@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*">
+	<!-- layer 2: fill -->
+	<!--- @private -->
+	<s:Rect id="fill" radiusX="10"
+			left="1" right="1" top="1" bottom="1">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xFFFFFF" />
+				<s:GradientEntry color="0xD8D8D8" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<!-- layer 7: border - put on top of the fill so it doesn't disappear when scale is less than 1 -->
+	<!--- @private -->
+	<s:Rect id="border" radiusX="10"
+			left="0" right="0" top="0" bottom="0" height="20" >
+		<s:stroke>
+			<s:LinearGradientStroke rotation="90" weight="1">
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.5625"/>
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.75" />
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Label id="userLabel" text="{data.user.prenom}" 
+			 left="20" verticalCenter="0" right="15"
+			 fontWeight="{data.role > 32 ? 'bold': 'normal'}"
+			 />
+	
+	<controls:ConnectionLight
+		id="statusIcon" status="{data.user.status}"
+		left="5" width="10" height="10" verticalCenter="-1"
+		/>
+</s:ItemRenderer>

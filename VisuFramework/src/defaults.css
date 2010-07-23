@@ -1,0 +1,35 @@
+/* CSS file */
+@namespace s 		"library://ns.adobe.com/flex/spark";
+@namespace mx 		"library://ns.adobe.com/flex/mx";
+@namespace 			"com.ithaca.visu.controls.*"; 
+@namespace nav 		"com.ithaca.visu.controls.globalNavigation.*"; 
+@namespace core 	"com.ithaca.visu.core.*"; 
+@namespace login	"com.ithaca.visu.controls.login.*"; 
+
+ConnectionLight
+{
+	skinClass: ClassReference("com.ithaca.visu.skins.ConnectionLightSkin");
+}
+
+ConnectedUser
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.ConnectedUserSkin");
+	corner-radius:10px;
+}
+SessionHomeElement
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.SessionHomeElementSkin");
+}
+
+nav|ApplicationMenu
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.ApplicationMenuSkin");	
+}
+core|VisuApplication
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.VisuAppSkin");	
+}
+login|LoginForm
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.LoginFormSkin");	
+}

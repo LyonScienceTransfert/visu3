@@ -1,0 +1,12 @@
+/* CSS file */
+@namespace "ws.tink.spark.containers.*";
+
+Form
+{
+	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormSkin" );
+}
+
+FormItem
+{
+	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormItemSkin" );
+}

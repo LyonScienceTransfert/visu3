@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.globalNavigation.ApplicationMenu")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="authentified" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=chat, type=spark.components.Button, required=false
+	name=disconnect, type=spark.components.Button, required=false
+	name=home, type=spark.components.Button, required=false
+	-->
+	<s:Group left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" />
+		</s:layout>
+		
+		<s:Label id="logo" text="VISU" color="#333333" fontWeight="bold">
+			<s:filters>
+				<s:DropShadowFilter alpha=".8" color="0xFFFFFF" angle="90" blurX="1" blurY="1" distance="1" /> 	
+			</s:filters>
+		</s:Label>
+		
+		<s:Button id="home" label="home" includeIn="authentified" />
+		
+		<s:Group id="contentGroup" width="100%" includeIn="authentified" 
+				 minHeight="0" minWidth="0">
+			<s:layout>
+				<s:HorizontalLayout />
+			</s:layout>
+		</s:Group>
+		
+		<mx:Spacer width="100%" includeIn="authentified" />
+		<s:Button id="chat" label="chat" includeIn="authentified" />
+		<s:Button id="disconnect" label="disconnect" includeIn="authentified" />
+	</s:Group>
+</s:Skin>

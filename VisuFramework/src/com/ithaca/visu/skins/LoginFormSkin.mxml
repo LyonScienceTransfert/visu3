@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		minWidth="250" minHeight="200" 
+		xmlns:containers="ws.tink.spark.containers.*" 
+		>
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.login.LoginForm")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import ws.tink.spark.skins.containers.FormItemSkin;
+		]]>
+	</fx:Script>
+	<!-- states -->
+	<s:states>
+		<s:State name="pending" />
+		<s:State name="normal" />
+		<s:State name="disabled" />
+		<fx:Script>
+			<![CDATA[
+				import mx.skins.spark.LinkButtonSkin;
+			]]>
+		</fx:Script>
+	</s:states>
+	
+	<!-- SkinParts
+	name=info, type=spark.components.supportClasses.TextBase, required=false
+	name=passField, type=spark.components.TextInput, required=false
+	name=loginField, type=spark.components.TextInput, required=false
+	name=submit, type=spark.components.Button, required=false
+	-->
+	
+	<containers:Form top="0" left="0" right="0" bottom="0">
+		<containers:layout>
+			<s:VerticalLayout />
+		</containers:layout>
+
+		<containers:FormItem
+			id="loginFormItem" 
+			width="100%">
+			<s:TextInput id="loginField" width="150" />
+		</containers:FormItem>
+		
+		<containers:FormItem 
+			id="passFormItem"
+			width="100%">
+			<s:TextInput id="passField" width="150" />
+		</containers:FormItem>
+		
+		<containers:FormItem  width="100%">
+			<s:Button id="submit" />
+		</containers:FormItem>
+		
+		<s:Button id="forgottenButton"
+			skinClass="com.ithaca.visu.skins.LinkButtonSkin"  />
+	</containers:Form>
+</s:Skin>

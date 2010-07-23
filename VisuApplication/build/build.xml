@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--ant-->
+<project name="Visu Client Builder" basedir="." default="build_all">
+   <property environment="env"/>
+   <property file="build.properties"/>
+	
+   <!-- Created by Lionel Breduillieard on 2010-04-09. -->
+   <!-- Copyright (c) 2010 Université Lumière Lyon 2. All rights reserved. -->
+   
+   <!-- add flex ant task -->
+   <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+   <!-- include properties file -->
+	
+
+	<!-- Application related path--> 
+	<property name="app.src" location="${assets.relative.path}/src" />
+	<property name="app.deploy" location="${app.relative.path}/deploy" />
+	
+	<!-- Visu framework related path--> 
+   <property name="framework.src" location="${framework.relative.path}/src" />
+   <property name="framework.bin" location="${framework.relative.path}/bin" />
+	
+	<!-- Component related path-->
+   <property name="components.src" location="${components.relative.path}/src" />
+   <property name="components.bin" location="${components.relative.path}/bin" />
+	<property name="components.css" location="${components.src}/default.css" />
+	
+	<!-- Utils related path-->
+   <property name="utils.src" location="${utils.relative.path}/src" />
+   <property name="utils.bin" location="${utils.relative.path}/bin" />
+   <property name="utils.locale" location="${utils.relative.path}/locale" />
+	
+	<!-- Assets related path-->	
+   <property name="assets.dir" location="${assets.relative.path}" />
+   <property name="assets.src" location="${assets.relative.path}/src" />
+   <property name="assets.bin" location="${assets.relative.path}/bin" />
+
+
+
+
+
+   <!-- Create a build report in order to optimize modules -->
+   <!-- todo: generate module after main application   -->
+   <!-- 
+      Strange:: if I use exclude.xml form generate_link_report, all seems to be good
+      if i use exclude.xml from buildApplication with theme options, font are invisible
+   -->
+	
+   <target name="generate_link_report">
+      <echo>Generate link report for exclude class</echo>
+      <mxmlc
+         file="${app.src}/${app.name}.mxml"
+         output="${app.deploy}/${app.name}.swf"
+         link-report="exclude.xml"
+         headless-server="true"
+         debug="${debug}">
+         
+         <library-path dir="${framework.bin}" append="true">
+            <include name="${framework.swc}" />
+         </library-path>
+         <library-path dir="${utils.bin}" append="true">
+            <include name="${utils.swc}" />
+         </library-path>
+         <library-path dir="${components.bin}" append="true">
+            <include name="${components.swc}" />
+         </library-path>
+         <library-path dir="${assets.bin}" append="true">
+            <include name="${assets.swc}" />
+         </library-path>
+      </mxmlc>
+      <delete file="${app.deploy}/${app.name}.swf" />
+   </target>
+   
+	<!-- build assets swc (can contain css, image, font, skins) -->
+   <target name="build_assets_lib">
+      <echo>Compile Assets Library (theme)</echo>	
+	
+      <!-- Perform xslt tranformation anies files up to date!! -->
+      <xslt
+         in="${assets.dir}/.flexLibProperties"
+         out="${assets.src}/${assets.includes}"
+         style="config.xsl">
+      </xslt>
+
+      <!-- Gather actionscript files -->
+      <fileset id="sources.dir" dir="${assets.src}">
+         <include name="**/*.as"/>
+      </fileset>
+      <pathconvert property="classes" pathsep=" " refid="sources.dir">
+         <chainedmapper>
+            <mapper type="glob" from="${assets.src}/*" to="*"/>
+            <mapper type="package" from="*.as" to="*"/>
+         </chainedmapper>
+      </pathconvert>
+      <!-- compile swc theme file -->
+      
+   	<compc 
+         output="${assets.bin}/${assets.swc}"
+         debug="${debug}" 
+         strict="true" 
+         optimize="true" 
+         warnings="true"
+         headless-server="true" 
+         include-classes="${classes}">
+   	  	
+   		<!-- add external swc-->
+      	<external-library-path dir="${FLEX_HOME}/frameworks" append="true">
+      		<include name="libs/player/${player.major.version}/playerglobal.swc" />
+      		<include name="libs/textLayout.swc" />
+      		<include name="libs/osmf.swc" />
+      		<include name="libs/framework.swc" />
+      		<include name="libs/spark.swc" />
+      		<include name="libs/sparkskins.swc" />
+      		<include name="libs/rpc.swc" />
+      	</external-library-path>
+      	<!-- add library swc-->
+      	<library-path dir="${FLEX_HOME}/frameworks" append="true">
+      		<include name="libs/datavisualization.swc" />
+      		<include name="flash-integration.swc" />
+      		<include name="utilities.swc" />
+      		<include name="locale\{locale}" />
+      	</library-path>			
+
+   	  	<!-- add directory to the source path (load only *.as,*.mxml,*.css) -->
+   	  	<include-sources dir="${assets.src}" includes="*.as,*.mxml,*.css" />
+   		<!-- equivalent to
+   		<source-path path-element="${assets.dir}/${assets.src}" /> 
+         -->
+         <!-- load config files with assets (images, sounds, fonts)  -->
+         <load-config filename="${assets.src}/${assets.includes}" />
+      </compc>
+      
+      <!-- Remove the theme load-config file -->
+      <delete file="${assets.src}/${assets.includes}" />
+   </target>
+
+   
+   <!-- Build component lib SWC -->
+   <target name="build_component_lib">
+      <echo>Compile components library</echo>
+      
+      <fileset id="sources.dir" dir="${components.src}">
+         <include name="**/*.as"/>
+         <include name="**/*.mxml"/>
+      </fileset>
+      <pathconvert property="components.classes" pathsep=" " refid="sources.dir">
+         <compositemapper>
+            <chainedmapper>
+               <globmapper from="${components.src}/*" to="*" handledirsep="yes" />
+               <mapper type="package" from="*.as" to="*"/>
+            </chainedmapper>
+            <chainedmapper>
+               <globmapper from="${components.src}/*" to="*" handledirsep="yes" />
+               <mapper type="package" from="*.mxml" to="*"/>
+            </chainedmapper>
+         </compositemapper>
+      </pathconvert>
+
+   	<compc 
+         output="${components.bin}/${components.swc}"
+         debug="${debug}" 
+         strict="true" 
+         optimize="true" 
+         warnings="true"
+         headless-server="true"
+         static-link-runtime-shared-libraries="false"
+         include-classes="${components.classes}"
+         > 
+         
+       	<!-- add external swc-->
+       	<external-library-path dir="${FLEX_HOME}/frameworks" append="true">
+       		<include name="libs/player/${player.major.version}/playerglobal.swc" />
+       		<include name="libs/textLayout.swc" />
+       		<include name="libs/osmf.swc" />
+       		<include name="libs/framework.swc" />
+       		<include name="libs/spark.swc" />
+       		<include name="libs/sparkskins.swc" />
+       		<include name="libs/rpc.swc" />
+       	</external-library-path>
+       	<!-- add library swc-->
+       	<library-path dir="${FLEX_HOME}/frameworks" append="true">
+       		<include name="libs/datavisualization.swc" />
+       		<include name="flash-integration.swc" />
+       		<include name="utilities.swc" />
+       		<include name="locale\{locale}" />
+       	</library-path>
+       	
+         <!-- add directory to the source path (load only *.as,*.mxml,*.css) --> 
+         <source-path path-element="${components.src}" />
+	   	<include-file name="default.css" path="${components.css}" />
+      </compc>
+   </target>
+
+
+   <!-- Build utils lib SWC -->
+   <target name="build_utils_lib">
+      <echo>Compile utils library</echo>
+      <compc 
+         output="${utils.bin}/${utils.swc}"
+         debug="${debug}" 
+         strict="true" 
+         optimize="true" 
+         warnings="true"
+         headless-server="true"
+         allow-source-path-overlap="true">
+      	 
+      	<!-- add external swc-->
+      	<external-library-path dir="${FLEX_HOME}/frameworks" append="true">
+      		<include name="libs/player/${player.major.version}/playerglobal.swc" />
+      		<include name="libs/textLayout.swc" />
+      		<include name="libs/osmf.swc" />
+      		<include name="libs/framework.swc" />
+      		<include name="libs/spark.swc" />
+      		<include name="libs/sparkskins.swc" />
+      		<include name="libs/rpc.swc" />
+      	</external-library-path>
+      	<!-- add library swc-->
+      	<library-path dir="${FLEX_HOME}/frameworks" append="true">
+      		<include name="libs/datavisualization.swc" />
+      		<include name="flash-integration.swc" />
+      		<include name="utilities.swc" />
+      		<include name="locale\{locale}" />
+      	</library-path>
+      	
+      	<source-path path-element="${utils.locale}" />
+      	<source-path path-element="${utils.locale}/{locale}" />
+     		<include-sources dir="${utils.src}" includes="*" />
+      	
+      </compc>
+   </target>
+    
+   <!-- Build framework lib SWC -->
+   <target name="build_framework_lib">
+      <echo>Compile framework library</echo>
+      <compc 
+         output="${framework.bin}/${framework.swc}"
+         debug="${debug}" 
+         strict="true" 
+         optimize="true" 
+         warnings="true"
+         headless-server="true">
+
+      	<!-- add external swc-->
+      	<external-library-path dir="${FLEX_HOME}/frameworks" append="true">
+      		<include name="libs/player/${player.major.version}/playerglobal.swc" />
+      		<include name="libs/textLayout.swc" />
+      		<include name="libs/osmf.swc" />
+      		<include name="libs/framework.swc" />
+      		<include name="libs/spark.swc" />
+      		<include name="libs/sparkskins.swc" />
+      		<include name="libs/rpc.swc" />
+      	</external-library-path>
+      	<!-- add library swc-->
+      	<library-path dir="${FLEX_HOME}/frameworks" append="true">
+      		<include name="libs/datavisualization.swc" />
+      		<include name="flash-integration.swc" />
+      		<include name="utilities.swc" />
+      		<include name="locale\{locale}" />
+      	</library-path>
+      	
+      	<library-path dir="${utils.bin}" append="true">
+            <include name="${utils.swc}" />
+         </library-path>
+         <library-path dir="${components.bin}" append="true">
+            <include name="${components.swc}" />
+         </library-path>
+         <library-path dir="${assets.bin}" append="true">
+            <include name="${assets.swc}" />
+         </library-path>
+         
+         <!-- define the source path -->
+         <include-sources dir="${framework.src}" includes="*" />
+         <source-path path-element="${framework.src}" />
+      </compc>
+   </target>
+
+
+   <!-- Build Application -->
+   <target name="build_application"> 
+      <echo>Build main application (shell)</echo>
+      <mxmlc 
+         file="${app.src}/${app.name}.mxml"
+         output="${app.deploy}/${app.name}.swf"
+         debug="${debug}"
+         strict="true" 
+         optimize="true" 
+         warnings="true"
+         headless-server="true">
+         
+         <!-- compile with theme / Remove if not needed -->
+         <!-- <theme dir="${assets.dir}" includes="${assets.bin}/${assets.swc}" /> -->
+         
+         <!-- define a source path (will include all files with .css, .as, .mxml extensions) -->
+         <source-path path-element="${app.src}"/>
+         <!-- define a library path -->
+         <library-path dir="${framework.bin}" append="true">
+            <include name="${framework.swc}" />
+         </library-path>
+         <library-path dir="${utils.bin}" append="true">
+            <include name="${utils.swc}" />
+         </library-path>
+         <library-path dir="${components.bin}" append="true">
+            <include name="${components.swc}" />
+         </library-path>
+         <library-path dir="${assets.bin}" append="true">
+            <include name="${assets.swc}" />
+         </library-path>
+      </mxmlc>
+   </target>
+
+
+   <!-- Build Module (TEST) -->
+   <target name="build_module_test">
+      <echo>Compile module ${module.name}</echo>
+      <mxmlc
+         file="${module.dir}/${module.src}/${module.name}.mxml"
+         output="${app.dir}/${app.deploy}/${module.name}.swf"
+         load-externs="exclude.xml"
+         headless-server="true"
+         debug="${debug}" 
+         warnings="true">
+         <!-- compile with theme / Remove if not needed -->
+         <!-- <theme dir="${assets.dir}" includes="${assets.bin}/${assets.swc}" /> -->
+
+         <library-path dir="${framework.dir}" append="true">
+            <include name="${framework.bin}/${framework.swc}" />
+         </library-path>
+         <library-path dir="${utils.dir}" append="true">
+            <include name="${utils.bin}/${utils.swc}" />
+         </library-path>
+         <library-path dir="${components.dir}" append="true">
+            <include name="${components.bin}/${components.swc}" />
+         </library-path>
+         <library-path dir="${assets.dir}" append="true">
+            <include name="${assets.bin}/${assets.swc}" />
+         </library-path>
+      </mxmlc>
+   </target>
+
+
+   <target name="build_all">
+      <antcall target="build_assets_lib" />
+      <antcall target="build_utils_lib" />
+      <antcall target="build_component_lib" />
+      <antcall target="build_framework_lib" />
+      <antcall target="build_application" />
+      <!-- Module -->
+      <!-- <antcall target="generate_link_report" /> -->
+      <!-- add module related build -->
+   </target>
+
+</project>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="ws.tink.graphics.Dash"/>
+    <classEntry path="ws.tink.graphics.GraphicsCreator"/>
+    <classEntry path="ws.tink.graphics.Hatch"/>
+    <classEntry path="ws.tink.graphics.IGraphicsCreator"/>
+    <classEntry path="ws.tink.graphics.utils.EllipseUtil"/>
+    <classEntry path="ws.tink.graphics.utils.RectUtil"/>
+    <classEntry path="ws.tink.spark.containers.Form"/>
+    <classEntry path="ws.tink.spark.containers.FormItem"/>
+    <classEntry path="ws.tink.spark.modules.Module"/>
+    <classEntry path="ws.tink.spark.modules.ModuleLoadPolicy"/>
+    <classEntry path="ws.tink.spark.modules.ModuleLoader"/>
+    <classEntry path="ws.tink.spark.modules.ModuleLoaderStatus"/>
+    <classEntry path="ws.tink.spark.skins.containers.FormItemSkin"/>
+    <classEntry path="ws.tink.spark.skins.containers.FormSkin"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>
+  </includeResources>
+  <namespaceManifests/>
+</flexLibProperties>

@@ -1,0 +1,540 @@
+<flex-config>
+   <!-- benchmark: générer une analyse des performances-->
+   <!-- benchmark usage:
+   <benchmark>boolean</benchmark>
+   -->
+   <compiler>
+      <!-- compiler.accessible: générer un fichier SWF accessible-->
+      <accessible>true</accessible>
+      <!-- compiler.actionscript-file-encoding: indique l'encodage de fichier ActionScript. Si aucune nomenclature n'est définie dans les fichiers source AS3, le compilateur utilise cet encodage.-->
+      <!-- compiler.actionscript-file-encoding usage:
+      <actionscript-file-encoding>string</actionscript-file-encoding>
+      -->
+      <!-- compiler.allow-source-path-overlap: vérifie si une entrée source-path correspond à un sous-répertoire d'une autre entrée source-path. Cela permet de rendre les noms de paquets de composants MXML non ambigus.-->
+      <allow-source-path-overlap>true</allow-source-path-overlap>
+      <!-- compiler.as3: utilisez le modèle d'objet reposant sur la classe ActionScript 3 pour optimiser les performances et les rapports d'erreurs. Dans ce modèle d'objet, la plupart des fonctions intégrées est implémentée en tant que méthodes de classes fixes.-->
+      <as3>true</as3>
+      <!-- compiler.context-root: chemin de remplacement des jetons {context.root} pour les extrémités de canaux de service-->
+      <!-- compiler.context-root usage:
+      <context-root>context-path</context-root>
+      -->
+      <!-- compiler.debug: génère un film adapté au débogage-->
+      <debug>true</debug>
+      <!-- compiler.defaults-css-files usage:
+      <defaults-css-files>
+         <filename>string</filename>
+         <filename>string</filename>
+      </defaults-css-files>
+      -->
+      <!-- compiler.defaults-css-url: définit l'emplacement de la feuille de style par défaut. La définition de cette option remplace l'utilisation implicite de la feuille de style defaults.css dans le fichier framework.swc.-->
+      <!-- compiler.defaults-css-url usage:
+      <defaults-css-url>string</defaults-css-url>
+      -->
+      <!-- compiler.define: créer une définition de compilation conditionnelle AS3 globale telle que : define=CONFIG::debugging,true ou -define+=CONFIG::debugging,true (à ajouter aux définitions existantes dans flex-config.xml) -->
+      <!-- compiler.define usage:
+      <define>
+         <name>string</name>
+         <value>string</value>
+         <value>string</value>
+      </define>
+      -->
+      <!-- compiler.enable-runtime-design-layers usage:
+      <enable-runtime-design-layers>boolean</enable-runtime-design-layers>
+      -->
+      <!-- compiler.es: utilisez le modèle d'objet reposant sur le prototype ECMAScript Edition 3 afin de permettre le remplacement dynamique des propriétés de prototype. Dans ce modèle d'objet, les fonctions intégrées sont implémentées en tant que propriétés dynamiques des objets prototype.-->
+      <es>false</es>
+      <extensions>
+         <!-- compiler.extensions.extension usage:
+         <extension>
+            <extension>string</extension>
+            <parameters>string</parameters>
+         </extension>
+         -->
+      </extensions>
+      <!-- compiler.external-library-path: liste des fichiers ou répertoires SWC de référence pour la compilation et à omettre de la liaison-->
+      <external-library-path>
+         <path-element>libs/player/{targetPlayerMajorVersion}.{targetPlayerMinorVersion}/playerglobal.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\player\10.0\playerglobal.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\datavisualization.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\flash-integration.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\flex.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\framework.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\osmf.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\rpc.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\spark.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\sparkskins.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\textLayout.swc</path-element>
+      </external-library-path>
+      <external-library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\utilities.swc</path-element>
+      </external-library-path>
+      <fonts>
+         <!-- compiler.fonts.advanced-anti-aliasing: active le lissage avancé pour les polices incorporées, ce qui améliore la lisibilité des polices de petite taille.-->
+         <advanced-anti-aliasing>true</advanced-anti-aliasing>
+         <!-- compiler.fonts.flash-type: active FlashType pour les polices incorporées, ce qui améliore la lisibilité des polices de petite taille.-->
+         <!-- compiler.fonts.flash-type usage:
+         <flash-type>boolean</flash-type>
+         -->
+         <languages>
+            <!-- compiler.fonts.languages.language-range: plage limitant le nombre de glyphes de polices incorporés dans le fichier SWF-->
+            <!-- compiler.fonts.languages.language-range usage:
+            <language-range>
+               <lang>string</lang>
+               <range>string</range>
+               <range>string</range>
+            </language-range>
+            -->
+         </languages>
+         <!-- compiler.fonts.local-font-paths usage:
+         <local-font-paths>
+            <path-element>string</path-element>
+            <path-element>string</path-element>
+         </local-font-paths>
+         -->
+         <!-- compiler.fonts.local-fonts-snapshot: Fichier contenant les données de polices système générées par flex2.tools.FontSnapshot.-->
+         <local-fonts-snapshot>${flexlib}/winFonts.ser</local-fonts-snapshot>
+         <!-- compiler.fonts.managers: Classes du gestionnaire de polices du compilateur, par ordre de résolution de stratégie-->
+         <managers>
+            <manager-class>flash.fonts.JREFontManager</manager-class>
+            <manager-class>flash.fonts.BatikFontManager</manager-class>
+            <manager-class>flash.fonts.AFEFontManager</manager-class>
+            <manager-class>flash.fonts.CFFFontManager</manager-class>
+         </managers>
+         <!-- compiler.fonts.max-cached-fonts: définit le nombre maximum de polices à conserver dans la mémoire cache du serveur. La valeur par défaut est 20.-->
+         <max-cached-fonts>20</max-cached-fonts>
+         <!-- compiler.fonts.max-glyphs-per-face: définit le nombre maximum de contours de glyphe de caractère à conserver dans la mémoire cache du serveur pour chaque police. La valeur par défaut est 1 000.-->
+         <max-glyphs-per-face>1000</max-glyphs-per-face>
+      </fonts>
+      <!-- compiler.headless-server: indicateur à définir lorsque Flex est exécuté sur un serveur sans écran-->
+      <headless-server>true</headless-server>
+      <!-- compiler.include-libraries: liste des bibliothèques (SWC) à inclure entièrement dans le fichier SWF-->
+      <!-- compiler.include-libraries usage:
+      <include-libraries>
+         <library>string</library>
+         <library>string</library>
+      </include-libraries>
+      -->
+      <!-- compiler.incremental: active la compilation incrémentielle-->
+      <!-- compiler.incremental usage:
+      <incremental>boolean</incremental>
+      -->
+      <!-- compiler.isolate-styles: active l'application ou le module compilé pour définir des styles qui n'affectent que lui et ses enfants.-->
+      <!-- compiler.isolate-styles usage:
+      <isolate-styles>boolean</isolate-styles>
+      -->
+      <!-- compiler.keep-all-type-selectors: désactive le nettoyage des sélecteurs de type CSS inutilisés.-->
+      <!-- compiler.keep-all-type-selectors usage:
+      <keep-all-type-selectors>boolean</keep-all-type-selectors>
+      -->
+      <!-- compiler.keep-as3-metadata: conserver les métadonnées spécifiées dans le fichier SWF-->
+      <!-- compiler.keep-as3-metadata usage:
+      <keep-as3-metadata>
+         <name>string</name>
+         <name>string</name>
+      </keep-as3-metadata>
+      -->
+      <!-- compiler.keep-generated-actionscript: enregistrer les fichiers source temporaires générés au cours de la compilation MXML-->
+      <keep-generated-actionscript>false</keep-generated-actionscript>
+      <!-- compiler.library-path: liste des fichiers SWC ou des répertoires contenant des fichiers SWC-->
+      <library-path>
+         <path-element>libs</path-element>
+         <path-element>libs/player</path-element>
+         <path-element>libs/player/{targetPlayerMajorVersion}.{targetPlayerMinorVersion}</path-element>
+         <path-element>locale/{locale}</path-element>
+      </library-path>
+      <library-path>
+         <path-element>C:\Program Files\Adobe\Adobe Flash Builder 4\sdks\4.0.0\frameworks\libs\datavisualization.swc</path-element>
+      </library-path>
+      <!-- compiler.locale: indique la langue pour l'internationalisation-->
+      <locale>
+         <locale-element>en_US</locale-element>
+         <locale-element>fr_FR</locale-element>
+      </locale>
+      <!-- compiler.minimum-supported-version usage:
+      <minimum-supported-version>string</minimum-supported-version>
+      -->
+      <mxml>
+         <!-- compiler.mxml.compatibility-version: spécifie une version de compatibilité, par exemple, compatibility-version=2.0.1.-->
+         <!-- compiler.mxml.compatibility-version usage:
+         <compatibility-version>version</compatibility-version>
+         -->
+         <!-- compiler.mxml.minimum-supported-version usage:
+         <minimum-supported-version>string</minimum-supported-version>
+         -->
+         <!-- compiler.mxml.qualified-type-selectors usage:
+         <qualified-type-selectors>boolean</qualified-type-selectors>
+         -->
+      </mxml>
+      <namespaces>
+         <!-- compiler.namespaces.namespace: Spécifiez un URI à associer à un fichier manifest de composants à utiliser en tant qu'éléments MXML-->
+         <namespace>
+            <uri>http://ns.adobe.com/mxml/2009</uri>
+            <manifest>mxml-2009-manifest.xml</manifest>
+         </namespace>
+         <namespace>
+            <uri>library://ns.adobe.com/flex/spark</uri>
+            <manifest>spark-manifest.xml</manifest>
+         </namespace>
+         <namespace>
+            <uri>library://ns.adobe.com/flex/mx</uri>
+            <manifest>mx-manifest.xml</manifest>
+         </namespace>
+         <namespace>
+            <uri>http://www.adobe.com/2006/mxml</uri>
+            <manifest>mxml-manifest.xml</manifest>
+         </namespace>
+      </namespaces>
+      <!-- compiler.omit-trace-statements: basculer vers l'omission des instructions trace-->
+      <omit-trace-statements>true</omit-trace-statements>
+      <!-- compiler.optimize: Activer l'optimisation SWF après liaison-->
+      <optimize>true</optimize>
+      <!-- compiler.report-invalid-styles-as-warnings: active le rapport de styles non valides en tant qu'avertissements-->
+      <!-- compiler.report-invalid-styles-as-warnings usage:
+      <report-invalid-styles-as-warnings>boolean</report-invalid-styles-as-warnings>
+      -->
+      <!-- compiler.services: chemin d'accès au fichier de configuration de Flex Data Services-->
+      <!-- compiler.services usage:
+      <services>filename</services>
+      -->
+      <!-- compiler.show-actionscript-warnings: exécute le compilateur AS3 dans un mode détectant un code légal mais potentiellement incorrect.-->
+      <show-actionscript-warnings>true</show-actionscript-warnings>
+      <!-- compiler.show-binding-warnings: basculer vers l'affichage des avertissements générés par le code de liaison des données-->
+      <show-binding-warnings>true</show-binding-warnings>
+      <!-- compiler.show-invalid-css-property-warnings: basculer vers le rapport d'avertissements de propriété css non valides-->
+      <!-- compiler.show-invalid-css-property-warnings usage:
+      <show-invalid-css-property-warnings>boolean</show-invalid-css-property-warnings>
+      -->
+      <!-- compiler.show-shadowed-device-font-warnings: bascule vers l'affichage des avertissements lorsque le nom d'une police incorporée ombre un nom de police du périphérique.-->
+      <show-shadowed-device-font-warnings>true</show-shadowed-device-font-warnings>
+      <!-- compiler.show-unused-type-selector-warnings: basculer vers l'affichage des avertissements générés par les sélecteurs de type CSS inutilisés-->
+      <show-unused-type-selector-warnings>true</show-unused-type-selector-warnings>
+      <!-- compiler.source-path: liste des éléments de chemin formant les racines d'arborescences de classes ActionScript-->
+      <source-path>
+         <path-element>D:\work\visu2\UtilsLib/locale</path-element>
+      </source-path>
+      <source-path>
+         <path-element>D:\work\visu2\UtilsLib/locale/{locale}</path-element>
+      </source-path>
+      <!-- compiler.strict: exécute le compilateur AS3 en mode de vérification des erreurs strict.-->
+      <strict>true</strict>
+      <!-- compiler.theme: liste des fichiers CSS ou SWC à appliquer comme thème-->
+      <theme>
+         <filename>themes/Spark/spark.css</filename>
+      </theme>
+      <!-- compiler.use-resource-bundle-metadata: détermine si les ensembles de ressources sont inclus dans l'application.-->
+      <use-resource-bundle-metadata>false</use-resource-bundle-metadata>
+      <!-- compiler.verbose-stacktraces: enregistrer les informations de pile des appels dans le fichier SWF à des fins de débogage-->
+      <verbose-stacktraces>false</verbose-stacktraces>
+      <!-- compiler.warn-array-tostring-changes: Le format Array.toString() a été modifié.-->
+      <warn-array-tostring-changes>false</warn-array-tostring-changes>
+      <!-- compiler.warn-assignment-within-conditional: Attribution au sein d'un élément conditionnel.-->
+      <warn-assignment-within-conditional>true</warn-assignment-within-conditional>
+      <!-- compiler.warn-bad-array-cast: Opération de projection de réseau potentiellement incorrecte.-->
+      <warn-bad-array-cast>true</warn-bad-array-cast>
+      <!-- compiler.warn-bad-bool-assignment: Une valeur non booléenne a été utilisée alors qu'une valeur booléenne était attendue.-->
+      <warn-bad-bool-assignment>true</warn-bad-bool-assignment>
+      <!-- compiler.warn-bad-date-cast: Opération de projection de données incorrecte.-->
+      <warn-bad-date-cast>true</warn-bad-date-cast>
+      <!-- compiler.warn-bad-es3-type-method: Méthode inconnue.-->
+      <warn-bad-es3-type-method>true</warn-bad-es3-type-method>
+      <!-- compiler.warn-bad-es3-type-prop: Propriété inconnue.-->
+      <warn-bad-es3-type-prop>true</warn-bad-es3-type-prop>
+      <!-- compiler.warn-bad-nan-comparison: Comparaison illogique à NaN. Toute opération de comparaison impliquant NaN aboutit au résultat false car NaN != NaN.-->
+      <warn-bad-nan-comparison>true</warn-bad-nan-comparison>
+      <!-- compiler.warn-bad-null-assignment: Attribution impossible à la valeur nulle.-->
+      <warn-bad-null-assignment>true</warn-bad-null-assignment>
+      <!-- compiler.warn-bad-null-comparison: Comparaison illogique à une valeur nulle.-->
+      <warn-bad-null-comparison>true</warn-bad-null-comparison>
+      <!-- compiler.warn-bad-undefined-comparison: Comparaison illogique à un élément non défini. Seules des variables sans type (ou de type *) peuvent être non définies.-->
+      <warn-bad-undefined-comparison>true</warn-bad-undefined-comparison>
+      <!-- compiler.warn-boolean-constructor-with-no-args: L'élément Boolean() sans arguments renvoie false dans ActionScript 3.0 tandis qu'il renvoie undefined dans ActionScript 2.0.-->
+      <warn-boolean-constructor-with-no-args>false</warn-boolean-constructor-with-no-args>
+      <!-- compiler.warn-changes-in-resolve: __resolve n'est plus pris en charge.-->
+      <warn-changes-in-resolve>false</warn-changes-in-resolve>
+      <!-- compiler.warn-class-is-sealed: La classe est scellée. Il est impossible d'y ajouter des membres de manière dynamique.-->
+      <warn-class-is-sealed>true</warn-class-is-sealed>
+      <!-- compiler.warn-const-not-initialized: Constante non initialisée.-->
+      <warn-const-not-initialized>true</warn-const-not-initialized>
+      <!-- compiler.warn-constructor-returns-value: Une fonction utilisée dans une nouvelle expression renvoie une valeur. Le résultat correspond à ce que la fonction renvoie au lieu d'une nouvelle instance de la fonction.-->
+      <warn-constructor-returns-value>false</warn-constructor-returns-value>
+      <!-- compiler.warn-deprecated-event-handler-error: EventHandler n'a pas été ajouté en tant que port d'écoute.-->
+      <warn-deprecated-event-handler-error>false</warn-deprecated-event-handler-error>
+      <!-- compiler.warn-deprecated-function-error: Fonction ActionScript 2.0 non prise en charge.-->
+      <warn-deprecated-function-error>true</warn-deprecated-function-error>
+      <!-- compiler.warn-deprecated-property-error: Propriété ActionScript 2.0 non prise en charge.-->
+      <warn-deprecated-property-error>true</warn-deprecated-property-error>
+      <!-- compiler.warn-duplicate-argument-names: Plusieurs arguments portent le même nom.-->
+      <warn-duplicate-argument-names>true</warn-duplicate-argument-names>
+      <!-- compiler.warn-duplicate-variable-def: Définition de variable en double -->
+      <warn-duplicate-variable-def>true</warn-duplicate-variable-def>
+      <!-- compiler.warn-for-var-in-changes: ActionScript 3.0 effectue une itération sur les propriétés d'un objet dans le cadre d'une instruction de type "pour x dans la cible" dans un ordre aléatoire.-->
+      <warn-for-var-in-changes>false</warn-for-var-in-changes>
+      <!-- compiler.warn-import-hides-class: L'importation d'un paquet portant le même nom que la classe active masquera l'identificateur de la classe dans cette étendue.-->
+      <warn-import-hides-class>true</warn-import-hides-class>
+      <!-- compiler.warn-instance-of-changes: Utilisation de l'instance de l'opérateur.-->
+      <warn-instance-of-changes>true</warn-instance-of-changes>
+      <!-- compiler.warn-internal-error: Erreur interne dans le compilateur.-->
+      <warn-internal-error>true</warn-internal-error>
+      <!-- compiler.warn-level-not-supported: _level n'est plus pris en charge. Pour plus de détails, consultez le paquet flash.display.-->
+      <warn-level-not-supported>true</warn-level-not-supported>
+      <!-- compiler.warn-missing-namespace-decl: Déclaration d'espace de noms manquante (par ex., la variable n'est pas définie comme étant publique, privée, etc.).-->
+      <warn-missing-namespace-decl>true</warn-missing-namespace-decl>
+      <!-- compiler.warn-negative-uint-literal: Une valeur négative devient une grande valeur positive lorsqu'elle est attribuée à un type de données uint.-->
+      <warn-negative-uint-literal>true</warn-negative-uint-literal>
+      <!-- compiler.warn-no-constructor: Constructeur manquant.-->
+      <warn-no-constructor>false</warn-no-constructor>
+      <!-- compiler.warn-no-explicit-super-call-in-constructor: L'instruction super() n'a pas été appelée dans le constructeur.-->
+      <warn-no-explicit-super-call-in-constructor>false</warn-no-explicit-super-call-in-constructor>
+      <!-- compiler.warn-no-type-decl: Déclaration de type manquante.-->
+      <warn-no-type-decl>true</warn-no-type-decl>
+      <!-- compiler.warn-number-from-string-changes: Dans ActionScript 3.0, les espaces sont ignorés et '' renvoie 0. Number() renvoie NaN dans ActionScript 2.0 lorsque le paramètre est '' ou lorsqu'il contient un espace.-->
+      <warn-number-from-string-changes>false</warn-number-from-string-changes>
+      <!-- compiler.warn-scoping-change-in-this: Modification dans l'étendue de ce mot-clé. Les méthodes de classe extraites à partir d'une instance d'une classe aboutiront toujours à cette instance. Dans ActionScript 2.0, la recherche se fait de manière dynamique depuis de l'emplacement à partir duquel la méthode est appelée.-->
+      <warn-scoping-change-in-this>false</warn-scoping-change-in-this>
+      <!-- compiler.warn-slow-text-field-addition: Utilisation inefficace de += sur une entrée TextField.-->
+      <warn-slow-text-field-addition>true</warn-slow-text-field-addition>
+      <!-- compiler.warn-unlikely-function-value: Parenthèses éventuellement manquantes.-->
+      <warn-unlikely-function-value>true</warn-unlikely-function-value>
+      <!-- compiler.warn-xml-class-has-changed: Utilisation possible de la classe XML ActionScript 2.0.-->
+      <warn-xml-class-has-changed>false</warn-xml-class-has-changed>
+   </compiler>
+   <!-- compute-digest: écrit une valeur de prétraitement dans le fichier catalog.xml d'une bibliothèque. Cela est nécessaire si vous désignez la bibliothèque dans l'option -runtime-shared-libraries-path.-->
+   <!-- compute-digest usage:
+   <compute-digest>boolean</compute-digest>
+   -->
+   <!-- debug-password: mot de passe à inclure dans les fichiers SWF à déboguer-->
+   <debug-password></debug-password>
+   <!-- default-background-color: couleur d'arrière-plan par défaut (peut être écrasée par le code de l'application)-->
+   <default-background-color>0xFFFFFF</default-background-color>
+   <!-- default-frame-rate: vitesse de défilement des images par défaut à utiliser dans le fichier SWF.-->
+   <default-frame-rate>24</default-frame-rate>
+   <!-- default-script-limits: limites d'exécution par défaut du script (peuvent être écrasées par les attributs root)-->
+   <default-script-limits>
+      <max-recursion-depth>1000</max-recursion-depth>
+      <max-execution-time>60</max-execution-time>
+   </default-script-limits>
+   <!-- default-size: taille par défaut de l'application (peut être écrasée par les attributs root de l'application)-->
+   <default-size>
+      <width>500</width>
+      <height>375</height>
+   </default-size>
+   <!-- directory: générer la bibliothèque sous forme d'un répertoire ouvert au lieu d'un fichier SWC-->
+   <directory>false</directory>
+   <!-- externs: liste des symboles à omettre de la liaison lors de la construction d'un fichier SWF-->
+   <!-- externs usage:
+   <externs>
+      <symbol>string</symbol>
+      <symbol>string</symbol>
+   </externs>
+   -->
+   <frames>
+      <!-- frames.frame: Libellé d'image SWF doté d'une séquence de noms de classes qui seront liés à l'image.-->
+      <!-- frames.frame usage:
+      <frame>
+         <label>string</label>
+         <classname>string</classname>
+      </frame>
+      -->
+   </frames>
+   <framework>halo</framework>
+   <!-- include-classes: liste de classes à inclure dans le fichier SWC généré-->
+   <!-- include-classes usage:
+   <include-classes>
+      <class>string</class>
+      <class>string</class>
+   </include-classes>
+   -->
+   <!-- include-file: liste de fichiers nommés à inclure dans le SWC généré-->
+   <!-- include-file usage:
+   <include-file>
+      <name>string</name>
+      <path>string</path>
+      <path>string</path>
+   </include-file>
+   -->
+   <!-- include-lookup-only: si la valeur est true, les entrées Manifest pour lesquelles lookupOnly=true sont incorporées au catalogue SWC. La valeur par défaut est false.-->
+   <!-- include-lookup-only usage:
+   <include-lookup-only>boolean</include-lookup-only>
+   -->
+   <!-- include-namespaces: toutes les classes dans les espaces de noms répertoriés sont incluses dans le fichier SWC généré.-->
+   <!-- include-namespaces usage:
+   <include-namespaces>
+      <uri>string</uri>
+      <uri>string</uri>
+   </include-namespaces>
+   -->
+   <!-- include-resource-bundles: liste d'ensembles de ressources à inclure dans le fichier SWC généré-->
+   <!-- include-resource-bundles usage:
+   <include-resource-bundles>
+      <bundle>string</bundle>
+      <bundle>string</bundle>
+   </include-resource-bundles>
+   -->
+   <!-- include-sources: liste de répertoires et de fichiers sources à inclure dans le fichier SWC généré-->
+   <include-sources>
+      <path-element>D:\work\visu2\UtilsLib\src\com</path-element>
+   </include-sources>
+   <include-sources>
+      <path-element>D:\work\visu2\UtilsLib\src\sparks</path-element>
+   </include-sources>
+   <!-- include-stylesheet: liste de ressources de feuilles de style nommées à inclure dans le fichier SWC généré-->
+   <!-- include-stylesheet usage:
+   <include-stylesheet>
+      <name>string</name>
+      <path>string</path>
+      <path>string</path>
+   </include-stylesheet>
+   -->
+   <!-- includes: liste des symboles vers laquelle un lien doit pointer lors de la construction d'un fichier SWF-->
+   <!-- includes usage:
+   <includes>
+      <symbol>string</symbol>
+      <symbol>string</symbol>
+   </includes>
+   -->
+   <!-- link-report: Génère un rapport au format XML de toutes les définitions liées dans l'application.-->
+   <!-- link-report usage:
+   <link-report>filename</link-report>
+   -->
+   <!-- load-config: charger un fichier contenant des options de configuration-->
+   <load-config>${flexlib}/${configname}-config.xml</load-config>
+   <!-- load-externs: fichier XML contenant les symboles <def>, <pre> et <ext> à omettre de la liaison lors de la construction d'un fichier SWF-->
+   <!-- load-externs usage:
+   <load-externs>filename</load-externs>
+   -->
+   <metadata>
+      <!-- metadata.contributor: Nom de collaborateur à stocker dans les métadonnées SWF-->
+      <!-- metadata.contributor usage:
+      <contributor>name</contributor>
+      -->
+      <!-- metadata.creator: Nom de créateur à stocker dans les métadonnées SWF-->
+      <creator>unknown</creator>
+      <!-- metadata.date: Date de création à stocker dans les métadonnées SWF-->
+      <!-- metadata.date usage:
+      <date>text</date>
+      -->
+      <!-- metadata.description: Description par défaut à stocker dans les métadonnées SWF-->
+      <description>http://www.adobe.com/products/flex</description>
+      <!-- metadata.language: Langue à stocker dans les métadonnées SWF (par ex., EN, FR)-->
+      <language>EN</language>
+      <!-- metadata.localized-description: Description RDF/XMP traduite à stocker dans les métadonnées SWF-->
+      <!-- metadata.localized-description usage:
+      <localized-description>
+         <text>string</text>
+         <lang>string</lang>
+         <lang>string</lang>
+      </localized-description>
+      -->
+      <!-- metadata.localized-title: Titre RDF/XMP traduit à stocker dans les métadonnées SWF-->
+      <!-- metadata.localized-title usage:
+      <localized-title>
+         <title>string</title>
+         <lang>string</lang>
+         <lang>string</lang>
+      </localized-title>
+      -->
+      <!-- metadata.publisher: Nom d'éditeur à stocker dans les métadonnées SWF-->
+      <publisher>unknown</publisher>
+      <!-- metadata.title: Titre par défaut à stocker dans les métadonnées SWF-->
+      <title>Adobe Flex 4 Application</title>
+   </metadata>
+   <!-- output: nom de fichier du film SWF à créer-->
+   <output>D:\work\visu2\UtilsLib\bin\utils.ant.swc</output>
+   <!-- raw-metadata: texte XML à stocker dans les métadonnées SWF (remplace la configuration metadata.*)-->
+   <!-- raw-metadata usage:
+   <raw-metadata>text</raw-metadata>
+   -->
+   <!-- resource-bundle-list: imprime dans un fichier une liste d'ensembles de ressources à entrer dans le compilateur compc afin de créer un fichier SWC d'ensemble de ressources. -->
+   <!-- resource-bundle-list usage:
+   <resource-bundle-list>filename</resource-bundle-list>
+   -->
+   <!-- runtime-shared-libraries: liste des URL de bibliothèques d'exécution partagées à charger avant le démarrage de l'application-->
+   <!-- runtime-shared-libraries usage:
+   <runtime-shared-libraries>
+      <url>string</url>
+      <url>string</url>
+   </runtime-shared-libraries>
+   -->
+   <runtime-shared-library-path>
+      <path-element>libs/textLayout.swc</path-element>
+      <rsl-url>http://fpdownload.adobe.com/pub/swz/tlf/1.0.0.595/textLayout_1.0.0.595.swz</rsl-url>
+      <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
+      <rsl-url>textLayout_1.0.0.595.swz</rsl-url>
+      <policy-file-url></policy-file-url>
+   </runtime-shared-library-path>
+   <runtime-shared-library-path>
+      <path-element>libs/osmf.swc</path-element>
+      <rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/osmf_flex.4.0.0.13495.swz</rsl-url>
+      <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
+      <rsl-url>osmf_flex.4.0.0.13495.swz</rsl-url>
+      <policy-file-url></policy-file-url>
+   </runtime-shared-library-path>
+   <runtime-shared-library-path>
+      <path-element>libs/framework.swc</path-element>
+      <rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/framework_4.0.0.14159.swz</rsl-url>
+      <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
+      <rsl-url>framework_4.0.0.14159.swz</rsl-url>
+      <policy-file-url></policy-file-url>
+   </runtime-shared-library-path>
+   <runtime-shared-library-path>
+      <path-element>libs/spark.swc</path-element>
+      <rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/spark_4.0.0.14159.swz</rsl-url>
+      <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
+      <rsl-url>spark_4.0.0.14159.swz</rsl-url>
+      <policy-file-url></policy-file-url>
+   </runtime-shared-library-path>
+   <runtime-shared-library-path>
+      <path-element>libs/sparkskins.swc</path-element>
+      <rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/sparkskins_4.0.0.14159.swz</rsl-url>
+      <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
+      <rsl-url>sparkskins_4.0.0.14159.swz</rsl-url>
+      <policy-file-url></policy-file-url>
+   </runtime-shared-library-path>
+   <runtime-shared-library-path>
+      <path-element>libs/rpc.swc</path-element>
+      <rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/rpc_4.0.0.14159.swz</rsl-url>
+      <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
+      <rsl-url>rpc_4.0.0.14159.swz</rsl-url>
+      <policy-file-url></policy-file-url>
+   </runtime-shared-library-path>
+   <!-- static-link-runtime-shared-libraries: établit un lien statique avec les bibliothèques désignées par l'option -runtime-shared-libraries-path.-->
+   <static-link-runtime-shared-libraries>false</static-link-runtime-shared-libraries>
+   <!-- target-player: spécifie la version du lecteur ciblé par l'application. Les fonctionnalités exigeant une version ultérieure ne seront pas compilées dans l'application. La version minimale prise en charge est la version 9.0.0.-->
+   <target-player>10.0.0</target-player>
+   <!-- tools-locale: spécifie les paramètres régionaux utilisés par le compilateur lors du rapport des erreurs et des avertissements.-->
+   <!-- tools-locale usage:
+   <tools-locale>string</tools-locale>
+   -->
+   <!-- use-network: activer/désactiver l'indication du fichier SWF pour l'accès aux ressources réseau-->
+   <use-network>true</use-network>
+   <!-- verify-digests: vérifie si les bibliothèques chargées au moment de l'exécution sont celles qui conviennent.-->
+   <!-- verify-digests usage:
+   <verify-digests>boolean</verify-digests>
+   -->
+   <!-- version: afficher la version de construction du programme-->
+   <!-- version usage:
+   <version>boolean</version>
+   -->
+   <!-- warnings: activer/désactiver l'affichage des avertissements-->
+   <warnings>true</warnings>
+</flex-config>

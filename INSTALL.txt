@@ -1,0 +1,32 @@
+The server has been tested and deployed on red5 0.8.0.
+
+
+* Layout
+
+The configuration/compilation files are expecting by default that the
+red5 directory is at the same level as the visu source directory,
+i.e.:
+
+PATH/red5
+PATH/visu/visu - server sources
+PATH/visu/VisuClient - client sources
+
+* Database initialisation
+
+  Configure the mysql connnection in
+  webapp/WEB-INF/classes/ibatis/sqlMapConfig.xml
+
+  Create a "visu" database with the appropriate login/password credentials.
+
+  Initialize an empty database from dump/empty_db.sql :
+   mysql -u_login_ -p visu < dump/empty_db.sql
+
+  Create an admin user from dump/admin_db.sql:
+   mysql -u_login_ -p visu < dump/admin_db.sql
+
+* Compilation 
+
+Since we are completely rebuilding the version 2, we are working on 
+a global ANT build file for building both client and server side.
+Still in a "work in progress" state, you can see 
+VisuApplication/build directory for the client part.

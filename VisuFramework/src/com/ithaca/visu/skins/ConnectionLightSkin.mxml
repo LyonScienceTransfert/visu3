@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.ConnectionLight")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="connected" />
+		<s:State name="disconnected" />
+		<s:State name="pending" />
+	</s:states>
+	
+
+	<s:Rect radiusX="{this.width/2}" top="-1" bottom="-1" left="-1" right="-1">
+		<s:fill>
+			<s:LinearGradient rotation="270">
+				<s:GradientEntry color="#FFFFFF" alpha=".5" />
+				<s:GradientEntry color="#FFFFFF" alpha="0" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect radiusX="{this.width/2}" top="0" bottom="0" left="0" right="0">
+		<s:fill>
+			<s:LinearGradient rotation="270">
+				<s:GradientEntry color="#008000" includeIn="connected" />
+				<s:GradientEntry color="#9FD62B" includeIn="connected" /> 
+				<s:GradientEntry color="#333333" includeIn="disconnected" /> 
+				<s:GradientEntry color="#AAAAAA" includeIn="disconnected" />
+				<s:GradientEntry color="#006699" includeIn="pending "/> 
+				<s:GradientEntry color="#00CCFF" includeIn="pending" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+</s:Skin>

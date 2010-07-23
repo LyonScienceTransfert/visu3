@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   xmlns:modules="com.ithaca.visu.modules.*" 
+		   configure="visumodulebase1_configureHandler(event)"
+		   top="0" bottom="0" left="0" right="0"
+		   >
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.events.VisuModuleEvent;
+
+			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace("configure module user with params " + parameters)
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+
+	<modules:layout>
+		<s:VerticalLayout />
+	</modules:layout>
+	<s:Label fontSize="20" text="Gestion des utilisateurs" />
+</modules:VisuModuleBase>
