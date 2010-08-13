@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<mate:EventMap 
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo"
+        xmlns:mate="http://mate.asfusion.com/"
+		xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+
+    <fx:Script><![CDATA[
+		import modules.HomeModule;
+		import business.HomeManager;
+		
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		
+		import com.ithaca.visu.events.MessageEvent;
+		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.UserEvent;
+		import com.ithaca.visu.events.InitMapEvent;	
+		import com.ithaca.visu.events.VisuActivityEvent;	
+		
+		import com.lyon2.visu.vo.SessionUserVO;
+		import com.lyon2.visu.model.Model;
+		
+		import mx.core.FlexGlobals;
+		import mx.events.FlexEvent;
+		import mx.events.ModuleEvent;
+		
+		
+        ]]></fx:Script>
+
+    <fx:Declarations>
+        <mate:Debugger level="{Debugger.ALL}"/>
+
+        <mate:Injectors target="{HomeModule}">
+			<mate:PropertyInjector source="{HomeManager}"
+								   targetKey="listSessionDate" sourceKey="listSessionDate"/>
+			<mate:PropertyInjector source="{HomeManager}"
+								   targetKey="listSessionView" sourceKey="listSessionView"/>
+			<mate:PropertyInjector source="{HomeManager}"
+								   targetKey="fluxActivity" sourceKey="fluxActivity"/>
+        </mate:Injectors>
+		
+		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->		
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_HOME}" debug="true">
+			<mate:ObjectBuilder generator="{HomeManager}" constructorArguments="{scope.dispatcher}"/>
+			<mate:MethodInvoker generator="{HomeManager}" 
+								method="getFluxActivity" />
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="testApp"   arguments="{['Home']}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.OUT_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="checkOutSession"
+							  arguments="{[event.userId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<s:RemoteObject
+			id="remoteUser"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="UserService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>						
+		
+		<s:RemoteObject
+			id="remoteSession"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="SessionService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+				
+		<mate:EventHandlers type="{SessionEvent.LOAD_SESSION}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSession" arguments="{event.sessionId}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onLoadSession" arguments="{resultObject}"/>
+				</mate:resultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+<!-- 1) first call -->
+		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSessionsDatesByUser" arguments="{event.userId}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onLoadListSessionsDates" arguments="{[resultObject,this]}"/>
+				</mate:resultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+<!-- 2) second call -->
+		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_SESSION}">
+			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSessionsByDateByUser" arguments="{[event.userId,event.sessionDate]}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onLoadListSessionByDate" arguments="{[resultObject,event.sessionDate]}"/>
+				</mate:resultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>		
+			
+<!-- 3) third call -->
+		<mate:EventHandlers type="{UserEvent.LOAD_LIST_USERS_SESSION}">
+			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="getUsersFromSession" arguments="{event.sessionId}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onLoadListUsersSession" arguments="{[resultObject, event.sessionId, event.sessionDate]}"/>
+				</mate:resultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+    </fx:Declarations>
+
+</mate:EventMap>

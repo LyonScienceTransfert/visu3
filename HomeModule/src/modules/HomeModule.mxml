@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						xmlns:s="library://ns.adobe.com/flex/spark" 
+						xmlns:mx="library://ns.adobe.com/flex/mx" 
+						xmlns:modules="com.ithaca.visu.modules.*" 
+						xmlns:maps="maps.*"
+						xmlns:mate="http://mate.asfusion.com/"
+						xmlns:controls="com.ithaca.visu.controls.*"
+						configure="configureHandler(event)"
+						creationComplete="creationCompleteHandler(event)"
+						top="0" bottom="0" left="0" right="0" 
+						>
+	<fx:Declarations>
+
+		<maps:HomeMap id="homeMap"/>
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"  method="updateSessionView"/>
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"  method="updateView"/>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.controls.SessionHomeElement;
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.MessageEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.events.SessionUserEvent;
+			import com.ithaca.visu.events.UserEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.RightStatus;
+			import com.lyon2.visu.model.Model;
+			import com.lyon2.visu.model.Session;
+			import com.lyon2.visu.model.User;
+			import com.lyon2.visu.vo.SessionUserVO;
+			import com.lyon2.visu.vo.SessionVO;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.ModuleEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext = FxGettext;
+			
+			[Bindable]
+			public var listSessionView:ArrayCollection;
+			
+			[Bindable]
+			public var listSessionDate:ArrayCollection;
+			
+			[Bindable]
+			public var fluxActivity : ArrayCollection;
+			
+			private var _selectedLabelDate : String;
+			private var _editableSession:Boolean;
+			private var _loggedUser:User;
+
+			protected function configureHandler(event:VisuModuleEvent):void
+			{				
+				// init map of this  module
+				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_HOME);
+				this.dispatchEvent(initMapEvent);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				_loggedUser = Model.getInstance().getLoggedUser();				
+				// check status logged user
+				var statusLoggedUser:int =_loggedUser.status; 
+				if(statusLoggedUser == ConnectionStatus.CONNECTED)
+				{
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
+					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
+					outSession.userId = _loggedUser.id_user;
+					this.dispatchEvent(outSession);
+				}
+				
+				var profile:String = _loggedUser.profil;				
+				_editableSession = RightStatus.hasRight(profile, RightStatus.CAN_MODIFY_OTHER_SESSION);
+				// image of the logged user
+				imageLoggedUser.source = _loggedUser.avatar;
+				// promt in navigateurDay
+				navigateurDay.prompt = fxgt.gettext("Il faut choisir la date de la séance");				
+				// remove all views the session
+				this.listSessionView = new ArrayCollection();
+				this.sessionGroup.removeAllElements();
+				
+				var vb:VGroup = new VGroup();	
+				this.sessionGroup.addElement(vb);
+				
+				if(Model.getInstance().hasDateSession())
+				{
+					// set dataProvider the navigateurDay  
+					this.listSessionDate = Model.getInstance().getSessionDate();
+				}else{
+					// id loggedUser
+					var loggedUserId:int = Model.getInstance().getLoggedUser().id_user;
+					// DEBUG
+					if(loggedUserId == 1){loggedUserId = 0 };
+					// getiing list date of sessions from BD
+					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_DATE_SESSION);
+					sessionEvent.userId = loggedUserId;				
+					dispatchEvent(sessionEvent);					
+				}
+			}
+			
+			/**
+			 * Send message to all users
+			 */ 
+			protected function sendAll_clickHandler():void
+			{						
+				var event:MessageEvent = new MessageEvent(MessageEvent.SEND_PUB_MESSAGE);
+				event.senderUserId = Model.getInstance().getLoggedUser().getId();
+				event.message = this.textToSend.text.toString();
+				dispatchEvent(event);
+				this.textToSend.text = ""; 
+				var loggerUser:User = Model.getInstance().getLoggedUser();
+				listConUsers.visible = false; 
+			}
+			
+			/**
+			 * Send message to one user
+			 */ 
+			protected function sendMessageToUser():void
+			{
+				var userId:int = this.listConUsers.selectedItem.id_user;
+				var text:String = this.textToSend.text.toString();
+				var event:MessageEvent = new MessageEvent(MessageEvent.SEND_PRV_MESSAGE);
+				event.senderUserId = Model.getInstance().getLoggedUser().getId();
+				event.message = text;
+				event.resiverUserId = userId;
+				dispatchEvent(event);
+				this.textToSend.text = "";  
+				var loggerUser:User = Model.getInstance().getLoggedUser();
+				Model.getInstance().addFluxActivity(loggerUser.id_user,loggerUser.firstname, loggerUser.avatar,"[private] "+text ,new Date());
+				listConUsers.visible = false;
+			}
+			
+			/**
+			 * Update session view
+			 */ 
+			public function updateSessionView(event:SessionEvent):void
+			{
+				// update if on the screen same date
+				if(event.sessionDate == _selectedLabelDate)
+				{
+					var listSession:ArrayCollection = event.listSession;
+					this.listSessionView = new ArrayCollection();
+					this.sessionGroup.removeAllElements();
+					var vb:VGroup = new VGroup();		
+					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+					var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
+					if(listSession != null)
+					{
+						var nbrSession:uint = listSession.length;
+						for(var nSession:uint = 0; nSession < nbrSession; nSession++)
+						{
+							var session:Session = listSession[nSession];
+							var sessionView:SessionHomeElement = new SessionHomeElement();
+							sessionView.width = 250;
+							// check connected users
+							session.checkConnectedUsers(listConnectedUser);
+							sessionView.session = session;
+							sessionView.editable = _editableSession;
+							sessionView.swapItems = listSwapUsers;
+							sessionView.loggedUser = _loggedUser;
+							// listener for change user in the session 
+							sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
+							// listener for action the logged user
+							sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
+							vb.addElement(sessionView);
+							this.listSessionView.addItem(sessionView);	
+						} 	
+					}else
+					{	
+						// havn't session to show by this date 
+						navigateurDay.selectedIndex = -1;
+					}
+					// add updated vb groupe
+					this.sessionGroup.addElement(vb);
+				}
+			}	
+			
+			/**
+			 * Change participants user 
+			 */ 
+			private function onChangeSessionUsers(event:SessionHomeElementEvent):void{
+				var sessionView:SessionHomeElement = event.currentTarget as SessionHomeElement;
+				var sessionId:uint = sessionView.session.getSessionId();
+				var oldUserId:uint = event.oldSessionUser.getId();
+				var newUserId:uint = event.newSessionUser.getId();
+				
+				var oldSessionUser:SessionUserVO = new SessionUserVO();
+				oldSessionUser.id_session = sessionId;
+				oldSessionUser.id_user = oldUserId;
+				
+				var newSessionUser:SessionUserVO = new SessionUserVO();
+				newSessionUser.id_session = sessionId;
+				newSessionUser.id_user = newUserId;
+				
+				var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.UPDATE_SESSION_USER);
+				sessionUserEvent.oldSessionUser = oldSessionUser;
+				sessionUserEvent.newSessionUser = newSessionUser;
+				dispatchEvent(sessionUserEvent);	
+			}
+			
+			/**
+			 * Check action of logged user  
+			 */ 
+			private function onClickActionLoggedUser(event:SessionHomeElementEvent):void
+			{
+				var eventSession:SessionEvent;
+				switch(event.typeAction)
+				{
+					case SessionHomeElementEvent.ACTION_JOIN_SESSION:
+					{
+						eventSession = new SessionEvent(SessionEvent.JOIN_SESSION);
+						break;
+					}
+					case SessionHomeElementEvent.ACTION_EDIT_SESSION:
+					{
+						eventSession = new SessionEvent(SessionEvent.EDIT_SESSION);
+						break;
+					}
+					case SessionHomeElementEvent.ACTION_CANCEL_SESSION:
+					{
+						eventSession = new SessionEvent(SessionEvent.CANCEL_SESSION);
+						break;
+					}				
+				}
+				eventSession.session = event.session;
+				dispatchEvent(eventSession);
+			}
+			
+			/**
+			 * Update dataProvider each sessionView
+			 */ 
+			public function updateView(event:SessionEvent = null):void
+			{
+				for each(var view:SessionHomeElement in this.listSessionView)
+				{
+					view.session.checkConnectedUsers(Model.getInstance().getConnectedUsers());
+					view.updateViewUsers();
+				}		
+			}
+			
+			/**
+			 * Show list connected users
+			 */ 
+			protected function sendOneUser_clickHandler(event:MouseEvent):void
+			{
+				if(listConUsers.visible){
+					listConUsers.visible = false;
+				}else
+				{
+					listConUsers.visible = true;
+				}
+			}		
+			
+		
+			/**
+			 * Handler the navigateurDay component
+			 */ 
+			protected function navigateurDay_changeHandler(event:IndexChangeEvent):void
+			{
+				var selectedItem:Object = (event.target as NavigateurDay).selectedItem as Object;
+				_selectedLabelDate = selectedItem.labelDate;
+				var listSessionDate:ArrayCollection = selectedItem.listSessionDate;			
+				if(listSessionDate == null){
+					tx.text = "calling";
+					// set list session from BD
+					var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+					sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+					//debagging
+					if(sessionEventLoad.userId == 1){sessionEventLoad.userId = 0}
+					sessionEventLoad.sessionDate = selectedItem.labelDate;
+					dispatchEvent(sessionEventLoad);				
+				}else{
+					tx.text = "local";
+					// update dataProvider SessionView 
+					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
+					sessionEvent.sessionDate = selectedItem.labelDate;
+					sessionEvent.listSession = listSessionDate;
+					dispatchEvent(sessionEvent);	
+				}
+			}			
+		]]>
+	</fx:Script>
+	<s:HGroup x="50" y="15">
+		<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
+		<s:VGroup >
+			<controls:NavigateurDay id="navigateurDay"   dataProvider="{listSessionDate}" visible="true"   change="navigateurDay_changeHandler(event)" labelField="labelDate" width="250"/>
+			<s:HGroup id="sessionGroup" x="0"/>
+		</s:VGroup>	
+		<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
+			<s:VGroup>
+				<s:HGroup>
+					<s:BorderContainer x="86" y="287" width="450" height="35" backgroundColor="#CCDCC8">
+						<s:Label width="100%" x="10" left="115"  fontSize="14" color="#000000" y="11">
+							<s:text>{fxgt.gettext("FLUX D'ACTIVITES")}</s:text>
+						</s:Label>
+						<s:Button x="306" y="0" height="33" width="63" click="sendAll_clickHandler()">
+							<s:label>{fxgt.gettext("Tout")}</s:label>
+						</s:Button>	
+						<s:Button x="369" y="0" height="33" width="80" click="sendOneUser_clickHandler(event)">
+							<s:label>{fxgt.gettext("Personnel")}</s:label>
+						</s:Button>
+					</s:BorderContainer>
+					<s:List  id="listConUsers"  click="sendMessageToUser()"  visible="false" labelField="firstname" width="51" height="35"/>
+				</s:HGroup>
+				<s:HGroup>
+					<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
+				</s:HGroup>
+				<s:HGroup verticalAlign="middle" width="450">
+					<s:TextInput id="textToSend" width="398" height="40"/>
+					<mx:Image id="imageLoggedUser" width="40" height="40"/>
+				</s:HGroup>
+				
+				<s:List  dataProvider="{fluxActivity}" width="450" height="200">
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+					<s:itemRenderer>
+						<fx:Component>
+							<s:ItemRenderer>
+								<s:BorderContainer  height="35"  borderVisible="true" width="430" >
+									<mx:Image source="{data.pathImage}" x="3" width="25" height="25"  y="3"/>
+									<s:Label text="{data.firstname}" fontWeight="bold"  x="35" y="8"/>
+									<s:Label text="{data.message}"   x="90" y="8"/>
+									<s:Label text="{data.time}"  fontSize="10"  right="30" y="20" color="#CCCCCC"/>
+								</s:BorderContainer>
+							</s:ItemRenderer>
+						</fx:Component>							
+					</s:itemRenderer>
+				</s:List> 	
+			</s:VGroup>		
+		</s:HGroup>
+		
+	</s:HGroup>
+	
+	<s:Label fontSize="20" text="/////.."  y="500" id="tx"  visible="false"/>
+</modules:VisuModuleBase>
