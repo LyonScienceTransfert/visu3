@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   xmlns:modules="com.ithaca.visu.modules.*" 
+		   xmlns:maps="maps.*"
+		   xmlns:mate="http://mate.asfusion.com/"
+		   configure="visumodulebase1_configureHandler(event)"
+		   creationComplete="visumodulebase1_creationCompleteHandler(event)"
+		   width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState">
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.VisuActivityEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.lyon2.visu.model.Activity;
+			import com.lyon2.visu.model.ActivityElement;
+			import com.lyon2.visu.model.Model;
+			import com.lyon2.visu.model.Session;
+			import com.lyon2.visu.vo.UserVO;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.modules.ModuleBase;
+			
+			import spark.components.Button;
+			import spark.components.Label;
+			import spark.events.IndexChangeEvent;
+			
+			private var currentSession:Session;
+			
+			[Bindable]
+			public var listActivities:ArrayCollection;
+			
+			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+			{
+				if((event.currentTarget as TutoratModule).parameters != null)
+				{
+					var session:Session = (event.currentTarget as TutoratModule).parameters as Session ;
+					this.currentSession = session;
+					// FIXME many instance of TutoratModul
+					Model.getInstance().setCurrentSession(session);
+					Model.getInstance().setCurrentTutoratModule(this);
+
+					var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_TUTORAT);
+					this.dispatchEvent(initMapEvent);
+					// set current state
+					if(Model.getInstance().getLoggedUser().role > RoleEnum.STUDENT)
+					{
+						this.setCurrentState("MainState");				
+					}else
+					{
+						this.setCurrentState("StudentState");		
+					}
+					
+				}
+				else{
+					this.setCurrentState("BlankState");
+				}
+			}
+
+			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.CONNECTED);
+					var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
+					visuActivityEvent.sessionId = Model.getInstance().getCurrentSession().id_session;					
+					dispatchEvent(visuActivityEvent);
+	
+					this.visio.connection = Model.getInstance().getNetConnection();
+					this.visio.streamID = Model.getInstance().getUserIdClient();
+					this.visio.addLocalDevice();
+					
+					if(panelPlanSession != null)
+					{
+						panelPlanSession.title = panelPlanSession.title +' : '+ Model.getInstance().getCurrentSession().theme;
+					}
+					// add streams of other users from this session
+					var listSessionUsers:ArrayCollection = Model.getInstance().getCurrentSession().participants;
+					var listIdClient:Array = Model.getInstance().getListIdClient(listSessionUsers);
+					if(listIdClient != null)
+					{
+						this.visio.addVideoStreams(listIdClient);	
+					}			
+				}
+			}
+			
+			/**
+			 * New user join to the session
+			 */
+			private function onNewUserJoinSession(event:SessionEvent):void{	
+				// check if user in current session
+				if(Model.getInstance().getCurrentSession().hasUser(event.userId))
+				{
+					var module:Object = Model.getInstance().getCurrentTutoratModule();
+					if(module.visio != null)
+					{
+						module.visio.addVideoStream(event.userIdClient);	
+					}
+				}		
+			}
+			
+			/**
+			* Old user walk out from the session
+			*/
+			private function onOldUserOutSession(event:SessionEvent):void{
+				// check if this user in current session
+				if(Model.getInstance().getCurrentSession().hasUser(event.userId))
+				{
+					var module:Object = Model.getInstance().getCurrentTutoratModule();
+					if(module.visio != null)
+					{
+						// streamId of user 
+						var streamId:String = Model.getInstance().getIdClient(event.userId);
+						// remove video user
+						module.visio.removeVideoStream(streamId);
+					}
+				}	
+			}
+			
+			/**
+			 * Update list activity
+			 */ 
+			private function updateView(event:VisuActivityEvent):void
+			{
+			 	var list:ArrayCollection = event.listActivity;
+				// FIXME : Bug many instances the TutoratModule
+				if(dropListActivity != null)
+				{
+					dropListActivity.dataProvider = list; 
+					// TODO : add keyword to panel keyword					
+				}
+				
+			}
+			
+			protected function dropListActivity_changeHandler(event:IndexChangeEvent):void
+			{
+				this.panelActivivtyElement.removeAllElements();
+				var listActivityElement:ArrayCollection = ((event.currentTarget as DropDownList).selectedItem as Activity).getListActivityElement()
+				var nbrElm:uint = listActivityElement.length;
+				for(var nElm:uint = 0; nElm < nbrElm; nElm++)
+				{
+					var elm:ActivityElement = listActivityElement[nElm];
+					var text:String = elm.data;
+					var type:String = elm.type_element;
+					var label:Button = new Button();
+					label.label = text;
+					if(type == "keyword"){
+						this.panelMotCle.addElement(label);
+					}else{
+						switch(type){	
+							case "consigne":
+								label.setStyle("color","#70B2EE");
+								break;
+							case "memo":
+								label.setStyle("color","#BA5A5A");
+								break;						
+						}
+						this.panelActivivtyElement.addElement(label)					
+					}
+				}
+			}
+
+
+		]]>
+	</fx:Script>
+	<modules:states>
+		<s:State name="MainState"/>
+		<s:State name="BlankState"/>
+		<s:State name="StudentState"/>
+	</modules:states>
+	<fx:Declarations>
+		<maps:TutoratMap id="tutoratMap"/>
+		<mate:Listener type="{VisuActivityEvent.SHOW_LIST_ACTIVITY}"  method="updateView"/>
+		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
+		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
+	</fx:Declarations>
+<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
+	<mx:VDividedBox width="33%" height="100%">
+		<s:Panel  height="60%" width="100%" id="panelPlanSession" title.StudentState="Media de la séance" title.MainState="Plan de la séance">
+			<s:title>Plan de séance</s:title>
+			<s:VGroup gap="20" width="100%">
+				<s:DropDownList id="dropListActivity" prompt="choose activity" 
+								change="dropListActivity_changeHandler(event)"
+								labelField="title"
+								 width="100%" includeIn="MainState" visible="false"/>
+				<s:VGroup id="panelActivivtyElement" gap="22" width="100%" includeIn="MainState"/>
+			</s:VGroup>
+		</s:Panel>
+		<s:Panel  width="100%" height="40%" includeIn="MainState">
+			<s:title>Mot clés</s:title>
+			<s:VGroup id="panelMotCle" width="100%"/>
+		</s:Panel>
+	</mx:VDividedBox>
+	<mx:VDividedBox width="77%" height="100%">
+		<mx:HDividedBox width="100%" height="55%">
+			<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}">
+
+				<controls:VisuVisio id="visio" width="100%" top="0" bottom="26"
+											  quality="80"
+											  bandwidth="15000" autoPlay="True"/>
+			</s:Panel>
+			<s:Panel height="100%" width="60%">
+				<s:title>Chat</s:title>
+			</s:Panel>
+		</mx:HDividedBox>
+		<s:Panel width="100%" height="45%">
+			<s:title>TimeLine</s:title>
+		</s:Panel>
+	</mx:VDividedBox>	
+</mx:HDividedBox>	
+	<s:Label includeIn="BlankState" text="Rejoindre séance simplement par Accueill" fontSize="22" left="50" top="50" width="474"/>
+</modules:VisuModuleBase>

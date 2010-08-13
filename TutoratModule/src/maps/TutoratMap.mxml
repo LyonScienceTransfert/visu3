@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<mate:EventMap 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	
+	<fx:Script><![CDATA[
+		import modules.TutoratModule;
+		import business.TutoratManager;
+		
+		import com.lyon2.visu.model.Model;
+		
+		import com.asfusion.mate.utils.debug.Debugger;
+		
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
+		
+		import com.ithaca.visu.events.MessageEvent;
+		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.UserEvent;
+		import com.ithaca.visu.events.InitMapEvent;	
+		import com.ithaca.visu.events.VisuActivityEvent;	
+		import com.ithaca.visu.events.VisuActivityElementEvent;	
+		
+		import com.lyon2.visu.vo.SessionUserVO;
+		
+		import com.lyon2.visu.model.Model;
+		
+		import mx.core.FlexGlobals;
+		import mx.events.FlexEvent;
+		import mx.events.ModuleEvent;
+		
+		
+	]]></fx:Script>
+	
+	<fx:Declarations>
+		<mate:Debugger level="{Debugger.ALL}"/>
+		
+		<mate:Injectors target="{TutoratModule}">
+			<mate:PropertyInjector source="{TutoratManager}"
+								   targetKey="listActivities" sourceKey="listActivities"/>
+		</mate:Injectors>
+		
+		<!-- InitMapEvent.INIT_MAP_TUTORAT __________________________________________________________________ -->		
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_TUTORAT}" debug="true">
+			<mate:ObjectBuilder generator="{TutoratManager}" constructorArguments="{scope.dispatcher}"/>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="testApp"   arguments="{['Tutorat']}" />
+			</rtmp:RtmpServiceInvoker>
+		<!--	<rtmp:CallbackRegistrator action="joinSession" target="{TutoratModule}" method="onJoinSession"/>-->
+		</mate:EventHandlers>
+		
+<!-- debug mode-->
+		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->		
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
+			<mate:ObjectBuilder generator="{TutoratManager}" constructorArguments="{scope.dispatcher}"/>
+		</mate:EventHandlers>		
+		
+		
+		<s:RemoteObject
+			id="remoteActivity"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="ActivityService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>						
+		
+		<s:RemoteObject
+			id="remoteActivityElement"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="ActivityElementService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+
+		
+		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="checkJoinSession"
+							  arguments="{[Model.getInstance().getLoggedUser().id_user, Model.getInstance().getUserIdClient()]}"/>              
+			</rtmp:RtmpServiceInvoker>
+			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="getSessionActivities" arguments="{event.sessionId}">
+			<mate:resultHandlers>
+				<mate:MethodInvoker generator="{TutoratManager}" method="onLoadListActivity" arguments="{[resultObject]}"/>
+			</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{TutoratManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+		</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS}">
+			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="getActivityElements" arguments="{event.activityId}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{TutoratManager}" method="onLoadListActivityElement" arguments="{[resultObject, event.activityId]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{TutoratManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		
+
+		
+	</fx:Declarations>
+	
+</mate:EventMap>
