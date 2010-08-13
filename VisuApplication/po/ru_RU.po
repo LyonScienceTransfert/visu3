@@ -1,0 +1,108 @@
+# Russian translations for PACKAGE package.
+# Copyright (C) 2010 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Visu2 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-11 22:04+0200\n"
+"PO-Revision-Date: 2010-08-11 22:04+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:82
+msgid "Il faut choisir la date de la séance"
+msgstr ""
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:280
+msgid "FLUX D'ACTIVITES"
+msgstr "Лента сообщений"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:283
+msgid "Tout"
+msgstr "Всем"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:286
+msgid "Personnel"
+msgstr "Лично"
+
+#: ../.././VisuApplication/src/business/MainManager.as:99
+msgid " a rejoint le DECK "
+msgstr "вошёл на платформу"
+
+#: ../.././VisuApplication/src/business/MainManager.as:112
+msgid " est parti du DECK "
+msgstr "вышел с платформы"
+
+#: ../.././VisuApplication/src/business/MainManager.as:122
+msgid "[personnel] "
+msgstr "Лично"
+
+#: ../.././VisuApplication/src/business/MainManager.as:127
+msgid "[public] "
+msgstr "Всем"
+
+#: ../.././VisuApplication/src/business/MainManager.as:164
+msgid "a quité la séance : "
+msgstr "вышел из сеанса :"
+
+#: ../.././VisuApplication/src/business/MainManager.as:183
+msgid "a rejoint la séance : "
+msgstr "присоединился к сеансу : "
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/SessionHomeElement.as:237
+msgid "la séance demarre"
+msgstr "сеансе начнётся "
+
+#: ../.././VisuFramework/src/com/ithaca/visu/core/VisuApplication.as:87
+msgid "Accueil"
+msgstr "Начало"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/core/VisuApplication.as:88
+msgid "Utilisateurs"
+msgstr "Пользователи"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/core/VisuApplication.as:89
+msgid "Séances"
+msgstr "Уроки"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/core/VisuApplication.as:90
+msgid "Salon synchrone"
+msgstr "Комната учителя"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/core/VisuApplication.as:91
+msgid "Salon de rétrospection"
+msgstr "Комната просмотра"
+
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:68
+msgid "Langage"
+msgstr "Язык"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:73
+msgid "Chat"
+msgstr "Чат"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:76
+msgid "Disconnect"
+msgstr "Выход"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:119
+msgid "Annuler"
+msgstr "Отменить"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:127
+msgid "Modifier"
+msgstr "Изменить"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:132
+msgid "Rejoindre"
+msgstr "Войти"
+

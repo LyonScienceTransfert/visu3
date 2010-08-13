@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Visu2 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-12 12:00+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:82
+msgid "Il faut choisir la date de la séance"
+msgstr ""
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:280
+msgid "FLUX D'ACTIVITES"
+msgstr ""
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:283
+msgid "Tout"
+msgstr ""
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:286
+msgid "Personnel"
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:102
+msgid " a rejoint le DECK "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:115
+msgid " est parti du DECK "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:125
+msgid "[personnel] "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:130
+msgid "[public] "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:169
+msgid "a quité la séance : "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:188
+msgid "a rejoint la séance : "
+msgstr ""
+
+#: ../.././VisuApplication/src/visuclient.mxml:124
+msgid "Accueil"
+msgstr ""
+
+#: ../.././VisuApplication/src/visuclient.mxml:127
+msgid "Utilisateurs"
+msgstr ""
+
+#: ../.././VisuApplication/src/visuclient.mxml:131
+msgid "Séances"
+msgstr ""
+
+#: ../.././VisuApplication/src/visuclient.mxml:135
+msgid "Salon synchrone"
+msgstr ""
+
+#: ../.././VisuApplication/src/visuclient.mxml:139
+msgid "Salon de rétrospection"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/SessionHomeElement.as:237
+msgid "la séance démarré"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:68
+msgid "Langage"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:73
+msgid "Chat"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:76
+msgid "Disconnect"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:119
+msgid "Annuler"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:127
+msgid "Modifier"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:132
+msgid "Rejoindre"
+msgstr ""

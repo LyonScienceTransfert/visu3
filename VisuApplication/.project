@@ -17,9 +17,24 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>[source path] HomeModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/HomeModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] RetrospectionModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/RetrospectionModule/src</locationURI>
+		</link>
+		<link>
 			<name>[source path] SessionModule-src</name>
 			<type>2</type>
 			<locationURI>DOCUMENTS/SessionModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] TutoratModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/TutoratModule/src</locationURI>
 		</link>
 		<link>
 			<name>[source path] UserModule-src</name>
@@ -29,7 +44,7 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>/Sites/test/visu2</location>
+			<location>/Applications/red5/webapps/visu2</location>
 		</link>
 	</linkedResources>
 </projectDescription>

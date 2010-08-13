@@ -1,0 +1,109 @@
+# German translations for PACKAGE package
+# German messages for PACKAGE.
+# Copyright (C) 2010 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Visu2 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-11 22:04+0200\n"
+"PO-Revision-Date: 2010-08-11 22:04+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:70
+msgid "Il faut choisir la date de la séance"
+msgstr "Man muss den Zeitpunkt der Sitzung wählen"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:260
+msgid "FLUX D'ACTIVITES"
+msgstr "TÄTIGKEITSFLUT"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:263
+msgid "Tout"
+msgstr "Jede"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:266
+msgid "Personnel"
+msgstr "Persönlich"
+
+
+#: ../.././VisuApplication/src/business/MainManager.as:99
+msgid " a rejoint le DECK "
+msgstr "eingegangen auf DECK"
+
+#: ../.././VisuApplication/src/business/MainManager.as:112
+msgid " est parti du DECK "
+msgstr "hinausgehen vom DECK"
+
+#: ../.././VisuApplication/src/business/MainManager.as:122
+msgid "[personnel] "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:127
+msgid "[public] "
+msgstr ""
+
+#: ../.././VisuApplication/src/business/MainManager.as:164
+msgid "a quité la séance : "
+msgstr "Ist aus der Sitzung hinausgegangen"
+
+#: ../.././VisuApplication/src/business/MainManager.as:183
+msgid "a rejoint la séance : "
+msgstr "Hat sich an die Sitzung angeschlossen"
+
+
+
+#: ../.././VisuApplication/src/visuclient.mxml:123
+msgid "Accueil"
+msgstr "Aufnahme"
+
+#: ../.././VisuApplication/src/visuclient.mxml:124
+msgid "Utilisateurs"
+msgstr "Benutzer"
+
+#: ../.././VisuApplication/src/visuclient.mxml:125
+msgid "Séances"
+msgstr "Sitzungs"
+
+#: ../.././VisuApplication/src/visuclient.mxml:126
+msgid "Salon synchrone"
+msgstr ""
+
+#: ../.././VisuApplication/src/visuclient.mxml:127
+msgid "Salon de rétrospection"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/SessionHomeElement.as:237
+msgid "la séance démarré"
+msgstr "die demarre Sitzung"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:68
+msgid "Langage"
+msgstr "Sprache"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:73
+msgid "Chat"
+msgstr "Katze"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:76
+msgid "Disconnect"
+msgstr ""
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:119
+msgid "Annuler"
+msgstr "Annullieren"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:127
+msgid "Modifier"
+msgstr "Andern"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:132
+msgid "Rejoindre"
+msgstr "Treffen"

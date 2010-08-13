@@ -29,6 +29,7 @@ package com.ithaca.visu.controls.login
 	[Event(name="getPassword", type="com.ithaca.visu.controls.login.event.LoginEvent")]
 	public class LoginForm extends SkinnableComponent
 	{
+		
 		[SkinPart("true")]
 		public var loginField:TextInput;
 		

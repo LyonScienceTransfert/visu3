@@ -44,6 +44,7 @@
 			
 			import spark.components.Button;
 			import spark.components.DropDownList;
+			import spark.components.TextArea;
 			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
@@ -53,8 +54,6 @@
 			
 			protected function visuapplication1_creationCompleteHandler(event:FlexEvent):void
 			{
-				this.loginForm.forgottenButton.label =" A : "+ Model.getInstance().rtmpServer+ "  "+ Model.getInstance().AMFServer;
-				// set list langage
 				this.setListLang();
 				menu.listLang = listLang;
 				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onCnangeLanguage);
@@ -66,7 +65,6 @@
 				setlocale(Locale.LC_MESSAGES, language);
 			}
 
-
 			protected function visuapplication1_preinitializeHandler(event:FlexEvent):void
 			{	
 				
@@ -76,12 +74,11 @@
 				
 				/* Initialise model.server with URL hostname */
 				 var appUrl:String = FlexGlobals.topLevelApplication.url;
-				Model.getInstance().server = '192.168.1.41';
-				//URLUtil.getServerName( appUrl); ;
+				Model.getInstance().server = URLUtil.getServerName( appUrl);
 				Model.getInstance().port   = URLUtil.getPort( appUrl );
-				a = appUrl.match(/\/(\w+)\/visuclient.swf/);
+				 a = appUrl.match(/\/(\w+)\/visuclient.swf/);
 				if (a)
-					Model.getInstance().appName = a[1];		 		
+					Model.getInstance().appName = a[1];	 	 		
 				
 				// we set the locale for the messages category to fr_FR
 				setlocale(Locale.LC_MESSAGES, mklocale(ISO_639_1.FR,ISO_3166.FR));				
@@ -121,7 +118,7 @@
 			
 			private function onComplete(event:Event):void
 			{
-				// update labels of the buttons all modules
+				// update labels of the buttons at all modules
 				this.updateListLabelModule();
 			}
 
@@ -134,7 +131,7 @@
 			}
 			
 			private function updateListLabelModule():void{
-				// FIXME : maybe othe way to update the labels
+				// FIXME : maybe other way to update the labels
 				var listModulsButton:Array = menu.listModulesButton;
 				if(listModulsButton.home != null)
 				{

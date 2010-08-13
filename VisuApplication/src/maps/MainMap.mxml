@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<mate:EventMap  		   
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo"
+        xmlns:mate="http://mate.asfusion.com/"
+        xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+
+    <fx:Script><![CDATA[
+		import business.MainManager;
+		
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
+		import com.ithaca.visu.controls.login.event.LoginEvent;
+		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.VisuActivityEvent;
+		import com.ithaca.visu.events.UserEvent;
+		import com.lyon2.visu.vo.SessionUserVO;
+		
+		import com.ithaca.visu.events.MessageEvent;
+		import com.lyon2.visu.model.Model;
+		import mx.events.FlexEvent;
+
+
+        ]]></fx:Script>
+
+    <fx:Declarations>
+		<mate:Injectors target="{MainManager}" debug="true">
+			<mate:PropertyInjector source="{RtmpService}"
+								   targetKey="netConnection" sourceKey="netConnection"/>
+		</mate:Injectors>
+		
+        <mate:Debugger level="{Debugger.ALL}"/>
+		<!-- FlexEvent.CREATION_COMPLETE __________________________________________________________________ -->		
+		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
+			<mate:ObjectBuilder generator="{RtmpService}" constructorArguments="{scope.dispatcher}"/>
+			<mate:ObjectBuilder generator="{MainManager}" constructorArguments="{scope.dispatcher}"/>
+		</mate:EventHandlers>
+
+        <mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="getConnectedClients"   arguments="{[]}" />
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="getConnectedClients" arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>		
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>	
+        </mate:EventHandlers>
+
+		<mate:EventHandlers type="{'clientInfo'}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true">
+				<mate:Request action="getClientInfo"   arguments="{[]}" />
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="getClientInfo" arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>		
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{'testApp'}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="testApp"   arguments="{['Main']}" />
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+
+        <mate:EventHandlers type="{LoginEvent.LOGIN}" debug="true">
+			<mate:MethodInvoker generator="{RtmpService}"  
+								method="connect"  arguments="{[Model.getInstance().rtmpServer, event.ar]}"/>
+			<rtmp:CallbackRegistrator action="joinDeck" target="{MainManager}" method="onJoinDeck"/>
+			<rtmp:CallbackRegistrator action="outDeck" target="{MainManager}" method="onOutDeck"/>
+			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />
+			<rtmp:CallbackRegistrator action="checkPublicMessage" target="{MainManager}" method="onResivePublicMessage" />
+			<rtmp:CallbackRegistrator action="setLoggedUser" target="{MainManager}" method="onSetLoggedUser" />
+			<rtmp:CallbackRegistrator action="checkUpdateSession" target="{MainManager}" method="onCheckUpdateSession" />
+			<rtmp:CallbackRegistrator action="joinSession" target="{MainManager}" method="onJoinSession"/>
+			<rtmp:CallbackRegistrator action="outSession" target="{MainManager}" method="onOutSession"/>
+        </mate:EventHandlers>
+
+		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
+			<mate:MethodInvoker generator="{MainManager}"
+								method="onError" arguments="{[currentEvent]}"/>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
+			<mate:MethodInvoker generator="{MainManager}"
+								method="onError" arguments="{[currentEvent]}"/>
+		</mate:EventHandlers>
+		
+		
+        <mate:EventHandlers type="{MessageEvent.SEND_PRV_MESSAGE}">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}">
+                <mate:Request action="sendPrivateMessage"
+                              arguments="{[event.senderUserId, event.message, event.resiverUserId]}"/>              
+            </rtmp:RtmpServiceInvoker>
+       </mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="sendPublicMessage"
+							  arguments="{[event.senderUserId, event.message]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionUserEvent.UPDATE_SESSION_USER}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="updateSessionUserApplication"
+							  arguments="{[event.oldSessionUser, event.newSessionUser]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+        <mate:EventHandlers type="{RtmpDataEvent.DATA}" debug="true"/>
+		
+
+    </fx:Declarations>
+
+</mate:EventMap>
