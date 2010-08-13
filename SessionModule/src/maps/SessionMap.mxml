@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<mate:EventMap 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	
+	<fx:Script><![CDATA[
+		import modules.SessionModule;
+		import business.SessionManager;
+		
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		
+		import com.ithaca.visu.events.MessageEvent;
+		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.UserEvent;
+		import com.ithaca.visu.events.InitMapEvent;	
+		import com.ithaca.visu.events.VisuActivityEvent;	
+		
+		import com.lyon2.visu.vo.SessionUserVO;
+		
+		import mx.core.FlexGlobals;
+		import mx.events.FlexEvent;
+		import mx.events.ModuleEvent;
+		
+		
+	]]></fx:Script>
+	
+	<fx:Declarations>
+		<mate:Debugger level="{Debugger.ALL}"/>
+	
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_SESSION}" debug="true">
+			<mate:ObjectBuilder generator="{SessionManager}" constructorArguments="{scope.dispatcher}"/>
+			<mate:MethodInvoker generator="{SessionManager}" 
+								method="onError" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.OUT_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="checkOutSession"
+							  arguments="{[event.userId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+
+	</fx:Declarations>
+	
+</mate:EventMap>

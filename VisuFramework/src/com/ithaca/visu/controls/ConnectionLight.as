@@ -10,12 +10,12 @@ package com.ithaca.visu.controls
 	public class ConnectionLight extends SkinnableComponent
 	{
 		
-		private var _status:ConnectionStatus;
-		public function get status():ConnectionStatus
+		private var _status:int;
+		public function get status():int
 		{
 			return _status;
 		}
-		public function set status(value:ConnectionStatus):void
+		public function set status(value:int):void
 		{
 			_status = value;
 			invalidateSkinState();

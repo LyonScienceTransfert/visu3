@@ -7,6 +7,7 @@ package com.ithaca.visu.controls.globalNavigation.event
 		public static const NAVIGATE:String = "navigate";
 		public static const CHAT:String = "chat";
 		public static const DISCONNECT:String = "disconnect";
+		public static const CHANGE_LANGUAGE:String = "changeLanguage";
 		
 		public var moduleName:String;
 		

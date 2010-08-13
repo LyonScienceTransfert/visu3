@@ -8,6 +8,7 @@ package com.ithaca.visu.modules
 	import flash.system.ApplicationDomain;
 	import flash.utils.Dictionary;
 	
+	import mx.collections.ArrayCollection;
 	import mx.core.Container;
 	import mx.core.IContainer;
 	import mx.core.IVisualElement;
@@ -27,7 +28,7 @@ package com.ithaca.visu.modules
 	
 	public class ModuleNavigator extends EventDispatcher
 	{
-		private var _moduleMap:Dictionary;
+		public var _moduleMap:Dictionary;
 		private var _container:SkinnableContainer;
 		private var _containerStyleManager:IStyleManager2;
 		private var moduleParameters:Object;
@@ -38,6 +39,9 @@ package com.ithaca.visu.modules
 		private var info:IModuleInfo;
 		private var currentModule:ModuleInfo;
 		private var module:VisuModuleBase;
+		
+		
+		
 		
 		public function ModuleNavigator(container:SkinnableContainer)
 		{
@@ -127,6 +131,7 @@ package com.ithaca.visu.modules
 		
 		private function loadModule():void
 		{
+			
 			trace("Module Navigator : loadModule " + currentModule.name);
 
 			info = ModuleManager.getModule( currentModule.url )
@@ -139,7 +144,6 @@ package com.ithaca.visu.modules
     				new ApplicationDomain(ApplicationDomain.currentDomain);
 			
 			info.load(childDomain);
-			
 			
 			if( currentModule.hasStyles ) 
 			{
@@ -164,11 +168,11 @@ package com.ithaca.visu.modules
 			{
 				_containerStyleManager.unloadStyleDeclarations(currentModule.css);
 			}
-			
 			info.release();
 			info.unload();
 			info = null;
 		}
+
 		/**
 		 * 
 		 * 
@@ -214,6 +218,7 @@ package com.ithaca.visu.modules
 			dispatchEvent( event.clone() );
 			dispatchEvent( new ModuleEvent(ModuleEvent.PROGRESS,false,false,0,100));
 			
+			var temp:IVisualElement = info.factory.create() as IVisualElement;
 			module = VisuModuleBase(_container.addElement( info.factory.create() as IVisualElement ));
 			
 			trace(module);

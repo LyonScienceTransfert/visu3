@@ -2,7 +2,27 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*">
+				creationComplete="itemrenderer1_creationCompleteHandler(event)"
+				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*"  >
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			
+			import mx.events.FlexEvent;
+
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				userLabel.setStyle("fontWeight", 'normal');
+				if (data.user.role > RoleEnum.STUDENT){
+					userLabel.setStyle("fontWeight", 'bold');					
+				}
+				// DEBUG 
+				/* if (data.user.role > RoleEnum.TUTEUR){
+					userLabel.setStyle("color", '0x49ba2f');					
+				}	 */			
+			}
+		]]>
+	</fx:Script>
 	<!-- layer 2: fill -->
 	<!--- @private -->
 	<s:Rect id="fill" radiusX="10"
@@ -29,9 +49,8 @@
 		</s:stroke>
 	</s:Rect>
 	
-	<s:Label id="userLabel" text="{data.user.prenom}" 
-			 left="20" verticalCenter="0" right="15"
-			 fontWeight="{data.role > 32 ? 'bold': 'normal'}"
+	<s:Label id="userLabel" text="{data.user.firstname}" 
+			 left="20" verticalCenter="0" right="15"  
 			 />
 	
 	<controls:ConnectionLight

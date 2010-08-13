@@ -1,15 +1,21 @@
 package com.ithaca.visu.controls
 {
 	import com.ithaca.visu.dataStrutures.UserSwapList;
+	import com.ithaca.visu.events.SessionHomeElementEvent;
 	import com.ithaca.visu.renderer.ConnectedUserListRenderer;
 	import com.ithaca.visu.renderer.ConnectedUserRenderer;
+	import com.ithaca.visu.renderer.ConnectedUserWithListRenderer;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.lyon2.utils.TimeUtils;
 	import com.lyon2.visu.model.Session;
 	import com.lyon2.visu.model.User;
 	
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
+	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
 	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
@@ -28,7 +34,6 @@ package com.ithaca.visu.controls
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
 	import spark.utils.TextFlowUtil;
-	import com.ithaca.visu.renderer.ConnectedUserWithListRenderer;
 	
 	[SkinState("normal")]
 	[SkinState("open")]
@@ -57,9 +62,16 @@ package com.ithaca.visu.controls
 		[SkinPart("false")]
 		public var editButton:ButtonBase;
 		
-		public var editable:Boolean
+		[SkinPart("false")]
+		public var cancelButton:ButtonBase;
+		
+		public var editable:Boolean;
+		public var loggedUser:User;
 		
 		protected var open:Boolean;
+		
+		[Bindable]
+		private var fxgt:_FxGettext = FxGettext;
 		
 		private var _session:Session;
 		private var sessionChanged:Boolean;
@@ -96,7 +108,7 @@ package com.ithaca.visu.controls
 		{
 			super();
 			hourformater=new DateFormatter();
-			hourformater.formatString = "HH:MM";
+			hourformater.formatString = "HH:NN";			
 		}
 		
 		
@@ -120,12 +132,8 @@ package com.ithaca.visu.controls
 					return new ClassFactory( className);
 				};
 				
-				var d:IList = new ArrayList();
-				for each( var u:User in _session.participants)
-				{
-					d.addItem( new UserSwapList( u, _swapItems ) );
-				}
-				users.dataProvider = d;
+				updateViewUsers();
+				
 			}
 			
 		}
@@ -152,6 +160,7 @@ package com.ithaca.visu.controls
 				if (session != null)
 				{
 					hourDisplay.text = hourformater.format(session.date_session);
+					
 					titleDisplay.text = session.theme;
 				}
 			}
@@ -187,7 +196,7 @@ package com.ithaca.visu.controls
 					
 					break;
 				default:
-					subDisplay.textFlow = TextFlowUtil.importFromString( participants );	
+					subDisplay.textFlow = TextFlowUtil.importFromString(participants);	
 					break;
 			}
 		}
@@ -207,6 +216,16 @@ package com.ithaca.visu.controls
 			invalidateSkinState();
 		}
 		
+		public function updateViewUsers():void{
+			if(users != null){
+				var d:IList = new ArrayList();
+				for each( var u:User in _session.participants)
+				{
+					d.addItem( new UserSwapList( u, _swapItems ) );
+				}
+				users.dataProvider = d;				
+			}
+		}
 		
 		/* Helper functions */
 		
@@ -215,7 +234,8 @@ package com.ithaca.visu.controls
 		 */ 
 		protected function get remaining_time():String
 		{
-			return "<p textAlign='center'  fontSize='10'>la séance demarre <span fontWeight='bold'>"
+			var translate:String = fxgt.gettext("la séance démarré");
+			return "<p textAlign='center'  fontSize='10'>"+translate+"<span fontWeight='bold'>"
 					+ TimeUtils.relativeTime(_session.date_session,null,true)
 					+"</span></p>";
 		}
@@ -231,14 +251,13 @@ package com.ithaca.visu.controls
 			var a:Array=[];
 			for each(var user:User in _session.participants)
 			{
-				
-				if( user.role > 32 )
+				if( user.role > RoleEnum.STUDENT )
 				{
-					a.splice(0,0,'<span fontWeight="bold">'+user.prenom+'</span>') ;
+					a.splice(0,0,'<span fontWeight="bold">'+user.firstname+'</span>') ;
 				}
 				else
 				{
-					a.push(user.prenom);
+					a.push(user.firstname);
 				}
 			} 
 			return a.join(", ");

@@ -6,10 +6,13 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 	import com.ithaca.visu.controls.login.LoginForm;
 	import com.ithaca.visu.controls.login.event.LoginEvent;
+	import com.ithaca.visu.events.SessionEvent;
+	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.events.VisuModuleEvent;
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
 	import com.lyon2.visu.*;
+	import com.lyon2.visu.model.Session;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -20,6 +23,7 @@ package com.ithaca.visu.core
 	
 	import mx.controls.ProgressBar;
 	import mx.controls.ProgressBarLabelPlacement;
+	import mx.core.INavigatorContent;
 	import mx.events.FlexEvent;
 	import mx.events.ModuleEvent;
 	
@@ -27,6 +31,7 @@ package com.ithaca.visu.core
 	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
+	import spark.events.IndexChangeEvent;
 	
 	[SkinState("authentified")]
 	
@@ -45,10 +50,11 @@ package com.ithaca.visu.core
 		 * */ 
 		public var moduleNavigator:ModuleNavigator;
 		
+		
 		protected var _progressBar:ProgressBar; 
 		
 		protected var defaultModule:String; 
-		
+
 		private var _authentified:Boolean;
 		public function get authentified():Boolean
 		{
@@ -70,7 +76,6 @@ package com.ithaca.visu.core
 			moduleNavigator.addEventListener(VisuModuleEvent.LOAD, onModuleLoad);
 			moduleNavigator.addEventListener(ModuleEvent.READY,onModuleReady);
 			moduleNavigator.addEventListener(ModuleEvent.UNLOAD,onModuleUnload);
-			
 		}
 		
 		
@@ -164,7 +169,18 @@ package com.ithaca.visu.core
 				moduleNavigator.navigateToModule( event.pathNames[0], event.parameters );
 			
 		}
+	
+		protected function joinSession(event:SessionEvent):void{
+			moduleNavigator.navigateToModule( "tutorat", event.session);
+		}
 		
+		protected function editSession(event:SessionEvent):void{
+			moduleNavigator.navigateToModule( "session", event.session);
+		}
+
+		protected function cancelSession(event:SessionEvent):void{
+			moduleNavigator.navigateToModule( "retrospection", event.session);
+		}
 		 
 		
 		/**
@@ -196,35 +212,37 @@ package com.ithaca.visu.core
 		 * 
 		 */
 		protected function authUser(event:Event):void
-		{
+		{	
 			trace("authenticate ",loginForm.loginField.text," as ",loginForm.passField.text);
-			userLoggedIN();
+			//userLoggedIN();
+			var loginEvent:LoginEvent = new LoginEvent(LoginEvent.LOGIN);
+			var array:Array = new Array();
+			var userId:int = int(loginForm.loginField.text.toString());
+			array.push(userId);
+			array.push(loginForm.passField.text);
+			loginEvent.ar = array;
+			dispatchEvent(loginEvent);
 		}
 		
 		/* TEMP */
-		protected function userLoggedIN():void
-		{
+		protected function userLoggedIN(event:VisuModuleEvent):void
+		{		
 			authentified = true;
 			menu.authentified = true;
-			menu.moduleList = [ {label:"Utilisateur",value:"user"},
-								{label:"Séances",value:"session"},
-									[{label:"Salon1",value:"salon#id=1"},
-									{label:"Les identités nationnales",value:"salon#id=2"},
-									{label:"La bise",value:"salon#id=3"}],
-								{label:"Debriefing",value:"retrospection"}];
-			
-			var h:ModuleInfo = new ModuleInfo();
-			h.name 	= "home";
-			h.label	= "Accueil";
-			h.url 	= "modules/HomeModule.swf";
-			
-			var m:ModuleInfo = new ModuleInfo();
-			m.name 	= "user";
-			m.label	= "Utilisateur";
-			m.url 	= "modules/UserModule.swf";
-			
+			var listModules:Array = event.listModules as Array;
+			var nbrModules:uint = listModules.length;
+			var listModulesInfo:Array = new Array();
+			var moduleList:Array = new Array();
+			for(var nModule:uint = 0; nModule < nbrModules; nModule++){
+				var moduleInfo:ModuleInfo = listModules[nModule] as ModuleInfo;
+				listModulesInfo.push(moduleInfo);
+				moduleList.push({label:moduleInfo.label, value:moduleInfo.name});				
+			}
+			// initialisation list the modules
+			menu.moduleList = moduleList;
+			// initialisation the modules
+			moduleNavigator.initModuleNavigation(listModulesInfo);
 			moduleNavigator.defaultModule = "home";
-			moduleNavigator.initModuleNavigation( [h,m] );
 			moduleNavigator.browserTitleBase = "VISU"
 			moduleNavigator.navigateToModule( "home" );
 		}
@@ -233,7 +251,6 @@ package com.ithaca.visu.core
 			authentified = false;
 			menu.authentified = false;
 		}
-		
 		
 		
 		/*---------------------------------------------------------------
@@ -246,6 +263,7 @@ package com.ithaca.visu.core
 			trace("navigate to " + event.moduleName)
 			moduleNavigator.navigateToModule( event.moduleName );
 		}
+		
 		
 	}
 }

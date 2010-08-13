@@ -5,7 +5,9 @@
 				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.events.SessionHomeElementEvent;
 			import com.lyon2.visu.model.User;
+			import com.ithaca.visu.ui.utils.RoleEnum;
 			
 			import mx.events.FlexEvent;
 			
@@ -13,9 +15,15 @@
 
 			protected function list_changeHandler(event:IndexChangeEvent):void
 			{
-				var u:User = data.swapList.getItemAt( event.newIndex );
-				statusIcon.status = u.status;
-				updateStyle( u );
+				var newUser:User = data.swapList.getItemAt( event.newIndex );
+				statusIcon.status = newUser.status;
+				updateStyle( newUser );
+				var oldUser:User = data.swapList.getItemAt( event.oldIndex );
+				
+				var sessionHomeElementEvent:SessionHomeElementEvent = new SessionHomeElementEvent(SessionHomeElementEvent.CHANGE_SESSION_USER);
+				sessionHomeElementEvent.oldSessionUser = oldUser;
+				sessionHomeElementEvent.newSessionUser = newUser;
+				parent.dispatchEvent(sessionHomeElementEvent);
 			}
 
 
@@ -27,13 +35,14 @@
 					{
 						list.selectedItem = u;						
 						updateStyle( u );
+						statusIcon.status = u.status;
 						return;
 					}
 				}
 			}
 			protected function updateStyle(user:User):void
 			{
-				if( user.role > 32 )
+				if( user.role > RoleEnum.STUDENT )
 					
 					list.setStyle("fontWeight","bold")
 				else
@@ -48,12 +57,13 @@
 		itemRenderer="com.ithaca.visu.renderer.ConnectedUserListRenderer"
 		skinClass="com.ithaca.visu.skins.ConnectedUserDropDownSkin"
 		cornerRadius="10"
-		labelField="prenom"
+		labelField="firstname"
 		creationComplete="list_creationCompleteHandler(event)"
 		change="list_changeHandler(event)"
 		/>
+	<!--status="{data.user.status}"-->
 	<controls:ConnectionLight
-		id="statusIcon" status="{data.user.status}"
+		id="statusIcon" 
 		left="5" width="10" height="10" verticalCenter="-1"
 		/>
 </s:ItemRenderer>

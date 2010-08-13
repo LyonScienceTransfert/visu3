@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
-    <classEntry path="com.lyon2.visu.model.VisuModel"/>
+    <classEntry path="com.lyon2.visu.model.VisuModelLB"/>
     <classEntry path="com.ithaca.visu.controls.ConnectedUser"/>
     <classEntry path="com.ithaca.visu.controls.ConnectionLight"/>
     <classEntry path="com.ithaca.visu.ui.utils.ConnectionStatus"/>
     <classEntry path="com.ithaca.visu.skins.ConnectionLightSkin"/>
-    <classEntry path="com.lyon2.visu.model.User"/>
+    <classEntry path="com.lyon2.visu.model.UserLB"/>
     <classEntry path="com.ithaca.visu.controls.SessionHomeElement"/>
     <classEntry path="com.ithaca.visu.skins.ConnectedUserSkin"/>
     <classEntry path="com.ithaca.visu.test.ConnectedUser"/>
@@ -24,6 +24,12 @@
     <classEntry path="com.ithaca.visu.skins.VisuAppSkin"/>
     <classEntry path="com.ithaca.visu.skins.ApplicationMenuSkin"/>
     <classEntry path="com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent"/>
+    <classEntry path="com.ithaca.visu.ui.utils.RightStatus"/>
+    <classEntry path="com.ithaca.visu.ui.utils.RoleEnum"/>
+    <classEntry path="com.ithaca.visu.events.VisuActivityEvent"/>
+    <classEntry path="com.lyon2.visu.model.Activity"/>
+    <classEntry path="com.ithaca.visu.events.VisuActivityElementEvent"/>
+    <classEntry path="com.lyon2.visu.model.ActivityElement"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

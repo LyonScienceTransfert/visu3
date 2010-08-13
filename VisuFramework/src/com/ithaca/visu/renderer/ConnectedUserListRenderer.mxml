@@ -3,19 +3,38 @@
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
 				autoDrawBackground="true"
-				xmlns:controls="com.ithaca.visu.controls.*">
+				xmlns:controls="com.ithaca.visu.controls.*" creationComplete="itemrenderer1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import com.ithaca.visu.ui.utils.RoleEnum;
+
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				userLabel.setStyle("fontWeight", 'normal');
+				if (data.role > RoleEnum.STUDENT){
+					userLabel.setStyle("fontWeight", 'bold');					
+				}
+				// DEBUG
+				/* if (data.role > RoleEnum.TUTEUR){
+					userLabel.setStyle("color", '0x2d34c1');					
+				}	 */			
+			}
+
+		]]>
+	</fx:Script>
 	
 	<controls:ConnectionLight
 		status="{data.status}" 
 		height="10" width="10" 
 		left="5" verticalCenter="-1"
 		/>
-	<s:Label
-		text="{data.prenom}"
+	<s:Label id="userLabel"
+		text="{data.firstname}"
 		left="20" top="0" bottom="0" right="5"
 		verticalAlign="middle"
-		minHeight="20"
-		fontWeight="{data.role > 32 ? 'bold': 'normal'}"
+		minHeight="20"	
 		/>
-	
+	<!--fontWeight="{data.role > 32 ? 'bold': 'normal'}"-->	
 </s:ItemRenderer>

@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx">
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.globalNavigation.ApplicationMenu")]
 	</fx:Metadata>
-	
+	<fx:Script>
+		<![CDATA[
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext = FxGettext;
+
+
+
+			protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				if(event.newState as String == 'authentified')
+				{
+					dropListLang.dataProvider = hostComponent.listLang;
+					dropListLang.selectedIndex = 0;
+				}
+			}
+
+		]]>
+	</fx:Script>
 	<!-- states -->
 	<s:states>
 		<s:State name="normal" />
@@ -30,7 +54,7 @@
 			</s:filters>
 		</s:Label>
 		
-		<s:Button id="home" label="home" includeIn="authentified" />
+<!--		<s:Button id="home" label="home" includeIn="authentified" />-->
 		
 		<s:Group id="contentGroup" width="100%" includeIn="authentified" 
 				 minHeight="0" minWidth="0">
@@ -39,8 +63,17 @@
 			</s:layout>
 		</s:Group>
 		
-		<mx:Spacer width="100%" includeIn="authentified" />
-		<s:Button id="chat" label="chat" includeIn="authentified" />
-		<s:Button id="disconnect" label="disconnect" includeIn="authentified" />
+		<mx:Spacer width="100%" includeIn="authentified"/>
+		<s:Label id="language" includeIn="authentified">
+			<s:text>{fxgt.gettext("Langage")+" :"}</s:text>
+		</s:Label>	
+		<s:DropDownList id="dropListLang" includeIn="authentified"
+						 labelField="labelLang"/>
+		<s:Button id="chat" includeIn="authentified">
+			<s:label>{fxgt.gettext("Chat")}</s:label>
+		</s:Button>	
+		<s:Button id="disconnect" includeIn="authentified" >
+			<s:label>{fxgt.gettext("Disconnect")}</s:label>
+		</s:Button>	
 	</s:Group>
 </s:Skin>

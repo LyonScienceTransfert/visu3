@@ -2,6 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:layout="sparks.layout.*"
+		 currentStateChange="skin1_currentStateChangeHandler(event)"
 		>
 	<!-- host component -->
 	<fx:Metadata>
@@ -10,7 +11,66 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
 			import mx.skins.spark.LinkButtonSkin;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+		
+			[Bindable]
+			private var fxgt:_FxGettext = FxGettext;
+
+			protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+			{				
+				if(event.newState as String == 'open')
+				{
+					if(hostComponent.loggedUser.role > RoleEnum.TUTEUR)
+					{
+						cancelButton.visible = true;
+					}else if(hostComponent.loggedUser.role > RoleEnum.STUDENT){
+								editButton.visible = true;						
+							}
+					// add listeners
+					cancelButton.addEventListener(MouseEvent.CLICK, onClickButtons);
+					editButton.addEventListener(MouseEvent.CLICK, onClickButtons);
+					connectButton.addEventListener(MouseEvent.CLICK, onClickButtons);
+				}
+			}
+			
+			private function onClickButtons(event:MouseEvent):void
+			{
+				var sessionHomeElementEvent:SessionHomeElementEvent = new SessionHomeElementEvent(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER); 
+				var typeButton:String = (event.currentTarget as Button).id;
+				switch (typeButton)
+				{
+					case "cancelButton":
+					{
+						sessionHomeElementEvent.typeAction = SessionHomeElementEvent.ACTION_CANCEL_SESSION;
+						break;
+						
+					}
+					case "editButton":
+					{
+						sessionHomeElementEvent.typeAction = SessionHomeElementEvent.ACTION_EDIT_SESSION;
+						break;
+						
+					}
+					case "connectButton":
+					{
+						
+						sessionHomeElementEvent.typeAction = SessionHomeElementEvent.ACTION_JOIN_SESSION;
+						break;
+					}
+				}
+				 
+				sessionHomeElementEvent.session = hostComponent.session;
+				hostComponent.dispatchEvent(sessionHomeElementEvent);
+			}
+
 		]]>
 	</fx:Script>
 	
@@ -52,20 +112,28 @@
 		</s:Rect>
 		<s:Button 
 			verticalCenter="0" left="20"
-			id="editButton"
-			label="Annuler" color="#FFFFFF"
+			id="cancelButton"
+			color="#FFFFFF"
 			skinClass="com.ithaca.visu.skins.LinkButtonSkin"
-			/>
+			 visible="false">
+			<s:label>{fxgt.gettext("Annuler")}</s:label>	
+		</s:Button>
+		<s:Button 
+			verticalCenter="0" left="20"
+			id="editButton"
+			color="#FFFFFF"
+			skinClass="com.ithaca.visu.skins.LinkButtonSkin"
+			visible="false">
+			<s:label>{fxgt.gettext("Modifier")}</s:label>	
+		</s:Button>
 		<s:Button 
 			verticalCenter="0" right="20"
-			id="connectButton"
-			label="Rejoindre"  
-			/>
+			id="connectButton">
+			<s:label>{fxgt.gettext("Rejoindre")}</s:label>	
+		</s:Button>
 	</s:Group>
 	<s:RichText id="subDisplay" 
 		top.normal="20" top.disabled="20"  left.normal="45" left.open="5" right="5" bottom="5"
 		mouseChildren="false" mouseEnabled="false"
 		/>
-	
-	
 </s:Skin>

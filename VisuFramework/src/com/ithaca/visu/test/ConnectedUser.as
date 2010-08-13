@@ -46,7 +46,7 @@ package com.ithaca.visu.test
 			super.partAdded(partName,instance);
 			if( instance == labelDisplay )
 			{
-				if(  _user != null ) labelDisplay.text = _user.prenom;
+				if(  _user != null ) labelDisplay.text = _user.firstname;
 			}
 			
 		}

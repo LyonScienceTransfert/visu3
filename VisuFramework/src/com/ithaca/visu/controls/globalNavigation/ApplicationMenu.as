@@ -4,12 +4,18 @@ package com.ithaca.visu.controls.globalNavigation
 	
 	import flash.events.MouseEvent;
 	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	
 	import spark.components.Button;
 	import spark.components.ComboBox;
 	import spark.components.DropDownList;
+	import spark.components.Label;
 	import spark.components.SkinnableContainer;
+	import spark.events.IndexChangeEvent;
 	
 	[SkinState(name="normal")]
 	[SkinState(name="authentified")]
@@ -24,12 +30,30 @@ package com.ithaca.visu.controls.globalNavigation
 		[SkinPart("true")]
 		public var disconnect:Button;
 		
-		[SkinPart("true")]
-		public var home:Button;
+/*		[SkinPart("true")]
+		public var home:Button;*/
 		
 		[SkinPart("false")]
 		public var chat:Button;
-		 
+
+		[SkinPart("true")]
+		public var language:Label;
+		
+		[SkinPart("true")]
+		public var dropListLang:DropDownList;
+		
+		public var listLang:ArrayCollection = new ArrayCollection()
+		public var listLabelModule:Array = new Array();
+		
+		/**
+		 * @private 
+		 */
+		private var _listModulesButton:Array = new Array();
+		
+		public function get listModulesButton():Array
+		{
+			return 	_listModulesButton;
+		}
 		/**
 		 * @private 
 		 * handle the state of the 
@@ -98,10 +122,15 @@ package com.ithaca.visu.controls.globalNavigation
 			{
 				disconnect.addEventListener(MouseEvent.CLICK, onDisconnect);
 			}
-			if (instance == home)
+			if (instance == dropListLang)
+			{
+				dropListLang.addEventListener(IndexChangeEvent.CHANGE, onChangeLange);
+			}
+/*			if (instance == home)
 			{
 				home.addEventListener(MouseEvent.CLICK, navigateToHome);
-			}
+			}*/
+			
 			if (instance == contentGroup)
 			{
 				if (moduleListChanged) 
@@ -123,10 +152,14 @@ package com.ithaca.visu.controls.globalNavigation
 			{
 				disconnect.removeEventListener(MouseEvent.CLICK, onDisconnect);
 			}
-			if (instance == home)
+			if (instance == dropListLang)
+			{
+				dropListLang.removeEventListener(IndexChangeEvent.CHANGE, onChangeLange);
+			}
+/*			if (instance == home)
 			{
 				home.removeEventListener(MouseEvent.CLICK, navigateToHome);
-			}
+			}*/
 		}
 		
 		/**
@@ -174,7 +207,6 @@ package com.ithaca.visu.controls.globalNavigation
 					cb.selectedIndex = 0
 					//bt.addEventListener(MouseEvent.CLICK, navigateToModule);
 					addElement( cb );
-
 				}
 				else
 				{
@@ -184,11 +216,13 @@ package com.ithaca.visu.controls.globalNavigation
 					bt.name = o.value;
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
 					addElement( bt );
+					// list buttons for translate the labels
+					_listModulesButton[o.value]=bt;
 				}
 			}
 			bt=null;
 		}
-		
+
 		/*----------------------------------------
 					Event handler
 		-----------------------------------------*/
@@ -200,15 +234,28 @@ package com.ithaca.visu.controls.globalNavigation
 		{
 			dispatchEvent( new ApplicationMenuEvent( ApplicationMenuEvent.DISCONNECT));
 		}		
-
+		/**
+		 * change lang event handler
+		 * dispatch an ApplicationMenuEvent.CHANGE_LANGUAGE
+		 */
+		 protected function onChangeLange(event:IndexChangeEvent):void
+		 {
+			 var newIndex:int = event.newIndex as int;
+			 var tempDropDownList:DropDownList = event.currentTarget as DropDownList;
+			 var obj:Object = tempDropDownList.dataProvider[newIndex] as Object;
+			 var language:String = obj.data;
+			 var applicationMenuEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CHANGE_LANGUAGE);
+			 applicationMenuEvent.moduleName = language;
+			 dispatchEvent(applicationMenuEvent); 
+		 }
 		/**
 		 * navigateToHome event handler
 		 * call navigate function with the module name
 		 */
-		protected function navigateToHome(event:MouseEvent):void
+/*		protected function navigateToHome(event:MouseEvent):void
 		{
 			navigate("home");
-		}
+		}*/
 		/**
 		 * navigateToModule event handler
 		 * call navigate function with the module name

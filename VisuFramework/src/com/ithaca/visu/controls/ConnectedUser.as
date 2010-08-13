@@ -76,11 +76,11 @@ package com.ithaca.visu.controls
 			super.partAdded(partName,instance);
 			if (instance == userLabel)
 			{
-				if (_user != null) userLabel.text = _user.prenom; 
+				if (_user != null) userLabel.text = _user.firstname; 
 			}
 			if (instance == users)
 			{
-				users.labelField = "prenom";
+				users.labelField = "firstname";
 				users.addEventListener(IndexChangeEvent.CHANGE, updateSelectedUser);
 				
 				if (_dataProvider != null) users.dataProvider = _dataProvider ; 

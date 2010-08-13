@@ -4,14 +4,163 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:core="com.ithaca.visu.core.*"
-	minWidth="800" minHeight="600"
+	xmlns:map = "maps.*"
+	xmlns:mate="http://mate.asfusion.com/"
+	minWidth="900" minHeight="600"
+	preinitialize="visuapplication1_preinitializeHandler(event)"
+	creationComplete="visuapplication1_creationCompleteHandler(event)"
 	>
+	<fx:Declarations>
+		<map:MainMap id="mainMap"/>
+		<mate:Listener type="{VisuModuleEvent.LOAD_LIST_MODULES}"  method="userLoggedIN"/>
+		<mate:Listener type="{SessionEvent.JOIN_SESSION}"  method="joinSession"/>
+		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
+		<mate:Listener type="{SessionEvent.CANCEL_SESSION}"  method="cancelSession"/>
+	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.modules.ModuleInfo;
 			import com.ithaca.visu.skins.VisuAppSkin;
+			import com.lyon2.visu.model.Model;
+			
+			import flash.events.Event;
+			import flash.events.IOErrorEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext.ISO_3166;
+			import gnu.as3.gettext.ISO_639_1;
+			import gnu.as3.gettext.Locale;
+			import gnu.as3.gettext._FxGettext;
+			import gnu.as3.gettext.services.IGettextService;
+			import gnu.as3.gettext.services.URLLoaderService;
+			
+			import mx.collections.ArrayCollection;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.utils.URLUtil;
+			
+			import spark.components.Button;
+			import spark.components.DropDownList;
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext = FxGettext;
+			
+			private var listLang:ArrayCollection = new ArrayCollection();
+			
+			protected function visuapplication1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.loginForm.forgottenButton.label =" A : "+ Model.getInstance().rtmpServer+ "  "+ Model.getInstance().AMFServer;
+				// set list langage
+				this.setListLang();
+				menu.listLang = listLang;
+				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onCnangeLanguage);
+			}
+			
+			protected function onCnangeLanguage(event:ApplicationMenuEvent):void
+			{
+				var language:String = event.moduleName as String;
+				setlocale(Locale.LC_MESSAGES, language);
+			}
+
+
+			protected function visuapplication1_preinitializeHandler(event:FlexEvent):void
+			{	
+				
+				var a: Array;			
+				/* Initialisation de différents paramètres via
+				les arguments passés dans l'URL */ 
+				
+				/* Initialise model.server with URL hostname */
+				 var appUrl:String = FlexGlobals.topLevelApplication.url;
+				Model.getInstance().server = '192.168.1.41';
+				//URLUtil.getServerName( appUrl); ;
+				Model.getInstance().port   = URLUtil.getPort( appUrl );
+				a = appUrl.match(/\/(\w+)\/visuclient.swf/);
+				if (a)
+					Model.getInstance().appName = a[1];		 		
+				
+				// we set the locale for the messages category to fr_FR
+				setlocale(Locale.LC_MESSAGES, mklocale(ISO_639_1.FR,ISO_3166.FR));				
+				
+				// prepare the service to load the translations.
+				// We assume the swf is at the root 
+				// of the ./FlexHelloWorld directory
+				var service:IGettextService = new URLLoaderService(".");
+				service.addEventListener(Event.COMPLETE, onServiceComplete);
+				service.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				
+				// You can listen to this event, but it is not required in 
+				// MXML files: the labels are automatically updated at startup 
+				// and when the locale changes
+				fxgt.addEventListener(Event.COMPLETE, onComplete);
+						
+				// Binds the messages of the helloword domain to the 
+				// default directory (locale)
+				fxgt.bindtextdomain("visu2", null, service);
+				
+				// We select helloworld to be the default domain. 
+				fxgt.textdomain("visu2");
+			}
+			
+			private function onServiceComplete(event:Event):void
+			{
+				// do some stuff here, if needed.
+			}
+			
+			private function onIOError(event:IOErrorEvent):void
+			{
+				// an error occured while loading the catalog
+				// it probably means there is no translations for this locale
+				// or the base path to the translations is incorrect.
+				trace(event);
+			}
+			
+			private function onComplete(event:Event):void
+			{
+				// update labels of the buttons all modules
+				this.updateListLabelModule();
+			}
+
+			private function setListLang():void
+			{
+				listLang.addItem({labelLang:"Français", data: "fr_FR"});
+				listLang.addItem({labelLang:"Deutsch", data: "de_DE"});
+				listLang.addItem({labelLang:"English", data: "en_US"});
+				listLang.addItem({labelLang:"Русский", data: "ru_RU"}); 
+			}
+			
+			private function updateListLabelModule():void{
+				// FIXME : maybe othe way to update the labels
+				var listModulsButton:Array = menu.listModulesButton;
+				if(listModulsButton.home != null)
+				{
+					listModulsButton.home.label = fxgt.gettext("Accueil");
+					if(listModulsButton.user != null)
+					{
+						listModulsButton.user.label = fxgt.gettext("Utilisateurs");
+					}
+					if(listModulsButton.session != null)
+					{
+						listModulsButton.session.label = fxgt.gettext("Séances");
+					}
+					if(listModulsButton.tutorat != null)
+					{
+						listModulsButton.tutorat.label = fxgt.gettext("Salon synchrone");
+					}
+					if(listModulsButton.retrospection != null)
+					{
+						listModulsButton.retrospection.label = fxgt.gettext("Salon de rétrospection");
+					}
+				}
+			}
+
 		]]>
 	</fx:Script>
-
+	
 	<fx:Script source="memory.as" />
 	
 	<fx:Style source="styles.css" />
