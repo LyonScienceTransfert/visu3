@@ -214,7 +214,6 @@ package com.ithaca.visu.core
 		protected function authUser(event:Event):void
 		{	
 			trace("authenticate ",loginForm.loginField.text," as ",loginForm.passField.text);
-			//userLoggedIN();
 			var loginEvent:LoginEvent = new LoginEvent(LoginEvent.LOGIN);
 			var array:Array = new Array();
 			var userId:int = int(loginForm.loginField.text.toString());

@@ -13,7 +13,6 @@ package  com.lyon2.visu.model
 			public var date_session:Date;
 			public var isModel:Boolean;
 			public var description:String;
-			// only for debagging, change public to private 
 			public var participants:ArrayCollection = new ArrayCollection();;
 
 		public function Session(session:SessionVO)
@@ -90,7 +89,6 @@ package  com.lyon2.visu.model
 			{
 				user.setStatus(ConnectionStatus.DISCONNECTED);
 			}
-		}
-		
+		}		
 	}
 }

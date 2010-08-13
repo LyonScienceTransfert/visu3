@@ -91,8 +91,7 @@ package com.ithaca.visu.controls
 						if( u.mail == _user.mail) users.selectedItem = u;
 					}
 				}
-			}
-			 
+			}		 
 		}
 
 		override protected function partRemoved(partName:String, instance:Object):void

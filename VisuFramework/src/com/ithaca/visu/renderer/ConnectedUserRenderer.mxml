@@ -15,11 +15,7 @@
 				userLabel.setStyle("fontWeight", 'normal');
 				if (data.user.role > RoleEnum.STUDENT){
 					userLabel.setStyle("fontWeight", 'bold');					
-				}
-				// DEBUG 
-				/* if (data.user.role > RoleEnum.TUTEUR){
-					userLabel.setStyle("color", '0x49ba2f');					
-				}	 */			
+				}		
 			}
 		]]>
 	</fx:Script>

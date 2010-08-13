@@ -9,7 +9,9 @@ package com.ithaca.visu.controls.globalNavigation.event
 		public static const DISCONNECT:String = "disconnect";
 		public static const CHANGE_LANGUAGE:String = "changeLanguage";
 		
+		
 		public var moduleName:String;
+		
 		
 		public function ApplicationMenuEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

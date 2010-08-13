@@ -61,8 +61,7 @@
 			<s:layout>
 				<s:HorizontalLayout />
 			</s:layout>
-		</s:Group>
-		
+		</s:Group>		
 		<mx:Spacer width="100%" includeIn="authentified"/>
 		<s:Label id="language" includeIn="authentified">
 			<s:text>{fxgt.gettext("Langage")+" :"}</s:text>

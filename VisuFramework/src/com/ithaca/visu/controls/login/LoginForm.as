@@ -152,8 +152,6 @@ package com.ithaca.visu.controls.login
 		protected function getPassword(MouseEvent:Event):void
 		{
 			dispatchEvent( new LoginEvent( LoginEvent.GET_PASSWORD ) );
-		}
-		
-		
+		}	
 	}
 }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DropDownList xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				skinClass="com.ithaca.visu.skins.NavigateurDaySkin"  creationComplete="initComp()" change="onChange()">
+	<fx:Script>
+		<![CDATA[
+			
+			import spark.components.Button;
+			import spark.events.IndexChangeEvent;
+
+			public var leftButton:Button;
+			public var rightButton:Button;			
+			
+			public function initComp():void{
+				leftButton.enabled = false;
+				rightButton.enabled = false;
+				leftButton.addEventListener(MouseEvent.CLICK, onClickLeftButton);
+				rightButton.addEventListener(MouseEvent.CLICK, onClickRightButton);				
+			}
+			
+			protected function onClickLeftButton(event:MouseEvent):void{
+				// left button
+				if (this.selectedIndex == 0){
+					leftButton.enabled = false;
+				}else{
+					this.selectedIndex = this.selectedIndex-1;
+					this.leftButton.enabled = true;					
+				}
+				
+				if(this.selectedIndex == 0){
+					leftButton.enabled = false;
+				}
+				// right button
+				var indexLastItem:uint = this.dataProvider.length-1;
+				if(this.selectedIndex != indexLastItem){
+					this.rightButton.enabled = true;
+				}
+				// dispatchEvent with selectedIndex = selectedIndex --;
+				var tempEvent:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE,false,false,this.selectedIndex, this.selectedIndex-1);
+				this.dispatchEvent(tempEvent);
+			
+			}
+			
+			protected function onClickRightButton(event:MouseEvent):void{
+				var indexLastItem:uint = this.dataProvider.length-1;
+				// right button
+				if(this.selectedIndex == indexLastItem){
+					this.rightButton.enabled = false;
+				}else{
+					this.selectedIndex = this.selectedIndex+1;
+					this.rightButton.enabled = true;			
+				}
+				
+				if(this.selectedIndex == indexLastItem){
+					this.rightButton.enabled = false;
+				}
+				// left button
+				if(this.selectedIndex > 0 ){
+					this.leftButton.enabled = true;
+				}
+				// dispatchEvent with selectedIndex = selectedIndex ++;
+				var tempEvent:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE,false,false,this.selectedIndex, this.selectedIndex+1);
+				this.dispatchEvent(tempEvent);				
+			}
+			protected function onChange():void
+			{
+				// update left button
+				if(this.selectedIndex > 0 ){
+					this.leftButton.enabled = true;
+				}else{
+					this.leftButton.enabled = false;
+				}
+				// update right button
+				var indexLastItem:uint = this.dataProvider.length-1;
+				if(this.selectedIndex == indexLastItem){
+					this.rightButton.enabled = false;
+				}else{
+					this.rightButton.enabled = true;
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+</s:DropDownList>

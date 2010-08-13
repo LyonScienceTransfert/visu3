@@ -8,7 +8,6 @@ package com.ithaca.visu.ui.utils
 /*		public static const CONNECTED:ConnectionStatus = new ConnectionStatus(0);
 		public static const DISCONNECTED:ConnectionStatus = new ConnectionStatus(1);
 		public static const PENDING:ConnectionStatus = new ConnectionStatus(2);*/
-		
 		private var value:int;
 		
 		public function ConnectionStatus(value:int)

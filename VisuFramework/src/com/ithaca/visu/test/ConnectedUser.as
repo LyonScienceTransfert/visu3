@@ -23,7 +23,7 @@ package com.ithaca.visu.test
 		public function ConnectedUser()
 		{
 			super();
-			labelField = "prenom";
+			labelField = "firstname";
 			dataProvider
 		}
 		

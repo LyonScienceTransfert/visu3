@@ -49,8 +49,7 @@
 					list.setStyle("fontWeight","normal")
 			}
 		]]>
-	</fx:Script>
-	 
+	</fx:Script>	 
 	<s:DropDownList 
 		id="list"
 		dataProvider="{data.swapList}"
@@ -61,7 +60,6 @@
 		creationComplete="list_creationCompleteHandler(event)"
 		change="list_changeHandler(event)"
 		/>
-	<!--status="{data.user.status}"-->
 	<controls:ConnectionLight
 		id="statusIcon" 
 		left="5" width="10" height="10" verticalCenter="-1"

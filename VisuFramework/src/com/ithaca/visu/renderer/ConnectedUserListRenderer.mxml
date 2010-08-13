@@ -15,11 +15,7 @@
 				userLabel.setStyle("fontWeight", 'normal');
 				if (data.role > RoleEnum.STUDENT){
 					userLabel.setStyle("fontWeight", 'bold');					
-				}
-				// DEBUG
-				/* if (data.role > RoleEnum.TUTEUR){
-					userLabel.setStyle("color", '0x2d34c1');					
-				}	 */			
+				}		
 			}
 
 		]]>
@@ -36,5 +32,4 @@
 		verticalAlign="middle"
 		minHeight="20"	
 		/>
-	<!--fontWeight="{data.role > 32 ? 'bold': 'normal'}"-->	
 </s:ItemRenderer>

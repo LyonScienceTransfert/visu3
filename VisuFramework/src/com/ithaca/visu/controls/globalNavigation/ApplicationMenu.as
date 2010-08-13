@@ -30,9 +30,6 @@ package com.ithaca.visu.controls.globalNavigation
 		[SkinPart("true")]
 		public var disconnect:Button;
 		
-/*		[SkinPart("true")]
-		public var home:Button;*/
-		
 		[SkinPart("false")]
 		public var chat:Button;
 
@@ -248,14 +245,7 @@ package com.ithaca.visu.controls.globalNavigation
 			 applicationMenuEvent.moduleName = language;
 			 dispatchEvent(applicationMenuEvent); 
 		 }
-		/**
-		 * navigateToHome event handler
-		 * call navigate function with the module name
-		 */
-/*		protected function navigateToHome(event:MouseEvent):void
-		{
-			navigate("home");
-		}*/
+
 		/**
 		 * navigateToModule event handler
 		 * call navigate function with the module name

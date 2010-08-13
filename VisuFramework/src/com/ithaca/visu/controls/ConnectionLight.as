@@ -36,6 +36,5 @@ package com.ithaca.visu.controls
 		
 			return "disconnected";
 		}
-		
 	}
 }

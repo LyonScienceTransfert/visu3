@@ -5,7 +5,6 @@ package   com.lyon2.visu.model
 	import com.ithaca.visu.ui.utils.RightStatus;
 	import com.lyon2.visu.vo.UserVO;
 
-
 	public class User extends UserVO
 	{
 		public var status:int;

@@ -134,8 +134,7 @@ package com.ithaca.visu.controls
 				
 				updateViewUsers();
 				
-			}
-			
+			}			
 		}
 		
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -174,7 +173,6 @@ package com.ithaca.visu.controls
 				+ subDisplay.measuredHeight;
 			if( users  ) 
 			{ 
-				//measuredHeight += users.getLayoutBoundsHeight();
 				measuredHeight += 150;
 			}
 			measuredMinHeight = measuredHeight;
@@ -201,8 +199,6 @@ package com.ithaca.visu.controls
 			}
 		}
 		
-		
-	 	
 		
 		/**
 		 * 

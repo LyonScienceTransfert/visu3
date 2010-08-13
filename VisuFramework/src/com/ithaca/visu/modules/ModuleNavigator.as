@@ -40,9 +40,6 @@ package com.ithaca.visu.modules
 		private var currentModule:ModuleInfo;
 		private var module:VisuModuleBase;
 		
-		
-		
-		
 		public function ModuleNavigator(container:SkinnableContainer)
 		{
 			super();
@@ -137,7 +134,6 @@ package com.ithaca.visu.modules
 			info = ModuleManager.getModule( currentModule.url )
 
 			addModuleListenner();
-			
 			
 			//TODO : loadStyleDeclaration
 			var childDomain:ApplicationDomain = 

@@ -8,6 +8,7 @@ package com.ithaca.visu.modules
 		public var url:String;
 		public var css:String;
 		public var profileUser:int;
+		
 		[Transine]
 		public function get hasStyles():Boolean
 		{

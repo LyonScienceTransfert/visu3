@@ -8,7 +8,6 @@
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.SessionHomeElement")]
 	</fx:Metadata>
-	
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.SessionHomeElementEvent;
