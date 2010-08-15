@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!--
+    Defines a properties file for dereferencing variables
+    -->
+    <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="/WEB-INF/red5-web.properties"/>
+    </bean>
+<!--
+        Defines the web context
+    -->
+    <bean id="web.context" class="org.red5.server.Context" autowire="byType"/>
+<!--
+        
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driver}" />
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+        </bean>
+        
+        <property name="dataSource" ref="dataSource" />
+        
+    -->
+    <bean id="sqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" singleton="false">
+        <property name="configLocation" value="classpath:ibatis/sqlMapConfig.xml"/>
+    </bean>
+<!--   
+        Defines the web scopes
+    -->
+    <bean id="web.scope" class="org.red5.server.WebScope" init-method="register">
+        <property name="server" ref="red5.server"/>
+        <property name="parent" ref="global.scope"/>
+        <property name="context" ref="web.context"/>
+        <property name="handler" ref="web.handler"/>
+        <property name="contextPath" value="${webapp.contextPath}"/>
+        <property name="virtualHosts" value="${webapp.virtualHosts}"/>
+    </bean>
+<!--
+        Defines the web handler which acts as an applications endpoint
+    -->
+    <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
+        <property name="sqlMapClient" ref="sqlMap"/>
+        <property name="smtpServer" value="${visu.smtpServer}" />
+    </bean>
+
+<!--  DAO Definitions  -->
+    <bean id="userDao" class="com.lyon2.visu.domain.dao.impl.UserDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="sessionDao" class="com.lyon2.visu.domain.dao.impl.SessionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="sessionUserDao" class="com.lyon2.visu.domain.dao.impl.SessionUserDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="profileDescriptionDao" class="com.lyon2.visu.domain.dao.impl.ProfileDescriptionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="activityDao" class="com.lyon2.visu.domain.dao.impl.ActivityDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="activityElementDao" class="com.lyon2.visu.domain.dao.impl.ActivityElementDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="obselDao" class="com.ithaca.domain.dao.impl.ObselDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+<!--  Service Definitions  -->
+<!-- Stream -->
+    <bean id="recorder.service" class="com.lyon2.visu.red5.StreamRecorder">
+        <property name="application" ref="web.handler"/>
+    </bean>
+<!-- BDD -->
+    <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+    <bean id="obsel.service" class="com.ithaca.service.impl.ObselServiceImpl">
+        <property name="obselDao" ref="obselDao"/>
+    </bean>
+    <bean id="session.service" class="com.lyon2.visu.service.impl.SessionServiceImpl">
+        <property name="sessionDao" ref="sessionDao"/>
+    </bean>
+    <bean id="sessionUser.service" class="com.lyon2.visu.service.impl.SessionUserServiceImpl">
+        <property name="sessionUserDao" ref="sessionUserDao"/>
+    </bean>
+    <bean id="activity.service" class="com.lyon2.visu.service.impl.ActivityServiceImpl">
+        <property name="activityDao" ref="activityDao"/>
+    </bean>
+    <bean id="activityElement.service" class="com.lyon2.visu.service.impl.ActivityElementServiceImpl">
+        <property name="activityElementDao" ref="activityElementDao"/>
+    </bean>
+    <bean id="profileDescription.service" class="com.lyon2.visu.service.impl.ProfileDescriptionServiceImpl">
+        <property name="profileDescriptionDao" ref="profileDescriptionDao"/>
+    </bean>    
+<!-- enable support for mx:RemoteObject requests -->
+    <bean id="flexMessaging.service" class="org.red5.server.net.remoting.FlexMessagingService">
+        <property name="serviceInvoker" ref="global.serviceInvoker"/>
+        <property name="endpoints">
+            <map>
+                <entry key="UserService">
+                    <ref bean="user.service"/>
+                </entry>
+                <entry key="ObselService">
+                    <ref bean="obsel.service"/>
+                </entry>
+                <entry key="SessionService">
+                    <ref bean="session.service"/>
+                </entry>
+                <entry key="SessionUserService">
+                    <ref bean="sessionUser.service"/>
+                </entry>
+                <entry key="ActivityService">
+                    <ref bean="activity.service"/>
+                </entry>
+                <entry key="ActivityElementService">
+                    <ref bean="activityElement.service"/>
+                </entry>
+                <entry key="ProfileDescriptionService">
+                    <ref bean="profileDescription.service"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

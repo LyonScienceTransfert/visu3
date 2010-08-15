@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="profile_descriptions">
+
+	<typeAlias alias="profileDescription" type="com.lyon2.visu.domain.model.ProfileDescription" />
+
+	<cacheModel id="cache" type="LRU" readOnly="false">
+        <flushInterval hours="24"/>
+        <property name="cache-size" value="1000"/>
+    </cacheModel>
+
+	<resultMap class="profileDescription" id="profileDescriptionResult">
+		<result column="profile" jdbcType="INTEGER" property="profile" />
+		<result column="short_description" jdbcType="VARCHAR" property="short_description" />
+		<result column="long_description" jdbcType="VARCHAR" property="long_description" />
+	</resultMap>
+
+	<sql id="selectBase">SELECT profile, short_description, long_description</sql>
+
+	<select id="getProfils"
+		resultMap="profileDescriptionResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM profile_descriptions 
+	</select>
+	
+</sqlMap>

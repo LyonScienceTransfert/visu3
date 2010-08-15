@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+	<sqlMapConfig>
+		<settings
+			cacheModelsEnabled="true"
+			enhancementEnabled="true"
+			lazyLoadingEnabled="true"
+			maxRequests="32"
+			maxSessions="10"
+			maxTransactions="5"
+			useStatementNamespaces="true"
+			/>
+		<transactionManager type="JDBC">
+			<dataSource type="SIMPLE">
+				<property name="JDBC.Driver" value="com.mysql.jdbc.Driver"/>
+				<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost/visu2"/>
+				<property name="JDBC.Username" value="root"/>
+				<property name="JDBC.Password" value="root"/>
+                <property name="Pool.PingQuery" value="select 1"/>
+                <property name="Pool.PingEnabled" value="true"/>
+                <!-- 28800000 ms is 8 hours, the default timeout of mysql. Let's use half. -->
+                <property name="Pool.PingConnectionsNotUsedFor" value="14400000" />
+
+			</dataSource>
+		</transactionManager>
+        <!-- Note: path here is relative to the classpath.
+             If not found, it looks into red5/conf directory.
+        -->
+		<sqlMap resource="ibatis/activities.sqlmap.xml"/>
+        <sqlMap resource="ibatis/activitiesElement.sqlmap.xml"/>
+        <sqlMap resource="ibatis/profileDescription.sqlmap.xml"/>
+		<sqlMap resource="ibatis/sessions.sqlmap.xml"/>
+		<sqlMap resource="ibatis/users.sqlmap.xml"/>
+        <sqlMap resource="ibatis/sessionUser.sqlmap.xml"/>
+        <sqlMap resource="ibatis/modules.sqlmap.xml"/>
+		<sqlMap resource="ibatis/obsels.sqlmap.xml"/>
+	</sqlMapConfig>

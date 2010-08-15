@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="session_users">
+
+	<typeAlias alias="sessionUser"
+		type="com.lyon2.visu.domain.model.SessionUser" />
+
+	    <cacheModel id="cache" type="LRU" readOnly="false">
+	        <flushInterval hours="24"/>
+            <flushOnExecute statement="session_users.insert"/>
+            <flushOnExecute statement="session_users.delete"/>
+            <flushOnExecute statement="session_users.update"/>
+            <property name="cache-size" value="1000"/>
+	    </cacheModel>
+
+
+	<resultMap class="com.lyon2.visu.domain.model.SessionUser"
+		id="sessionUserResult">
+		<result column="id_session" jdbcType="INTEGER" property="id_session" />
+		<result column="id_user" jdbcType="INTEGER" property="id_user" />
+        <result column="mask" jdbcType="LONGVARCHAR" property="mask" />
+    </resultMap>
+
+	<sql id="selectBase">
+		SELECT id_session, id_user, mask
+    </sql>
+
+	<insert id="insert" parameterClass="sessionUser">
+		INSERT INTO session_users
+		SET 
+			id_session = #id_session:LONGVARBINARY#, 
+			id_user = #id_user:LONGVARBINARY#,
+            mask = #mask:LONGVARBINARY# 
+        <selectKey keyProperty="id_session_user" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+    
+	<delete id="delete" parameterClass="sessionUser" >		 
+		DELETE FROM session_users WHERE
+        id_session = #id_session:LONGVARBINARY# AND id_user = #id_user:LONGVARBINARY#
+	</delete>
+    
+    <delete id="deleteSessionUserByIdUser" parameterClass="int" >		 
+		DELETE FROM session_users WHERE
+        id_user = #value#
+	</delete>
+    
+    <delete id="deleteSessionUserByIdSession" parameterClass="int" >		 
+		DELETE FROM session_users WHERE
+        id_session = #value#
+	</delete>
+        
+	<update id="update" parameterClass="sessionUser" >
+		UPDATE 
+			session_users
+		SET 
+			id_session = #id_session:LONGVARBINARY#, 
+			id_user = #id_user:LONGVARBINARY#,
+            mask = #mask:LONGVARBINARY# 
+		WHERE id_session_user = #id_session_user# 
+	</update>
+</sqlMap>

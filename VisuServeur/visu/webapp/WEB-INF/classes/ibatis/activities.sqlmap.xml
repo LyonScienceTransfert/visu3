@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="activities">
+	
+	<typeAlias alias="activity" type="com.lyon2.visu.domain.model.Activity"/>	
+	<cacheModel id="cache" type="LRU" readOnly="false">
+		<flushInterval hours="24"/>
+		<flushOnExecute statement="activities.delete"/>
+		<flushOnExecute statement="activities.insert"/>
+		<flushOnExecute statement="activities.update"/>
+		<property name="cache-size" value="1000"/>
+	</cacheModel>
+
+
+	<resultMap class="activity" id="activityResult" groupBy="id">
+		<result column="id_activity" jdbcType="INTEGER" property="id_activity"  />
+        <result column="id_session" jdbcType="INTEGER" property="id_session"  />
+		<result column="title" jdbcType="LONGVARCHAR" property="title" />
+		<result column="duration" jdbcType="INTEGER" property="duration" />
+		<result column="ind" jdbcType="INTEGER" property="ind" />
+	</resultMap>
+
+	<sql id="selectBase">
+		SELECT 
+			id_activity,
+			id_session,
+			title,
+			duration,
+			ind
+		FROM 
+            activities 
+    </sql>
+
+    <select id="getActivity" parameterClass="int" resultMap="activityResult" cacheModel="cache">
+    	<include refid="selectBase" />
+        
+		WHERE id_activity = #value#
+
+    </select>
+   	
+   	<select id="getActivities" resultMap="activityResult" cacheModel="cache">
+    	<include refid="selectBase" />
+    </select>
+    
+   	<select id="getSessionActivities" parameterClass="int" resultMap="activityResult" cacheModel="cache">
+    	<include refid="selectBase" />
+        WHERE
+        	id_session = #value#
+        ORDER BY ind
+    </select>
+
+   	<insert id="insert" parameterClass="activity">
+   		INSERT INTO activities 
+		SET
+			title = #title:LONGVARCHAR#,
+			duration = #duration:LONGVARBINARY#,
+			ind = #ind:LONGVARBINARY#,
+			id_session = #id_session:LONGVARBINARY#
+		<selectKey keyProperty="id_activity" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+   	<delete id="delete" parameterClass="activity">
+   		DELETE FROM activities WHERE id_activity = #id_activity#
+   	</delete>
+
+   	<update id="update" parameterClass="activity">
+   		UPDATE activities 
+		SET
+			title = #title:LONGVARCHAR#,
+			duration = #duration:LONGVARBINARY#,
+			ind = #ind:LONGVARBINARY#,
+			id_session = #id_session:LONGVARBINARY#
+	   	WHERE id_activity = #id_activity#
+   	</update>
+
+</sqlMap>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sessions">
+
+	<typeAlias alias="session"
+		type="com.lyon2.visu.domain.model.Session" />
+ 	<typeAlias alias="userDate"
+		type="com.lyon2.utils.UserDate" />       
+        
+        
+        
+	    <cacheModel id="cache" type="LRU" readOnly="false">
+	        <flushInterval hours="24"/>
+	        <flushOnExecute statement="sessions.delete"/>
+	        <flushOnExecute statement="sessions.insert"/>
+	        <flushOnExecute statement="sessions.update"/>
+	        <property name="cache-size" value="1000"/>
+	    </cacheModel>
+
+
+	<resultMap class="com.lyon2.visu.domain.model.Session"
+		id="sessionResult">
+		<result column="s_id" jdbcType="INTEGER" property="id_session" />
+		<result column="u_id" jdbcType="INTEGER" property="id_user" />
+        <result column="theme" jdbcType="LONGVARCHAR" property="theme" />
+		<result column="description" jdbcType="LONGVARCHAR" property="description" />
+		<result column="date_session" jdbcType="DATETIME" property="date_session" />
+		<result column="isModel" jdbcType="TINYINT" property="isModel" />
+	</resultMap>
+    
+	<sql id="selectBase">
+		SELECT id_session as s_id, id_user as u_id, theme, date_session, isModel, description
+	</sql>
+
+	<select id="getSession" parameterClass="int"
+		resultMap="sessionResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM sessions WHERE id_session = #value#
+	</select>
+	
+	<select id="getSessions" resultMap="sessionResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM sessions  WHERE isModel = 0
+	</select>
+
+	<select id="getSessionPlans" resultMap="sessionResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM sessions WHERE isModel = 1
+	</select>
+
+    <select id="getSessionsByUser" parameterClass="int"
+		resultMap="sessionResult" cacheModel="cache">
+		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description
+		FROM session_users su, sessions s WHERE su.id_user = #value# AND su.id_session = s.id_session 
+	</select> 
+
+    <select id="getDatesSessionsByUser" parameterClass="int"
+		 resultClass="Date" cacheModel="cache">
+    <![CDATA[
+		SELECT DISTINCT CAST(s.date_session AS DATE)
+		FROM session_users su, sessions s 
+        WHERE s.id_session = su.id_session 
+            AND su.id_user = #value:INTEGER#
+    ]]>
+	</select>
+    
+    <select id="getDatesSessions"
+		 resultClass="Date" cacheModel="cache">
+    <![CDATA[
+		SELECT DISTINCT CAST(s.date_session AS DATE)
+		FROM sessions s 
+        ORDER BY s.date_session            
+    ]]>
+	</select>
+    
+    <select id="getSessionsByDateByUser" parameterClass="userDate"
+		 resultMap="sessionResult" cacheModel="cache">
+    <![CDATA[
+		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description 
+		FROM session_users su, sessions s 
+        WHERE s.id_session = su.id_session 
+            AND CAST(s.date_session AS DATE) = #dateSession:LONGCHAR# 
+            AND su.id_user = #userId:INTEGER#
+            ORDER BY s.date_session  
+    ]]>
+	</select>
+
+    <select id="getSessionsByDate" parameterClass="String"
+		 resultMap="sessionResult" cacheModel="cache">
+    <![CDATA[
+		SELECT s.id_session as s_id, s.id_user as u_id, theme, s.date_session, isModel, description 
+		FROM sessions s 
+        WHERE CAST(s.date_session AS DATE) = #value# 
+            ORDER BY s.date_session  
+    ]]>
+	</select>    
+    
+
+	<insert id="insert" parameterClass="session">
+		INSERT INTO sessions
+		SET 
+			theme = #theme:VARCHAR#, 
+			date_session = #date_session:DATETIME#,
+            id_user = #id_user:LONGVARBINARY#, 
+			isModel = #isModel:TINYINT#,  
+			description = #description:LONGVARCHAR#
+		<selectKey keyProperty="id_session" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterClass="session">
+		UPDATE 
+			sessions 
+		SET 
+			theme = #theme:VARCHAR#, 
+			date_session = #date_session:DATETIME#,  
+			description = #description:LONGVARCHAR#,
+            isModel = #isModel:TINYINT#,  
+			id_user = #id_user:LONGVARBINARY#
+		WHERE
+			id_session = #id_session:INTEGER#
+	</update>
+
+	<delete id="delete" parameterClass="session">
+		DELETE FROM sessions WHERE id_session = #id_session:INTEGER#
+	</delete>
+</sqlMap>

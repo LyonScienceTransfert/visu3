@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="activities_elements">
+	
+	<typeAlias alias="activityElement" type="com.lyon2.visu.domain.model.ActivityElement"/>
+	
+	<cacheModel id="cache" type="LRU" readOnly="false">
+		<flushInterval hours="24"/>
+		<flushOnExecute statement="activities_elements.delete"/>
+		<flushOnExecute statement="activities_elements.insert"/>
+		<flushOnExecute statement="activities_elements.update"/>
+		<property name="cache-size" value="1000"/>
+	</cacheModel>
+
+
+	<resultMap class="activityElement" id="activityElementResult" groupBy="id">
+        <result column="id_element" jdbcType="INTEGER" property="id_element"  />
+		<result column="a_id" jdbcType="INTEGER" property="id_activity"  />
+		<result column="data" jdbcType="LONGVARCHAR" property="data" />
+		<result column="url_element" jdbcType="VARCHAR" property="url_element" />
+		<result column="type_element" jdbcType="VARCHAR" property="type_element" />
+        <result column="type_mime" jdbcType="VARCHAR" property="type_mime" />
+	</resultMap>
+
+	<sql id="selectBase">
+		SELECT 
+            id_element,
+			id_activity as a_id,	
+			data,
+			url_element,
+			type_element,
+            type_mime
+		FROM 
+            activities_elements
+    </sql>
+
+    <select id="getActivityElements" parameterClass="int" resultMap="activityElementResult" cacheModel="cache">
+    	<include refid="selectBase" />        
+		WHERE id_activity = #value#
+    </select>
+ 	    
+   	<select id="getSessionActivitiesElements" parameterClass="int" resultMap="activityElementResult" cacheModel="cache">
+    	SELECT 
+            id_element,
+			ae.id_activity as a_id,	
+			data,
+			url_element,
+			type_element,
+            type_mime
+       FROM activities a, activities_elements ae 
+       WHERE a.id_session = #value# AND a.id_activity = ae.id_activity 
+       ORDER BY a.ind
+    </select>
+    
+   	<insert id="insert" parameterClass="activityElement">
+   		INSERT INTO activities_elements
+		SET
+			data = #data:LONGVARCHAR#,
+			url_element = #url_element:VARCHAR#,
+			type_element = #type_element:VARCHAR#,
+            type_mime = #type_mime:VARCHAR#,
+			id_activity = #id_activity:LONGVARBINARY#
+		<selectKey keyProperty="id_element" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+   	<delete id="delete" parameterClass="activityElement">
+   		DELETE FROM activities_elements WHERE id_element = #id_element#
+   	</delete>
+    
+   	<delete id="deleteByIdActivity" parameterClass="int">
+        DELETE FROM activities_elements WHERE id_activity = #value#
+    </delete>
+    
+   	<update id="update" parameterClass="activityElement">
+   		UPDATE activities_elements 
+		SET
+			data = #data:LONGVARCHAR#,
+			url_element = #url_element:VARCHAR#,
+			type_element = #type_element:VARCHAR#,
+            type_mime = #type_mime:VARCHAR#,
+			id_activity = #id_activity:LONGVARBINARY#
+	   	WHERE id_element = #id_element#
+   	</update>
+
+</sqlMap>
