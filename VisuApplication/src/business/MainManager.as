@@ -1,12 +1,7 @@
 package business
 {
-import com.flashdevs.mateExt.rtmpService.RtmpService;
-import com.flashdevs.mateExt.rtmpService.events.RtmpErrorEvent;
-import com.ithaca.visu.controls.SessionHomeElement;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
-import com.ithaca.visu.modules.ModuleInfo;
-import com.ithaca.visu.modules.ModuleNavigator;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.lyon2.visu.model.Model;
@@ -16,20 +11,14 @@ import com.lyon2.visu.vo.SessionUserVO;
 import com.lyon2.visu.vo.SessionVO;
 import com.lyon2.visu.vo.UserVO;
 
-import events.*;
-
-import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.net.NetConnection;
-import flash.sampler.Sample;
 
 import gnu.as3.gettext.FxGettext;
 import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
-import mx.controls.Text;
-import mx.core.FlexGlobals;
 import mx.logging.ILogger;
 import mx.logging.Log;
 

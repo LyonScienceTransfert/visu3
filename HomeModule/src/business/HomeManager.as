@@ -1,30 +1,16 @@
 package business
 {
 
-import com.ithaca.visu.controls.SessionHomeElement;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.UserEvent;
-import com.ithaca.visu.modules.ModuleInfo;
 import com.lyon2.visu.model.Model;
-import com.lyon2.visu.model.Session;
-import com.lyon2.visu.vo.SessionUserVO;
 import com.lyon2.visu.vo.SessionVO;
-import com.lyon2.visu.vo.UserVO;
 
-import events.*;
-
-import flash.events.DataEvent;
-import flash.events.Event;
 import flash.events.IEventDispatcher;
-import flash.sampler.Sample;
 
 import mx.collections.ArrayCollection;
-import mx.controls.Alert;
-import mx.controls.Text;
-import mx.core.FlexGlobals;
 import mx.logging.ILogger;
 import mx.logging.Log;
-import mx.messaging.events.MessageEvent;
 
 
 public class HomeManager

@@ -13,6 +13,7 @@
       <libraryPathEntry kind="3" linkType="1" path="/ComponentsLib/bin/ComponentsLib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/UtilsLib/bin/UtilsLib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/VisuFramework/bin/VisuFramework.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/swc"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

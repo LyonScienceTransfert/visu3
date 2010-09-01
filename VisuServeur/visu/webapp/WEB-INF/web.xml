@@ -47,14 +47,7 @@
 		<servlet-class>org.red5.server.net.servlet.AMFGatewayServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-    <servlet>
-    	<servlet-name>userServlet</servlet-name>
-    	<servlet-class>com.lyon2.visu.web.UserHandler</servlet-class>
-    </servlet>
-    <servlet>
-    	<servlet-name>proxyServlet</servlet-name>
-    	<servlet-class>com.lyon2.visu.web.ImageProxy</servlet-class>
-    </servlet>
+  
     <!--
 	The servlet-mapping element defines a mapping 
 	between a servlet and a url pattern
@@ -62,18 +55,6 @@
 	<servlet-mapping>
 		<servlet-name>gateway</servlet-name>
 		<url-pattern>/gateway</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>userServlet</servlet-name>
-		<url-pattern>/activation/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>proxyServlet</servlet-name>
-		<url-pattern>/image/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>userServlet</servlet-name>
-		<url-pattern>/recovery/*</url-pattern>
 	</servlet-mapping>
 	<!--
 	The security-constraint element is used to associate security
