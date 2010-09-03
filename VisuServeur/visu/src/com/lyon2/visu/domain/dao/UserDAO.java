@@ -82,4 +82,6 @@ public interface UserDAO
 		
 		public User getUser(Integer userId) throws SQLException;
 		
+		public User getUserByUsernamePassword(String username, String password) throws SQLException;
+		
 	}

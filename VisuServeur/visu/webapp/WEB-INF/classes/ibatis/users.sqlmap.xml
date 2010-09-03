@@ -47,7 +47,23 @@
 		FROM users 
         WHERE id_user = #value#
 	</select>
-        
+
+	
+
+	<select id="getUserByUsernamePassword" parameterClass="java.util.HashMap"
+		resultMap="userResult"  cacheModel="cache">
+    	<include refid="selectBase" />
+        FROM 
+            users
+        WHERE
+        	
+        	mail = #username#
+        AND 
+      		password = #password#
+	
+    </select>
+    
+    
     <select id="getUsersFromSession" parameterClass="int"
 		resultMap="userResult" cacheModel="cache">
 		SELECT u.id_user as u_id, lastname, firstname, mail, password, profil, avatar, activation_key, recovery_key 
