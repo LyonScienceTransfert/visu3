@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<contextName>visu</contextName>	
+	<contextName>visu2</contextName>	
 
-	<jmxConfigurator contextName="visu" />	
-
+	<jmxConfigurator contextName="visu2" />	
+	
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%p] [%thread] %logger - %msg%n</Pattern>
+		</layout>
+	</appender>
+	
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-	        <File>log/visu.log</File>
+	        <File>log/visu2.log</File>
 	        <Append>false</Append>
 	        <Encoding>UTF-8</Encoding>
 	        <BufferedIO>false</BufferedIO>
@@ -17,15 +24,20 @@
 	                </Pattern>
 	        </layout>
 	</appender>
+	
 	<root>
-		<level value="ERROR" />
 	   <appender-ref ref="FILE" />
+	   <appender-ref ref="CONSOLE" />
 	</root>
 	
-	<logger name="com.lyon2.visu">
+	<logger name="com.lyon2">
+	   <level value="DEBUG" />
+	</logger>
+	<logger name="com.ithaca">
 	   <level value="DEBUG" />
 	</logger>
 	<logger name="org.springframework.orm.ibatis">
-	<level value="DEBUG" />
+		<level value="DEBUG" />
 	</logger>
+	
 </configuration>
