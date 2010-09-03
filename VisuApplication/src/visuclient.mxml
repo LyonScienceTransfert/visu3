@@ -48,7 +48,7 @@
 			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
-			private var fxgt:_FxGettext = FxGettext;
+			private var fxgt:_FxGettext;
 			
 			private var listLang:ArrayCollection = new ArrayCollection();
 			
@@ -67,7 +67,7 @@
 
 			protected function visuapplication1_preinitializeHandler(event:FlexEvent):void
 			{	
-				
+				fxgt = FxGettext;
 				var a: Array;			
 				/* Initialisation de différents paramètres via
 				les arguments passés dans l'URL */ 

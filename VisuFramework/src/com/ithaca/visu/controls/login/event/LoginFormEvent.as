@@ -2,17 +2,17 @@ package com.ithaca.visu.controls.login.event
 {
 	import flash.events.Event;
 	
-	public class LoginEvent extends Event
+	public class LoginFormEvent extends Event
 	{
 		// constants
 		public static const LOGIN:String="onLogin";
 		public static const GET_PASSWORD:String="getPassword";
 		
 		// properties
-		// DEBUG MODE
-		public var ar:Array;
+		public var username:String;
+		public var password:String;
 		
-		public function LoginEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+		public function LoginFormEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 		}

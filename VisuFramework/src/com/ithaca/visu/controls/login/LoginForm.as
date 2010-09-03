@@ -1,6 +1,6 @@
 package com.ithaca.visu.controls.login
 {
-	import com.ithaca.visu.controls.login.event.LoginEvent;
+	import com.ithaca.visu.controls.login.event.LoginFormEvent;
 	import com.lyon2.visu.model.Model;
 	
 	import flash.events.Event;
@@ -25,8 +25,8 @@ package com.ithaca.visu.controls.login
 	[SkinState("normal")]
 	[SkinState("disabled")]
 	
-	[Event(name="onLogin", type="com.ithaca.visu.controls.login.event.LoginEvent")]
-	[Event(name="getPassword", type="com.ithaca.visu.controls.login.event.LoginEvent")]
+	[Event(name="onLogin", type="com.ithaca.visu.controls.login.event.LoginFormEvent")]
+	[Event(name="getPassword", type="com.ithaca.visu.controls.login.event.LoginFormEvent")]
 	public class LoginForm extends SkinnableComponent
 	{
 		
@@ -133,7 +133,11 @@ package com.ithaca.visu.controls.login
 			var result:Array = Validator.validateAll( [loginValidator, passValidator])
 			if (result.length==0)
 			{
-				dispatchEvent( new LoginEvent( LoginEvent.LOGIN ) );
+				var e:LoginFormEvent = new LoginFormEvent(LoginFormEvent.LOGIN);
+				e.username = loginField.text;
+				e.password = passField.text;
+					
+				dispatchEvent( new LoginFormEvent( LoginFormEvent.LOGIN ) );
 			}
 			else
 			{
@@ -152,7 +156,9 @@ package com.ithaca.visu.controls.login
 		 */
 		protected function getPassword(MouseEvent:Event):void
 		{
-			dispatchEvent( new LoginEvent( LoginEvent.GET_PASSWORD ) );
+			var e:LoginFormEvent = new LoginFormEvent(LoginFormEvent.LOGIN);
+			e.username = loginField.text;
+			dispatchEvent( new LoginFormEvent( LoginFormEvent.GET_PASSWORD ) );
 		}	
 	}
 }

@@ -19,7 +19,7 @@
     <classEntry path="com.ithaca.visu.dataStrutures.UserSwapList"/>
     <classEntry path="com.ithaca.visu.controls.login.LoginForm"/>
     <classEntry path="com.ithaca.visu.skins.LoginFormSkin"/>
-    <classEntry path="com.ithaca.visu.controls.login.event.LoginEvent"/>
+    <classEntry path="com.ithaca.visu.controls.login.event.LoginFormEvent"/>
     <classEntry path="com.ithaca.visu.controls.globalNavigation.ApplicationMenu"/>
     <classEntry path="com.ithaca.visu.skins.VisuAppSkin"/>
     <classEntry path="com.ithaca.visu.skins.ApplicationMenuSkin"/>
@@ -30,6 +30,8 @@
     <classEntry path="com.lyon2.visu.model.Activity"/>
     <classEntry path="com.ithaca.visu.events.VisuActivityElementEvent"/>
     <classEntry path="com.lyon2.visu.model.ActivityElement"/>
+    <classEntry path="com.ithaca.visu.events.AuthenticationEvent"/>
+    <classEntry path="com.lyon2.visu.model.ServerInfo"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

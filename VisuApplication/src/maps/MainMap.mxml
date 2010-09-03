@@ -13,17 +13,12 @@
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
 		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
 		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
-		import com.ithaca.visu.controls.login.event.LoginEvent;
-		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.VisuActivityEvent;
-		import com.ithaca.visu.events.UserEvent;
-		import com.lyon2.visu.vo.SessionUserVO;
-		
+		import com.ithaca.visu.events.AuthenticationEvent;
 		import com.ithaca.visu.events.MessageEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
 		import com.lyon2.visu.model.Model;
+		
 		import mx.events.FlexEvent;
-
 
         ]]></fx:Script>
 
@@ -74,9 +69,9 @@
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
 
-        <mate:EventHandlers type="{LoginEvent.LOGIN}" debug="true">
-			<mate:MethodInvoker generator="{RtmpService}"  
-								method="connect"  arguments="{[Model.getInstance().rtmpServer, event.ar]}"/>
+        <mate:EventHandlers type="{AuthenticationEvent.CONNECT}" debug="true">
+			<mate:MethodInvoker generator="{RtmpService}"   
+								method="connect"  arguments="{[Model.getInstance().rtmpServer,event.params]}"/>
 			<rtmp:CallbackRegistrator action="joinDeck" target="{MainManager}" method="onJoinDeck"/>
 			<rtmp:CallbackRegistrator action="outDeck" target="{MainManager}" method="onOutDeck"/>
 			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />

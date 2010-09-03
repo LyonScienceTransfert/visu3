@@ -5,7 +5,8 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.controls.globalNavigation.ApplicationMenu;
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 	import com.ithaca.visu.controls.login.LoginForm;
-	import com.ithaca.visu.controls.login.event.LoginEvent;
+	import com.ithaca.visu.controls.login.event.LoginFormEvent;
+	import com.ithaca.visu.events.AuthenticationEvent;
 	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.events.VisuModuleEvent;
@@ -13,6 +14,8 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.modules.ModuleNavigator;
 	import com.lyon2.visu.*;
 	import com.lyon2.visu.model.Session;
+	import com.lyon2.visu.model.User;
+	import com.lyon2.visu.vo.UserVO;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -114,7 +117,7 @@ package com.ithaca.visu.core
 			super.partAdded(partName,instance);
 			if (instance == loginForm)
 			{
-				loginForm.addEventListener(LoginEvent.LOGIN,authUser);
+				loginForm.addEventListener(LoginFormEvent.LOGIN,authUser);
 			}
 			if (instance == menu)
 			{
@@ -126,7 +129,7 @@ package com.ithaca.visu.core
 			super.partRemoved(partName,instance);
 			if( instance == loginForm)
 			{
-				loginForm.removeEventListener(LoginEvent.LOGIN,authUser);
+				loginForm.removeEventListener(LoginFormEvent.LOGIN,authUser);
 			}
 			if (instance == menu)
 			{
@@ -213,13 +216,8 @@ package com.ithaca.visu.core
 		 */
 		protected function authUser(event:Event):void
 		{	
-			trace("authenticate ",loginForm.loginField.text," as ",loginForm.passField.text);
-			var loginEvent:LoginEvent = new LoginEvent(LoginEvent.LOGIN);
-			var array:Array = new Array();
-			var userId:int = int(loginForm.loginField.text.toString());
-			array.push(userId);
-			array.push(loginForm.passField.text);
-			loginEvent.ar = array;
+			var loginEvent:AuthenticationEvent = new AuthenticationEvent(AuthenticationEvent.CONNECT);
+			loginEvent.params = {"username" : loginForm.loginField.text, "password" : loginForm.passField.text};
 			dispatchEvent(loginEvent);
 		}
 		

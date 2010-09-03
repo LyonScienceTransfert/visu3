@@ -82,43 +82,39 @@ package com.lyon2.visu;
  */
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Collection;
-import java.util.Set;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
-import org.red5.server.api.service.IServiceCapableConnection;
-import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.api.Red5;
-import org.red5.server.api.so.ISharedObject;
-import org.red5.server.api.stream.IBroadcastStream;
-import org.red5.server.api.IConnection;
 import org.red5.server.api.scheduling.IScheduledJob;
 import org.red5.server.api.scheduling.ISchedulingService;
+import org.red5.server.api.service.IServiceCapableConnection;
+import org.red5.server.api.service.ServiceUtils;
+import org.red5.server.api.so.ISharedObject;
+import org.red5.server.api.stream.IBroadcastStream;
 import org.slf4j.Logger;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.lyon2.visu.domain.model.User;
-import com.lyon2.visu.domain.model.SessionUser;
-import com.lyon2.visu.domain.model.Session;
+import com.lyon2.utils.MailerFacade;
+import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Module;
-
+import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.SessionUser;
+import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
-import com.lyon2.utils.MailerFacade;
-import com.lyon2.utils.UserDate;
 
 
 /**
@@ -132,7 +128,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     private SqlMapClient sqlMapClient;
     private String smtpserver = "";
 
-    private static Logger log = Red5LoggerFactory.getLogger( Application.class , "visu" );
+    private static Logger log = Red5LoggerFactory.getLogger( Application.class , "visu2" );
 
 
     public Application()
@@ -172,25 +168,48 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
         return super.appStart(app);
     }
 
-	@SuppressWarnings("unchecked")
     public boolean appConnect(IConnection conn, Object[] params)
     {
+		if( !super.appConnect(conn, params))
+		{
+			return false;
+		}
+		
 		// set all params in the List, framework "Mate+RTMP" send only one object 
-		List<Object> listParams = (List<Object>)params[0];
+		//User listParams = (User)params[0];
+		
+		
 		log.warn("====appConnect====");
-		log.warn("param 0 .... {} ", listParams.get(0));
-		log.warn("param 1 .... {} ", listParams.get(1));
-        if (params == null || params.length == 0)
+		log.debug("{}",params[0]);
+		log.debug("{}",params[0].getClass());
+		
+		User user =null;
+		
+		try {
+			user = (User) getSqlMapClient().queryForObject("users.getUserByUsernamePassword",params[0]);
+			
+		} catch (SQLException e) {
+			user = null;
+			log.error("recuperation du user impossible {}", e);
+		}
+		
+		
+        if (params == null || params.length == 0 || user == null)
         {
 			// NOTE: "rejectClient" terminates the execution of the current method!
-			rejectClient("No username passed.");
+			rejectClient("Bad client information");
+        }
+        else
+        {
+        	//store client information
+    		IClient client = conn.getClient();
+    		client.setAttribute("user", user);
+    		User u2 = (User) client.getAttribute("user");
+    		log.debug("user attempt to log in {}",u2);
         }
 				
-        if( !super.appConnect(conn, params))
-        {
-            return false;
-        }
-		
+        
+        
         return true;
     }
 	
@@ -203,20 +222,19 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
         }
 		
 		log.warn("====roomConnect====");
-        log.warn("*** User " + "username" + " - " + conn.getClient().getId() + " enter " + conn.getScope().getName());
-		
-		List<Object> listParams = (List<Object>)params[0];
-		// id connected user
-		Integer userId = Integer.parseInt(listParams.get(0).toString());
-		log.warn("getUser id = {}",userId);
 		User user = null;
-        try
-        {
-			user = (User) getSqlMapClient().queryForObject("users.getUser",userId);
-			log.warn("roomconnect the user is = {}",user.getFirstname());
-        } catch (Exception e) {
-            log.error("Probleme lors du listing des utilisateurs" + e);
-        }
+		IClient client = conn.getClient();
+
+		//recupération de l'utilisateur 
+		if( client.hasAttribute("user") )
+		{
+			user = (User) client.getAttribute("user");
+		}
+		
+        log.debug("*** User {} enter {}",user, conn.getScope().getName());
+		
+		
+
 		Object[] args = { user };
 		//Get the Client Scope
 		IScope scope = conn.getScope();
@@ -224,44 +242,40 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		invokeOnScopeClients(scope, "joinDeck", args);	
 		
 		// add info about client
-		IClient client = conn.getClient();
-		client.setAttribute("uid", userId);
-		client.setAttribute("connection", conn);
-		// TODO static var status
 		client.setAttribute("status", 2);
 
 
-		UserDate userDate = new UserDate(userId,getDateStringFormat_YYYY_MM_DD(Calendar.getInstance()));		
+		UserDate userDate = new UserDate(user.getId_user(),getDateStringFormat_YYYY_MM_DD(Calendar.getInstance()));		
 		List<Session> listSessionToday = null;
 		try
 		{
-			log.warn("date today is {}",userDate.toString());
+			log.debug("date today is {}",userDate);
 			listSessionToday = (List<Session>)sqlMapClient.queryForList("sessions.getSessionsByDateByUser",userDate);
 		} catch (Exception e) {
-			log.error("Probleme lors du listing des sessions" + e);
+			log.error("Probleme lors du listing des sessions {}",e);
 		}
 
 		for(Session session : listSessionToday)
 		{
-			log.warn("session = {}", session.toString());
+			log.warn("{}", session);
 		}
 		
 
 		// get role of logged user
 		Integer roleUser = getRoleUser(user.getProfil());
-		log.warn("role = {}"+roleUser);
+		log.debug("{}",roleUser);
 		// all modules
 		List<Module> listModules = null;
 		try
 		{
 			listModules = (List<Module>)sqlMapClient.queryForList("modules.getModules");
 		} catch (Exception e) {
-			log.error("Probleme lors du listing des modules" + e);
+			log.error("Probleme lors du listing des modules {}", e);
 		}
 		
 		// list module for logged user
 		List<Module> listModulesUser = new ArrayList<Module>();
-		log.warn("getListModules");
+		log.debug("getListModules");
 		for( Module module : listModules)
 		{
 			//log.warn("inside module = {}"+ module.toString());
@@ -270,7 +284,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			{
 				listModulesUser.add(module);
 			}
-		}	
+		}
+		
 		Object[] argsLoggedUser = {user , listModulesUser, listSessionToday};
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
@@ -285,12 +300,12 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		{
 			ls = (List<Session>)sqlMapClient.queryForList("sessions.getSessionsByDateByUser",userDateTest);
 		} catch (Exception e) {
-			log.error("Probleme lors du listing des sessions" + e);
+			log.error("Probleme lors du listing des sessions {}", e);
 		}
 		
 		for(Session session : ls)
 		{
-			log.warn("session = {}", session.toString());
+			log.debug("session = {}", session.toString());
 		}
 	/*
 		log.warn("strat date");
@@ -315,18 +330,14 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     {
         super.appDisconnect(conn);
 		IClient client = conn.getClient();
+		log.warn("{}",client);
+		
 		client.setAttribute("status", 1);
+		
 		User user = null;
-		if (client.hasAttribute("uid"))
+		if (client.hasAttribute("user"))
 		{
-			Integer userId = (Integer)client.getAttribute("uid");
-			try
-			{
-				user = (User) getSqlMapClient().queryForObject("users.getUser",userId);
-				log.warn("appDisconnect the user is = {}",user.getFirstname());
-			} catch (Exception e) {
-				log.error("Probleme lors du listing des utilisateurs" + e);
-			}
+			user = (User)client.getAttribute("user"); 
 		}
 		Object [] args = {user};
 		//Get the Client Scope
@@ -367,7 +378,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
         {
             return (List<User>)sqlMapClient.queryForList("users.getUsers");
         } catch (Exception e) {
-            log.error("Probleme lors du listing des utilisateurs" + e);
+            log.error("Probleme lors du listing des utilisateurs {}",e);
         }
         return null;
     }
@@ -434,16 +445,9 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			//	 scopes.append(" ");
 			// }
 			 
-			 Integer userId = (Integer)client.getAttribute("uid");
-			 User user = null;
-			 try
-			 {
-				 user = (User) getSqlMapClient().queryForObject("users.getUser",userId);
-				 log.warn(" getConnectedClients , getFirstname the user is = {}",user.getFirstname());
-			 } catch (Exception e) {
-				 log.error("Probleme lors du listing des utilisateurs" + e);
-			 }
 			 
+			 User user = (User) client.getAttribute("user");
+			  
 			// info.add(scopes.toString());
 			// if (client.getAttribute("recording") == "yes")
 			//	 status = User.RECORDING;

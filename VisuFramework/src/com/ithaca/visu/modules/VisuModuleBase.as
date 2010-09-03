@@ -39,7 +39,8 @@ package com.ithaca.visu.modules
 		protected function onAddedToStage(event:Event):void
 		{
 			trace("Module "+name+" added to stage");
-			_application = VisuApplication(parentApplication);
+			if( parentApplication is VisuApplication) 
+				_application = VisuApplication(parentApplication);
 		}
 		protected function onRemovedFromStage(event:Event):void
 		{
@@ -50,7 +51,9 @@ package com.ithaca.visu.modules
 		protected function moduleCreationComplete(event:Event):void
 		{
 			trace("Module "+name+" creationComplete");
-			_application = VisuApplication(parentApplication);
+			
+			if( parentApplication is VisuApplication )
+				_application = VisuApplication(parentApplication);
 		}
 		
 		public function handle_parameter(params:Object):void

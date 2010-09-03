@@ -270,5 +270,13 @@ public class MainManager
 
 	public function toString() : String
 	{ return 'MainManager'; }
+	
+	public function testParams(... rest):void
+	{
+		trace("testParams")
+		for each( var o:Object in rest)
+		trace("++ " + o);	
+	}
+	
 }
 }
