@@ -9,7 +9,7 @@ package com.ithaca.visu.modules
 		public var css:String;
 		public var profileUser:int;
 		
-		[Transine]
+		[Transient]
 		public function get hasStyles():Boolean
 		{
 			return css != null && (css.lastIndexOf(".css")==css.length-4) ;
