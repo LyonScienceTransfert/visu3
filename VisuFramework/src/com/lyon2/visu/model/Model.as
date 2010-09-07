@@ -537,7 +537,7 @@ package  com.lyon2.visu.model
 				var user:User = listUserSession[nUser];
 				var idClient:String = this.getIdClient(user.id_user);
 				var status:int = user.status;
-				if((idClient != "") && (status == ConnectionStatus.CONNECTED))
+				if((idClient != "") && (status == ConnectionStatus.CONNECTED || status == ConnectionStatus.RECORDING))
 				{
 					//add idClient only if status Connected
 					result.push(idClient);				

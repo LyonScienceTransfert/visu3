@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
@@ -115,13 +116,25 @@
 					if(module.visio != null)
 					{
 						// streamId of user 
-						var streamId:String = Model.getInstance().getIdClient(event.userId);
+						//var streamId:String = Model.getInstance().getIdClient(event.userId);
+						var streamId:String = event.userIdClient;
 						// remove video user
 						module.visio.removeVideoStream(streamId);
 					}
 				}	
 			}
 			
+			/**
+			 * Update status on recording mode
+			 */
+			private function onStartRecordingSession(event:SessionEvent):void
+			{
+				if(this.visio != null)
+				{
+					this.visio.status = VisuVisio.STATUS_RECORD;
+				}
+			}
+				
 			/**
 			 * Update list activity
 			 */ 
@@ -166,6 +179,17 @@
 			}
 
 
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				if(this.visio != null)
+				{
+					//start recording
+					var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
+					eventStartRecording.sessionId = this.currentSession.id_session;
+					dispatchEvent(eventStartRecording);				}
+			}
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -178,11 +202,14 @@
 		<mate:Listener type="{VisuActivityEvent.SHOW_LIST_ACTIVITY}"  method="updateView"/>
 		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
 		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
+		<mate:Listener type="{SessionEvent.START_RECORDING_SESSION}"  method="onStartRecordingSession"/>
 	</fx:Declarations>
 <mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
 	<mx:VDividedBox width="33%" height="100%">
 		<s:Panel  height="60%" width="100%" id="panelPlanSession" title.StudentState="Media de la séance" title.MainState="Plan de la séance">
 			<s:title>Plan de séance</s:title>
+			<s:Button includeIn="MainState" click="button1_clickHandler(event)" label="Recording"/>
+				
 			<s:VGroup gap="20" width="100%">
 				<s:DropDownList id="dropListActivity" prompt="choose activity" 
 								change="dropListActivity_changeHandler(event)"

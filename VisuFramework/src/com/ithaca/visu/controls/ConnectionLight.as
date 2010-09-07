@@ -7,6 +7,7 @@ package com.ithaca.visu.controls
 	[SkinState("connected")]
 	[SkinState("disconnected")]
 	[SkinState("pending")]
+	[SkinState("recording")]
 	public class ConnectionLight extends SkinnableComponent
 	{
 		
@@ -34,7 +35,10 @@ package com.ithaca.visu.controls
 			if( _status == ConnectionStatus.PENDING)
 				return "pending";
 		
-			return "disconnected";
+			if( _status == ConnectionStatus.DISCONNECTED)
+				return "disconnected";
+			
+			return "recording";
 		}
 	}
 }

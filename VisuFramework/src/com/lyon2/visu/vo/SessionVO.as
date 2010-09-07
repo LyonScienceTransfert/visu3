@@ -10,5 +10,6 @@ package com.lyon2.visu.vo
 			public var date_session:Date;
 			public var isModel:Boolean;
 			public var description:String;
+			public var start_recording:Date;
 	}
 }

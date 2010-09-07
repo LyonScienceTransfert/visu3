@@ -21,6 +21,7 @@ public class SessionEvent extends Event
 	static public const OUT_SESSION : String = 'outSession';
 	static public const NEW_USER_JOIN_SESSION : String = 'newUserJoinSession';
 	static public const OLD_USER_OUT_SESSION : String = 'oldUserOutSession';
+	static public const START_RECORDING_SESSION : String = 'startRecordingSession';
 	
 
 	// properties
@@ -30,6 +31,7 @@ public class SessionEvent extends Event
 	public var sessionDate : String;
 	public var session : Session;
 	public var listSession : ArrayCollection;
+	public var status : int;
 
 	// constructor
 	public function SessionEvent(type : String,

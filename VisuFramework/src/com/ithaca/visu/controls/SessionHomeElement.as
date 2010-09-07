@@ -127,7 +127,7 @@ package com.ithaca.visu.controls
 
 					
 					
-					if( editable && u.user.status != ConnectionStatus.CONNECTED ) 
+					if( editable && u.user.status != ConnectionStatus.CONNECTED && u.user.status != ConnectionStatus.RECORDING ) 
 						className = ConnectedUserWithListRenderer;
 					return new ClassFactory( className);
 				};

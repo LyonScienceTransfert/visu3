@@ -80,6 +80,8 @@
 			<rtmp:CallbackRegistrator action="checkUpdateSession" target="{MainManager}" method="onCheckUpdateSession" />
 			<rtmp:CallbackRegistrator action="joinSession" target="{MainManager}" method="onJoinSession"/>
 			<rtmp:CallbackRegistrator action="outSession" target="{MainManager}" method="onOutSession"/>
+			<rtmp:CallbackRegistrator action="startRecording" target="{MainManager}" method="onStartRecording"/>
+			<rtmp:CallbackRegistrator action="setStatusRecording" target="{MainManager}" method="onSetStatusRecording"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">

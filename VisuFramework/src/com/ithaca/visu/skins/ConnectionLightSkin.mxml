@@ -12,6 +12,7 @@
 		<s:State name="connected" />
 		<s:State name="disconnected" />
 		<s:State name="pending" />
+		<s:State name="recording" />
 	</s:states>
 	
 
@@ -33,6 +34,8 @@
 				<s:GradientEntry color="#AAAAAA" includeIn="disconnected" />
 				<s:GradientEntry color="#006699" includeIn="pending "/> 
 				<s:GradientEntry color="#00CCFF" includeIn="pending" />
+				<s:GradientEntry color="#990000" includeIn="recording "/> 
+				<s:GradientEntry color="#ff0000" includeIn="recording" />
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
