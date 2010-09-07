@@ -75,7 +75,6 @@
 					this.visio.connection = Model.getInstance().getNetConnection();
 					this.visio.streamID = Model.getInstance().getUserIdClient();
 					this.visio.addLocalDevice();
-					
 					if(panelPlanSession != null)
 					{
 						panelPlanSession.title = panelPlanSession.title +' : '+ Model.getInstance().getCurrentSession().theme;
@@ -85,8 +84,22 @@
 					var listIdClient:Array = Model.getInstance().getListIdClient(listSessionUsers);
 					if(listIdClient != null)
 					{
+						// FIXME : if session end recording and for logged user status = 0 , this status by default add to all streams, it's no good!!!
 						this.visio.addVideoStreams(listIdClient);	
-					}			
+					}
+					// removing module from the stage
+					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+				}
+			}
+			
+			/**
+			 * Removing all streams and local devices
+			 */
+			private function onRemovedModuleFromStage(event:Event):void{
+				if(this.visio != null)
+				{
+					this.visio.removeAllStreams();
+					this.visio.removeLocalDevice();				
 				}
 			}
 			
@@ -95,14 +108,22 @@
 			 */
 			private function onNewUserJoinSession(event:SessionEvent):void{	
 				// check if user in current session
-				if(Model.getInstance().getCurrentSession().hasUser(event.userId))
-				{
-					var module:Object = Model.getInstance().getCurrentTutoratModule();
-					if(module.visio != null)
+			//	if(this.currentSession.id_session == event.sessionId)
+			//	{
+					if(Model.getInstance().getCurrentSession().id_session == event.sessionId)
 					{
-						module.visio.addVideoStream(event.userIdClient);	
-					}
-				}		
+						var module:Object = Model.getInstance().getCurrentTutoratModule();
+						if(module.visio != null)
+						{
+							module.visio.addVideoStream(event.userIdClient);
+							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
+							if(event.status == ConnectionStatus.RECORDING)
+							{
+								module.visio.status = VisuVisio.STATUS_RECORD;
+							}
+						}
+					}							
+			//}
 			}
 			
 			/**
