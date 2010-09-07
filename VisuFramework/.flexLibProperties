@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
-    <classEntry path="com.lyon2.visu.model.VisuModelLB"/>
     <classEntry path="com.ithaca.visu.controls.ConnectedUser"/>
     <classEntry path="com.ithaca.visu.controls.ConnectionLight"/>
     <classEntry path="com.ithaca.visu.ui.utils.ConnectionStatus"/>
     <classEntry path="com.ithaca.visu.skins.ConnectionLightSkin"/>
-    <classEntry path="com.lyon2.visu.model.UserLB"/>
     <classEntry path="com.ithaca.visu.controls.SessionHomeElement"/>
     <classEntry path="com.ithaca.visu.skins.ConnectedUserSkin"/>
     <classEntry path="com.ithaca.visu.test.ConnectedUser"/>
@@ -19,7 +17,6 @@
     <classEntry path="com.ithaca.visu.dataStrutures.UserSwapList"/>
     <classEntry path="com.ithaca.visu.controls.login.LoginForm"/>
     <classEntry path="com.ithaca.visu.skins.LoginFormSkin"/>
-    <classEntry path="com.ithaca.visu.controls.login.event.LoginFormEvent"/>
     <classEntry path="com.ithaca.visu.controls.globalNavigation.ApplicationMenu"/>
     <classEntry path="com.ithaca.visu.skins.VisuAppSkin"/>
     <classEntry path="com.ithaca.visu.skins.ApplicationMenuSkin"/>
@@ -30,13 +27,6 @@
     <classEntry path="com.lyon2.visu.model.Activity"/>
     <classEntry path="com.ithaca.visu.events.VisuActivityElementEvent"/>
     <classEntry path="com.lyon2.visu.model.ActivityElement"/>
-    <classEntry path="com.ithaca.visu.events.AuthenticationEvent"/>
-    <classEntry path="com.lyon2.visu.model.ServerInfo"/>
-    <classEntry path="com.ithaca.visu.controls.users.skins.UserDetailSkin"/>
-    <classEntry path="com.ithaca.visu.controls.users.skins.UserFilterSkin"/>
-    <classEntry path="com.ithaca.visu.controls.users.UserFilters"/>
-    <classEntry path="com.ithaca.visu.controls.users.UserDetail"/>
-    <classEntry path="com.ithaca.visu.controls.users.event.UserFilterEvent"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

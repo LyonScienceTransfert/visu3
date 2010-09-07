@@ -80,6 +80,7 @@
 			<rtmp:CallbackRegistrator action="checkUpdateSession" target="{MainManager}" method="onCheckUpdateSession" />
 			<rtmp:CallbackRegistrator action="joinSession" target="{MainManager}" method="onJoinSession"/>
 			<rtmp:CallbackRegistrator action="outSession" target="{MainManager}" method="onOutSession"/>
+			<rtmp:CallbackRegistrator action="sameUserId" target="{MainManager}" method="onSameUserId"/>
 			<rtmp:CallbackRegistrator action="startRecording" target="{MainManager}" method="onStartRecording"/>
 			<rtmp:CallbackRegistrator action="setStatusRecording" target="{MainManager}" method="onSetStatusRecording"/>
         </mate:EventHandlers>
@@ -89,11 +90,10 @@
 								method="onError" arguments="{[currentEvent]}"/>
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
+<!--		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
 			<mate:MethodInvoker generator="{MainManager}"
 								method="onError" arguments="{[currentEvent]}"/>
-		</mate:EventHandlers>
-		
+		</mate:EventHandlers>-->
 		
         <mate:EventHandlers type="{MessageEvent.SEND_PRV_MESSAGE}">
             <rtmp:RtmpServiceInvoker service="{RtmpService}">
@@ -102,10 +102,17 @@
             </rtmp:RtmpServiceInvoker>
        </mate:EventHandlers>
 		
-		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}">
+		<mate:EventHandlers type="{MessageEvent.START_RECORDING}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="recorder.startRecordRoom"
+							  arguments="{[event.sessionId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="sendPublicMessage"
-							  arguments="{[event.senderUserId, event.message]}"/>              
+							  arguments="{[event.senderUserId, event.message]}"/>             
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		

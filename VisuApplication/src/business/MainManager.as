@@ -19,6 +19,7 @@ import gnu.as3.gettext.FxGettext;
 import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
+import mx.controls.Alert;
 import mx.logging.ILogger;
 import mx.logging.Log;
 
@@ -153,6 +154,24 @@ public class MainManager
 		// DEBUG
 		this.dispatcher.dispatchEvent(new Event("testApp"));
 	}
+	
+	/**
+	 * message for user, if someone connected on the DECK with the same identifiants
+	 */
+	public function onSameUserId():void
+	{
+		Alert.show(fxgt.gettext("L'utilisateur avec le même identifiant deja connecté sur la platefirme...."),fxgt.gettext("Information"));
+	}
+	
+	/**
+	 * notification when start recording session
+	 */
+	public function onStartRecording():void
+	{
+		var eventRecordingSession:SessionEvent = new SessionEvent(SessionEvent.START_RECORDING_SESSION);
+		dispatcher.dispatchEvent(eventRecordingSession);
+	}
+	
 	
 	/**
 	 * set client id of logged user
