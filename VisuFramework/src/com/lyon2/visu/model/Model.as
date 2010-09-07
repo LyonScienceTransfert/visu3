@@ -429,6 +429,21 @@ package  com.lyon2.visu.model
 			return this.listConnectedUsers;
 		}
 		
+		public function getConnectedUserExcludeLoggedUser():ArrayCollection
+		{
+			var listConnectedUserExcludeLoggedUser:ArrayCollection = new ArrayCollection();
+			var nbrConnectedUser:uint = this.listConnectedUsers.length;
+			for(var nConnectedUser:uint = 0; nConnectedUser < nbrConnectedUser ; nConnectedUser++)
+			{
+				var user:User = this.listConnectedUsers[nConnectedUser];
+				if(user != _loggedUser)
+				{
+					listConnectedUserExcludeLoggedUser.addItem(user);
+				}
+			}
+			return listConnectedUserExcludeLoggedUser;
+		}
+		
 		public function getSwapUsers():ArrayCollection
 		{
 			return this.listSwapUsers;

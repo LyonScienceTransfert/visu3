@@ -113,6 +113,12 @@ public class MainManager
 	public function onOutDeck(arg : Object) : void
 	{
 		var userVO:UserVO = arg as UserVO;
+		// remove stream from TutoratModule
+		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);	
+		oldUserOutSession.userId = userVO.id_user;
+		oldUserOutSession.userIdClient = Model.getInstance().getIdClient(userVO.id_user);
+		this.dispatcher.dispatchEvent(oldUserOutSession);
+		
 		// remove user from the list connected users
 		Model.getInstance().removeConnectedUser(userVO.id_user);
 		
@@ -123,10 +129,6 @@ public class MainManager
 		// add flix activity
 		Model.getInstance().addFluxActivity(userVO.id_user, userVO.firstname, userVO.avatar, fxgt.gettext(" est parti du DECK "),new Date());
 		
-		// remove stream from TutoratModule
-		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);			
-		oldUserOutSession.userId = userVO.id_user;
-		this.dispatcher.dispatchEvent(oldUserOutSession);
 	}
 	
 	public function onResivePrivateMessage(message : String, sender: UserVO):void
@@ -306,14 +308,14 @@ public class MainManager
 		var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
 		
-		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);			
+		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);	
+		oldUserOutSession.userIdClient = Model.getInstance().getIdClient(userVO.id_user);
 		oldUserOutSession.userId = userVO.id_user;
 		this.dispatcher.dispatchEvent(oldUserOutSession);
 		
 	}
 	public function onError(event : Object) : void
 	{
-		
 	}
 
 	public function toString() : String
