@@ -41,7 +41,10 @@
 			import gnu.as3.gettext.services.URLLoaderService;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.Application;
 			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.utils.URLUtil;
 			
@@ -60,6 +63,7 @@
 				this.setListLang();
 				menu.listLang = listLang;
 				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onCnangeLanguage);
+				menu.addEventListener(ApplicationMenuEvent.DISCONNECT, onDisconnect);			
 			}
 			
 			protected function onCnangeLanguage(event:ApplicationMenuEvent):void
@@ -68,6 +72,38 @@
 				setlocale(Locale.LC_MESSAGES, language);
 			}
 
+			protected function onDisconnect(event:ApplicationMenuEvent):void
+			{
+				Alert.yesLabel = fxgt.gettext("Oui");
+				Alert.noLabel = fxgt.gettext("Non");
+				Alert.show(fxgt.gettext("Voulez-vous quitter l'application ?"),
+					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, logOutConfirmed); 
+			}		
+			
+			protected function logOutConfirmed(event:CloseEvent):void
+			{
+				if( event.detail == Alert.YES )
+				{				
+					// TODO : gestion the Trace
+					//VisuTrace.trace("PresenceEnd");
+					if (Capabilities.playerType == "StandAlone")
+					{
+						fscommand("quit");Model.getInstance()
+					}
+					else if (ExternalInterface.available)
+					{
+						try{
+							ExternalInterface.call("window.location.reload(true)");
+						} catch (error:Error) {
+							navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
+						}
+					}
+					else
+					{
+						navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
+					}					
+				}
+			}
 			protected function visuapplication1_preinitializeHandler(event:FlexEvent):void
 			{	
 				fxgt = FxGettext;
@@ -76,12 +112,12 @@
 				les arguments passés dans l'URL */ 
 				
 				/* Initialise model.server with URL hostname */
-				 var appUrl:String = FlexGlobals.topLevelApplication.url;
+ 				 var appUrl:String = FlexGlobals.topLevelApplication.url;
 				Model.getInstance().server = URLUtil.getServerName( appUrl);
 				Model.getInstance().port   = URLUtil.getPort( appUrl );
 				 a = appUrl.match(/\/(\w+)\/visuclient.swf/);
 				if (a)
-					Model.getInstance().appName = a[1];	 	 		
+					Model.getInstance().appName = a[1];	  	 		
 				
 				// we set the locale for the messages category to fr_FR
 				setlocale(Locale.LC_MESSAGES, mklocale(ISO_639_1.FR,ISO_3166.FR));				
