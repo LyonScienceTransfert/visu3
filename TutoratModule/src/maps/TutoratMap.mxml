@@ -81,7 +81,7 @@
 		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="checkJoinSession"
-							  arguments="{[Model.getInstance().getLoggedUser().id_user, Model.getInstance().getUserIdClient()]}"/>              
+							  arguments="{[Model.getInstance().getLoggedUser().id_user, Model.getInstance().getUserIdClient(),event.sessionId]}"/>              
 			</rtmp:RtmpServiceInvoker>
 			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="getSessionActivities" arguments="{event.sessionId}">
 			<mate:resultHandlers>

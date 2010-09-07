@@ -247,11 +247,11 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onJoinSession(userVO:UserVO, userIdClient:String):void{
+	public function onJoinSession(userVO:UserVO, userIdClient:String, sessionId:int, status:int):void{
 		if(userVO.id_user != Model.getInstance().getLoggedUser().id_user)
 		{
 			// update status user 
-			Model.getInstance().updateStatusUser(userVO, ConnectionStatus.CONNECTED);
+			Model.getInstance().updateStatusUser(userVO, status);
 			// update idClient
 			Model.getInstance().updateUserIdClient(userVO, userIdClient);
 			// update list user
@@ -261,9 +261,36 @@ public class MainManager
 			var newUserJoinSessionEvent:SessionEvent = new SessionEvent(SessionEvent.NEW_USER_JOIN_SESSION);			
 			newUserJoinSessionEvent.userId = userVO.id_user;
 			newUserJoinSessionEvent.userIdClient = userIdClient;
+			newUserJoinSessionEvent.sessionId = sessionId;
+			newUserJoinSessionEvent.status = status;
 			this.dispatcher.dispatchEvent(newUserJoinSessionEvent);		
+		}else
+		{
+			// check if session in mode recording
+			
 		}
 	}
+	
+	/**
+	 * set status recording
+	 * @param
+	 * userVO
+	 * userIdClient 
+	 */
+	public function onSetStatusRecording(userId:int, status:int):void{
+		if(userId != Model.getInstance().getLoggedUser().id_user)
+		{
+			// FIXME : have to fine other solution
+			var userVO:UserVO = new UserVO();
+			userVO.id_user = userId;
+			// update status user 
+			Model.getInstance().updateStatusUser(userVO, status);
+			// update list user
+			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
+			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
+		}
+	}
+	
 	
 	/**
 	 *  call if user walk out from session
