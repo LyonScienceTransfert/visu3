@@ -29,6 +29,9 @@ package  com.lyon2.visu.model
 		private var listSessions:ArrayCollection = new ArrayCollection();
 		private var listFluxActivity:ArrayCollection = new ArrayCollection();
 		private var listDateSession:ArrayCollection = new ArrayCollection();
+		
+		public var profiles:Array = [];
+		
 		private var _loggedUser:User;
 		private var _netConnection:NetConnection;
 		private var _userIdClient:String;

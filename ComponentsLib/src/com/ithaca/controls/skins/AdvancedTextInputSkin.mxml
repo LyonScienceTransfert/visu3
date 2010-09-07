@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+<!--- The default skin class for Spark TextInput component.  
+
+     @see spark.components.TextInput
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5" blendMode="normal">
+    <fx:Metadata>[HostComponent("com.ithaca.controls.AdvancedTextInput")]</fx:Metadata>
+
+    <fx:Script fb:purpose="styling">
+        private var paddingChanged:Boolean;
+        
+        /* Define the skin elements that should not be colorized. */
+        static private const exclusions:Array = ["background", "textDisplay"];
+
+        /**
+         * @private
+         */   
+        override public function get colorizeExclusions():Array {return exclusions;}
+        
+        /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
+        static private const contentFill:Array = ["bgFill"];
+		
+	    /**
+         *  @private
+         */
+        override public function get contentItems():Array {return contentFill};
+        
+        /**
+         *  @private
+         */
+        override protected function commitProperties():void
+        {
+            super.commitProperties();
+            
+            if (paddingChanged)
+            {
+                updatePadding();
+                paddingChanged = false;
+            }
+			
+			if( !getStyle("promptColor")) setStyle("promptColor","#AAAAAA");
+        }
+        
+        /**
+         * @private
+         */
+        override protected function initializationComplete():void
+        {
+            useChromeColor = true;
+            super.initializationComplete();
+        }
+        
+        /**
+         *  @private
+         */
+        override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+        {
+			border.radiusX = Math.floor(unscaledHeight/2);
+			background.radiusX = Math.floor(unscaledHeight/2);
+			
+            if (getStyle("borderVisible") == true)
+            {
+                border.visible = true;
+                shadow.visible = true;
+                background.left = background.top = background.right = background.bottom = 1;
+                textDisplay.top = textDisplay.bottom = 1;
+            }
+            else
+            {
+                border.visible = false;
+                shadow.visible = false;
+                background.left = background.top = background.right = background.bottom = 0;
+                textDisplay.top = textDisplay.bottom = 0;
+            }
+			
+			textDisplay.left = clearIcon.right;
+			textDisplay.right = clearIcon.width + clearIcon.right + clearIcon.right;
+            
+            borderStroke.color = getStyle("borderColor");
+            borderStroke.alpha = getStyle("borderAlpha");
+ 
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			
+        }
+
+        /**
+         *  @private
+         */
+        private function updatePadding():void
+        {
+            if (!textDisplay)
+                return;
+            
+            // Push padding styles into the textDisplay
+            var padding:Number;
+            
+            padding = getStyle("paddingLeft");
+            if (textDisplay.getStyle("paddingLeft") != padding)
+                textDisplay.setStyle("paddingLeft", padding);
+            
+            padding = getStyle("paddingTop");
+            if (textDisplay.getStyle("paddingTop") != padding)
+                textDisplay.setStyle("paddingTop", padding);
+            
+            padding = getStyle("paddingRight");
+            if (textDisplay.getStyle("paddingRight") != padding)
+                textDisplay.setStyle("paddingRight", padding);
+            
+            padding = getStyle("paddingBottom");
+            if (textDisplay.getStyle("paddingBottom") != padding)
+                textDisplay.setStyle("paddingBottom", padding);
+        }
+        
+        /**
+         *  @private
+         */
+        override public function styleChanged(styleProp:String):void
+        {
+            var allStyles:Boolean = !styleProp || styleProp == "styleName";
+
+            super.styleChanged(styleProp);
+            
+            if (allStyles || styleProp.indexOf("padding") == 0)
+            {
+                paddingChanged = true;
+                invalidateProperties();
+            }
+        }
+    </fx:Script>
+    
+    <fx:Script>
+        <![CDATA[
+        /** 
+         * @private 
+         */     
+        private static const focusExclusions:Array = ["textDisplay"];
+
+        /**
+         *  @private
+         */
+        override public function get focusSkinExclusions():Array { return focusExclusions;};
+        ]]>
+    </fx:Script>
+    
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="prompt"/> 
+        <s:State name="disabled"/>
+    </s:states>
+    
+    <!-- border --> 
+    <!--- @private -->
+    <s:Rect left="0" right="0" top="0" bottom="0" id="border" radiusX="20" radiusY="20">
+        <s:stroke>     
+            <!--- @private -->
+            <s:SolidColorStroke id="borderStroke" weight="1" />
+        </s:stroke>
+    </s:Rect>
+
+    <!-- fill -->
+    <!--- Defines the appearance of the TextInput component's background. -->
+    <s:Rect id="background" left="1" right="1" top="1" bottom="1">
+        <s:fill>
+            <!--- @private Defines the background fill color. -->
+            <s:SolidColor id="bgFill" color="0xFFFFFF" />
+        </s:fill>
+    </s:Rect>
+    
+    <!-- shadow -->
+    <!--- @private -->
+    <s:Rect left="1" top="1" right="1" height="1" id="shadow">
+        <s:fill>
+            <s:SolidColor color="0xCC0000" alpha="0.12" />
+        </s:fill>
+    </s:Rect>
+    
+    <!-- text -->
+    <!--- @copy spark.components.supportClasses.SkinnableTextBase#textDisplay -->
+    <s:RichEditableText id="textDisplay"
+              verticalAlign="middle"
+              widthInChars="10"
+              left="1" right="20" top="1" bottom="1" />
+	<s:Label id="promptDisplay" includeIn="prompt" 
+			 verticalAlign="middle" color="{getStyle('promptColor')}" 
+			 fontStyle="italic" 
+			 left="1" right="20" top="1" bottom="1" />
+	
+	<!-- clear Icon -->
+	<s:Group id="clearIcon" right="3" verticalCenter="-1" visible.normal="true" visible="false">
+		<s:Path 
+			winding="evenOdd" 
+			data="M 4 5 L 5 4 L 8 7 L 11 4 L 12 5 L 9 8 L 12 11 L 11 12 L 8 9 L 5 12 L 4 11 L 7 8 L 4 5 Z M 1 8 C 1 12 4 15 8 15 C 12 15 15 12 15 8 C 15 4 12 1 8 1 C 4 1 1 4 1 8 Z " 
+			blendMode="normal" 
+			alpha="0.7">
+			<s:fill>
+				<s:LinearGradient x = "7" y = "0" scaleX = "14" rotation = "90">
+					<s:GradientEntry color="#666666" ratio="0" alpha="1"/>
+					<s:GradientEntry color="#999999" ratio="1" alpha="1"/>
+				</s:LinearGradient>
+			</s:fill>
+			<s:filters>
+				<s:DropShadowFilter angle="90" color="#000000" distance="1" alpha="0.65" quality="0" inner="true"/>
+				<s:DropShadowFilter angle="90" color="#ffffff" distance="1" alpha="0.7" quality="0"/>
+			</s:filters>
+		</s:Path>
+	</s:Group>
+</s:SparkSkin>

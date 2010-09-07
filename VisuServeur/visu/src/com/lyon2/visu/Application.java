@@ -109,6 +109,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 import com.lyon2.utils.MailerFacade;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Module;
+import com.lyon2.visu.domain.model.ProfileDescription;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.User;
@@ -177,11 +178,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		
 		// set all params in the List, framework "Mate+RTMP" send only one object 
 		//User listParams = (User)params[0];
-		
-		
-		log.warn("====appConnect====");
-		log.debug("{}",params[0]);
-		log.debug("{}",params[0].getClass());
+		log.info("====appConnect====");
+				
 		
 		User user =null;
 		
@@ -190,26 +188,30 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			
 		} catch (SQLException e) {
 			user = null;
-			log.error("recuperation du user impossible {}", e);
+			log.error("unknow user {}", e);
 		}
-		
+		 
 		
         if (params == null || params.length == 0 || user == null)
         {
 			// NOTE: "rejectClient" terminates the execution of the current method!
-			rejectClient("Bad client information");
+        	log.info("Wrong credentials {}",params[0]);
+        	rejectClient("Wrong credentials");
+        	return true;
         }
         else
         {
         	//store client information
     		IClient client = conn.getClient();
     		client.setAttribute("user", user);
+
+    		//changeRoom("deck", conn.getScope(), client);
+    		
     		User u2 = (User) client.getAttribute("user");
     		log.debug("user attempt to log in {}",u2);
+    		
         }
-				
-        
-        
+
         return true;
     }
 	
@@ -286,7 +288,19 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			}
 		}
 		
-		Object[] argsLoggedUser = {user , listModulesUser, listSessionToday};
+		// Récupération des profiles utilisateurs
+		List<ProfileDescription> profiles = null;
+		try
+		{
+			profiles = (List<ProfileDescription>) sqlMapClient.queryForList("profile_descriptions.getProfils");
+		}
+		catch (SQLException e) {
+			// TODO: handle exception
+			log.error("Loading profileDescription failed {}",e);
+		}
+		
+		
+		Object[] argsLoggedUser = {user , listModulesUser, listSessionToday, profiles};
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
 			sc.invoke("setLoggedUser", argsLoggedUser);
@@ -307,7 +321,10 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		{
 			log.debug("session = {}", session.toString());
 		}
-	/*
+	
+		
+		
+		/*
 		log.warn("strat date");
 		List<Date> dateSession = null;		
 		try
@@ -794,18 +811,20 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     {
         ISharedObject so = getSharedObject(scope, "VisuServer");
         String username = (String)client.getAttribute("username");
-		
-        log.warn("*** User " + username + " - " + client.getId() + " left " + scope.getName());
+        
+        User user = (User)client.getAttribute("user");
+        
+        log.warn("*** User " + user.getFirstname() + " - " + client.getId() + " left " + scope.getName());
         
         if (so != null)
 		{
 			
 			so.setAttribute("message",
 							new Red5Message(RemoteAppEventType.CLIENT_LOGOUT,
-											username + " a quitté l'application",
-											username,
+									user.getFirstname() + " a quitté l'application",
+									user.getFirstname(),
 											client.getId(),
-											(Integer)client.getAttribute("uid")));
+											(Integer) user.getId_user() ));
 		}
         else
 		{
@@ -813,5 +832,25 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		}
         super.roomLeave(client, scope);
     }
+	
+	@SuppressWarnings("unused")
+	private boolean changeRoom( String roomName, IScope scope, IClient client ) 
+	{
+	 
+		IConnection conn= Red5.getConnectionLocal();
+		IScope newScope;
+		
+		if( !scope.hasChildScope( roomName ) ) {
+			//create scope
+			scope.createChildScope( roomName );
+		}
+
+		newScope = scope.getScope( roomName );
+		
+		conn.connect(newScope, null);	 
+		return true;
+	}
+	
+	
 	
 }

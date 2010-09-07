@@ -20,7 +20,7 @@
 	<select id="getProfils"
 		resultMap="profileDescriptionResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM profile_descriptions 
+		FROM profile_descriptions ORDER BY profile
 	</select>
 	
 </sqlMap>

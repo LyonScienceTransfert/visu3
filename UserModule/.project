@@ -15,4 +15,11 @@
 		<nature>com.adobe.flexbuilder.project.flexnature</nature>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>bin-debug</name>
+			<type>2</type>
+			<location>/devtools/red5-0.8.0/webapps/visu2</location>
+		</link>
+	</linkedResources>
 </projectDescription>

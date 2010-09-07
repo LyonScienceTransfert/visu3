@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<core:VisuApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" 
-			   xmlns:core="com.ithaca.visu.core.*"
-			   xmlns:maps="maps.*"
-			   minWidth="955" minHeight="600" xmlns:modules="modules.*">
-	<modules:UserModule/>
-</core:VisuApplication>
+			   minWidth="780" minHeight="550" 
+			   xmlns:layout="sparks.layout.*"			   
+			   xmlns:controls="com.ithaca.controls.*" 
+			   xmlns:mate="http://mate.asfusion.com" 
+			   xmlns:bootstrap="com.ithaca.visu.bootstrap.*" 
+			   xmlns:modules="ws.tink.spark.modules.*" 
+			   xmlns:vo="com.lyon2.visu.vo.*"			   
+			   >
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.logging.LogEventLevel;
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:TraceTarget fieldSeparator=" | " includeCategory="true" includeLevel="true" level="{LogEventLevel.ALL}" />
+		
+		<bootstrap:BootStrapMap />
+		<!--force vo mapping-->
+		<vo:ProfileDescriptionVO />
+		
+	</fx:Declarations>
+	 
+	<modules:ModuleLoader
+		 url="modules/UserModule.swf"  width="100%" height="100%"
+		 top="0" left="0" right="0" bottom="0"/>
+</s:Application>

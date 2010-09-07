@@ -7,7 +7,7 @@ package com.lyon2.visu.model
 		protected var protocol : String 	= "http"
 		protected var server : String 		= "localhost"; 
 		protected var webapp : String 		= "visu2";
-		protected var defaultRoom: String 	= "";
+		protected var defaultRoom: String 	= "/deck";
 		
 		protected var _rtmpServer:String;
 		protected var _amfGateway:String;

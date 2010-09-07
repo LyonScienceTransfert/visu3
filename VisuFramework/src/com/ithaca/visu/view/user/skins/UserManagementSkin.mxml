@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:controls="com.ithaca.controls.*" 
+		xmlns:users="com.ithaca.visu.controls.users.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.user.UserManagement")]
+	</fx:Metadata>
+	
+	<!-- SkinParts
+	name=addUserButton, type=spark.components.Button, required=false
+	name=filter, type=components.UserFilters, required=false
+	name=userDetail, type=components.UserDetail, required=false
+	name=usersList, type=com.ithaca.controls.FilteredList, required=false
+	-->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+
+
+	
+	<s:Group top="0" left="0" right="0" bottom="0">
+		<s:layout>
+			<s:HorizontalLayout  />
+		</s:layout>
+		
+		<s:Group top="0" width="25%" height="100%">
+			<s:Panel top="40"
+				title="LABEL_AFFICHER" width="100%">	
+				<users:UserFilters 
+					width="100%"
+					id="filter"
+					skinClass="com.ithaca.visu.controls.users.skins.UserFilterSkin" />
+			</s:Panel>
+		</s:Group>
+		
+		<s:Group width="25%" height="100%">
+			<s:Button id="addUserButton" label="LABEL_ADD_USER" />
+			
+			<s:Panel top="40" width="100%" height="100%"
+					 title="LABEL_UTILISATEURS" >
+				<!--<controls:FilteredList-->
+				<controls:AdvancedTextInput
+					id="searchDisplay"
+					top="0" left="0" right="0" height="25" 
+					prompt="Filtre de recherche"
+					/>
+				
+				<s:List	
+					id="usersList"
+					top="25" bottom="0" left="0" right="0"
+					itemRenderer="com.ithaca.visu.renderer.UserRenderer"
+					/>
+			</s:Panel>
+		</s:Group>
+		
+		<s:Group width="50%" height="100%">
+			<s:Panel top="40" title="LABEL_PROFIL" 
+					width="100%" height="80%">		
+				<users:UserDetail id="userDetail" 
+									   top="0" bottom="0" left="0" right="0"
+									   skinClass="com.ithaca.visu.controls.users.skins.UserDetailSkin" />
+									   
+			</s:Panel>
+					
+			<s:List bottom="0" width="100%" height="20%" />
+					
+		</s:Group>
+	</s:Group> 
+</s:Skin>

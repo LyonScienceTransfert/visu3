@@ -44,7 +44,7 @@
 			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
-			private var fxgt:_FxGettext = FxGettext;
+			private var fxgt:_FxGettext;
 			
 			[Bindable]
 			public var listSessionView:ArrayCollection;
@@ -68,6 +68,8 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
+				fxgt = FxGettext;
+				
 				_loggedUser = Model.getInstance().getLoggedUser();				
 				// check status logged user
 				var statusLoggedUser:int =_loggedUser.status; 

@@ -32,6 +32,11 @@
     <classEntry path="com.lyon2.visu.model.ActivityElement"/>
     <classEntry path="com.ithaca.visu.events.AuthenticationEvent"/>
     <classEntry path="com.lyon2.visu.model.ServerInfo"/>
+    <classEntry path="com.ithaca.visu.controls.users.skins.UserDetailSkin"/>
+    <classEntry path="com.ithaca.visu.controls.users.skins.UserFilterSkin"/>
+    <classEntry path="com.ithaca.visu.controls.users.UserFilters"/>
+    <classEntry path="com.ithaca.visu.controls.users.UserDetail"/>
+    <classEntry path="com.ithaca.visu.controls.users.event.UserFilterEvent"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

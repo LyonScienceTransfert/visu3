@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:containers="ws.tink.spark.containers.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.users.UserDetail")]
+	</fx:Metadata>
+	
+
+	<!-- SkinParts
+	name=saveButton, type=spark.components.Button, required=false
+	name=passsword, type=spark.components.TextInput, required=false
+	name=profileList, type=spark.components.DropDownList, required=false
+	name=deleteButton, type=spark.components.Button, required=false
+	name=lastname, type=spark.components.TextInput, required=false
+	name=editButton, type=spark.components.Button, required=false
+	name=cancelButton, type=spark.components.Button, required=false
+	name=email, type=spark.components.TextInput, required=false
+	name=firstname, type=spark.components.TextInput, required=false
+	-->
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="edit" />
+		<s:State name="pending" />
+	</s:states>
+	
+	
+	<s:Group top="0" bottom="0" left="0" right="0">
+		<s:layout>
+			<s:BasicLayout/>
+		</s:layout>
+		
+		<s:Group top="0" left="0" right="0" height="50" includeIn="normal">
+			<s:layout>
+				<s:HorizontalLayout />
+			</s:layout>
+			<s:Button id="editButton" label="LABEL_EDIT" />
+			<s:Button id="deleteButton" label="LABEL_DELETE" />
+		</s:Group>
+		
+		<s:Rect 
+			top="0" left="0" right="0" bottom="0"
+			includeIn="pending">
+			<s:fill>
+				<s:SolidColor alpha=".5" color="#CC0000" />
+			</s:fill>
+		</s:Rect>
+		 		
+		<containers:Form enabled.pending="false" enabled="true" id="form"
+			top="50" bottom="0" left="0" right="0" backgroundColor="#eeeeee">
+		 
+			<containers:FormItem id="LABEL_NOM" label="LABEL_NOM" width="80%" >
+				<s:Label id="firstnameDisplay" fontWeight="bold" includeIn="normal" />
+				<s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"/>
+			</containers:FormItem>
+			
+			<containers:FormItem id="LABEL_PRENOM" label="LABEL_PRENOM" width="80%">
+				<s:Label id="lastnameDisplay" fontWeight="bold" includeIn="normal" />
+				<s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"/>
+			</containers:FormItem>
+			
+			<containers:FormItem id="LABEL_EMAIL" label="LABEL_EMAIL" width="80%">
+				<s:Label id="emailDisplay" includeIn="normal" />
+				<s:TextInput id="emailInput"  minWidth="100" width="100%" includeIn="edit" />
+			</containers:FormItem>
+			
+			<containers:FormItem id="LABEL_PASS" label="LABEL_PASS"  width="80%">
+				<s:Label id="passwordDisplay" includeIn="normal" />
+				<s:TextInput id="passwordInput" 
+							 minWidth="100" width="100%" displayAsPassword="true" includeIn="edit" />
+			</containers:FormItem>
+			
+			<containers:FormItem id="LABEL_ROLE" label="LABEL_ROLE" width="80%">
+				<s:Label id="profileDisplay"  includeIn="normal" />
+				<s:DropDownList id="profileList" labelField="short_description" 
+								minWidth="100" includeIn="edit" />
+			</containers:FormItem>
+			
+			<containers:FormItem includeIn="edit,pending" width="80%">
+				<s:Button id="saveButton" label="LABEL_SAVE" />
+				<s:Button id="cancelButton" label="LABEL_CANCEL" />
+			</containers:FormItem>
+		</containers:Form>
+	</s:Group>
+</s:Skin>

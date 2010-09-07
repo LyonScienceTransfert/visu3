@@ -66,7 +66,7 @@ public class MainManager
 	 * listModules - list modules for this user according with rights
 	 * listSessionToday - will using ?, list session for today
 	 */
-	public function onSetLoggedUser(user:UserVO, listModules:Array, listSessionToday:Array):void
+	public function onSetLoggedUser(user:UserVO, listModules:Array, listSessionToday:Array, profiles:Array):void
 	{
 
 		logger.info('onLogin [' + user + ']');
@@ -77,6 +77,8 @@ public class MainManager
 		}
 		// set logged user to the model
 		Model.getInstance().setLoggedUser(user);
+		
+		Model.getInstance().profiles = profiles;
 		
 		var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.LOAD_LIST_MODULES);
 		event.listModules = listModules;

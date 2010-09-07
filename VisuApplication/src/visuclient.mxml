@@ -8,7 +8,7 @@
 	xmlns:mate="http://mate.asfusion.com/"
 	minWidth="900" minHeight="600"
 	preinitialize="visuapplication1_preinitializeHandler(event)"
-	creationComplete="visuapplication1_creationCompleteHandler(event)"
+	creationComplete="visuapplication1_creationCompleteHandler(event)" xmlns:vo="com.lyon2.visu.vo.*"
 	>
 	<fx:Declarations>
 		<map:MainMap id="mainMap"/>
@@ -16,6 +16,9 @@
 		<mate:Listener type="{SessionEvent.JOIN_SESSION}"  method="joinSession"/>
 		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
 		<mate:Listener type="{SessionEvent.CANCEL_SESSION}"  method="cancelSession"/>
+	
+		<vo:ProfileDescriptionVO />
+		
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[

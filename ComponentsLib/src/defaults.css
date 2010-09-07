@@ -1,5 +1,6 @@
 /* CSS file */
-@namespace "ws.tink.spark.containers.*";
+@namespace 		"ws.tink.spark.containers.*";
+@namespace c 	"com.ithaca.controls.*";
 
 Form
 {
@@ -9,4 +10,9 @@ Form
 FormItem
 {
 	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormItemSkin" );
+}
+
+c|AdvancedTextInput
+{
+	skin-class : ClassReference( "com.ithaca.controls.skins.AdvancedTextInputSkin" );
 }

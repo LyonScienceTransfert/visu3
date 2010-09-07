@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mate:EventMap 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*" 
+	xmlns:events="com.flashdevs.mateExt.rtmpService.events.*">
+	<fx:Script>
+		<![CDATA[
+			import com.lyon2.visu.model.Model;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+	<!-- 
+		~~~~~~~~ SERVICES ~~~~~~~~
+	-->
+	
+		
+	<!-- 
+		~~~~~~~~ INJECTORS ~~~~~~~~
+	-->
+		
+	<!-- 
+		~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
+	-->
+		
+	<mate:EventHandlers type="{FlexEvent.INITIALIZE}">
+		
+		<mate:ObjectBuilder generator="{RtmpService}" constructorArguments="{scope.dispatcher}"/>
+		<mate:ObjectBuilder generator="{BootStrapManager}" constructorArguments="{scope.dispatcher}"/>
+	</mate:EventHandlers>
+	
+		
+	
+	<mate:EventHandlers type="{FlexEvent.APPLICATION_COMPLETE}" debug="true">
+		<mate:MethodInvoker generator="{BootStrapManager}" method="getRtmpServer" />
+		<mate:MethodInvoker generator="{RtmpService}"  
+							method="connect"
+							arguments="{[lastReturn,{username:'caro@visu.fr',password:'mdp'}]}"/>
+		
+		<rtmp:CallbackRegistrator action="setLoggedUser" target="{BootStrapManager}" method="onSetLoggedUser" /> 
+	</mate:EventHandlers>
+	
+	
+	 
+		
+		
+	<mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
+	</mate:EventHandlers>
+	<mate:EventHandlers type="{RtmpStatusEvent.FAILED}"  />
+	<mate:EventHandlers type="{RtmpStatusEvent.REJECTED}" debug="true" />
+	<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" start="trace(event)"/>
+	<mate:EventHandlers type="{RtmpErrorEvent.ERROR}" debug="true" />
+	<mate:EventHandlers type="{RtmpDataEvent.DATA}" debug="true" />
+	<mate:EventHandlers type="{RtmpResultEvent.DATA}" debug="true" />
+						 
+	<!--
+		~~~~~~~~ INJECTORS ~~~~~~~~
+	-->
+	
+	</fx:Declarations>
+	<fx:Script>
+	<![CDATA[
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpErrorEvent;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpResultEvent;
+		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
+		
+		import mx.events.FlexEvent;
+
+	 
+	]]>
+</fx:Script>
+</mate:EventMap>

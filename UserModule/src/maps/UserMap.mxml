@@ -6,45 +6,73 @@
         xmlns:mate="http://mate.asfusion.com/"
         xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 
-    <fx:Script><![CDATA[
-		import modules.UserModule;
-		import business.UserManager;
-		
-		import com.asfusion.mate.utils.debug.Debugger;
-		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
-		
-		import com.ithaca.visu.events.MessageEvent;
-		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.UserEvent;
-
-		
-		import mx.core.FlexGlobals;
-		import mx.events.FlexEvent;
-		import mx.events.ModuleEvent;
-		
-		import com.ithaca.visu.events.InitMapEvent;	
-		
-        ]]></fx:Script>
 
     <fx:Declarations>
 		<mate:Debugger level="{Debugger.ALL}"/>
+		 
+		<mate:Injectors targets="{[UserFilters,UserDetail]}">
+			<mate:PropertyInjector source="{Model.getInstance()}"
+								   sourceKey="profiles"
+								   targetKey="profiles"
+								   />
+		</mate:Injectors>
 		
-		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_USER}" debug="true">
-			<mate:ObjectBuilder generator="{UserManager}" constructorArguments="{scope.dispatcher}"/>
+		<mate:Injectors target="{UserManagement}">
+			<mate:PropertyInjector source="{UserManager}"
+								   sourceKey="users"
+								   targetKey="users"
+								   />
+		</mate:Injectors>		
+		
+		<!-- Application complete start-->
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_USER}" start="trace('module : '+event)">
+			<!-- MainManager creation -->
+			<mate:ObjectBuilder generator="{UserManager}"
+								constructorArguments="{[scope.dispatcher]}"/>
+			
 			<mate:MethodInvoker generator="{UserManager}" 
-								method="onError" />
+								method="getUsers" />
+			
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="testApp"   arguments="{['UserManagement']}" />
+			</rtmp:RtmpServiceInvoker>
+			
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{SessionEvent.OUT_SESSION}" debug="true">
+		
+		<!-- Retreiving users -->
+		<mate:EventHandlers type="{UserEvent.LOAD_USERS}">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
-				<mate:Request action="checkOutSession"
-							  arguments="{[event.userId]}"/>              
+				<mate:Request action="listUsers" />
+				
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{UserManager}"
+										method="setUsers" 
+										arguments="{[currentEvent.data]}" />
+				</rtmp:resultHandlers>
+				
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{UserManager}" 
+										method="onError" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-				
+		
     </fx:Declarations>
-
+	
+	<fx:Script><![CDATA[
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.visu.bootstrap.BootStrapManager;
+		import com.ithaca.visu.controls.users.UserDetail;
+		import com.ithaca.visu.controls.users.UserFilters;
+		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.events.UserEvent;
+		import com.ithaca.visu.view.user.UserManagement;
+		import com.lyon2.visu.model.Model;
+		
+		import managers.UserManager;	
+		
+	]]></fx:Script>
 </mate:EventMap>
