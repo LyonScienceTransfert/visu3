@@ -39,6 +39,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
 			import mx.events.ModuleEvent;
 			
 			import spark.events.IndexChangeEvent;
@@ -251,7 +252,7 @@
 			}
 			
 			/**
-			 * Show list connected users
+			 * Show list connected users, exclude logged user
 			 */ 
 			protected function sendOneUser_clickHandler(event:MouseEvent):void
 			{
@@ -259,7 +260,12 @@
 					listConUsers.visible = false;
 				}else
 				{
-					listConUsers.visible = true;
+					var listConnectedUserExludeLoggedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
+					if (listConnectedUserExludeLoggedUser.length > 0)
+					{
+						listConUsers.dataProvider = listConnectedUserExludeLoggedUser;
+						listConUsers.visible = true;
+					}
 				}
 			}		
 			
@@ -312,7 +318,7 @@
 							<s:label>{fxgt.gettext("Personnel")}</s:label>
 						</s:Button>
 					</s:BorderContainer>
-					<s:List  id="listConUsers"  click="sendMessageToUser()"  visible="false" labelField="firstname" width="51" height="35"/>
+					<s:List  id="listConUsers" change="sendMessageToUser()"  visible="false" labelField="firstname" width="200" height="35"/>
 				</s:HGroup>
 				<s:HGroup>
 					<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
@@ -331,8 +337,8 @@
 							<s:ItemRenderer>
 								<s:BorderContainer  height="35"  borderVisible="true" width="430" >
 									<mx:Image source="{data.pathImage}" x="3" width="25" height="25"  y="3"/>
-									<s:Label text="{data.firstname}" fontWeight="bold"  x="35" y="8"/>
-									<s:Label text="{data.message}"   x="90" y="8"/>
+									<s:Label id="labelFirstName" text="{data.firstname}" fontWeight="bold"  x="35" y="8"/>
+									<s:Label text="{data.message}"   x="{labelFirstName.x + labelFirstName.width + 5}" y="{labelFirstName.y}" color="#6ca6cf"/>
 									<s:Label text="{data.time}"  fontSize="10"  right="30" y="20" color="#CCCCCC"/>
 								</s:BorderContainer>
 							</s:ItemRenderer>
