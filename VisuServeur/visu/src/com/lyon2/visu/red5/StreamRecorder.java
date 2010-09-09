@@ -63,6 +63,9 @@
 package com.lyon2.visu.red5;
 
 
+
+import java.sql.SQLException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -70,6 +73,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IConnection;
@@ -80,6 +86,7 @@ import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
 
+import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.Application;
  
 /**
@@ -100,11 +107,13 @@ public class StreamRecorder
   	
 	protected static final Logger log = Red5LoggerFactory.getLogger(StreamRecorder.class, "visu" );
 	
+	@SuppressWarnings("unchecked")
 	public void startRecordRoom(IConnection conn, Integer session_id)
 	{
         /* We store the record filenames, in order to notify clients */
         List<String> filenames = new Vector<String>();
-        
+		Map<Integer,List<String>> listUserStartRecording = new HashMap<Integer,List<String>>(); 
+		List<String> listPresentsIdUsers= new ArrayList<String>();
 		//Get the Client Scope
 		IScope scope = conn.getScope();
 		
@@ -116,9 +125,30 @@ public class StreamRecorder
 
 		String sDate = dateFormat.format(calendar.getTime());
 		
+		// set StartTime recording of this session
+		app.setDateStartRecordingSession(session_id);
+		
+		// get users from this session
+		List<User> listUsersSession = new ArrayList<User>();	
+		List<String> listUsersIdsSession = null;
+		try {
+			listUsersSession = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",session_id);
+			listUsersIdsSession = new ArrayList<String>();	
+			for(User userSession : listUsersSession)
+			{
+				Integer userIdSession = userSession.getId_user();
+				listUsersIdsSession.add(userIdSession.toString());
+			}
+		} catch (SQLException e) {
+			log.error("unknow user {}", e);
+		}
+		
+		
+		
 		//record all the streams in a scope
         for (String name: app.getBroadcastStreamNames(scope))
 		{			
+			log.warn("====NAME Broadcaststreem  {}",name);
 			ClientBroadcastStream stream = (ClientBroadcastStream) app.getBroadcastStream(scope, name);
             /* Note about the record filename: since we generate a
              * filename based on current time in seconds, we could
@@ -127,34 +157,104 @@ public class StreamRecorder
              * second. Given that in this case, the previous recorded
              * information would be useless anyway, we do not make any
              * effort to avoid that. */
-			String filename = "record-" + sDate + "-" + session_id.toString() + "-" + stream.getConnection().getClient().getAttribute("uid").toString();
-
-			log.debug("Start recording stream {} to file {} ", stream.getPublishedName(), filename);
 			
-			try 
+			// sessionId of this client
+			Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
+			if(sessionIdClient == session_id)
 			{
-				// Save the stream to disk.
-				stream.saveAs(filename, false);
-                // SaveAs specifies the prefix. getSaveFilename will return path + prefix + suffix.
-                // filenames.add(stream.getSaveFilename());
+				IClient client = stream.getConnection().getClient();
+				Integer userId = (Integer)client.getAttribute("uid");
+				// generate traceId
+				String trace = app.makeTraceId(userId);
+				client.setAttribute("trace", trace);
+				// set status recording
+				client.setAttribute("status", 3);
+				// call client that start recording
+				IConnection connectionClient = (IConnection)client.getAttribute("connection");
+				if (connectionClient instanceof IServiceCapableConnection) {
+					IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
+					sc.invoke("startRecording");
+				} 	
+				
+				String filename = "record-" + sDate + "-" + session_id.toString() + "-" + userId.toString();
+				
+				log.warn("Start recording stream {} to file {} ", stream.getPublishedName(), filename);
 
-                // However, NetStream takes the generated basename,
-                // without prefix or suffix. So return only this part.
-                filenames.add(filename);
-			} 
-			catch (Exception e) 
-			{
-				log.error("Error while saving stream: " + stream.getName(), e);
+				// save all connected users of this session 
+				List<String> listTraceFileName = new ArrayList<String>();
+				listTraceFileName.add(0,trace);
+				listTraceFileName.add(1,filename);
+				listUserStartRecording.put(userId,listTraceFileName);
+    			listPresentsIdUsers.add(userId.toString());
+				// notification for all users that user has status "recording"
+				Object[] args = {userId, (Integer)client.getAttribute("status")};
+				//send message to all users on "Deck"
+				invokeOnScopeClients(scope, "setStatusRecording", args);
+				
+				try 
+				{
+					// Save the stream to disk.
+					stream.saveAs(filename, false);					
+					// However, NetStream takes the generated basename,
+					// without prefix or suffix. So return only this part.
+					filenames.add(filename);
+				} 
+				catch (Exception e) 
+				{
+					log.error("Error while saving stream: " + stream.getName(), e);
+				}				
 			}
 		}
-        
+		
+		// set Obsel "RecordFileName" to connected users of this session
+		for (Integer key : listUserStartRecording.keySet()){
+    		log.warn("userId is = {}",key);
+			    log.warn("Trace is = {}",listUserStartRecording.get(key).get(0));
+    			//log.warn("FileName is = {}",listUserStartRecording.get(key).get(1));
+    			// add obsel "SessionStart"
+    			List<Object> paramsObselSessionStart= new ArrayList<Object>();
+    			paramsObselSessionStart.add("session");paramsObselSessionStart.add(session_id.toString());
+    			// TODO : get durationSession of this session
+    			paramsObselSessionStart.add("durationSession");paramsObselSessionStart.add("void");
+    			paramsObselSessionStart.add("userids");paramsObselSessionStart.add(listUsersIdsSession);
+    			paramsObselSessionStart.add("presentids");paramsObselSessionStart.add(listPresentsIdUsers);
+    			
+    			try
+					{
+						app.setObsel(key, listUserStartRecording.get(key).get(0), "SessionStart", paramsObselSessionStart);					
+					}
+					catch (SQLException sqle)
+					{
+						log.error("=====Errors===== {}", sqle);
+					}
+			for (Integer keyUserId : listUserStartRecording.keySet()) {
+				log.warn("FileName is = {}",listUserStartRecording.get(keyUserId).get(1));
+    			
+    			// add obsel "RecordFileName"
+				List<Object> paramsObselRecordFileName= new ArrayList<Object>();
+    			paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(listUserStartRecording.get(keyUserId).get(1));
+    			paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(session_id.toString());
+				try
+				{
+					app.setObsel(key, listUserStartRecording.get(key).get(0), "RecordFilename", paramsObselRecordFileName);					
+				}
+				catch (SQLException sqle)
+				{
+					log.error("=====Errors===== {}", sqle);
+				}
+			}
+		}
+		
+		
+		
+	    
         /* Notify all clients of the recorded filenames */
 
         /* Generate a multiline String with 1 filename per line */
         /* Normally, we could just pass filenames to
          * invokeOnScopeClients, but the java-as3 bridge has trouble
          * dealing with variable arguments mappings */
-        StringBuffer sb = new StringBuffer();
+     /*   StringBuffer sb = new StringBuffer();
         for (String f: filenames)
             {
                 sb.append(f);
@@ -165,6 +265,7 @@ public class StreamRecorder
         
         for (IClient client: scope.getClients())
             client.setAttribute("recording", "yes");
+	*/
 	}
 
 	public void stopRecordRoom(IConnection conn)
