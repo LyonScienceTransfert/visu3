@@ -217,6 +217,7 @@ package com.ithaca.visu.core
 		protected function authUser(event:Event):void
 		{	
 			var loginEvent:AuthenticationEvent = new AuthenticationEvent(AuthenticationEvent.CONNECT);
+			loginEvent.rtmpSever = Model.getInstance().rtmpServer;
 			loginEvent.params = {"username" : loginForm.loginField.text, "password" : loginForm.passField.text};
 			dispatchEvent(loginEvent);
 		}

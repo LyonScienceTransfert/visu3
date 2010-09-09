@@ -71,7 +71,7 @@
 
         <mate:EventHandlers type="{AuthenticationEvent.CONNECT}" debug="true">
 			<mate:MethodInvoker generator="{RtmpService}"   
-								method="connect"  arguments="{[Model.getInstance().rtmpServer,event.params]}"/>
+								method="connect"  arguments="{[event.rtmpSever,event.params]}"/>
 			<rtmp:CallbackRegistrator action="joinDeck" target="{MainManager}" method="onJoinDeck"/>
 			<rtmp:CallbackRegistrator action="outDeck" target="{MainManager}" method="onOutDeck"/>
 			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />
