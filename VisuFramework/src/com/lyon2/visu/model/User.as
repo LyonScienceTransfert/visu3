@@ -18,7 +18,8 @@ package   com.lyon2.visu.model
 			this.firstname = user.firstname;
 			this.mail = user.mail;
 			this.avatar = user.avatar;
-			this.profil = user.profil;
+			this.profil = user.profil || "";
+			this.password = user.password || "";
 		}
 		public function getId():int
 		{

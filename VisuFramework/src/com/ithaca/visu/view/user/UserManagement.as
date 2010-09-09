@@ -9,12 +9,15 @@ package com.ithaca.visu.view.user
 	import com.lyon2.visu.model.Session;
 	import com.lyon2.visu.model.User;
 	import com.lyon2.visu.vo.ProfileDescriptionVO;
+	import com.lyon2.visu.vo.UserVO;
 	
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.controls.Alert;
 	import mx.events.FlexEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -98,9 +101,11 @@ package com.ithaca.visu.view.user
 			{
 				searchDisplay.addEventListener(TextOperationEvent.CHANGE,searchDisplay_changeHandler);
 				searchDisplay.addEventListener(FlexEvent.VALUE_COMMIT,searchDisplay_mxchangeHandler);
-				
 			}
-			 
+			if (instance == addUserButton)
+			{
+				addUserButton.addEventListener(MouseEvent.CLICK, addButton_clickHandler);
+			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
@@ -118,6 +123,10 @@ package com.ithaca.visu.view.user
 			if (instance == searchDisplay)
 			{
 				searchDisplay.removeEventListener(TextOperationEvent.CHANGE,searchDisplay_changeHandler);
+			}
+			if (instance == addUserButton)
+			{
+				addUserButton.removeEventListener(MouseEvent.CLICK, addButton_clickHandler);
 			}
 
 			 
@@ -139,6 +148,17 @@ package com.ithaca.visu.view.user
 		// Event Handlers
 		//
 		//_____________________________________________________________________
+		
+		/**
+		 * @private
+		 */
+		protected function addButton_clickHandler(event:MouseEvent):void
+		{
+			usersList.selectedIndex = -1;
+			
+			userDetail.editing = true;
+			userDetail.user = new User( new UserVO());
+		}
 		
 		/**
 		 * @private
@@ -183,6 +203,8 @@ package com.ithaca.visu.view.user
 			
 			userCollection.refresh();
 		}
+		
+		
 	 
 		protected function userFilterFunction(item:Object):Boolean
 		{

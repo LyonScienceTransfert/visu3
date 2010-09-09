@@ -25,11 +25,21 @@
 		<s:State name="normal" />
 		<s:State name="edit" />
 		<s:State name="pending" />
+		<fx:Script>
+			<![CDATA[
+				import mx.skins.spark.LinkButtonSkin;
+			]]>
+		</fx:Script>
 	</s:states>
 	
 	
 	<s:Group top="0" bottom="0" left="0" right="0">
 		<s:layout>
+			<fx:Script>
+				<![CDATA[
+					import com.ithaca.visu.skins.LinkButtonSkin;
+				]]>
+			</fx:Script>
 			<s:BasicLayout/>
 		</s:layout>
 		
@@ -52,34 +62,45 @@
 		<containers:Form enabled.pending="false" enabled="true" id="form"
 			top="50" bottom="0" left="0" right="0" backgroundColor="#eeeeee">
 		 
-			<containers:FormItem id="LABEL_NOM" label="LABEL_NOM" width="80%" >
-				<s:Label id="firstnameDisplay" fontWeight="bold" includeIn="normal" />
+			<containers:FormItem id="LABEL_NOM" label="LABEL_NOM" width="80%" minHeight="25" backgroundColor="#666666">
+				<s:Label id="firstnameDisplay" 
+						 includeIn="normal" height="100%" verticalAlign="middle" 
+						 fontWeight="bold" /> 
 				<s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"/>
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_PRENOM" label="LABEL_PRENOM" width="80%">
-				<s:Label id="lastnameDisplay" fontWeight="bold" includeIn="normal" />
+			<containers:FormItem id="LABEL_PRENOM" label="LABEL_PRENOM" width="80%" minHeight="25" backgroundColor="#666666">
+				<s:Label id="lastnameDisplay" fontWeight="bold" 
+						 height="100%" verticalAlign="middle"
+						 includeIn="normal" />
 				<s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"/>
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_EMAIL" label="LABEL_EMAIL" width="80%">
-				<s:Label id="emailDisplay" includeIn="normal" />
+			<containers:FormItem id="LABEL_EMAIL" label="LABEL_EMAIL" width="80%" minHeight="25" backgroundColor="#666666">
+				<s:Label id="emailDisplay" 
+						 height="100%" verticalAlign="middle"
+						 includeIn="normal"/>
 				<s:TextInput id="emailInput"  minWidth="100" width="100%" includeIn="edit" />
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_PASS" label="LABEL_PASS"  width="80%">
-				<s:Label id="passwordDisplay" includeIn="normal" />
+			<containers:FormItem id="LABEL_PASS" label="LABEL_PASS"  width="80%" minHeight="25" backgroundColor="#666666">
+				<s:Label id="passwordDisplay" 
+						 includeIn="normal" 
+						 height="100%" verticalAlign="middle" />
 				<s:TextInput id="passwordInput" 
 							 minWidth="100" width="100%" displayAsPassword="true" includeIn="edit" />
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_ROLE" label="LABEL_ROLE" width="80%">
-				<s:Label id="profileDisplay"  includeIn="normal" />
+			<containers:FormItem id="LABEL_ROLE" label="LABEL_ROLE" width="80%" minHeight="25" backgroundColor="#666666">
+				<s:Label id="profileDisplay"  includeIn="normal" 
+						 height="100%" verticalAlign="middle" />
 				<s:DropDownList id="profileList" labelField="short_description" 
 								minWidth="100" includeIn="edit" />
+				<s:Button label="Modifier" includeIn="edit" 
+						  skinClass="com.ithaca.visu.skins.LinkButtonSkin" />
 			</containers:FormItem>
 			
-			<containers:FormItem includeIn="edit,pending" width="80%">
+			<containers:FormItem includeIn="edit,pending" width="80%" minHeight="25" backgroundColor="#666666">
 				<s:Button id="saveButton" label="LABEL_SAVE" />
 				<s:Button id="cancelButton" label="LABEL_CANCEL" />
 			</containers:FormItem>

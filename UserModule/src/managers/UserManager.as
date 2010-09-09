@@ -7,6 +7,7 @@ package managers
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.utils.ObjectUtil;
 
 	public class UserManager
 	{
@@ -31,6 +32,7 @@ package managers
 		[Bindable] public var users:Array=[];	
 		public function setUsers(value:Array):void 
 		{ 
+			log.debug( ObjectUtil.toString(value));
 			var ar:Array = []
 			for each (var vo:UserVO in value)
 			{

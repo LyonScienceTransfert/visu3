@@ -37,7 +37,7 @@ public class BootStrapManager
 	public function onSetLoggedUser(uservo:UserVO, listModules:Array, listSessionToday:Array, profiles:Array):void
 	{
 		user = new User(uservo);
-		log.info('onLogin [ \n' + user +"\n"+listModules+"\n"+listSessionToday+"\n"+profiles+'\n]');
+		log.info('onLogin [ \nuser:' + user +"\nmodules:"+listModules+"\nsession:"+listSessionToday+"\nprofiles:"+profiles+'\n]');
 		
 		Model.getInstance().profiles = profiles;
 		//setProfiles( profiles );

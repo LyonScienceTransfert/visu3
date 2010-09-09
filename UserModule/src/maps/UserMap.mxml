@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
-<mate:EventMap 
+<mate:LocalEventMap 
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:s="library://ns.adobe.com/flex/spark"
         xmlns:mx="library://ns.adobe.com/flex/halo"
         xmlns:mate="http://mate.asfusion.com/"
         xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+		]]>
+	</fx:Script>
 
 
     <fx:Declarations>
+		<!-- 
+			~~~~~~~~ DEBUGGER ~~~~~~~~
+		-->	
 		<mate:Debugger level="{Debugger.ALL}"/>
-		 
-		<mate:Injectors targets="{[UserFilters,UserDetail]}">
-			<mate:PropertyInjector source="{Model.getInstance()}"
-								   sourceKey="profiles"
-								   targetKey="profiles"
-								   />
-		</mate:Injectors>
+
+		<!-- 
+			~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
+		-->	
 		
-		<mate:Injectors target="{UserManagement}">
-			<mate:PropertyInjector source="{UserManager}"
-								   sourceKey="users"
-								   targetKey="users"
-								   />
-		</mate:Injectors>		
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
+			<!-- UserManager creation -->
+			<mate:ObjectBuilder generator="{UserManager}" constructorArguments="{[scope.dispatcher]}"/>
+		</mate:EventHandlers>
 		
 		<!-- Application complete start-->
-		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_USER}" start="trace('module : '+event)">
-			<!-- MainManager creation -->
-			<mate:ObjectBuilder generator="{UserManager}"
-								constructorArguments="{[scope.dispatcher]}"/>
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_USER}">
 			
 			<mate:MethodInvoker generator="{UserManager}" 
 								method="getUsers" />
 			
-			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="testApp"   arguments="{['UserManagement']}" />
 			</rtmp:RtmpServiceInvoker>
 			
@@ -42,7 +42,7 @@
 		
 		<!-- Retreiving users -->
 		<mate:EventHandlers type="{UserEvent.LOAD_USERS}">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="listUsers" />
 				
 				<rtmp:resultHandlers>
@@ -59,12 +59,27 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
+		<!-- 
+			~~~~~~~~ INJECTORS ~~~~~~~~
+		-->
+		<mate:Injectors targets="{[UserFilters,UserDetail]}">
+			<mate:PropertyInjector source="{Model.getInstance()}"
+								   sourceKey="profiles"
+								   targetKey="profiles"
+								   />
+		</mate:Injectors>
+		
+		<mate:Injectors target="{UserManagement}" >
+			<mate:PropertyInjector source="{UserManager}"
+								   sourceKey="users"
+								   targetKey="users"
+								   />
+		</mate:Injectors>	
     </fx:Declarations>
 	
 	<fx:Script><![CDATA[
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.ithaca.visu.bootstrap.BootStrapManager;
 		import com.ithaca.visu.controls.users.UserDetail;
 		import com.ithaca.visu.controls.users.UserFilters;
 		import com.ithaca.visu.events.InitMapEvent;
@@ -75,4 +90,4 @@
 		import managers.UserManager;	
 		
 	]]></fx:Script>
-</mate:EventMap>
+</mate:LocalEventMap>

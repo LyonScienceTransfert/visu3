@@ -14,27 +14,27 @@
 	<fx:Declarations>
 		
 	<!-- 
+		~~~~~~~~ DEBUG ~~~~~~~~
+	-->
+		<mate:Debugger level="{Debugger.ALL}"/>
+		
+	<!-- 
 		~~~~~~~~ SERVICES ~~~~~~~~
 	-->
 	
-		
-	<!-- 
-		~~~~~~~~ INJECTORS ~~~~~~~~
-	-->
-		
+		 
 	<!-- 
 		~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
 	-->
 		
-	<mate:EventHandlers type="{FlexEvent.INITIALIZE}">
-		
+	<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">		
 		<mate:ObjectBuilder generator="{RtmpService}" constructorArguments="{scope.dispatcher}"/>
 		<mate:ObjectBuilder generator="{BootStrapManager}" constructorArguments="{scope.dispatcher}"/>
 	</mate:EventHandlers>
 	
 		
 	
-	<mate:EventHandlers type="{FlexEvent.APPLICATION_COMPLETE}" debug="true">
+	<mate:EventHandlers type="{FlexEvent.APPLICATION_COMPLETE}">
 		<mate:MethodInvoker generator="{BootStrapManager}" method="getRtmpServer" />
 		<mate:MethodInvoker generator="{RtmpService}"  
 							method="connect"
@@ -47,14 +47,13 @@
 	 
 		
 		
-	<mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
-	</mate:EventHandlers>
-	<mate:EventHandlers type="{RtmpStatusEvent.FAILED}"  />
-	<mate:EventHandlers type="{RtmpStatusEvent.REJECTED}" debug="true" />
-	<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" start="trace(event)"/>
-	<mate:EventHandlers type="{RtmpErrorEvent.ERROR}" debug="true" />
-	<mate:EventHandlers type="{RtmpDataEvent.DATA}" debug="true" />
-	<mate:EventHandlers type="{RtmpResultEvent.DATA}" debug="true" />
+	<mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" />
+	<mate:EventHandlers type="{RtmpStatusEvent.FAILED}" />
+	<mate:EventHandlers type="{RtmpStatusEvent.REJECTED}" />
+	<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" />
+	<mate:EventHandlers type="{RtmpErrorEvent.ERROR}" />
+	<mate:EventHandlers type="{RtmpDataEvent.DATA}" />
+	<mate:EventHandlers type="{RtmpResultEvent.DATA}" />
 						 
 	<!--
 		~~~~~~~~ INJECTORS ~~~~~~~~

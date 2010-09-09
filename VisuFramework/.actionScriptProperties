@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="VisuLibrary.as" projectUUID="2ebf059a-e930-4abd-a564-7ffdab46558d" version="6">
+<?xml version="1.0" encoding="UTF-8"?>
+<actionScriptProperties mainApplicationPath="VisuLibrary.as" projectUUID="2ebf059a-e930-4abd-a564-7ffdab46558d" version="6">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="false" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
@@ -11,7 +11,7 @@
       <libraryPathEntry kind="3" linkType="1" path="/AssetsLib/bin/AssetsLib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/ComponentsLib/bin/ComponentsLib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/UtilsLib/bin/UtilsLib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/Users/admin/Downloads/as3-gettext.0.4.1/lib/as3-gettext-0.4.1.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/swc"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

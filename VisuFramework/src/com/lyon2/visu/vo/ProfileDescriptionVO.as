@@ -8,5 +8,9 @@ package com.lyon2.visu.vo
 		public var short_description:String;
 		public var long_description:String;
 		
+		public function toString():String
+		{
+			return "[Profile : "+short_description+"]";	
+		}
 	}
 }

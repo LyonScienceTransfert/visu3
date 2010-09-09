@@ -14,7 +14,7 @@ package com.ithaca.visu.ui.utils
 				
 		}
 
-		public static function binaryToNumber(binaryString:String):Number{
+		public static function binaryToNumber(binaryString:String=""):Number{
 			var result:Number = 0;
 			var nbrChar:int = binaryString.length;
 			for(var nChar:int = nbrChar; nChar > 0; nChar--){

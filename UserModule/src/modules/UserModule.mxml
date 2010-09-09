@@ -8,15 +8,14 @@
 		   xmlns:controls="com.ithaca.visu.controls.*"
 		   configure="configureHandler(event)"
 		   creationComplete="creationCompleteHandler(event)"
-		   initialize="visumodulebase1_initializeHandler(event)"
 		   top="0" bottom="0" left="0" right="0" 
 		   xmlns:vo="com.lyon2.visu.vo.*" 
 		   xmlns:user="com.ithaca.visu.view.user.*" 
 		   >
 	<fx:Declarations>
-		<maps:UserMap />
-		<!--force vo mapping-->
+		<maps:UserMap dispatcher="{this}"/>
 	</fx:Declarations>
+	
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.InitMapEvent;
@@ -40,6 +39,8 @@
 					this.dispatchEvent(outSession);
 				}
 				*/
+				trace("InitMapEvent.INIT_MAP_USER");
+				dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
 			}
 			
 			protected function configureHandler(event:VisuModuleEvent):void
@@ -55,7 +56,7 @@
 
 			protected function visumodulebase1_initializeHandler(event:FlexEvent):void
 			{
-				dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
+				//dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
 			}
 
 		]]>
