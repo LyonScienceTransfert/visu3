@@ -13,7 +13,9 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
 	import com.lyon2.visu.*;
-	//import com.lyon2.visu.model.Model;
+	
+	import com.lyon2.visu.model.Model;
+	
 	import com.lyon2.visu.model.Session;
 	import com.lyon2.visu.model.User;
 	import com.lyon2.visu.vo.UserVO;
@@ -53,8 +55,6 @@ package com.ithaca.visu.core
 		 * 
 		 * */ 
 		public var moduleNavigator:ModuleNavigator;
-		 
-		public var md:Model;
 		
 		protected var _progressBar:ProgressBar; 
 		
