@@ -11,6 +11,7 @@ package com.ithaca.visu.events
 		public static const AUTHENTICATION_ERROR:String = "authentication_error";
 
 		public var params : Object;
+		public var rtmpSever : String;
 		
 		public function AuthenticationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
