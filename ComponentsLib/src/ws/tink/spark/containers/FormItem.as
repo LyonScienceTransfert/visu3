@@ -273,7 +273,7 @@ package ws.tink.spark.containers
 			if( event.element is UIComponent )
 			{
 				var element:UIComponent = UIComponent( event.element );
-				element.enabled = false;
+				//element.enabled = false;
 				element.addEventListener( "errorStringChanged", onElementErrorStringChange, false, 0, true );
 			}
 		}

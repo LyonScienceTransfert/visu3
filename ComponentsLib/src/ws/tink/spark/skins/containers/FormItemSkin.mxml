@@ -57,7 +57,9 @@ SOFTWARE.
 		<s:VerticalLayout/>
 	</s:layout>
 	
-	<s:Group left="5" right="5" top="5" bottom="5" >
+	<s:Group left="5" right="5" top="5" bottom="5"
+			 width="100%" height="100%"
+			 >
 		
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle"/>
@@ -72,7 +74,7 @@ SOFTWARE.
 		more about it here: http://bugs.adobe.com/jira/browse/SDK-21143
 		-->
 		<!--- @copy spark.components.SkinnableDataContainer#dataGroup -->
-		<s:Group id="contentGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
+		<s:Group id="contentGroup" width="100%" height="100%" minWidth="0" minHeight="0">
 			<s:layout>
 				<s:HorizontalLayout/>
 			</s:layout>
