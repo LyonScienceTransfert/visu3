@@ -26,6 +26,7 @@
 		<result column="description" jdbcType="LONGVARCHAR" property="description" />
 		<result column="date_session" jdbcType="DATETIME" property="date_session" />
 		<result column="isModel" jdbcType="TINYINT" property="isModel" />
+		<result column="start_recording" jdbcType="DATETIME" property="start_recording" />
 	</resultMap>
     
 	<sql id="selectBase">
