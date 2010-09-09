@@ -61,6 +61,11 @@ public class AdvancedTextInput extends TextInput
 		{
 			clearIcon.addEventListener(MouseEvent.CLICK, clearButton_clickHandler);	
 		}
+		if (instance == promptDisplay)
+		{
+			if (prompt.length > 0) 
+				promptDisplay.text = prompt;
+		}
 	}
 	
 	/**
@@ -134,6 +139,7 @@ public class AdvancedTextInput extends TextInput
 	 */
 	protected function textDisplay_changeHandler(event:TextOperationEvent):void
 	{
+		showPrompt = text.length == 0;
 		invalidateSkinState();
 	}
 	
@@ -142,7 +148,7 @@ public class AdvancedTextInput extends TextInput
 	 */
 	protected function clearButton_clickHandler(event:MouseEvent):void
 	{
-		clear(true);
+		clear();
 	}
 	
 	
@@ -158,6 +164,7 @@ public class AdvancedTextInput extends TextInput
 	{
 		
 		textDisplay.text = "";
+		showPrompt = keepFocus;
 		invalidateSkinState();
 	}
 }

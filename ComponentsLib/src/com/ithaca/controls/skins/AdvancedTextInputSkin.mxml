@@ -199,7 +199,7 @@
 	<s:Label id="promptDisplay" includeIn="prompt" 
 			 verticalAlign="middle" color="{getStyle('promptColor')}" 
 			 fontStyle="italic" 
-			 left="1" right="20" top="1" bottom="1" />
+			 left="5" right="20" top="1" bottom="1" />
 	
 	<!-- clear Icon -->
 	<s:Group id="clearIcon" right="3" verticalCenter="-1" visible.normal="true" visible="false">
