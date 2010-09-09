@@ -20,12 +20,8 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.InitMapEvent;
-			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
-			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.view.user.skins.UserManagementSkin;
-			import com.lyon2.visu.model.Model;
-			import com.lyon2.visu.model.User;
 			
 			import mx.events.FlexEvent;			
 
