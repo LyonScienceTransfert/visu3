@@ -5,11 +5,14 @@ package business
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.lyon2.visu.model.Activity;
+	import com.lyon2.visu.model.Model;
 	import com.lyon2.visu.vo.ActivityVO;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.net.NetConnection;
+	
+	import modules.TutoratModule;
 	
 	import mx.collections.ArrayCollection;
 	import mx.logging.ILogger;
@@ -53,7 +56,7 @@ package business
 		public function onLoadListActivityElement(listActivityElement:Array, activityId:int):void
 		{
 			// DEBAG MODE without load list activity
-			/*var activity:Activity = this.getActivityById(activityId);
+			var activity:Activity = this.getActivityById(activityId);
 			if(activity != null)
 			{
 				var nbrActivity:int = activity.getListActivityElement().length;
@@ -62,10 +65,14 @@ package business
 					activity.setListActivityElement(listActivityElement);
 					var ev:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.SHOW_LIST_ACTIVITY);
 					ev.listActivity = this.listActivities;
-					this.dispatcher.dispatchEvent(ev);
-					
+					var modulTutorat:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+					modulTutorat.updateView(this.listActivities);
+					// FIXME : If using dispatcher => Error : many instances the TutoratModule
+					//TypeError: Error #1034: Echec de la contrainte de type : c
+					//onversion de com.ithaca.visu.events::VisuActivityEvent@2d2a6191 en com.ithaca.visu.events.VisuActivityEvent impossible.
+					//this.dispatcher.dispatchEvent(ev);
 				}
-			}*/
+			}
 		}
 		
 		public function error(event:Object):void

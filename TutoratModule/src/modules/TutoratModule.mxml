@@ -159,9 +159,12 @@
 			/**
 			 * Update list activity
 			 */ 
-			private function updateView(event:VisuActivityEvent):void
+		// FIXME : 	Echec de la contrainte de type, look at TutoratManageronLoadListActivityElement
+		//	public function updateView(event:VisuActivityEvent):void
+			public function updateView(listActivity:ArrayCollection):void
 			{
-			 	var list:ArrayCollection = event.listActivity;
+			 //	var list:ArrayCollection = event.listActivity;
+			 	var list:ArrayCollection = listActivity;
 				// FIXME : Bug many instances the TutoratModule
 				if(dropListActivity != null)
 				{
@@ -192,7 +195,10 @@
 								break;
 							case "memo":
 								label.setStyle("color","#BA5A5A");
-								break;						
+								break;	
+							case "document" : 
+								label.setStyle("color","#O8DD22");
+								break;	
 						}
 						this.panelActivivtyElement.addElement(label)					
 					}
@@ -229,14 +235,16 @@
 	<mx:VDividedBox width="33%" height="100%">
 		<s:Panel  height="60%" width="100%" id="panelPlanSession" title.StudentState="Media de la séance" title.MainState="Plan de la séance">
 			<s:title>Plan de séance</s:title>
-			<s:Button includeIn="MainState" click="button1_clickHandler(event)" label="Recording"/>
+			
 				
 			<s:VGroup gap="20" width="100%">
+				<s:Button includeIn="MainState" click="button1_clickHandler(event)" label="Recording"/>
 				<s:DropDownList id="dropListActivity" prompt="choose activity" 
 								change="dropListActivity_changeHandler(event)"
 								labelField="title"
-								 width="100%" includeIn="MainState" visible="false"/>
-				<s:VGroup id="panelActivivtyElement" gap="22" width="100%" includeIn="MainState"/>
+								width="100%" includeIn="MainState" visible="true"/>
+				<s:VGroup id="panelActivivtyElement" gap="22" width="100%" includeIn="MainState">					
+				</s:VGroup>
 			</s:VGroup>
 		</s:Panel>
 		<s:Panel  width="100%" height="40%" includeIn="MainState">
