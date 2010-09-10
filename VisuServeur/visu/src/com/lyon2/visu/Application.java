@@ -144,7 +144,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     private String smtpserver = "";
 //	public List<Integer> recordingSession = new Vector<Integer>();
 
-    private static Logger log = Red5LoggerFactory.getLogger( Application.class , "visu" );
+    private static Logger log = Red5LoggerFactory.getLogger( Application.class , "visu2" );
 
 
     public Application()
