@@ -23,10 +23,7 @@ public class BootStrapManager
 	
 	[Bindable] public var user:User;
 	
-	//[Bindable] public var profiles:Array=[];
-	
-	//public function setProfiles(value:Array):void { log.debug(value.toString());profiles = value; }
-	
+	[Bindable] public var model:Model;
 	
 	public function BootStrapManager(dispatcher:IEventDispatcher)
 	{
@@ -38,10 +35,8 @@ public class BootStrapManager
 	{
 		user = new User(uservo);
 		log.info('onLogin [ \nuser:' + user +"\nmodules:"+listModules+"\nsession:"+listSessionToday+"\nprofiles:"+profiles+'\n]');
-		
-		Model.getInstance().profiles = profiles;
-		//setProfiles( profiles );
-		
+		model.setLoggedUser(uservo);
+		model.profiles = profiles;
 	}
 	
 	 
@@ -53,7 +48,7 @@ public class BootStrapManager
 	{
 		return serverInfo.rtmpServer;
 	}
-	 
+	
 	
 }
 }

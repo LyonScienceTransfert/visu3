@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<core:VisuApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" 
 			   xmlns:modules="ws.tink.spark.modules.*"
 			   minWidth="955" minHeight="600"
 			   backgroundColor="#CCCCCC" 
-			   xmlns:core="com.ithaca.visu.core.*" 
+			   xmlns:core="com.ithaca.visu.core.*" xmlns:bootstrap="com.ithaca.visu.bootstrap.*" 
 			   >
 	<fx:Script>
 		<![CDATA[
 			import mx.events.ModuleEvent;
+			import mx.logging.LogEventLevel;
 			protected function moduleloader1_errorHandler(event:ModuleEvent):void
 			{
 				trace(event)
@@ -27,11 +28,29 @@
 				trace(event)
 			}
 
+
+			protected function load_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				moduleloader.loadModule("modules/SessionModule.swf");
+			}
+			protected function unload_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				moduleloader.unloadModule();
+			}
+
 		]]>
 	</fx:Script>
+	
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<bootstrap:BootStrapMap />
+		<s:TraceTarget fieldSeparator=" | " includeCategory="true" includeLevel="true" level="{LogEventLevel.ALL}" />
 	</fx:Declarations>
- 
- 
-</core:VisuApplication>
+  	<s:controlBarContent>
+		<s:Button label="load" click="load_clickHandler(event)" />
+		<s:Button label="unload" click="unload_clickHandler(event)" />
+	</s:controlBarContent>
+	<modules:ModuleLoader id="moduleloader" 
+						  top="0" left="0" right="0" bottom="0" />
+</s:Application>

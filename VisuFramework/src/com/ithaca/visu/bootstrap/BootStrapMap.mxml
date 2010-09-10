@@ -27,7 +27,7 @@
 		~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
 	-->
 		
-	<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">		
+	<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
 		<mate:ObjectBuilder generator="{RtmpService}" constructorArguments="{scope.dispatcher}"/>
 		<mate:ObjectBuilder generator="{BootStrapManager}" constructorArguments="{scope.dispatcher}"/>
 	</mate:EventHandlers>
@@ -36,10 +36,8 @@
 	
 	<mate:EventHandlers type="{FlexEvent.APPLICATION_COMPLETE}">
 		<mate:MethodInvoker generator="{BootStrapManager}" method="getRtmpServer" />
-		<mate:MethodInvoker generator="{RtmpService}"  
-							method="connect"
-							arguments="{[lastReturn,{username:'caro@visu.fr',password:'mdp'}]}"/>
-		
+		<mate:MethodInvoker generator="{RtmpService}" method="connect"
+							arguments="{[lastReturn,{username:'lionel@visu.fr',password:'test'}]}"/>		
 		<rtmp:CallbackRegistrator action="setLoggedUser" target="{BootStrapManager}" method="onSetLoggedUser" /> 
 	</mate:EventHandlers>
 	
@@ -58,7 +56,10 @@
 	<!--
 		~~~~~~~~ INJECTORS ~~~~~~~~
 	-->
-	
+	<mate:Injectors target="{BootStrapManager}" debug="true">
+		<mate:PropertyInjector targetKey="model" source="{Model.getInstance()}" />
+	</mate:Injectors>
+
 	</fx:Declarations>
 	<fx:Script>
 	<![CDATA[
