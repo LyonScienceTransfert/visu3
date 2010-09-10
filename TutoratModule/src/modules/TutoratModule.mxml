@@ -225,7 +225,7 @@
 		<s:State name="StudentState"/>
 	</modules:states>
 	<fx:Declarations>
-		<maps:TutoratMap id="tutoratMap"/>
+		<maps:TutoratMap id="tutoratMap" dispatcher="{this}"/>
 		<mate:Listener type="{VisuActivityEvent.SHOW_LIST_ACTIVITY}"  method="updateView"/>
 		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
 		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>

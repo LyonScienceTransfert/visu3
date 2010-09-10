@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<core:VisuApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:modules="ws.tink.spark.modules.*"
+			   minWidth="955" minHeight="600"
+			   backgroundColor="#CCCCCC" 
 			   xmlns:core="com.ithaca.visu.core.*" 
-			   xmlns:maps="maps.*"
-			   xmlns:mate="http://mate.asfusion.com/"
-			   minWidth="955" minHeight="600" xmlns:modules="modules.*">
+			   xmlns:bootstrap="com.ithaca.visu.bootstrap.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.lyon2.visu.model.Model;
+			
+			import flash.events.MouseEvent;
+			
+			protected function load_clickHandler(event:MouseEvent):void
+			{
+				
+				// TODO Auto-generated method stub
+				moduleLoader.loadModule("modules/TutoratModule.swf");
+			}
+			protected function unload_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				moduleLoader.unloadModule();
+			}
+		]]>
+	</fx:Script>
 
-<modules:TutoratModule/>
-</core:VisuApplication>
+	<fx:Declarations>
+		<s:TraceTarget />
+		<bootstrap:BootStrapMap />
+	</fx:Declarations>
+
+	
+	<s:controlBarContent>
+		<s:Button id="load" label="load module" click="load_clickHandler(event)" />
+		<s:Button id="unload" label="unload module" click="unload_clickHandler(event)" />
+	</s:controlBarContent>
+	 
+	<modules:ModuleLoader id="moduleLoader"
+						  top="0" left="0" right="0" bottom="0" />
+	
+</s:Application>
