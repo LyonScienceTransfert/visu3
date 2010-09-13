@@ -266,11 +266,6 @@ public class MainManager
 			newUserJoinSessionEvent.sessionId = sessionId;
 			newUserJoinSessionEvent.status = status;
 			this.dispatcher.dispatchEvent(newUserJoinSessionEvent);		
-		}else
-		{
-			// check if session in mode recording
-			
-		}
 	}
 	
 	/**
@@ -279,18 +274,15 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusRecording(userId:int, status:int):void{
-		if(userId != Model.getInstance().getLoggedUser().id_user)
-		{
+	public function onSetStatusRecording(userId:int, status:int, sessionId:int):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
 			// update status user 
-			Model.getInstance().updateStatusUser(userVO, status);
+			Model.getInstance().updateStatusUser(userVO, status , sessionId);
 			// update list user
 			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
-		}
 	}
 	
 	
