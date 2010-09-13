@@ -4,7 +4,9 @@
 @namespace 			"com.ithaca.visu.controls.*"; 
 @namespace nav 		"com.ithaca.visu.controls.globalNavigation.*"; 
 @namespace core 	"com.ithaca.visu.core.*"; 
-@namespace login	"com.ithaca.visu.controls.login.*"; 
+@namespace login	"com.ithaca.visu.controls.login.*";
+@namespace sessions	"com.ithaca.visu.controls.sessions.*";
+
 
 ConnectionLight
 {
@@ -32,4 +34,12 @@ core|VisuApplication
 login|LoginForm
 {
 	skin-class:ClassReference("com.ithaca.visu.skins.LoginFormSkin");	
+}
+sessions|ActivityDetail
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin");	
+}
+sessions|ActivityElementDetail
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.StatementSkin");	
 }

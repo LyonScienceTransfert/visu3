@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.sessions.ActivityDetail")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="open" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=statementGroup, type=spark.components.Group, required=false
+	name=startButton, type=spark.components.Button, required=false
+	name=memoDisplay, type=spark.components.Label, required=false
+	name=documentGroup, type=spark.components.Group, required=false
+	name=durationDisplay, type=spark.components.supportClasses.TextBase, required=false
+	name=titleDisplay, type=spark.components.supportClasses.TextBase, required=false
+	-->
+	
+	<s:Scroller width="100%" verticalScrollPolicy="auto" horizontalScrollPolicy="off">
+		<s:Group top="0" left="0" right="0" bottom="0">
+			<s:layout>
+				<s:VerticalLayout />
+			</s:layout>
+			
+			<s:Group width="100%" height="30">				
+				<s:Label id="titleDisplay" left="0" top="0" right="50" />
+				<s:Label id="durationDisplay" right="0" top="0" width="40"/>
+				<s:Button id="startButton" label="start" right="0"/>
+			</s:Group>
+			
+			<s:Group id="statementGroup" width="100%">
+				<s:layout>
+					<s:VerticalLayout />
+				</s:layout>
+			</s:Group>
+			 
+			<s:Rect height="2" width="100%">
+				<s:fill>
+					<s:SolidColor color="#999999" />
+				</s:fill>
+			</s:Rect> 
+			
+			<s:Group id="DocumentGroup" width="100%">
+				<s:layout>
+					<s:TileLayout rowHeight="50" columnWidth="50" />
+				</s:layout>
+			</s:Group>
+			
+			<s:Rect height="2" width="100%">
+				<s:fill>
+					<s:SolidColor color="#999999" />
+				</s:fill>
+			</s:Rect> 
+			<s:Label id="memoDisplay" maxDisplayedLines="2" />
+		</s:Group>		
+	</s:Scroller>
+</s:Skin>

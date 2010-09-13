@@ -29,6 +29,11 @@
     <classEntry path="com.lyon2.visu.model.ActivityElement"/>
     <classEntry path="com.ithaca.visu.controls.sessions.SessionPlan"/>
     <classEntry path="com.ithaca.visu.controls.sessions.SessionPlanSkin"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.ActivityDetail"/>
+    <classEntry path="com.lyon2.visu.model.ActivityElementType"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.ActivityElementDetail"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.StatementSkin"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

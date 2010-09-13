@@ -3,10 +3,11 @@ package com.lyon2.visu.model
 	import com.lyon2.visu.vo.ActivityVO;
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.ArrayList;
 	
 	public class Activity 
 	{
-		public var _listActivityElement:ArrayCollection = new ArrayCollection();
+		private var _listActivityElement:ArrayCollection = new ArrayCollection();
 		
 		public var id_activity:int;
 		public var id_session:int;
@@ -14,7 +15,6 @@ package com.lyon2.visu.model
 		public var title:String;
 		public var ind:int;
 
-		
 		public function Activity(activity:Object)
 		{
 			
