@@ -1,6 +1,7 @@
 package business
 {
 import com.ithaca.visu.events.SessionEvent;
+import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
@@ -57,6 +58,7 @@ public class MainManager
 	public function MainManager(dispatcher:IEventDispatcher)
 	{
 		this.dispatcher = dispatcher;
+		fxgt = FxGettext;
 	}
 	// methods
 	
@@ -303,6 +305,23 @@ public class MainManager
 		oldUserOutSession.userId = userVO.id_user;
 		this.dispatcher.dispatchEvent(oldUserOutSession);	
 	}
+	
+	/**
+	 *  call when user receive dhared info
+	 * @param
+	 * 
+	 * 
+	 */
+	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int):void
+	{	
+		var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.RECEIVE_SHARED_INFO);	
+		sessionSharedEvent.typeInfo = typeInfo;
+		sessionSharedEvent.info = info;
+		sessionSharedEvent.senderUserId = senderUserId;		
+		this.dispatcher.dispatchEvent(sessionSharedEvent);	
+	}
+	
+	
 	public function onError(event : Object) : void
 	{
 	}

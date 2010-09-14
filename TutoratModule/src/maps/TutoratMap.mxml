@@ -7,32 +7,18 @@
 	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 	
 	<fx:Script><![CDATA[
-		import modules.TutoratModule;
 		import business.TutoratManager;
 		
-		import com.lyon2.visu.model.Model;
-		
 		import com.asfusion.mate.utils.debug.Debugger;
-		
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
-		
-		import com.ithaca.visu.events.MessageEvent;
-		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.UserEvent;
-		import com.ithaca.visu.events.InitMapEvent;	
-		import com.ithaca.visu.events.VisuActivityEvent;	
-		import com.ithaca.visu.events.VisuActivityElementEvent;	
-		
-		import com.lyon2.visu.vo.SessionUserVO;
-		
+		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.events.VisuActivityElementEvent;
+		import com.ithaca.visu.events.VisuActivityEvent;
 		import com.lyon2.visu.model.Model;
 		
-		import mx.core.FlexGlobals;
+		import modules.TutoratModule;
+		
 		import mx.events.FlexEvent;
-		import mx.events.ModuleEvent;
 		
 		
 	]]></fx:Script>

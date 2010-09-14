@@ -48,7 +48,7 @@
 					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentSession(session);
 					Model.getInstance().setCurrentTutoratModule(this);
-
+					
 					var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_TUTORAT);
 					this.dispatchEvent(initMapEvent);
 					// set current state
@@ -157,16 +157,16 @@
 					this.visio.status = VisuVisio.STATUS_RECORD;
 				}
 			}
-				
+			
 			/**
 			 * Update list activity
 			 */ 
-		// FIXME : 	Echec de la contrainte de type, look at TutoratManageronLoadListActivityElement
-		//	public function updateView(event:VisuActivityEvent):void
+			// FIXME : 	Echec de la contrainte de type, look at TutoratManageronLoadListActivityElement
+			//	public function updateView(event:VisuActivityEvent):void
 			public function updateView(listActivity:ArrayCollection):void
 			{
-			 //	var list:ArrayCollection = event.listActivity;
-			 	var list:ArrayCollection = listActivity;
+				//	var list:ArrayCollection = event.listActivity;
+				var list:ArrayCollection = listActivity;
 				// FIXME : Bug many instances the TutoratModule
 				if(dropListActivity != null)
 				{
@@ -186,29 +186,55 @@
 					var elm:ActivityElement = listActivityElement[nElm];
 					var text:String = elm.data;
 					var type:String = elm.type_element;
-					var label:Button = new Button();
-					label.label = text;
+					var label:RoundedLabel = new RoundedLabel();
+					label.text = text;
+					label.doubleClickEnabled = true;
+					label.addEventListener(MouseEvent.DOUBLE_CLICK , onDoubleClickLabel);
 					if(type == "keyword"){
+						label.typeLabel = 2;
 						this.panelMotCle.addElement(label);
 					}else{
 						switch(type){	
 							case "consigne":
-								label.setStyle("color","#70B2EE");
+								label.setStyle("color","#52ad3c");
+								label.typeLabel = 1;
 								break;
 							case "memo":
-								label.setStyle("color","#BA5A5A");
+								label.setStyle("color","#52ad3c");
+								label.typeLabel = 0;
 								break;	
 							case "document" : 
-								label.setStyle("color","#O8DD22");
+								label.setStyle("color","#a1157f");
+								label.typeLabel = 3;
 								break;	
 						}
 						this.panelActivivtyElement.addElement(label)					
 					}
 				}
 			}
-
-
-
+			
+			private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					var label:RoundedLabel = new RoundedLabel();
+					label.text = event.senderUserId.toString()+" : "+event.info;
+					this.panelChatSession.addElement(label);
+				}
+			}
+			
+			private function onDoubleClickLabel(event:MouseEvent):void
+			{
+					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+					var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+					sessionSharedEvent.typeInfo = (event.currentTarget as RoundedLabel).typeLabel;
+					sessionSharedEvent.info = (event.currentTarget as RoundedLabel).text;
+					sessionSharedEvent.listUsers = listUsersId;
+					dispatchEvent(sessionSharedEvent);
+			}
+			
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
 				if(this.visio != null)
@@ -216,9 +242,10 @@
 					//start recording
 					var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
 					eventStartRecording.sessionId = this.currentSession.id_session;
-					dispatchEvent(eventStartRecording);				}
+					dispatchEvent(eventStartRecording);				
+				}
 			}
-
+			
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -232,44 +259,47 @@
 		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
 		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
 		<mate:Listener type="{SessionEvent.START_RECORDING_SESSION}"  method="onStartRecordingSession"/>
+		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
 	</fx:Declarations>
-<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
-	<mx:VDividedBox width="33%" height="100%">
-		<s:Panel  height="60%" width="100%" id="panelPlanSession" title.StudentState="Media de la séance" title.MainState="Plan de la séance">
-			<s:title>Plan de séance</s:title>
-			
+	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
+		<mx:VDividedBox width="33%" height="100%">
+			<s:Panel  height="60%" width="100%" id="panelPlanSession" title.StudentState="Media de la séance" title.MainState="Plan de la séance">
+				<s:title>Plan de séance</s:title>
 				
-			<s:VGroup gap="20" width="100%">
-				<s:Button includeIn="MainState" click="button1_clickHandler(event)" label="Recording"/>
-				<s:DropDownList id="dropListActivity" prompt="choose activity" 
-								change="dropListActivity_changeHandler(event)"
-								labelField="title"
-								width="100%" includeIn="MainState" visible="true"/>
-				<s:VGroup id="panelActivivtyElement" gap="22" width="100%" includeIn="MainState">					
+				
+				<s:VGroup gap="20" width="100%">
+					<s:Button includeIn="MainState" click="button1_clickHandler(event)" label="Recording"/>
+					<s:DropDownList id="dropListActivity" prompt="choose activity" 
+									change="dropListActivity_changeHandler(event)"
+									labelField="title"
+									width="100%" includeIn="MainState" visible="true"/>
+					<s:VGroup id="panelActivivtyElement" gap="22" width="100%" includeIn="MainState">					
+					</s:VGroup>
 				</s:VGroup>
-			</s:VGroup>
-		</s:Panel>
-		<s:Panel  width="100%" height="40%" includeIn="MainState">
-			<s:title>Mot clés</s:title>
-			<s:VGroup id="panelMotCle" width="100%"/>
-		</s:Panel>
-	</mx:VDividedBox>
-	<mx:VDividedBox width="77%" height="100%">
-		<mx:HDividedBox width="100%" height="55%">
-			<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}">
-
-				<controls:VisuVisio id="visio" width="100%" top="0" bottom="26"
-											  quality="80"
-											  bandwidth="15000" autoPlay="True"/>
 			</s:Panel>
-			<s:Panel height="100%" width="60%">
-				<s:title>Chat</s:title>
+			<s:Panel  width="100%" height="40%" includeIn="MainState">
+				<s:title>Mot clés</s:title>
+				<s:VGroup id="panelMotCle" width="100%"/>
 			</s:Panel>
-		</mx:HDividedBox>
-		<s:Panel width="100%" height="45%">
-			<s:title>TimeLine</s:title>
-		</s:Panel>
-	</mx:VDividedBox>	
-</mx:HDividedBox>	
+		</mx:VDividedBox>
+		<mx:VDividedBox width="77%" height="100%">
+			<mx:HDividedBox width="100%" height="55%">
+				<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}">
+					
+					<controls:VisuVisio id="visio" width="100%" top="0" bottom="26"
+										quality="80"
+										bandwidth="15000" autoPlay="True"/>
+				</s:Panel>
+				<s:Panel   height="100%" width="60%">
+					<s:title>Chat</s:title>
+				<s:VGroup id="panelChatSession" gap="22" width="100%" includeIn="MainState">					
+				</s:VGroup>
+				</s:Panel>
+			</mx:HDividedBox>
+			<s:Panel width="100%" height="45%">
+				<s:title>TimeLine</s:title>
+			</s:Panel>
+		</mx:VDividedBox>	
+	</mx:HDividedBox>	
 	<s:Label includeIn="BlankState" text="Rejoindre séance simplement par Accueill" fontSize="22" left="50" top="50" width="474"/>
 </modules:VisuModuleBase>

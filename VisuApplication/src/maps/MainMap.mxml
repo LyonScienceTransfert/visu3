@@ -16,6 +16,8 @@
 		import com.ithaca.visu.events.AuthenticationEvent;
 		import com.ithaca.visu.events.MessageEvent;
 		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.SessionSharedEvent;
+		import com.ithaca.visu.events.SessionEvent;
 		import com.lyon2.visu.model.Model;
 		
 		import mx.events.FlexEvent;
@@ -83,6 +85,7 @@
 			<rtmp:CallbackRegistrator action="sameUserId" target="{MainManager}" method="onSameUserId"/>
 			<rtmp:CallbackRegistrator action="startRecording" target="{MainManager}" method="onStartRecording"/>
 			<rtmp:CallbackRegistrator action="setStatusRecording" target="{MainManager}" method="onSetStatusRecording"/>
+			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
@@ -96,10 +99,6 @@
 							  arguments="{[event.userId]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-<!--		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
-			<mate:MethodInvoker generator="{MainManager}"
-								method="onError" arguments="{[currentEvent]}"/>
-		</mate:EventHandlers>-->
 		
         <mate:EventHandlers type="{MessageEvent.SEND_PRV_MESSAGE}">
             <rtmp:RtmpServiceInvoker service="{RtmpService}">
@@ -108,6 +107,13 @@
             </rtmp:RtmpServiceInvoker>
        </mate:EventHandlers>
 		
+		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="sendPublicMessage"
+							  arguments="{[event.senderUserId, event.message]}"/>             
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
 		<mate:EventHandlers type="{MessageEvent.START_RECORDING}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="recorder.startRecordRoom"
@@ -115,10 +121,10 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
+		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
-				<mate:Request action="sendPublicMessage"
-							  arguments="{[event.senderUserId, event.message]}"/>             
+				<mate:Request action="shared.sendSharedInfo"
+							  arguments="{[event.typeInfo, event.info, event.listUsers]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
