@@ -745,7 +745,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			 }
 			 
 			 String userIdClient = client.getId();
-			 
+		*/
 			 info.add((Integer)client.getAttribute("status"));
              info.add((User)client.getAttribute("user"));
 			 info.add((String)client.getAttribute("id"));
