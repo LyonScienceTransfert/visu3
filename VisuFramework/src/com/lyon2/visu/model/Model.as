@@ -37,6 +37,8 @@ package  com.lyon2.visu.model
 		private var _userIdClient:String;
 		private var _currentSession:Session;
 		private var _tutoratModule:VisuModuleBase;
+		private var _userModule:VisuModuleBase;
+		private var _homeModule:VisuModuleBase;
 		
 		public function Model(access:Private)
 		{
@@ -139,6 +141,32 @@ package  com.lyon2.visu.model
 		public function getCurrentTutoratModule():VisuModuleBase
 		{
 			return _tutoratModule;
+		}
+		
+		/**
+		 * current user module, only for debugging
+		 */
+		public function setCurrentUserModule(value:VisuModuleBase):void
+		{
+			_userModule = value;
+		}
+		
+		public function getCurrentUserModule():VisuModuleBase
+		{
+			return _userModule;
+		}
+		
+		/**
+		 * current user module, only for debugging
+		 */
+		public function setCurrentHomeModule(value:VisuModuleBase):void
+		{
+			_homeModule = value;
+		}
+		
+		public function getCurrentHomeModule():VisuModuleBase
+		{
+			return _homeModule;
 		}
 		
 		public function setListSessions(arSession:Array):void
