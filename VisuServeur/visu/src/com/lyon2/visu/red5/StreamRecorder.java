@@ -187,8 +187,10 @@ public class StreamRecorder
 				listUserStartRecording.put(userId,listTraceFileName);
     			listPresentsIdUsers.add(userId.toString());
 				// notification for all users that user has status "recording"
-				Object[] args = {userId, (Integer)client.getAttribute("status")};
+				Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId")};
 				//send message to all users on "Deck"
+				log.warn("==============setStatusRecording");
+				log.warn("==++++ setStatusRecording {} ",args);
 				invokeOnScopeClients(scope, "setStatusRecording", args);
 				
 				try 
