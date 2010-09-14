@@ -732,9 +732,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		 for (IClient client : this.getClients())
 		 {
 			 List<Object> info = new Vector<Object>();
-			// IConnection conn = (IConnection)client.getConnections().toArray()[0];
-			// StringBuffer scopes = new StringBuffer();
-			 Integer status = (Integer)client.getAttribute("status");
+		/*	 Integer status = (Integer)client.getAttribute("status");
 			 
 			 Integer userId = (Integer)client.getAttribute("uid");
 			 User user = null;
