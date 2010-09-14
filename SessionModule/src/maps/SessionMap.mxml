@@ -38,6 +38,5 @@
 		
 		import mx.events.FlexEvent;
 		
-		
 	]]></fx:Script>	
 </mate:LocalEventMap>

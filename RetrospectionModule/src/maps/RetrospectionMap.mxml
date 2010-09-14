@@ -38,12 +38,6 @@
 								method="onError" />
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{SessionEvent.OUT_SESSION}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}">
-				<mate:Request action="checkOutSession"
-							  arguments="{[event.userId]}"/>              
-			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
 		
 	</fx:Declarations>
 	
