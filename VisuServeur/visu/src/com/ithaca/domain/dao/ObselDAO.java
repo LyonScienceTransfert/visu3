@@ -66,6 +66,8 @@ import com.ithaca.domain.model.Obsel;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.lyon2.utils.ObselStringParams;
+
 public interface ObselDAO 
 {
 	/**
@@ -89,5 +91,8 @@ public interface ObselDAO
 	public List<Obsel> getSessionStartObselsForUserId(Integer uid) throws SQLException;
 	
 	public List<Obsel> getTextCommentsObselsForStartObsel(Long timeBegin) throws SQLException;
+	
+	public String getTraceIdByObselRoomEnter(ObselStringParams param) throws SQLException;
+	
 
 }

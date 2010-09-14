@@ -72,6 +72,7 @@ import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
 import com.ithaca.domain.dao.ObselDAO;
 import com.ithaca.domain.model.Obsel;
+import com.lyon2.utils.ObselStringParams;
 
 public class ObselDAOImpl extends SqlMapClientTemplate implements ObselDAO 
 {
@@ -136,6 +137,17 @@ public class ObselDAOImpl extends SqlMapClientTemplate implements ObselDAO
         // redefining the table structure, id should be put in its own
         // field.
         return (List<Obsel>) getSqlMapClient().queryForList("obsels.getTextCommentsObselsForStartObsel", "%" + Long.toString(timeBegin) + "%");
+    }
+	
+	@SuppressWarnings("unchecked")
+    public String getTraceIdByObselRoomEnter(ObselStringParams param) throws SQLException
+    {
+        // FIXME: we are hacking timeBegin passing, which was not stored as
+        // such in the table but is part of the trace field. When
+        // redefining the table structure, id should be put in its own
+        // field.
+       // return (String) getSqlMapClient().queryForObject("obsels.getTraceIdByObselRoomEnter", "%-" + tempTrace + ">%", "%:hasSession " + "\""+tempRdf+"\"%");
+		return (String) getSqlMapClient().queryForObject("obsels.getTraceIdByObselRoomEnter", param);
     }
 
 }
