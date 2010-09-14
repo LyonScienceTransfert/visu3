@@ -7,7 +7,7 @@
 						xmlns:mate="http://mate.asfusion.com/"
 						configure="visumodulebase1_configureHandler(event)"
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
-						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState">
+						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState" xmlns:sessions="com.ithaca.visu.controls.sessions.*">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.InitMapEvent;
@@ -165,21 +165,13 @@
 			//	public function updateView(event:VisuActivityEvent):void
 			public function updateView(listActivity:ArrayCollection):void
 			{
-				//	var list:ArrayCollection = event.listActivity;
-				var list:ArrayCollection = listActivity;
-				// FIXME : Bug many instances the TutoratModule
-				if(dropListActivity != null)
-				{
-					dropListActivity.dataProvider = list; 
-					// TODO : add keyword to panel keyword					
-				}
 				
 			}
 			
 			protected function dropListActivity_changeHandler(event:IndexChangeEvent):void
 			{
-				this.panelActivivtyElement.removeAllElements();
-				var listActivityElement:ArrayCollection = ((event.currentTarget as DropDownList).selectedItem as Activity).getListActivityElement()
+				
+				/*
 				var nbrElm:uint = listActivityElement.length;
 				for(var nElm:uint = 0; nElm < nbrElm; nElm++)
 				{
@@ -211,6 +203,7 @@
 						this.panelActivivtyElement.addElement(label)					
 					}
 				}
+				*/
 			}
 			
 			private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
@@ -262,26 +255,17 @@
 		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
-		<mx:VDividedBox width="33%" height="100%">
-			<s:Panel  height="60%" width="100%" id="panelPlanSession" title.StudentState="Media de la séance" title.MainState="Plan de la séance">
+		<s:VGroup width="33%" height="100%">
+			<mx:Spacer height="5" />
+			<s:Button width="100%" includeIn="MainState" height="30" 
+					  click="button1_clickHandler(event)" label="Recording"/>
+			<s:Panel height="100%" width="100%" id="panelPlanSession">
 				<s:title>Plan de séance</s:title>
-				
-				
-				<s:VGroup gap="20" width="100%">
-					<s:Button includeIn="MainState" click="button1_clickHandler(event)" label="Recording"/>
-					<s:DropDownList id="dropListActivity" prompt="choose activity" 
-									change="dropListActivity_changeHandler(event)"
-									labelField="title"
-									width="100%" includeIn="MainState" visible="true"/>
-					<s:VGroup id="panelActivivtyElement" gap="22" width="100%" includeIn="MainState">					
-					</s:VGroup>
-				</s:VGroup>
+				<s:title.StudentState>Media de la séance</s:title.StudentState>
+				<sessions:SessionPlan height="100%" width="100%" />
 			</s:Panel>
-			<s:Panel  width="100%" height="40%" includeIn="MainState">
-				<s:title>Mot clés</s:title>
-				<s:VGroup id="panelMotCle" width="100%"/>
-			</s:Panel>
-		</mx:VDividedBox>
+		</s:VGroup>
+		 
 		<mx:VDividedBox width="77%" height="100%">
 			<mx:HDividedBox width="100%" height="55%">
 				<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}">

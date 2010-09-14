@@ -80,11 +80,14 @@ package com.ithaca.visu.controls.sessions
 				
 				for each (var el:ActivityElement in _activity.getListActivityElement())
 				{
-					trace("+++++ "+el.data+" - " +el.type_element)
 					switch(el.type_element)
 					{
 					case ActivityElementType.MEMO:
-						if (memoDisplay) memoDisplay.text = el.data;
+						if (memoDisplay) 
+						{
+							memoDisplay.toolTip = el.data;						
+							memoDisplay.text = el.data;
+						}
 						break;
 					case ActivityElementType.STATEMENT:						
 						var s:ActivityElementDetail = new ActivityElementDetail();

@@ -24,7 +24,7 @@ package com.ithaca.visu.controls.sessions
 		public var activityGroup:Group;
 		
 		[SkinPart("false")] 
-		public var keyWordGroup:Group;
+		public var keywordGroup:Group;
 		
 		private var _keywords:IList;
 		protected var keywordsChanged:Boolean;
@@ -45,21 +45,23 @@ package com.ithaca.visu.controls.sessions
 			if (activitiesChanged)
 			{
 				activitiesChanged = false;
+				
+				removeAllElements();
+				keywordGroup.removeAllElements();
+				
 				for each (var activity:Activity in _activities)
 				{
 					var a:ActivityDetail =  new ActivityDetail();
 					
 					a.activity = activity;
 					a.percentWidth = 100;
-					trace("parsing activity " + activity.title)
 					for each( var el:ActivityElement in activity.getListActivityElement())
 					{
-						trace("parsing element " +el.data + "-"+ el.type_element)
 						if (el.type_element == ActivityElementType.KEYWORD)
 						{
 							var s:Label = new Label();
 							s.text = el.data;
-							keyWordGroup.addElement(s);
+							keywordGroup.addElement(s);
 						}
 					}
 					addElement( a );
@@ -82,6 +84,7 @@ package com.ithaca.visu.controls.sessions
 		public function set activities(value:IList):void 
 		{
 			if (_activities == value) return;
+			
 			if (_activities != null)
 			{
 				_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
@@ -99,6 +102,7 @@ package com.ithaca.visu.controls.sessions
 			dispatchEvent( new Event("updateActivities")); 
 			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
 			_activities.dispatchEvent(event);
+			
 		}
 		
 		
@@ -107,14 +111,5 @@ package com.ithaca.visu.controls.sessions
 			activitiesChanged = true;
 			invalidateProperties();
 		}	
-		
-		[Bindable]public function get act():IList{return _activities;}
-		public function set act(value:IList):void
-		{
-			if (value == _activities) return;
-			_activities = value;
-			activitiesChanged = true;
-			invalidateProperties();			
-		}
 	}
 }

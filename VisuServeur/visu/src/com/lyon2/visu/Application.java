@@ -745,7 +745,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			 }
 			 
 			 String userIdClient = client.getId();
-			 */
+			 
 			 info.add((Integer)client.getAttribute("status"));
              info.add((User)client.getAttribute("user"));
 			 info.add((String)client.getAttribute("id"));
@@ -909,7 +909,12 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     			paramsObsel.add("uid");paramsObsel.add(loggedUserId.toString());
     			paramsObsel.add("session");paramsObsel.add(sessionId.toString());
     			paramsObsel.add("typeExit");paramsObsel.add("normal");
-				// add obsel "SessionExit"
+				
+    			log.debug("uid : {}",connectedClient.getAttribute("uid"));
+				log.debug("trace : {}",connectedClient.getAttribute("trace"));
+				log.debug("paramsObsel {}",paramsObsel);
+				
+    			// add obsel "SessionExit"
 				try
 				{
 					setObsel((Integer)connectedClient.getAttribute("uid"), (String)connectedClient.getAttribute("trace"), "SessionExit", paramsObsel);					

@@ -28,7 +28,7 @@
     <classEntry path="com.ithaca.visu.events.VisuActivityElementEvent"/>
     <classEntry path="com.lyon2.visu.model.ActivityElement"/>
     <classEntry path="com.ithaca.visu.controls.sessions.SessionPlan"/>
-    <classEntry path="com.ithaca.visu.controls.sessions.SessionPlanSkin"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.SessionPlanSkin"/>
     <classEntry path="com.ithaca.visu.controls.sessions.ActivityDetail"/>
     <classEntry path="com.lyon2.visu.model.ActivityElementType"/>
     <classEntry path="com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin"/>

@@ -71,7 +71,7 @@ package com.ithaca.visu.controls
 		protected var open:Boolean;
 		
 		[Bindable]
-		private var fxgt:_FxGettext = FxGettext;
+		private var fxgt:_FxGettext;
 		
 		private var _session:Session;
 		private var sessionChanged:Boolean;
@@ -108,7 +108,8 @@ package com.ithaca.visu.controls
 		{
 			super();
 			hourformater=new DateFormatter();
-			hourformater.formatString = "HH:NN";			
+			hourformater.formatString = "HH:NN";
+			fxgt = FxGettext;
 		}
 		
 		

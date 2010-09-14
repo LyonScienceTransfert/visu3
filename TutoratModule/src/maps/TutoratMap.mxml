@@ -11,6 +11,7 @@
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.visu.controls.sessions.SessionPlan;
 		import com.ithaca.visu.events.InitMapEvent;
 		import com.ithaca.visu.events.VisuActivityElementEvent;
 		import com.ithaca.visu.events.VisuActivityEvent;
@@ -29,6 +30,10 @@
 		<mate:Injectors target="{TutoratModule}">
 			<mate:PropertyInjector source="{TutoratManager}"
 								   targetKey="listActivities" sourceKey="listActivities"/>
+		</mate:Injectors>
+		<mate:Injectors target="{SessionPlan}">
+			<mate:PropertyInjector source="{TutoratManager}"
+								   targetKey="activities" sourceKey="listActivities"/>
 		</mate:Injectors>
 		
 		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->

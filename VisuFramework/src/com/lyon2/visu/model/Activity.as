@@ -25,6 +25,12 @@ package com.lyon2.visu.model
 			this.ind = activity.ind;
 		}
 		
+		public function get activityElements():ArrayCollection
+		{
+			return _listActivityElement;
+		}
+		
+		
 		public function getListActivityElement():ArrayCollection
 		{
 			return _listActivityElement;

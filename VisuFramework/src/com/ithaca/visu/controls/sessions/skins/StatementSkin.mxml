@@ -9,15 +9,18 @@
 	
 	<!-- SkinParts
 	name=textDisplay, type=spark.components.supportClasses.TextBase, required=false
-	--><s:filters>
+	-->
+
+	<s:Rect  top="5" left="5" right="5" bottom="5">
+		<s:fill>
+			<s:SolidColor color="#0099CC" />
+		</s:fill>
+		<s:filters>
 			<s:GlowFilter color="#333" />
 		</s:filters>
-	<s:Rect  top="0" left="0" right="0" bottom="0">
-		<s:fill>
-			<s:SolidColor color="#00EFEF" />
-		</s:fill>
-		
 	</s:Rect>
-	<s:RichText id="textDisplay" top="0" left="0" right="0" bottom="0"/>
+	<s:RichText id="textDisplay" top="10" left="10" right="10" bottom="10"
+				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+				/>
 				
 </s:Skin>
