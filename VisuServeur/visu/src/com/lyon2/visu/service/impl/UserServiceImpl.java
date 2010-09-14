@@ -64,11 +64,7 @@ package com.lyon2.visu.service.impl;
 
 import java.util.List;
 
-import javax.swing.Icon;
-
 import org.red5.logging.Red5LoggerFactory;
-import org.red5.server.api.IConnection;
-import org.red5.server.api.Red5;
 import org.slf4j.Logger;
 
 import com.lyon2.utils.MailerFacade;
@@ -189,37 +185,6 @@ public class UserServiceImpl implements UserService
 	
 	public void setUserDao(UserDAO userDao) {
 		this.userDao = userDao;
-	}
-
-	public User getUserByUsernamePassword(String username, String password) 
-	{
-		
-		log.debug("getUserByUsernamePassword user {} - passs : ********", username, password );
-		IConnection conn = Red5.getConnectionLocal();
-		
-		
-		User u = (User) conn.getAttribute("user");
-		if( u != null )
-		{
-			log.debug("user already authentified {}",u);
-			return u;
-		}
-		else
-		{
-			log.debug("user is not authentified");
-		}
-		try
-		{
-			u = this.userDao.getUserByUsernamePassword(username,password);
-			conn.setAttribute("user", u);
-			log.debug("Save authentified user {}",u);
-		}
-		catch (Exception e)
-		{
-			log.error("--getUserByUsernamePassword : " + e.getMessage());
-		}
-		
-		return u;
 	}
 	
 	

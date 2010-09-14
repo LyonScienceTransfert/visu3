@@ -79,6 +79,4 @@ public interface UserService
 		public abstract List<User> getUsersFromSession(Integer sessionId);
 		
 		public abstract User getUser(Integer userId);
-
-		public abstract User getUserByUsernamePassword(String username, String password);
 	}
