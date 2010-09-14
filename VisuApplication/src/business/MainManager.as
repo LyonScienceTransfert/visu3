@@ -250,10 +250,8 @@ public class MainManager
 	 * userIdClient 
 	 */
 	public function onJoinSession(userVO:UserVO, userIdClient:String, sessionId:int, status:int):void{
-		if(userVO.id_user != Model.getInstance().getLoggedUser().id_user)
-		{
 			// update status user 
-			Model.getInstance().updateStatusUser(userVO, status);
+			Model.getInstance().updateStatusUser(userVO, status, sessionId);
 			// update idClient
 			Model.getInstance().updateUserIdClient(userVO, userIdClient);
 			// update list user
@@ -295,7 +293,7 @@ public class MainManager
 	public function onOutSession(userVO:UserVO, status:int):void
 	{
 		// update status user 
-		Model.getInstance().updateStatusUser(userVO, status);
+		Model.getInstance().updateStatusUser(userVO, status , 0);
 		// update list user
 		var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
@@ -303,8 +301,7 @@ public class MainManager
 		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);	
 		oldUserOutSession.userIdClient = Model.getInstance().getIdClient(userVO.id_user);
 		oldUserOutSession.userId = userVO.id_user;
-		this.dispatcher.dispatchEvent(oldUserOutSession);
-		
+		this.dispatcher.dispatchEvent(oldUserOutSession);	
 	}
 	public function onError(event : Object) : void
 	{

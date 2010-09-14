@@ -417,7 +417,8 @@ package  com.lyon2.visu.model
 				var userVO:UserVO = infoUser[1];
 				var user:User = new User(userVO);
 				user.setStatus(status);
-				user.id_client=infoUser[2]
+				user.id_client=infoUser[2];
+				user.currentSessionId = infoUser[3];
 				this.listConnectedUsers.addItem(user);
 				// add set swapUsers
 				this.listSwapUsers.addItem(user);
@@ -518,16 +519,16 @@ package  com.lyon2.visu.model
 		/**
 		 * update status connected user, when user walk out fro salon tutorat 
 		 */
-		public function updateStatusUser(userVO:UserVO, status:int):void
+		public function updateStatusUser(userVO:UserVO, status:int, sessionId:int):void
 		{
-			this.updateStatusUserFromList(userVO, this.listConnectedUsers, status);
-			this.updateStatusUserFromList(userVO, this.listSwapUsers, status);
+			this.updateStatusUserFromList(userVO, this.listConnectedUsers, status, sessionId);
+			this.updateStatusUserFromList(userVO, this.listSwapUsers, status, sessionId);
 		}
 		
 		/**
 		 * update status user  
 		 */
-		private function updateStatusUserFromList(userVO:UserVO, listUsers:ArrayCollection, status:int):void{
+		private function updateStatusUserFromList(userVO:UserVO, listUsers:ArrayCollection, status:int, sessionId:int):void{
 			var nbrUsers:uint = listUsers.length;
 			for(var nUser:uint =0; nUser < nbrUsers; nUser++)
 			{ 
@@ -536,6 +537,7 @@ package  com.lyon2.visu.model
 				if(userId == userVO.id_user)
 				{
 					user.status = status;
+					user.currentSessionId = sessionId;
 				}
 			}
 		}
@@ -543,24 +545,64 @@ package  com.lyon2.visu.model
 		/**
 		 * get list client id of the connected users
 		 */
-		public function getListIdClient(listUserSession:ArrayCollection):Array
+		public function getListIdClient(sessionId:int):Array
+		{
+			var result:Array = new Array();
+			var nbrUsers:uint = this.listConnectedUsers.length;
+			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
+			{
+				var user:User = this.listConnectedUsers[nUser];
+				var idClient:String = this.getIdClient(user.id_user);
+				var status:int = user.status;
+				var currentSessionUser:int = user.currentSessionId;
+				if((idClient != "") && (status == ConnectionStatus.CONNECTED || status == ConnectionStatus.RECORDING) && (currentSessionUser == sessionId))
+				{
+					//add idClient only if status Connected or Recording
+					result.push(idClient);				
+				}
+			}
+			return result;
+		}
+		
+		
+		/**
+		 * get list users id of the session 
+		 */
+		public function getListUsersId(listUserSession:ArrayCollection):Array
 		{
 			var result:Array = new Array();
 			var nbrUsers:uint = listUserSession.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
 				var user:User = listUserSession[nUser];
-				var idClient:String = this.getIdClient(user.id_user);
-				var status:int = user.status;
-				if((idClient != "") && (status == ConnectionStatus.CONNECTED || status == ConnectionStatus.RECORDING))
+				if(user.status == ConnectionStatus.RECORDING)
 				{
-					//add idClient only if status Connected
-					result.push(idClient);				
+					//add userId only if status Recording
+					result.push(user.getId());				
 				}
 			}
 			return result;
 		}
-			
+		
+		/**
+		 * get list users id with status "RECORDING" of the recording session 
+		 */
+		public function getListUsersIdByRecordingSession(sessionId:int):Array
+		{
+			var result:Array = new Array();
+			var nbrUsers:uint = this.listConnectedUsers.length;
+			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
+			{
+				var user:User = this.listConnectedUsers[nUser];
+				if((user.status == ConnectionStatus.RECORDING) && (user.currentSessionId == sessionId))
+				{
+					//add userId only if status Recording of this sessionId
+					result.push(user.getId());				
+				}
+			}
+			return result;
+		}
+		
 		public function getIdClient(userId:int):String
 		{
 			var nbrUsers:uint = this.listConnectedUsers.length;

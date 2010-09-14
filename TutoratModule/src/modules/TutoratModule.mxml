@@ -63,7 +63,7 @@
 					this.setCurrentState("BlankState");
 				}
 			}
-
+			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
 				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
@@ -71,7 +71,7 @@
 					var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
 					visuActivityEvent.sessionId = Model.getInstance().getCurrentSession().id_session;					
 					dispatchEvent(visuActivityEvent);
-	
+					
 					this.visio.connection = Model.getInstance().getNetConnection();
 					this.visio.streamID = Model.getInstance().getUserIdClient();
 					this.visio.addLocalDevice();
@@ -80,8 +80,8 @@
 						panelPlanSession.title = panelPlanSession.title +' : '+ Model.getInstance().getCurrentSession().theme;
 					}
 					// add streams of other users from this session
-					var listSessionUsers:ArrayCollection = Model.getInstance().getCurrentSession().participants;
-					var listIdClient:Array = Model.getInstance().getListIdClient(listSessionUsers);
+					//var listSessionUsers:ArrayCollection = Model.getInstance().getCurrentSession().participants;
+					var listIdClient:Array = Model.getInstance().getListIdClient(Model.getInstance().getCurrentSession().id_session);
 					if(listIdClient != null)
 					{
 						// FIXME : if session end recording and for logged user status = 0 , this status by default add to all streams, it's no good!!!
@@ -108,27 +108,27 @@
 			 */
 			private function onNewUserJoinSession(event:SessionEvent):void{	
 				// check if user in current session
-			//	if(this.currentSession.id_session == event.sessionId)
-			//	{
-					if(Model.getInstance().getCurrentSession().id_session == event.sessionId)
+				//	if(this.currentSession.id_session == event.sessionId)
+				//	{
+				if(Model.getInstance().getCurrentSession().id_session == event.sessionId)
+				{
+					var module:Object = Model.getInstance().getCurrentTutoratModule();
+					if(module.visio != null)
 					{
-						var module:Object = Model.getInstance().getCurrentTutoratModule();
-						if(module.visio != null)
+						module.visio.addVideoStream(event.userIdClient);
+						// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
+						if(event.status == ConnectionStatus.RECORDING)
 						{
-							module.visio.addVideoStream(event.userIdClient);
-							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
-							if(event.status == ConnectionStatus.RECORDING)
-							{
-								module.visio.status = VisuVisio.STATUS_RECORD;
-							}
+							module.visio.status = VisuVisio.STATUS_RECORD;
 						}
-					}							
-			//}
+					}
+				}							
+				//}
 			}
 			
 			/**
-			* Old user walk out from the session
-			*/
+			 * Old user walk out from the session
+			 */
 			private function onOldUserOutSession(event:SessionEvent):void{
 				// check if this user in current session
 				if(Model.getInstance().getCurrentSession().hasUser(event.userId))
