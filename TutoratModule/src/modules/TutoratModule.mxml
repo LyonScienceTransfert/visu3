@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" 
-		   xmlns:modules="com.ithaca.visu.modules.*" 
-		   xmlns:maps="maps.*"
-		   xmlns:mate="http://mate.asfusion.com/"
-		   configure="visumodulebase1_configureHandler(event)"
-		   creationComplete="visumodulebase1_creationCompleteHandler(event)"
-		   width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState">
+						xmlns:s="library://ns.adobe.com/flex/spark" 
+						xmlns:mx="library://ns.adobe.com/flex/mx" 
+						xmlns:modules="com.ithaca.visu.modules.*" 
+						xmlns:maps="maps.*"
+						xmlns:mate="http://mate.asfusion.com/"
+						configure="visumodulebase1_configureHandler(event)"
+						creationComplete="visumodulebase1_creationCompleteHandler(event)"
+						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.lyon2.controls.RoundedLabel;
 			import com.lyon2.visu.model.Activity;
 			import com.lyon2.visu.model.ActivityElement;
 			import com.lyon2.visu.model.Model;
