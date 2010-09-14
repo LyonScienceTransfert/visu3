@@ -122,9 +122,4 @@ public class UserDAOImpl extends SqlMapClientTemplate implements UserDAO
 		return (User) getSqlMapClient().queryForObject("users.getUser",userId);
 	}
 
-	public User getUserByUsernamePassword(String username, String password)
-			throws SQLException {
-		return (User) getSqlMapClient().queryForObject("users.getUserByUsernamePassword",username, password);
-	}
-
 }
