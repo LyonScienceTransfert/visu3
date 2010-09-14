@@ -68,9 +68,12 @@
         <property name="sqlMapClient" ref="sqlMap"/>
     </bean>
 <!--  Service Definitions  -->
-
 <!-- Stream -->
     <bean id="recorder.service" class="com.lyon2.visu.red5.StreamRecorder">
+        <property name="application" ref="web.handler"/>
+    </bean>
+<!-- Shared -->
+    <bean id="shared.service" class="com.lyon2.visu.red5.SharedInfo">
         <property name="application" ref="web.handler"/>
     </bean>
 <!-- BDD -->
@@ -94,8 +97,7 @@
     </bean>
     <bean id="profileDescription.service" class="com.lyon2.visu.service.impl.ProfileDescriptionServiceImpl">
         <property name="profileDescriptionDao" ref="profileDescriptionDao"/>
-    </bean>  
-     
+    </bean>    
 <!-- enable support for mx:RemoteObject requests -->
     <bean id="flexMessaging.service" class="org.red5.server.net.remoting.FlexMessagingService">
         <property name="serviceInvoker" ref="global.serviceInvoker"/>
