@@ -59,6 +59,48 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{UserEvent.UPDATE_USER}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="updateUser" arguments="{event.userVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{UserManager}"
+										method="onUpdateUser" arguments="{resultObject}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{UserManager}" 
+										method="onError" 
+										arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{UserEvent.ADD_USER}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="addUser" arguments="{event.userVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{UserManager}"
+										method="onAddUser" arguments="{resultObject}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{UserManager}" 
+										method="onError" 
+										arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{UserEvent.DELETE_USER}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="deleteUser" arguments="{event.userVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{UserManager}"
+										method="onDeleteUser" arguments="{resultObject}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{UserManager}" 
+										method="onError" 
+										arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
 		<!-- 
 			~~~~~~~~ INJECTORS ~~~~~~~~
 		-->
@@ -75,6 +117,17 @@
 								   targetKey="users"
 								   />
 		</mate:Injectors>	
+		
+		<!--
+		  ~~~~~~~~ REMOTEOBJECTS ~~~~~~~~
+		-->
+		<s:RemoteObject
+			id="remoteUser"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="UserService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>	
     </fx:Declarations>
 	
 	<fx:Script><![CDATA[

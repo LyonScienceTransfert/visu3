@@ -1,9 +1,13 @@
 package managers
 {
-	import com.ithaca.visu.events.ProfilesEvent;
 	import com.ithaca.visu.events.UserEvent;
+	import com.lyon2.visu.model.Model;
 	import com.lyon2.visu.model.User;
 	import com.lyon2.visu.vo.UserVO;
+	
+	import flash.events.Event;
+	
+	import modules.UserModule;
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -57,6 +61,35 @@ package managers
 		public function onError(event:Event):void
 		{
 			log.error(event.toString());
+		}
+		
+		/**
+		 * return updated user
+		 */
+		public function onUpdateUser(userVO:UserVO):void{
+			//var userEvent:UserEvent = new UserEvent(UserEvent.UPDATE_VIEW_USER);
+			//userEvent.userVO = userVO;
+			var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
+			userModule.setModeEditUpdatedUser(userVO);
+			// FIXME : If using dispatcher => Error : many instances the UserModule
+			//TypeError: Error #1034: Echec de la contrainte de type 
+			//dispatcher.dispatchEvent(userEvent);
+		}
+		
+		/**
+		 * return added user
+		 */
+		public function onAddUser(userVO:UserVO):void{
+			var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
+			userModule.setModeEditAddedUser(userVO);
+		}
+		
+		/**
+		 * return id of the deleted user
+		 */
+		public function onDeleteUser(userId:int):void{
+			var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
+			userModule.setModeEditDeletedUser(userId);
 		}
 	}
 }

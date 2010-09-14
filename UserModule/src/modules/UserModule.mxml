@@ -19,26 +19,19 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.view.user.skins.UserManagementSkin;
+			import com.lyon2.visu.model.Model;
+			import com.lyon2.visu.model.User;
+			import com.lyon2.visu.vo.UserVO;
 			
 			import mx.events.FlexEvent;			
 
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				// check status logged user
-				/*
-				var loggedUser:User =  Model.getInstance().getLoggedUser();
-				var statusLoggedUser:int =loggedUser.status; 
-				if(statusLoggedUser == ConnectionStatus.CONNECTED)
-				{
-					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
-					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
-					outSession.userId = loggedUser.id_user;
-					this.dispatchEvent(outSession);
-				}
-				*/
 				trace("InitMapEvent.INIT_MAP_USER");
 				dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
 			}
@@ -48,12 +41,78 @@
 				if((event.currentTarget as UserModule).parameters != null)
 				{
 					var param:Object = (event.currentTarget as UserModule).parameters ;
-					
+				}
+				
+				Model.getInstance().setCurrentUserModule(this);
+				
+				var loggedUser:User =  Model.getInstance().getLoggedUser();
+				var statusLoggedUser:int =loggedUser.status; 
+				if(statusLoggedUser == ConnectionStatus.CONNECTED)
+				{
+					// update status connected user
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
+					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
+					outSession.userId = loggedUser.id_user;
+					this.dispatchEvent(outSession);
 				}
 			}
 			
-	
+			public function setModeEditUpdatedUser(userVOUpdated:UserVO):void{
+				if(userManagement != null && userManagement.userDetail != null )
+				{
+					// updated user
+					var nbrUser:uint = userManagement.userCollection.length;
+					for(var nUser:uint = 0; nUser < nbrUser; nUser++)
+					{
+						var user:User =  userManagement.userCollection[nUser] as User;
+						if(user.id_user == userVOUpdated.id_user)
+						{
+							// update property 
+							user.firstname = userVOUpdated.firstname;
+							user.lastname = userVOUpdated.lastname;
+							user.mail = userVOUpdated.mail;
+							user.password = userVOUpdated.password;
+							user.profil = userVOUpdated.profil;
+							// set state normal
+							userManagement.userDetail.setStateNormal();
+							return;
+						}
+					}
+						
+				}
+			}
+			
+			public function setModeEditAddedUser(userVOAdded:UserVO):void{
+				if(userManagement != null && userManagement.userDetail != null )
+				{
+					// added user
+					var user:User = new User(userVOAdded);
+					userManagement.userCollection.addItem(user);
+					// set state normal
+					userManagement.userDetail.setStateNormal();
+				}
+			}
+			
+			public function setModeEditDeletedUser(userId:int):void{
+				if(userManagement != null && userManagement.userDetail != null )
+				{
+					// set state normal
 
+					var nbrUser:uint = userManagement.userCollection.length;
+					for(var nUser:uint = 0; nUser < nbrUser; nUser++)
+					{
+						var user:User =  userManagement.userCollection[nUser] as User;
+						if(user.id_user == userId)
+						{
+							// remove user
+							//userManagement.userCollection.removeItemAt[nUser];
+							return;
+						}
+					}
+						
+				}
+			}
+			
 			protected function visumodulebase1_initializeHandler(event:FlexEvent):void
 			{
 				//dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
@@ -62,7 +121,7 @@
 		]]>
 	</fx:Script>
 
-	<user:UserManagement top="0" left="0" right="0" bottom="0"
+	<user:UserManagement  id="userManagement" top="0" left="0" right="0" bottom="0"
 						  skinClass="com.ithaca.visu.view.user.skins.UserManagementSkin"
 						  />
 </modules:VisuModuleBase>
