@@ -187,11 +187,23 @@ package com.ithaca.visu.controls.users
 			u.lastname = lastnameInput.text;
 			u.mail = emailInput.text;
 			u.password = passwordInput.text;
-			u.profil = profileList.selectedItem.profile;
+			u.profil = RightStatus.numberToBinary(profileList.selectedItem.profile);
+			u.id_user = _user.id_user;
+			u.avatar = _user.avatar;
 			
-			var e:UserEvent = new UserEvent(UserEvent.LOAD_USERS);
-			e.user = new User(u);
-			dispatchEvent( e );
+			if(u.id_user == 0)
+			{
+				var userEventAdd:UserEvent = new UserEvent(UserEvent.ADD_USER);
+				u.avatar = "https://wave.google.com/wave/static/images/unknown.jpg";
+				userEventAdd.userVO = u;
+				
+				dispatchEvent( userEventAdd );
+			}else
+			{
+				var userEventUpdate:UserEvent = new UserEvent(UserEvent.UPDATE_USER);
+				userEventUpdate.userVO = u;
+				dispatchEvent( userEventUpdate );
+			}
 			invalidateSkinState();
 		}
 		
@@ -200,8 +212,13 @@ package com.ithaca.visu.controls.users
 		 */
 		protected function deleteButton_clickHandler(event:MouseEvent):void
 		{
-			_editing = true;
-			invalidateSkinState();
+			//pending = true;
+			var u:UserVO = new UserVO();
+			u.id_user = _user.id_user;
+			var userEventDelete:UserEvent = new UserEvent(UserEvent.DELETE_USER);
+			userEventDelete.userVO = u;
+			dispatchEvent( userEventDelete );
+		//	invalidateSkinState();
 			
 		}
 		
@@ -282,7 +299,7 @@ package com.ithaca.visu.controls.users
 			var lastProfile:ProfileDescriptionVO = profiles[0];
 			for each (var p:ProfileDescriptionVO in profiles)
 			{
-				if(userProfil < p.profile) 
+				if(userProfil < p.profile || userProfil == p.profile ) 
 				{
 					return p; 
 				}
@@ -337,6 +354,14 @@ package com.ithaca.visu.controls.users
 			_editing = true;
 			invalidateSkinState();
 		}
+		
+		public function setStateNormal():void{
+			pending = false;
+			_editing = false;
+			invalidateSkinState();
+		}
+		
+		
 		
 	}
 }

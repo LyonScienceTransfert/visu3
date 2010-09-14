@@ -85,11 +85,11 @@ package com.ithaca.visu.controls.users
 					break;
 				case "profile":
 					e = new UserFilterEvent(UserFilterEvent.VIEW_PROFILE);
-					e.profile_max = o.profile;
+					e.profile_max = o.profile+1;
 					if (event.newIndex == 0)
 						e.profile_min = 0
 					else
-						e.profile_min = filterElements.getItemAt(event.newIndex-1).profile;
+						e.profile_min = filterElements.getItemAt(event.newIndex-1).profile+1;
 					break;
 				default://all
 					e = new UserFilterEvent(UserFilterEvent.VIEW_ALL);

@@ -10,6 +10,7 @@ package   com.lyon2.visu.model
 		public var status:int;
 		private var _role:int;
 		public var id_client:String = "";
+		public var currentSessionId:int;
 		
 		public function User(user:UserVO)
 		{

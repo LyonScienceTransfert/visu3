@@ -14,9 +14,12 @@
 
 			protected function updateStyle():void
 			{
-				if( data.getProfile() > RoleEnum.STUDENT)
+				if(data != null)
 				{
-					firstname.setStyle("font-weight","bold");	
+					if( data.getProfile() > RoleEnum.STUDENT)
+					{
+						firstname.setStyle("font-weight","bold");	
+					}					
 				}
 			}
 			override public function set data(value:Object):void

@@ -35,5 +35,23 @@ package com.ithaca.visu.ui.utils
 				return result;
 			}
 		}
+		
+		public static function numberToBinary(iNumber:int):String {
+			var result :String = "";
+			var oNumber : int = iNumber;
+			while (iNumber>0) {
+				if (iNumber%2) {
+					result = "1"+result;
+				} else {
+					result = "0"+result;
+				}
+				iNumber = Math.floor(iNumber/2);
+			}
+			// left pad with zeros
+			while (result.length<20) {
+				result = "0"+result;
+			}
+			return result;
+		};
 	}
 }

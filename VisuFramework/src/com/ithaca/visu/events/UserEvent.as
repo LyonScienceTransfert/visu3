@@ -1,6 +1,7 @@
 package  com.ithaca.visu.events
 {
 	import com.lyon2.visu.model.User;
+	import com.lyon2.visu.vo.UserVO;
 	
 	import flash.events.Event;
 	
@@ -9,10 +10,15 @@ package  com.ithaca.visu.events
 		// constants
 		static public const LOAD_LIST_USERS_SESSION : String = 'loadListUsersSession';
 		static public const LOAD_USERS : String = 'loadUsers';
+		static public const UPDATE_USER : String = 'updateUser';
+		static public const ADD_USER : String = 'addViewUser';
+		static public const DELETE_USER : String = 'deleteViewUser';
+		
 		// properties
 		public var sessionId : int;
 		public var sessionDate : String;
 		public var user : User;
+		public var userVO: UserVO;
 		
 		// constructor
 		public function UserEvent(type : String,
