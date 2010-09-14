@@ -3,6 +3,7 @@
 <sqlMap namespace="obsels">
 
 	<typeAlias alias="obsel" type="com.ithaca.domain.model.Obsel" />
+    <typeAlias alias="obselStringParam" type="com.lyon2.utils.ObselStringParams" />
 
 	<cacheModel id="cache" type="LRU" readOnly="false">
         <flushInterval hours="24"/>
@@ -13,21 +14,21 @@
     </cacheModel>
 
 	<resultMap class="obsel" id="obselResult">
-		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="id_obsel" jdbcType="INTEGER" property="id" />
 		<result column="trace" jdbcType="VARCHAR" property="trace" />
-		<result column="type" jdbcType="VARCHAR" property="type" />
-		<result column="begin" javaType="java.util.Date" property="begin" />
+		<result column="type_obsel" jdbcType="VARCHAR" property="type" />
+		<result column="begin_obsel" javaType="java.util.Date" property="begin" />
 		<result column="rdf" jdbcType="LONGVARCHAR" property="rdf" />
 	</resultMap>
 
 	<sql id="selectBase">
-		SELECT id, trace, type, begin, rdf
+		SELECT id_obsel, trace, type_obsel, begin_obsel, rdf
 	</sql>
 
 	
 	<select id="getObsel" parameterClass="int" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM obsels WHERE id = #value#
+		FROM obsels WHERE id_obsel = #value#
 	</select>
 		
 	<select id="getTraces" cacheModel="cache">
@@ -45,7 +46,7 @@
 	<select id="getSessionStartObselsForUserId" parameterClass="String" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
 		FROM obsels
-		WHERE type = 'SessionStart' and trace like #value#
+		WHERE type_obsel = 'SessionStart' and trace like #value#
 	</select>
 
 	<select id="getTextCommentsObselsForStartObsel" parameterClass="String" resultMap="obselResult" cacheModel="cache">
@@ -53,13 +54,27 @@
 		FROM obsels
 		WHERE type = 'TextComment' and rdf like #value#
 	</select>
-	
+    <!--
+		<select id="getTraceIdByObselSessionStart" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        
+        SELECT *
+		FROM obsels
+		WHERE type_obsel = 'SessionStart' and trace like #traceParam# and rdf like #refParam# 
+	</select>
+    -->
+    <select id="getTraceIdByObselSessionStartSessionEnter" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') and trace like #traceParam# and rdf like #refParam# 
+	</select>
+
 	<insert id="insert" parameterClass="obsel">
 		INSERT INTO obsels
 		SET 
 		    trace = #trace#,
-			type = #type#,
-			begin = #begin#,
+			type_obsel = #type#,
+			begin_obsel = #begin#,
 			rdf = #rdf#
 
 		<selectKey keyProperty="id" resultClass="java.lang.Integer">
@@ -71,14 +86,14 @@
 		UPDATE obsels
 		SET 
 		    trace = #trace#,
-			type = #type#,
-			begin = #begin#,
+			type_obsel = #type#,
+			begin_obsel = #begin#,
 			rdf = #rdf#
-		where id = #id:INTEGER#
+		where id_obsel = #id:INTEGER#
 	</update>
 
 	<delete id="delete" parameterClass="obsel">
-		DELETE from obsels WHERE id = #id:INTEGER#
+		DELETE from obsels WHERE id_obsel = #id:INTEGER#
 	</delete>
 
 </sqlMap>

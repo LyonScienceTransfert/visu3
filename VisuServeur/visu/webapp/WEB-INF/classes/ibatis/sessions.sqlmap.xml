@@ -26,11 +26,11 @@
 		<result column="description" jdbcType="LONGVARCHAR" property="description" />
 		<result column="date_session" jdbcType="DATETIME" property="date_session" />
 		<result column="isModel" jdbcType="TINYINT" property="isModel" />
-		<result column="start_recording" jdbcType="DATETIME" property="start_recording" />
+        <result column="start_recording" jdbcType="DATETIME" property="start_recording" />
 	</resultMap>
     
 	<sql id="selectBase">
-		SELECT id_session as s_id, id_user as u_id, theme, date_session, isModel, description
+		SELECT id_session as s_id, id_user as u_id, theme, date_session, isModel, description, start_recording
 	</sql>
 
 	<select id="getSession" parameterClass="int"
@@ -51,7 +51,7 @@
 
     <select id="getSessionsByUser" parameterClass="int"
 		resultMap="sessionResult" cacheModel="cache">
-		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description
+		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording
 		FROM session_users su, sessions s WHERE su.id_user = #value# AND su.id_session = s.id_session 
 	</select> 
 
@@ -77,7 +77,7 @@
     <select id="getSessionsByDateByUser" parameterClass="userDate"
 		 resultMap="sessionResult" cacheModel="cache">
     <![CDATA[
-		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description 
+		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording
 		FROM session_users su, sessions s 
         WHERE s.id_session = su.id_session 
             AND CAST(s.date_session AS DATE) = #dateSession:LONGCHAR# 
@@ -89,7 +89,7 @@
     <select id="getSessionsByDate" parameterClass="String"
 		 resultMap="sessionResult" cacheModel="cache">
     <![CDATA[
-		SELECT s.id_session as s_id, s.id_user as u_id, theme, s.date_session, isModel, description 
+		SELECT s.id_session as s_id, s.id_user as u_id, theme, s.date_session, isModel, description, start_recording
 		FROM sessions s 
         WHERE CAST(s.date_session AS DATE) = #value# 
             ORDER BY s.date_session  
@@ -104,7 +104,8 @@
 			date_session = #date_session:DATETIME#,
             id_user = #id_user:LONGVARBINARY#, 
 			isModel = #isModel:TINYINT#,  
-			description = #description:LONGVARCHAR#
+			description = #description:LONGVARCHAR#,
+            start_recording = #start_recording:DATETIME#
 		<selectKey keyProperty="id_session" resultClass="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -118,7 +119,8 @@
 			date_session = #date_session:DATETIME#,  
 			description = #description:LONGVARCHAR#,
             isModel = #isModel:TINYINT#,  
-			id_user = #id_user:LONGVARBINARY#
+			id_user = #id_user:LONGVARBINARY#,
+            start_recording = #start_recording:DATETIME#
 		WHERE
 			id_session = #id_session:INTEGER#
 	</update>
