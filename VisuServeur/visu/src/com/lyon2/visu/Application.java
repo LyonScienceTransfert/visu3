@@ -687,8 +687,9 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			}
 			
 			// notification for all users that user has status "recording"
-			Object[] args = {(Integer)clientRecording.getAttribute("uid"), (Integer)clientRecording.getAttribute("status") };
+			Object[] args = {(Integer)clientRecording.getAttribute("uid"), (Integer)clientRecording.getAttribute("status"), (Integer)clientRecording.getAttribute("sessionId") };
 			//send message to all users on "Deck"
+			log.warn("== setStatusRecording {} ",args);
 			invokeOnScopeClients(scope, "setStatusRecording", args);
 			
 			try 
@@ -746,10 +747,11 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			 }
 			 
 			 String userIdClient = client.getId();
-			 
-			 info.add(status);
-             info.add(user);
-			 info.add(userIdClient);
+			 */
+			 info.add((Integer)client.getAttribute("status"));
+             info.add((User)client.getAttribute("user"));
+			 info.add((String)client.getAttribute("id"));
+			 info.add((Integer)client.getAttribute("sessionId"));
 	 
 			 userlist.add(info);
 		 }
