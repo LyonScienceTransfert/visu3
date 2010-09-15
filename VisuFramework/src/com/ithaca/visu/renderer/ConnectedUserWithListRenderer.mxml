@@ -2,7 +2,8 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*">
+				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*"
+				creationComplete="itemrenderer1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.dataStrutures.UserSwapList;
@@ -20,6 +21,12 @@
 			
 			private var doUpdate:Boolean = true;
 			private var selectedUser:User = null;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
 
 			protected function list_changeHandler(event:IndexChangeEvent):void
 			{
@@ -62,7 +69,7 @@
 			{
 				list.removeEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);
 				//show message
-				if(!doUpdate)Alert.show("Peut pas ajouter l'utilisateur : "+selectedUser.firstname+" dans le séance, il y a deja dedant.","information");
+				if(!doUpdate)Alert.show(fxgt.gettext("L'utilisateur ")+selectedUser.firstname+fxgt.gettext(" est deja en liste de séance."),fxgt.gettext("Information"));
 			}
 
 			protected function list_creationCompleteHandler(event:FlexEvent):void
@@ -86,6 +93,12 @@
 				else
 					list.setStyle("fontWeight","normal")						
 			}
+
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
 		]]>
 	</fx:Script>	 
 	<s:DropDownList 
