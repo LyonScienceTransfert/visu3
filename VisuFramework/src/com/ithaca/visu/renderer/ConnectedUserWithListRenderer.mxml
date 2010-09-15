@@ -5,27 +5,65 @@
 				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.dataStrutures.UserSwapList;
 			import com.ithaca.visu.events.SessionHomeElementEvent;
-			import com.lyon2.visu.model.User;
 			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.lyon2.visu.model.User;
 			
+			import mx.collections.IList;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			
+			import spark.components.DataGroup;
+			import spark.events.DropDownEvent;
 			import spark.events.IndexChangeEvent;
+			
+			private var doUpdate:Boolean = true;
+			private var selectedUser:User = null;
 
 			protected function list_changeHandler(event:IndexChangeEvent):void
 			{
 				var newUser:User = data.swapList.getItemAt( event.newIndex );
-				statusIcon.status = newUser.status;
-				updateStyle( newUser );
 				var oldUser:User = data.swapList.getItemAt( event.oldIndex );
-				
+				doUpdate = true;
+				selectedUser = null;
+				// try find selected user in this session
+				var arrUsersSwapList:IList = (parent as DataGroup).dataProvider;
+				var nbrObject:uint = arrUsersSwapList.length;
+				for(var nObject:uint = 0; nObject < nbrObject ; nObject++)
+				{
+					var userSwapList:UserSwapList = arrUsersSwapList.getItemAt(nObject) as UserSwapList;
+					var userId:int = userSwapList.user.id_user;
+					if(userId == newUser.id_user)
+					{	
+						// set old index in DropDownList
+						(event.currentTarget as DropDownList).selectedIndex=event.oldIndex;
+						doUpdate = false;
+						selectedUser = newUser;
+						break;
+					}
+				}
+			 	if (doUpdate)
+				{
+				updateStyle( newUser );
+				statusIcon.status = newUser.status;
 				var sessionHomeElementEvent:SessionHomeElementEvent = new SessionHomeElementEvent(SessionHomeElementEvent.CHANGE_SESSION_USER);
 				sessionHomeElementEvent.oldSessionUser = oldUser;
 				sessionHomeElementEvent.newSessionUser = newUser;
 				parent.dispatchEvent(sessionHomeElementEvent);
+				}else{
+					updateStyle( oldUser );
+					list.addEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);	
+				}
+				
 			}
 
+			protected function onDropDropDownListClose(event:DropDownEvent):void
+			{
+				list.removeEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);
+				//show message
+				if(!doUpdate)Alert.show("Peut pas ajouter l'utilisateur : "+selectedUser.firstname+" dans le séance, il y a deja dedant.","information");
+			}
 
 			protected function list_creationCompleteHandler(event:FlexEvent):void
 			{
@@ -46,7 +84,7 @@
 					
 					list.setStyle("fontWeight","bold")
 				else
-					list.setStyle("fontWeight","normal")
+					list.setStyle("fontWeight","normal")						
 			}
 		]]>
 	</fx:Script>	 
