@@ -40,6 +40,8 @@ package  com.lyon2.visu.model
 		private var _userModule:VisuModuleBase;
 		private var _homeModule:VisuModuleBase;
 		
+		private var _selectedDateLoggedUser:Object = null;
+		
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -169,6 +171,14 @@ package  com.lyon2.visu.model
 			return _homeModule;
 		}
 		
+		public function setSelectedItemNavigateurDayByLoggedUser(value:Object):void{
+			_selectedDateLoggedUser = value;
+		}
+		
+		public function getSelectedItemNavigateurDayByLoggedUser():Object
+		{
+			return _selectedDateLoggedUser;
+		}
 		public function setListSessions(arSession:Array):void
 		{
 			var nbrSession:uint = arSession.length;
