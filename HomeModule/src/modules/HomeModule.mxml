@@ -15,10 +15,12 @@
 		<maps:HomeMap id="homeMap"/>
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"  method="updateSessionView"/>
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"  method="updateView"/>
+		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLanguageNavigateurDay"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.controls.SessionHomeElement;
+			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
@@ -99,6 +101,12 @@
 				{
 					// set dataProvider the navigateurDay  
 					this.listSessionDate = Model.getInstance().getSessionDate();
+					var lastSelectedObject:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+					// set last time selected item
+					this.navigateurDay.selectedItem = lastSelectedObject;
+					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
+					sessionEvent.listSession = lastSelectedObject.listSessionDate;
+					dispatchEvent(sessionEvent);				
 				}else{
 					// id loggedUser
 					var loggedUserId:int = Model.getInstance().getLoggedUser().id_user;
@@ -148,9 +156,10 @@
 			 */ 
 			public function updateSessionView(event:SessionEvent):void
 			{
-				// update if on the screen same date
-				if(event.sessionDate == _selectedLabelDate)
-				{
+				// set selected label date 
+				var openDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+				this.navigateurDay.selectedItem = openDate;
+				
 					var listSession:ArrayCollection = event.listSession;
 					this.listSessionView = new ArrayCollection();
 					this.sessionGroup.removeAllElements();
@@ -276,7 +285,8 @@
 			protected function navigateurDay_changeHandler(event:IndexChangeEvent):void
 			{
 				var selectedItem:Object = (event.target as NavigateurDay).selectedItem as Object;
-				_selectedLabelDate = selectedItem.labelDate;
+				// set selected item to Model
+				Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(selectedItem);
 				var listSessionDate:ArrayCollection = selectedItem.listSessionDate;			
 				if(listSessionDate == null){
 					tx.text = "calling";
@@ -295,20 +305,106 @@
 					sessionEvent.listSession = listSessionDate;
 					dispatchEvent(sessionEvent);	
 				}
-			}			
+			}	
+			
+			/**
+			 * 
+			 */
+			protected function showLabalNavigateurDay(item:Object):String
+			{
+				var date:Date = item.fullDate as Date;
+				var dayString:String = date.getDate().toString();
+				var yearString:String = date.getFullYear().toString();
+				var monthString:String = "";
+				var month:Number = date.getMonth();
+				switch (month){
+					case 0:
+						monthString = fxgt.gettext("JANVIER");
+						break;
+					case 1:
+						monthString = fxgt.gettext("FEVRIER");
+						break;
+					case 2:
+						monthString = fxgt.gettext("MARS");
+						break;
+					case 3:
+						monthString = fxgt.gettext("AVRIL");
+						break;
+					case 4:
+						monthString = fxgt.gettext("MAI");
+						break;
+					case 5:
+						monthString = fxgt.gettext("JUIN");
+						break;
+					case 6:
+						monthString = fxgt.gettext("JUILLIET");
+						break;
+					case 7:
+						monthString = fxgt.gettext("AOÛT");
+						break;
+					case 8:
+						monthString = fxgt.gettext("SEPTEMBRE");
+						break;
+					case 9:
+						monthString = fxgt.gettext("OCTOBRE");
+						break;
+					case 10:
+						monthString = fxgt.gettext("NOVEMBRE");
+						break;
+					case 11:
+						monthString = fxgt.gettext("DECEMBRE");
+						break;
+				}
+				var dayWeek:Number = date.getDay();
+				var dayWeekString:String="";
+				switch (dayWeek){
+					case 0:
+						dayWeekString = fxgt.gettext("DIMANCHE");
+						break;
+					case 1:
+						dayWeekString = fxgt.gettext("LUNDI");
+						break;
+					case 2:
+						dayWeekString = fxgt.gettext("MARDI");
+						break;
+					case 3:
+						dayWeekString = fxgt.gettext("MERCREDI");
+						break;
+					case 4:
+						dayWeekString = fxgt.gettext("JEUDI");
+						break;
+					case 5:
+						dayWeekString = fxgt.gettext("VENDREDI");
+						break;
+					case 6:
+						dayWeekString = fxgt.gettext("SAMEDI");
+						break;		
+				}
+				return 	dayWeekString + " "+dayString + " "+monthString+ " "+ yearString ;		
+			}
+			
+			/**
+			 * Update language of te selected item 
+			 */
+			protected function updateLanguageNavigateurDay(event:ApplicationMenuEvent):void
+			{
+				var selectedDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+				this.navigateurDay.selectedIndex = -1;		
+				this.navigateurDay.selectedItem = selectedDate;				
+			}
 		]]>
 	</fx:Script>
 	<s:HGroup x="50" y="15">
 		<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
 		<s:VGroup >
-			<controls:NavigateurDay id="navigateurDay"   dataProvider="{listSessionDate}" visible="true"   change="navigateurDay_changeHandler(event)" labelField="labelDate" width="250"/>
+			<controls:NavigateurDay id="navigateurDay" labelFunction="showLabalNavigateurDay"  dataProvider="{listSessionDate}" visible="true"   change="navigateurDay_changeHandler(event)"  width="300"/>
 			<s:HGroup id="sessionGroup" x="0"/>
 		</s:VGroup>	
 		<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
 			<s:VGroup>
 				<s:HGroup>
 					<s:BorderContainer x="86" y="287" width="450" height="35" backgroundColor="#CCDCC8">
-						<s:Label width="100%" x="10" left="115"  fontSize="14" color="#000000" y="11">
+						<s:Label width="100%" left="15"  fontSize="14" color="#000000" y="11">
 							<s:text>{fxgt.gettext("FLUX D'ACTIVITES")}</s:text>
 						</s:Label>
 						<s:Button x="306" y="0" height="33" width="63" click="sendAll_clickHandler()">
