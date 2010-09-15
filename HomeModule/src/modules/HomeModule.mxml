@@ -58,7 +58,6 @@
 			[Bindable]
 			public var fluxActivity : ArrayCollection;
 			
-			private var _selectedLabelDate : String;
 			private var _editableSession:Boolean;
 			private var _loggedUser:User;
 
@@ -191,10 +190,10 @@
 					{	
 						// havn't session to show by this date 
 						navigateurDay.selectedIndex = -1;
+						
 					}
 					// add updated vb groupe
 					this.sessionGroup.addElement(vb);
-				}
 			}	
 			
 			/**
