@@ -50,9 +50,53 @@ public class HomeManager
 		if( Model.getInstance().getSessionDate().length == 0)
 		{
 			Model.getInstance().setSessionDate(arSessionDates);
-			this.listSessionDate = Model.getInstance().getSessionDate();						
+			this.listSessionDate = Model.getInstance().getSessionDate();
+			
+			var elementDateStartToday:Object = getObjectDateSessionStartToday(this.listSessionDate);
+			var labelDate:String = elementDateStartToday.labelDate;
+			Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(elementDateStartToday);
+			
+			var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+			sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+			//debagging
+			if(sessionEventLoad.userId == 1){sessionEventLoad.userId = 0}
+			sessionEventLoad.sessionDate = labelDate;
+			this.dispatcher.dispatchEvent(sessionEventLoad);
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	private function getObjectDateSessionStartToday(arr:ArrayCollection):Object
+	{
+		var date:Date = new Date();
+		var result:Object = null;
+		var deltaPositive:Number = Number.MAX_VALUE;
+		var deltaNegative:Number = Number.MAX_VALUE;
+		var nbrElement:uint = arr.length;
+		for(var nElement:uint = 0; nElement < nbrElement ; nElement++)
+		{
+			var elmDate:Date = arr[nElement].fullDate;
+			var tempDelta:Number = elmDate.getTime() - date.getTime();
+			if(tempDelta > 0)
+			{
+				if(tempDelta < deltaPositive)
+				{
+					deltaPositive = tempDelta;
+					result = arr[nElement];
+				}
+			}else{
+					tempDelta = tempDelta * -1;
+					if(tempDelta < deltaNegative)
+					{
+						deltaNegative = tempDelta;
+						result = arr[nElement];
+					}
+			}
+		}	
+		return result; 
+	}	
 	
 	/**
 	 * Set session list, call for each date  
