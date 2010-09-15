@@ -145,6 +145,8 @@
 			private function onServiceComplete(event:Event):void
 			{
 				// do some stuff here, if needed.
+				var eventUpdateLanguage:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.UPDATE_LANGUAGE);
+				this.dispatchEvent(eventUpdateLanguage);
 			}
 			
 			private function onIOError(event:IOErrorEvent):void
