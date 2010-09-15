@@ -48,7 +48,7 @@ package com.ithaca.visu.ui.utils
 				iNumber = Math.floor(iNumber/2);
 			}
 			// left pad with zeros
-			while (result.length<20) {
+			while (result.length<NUMBER_DIGITS_IN_MASK_RIGHT) {
 				result = "0"+result;
 			}
 			return result;
