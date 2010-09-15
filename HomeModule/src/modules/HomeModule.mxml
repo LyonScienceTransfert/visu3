@@ -173,7 +173,7 @@
 						{
 							var session:Session = listSession[nSession];
 							var sessionView:SessionHomeElement = new SessionHomeElement();
-							sessionView.width = 250;
+							sessionView.width = navigateurDay.width;
 							// check connected users
 							session.checkConnectedUsers(listConnectedUser);
 							sessionView.session = session;
