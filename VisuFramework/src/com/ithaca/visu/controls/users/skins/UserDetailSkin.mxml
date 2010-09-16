@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:containers="ws.tink.spark.containers.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:containers="ws.tink.spark.containers.*"
+		creationComplete="skin1_creationCompleteHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.users.UserDetail")]
 	</fx:Metadata>
 	
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.skins.LinkButtonSkin;
+			
+			import mx.events.FlexEvent;
+			
+			import ws.tink.spark.containers.*;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
 
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
+		]]>
+	</fx:Script>
+	
 	<!-- SkinParts
 	name=saveButton, type=spark.components.Button, required=false
 	name=passsword, type=spark.components.TextInput, required=false
@@ -25,21 +47,11 @@
 		<s:State name="normal" />
 		<s:State name="edit" />
 		<s:State name="pending" />
-		<fx:Script>
-			<![CDATA[
-				import mx.skins.spark.LinkButtonSkin;
-			]]>
-		</fx:Script>
 	</s:states>
 	
 	
 	<s:Group top="0" bottom="0" left="0" right="0">
 		<s:layout>
-			<fx:Script>
-				<![CDATA[
-					import com.ithaca.visu.skins.LinkButtonSkin;
-				]]>
-			</fx:Script>
 			<s:BasicLayout/>
 		</s:layout>
 		
@@ -47,8 +59,12 @@
 			<s:layout>
 				<s:HorizontalLayout />
 			</s:layout>
-			<s:Button id="editButton" label="LABEL_EDIT" />
-			<s:Button id="deleteButton" label="LABEL_DELETE" />
+			<s:Button id="editButton">
+				<s:label>{fxgt.gettext("Editer")}</s:label>	
+			</s:Button>
+			<s:Button id="deleteButton">
+				<s:label>{fxgt.gettext("Supprimer")}</s:label>	
+			</s:Button>
 		</s:Group>
 		
 		<s:Rect 
@@ -62,28 +78,32 @@
 		<containers:Form enabled.pending="false" enabled="true" id="form"
 			top="50" bottom="0" left="0" right="0" backgroundColor="#eeeeee">
 		 
-			<containers:FormItem id="LABEL_NOM" label="LABEL_NOM" width="80%" minHeight="25" backgroundColor="#666666">
+			<containers:FormItem id="LABEL_NOM" width="80%" minHeight="25" backgroundColor="#666666">
+				<containers:label>{fxgt.gettext("NOM")}</containers:label>
 				<s:Label id="firstnameDisplay" 
 						 includeIn="normal" height="100%" verticalAlign="middle" 
-						 fontWeight="bold" /> 
+						 fontWeight="bold"/> 
 				<s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"/>
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_PRENOM" label="LABEL_PRENOM" width="80%" minHeight="25" backgroundColor="#666666">
+			<containers:FormItem id="LABEL_PRENOM" width="80%" minHeight="25" backgroundColor="#666666">
+				<containers:label>{fxgt.gettext("PRENOM")}</containers:label>
 				<s:Label id="lastnameDisplay" fontWeight="bold" 
 						 height="100%" verticalAlign="middle"
 						 includeIn="normal" />
 				<s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"/>
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_EMAIL" label="LABEL_EMAIL" width="80%" minHeight="25" backgroundColor="#666666">
+			<containers:FormItem id="LABEL_EMAIL" width="80%" minHeight="25" backgroundColor="#666666">
+				<containers:label>{fxgt.gettext("EMAIL")}</containers:label>
 				<s:Label id="emailDisplay" 
 						 height="100%" verticalAlign="middle"
 						 includeIn="normal"/>
-				<s:TextInput id="emailInput"  minWidth="100" width="100%" includeIn="edit" />
+				<s:TextInput id="emailInput"  minWidth="100" width="100%" includeIn="edit"/>
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_PASS" label="LABEL_PASS"  width="80%" minHeight="25" backgroundColor="#666666">
+			<containers:FormItem id="LABEL_PASS"  width="80%" minHeight="25" backgroundColor="#666666">
+				<containers:label>{fxgt.gettext("MOT DE PASSE")}</containers:label>
 				<s:Label id="passwordDisplay" 
 						 includeIn="normal" 
 						 height="100%" verticalAlign="middle" />
@@ -91,18 +111,25 @@
 							 minWidth="100" width="100%" displayAsPassword="true" includeIn="edit" />
 			</containers:FormItem>
 			
-			<containers:FormItem id="LABEL_ROLE" label="LABEL_ROLE" width="80%" minHeight="25" backgroundColor="#666666">
+			<containers:FormItem id="LABEL_ROLE" width="80%" minHeight="25" backgroundColor="#666666">
+				<containers:label>{fxgt.gettext("ROLE")}</containers:label>
 				<s:Label id="profileDisplay"  includeIn="normal" 
 						 height="100%" verticalAlign="middle" />
 				<s:DropDownList id="profileList" labelField="short_description" 
 								minWidth="100" includeIn="edit" />
-				<s:Button label="Modifier" includeIn="edit" 
-						  skinClass="com.ithaca.visu.skins.LinkButtonSkin" />
+				<s:Button includeIn="edit" 
+						  skinClass="com.ithaca.visu.skins.LinkButtonSkin">
+					<s:label>{fxgt.gettext("Modifier")}</s:label>	
+				</s:Button>
 			</containers:FormItem>
 			
 			<containers:FormItem includeIn="edit,pending" width="80%" minHeight="25" backgroundColor="#666666">
-				<s:Button id="saveButton" label="LABEL_SAVE" />
-				<s:Button id="cancelButton" label="LABEL_CANCEL" />
+				<s:Button id="saveButton">
+					<s:label>{fxgt.gettext("Sauvegarder")}</s:label>	
+				</s:Button>
+				<s:Button id="cancelButton">
+					<s:label>{fxgt.gettext("Annuler")}</s:label>	
+				</s:Button>
 			</containers:FormItem>
 		</containers:Form>
 	</s:Group>

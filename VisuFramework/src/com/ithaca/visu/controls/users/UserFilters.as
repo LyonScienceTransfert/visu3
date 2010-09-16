@@ -13,6 +13,10 @@ package com.ithaca.visu.controls.users
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
+	
 	[Event(name="viewUngroup",type="com.ithaca.visu.controls.users.event.UserFilterEvent")]
 	[Event(name="viewAll",type="com.ithaca.visu.controls.users.event.UserFilterEvent")]
 	[Event(name="viewProfile",type="com.ithaca.visu.controls.users.event.UserFilterEvent")]
@@ -26,9 +30,13 @@ package com.ithaca.visu.controls.users
 		
 		protected static var log:ILogger = Log.getLogger("components.FilterPanel");
 		
+		[Bindable]
+		private var fxgt:_FxGettext;
+		
 		public function UserFilters()
 		{
 			super();
+			fxgt = FxGettext;
 			populateDefaultFilter();
 		}
 		override protected function commitProperties():void
@@ -60,7 +68,7 @@ package com.ithaca.visu.controls.users
 		public function populateDefaultFilter():void
 		{
 			filterElements = new ArrayList();
-			filterElements.addItem( {label:"ALL_USERS", value:"all", style:"bold"} );
+			filterElements.addItem( {label:fxgt.gettext("Tous les utilisateurs"), value:"all", style:"bold"} );
 			// Not implemented yet
 			//filterElements.addItem( {label:"UNGROUP_USERS", value:"ungroup", style:"bold"} );
 		}

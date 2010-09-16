@@ -14,13 +14,14 @@
 			import com.ithaca.visu.events.SessionHomeElementEvent;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
 			
 			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
 			import mx.skins.spark.LinkButtonSkin;
 		
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
 			[Bindable]
 			private var fxgt:_FxGettext;
 
