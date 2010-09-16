@@ -183,6 +183,7 @@
 							sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
 							// listener for action the logged user
 							sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
+							sessionView.addEventListener(Event.ADDED_TO_STAGE, onAddedSessionViewToStage);
 							vb.addElement(sessionView);
 							this.listSessionView.addItem(sessionView);	
 						} 	
@@ -195,6 +196,14 @@
 					// add updated vb groupe
 					this.sessionGroup.addElement(vb);
 			}	
+			
+			private function onAddedSessionViewToStage(event:Event):void
+			{
+				var sessionView:SessionHomeElement = event.currentTarget as SessionHomeElement;
+				sessionView.removeEventListener(Event.ADDED_TO_STAGE, onAddedSessionViewToStage);
+				sessionView.setOpenView(true);
+				// TODO : check if session status == open
+			}
 			
 			/**
 			 * Change participants user 
