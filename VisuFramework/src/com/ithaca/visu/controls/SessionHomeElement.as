@@ -224,6 +224,18 @@ package com.ithaca.visu.controls
 			}
 		}
 		
+		public function setOpenView(value:Boolean):void
+		{
+			open=value;
+			invalidateSkinState();
+		}
+		
+		public function setEnabledView(value:Boolean):void
+		{
+			enabled=value;
+			invalidateSkinState();
+		}
+		
 		/* Helper functions */
 		
 		/**
