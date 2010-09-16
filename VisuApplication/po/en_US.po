@@ -7,14 +7,189 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Visu2 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-11 22:04+0200\n"
-"PO-Revision-Date: 2010-08-11 22:04+0200\n"
+"POT-Creation-Date: 2010-09-16 16:46+0200\n"
+"PO-Revision-Date: 2010-09-16 16:46+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:321
+msgid "JANVIER"
+msgstr "JANUARY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:324
+msgid "FEVRIER"
+msgstr "FEBRUARY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:327
+msgid "MARS"
+msgstr "MARCH"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:330
+msgid "AVRIL"
+msgstr "APRIL"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:333
+msgid "MAI"
+msgstr "MAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:336
+msgid "JUIN"
+msgstr "JUNE"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:339
+msgid "JUILLIET"
+msgstr "JULY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:342
+msgid "AOÛT"
+msgstr "AUGUST"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:345
+msgid "SEPTEMBRE"
+msgstr "SEPTEMBER"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:348
+msgid "OCTOBRE"
+msgstr "OCTOBER"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:351
+msgid "NOVEMBRE"
+msgstr "NOVEMBER"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:354
+msgid "DECEMBRE"
+msgstr "DECEMBER"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:361
+msgid "DIMANCHE"
+msgstr "SUNDAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:364
+msgid "LUNDI"
+msgstr "MONDAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:367
+msgid "MARDI"
+msgstr "TUESDAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:370
+msgid "MERCREDI"
+msgstr "WEDNESDAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:373
+msgid "JEUDI"
+msgstr "THURSDAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:376
+msgid "VENDREDI"
+msgstr "FRIDAY"
+
+#: ../.././HomeModule/src/modules/HomeModule.mxml:379
+msgid "SAMEDI"
+msgstr "SATURDAY"
+
+
+
+#: ../.././VisuApplication/src/business/MainManager.as:167
+msgid ""
+"L'utilisateur avec le même identifiant deja connecté sur la platefirme...."
+msgstr ""
+"L'utilisateur avec le même identifiant deja connecté sur la platefirme...."
+
+#: ../.././VisuApplication/src/business/MainManager.as:167
+#: ../.././VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:72
+msgid "Information"
+msgstr "Information"
+
+
+
+#: ../.././VisuApplication/src/visuclient.mxml:77
+msgid "Oui"
+msgstr "Oui"
+
+#: ../.././VisuApplication/src/visuclient.mxml:78
+msgid "Non"
+msgstr "Non"
+
+#: ../.././VisuApplication/src/visuclient.mxml:79
+msgid "Voulez-vous quitter l'application ?"
+msgstr "Voulez-vous quitter l'application ?"
+
+#: ../.././VisuApplication/src/visuclient.mxml:80
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:64
+msgid "Editer"
+msgstr "Editer"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:67
+msgid "Supprimer"
+msgstr "Supprimer"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:83
+msgid "NOM"
+msgstr "NOM"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:91
+msgid "PRENOM"
+msgstr "PRENOM"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:99
+msgid "EMAIL"
+msgstr "EMAIL"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:107
+msgid "MOT DE PASSE"
+msgstr "MOT DE PASSE"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:116
+msgid "ROLE"
+msgstr "ROLE"
+
+
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:129
+msgid "Sauvegarder"
+msgstr "Sauvegarder"
+
+
+
+#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/UserFilters.as:71
+msgid "Tous les utilisateurs"
+msgstr "Tous les utilisateurs"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:72
+msgid "L'utilisateur "
+msgstr "L'utilisateur "
+
+#: ../.././VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:72
+msgid " est deja en liste de séance."
+msgstr " est deja en liste de séance."
+
+
+
+#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:53
+msgid "Afficher..."
+msgstr "Afficher..."
+
+#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:63
+msgid "Ajuoter une utilisateur"
+msgstr "Ajuoter une utilisateur"
+
+#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:68
+msgid "Utilisateurs..."
+msgstr "Utilisateurs..."
+
+#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:87
+msgid "Profil ( "
+msgstr "Profil ( "
+
 
 #: ../.././HomeModule/src/modules/HomeModule.mxml:70
 msgid "Il faut choisir la date de la séance"
@@ -83,7 +258,7 @@ msgstr "session started"
 
 #: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:68
 msgid "Langage"
-msgstr "Langauge"
+msgstr "Language"
 
 #: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:73
 msgid "Chat"
@@ -104,3 +279,4 @@ msgstr "Edit"
 #: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:132
 msgid "Rejoindre"
 msgstr "Join"
+
