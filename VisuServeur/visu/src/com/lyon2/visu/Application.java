@@ -987,7 +987,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 	}
 	
 	
-	private Integer getRoleUser(String s){
+	public Integer getRoleUser(String s){
 		// FIXME can be better keep it in BD
 		final double RESPONSABLE = 8191.0;
 		// idem that "00000001111111111111"

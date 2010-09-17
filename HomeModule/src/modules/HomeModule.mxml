@@ -12,7 +12,7 @@
 						>
 	<fx:Declarations>
 
-		<maps:HomeMap id="homeMap"/>
+		<maps:HomeMap id="homeMap" dispatcher="{this}"/>
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"  method="updateSessionView"/>
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"  method="updateView"/>
 		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLanguageNavigateurDay"/>
@@ -109,8 +109,6 @@
 				}else{
 					// id loggedUser
 					var loggedUserId:int = Model.getInstance().getLoggedUser().id_user;
-					// DEBUG
-					if(loggedUserId == 1){loggedUserId = 0 };
 					// getiing list date of sessions from BD
 					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_DATE_SESSION);
 					sessionEvent.userId = loggedUserId;				

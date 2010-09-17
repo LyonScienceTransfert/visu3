@@ -44,12 +44,12 @@ public class HomeManager
 	/**
 	 * Set date list
 	 */ 
-	public function onLoadListSessionsDates(arSessionDates:Array, map:Object):void{
+	public function onLoadListSessionsDates(arSessionDates:Object):void{
 		
 		// FIXME PROBLEME TOO TIMES CALL THIS FUNCTION, EXISTE TOO MAPS !!!!!
 		if( Model.getInstance().getSessionDate().length == 0)
 		{
-			Model.getInstance().setSessionDate(arSessionDates);
+			Model.getInstance().setSessionDate(arSessionDates.data);
 			this.listSessionDate = Model.getInstance().getSessionDate();
 			
 			var elementDateStartToday:Object = getObjectDateSessionStartToday(this.listSessionDate);
@@ -58,8 +58,6 @@ public class HomeManager
 			
 			var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
 			sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
-			//debagging
-			if(sessionEventLoad.userId == 1){sessionEventLoad.userId = 0}
 			sessionEventLoad.sessionDate = labelDate;
 			this.dispatcher.dispatchEvent(sessionEventLoad);
 		}
@@ -101,9 +99,10 @@ public class HomeManager
 	/**
 	 * Set session list, call for each date  
 	 */ 
-	public function onLoadListSessionByDate(listSessionByDate:Array, sessionDate:String):void{
-		Model.getInstance().setListSessionsByDate(listSessionByDate, sessionDate);
+	public function onLoadListSessionByDate(listSession:Object, sessionDate:String):void{
 		// get all users how will participate in session of logged user
+		var listSessionByDate:Array = listSession.data as Array;
+		Model.getInstance().setListSessionsByDate(listSessionByDate, sessionDate);
 		var nbrSession:uint = listSessionByDate.length;
 		for(var nSession:uint = 0; nSession < nbrSession ; nSession++)
 		{
@@ -138,7 +137,7 @@ public class HomeManager
 	}
 
 
-	public function onError(session:SessionVO = null):void{
+	public function onError(session:Object = null):void{
 		
 	}
 

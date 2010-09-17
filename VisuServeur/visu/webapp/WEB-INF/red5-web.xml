@@ -76,6 +76,10 @@
     <bean id="shared.service" class="com.lyon2.visu.red5.SharedInfo">
         <property name="application" ref="web.handler"/>
     </bean>
+ <!--  Session -->
+     <bean id="sessionInfo.service" class="com.lyon2.visu.red5.SessionInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
 <!-- BDD -->
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>

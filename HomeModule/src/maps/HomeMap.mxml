@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<mate:EventMap 
+<mate:LocalEventMap
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:s="library://ns.adobe.com/flex/spark"
         xmlns:mx="library://ns.adobe.com/flex/halo"
@@ -47,8 +47,8 @@
 			<mate:ObjectBuilder generator="{HomeManager}" constructorArguments="{scope.dispatcher}"/>
 			<mate:MethodInvoker generator="{HomeManager}" 
 								method="getFluxActivity" />
-			<rtmp:RtmpServiceInvoker service="{RtmpService}">
-				<mate:Request action="testApp"   arguments="{['Home']}" />
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="testApp"   arguments="{['Home']}"/>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
@@ -78,23 +78,50 @@
 		</mate:EventHandlers>
 		
 <!-- 1) first call -->
-		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
+<!--		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSessionsDatesByUser" arguments="{event.userId}">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{HomeManager}"
 										method="onLoadListSessionsDates" arguments="{[resultObject,this]}"/>
 				</mate:resultHandlers>
 			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>-->
+		
+		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true" cache="global">
+				<mate:Request action="sessionInfo.getSessionsDatesByUser"   arguments="{[event.userId]}" />
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onLoadListSessionsDates" arguments="{[currentEvent]}"/>
+				</rtmp:resultHandlers>		
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
 <!-- 2) second call -->
 		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_SESSION}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true" cache="global">
+				<mate:Request action="sessionInfo.getSessionsByDateByUser"   arguments="{[event.userId,event.sessionDate]}" />
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onLoadListSessionByDate" arguments="{[currentEvent,event.sessionDate]}"/>
+				</rtmp:resultHandlers>		
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>		
+<!--		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_SESSION}">
 			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSessionsByDateByUser" arguments="{[event.userId,event.sessionDate]}">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{HomeManager}"
 										method="onLoadListSessionByDate" arguments="{[resultObject,event.sessionDate]}"/>
 				</mate:resultHandlers>
 			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>		
+		</mate:EventHandlers>		-->
 			
 <!-- 3) third call -->
 		<mate:EventHandlers type="{UserEvent.LOAD_LIST_USERS_SESSION}">
@@ -108,4 +135,4 @@
 		
     </fx:Declarations>
 
-</mate:EventMap>
+</mate:LocalEventMap>
