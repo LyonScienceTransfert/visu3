@@ -1,5 +1,6 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
 	import com.lyon2.visu.model.Activity;
 	import com.lyon2.visu.model.ActivityElement;
 	import com.lyon2.visu.model.ActivityElementType;
@@ -8,15 +9,11 @@ package com.ithaca.visu.controls.sessions
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	
 	import spark.components.Button;
-	import spark.components.DataGroup;
 	import spark.components.Group;
 	import spark.components.Label;
-	import spark.components.RichText;
-	import spark.components.TextArea;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
 	
@@ -70,6 +67,10 @@ package com.ithaca.visu.controls.sessions
 			{
 				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
 			}
+			if (instance == durationDisplay)
+			{
+				durationDisplay.text = "Durée prévue : " +activity.duration.toString();
+			}
 			if (instance == statementGroup)
 			{
 				trace("add statementGroup");
@@ -107,8 +108,8 @@ package com.ithaca.visu.controls.sessions
 			{
 				activityChanged = false;
 				
-				titleDisplay.text = _activity.title;
-				durationDisplay.text = _activity.duration.toString();
+				titleDisplay.toolTip = titleDisplay.text = _activity.title;
+				if (durationDisplay) durationDisplay.text = "Durée prévue : " + _activity.duration.toString();
 				parseActivityElements();
 
 			}
@@ -141,9 +142,11 @@ package com.ithaca.visu.controls.sessions
 		{
 			for each( var el:ActivityElement in list)
 			{
+				//var s:com.ithaca.visu.controls.sessions.ActivityElementDetail = new com.ithaca.visu.controls.sessions.ActivityElementDetail();
 				var s:ActivityElementDetail = new ActivityElementDetail();
+				s.setStyle("skinClass",StatementSkin);
 				s.percentWidth = 100;
-				s.text = el.data;
+				s.label = el.data;
 				statementGroup.addElement(s);
 			}
 		}

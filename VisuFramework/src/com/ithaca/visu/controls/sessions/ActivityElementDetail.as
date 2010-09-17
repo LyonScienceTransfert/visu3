@@ -1,36 +1,21 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.lyon2.visu.model.ActivityElement;
+	
+	import spark.components.supportClasses.ButtonBase;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
 	
-	public class ActivityElementDetail extends SkinnableComponent
+	public class ActivityElementDetail extends ButtonBase
 	{
-		[SkinPart("true")]
-		public var textDisplay:TextBase;  
+		protected var _activityElement:ActivityElement;
 		
-		protected var _text:String;
-		protected var textChanged : Boolean;
-		public function ActivityElementDetail()
+		public function get activityElement():ActivityElement {return _activityElement; }
+		public function set activityElement(value:ActivityElement):void
 		{
-			super();
+			_activityElement = value;
+			if (labelDisplay) labelDisplay.text = _activityElement.data;
 		}
 		
-		override protected function commitProperties():void
-		{
-			super.commitProperties();
-			if (textChanged)
-			{
-				textChanged = false;
-				textDisplay.text = _text;
-			}
-		}
-		
-		public function get text():String { return textDisplay.text };
-		public function set text(value:String):void 
-		{  
-			_text = value; 
-			textChanged=true;
-			invalidateProperties(); 
-		}
 	}
 }

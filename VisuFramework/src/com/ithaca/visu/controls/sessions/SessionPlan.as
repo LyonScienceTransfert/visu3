@@ -1,21 +1,21 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.visu.controls.sessions.skins.KeywordSkin;
 	import com.lyon2.visu.model.Activity;
 	import com.lyon2.visu.model.ActivityElement;
 	import com.lyon2.visu.model.ActivityElementType;
 	
 	import flash.events.Event;
 	
-	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
-	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class SessionPlan extends SkinnableContainer
 	{
@@ -59,8 +59,9 @@ package com.ithaca.visu.controls.sessions
 					{
 						if (el.type_element == ActivityElementType.KEYWORD)
 						{
-							var s:Label = new Label();
-							s.text = el.data;
+							var s:Button = new Button();
+							s.setStyle("skinClass",KeywordSkin);
+							s.label = el.data;
 							keywordGroup.addElement(s);
 						}
 					}

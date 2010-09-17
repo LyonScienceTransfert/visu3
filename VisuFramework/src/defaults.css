@@ -43,7 +43,3 @@ sessions|SessionPlan
 {
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionPlanSkin");	
 }
-sessions|ActivityElementDetail
-{
-	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.StatementSkin");	
-}

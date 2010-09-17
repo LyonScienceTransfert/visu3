@@ -29,10 +29,10 @@
 					<s:SolidColor color="#CCCCCC" />
 				</s:fill>
 			</s:Rect>
-			<s:Scroller top="5" left="5" right="5" bottom="5">
+			<s:Scroller top="0" left="0" right="0" bottom="0">
 			<s:Group id="contentGroup">
 				<s:layout>
-					<s:VerticalLayout />
+					<s:VerticalLayout gap="0" />
 				</s:layout>
 			</s:Group>
 			</s:Scroller>
@@ -40,7 +40,7 @@
 		
 		<!-- keyword group -->
 		<s:Group width="100%" 
-				 height="20%" maxHeight="200">
+				 height="25%">
 			<s:Rect top="0" left="0" right="0" bottom="0" radiusX="5">
 				<s:fill>
 					<s:SolidColor color="#EFEFEF" />
@@ -49,7 +49,7 @@
 			<s:Scroller top="5" left="5" right="5" bottom="5">
 				<s:Group id="keywordGroup">
 					<s:layout>
-						<layout:FlowLayout  horizontalGap="10" />
+						<layout:FlowLayout  horizontalGap="5"   />
 					</s:layout>
 				</s:Group>
 			</s:Scroller>

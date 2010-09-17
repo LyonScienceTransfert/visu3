@@ -10,7 +10,7 @@
 		<s:State name="normal" />
 		<s:State name="open" />
 	</s:states>
-	
+
 	<!-- SkinParts
 	name=statementGroup, type=spark.components.Group, required=false
 	name=startButton, type=spark.components.Button, required=false
@@ -19,27 +19,55 @@
 	name=durationDisplay, type=spark.components.supportClasses.TextBase, required=false
 	name=titleDisplay, type=spark.components.supportClasses.TextBase, required=false
 	-->
-	
-			<s:layout>
-				<s:VerticalLayout />
-			</s:layout>
+	 
 			
-			<s:Group width="100%" height="30">
-				<s:Label id="titleDisplay" left="10" top="10" right="50" color="#121212"
+			<s:Group width="100%" height="30">				
+				<s:Rect top="0" left="0" bottom="0" right="0">
+					<s:stroke>
+						<s:LinearGradientStroke rotation="90">
+							<s:GradientEntry color="#CCCCCC" />
+							<s:GradientEntry color="#999999" />
+						</s:LinearGradientStroke>
+					</s:stroke>
+					<s:fill>
+						<s:LinearGradient rotation="90">					
+							<s:GradientEntry color="#EFEFEF" />						
+							<s:GradientEntry color="#CCCCCC" />						
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:Path data="M 0 0 L 7 5 L 0 10 L 0 0 Z" 
+						rotation.open="90"
+						verticalCenter="0" left="3"
+						>
+					<s:postLayoutTransformOffsets>
+						<s:TransformOffsets id="tOffsets" x.open="0" y.open="0"/>  
+					</s:postLayoutTransformOffsets>
+					<s:fill>
+						<s:SolidColor color="#333333"/>
+					</s:fill>
+					<s:filters>
+						<s:DropShadowFilter angle="90"  distance="1" blurX="2" blurY="2" alpha=".7" inner="true" />
+						<s:DropShadowFilter angle="180" distance="1" blurX="1" blurY="1" color="#FFFFFF" />
+					</s:filters>
+				</s:Path>
+			
+				
+				<s:Label id="titleDisplay" left="15" top="10" right="50" color="#121212"
 						 fontSize="16" fontWeight="bold" maxDisplayedLines="1">
 					<s:filters>
 						<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 					</s:filters>
 				</s:Label>
 				
-				<s:Button id="startButton" label="start" right="0"/>
-
-				<s:Label id="durationDisplay" left="0" top="30" width="30"/>
+				<s:Button id="startButton" label="start" right="3" width="50" cornerRadius="10" verticalCenter="0"/>
 			</s:Group>
-			<s:Group width="100%" includeIn="open" id="content">
+	
+			<s:Group top="30" left="5" right="5" bottom="10" includeIn="open" id="content">
 				<s:layout>
 					<s:VerticalLayout />
 				</s:layout>
+				<s:Label id="durationDisplay" paddingTop="5" includeIn="open"/>
 				<s:Group id="statementGroup" width="100%">
 					<s:layout>
 						<s:VerticalLayout />
