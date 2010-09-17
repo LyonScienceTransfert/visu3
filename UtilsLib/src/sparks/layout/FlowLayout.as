@@ -5,6 +5,8 @@ import mx.core.ILayoutElement;
 import spark.components.supportClasses.GroupBase;
 import spark.layouts.supportClasses.LayoutBase;
 
+[Style(name="verticalGap", type="Number", inherit="no", minValue="0.0")]
+
 public class FlowLayout extends LayoutBase
 {
     
@@ -13,12 +15,27 @@ public class FlowLayout extends LayoutBase
     //  Class properties
     //
     //---------------------------------------------------------------
-    
+	//---------------------------------------------------------------
+	//  verticalGap
+	//---------------------------------------------------------------
+	
+	private var _verticalGap:Number = 3;
+	
+	public function set verticalGap(value:Number):void
+	{
+		_verticalGap = value;
+		
+		// We must invalidate the layout
+		var layoutTarget:GroupBase = target;
+		if (layoutTarget)
+			layoutTarget.invalidateDisplayList();
+	}
+	
     //---------------------------------------------------------------
     //  horizontalGap
     //---------------------------------------------------------------
 
-    private var _horizontalGap:Number = 10;
+    private var _horizontalGap:Number = 7;
 
     public function set horizontalGap(value:Number):void
     {
@@ -75,7 +92,8 @@ public class FlowLayout extends LayoutBase
         var layoutTarget:GroupBase = target;
         var count:int = layoutTarget.numElements;
         var hGap:Number = _horizontalGap;
-
+		var vGap:Number = _verticalGap;
+		
         // The position for the current element
         var x:Number = 0;
         var y:Number = 0;
@@ -165,7 +183,7 @@ public class FlowLayout extends LayoutBase
 
             // Update the position to the beginning of the row
             x = 0;
-            y += rowHeight;
+            y += rowHeight+ vGap;
         }
 
         // Set the content size which determines the scrolling limits
