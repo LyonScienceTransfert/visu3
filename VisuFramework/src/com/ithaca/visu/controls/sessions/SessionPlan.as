@@ -1,11 +1,14 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.visu.controls.sessions.skins.KeywordSkin;
+	import com.ithaca.visu.events.ActivityElementEvent;
+	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.lyon2.visu.model.Activity;
 	import com.lyon2.visu.model.ActivityElement;
 	import com.lyon2.visu.model.ActivityElementType;
 	
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
@@ -16,6 +19,9 @@ package com.ithaca.visu.controls.sessions
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
+	
+	[Event(name="shareElement",type="com.ithaca.visu.events.ActivityElementEvent")]
+	[Event(name="startActivity",type="com.ithaca.visu.events.VisuActivityEvent")]
 	
 	public class SessionPlan extends SkinnableContainer
 	{
@@ -31,6 +37,9 @@ package com.ithaca.visu.controls.sessions
 		
 		private var _activities:IList;
 		protected var activitiesChanged:Boolean;
+		
+		public var session_id:int;
+		
 		
 		public function SessionPlan()
 		{
@@ -55,17 +64,23 @@ package com.ithaca.visu.controls.sessions
 					
 					a.activity = activity;
 					a.percentWidth = 100;
+					a.addEventListener(MouseEvent.DOUBLE_CLICK, shareActivityElement);
+					addElement( a );
+					
 					for each( var el:ActivityElement in activity.getListActivityElement())
 					{
 						if (el.type_element == ActivityElementType.KEYWORD)
 						{
-							var s:Button = new Button();
+							var s:ActivityElementDetail = new ActivityElementDetail();
 							s.setStyle("skinClass",KeywordSkin);
 							s.label = el.data;
+							s.activityElement = el;
+							s.doubleClickEnabled = true;
+							s.addEventListener(MouseEvent.DOUBLE_CLICK,shareActivityElement);
 							keywordGroup.addElement(s);
 						}
 					}
-					addElement( a );
+					
 				}
 			}
 		}
@@ -112,5 +127,15 @@ package com.ithaca.visu.controls.sessions
 			activitiesChanged = true;
 			invalidateProperties();
 		}	
+		
+		protected function shareActivityElement(event:MouseEvent):void
+		{
+			trace("shareActivityElement");
+			if( !(event.target is ActivityElementDetail )) return;
+			var e:ActivityElementEvent = new ActivityElementEvent(ActivityElementEvent.SHARE_ELEMENT);
+			e.element = ActivityElementDetail(event.target).activityElement;
+			dispatchEvent(e);
+		}
+		
 	}
 }

@@ -1,5 +1,7 @@
 package com.ithaca.visu.events
 {
+	import com.lyon2.visu.model.Activity;
+	
 	import flash.events.Event;
 	
 	import mx.collections.ArrayCollection;
@@ -9,9 +11,13 @@ package com.ithaca.visu.events
 		// constants
 		static public const LOAD_LIST_ACTIVITY : String = 'loadListActivity';
 		static public const SHOW_LIST_ACTIVITY : String = 'showListActivity';
+		static public const START_ACTIVITY : String = 'startActivity';
+		
 		// properties
 		public var sessionId:int;
 		public var listActivity:ArrayCollection;
+		public var activity:Activity;
+		
 		// constructor
 		public function VisuActivityEvent(type : String,
 									 bubbles : Boolean = true,

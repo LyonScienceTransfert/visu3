@@ -35,6 +35,8 @@
     <classEntry path="com.ithaca.visu.controls.sessions.ActivityElementDetail"/>
     <classEntry path="com.ithaca.visu.controls.sessions.skins.StatementSkin"/>
     <classEntry path="com.ithaca.visu.controls.sessions.skins.KeywordSkin"/>
+    <classEntry path="com.ithaca.visu.controls.timeline.TimeLine"/>
+    <classEntry path="com.ithaca.visu.events.ActivityElementEvent"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

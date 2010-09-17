@@ -1,6 +1,8 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
+	import com.ithaca.visu.events.VisuActivityElementEvent;
+	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.lyon2.visu.model.Activity;
 	import com.lyon2.visu.model.ActivityElement;
 	import com.lyon2.visu.model.ActivityElementType;
@@ -21,6 +23,8 @@ package com.ithaca.visu.controls.sessions
 
 	[SkinState("normal")]
 	[SkinState("open")]
+	// Bubling event
+	[Event(name="startActivity",type="com.ithaca.visu.events.VisuActivityEvent")]
 	
 	public class ActivityDetail extends SkinnableComponent
 	{
@@ -71,6 +75,10 @@ package com.ithaca.visu.controls.sessions
 			{
 				durationDisplay.text = "Durée prévue : " +activity.duration.toString();
 			}
+			if (instance == startButton)
+			{
+				startButton.addEventListener(MouseEvent.CLICK,startButton_clickHandler);
+			}
 			if (instance == statementGroup)
 			{
 				trace("add statementGroup");
@@ -98,7 +106,10 @@ package com.ithaca.visu.controls.sessions
 			{
 				titleDisplay.removeEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
 			}
-			 
+			if (instance == startButton)
+			{
+				startButton.removeEventListener(MouseEvent.CLICK,startButton_clickHandler);
+			}
 		}
 		
 		override protected function commitProperties():void
@@ -147,6 +158,9 @@ package com.ithaca.visu.controls.sessions
 				s.setStyle("skinClass",StatementSkin);
 				s.percentWidth = 100;
 				s.label = el.data;
+				s.activityElement = el;
+				s.doubleClickEnabled = true;
+				//s.addEventListener(MouseEvent.DOUBLE_CLICK, activityElement_doubleClickHandler);
 				statementGroup.addElement(s);
 			}
 		}
@@ -180,6 +194,16 @@ package com.ithaca.visu.controls.sessions
 			open = !open;
 			invalidateSkinState();
 		}
-		
+		protected function startButton_clickHandler(event:MouseEvent):void
+		{
+			var e:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.START_ACTIVITY);
+			e.activity = activity;
+			dispatchEvent(e);
+			if( open == false )
+			{
+				open = true;
+				invalidateSkinState();
+			}
+		}
 	}
 }

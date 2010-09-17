@@ -10,6 +10,7 @@
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState" xmlns:sessions="com.ithaca.visu.controls.sessions.*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
@@ -21,6 +22,7 @@
 			import com.lyon2.controls.RoundedLabel;
 			import com.lyon2.visu.model.Activity;
 			import com.lyon2.visu.model.ActivityElement;
+			import com.lyon2.visu.model.ActivityElementType;
 			import com.lyon2.visu.model.Model;
 			import com.lyon2.visu.model.Session;
 			import com.lyon2.visu.vo.UserVO;
@@ -217,16 +219,27 @@
 				}
 			}
 			
-			private function onDoubleClickLabel(event:MouseEvent):void
+			
+			
+			protected function shareActivityElement(event:ActivityElementEvent):void
 			{
-					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-					var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
-					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
-					sessionSharedEvent.typeInfo = (event.currentTarget as RoundedLabel).typeLabel;
-					sessionSharedEvent.info = (event.currentTarget as RoundedLabel).text;
-					sessionSharedEvent.listUsers = listUsersId;
-					dispatchEvent(sessionSharedEvent);
+				trace("shareActivityElement");
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(event.element.type_element);
+				sessionSharedEvent.info = event.element.data;
+				sessionSharedEvent.listUsers = listUsersId;
+				dispatchEvent(sessionSharedEvent);
 			}
+			
+			protected function startActivity(event:VisuActivityEvent):void
+			{
+				//dispatchEvent 
+				event.stopPropagation();
+				trace("TODO : start activity "+event.activity.id_activity + ":"+ event.activity.title);
+			}
+			
 			
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
@@ -262,7 +275,10 @@
 			<s:Panel height="100%" width="100%" id="panelPlanSession">
 				<s:title>Plan de séance</s:title>
 				<s:title.StudentState>Media de la séance</s:title.StudentState>
-				<sessions:SessionPlan height="100%" width="100%" />
+				<sessions:SessionPlan height="100%" width="100%" 
+									  shareElement="shareActivityElement(event)"
+									  startActivity="startActivity(event)"
+									  />
 			</s:Panel>
 		</s:VGroup>
 		 
