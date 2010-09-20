@@ -216,6 +216,8 @@ public class MainManager
 		var session:Session = Model.getInstance().hasSessionById(sessionId);
 		var loggedUser:User = Model.getInstance().getLoggedUser();
 		var loggedUserId:int = loggedUser.id_user;
+		var dateSession:Date = sessionVO.date_session;
+		var promtDeLeString:String = " de "+dateSession.getHours().toString()+":"+dateSession.getMinutes().toString()+" le "+dateSession.getDate().toString()+"."+(dateSession.getMonth()+1).toString()+"."+dateSession.getFullYear().toString();
 		if(session){
 			session.setUsers(ar);
 			// add swap Users
@@ -228,7 +230,19 @@ public class MainManager
 				if(labelDateRemovedSession != "")
 				{
 					// add flux 
-					Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar,fxgt.gettext("a quité la séance : ")+sessionVO.theme, new Date());	
+					var hasLoggedUserInSession:Boolean = false;
+					var nbrUser:uint = ar.length;
+					for(var nUser:uint = 0; nUser < nbrUser; nUser++){
+						var user:UserVO = ar[nUser];
+						var userId:uint = user.id_user;
+						if(userId == loggedUserId){
+							hasLoggedUserInSession = true;
+						}
+					}
+					if(!hasLoggedUserInSession)
+					{
+						Model.getInstance().addFluxActivity(loggedUserId,loggedUser.firstname, loggedUser.avatar,fxgt.gettext("A été désinscrit de la séance: ")+sessionVO.theme+promtDeLeString, new Date());		
+					}
 					// notification for removing session
 					var eventRemoveSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 					// get list sessionDate
@@ -247,7 +261,7 @@ public class MainManager
 					// add session , add swap users
 					var labelDate:String = Model.getInstance().addSession(sessionVO, ar);					
 					// add flux 
-					Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar,fxgt.gettext("a rejoint la séance : ")+sessionVO.theme, new Date());	
+					Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar,fxgt.gettext("A été inscrit à la séance: ")+sessionVO.theme+promtDeLeString, new Date());	
 					// notification for adding session
 					var event:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 					// get list sessionDate
