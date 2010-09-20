@@ -214,7 +214,7 @@ package  com.lyon2.visu.model
 				return null;
 		}
 		
-		private function getObjectDateSessions(dateSession:String):Object
+		public function getObjectDateSessions(dateSession:String):Object
 		{
 			var nbrObjects:int = this.listDateSession.length;
 			for(var nObject:int = 0; nObject < nbrObjects; nObject++){

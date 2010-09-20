@@ -103,12 +103,12 @@
 				if(Model.getInstance().hasDateSession())
 				{
 					// set dataProvider the navigateurDay  
-					this.listSessionDate = Model.getInstance().getSessionDate();
+					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
+					// get last time selected item navigateurDay
 					var lastSelectedObject:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
-					// set last time selected item
-					this.navigateurDay.selectedItem = lastSelectedObject;
 					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 					sessionEvent.listSession = lastSelectedObject.listSessionDate;
+					sessionEvent.sessionDate = lastSelectedObject.labelDate;
 					dispatchEvent(sessionEvent);				
 				}else{
 					// id loggedUser
@@ -481,7 +481,7 @@
 	<s:HGroup x="50" y="15">
 		<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
 		<s:VGroup >
-			<controls:NavigateurDay id="navigateurDay" labelFunction="showLabalNavigateurDay"  dataProvider="{listSessionDate}" visible="true"   change="navigateurDay_changeHandler(event)"  width="300"/>
+			<controls:NavigateurDay id="navigateurDay" dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"  visible="true"   change="navigateurDay_changeHandler(event)"  width="300"/>
 			<s:HGroup id="sessionGroup" x="0"/>
 		</s:VGroup>	
 		<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
