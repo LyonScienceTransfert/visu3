@@ -118,7 +118,7 @@ public class StreamRecorder
 		IScope scope = conn.getScope();
 		
 		//notify all the client in the scope that it is Recording
-		invokeOnScopeClients(scope, "startRecord", null);
+//		invokeOnScopeClients(scope, "startRecord", null);
 	
 		GregorianCalendar calendar = new GregorianCalendar(); 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -270,22 +270,54 @@ public class StreamRecorder
 	*/
 	}
 
-	public void stopRecordRoom(IConnection conn)
+	public void stopRecordRoom(IConnection conn, Integer session_id)
 	{
-		
+		//Get the Client Scope
 		IScope scope = conn.getScope();
+		 for (String name: app.getBroadcastStreamNames(scope))
+			{			
+				log.warn("====NAME Broadcaststreem  {}",name);
+				ClientBroadcastStream stream = (ClientBroadcastStream) app.getBroadcastStream(scope, name);
+				
+				// sessionId of this client
+				Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
+				if(sessionIdClient == session_id)
+				{
+					IClient client = stream.getConnection().getClient();
+					Integer userId = (Integer)client.getAttribute("uid");
+					// set status join session
+					client.setAttribute("status", 0);
+					// call client that start recording
+					IConnection connectionClient = (IConnection)client.getAttribute("connection");
+					if (connectionClient instanceof IServiceCapableConnection) {
+						IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
+						sc.invoke("stopRecording");
+					} 	
+
+					// notification for all users that user has status "recording"
+					Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId")};
+					//send message to all users on "Deck"
+					log.warn("==============setStatusStop");
+					log.warn("==++++ setStatusStop {} ",args);
+					invokeOnScopeClients(scope, "setStatusStop", args);
+					
+						
+				}
+			}
 		
-		invokeOnScopeClients(scope, "stopRecord", null);
 		
-		for (String name: app.getBroadcastStreamNames(scope))
-		{			
-			ClientBroadcastStream stream = 
-				(ClientBroadcastStream) app.getBroadcastStream(scope, name);
-			stream.stopRecording();
-			log.debug("Stop recording stream {}", stream.getName()); 
-		}
-        for (IClient client: scope.getClients())
-            client.setAttribute("recording", "no");
+//		IScope scope = conn.getScope();
+//		
+//		invokeOnScopeClients(scope, "stopRecord", null);
+//		
+//		for (String name: app.getBroadcastStreamNames(scope))
+//		{			
+//			ClientBroadcastStream stream = 
+//				(ClientBroadcastStream) app.getBroadcastStream(scope, name);
+//			stream.stopRecording();
+//			log.debug("Stop recording stream {}", stream.getName()); 
+//		}
+       
 	}
 	
     private void invokeOnScopeClients(IScope scope, String method, Object[] arg)
