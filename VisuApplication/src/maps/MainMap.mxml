@@ -65,11 +65,11 @@
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{'testApp'}" debug="true">
+<!--		<mate:EventHandlers type="{'testApp'}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="testApp"   arguments="{['Main']}" />
 			</rtmp:RtmpServiceInvoker>	
-		</mate:EventHandlers>
+		</mate:EventHandlers>-->
 
         <mate:EventHandlers type="{AuthenticationEvent.CONNECT}" debug="true">
 			<mate:MethodInvoker generator="{RtmpService}"   
@@ -86,6 +86,8 @@
 			<rtmp:CallbackRegistrator action="startRecording" target="{MainManager}" method="onStartRecording"/>
 			<rtmp:CallbackRegistrator action="setStatusRecording" target="{MainManager}" method="onSetStatusRecording"/>
 			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
+			<rtmp:CallbackRegistrator action="checkListDates" target="{MainManager}" method="onCheckListDates"/>
+			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">

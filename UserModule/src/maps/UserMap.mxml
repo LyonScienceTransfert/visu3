@@ -33,9 +33,9 @@
 			<mate:MethodInvoker generator="{UserManager}" 
 								method="getUsers" />
 			
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+<!--			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="testApp"   arguments="{['UserManagement']}" />
-			</rtmp:RtmpServiceInvoker>
+			</rtmp:RtmpServiceInvoker>-->
 			
 		</mate:EventHandlers>
 		

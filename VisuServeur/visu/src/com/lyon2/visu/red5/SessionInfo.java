@@ -114,7 +114,7 @@ public class SessionInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SessionInfo.class, "visu2" );
 	
 	@SuppressWarnings("unchecked")
-	public List<Date> getSessionsDatesByUser(IConnection conn, Integer userId ) throws SQLException 
+	public void getSessionsDatesByUser(IConnection conn, Integer userId ) throws SQLException 
 	{
 		log.warn("======== getSessionsDatesByUser ");
 		log.warn("=====userId = {}",userId);
@@ -140,11 +140,16 @@ public class SessionInfo
 			}
 		}
 		log.warn("size = {}",result.size());
-		return result;
+		Object[] args = {result};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListDates", args);
+			} 	
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Session> getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
+	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
 	{
 		log.warn("======== getSessionsByDateByUser ");
 		log.warn("=====userId = {}",userId);
@@ -172,7 +177,12 @@ public class SessionInfo
 				log.error("Probleme lors du listing des utilisateurs" + e);
 			}
 		}
-		return result;
+		Object[] args = {result,date};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListSession", args);
+			} 	
 	}
 
 	

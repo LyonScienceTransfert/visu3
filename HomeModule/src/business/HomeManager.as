@@ -20,9 +20,9 @@ public class HomeManager
 	[Bindable]
 	public var connectedUsers : ArrayCollection;
 
-	[Bindable]
+	/*[Bindable]
 	public var listSessionDate : ArrayCollection = new ArrayCollection();
-	
+	*/
 	[Bindable]
 	public var fluxActivity : ArrayCollection;
 	
@@ -44,7 +44,7 @@ public class HomeManager
 	/**
 	 * Set date list
 	 */ 
-	public function onLoadListSessionsDates(arSessionDates:Object):void{
+/*	public function onLoadListSessionsDates(arSessionDates:Object):void{
 		
 		// FIXME PROBLEME TOO TIMES CALL THIS FUNCTION, EXISTE TOO MAPS !!!!!
 		if( Model.getInstance().getSessionDate().length == 0)
@@ -61,45 +61,14 @@ public class HomeManager
 			sessionEventLoad.sessionDate = labelDate;
 			this.dispatcher.dispatchEvent(sessionEventLoad);
 		}
-	}
+	}*/
 	
-	/**
-	 * 
-	 */
-	private function getObjectDateSessionStartToday(arr:ArrayCollection):Object
-	{
-		var date:Date = new Date();
-		var result:Object = null;
-		var deltaPositive:Number = Number.MAX_VALUE;
-		var deltaNegative:Number = Number.MAX_VALUE;
-		var nbrElement:uint = arr.length;
-		for(var nElement:uint = 0; nElement < nbrElement ; nElement++)
-		{
-			var elmDate:Date = arr[nElement].fullDate;
-			var tempDelta:Number = elmDate.getTime() - date.getTime();
-			if(tempDelta > 0)
-			{
-				if(tempDelta < deltaPositive)
-				{
-					deltaPositive = tempDelta;
-					result = arr[nElement];
-				}
-			}else{
-					tempDelta = tempDelta * -1;
-					if(tempDelta < deltaNegative)
-					{
-						deltaNegative = tempDelta;
-						result = arr[nElement];
-					}
-			}
-		}	
-		return result; 
-	}	
+
 	
 	/**
 	 * Set session list, call for each date  
 	 */ 
-	public function onLoadListSessionByDate(listSession:Object, sessionDate:String):void{
+	/*public function onLoadListSessionByDate(listSession:Object, sessionDate:String):void{
 		// get all users how will participate in session of logged user
 		var listSessionByDate:Array = listSession.data as Array;
 		Model.getInstance().setListSessionsByDate(listSessionByDate, sessionDate);
@@ -111,7 +80,7 @@ public class HomeManager
 			event.sessionDate = sessionDate;
 			dispatcher.dispatchEvent(event);			
 		}		
-	}
+	}*/
 	
 	/**
 	 * Set user list for a session
@@ -123,6 +92,7 @@ public class HomeManager
 		
 		var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 		var listSession:ArrayCollection = Model.getInstance().getListSessionByDate(sessionDate);
+		
 		sessionEvent.listSession = listSession;
 		sessionEvent.sessionDate = sessionDate;
 		dispatcher.dispatchEvent(sessionEvent);	

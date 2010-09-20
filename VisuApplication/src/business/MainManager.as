@@ -2,6 +2,7 @@ package business
 {
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
+import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
@@ -142,6 +143,23 @@ public class MainManager
 	{
 		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.avatar,fxgt.gettext("[public] ")+message ,new Date());	
 	}	
+
+	public function onCheckListDates(listDate : Array):void
+	{
+		var eventListDate:SessionEvent = new SessionEvent(SessionEvent.SHOW_LIST_DATE_SESSION);
+		eventListDate.listDate = listDate;
+		dispatcher.dispatchEvent(eventListDate);
+	}	
+	
+	public function onCheckListSession(listSession : Array, sessionDate: String):void
+	{
+		var eventListSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_LIST_SESSION);
+		eventListSession.listDate = listSession;
+		eventListSession.sessionDate = sessionDate;
+		dispatcher.dispatchEvent(eventListSession);	
+	}
+
+	
 	/**
 	 * set connected users 
 	 * @param 

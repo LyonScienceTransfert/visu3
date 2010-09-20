@@ -7,26 +7,16 @@
 		xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 
     <fx:Script><![CDATA[
-		import modules.HomeModule;
 		import business.HomeManager;
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		
-		import com.ithaca.visu.events.MessageEvent;
+		import com.ithaca.visu.events.InitMapEvent;
 		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
 		import com.ithaca.visu.events.UserEvent;
-		import com.ithaca.visu.events.InitMapEvent;	
-		import com.ithaca.visu.events.VisuActivityEvent;	
-		
-		import com.lyon2.visu.vo.SessionUserVO;
 		import com.lyon2.visu.model.Model;
 		
-		import mx.core.FlexGlobals;
-		import mx.events.FlexEvent;
-		import mx.events.ModuleEvent;
-		
+		import modules.HomeModule;
 		
         ]]></fx:Script>
 
@@ -34,8 +24,6 @@
         <mate:Debugger level="{Debugger.ALL}"/>
 
         <mate:Injectors target="{HomeModule}">
-			<mate:PropertyInjector source="{HomeManager}"
-								   targetKey="listSessionDate" sourceKey="listSessionDate"/>
 			<mate:PropertyInjector source="{HomeManager}"
 								   targetKey="listSessionView" sourceKey="listSessionView"/>
 			<mate:PropertyInjector source="{HomeManager}"
@@ -67,64 +55,23 @@
 			makeObjectsBindable="true"
 			showBusyCursor="true">
 		</s:RemoteObject>
-				
-		<mate:EventHandlers type="{SessionEvent.LOAD_SESSION}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSession" arguments="{event.sessionId}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onLoadSession" arguments="{resultObject}"/>
-				</mate:resultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>
-		
-<!-- 1) first call -->
-<!--		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSessionsDatesByUser" arguments="{event.userId}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onLoadListSessionsDates" arguments="{[resultObject,this]}"/>
-				</mate:resultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>-->
-		
+
+<!-- 1) first call -->		
 		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true" cache="global">
 				<mate:Request action="sessionInfo.getSessionsDatesByUser"   arguments="{[event.userId]}" />
-				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onLoadListSessionsDates" arguments="{[currentEvent]}"/>
-				</rtmp:resultHandlers>		
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onError" arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
+		
 <!-- 2) second call -->
 		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_SESSION}">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true" cache="global">
 				<mate:Request action="sessionInfo.getSessionsByDateByUser"   arguments="{[event.userId,event.sessionDate]}" />
-				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onLoadListSessionByDate" arguments="{[currentEvent,event.sessionDate]}"/>
-				</rtmp:resultHandlers>		
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onError" arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>		
-<!--		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_SESSION}">
-			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="getSessionsByDateByUser" arguments="{[event.userId,event.sessionDate]}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onLoadListSessionByDate" arguments="{[resultObject,event.sessionDate]}"/>
-				</mate:resultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>		-->
 			
 <!-- 3) third call -->
-		<mate:EventHandlers type="{UserEvent.LOAD_LIST_USERS_SESSION}">
+		<mate:EventHandlers type="{UserEvent.LOAD_LIST_USERS_SESSION}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="getUsersFromSession" arguments="{event.sessionId}">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{HomeManager}"

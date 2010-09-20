@@ -16,6 +16,8 @@
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"  method="updateSessionView"/>
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"  method="updateView"/>
 		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLanguageNavigateurDay"/>
+		<mate:Listener type="{SessionEvent.SHOW_LIST_DATE_SESSION}"  method="showDateSession"/>
+		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"  method="showSession"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -52,8 +54,9 @@
 			[Bindable]
 			public var listSessionView:ArrayCollection;
 			
+
 			[Bindable]
-			public var listSessionDate:ArrayCollection;
+			public var listDateForNavigateurDay:ArrayCollection;
 			
 			[Bindable]
 			public var fluxActivity : ArrayCollection;
@@ -66,6 +69,7 @@
 				// init map of this  module
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_HOME);
 				this.dispatchEvent(initMapEvent);
+				Model.getInstance().setCurrentHomeModule(this);
 			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
@@ -153,46 +157,122 @@
 			 */ 
 			public function updateSessionView(event:SessionEvent):void
 			{
-				// set selected label date 
-				var openDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
-				this.navigateurDay.selectedItem = openDate;
-				
-					var listSession:ArrayCollection = event.listSession;
-					this.listSessionView = new ArrayCollection();
-					this.sessionGroup.removeAllElements();
-					var vb:VGroup = new VGroup();		
-					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
-					var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
-					if(listSession != null)
-					{
-						var nbrSession:uint = listSession.length;
-						for(var nSession:uint = 0; nSession < nbrSession; nSession++)
+				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule
+				if( homeModule == this)
+				{
+					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
+					// set selected label date 
+					var openDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+					this.navigateurDay.selectedItem = openDate;
+					// update view only if date of session for updating the same with date on navigateurDay
+					if(openDate.labelDate == event.sessionDate)
+					{					
+						var listSession:ArrayCollection = event.listSession;
+						this.listSessionView = new ArrayCollection();
+						this.sessionGroup.removeAllElements();
+						var vb:VGroup = new VGroup();		
+						var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+						var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
+						if(listSession != null)
 						{
-							var session:Session = listSession[nSession];
-							var sessionView:SessionHomeElement = new SessionHomeElement();
-							sessionView.width = navigateurDay.width;
-							// check connected users
-							session.checkConnectedUsers(listConnectedUser);
-							sessionView.session = session;
-							sessionView.editable = _editableSession;
-							sessionView.swapItems = listSwapUsers;
-							sessionView.loggedUser = _loggedUser;
-							// listener for change user in the session 
-							sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
-							// listener for action the logged user
-							sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
-							sessionView.addEventListener(Event.ADDED_TO_STAGE, onAddedSessionViewToStage);
-							vb.addElement(sessionView);
-							this.listSessionView.addItem(sessionView);	
-						} 	
-					}else
-					{	
-						// havn't session to show by this date 
-						navigateurDay.selectedIndex = -1;
-						
+							var nbrSession:uint = listSession.length;
+							for(var nSession:uint = 0; nSession < nbrSession; nSession++)
+							{
+								var session:Session = listSession[nSession];
+								var sessionView:SessionHomeElement = new SessionHomeElement();
+								sessionView.width = navigateurDay.width;
+								// check connected users
+								session.checkConnectedUsers(listConnectedUser);
+								sessionView.session = session;
+								sessionView.editable = _editableSession;
+								sessionView.swapItems = listSwapUsers;
+								sessionView.loggedUser = _loggedUser;
+								// listener for change user in the session 
+								sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
+								// listener for action the logged user
+								sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
+								sessionView.addEventListener(Event.ADDED_TO_STAGE, onAddedSessionViewToStage);
+								vb.addElement(sessionView);
+								this.listSessionView.addItem(sessionView);	
+							} 	
+						}else
+							{	
+							// havn't session to show by this date 
+							navigateurDay.selectedIndex = -1;
+						}
+							// add updated vb groupe
+							this.sessionGroup.addElement(vb);
 					}
-					// add updated vb groupe
-					this.sessionGroup.addElement(vb);
+				}
+			}	
+			
+			private function showDateSession(event :SessionEvent):void{
+				if( Model.getInstance().getSessionDate().length == 0)
+				{
+					Model.getInstance().setSessionDate(event.listDate);
+					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
+					
+					var elementDateStartToday:Object = getObjectDateSessionStartToday(this.listDateForNavigateurDay);
+					var labelDate:String = elementDateStartToday.labelDate;
+					Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(elementDateStartToday);
+					
+					var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+					sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+					sessionEventLoad.sessionDate = labelDate;
+					dispatchEvent(sessionEventLoad);
+				}
+			}
+			
+			private function showSession(event :SessionEvent):void{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this){
+					// FIXME have to change name the property 
+					var listSession :Array = event.listDate;
+					Model.getInstance().setListSessionsByDate(listSession , event.sessionDate);
+					var nbrSession:uint = listSession.length;
+					for(var nSession:uint = 0; nSession < nbrSession ; nSession++)
+					{
+						var userEvent:UserEvent = new UserEvent(UserEvent.LOAD_LIST_USERS_SESSION);
+						userEvent.sessionId = listSession[nSession].id_session;
+						userEvent.sessionDate = event.sessionDate;
+						dispatchEvent(userEvent);			
+					}	
+				}
+					
+					
+				
+			}
+
+			/**
+			 * 
+			 */
+			private function getObjectDateSessionStartToday(arr:ArrayCollection):Object
+			{
+				var date:Date = new Date();
+				var result:Object = null;
+				var deltaPositive:Number = Number.MAX_VALUE;
+				var deltaNegative:Number = Number.MAX_VALUE;
+				var nbrElement:uint = arr.length;
+				for(var nElement:uint = 0; nElement < nbrElement ; nElement++)
+				{
+					var elmDate:Date = arr[nElement].fullDate;
+					var tempDelta:Number = elmDate.getTime() - date.getTime();
+					if(tempDelta > 0)
+					{
+						if(tempDelta < deltaPositive)
+						{
+							deltaPositive = tempDelta;
+							result = arr[nElement];
+						}
+					}else{
+						tempDelta = tempDelta * -1;
+						if(tempDelta < deltaNegative)
+						{
+							deltaNegative = tempDelta;
+							result = arr[nElement];
+						}
+					}
+				}	
+				return result; 
 			}	
 			
 			private function onAddedSessionViewToStage(event:Event):void
@@ -299,8 +379,6 @@
 					// set list session from BD
 					var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
 					sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
-					//debagging
-					if(sessionEventLoad.userId == 1){sessionEventLoad.userId = 0}
 					sessionEventLoad.sessionDate = selectedItem.labelDate;
 					dispatchEvent(sessionEventLoad);				
 				}else{
