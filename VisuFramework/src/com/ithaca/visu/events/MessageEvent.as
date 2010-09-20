@@ -8,6 +8,7 @@ public class MessageEvent extends Event
 	static public const SEND_PRV_MESSAGE : String = 'sendPrivateMessage';
 	static public const SEND_PUB_MESSAGE : String = 'sendPublicMessage';
 	static public const START_RECORDING : String = 'startRecording';
+	static public const STOP_RECORDING : String = 'stopRecording';
 	
 
 	// properties

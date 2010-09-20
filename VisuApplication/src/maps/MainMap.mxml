@@ -85,6 +85,8 @@
 			<rtmp:CallbackRegistrator action="sameUserId" target="{MainManager}" method="onSameUserId"/>
 			<rtmp:CallbackRegistrator action="startRecording" target="{MainManager}" method="onStartRecording"/>
 			<rtmp:CallbackRegistrator action="setStatusRecording" target="{MainManager}" method="onSetStatusRecording"/>
+			<rtmp:CallbackRegistrator action="stopRecording" target="{MainManager}" method="onStopRecording"/>
+			<rtmp:CallbackRegistrator action="setStatusStop" target="{MainManager}" method="onSetStatusStop"/>
 			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
 			<rtmp:CallbackRegistrator action="checkListDates" target="{MainManager}" method="onCheckListDates"/>
 			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
@@ -119,6 +121,13 @@
 		<mate:EventHandlers type="{MessageEvent.START_RECORDING}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="recorder.startRecordRoom"
+							  arguments="{[event.sessionId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.STOP_RECORDING}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="recorder.stopRecordRoom"
 							  arguments="{[event.sessionId]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>

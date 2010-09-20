@@ -194,6 +194,15 @@ public class MainManager
 		dispatcher.dispatchEvent(eventRecordingSession);
 	}
 	
+	/**
+	 * notification when start recording session
+	 */
+	public function onStopRecording():void
+	{
+		var eventStopSession:SessionEvent = new SessionEvent(SessionEvent.STOP_RECORDING_SESSION);
+		dispatcher.dispatchEvent(eventStopSession);
+	}
+	
 	
 	/**
 	 * set client id of logged user
@@ -307,6 +316,23 @@ public class MainManager
 	 * userIdClient 
 	 */
 	public function onSetStatusRecording(userId:int, status:int, sessionId:int):void{
+			// FIXME : have to fine other solution
+			var userVO:UserVO = new UserVO();
+			userVO.id_user = userId;
+			// update status user 
+			Model.getInstance().updateStatusUser(userVO, status , sessionId);
+			// update list user
+			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
+			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
+	}
+
+	/**
+	 * set status 
+	 * @param
+	 * userVO
+	 * userIdClient 
+	 */
+	public function onSetStatusStop(userId:int, status:int, sessionId:int):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;

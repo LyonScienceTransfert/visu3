@@ -157,6 +157,19 @@
 				if(this.visio != null)
 				{
 					this.visio.status = VisuVisio.STATUS_RECORD;
+					buttonStartRecording.label = "Stop";				
+				}
+			}
+
+			/**
+			 * Update status on stop recording session
+			 */
+			private function onStopRecordingSession(event:SessionEvent):void
+			{
+				if(this.visio != null)
+				{
+					this.visio.status = VisuVisio.STATUS_NONE;
+					buttonStartRecording.label = "Recording";				
 				}
 			}
 			
@@ -245,10 +258,18 @@
 			{
 				if(this.visio != null)
 				{
-					//start recording
-					var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
-					eventStartRecording.sessionId = this.currentSession.id_session;
-					dispatchEvent(eventStartRecording);				
+					if (this.visio.status == VisuVisio.STATUS_RECORD){
+						//stop recording
+						//TODO :  asc if tutor close the session
+						var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
+						eventStopRecording.sessionId = this.currentSession.id_session;
+						dispatchEvent(eventStopRecording);														
+					}else{
+						//start recording
+						var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
+						eventStartRecording.sessionId = this.currentSession.id_session;
+						dispatchEvent(eventStartRecording);								
+					}
 				}
 			}
 			
@@ -265,12 +286,13 @@
 		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
 		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
 		<mate:Listener type="{SessionEvent.START_RECORDING_SESSION}"  method="onStartRecordingSession"/>
+		<mate:Listener type="{SessionEvent.STOP_RECORDING_SESSION}"  method="onStopRecordingSession"/>
 		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
 		<s:VGroup width="33%" height="100%">
 			<mx:Spacer height="5" />
-			<s:Button width="100%" includeIn="MainState" height="30" 
+			<s:Button  id="buttonStartRecording" width="100%" includeIn="MainState" height="30" 
 					  click="button1_clickHandler(event)" label="Recording"/>
 			<s:Panel height="100%" width="100%" id="panelPlanSession">
 				<s:title>Plan de séance</s:title>
