@@ -307,8 +307,10 @@
 				</s:Panel>
 				<s:Panel   height="100%" width="60%">
 					<s:title>Chat</s:title>
-				<s:VGroup id="panelChatSession" gap="22" width="100%" includeIn="MainState">					
-				</s:VGroup>
+				<s:Scroller top="0" left="0" right="0" bottom="0">
+					<s:VGroup id="panelChatSession" gap="22" width="100%" >					
+					</s:VGroup>					
+				</s:Scroller>
 				</s:Panel>
 			</mx:HDividedBox>
 			<s:Panel width="100%" height="45%">
