@@ -535,6 +535,17 @@
 				this.navigateurDay.selectedIndex = -1;		
 				this.navigateurDay.selectedItem = selectedDate;				
 			}
+			
+			/**
+			 * Send message to all by click button "enter"
+			 */
+			protected function onKeyUp(event:KeyboardEvent):void
+			{
+				if (event.keyCode == Keyboard.ENTER)
+				{
+					sendAll_clickHandler();
+				}
+			}
 		]]>
 	</fx:Script>
 	<s:HGroup x="50" y="15">
@@ -563,7 +574,7 @@
 					<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
 				</s:HGroup>
 				<s:HGroup verticalAlign="middle" width="450">
-					<s:TextInput id="textToSend" width="398" height="40"/>
+					<s:TextInput id="textToSend" width="398" height="40" keyUp="onKeyUp(event)"/>
 					<mx:Image id="imageLoggedUser" width="40" height="40"/>
 				</s:HGroup>
 				
