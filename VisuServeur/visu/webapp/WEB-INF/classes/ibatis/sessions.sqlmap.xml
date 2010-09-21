@@ -62,6 +62,7 @@
 		FROM session_users su, sessions s 
         WHERE s.id_session = su.id_session 
             AND su.id_user = #value:INTEGER#
+        ORDER BY s.date_session      
     ]]>
 	</select>
     

@@ -227,6 +227,8 @@ public class MainManager
 		var loggedUserId:int = loggedUser.id_user;
 		var dateSession:Date = sessionVO.date_session;
 		var promtDeLeString:String = " de "+dateSession.getHours().toString()+":"+dateSession.getMinutes().toString()+" le "+dateSession.getDate().toString()+"."+(dateSession.getMonth()+1).toString()+"."+dateSession.getFullYear().toString();
+		// FIXME : if user hasn't session of the date(user just looking on the list date of session and don't choose any date),
+	    // and at this moment responsable will "désinscrit" user from the session => the date will stay on his liste  the date .....
 		if(session){
 			session.setUsers(ar);
 			// add swap Users

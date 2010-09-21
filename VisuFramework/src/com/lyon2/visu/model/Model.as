@@ -279,10 +279,34 @@ package  com.lyon2.visu.model
 				}					
 			}
 			// add new date and session
-			var listSessionDate:ArrayCollection = new ArrayCollection;
+			var listSessionDate:ArrayCollection = new ArrayCollection();
 			listSessionDate.addItem(session);
-			this.listDateSession.addItem({labelDate:labelDate, fullDate:sessionVO.date_session, listSessionDate:listSessionDate});			
+			var index:int = this.getIndexDateSession(sessionVO.date_session);		
+			this.listDateSession.addItemAt({labelDate:labelDate, fullDate:sessionVO.date_session, listSessionDate:listSessionDate},index);			
 			return labelDate;
+		}
+		
+		/**
+		 * Get index of element date where will be add new date of the sesion
+		 */
+		private function getIndexDateSession(date:Date):int
+		{
+			var nbrDate:uint = this.listDateSession.length;
+			if(nbrDate == 0){
+				return 0;
+			}else
+			{
+				for(var nDate:int = 0; nDate < nbrDate; nDate++){
+					var obj:Object = this.listDateSession[nDate] as Object;
+					var dateObject:Date = obj.fullDate as Date;
+					var diff:Number = dateObject.getTime() - date.getTime();
+					if(diff > 0)
+					{
+						return nDate
+					}
+				}
+				return nDate;
+			}	
 		}
 		
 		/**
@@ -428,6 +452,13 @@ package  com.lyon2.visu.model
 			}
 		}
 		
+		public function addSessionDateToday(index:int):Object
+		{
+			var date:Date = new Date();
+			var labelDate:String = getDateFormatYYY_MM_DD(date);
+			this.listDateSession.addItemAt({labelDate:labelDate, fullDate:date, listSessionDate:null},index);
+			return this.listDateSession.getItemAt(index);
+		}
 		public function hasDateSession():Boolean
 		{
 			if(this.listDateSession.length > 0)

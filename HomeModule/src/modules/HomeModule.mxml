@@ -176,24 +176,34 @@
 						if(listSession != null)
 						{
 							var nbrSession:uint = listSession.length;
-							for(var nSession:uint = 0; nSession < nbrSession; nSession++)
+							if(nbrSession == 0)
 							{
-								var session:Session = listSession[nSession];
-								var sessionView:SessionHomeElement = new SessionHomeElement();
-								sessionView.width = navigateurDay.width;
-								// check connected users
-								session.checkConnectedUsers(listConnectedUser);
-								sessionView.session = session;
-								sessionView.editable = _editableSession;
-								sessionView.swapItems = listSwapUsers;
-								sessionView.loggedUser = _loggedUser;
-								// listener for change user in the session 
-								sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
-								// listener for action the logged user
-								sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
-								sessionView.addEventListener(Event.ADDED_TO_STAGE, onAddedSessionViewToStage);
-								vb.addElement(sessionView);
-								this.listSessionView.addItem(sessionView);	
+								var labelMessage:Label = new Label();
+								labelMessage.setStyle("fontSize", 16);
+								labelMessage.setStyle("fontWeight", "bold");
+								labelMessage.text = fxgt.gettext("Vous n'aves pas la séance pour cet date....");
+								vb.addElement(labelMessage);
+							}else
+							{
+								for(var nSession:uint = 0; nSession < nbrSession; nSession++)
+								{
+									var session:Session = listSession[nSession];
+									var sessionView:SessionHomeElement = new SessionHomeElement();
+									sessionView.width = navigateurDay.width;
+									// check connected users
+									session.checkConnectedUsers(listConnectedUser);
+									sessionView.session = session;
+									sessionView.editable = _editableSession;
+									sessionView.swapItems = listSwapUsers;
+									sessionView.loggedUser = _loggedUser;
+									// listener for change user in the session 
+									sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
+									// listener for action the logged user
+									sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
+									sessionView.addEventListener(Event.ADDED_TO_STAGE, onAddedSessionViewToStage);
+									vb.addElement(sessionView);
+									this.listSessionView.addItem(sessionView);	
+								}
 							} 	
 						}else
 							{	
@@ -228,18 +238,26 @@
 					// FIXME have to change name the property 
 					var listSession :Array = event.listDate;
 					Model.getInstance().setListSessionsByDate(listSession , event.sessionDate);
+					
 					var nbrSession:uint = listSession.length;
-					for(var nSession:uint = 0; nSession < nbrSession ; nSession++)
+					if(nbrSession != 0)
 					{
-						var userEvent:UserEvent = new UserEvent(UserEvent.LOAD_LIST_USERS_SESSION);
-						userEvent.sessionId = listSession[nSession].id_session;
-						userEvent.sessionDate = event.sessionDate;
-						dispatchEvent(userEvent);			
-					}	
-				}
-					
-					
-				
+						for(var nSession:uint = 0; nSession < nbrSession ; nSession++)
+						{
+							var userEvent:UserEvent = new UserEvent(UserEvent.LOAD_LIST_USERS_SESSION);
+							userEvent.sessionId = listSession[nSession].id_session;
+							userEvent.sessionDate = event.sessionDate;
+							dispatchEvent(userEvent);			
+						}	
+					}else
+					{
+						var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
+						var listSessionEmpty:ArrayCollection = new ArrayCollection();
+						sessionEvent.listSession = listSessionEmpty;
+						sessionEvent.sessionDate = event.sessionDate;
+						dispatchEvent(sessionEvent);	
+					}
+				}				
 			}
 
 			/**
@@ -251,10 +269,17 @@
 				var result:Object = null;
 				var deltaPositive:Number = Number.MAX_VALUE;
 				var deltaNegative:Number = Number.MAX_VALUE;
+				var hasDateToday:Boolean = false;
 				var nbrElement:uint = arr.length;
 				for(var nElement:uint = 0; nElement < nbrElement ; nElement++)
 				{
 					var elmDate:Date = arr[nElement].fullDate;
+					if(isDateToday(elmDate)){
+						result = arr[nElement];
+						hasDateToday = true;
+						break;
+					}
+				
 					var tempDelta:Number = elmDate.getTime() - date.getTime();
 					if(tempDelta > 0)
 					{
@@ -272,8 +297,36 @@
 						}
 					}
 				}	
-				return result; 
+				
+				if(!hasDateToday)
+				{
+					// where will add date today
+					var obj:Object = null;
+					var index:uint = arr.getItemIndex(result);
+					var diff:Number = (result.fullDate as Date).getTime() - date.getTime();
+					if(diff < 0)
+					{
+						 index++;
+					}
+					obj = Model.getInstance().addSessionDateToday(index);
+					return obj;
+					
+				}else return result; 
 			}	
+			
+			private function isDateToday(arrDate:Date):Boolean
+			{
+				var date:Date = new Date();
+				if(date.getFullYear() == arrDate.getFullYear())
+				{
+					if(date.getMonth() == arrDate.getMonth()){
+						if(date.getDate() == arrDate.getDate())
+						{
+							return true;
+						}else return false;
+					}else return false;
+				}else return false;
+			}
 			
 			private function onAddedSessionViewToStage(event:Event):void
 			{
@@ -397,74 +450,80 @@
 			protected function showLabalNavigateurDay(item:Object):String
 			{
 				var date:Date = item.fullDate as Date;
-				var dayString:String = date.getDate().toString();
-				var yearString:String = date.getFullYear().toString();
-				var monthString:String = "";
-				var month:Number = date.getMonth();
-				switch (month){
-					case 0:
-						monthString = fxgt.gettext("JANVIER");
-						break;
-					case 1:
-						monthString = fxgt.gettext("FEVRIER");
-						break;
-					case 2:
-						monthString = fxgt.gettext("MARS");
-						break;
-					case 3:
-						monthString = fxgt.gettext("AVRIL");
-						break;
-					case 4:
-						monthString = fxgt.gettext("MAI");
-						break;
-					case 5:
-						monthString = fxgt.gettext("JUIN");
-						break;
-					case 6:
-						monthString = fxgt.gettext("JUILLIET");
-						break;
-					case 7:
-						monthString = fxgt.gettext("AOÛT");
-						break;
-					case 8:
-						monthString = fxgt.gettext("SEPTEMBRE");
-						break;
-					case 9:
-						monthString = fxgt.gettext("OCTOBRE");
-						break;
-					case 10:
-						monthString = fxgt.gettext("NOVEMBRE");
-						break;
-					case 11:
-						monthString = fxgt.gettext("DECEMBRE");
-						break;
+				if(this.isDateToday(date))
+				{
+					return fxgt.gettext("         <<---  AUJOURD'HUI  --->>");
+				}else
+				{
+					var dayString:String = date.getDate().toString();
+					var yearString:String = date.getFullYear().toString();
+					var monthString:String = "";
+					var month:Number = date.getMonth();
+					switch (month){
+						case 0:
+							monthString = fxgt.gettext("JANVIER");
+							break;
+						case 1:
+							monthString = fxgt.gettext("FEVRIER");
+							break;
+						case 2:
+							monthString = fxgt.gettext("MARS");
+							break;
+						case 3:
+							monthString = fxgt.gettext("AVRIL");
+							break;
+						case 4:
+							monthString = fxgt.gettext("MAI");
+							break;
+						case 5:
+							monthString = fxgt.gettext("JUIN");
+							break;
+						case 6:
+							monthString = fxgt.gettext("JUILLIET");
+							break;
+						case 7:
+							monthString = fxgt.gettext("AOÛT");
+							break;
+						case 8:
+							monthString = fxgt.gettext("SEPTEMBRE");
+							break;
+						case 9:
+							monthString = fxgt.gettext("OCTOBRE");
+							break;
+						case 10:
+							monthString = fxgt.gettext("NOVEMBRE");
+							break;
+						case 11:
+							monthString = fxgt.gettext("DECEMBRE");
+							break;
+					}
+					var dayWeek:Number = date.getDay();
+					var dayWeekString:String="";
+					switch (dayWeek){
+						case 0:
+							dayWeekString = fxgt.gettext("DIMANCHE");
+							break;
+						case 1:
+							dayWeekString = fxgt.gettext("LUNDI");
+							break;
+						case 2:
+							dayWeekString = fxgt.gettext("MARDI");
+							break;
+						case 3:
+							dayWeekString = fxgt.gettext("MERCREDI");
+							break;
+						case 4:
+							dayWeekString = fxgt.gettext("JEUDI");
+							break;
+						case 5:
+							dayWeekString = fxgt.gettext("VENDREDI");
+							break;
+						case 6:
+							dayWeekString = fxgt.gettext("SAMEDI");
+							break;		
+					}
+					return 	dayWeekString + " "+dayString + " "+monthString+ " "+ yearString ;		
 				}
-				var dayWeek:Number = date.getDay();
-				var dayWeekString:String="";
-				switch (dayWeek){
-					case 0:
-						dayWeekString = fxgt.gettext("DIMANCHE");
-						break;
-					case 1:
-						dayWeekString = fxgt.gettext("LUNDI");
-						break;
-					case 2:
-						dayWeekString = fxgt.gettext("MARDI");
-						break;
-					case 3:
-						dayWeekString = fxgt.gettext("MERCREDI");
-						break;
-					case 4:
-						dayWeekString = fxgt.gettext("JEUDI");
-						break;
-					case 5:
-						dayWeekString = fxgt.gettext("VENDREDI");
-						break;
-					case 6:
-						dayWeekString = fxgt.gettext("SAMEDI");
-						break;		
-				}
-				return 	dayWeekString + " "+dayString + " "+monthString+ " "+ yearString ;		
 			}
 			
 			/**
