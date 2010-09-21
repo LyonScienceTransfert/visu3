@@ -10,6 +10,7 @@
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" currentState="BlankState" xmlns:sessions="com.ithaca.visu.controls.sessions.*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
@@ -20,17 +21,15 @@
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.lyon2.controls.RoundedLabel;
-			import com.lyon2.visu.model.Activity;
-			import com.lyon2.visu.model.ActivityElement;
 			import com.lyon2.visu.model.ActivityElementType;
 			import com.lyon2.visu.model.Model;
 			import com.lyon2.visu.model.Session;
-			import com.lyon2.visu.vo.UserVO;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
 			import mx.events.FlexEvent;
-			import mx.modules.ModuleBase;
 			
 			import spark.components.Button;
 			import spark.components.Label;
@@ -40,6 +39,9 @@
 			
 			[Bindable]
 			public var listActivities:ArrayCollection;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -71,6 +73,12 @@
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
 				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
+					
+					fxgt = FxGettext;
+					if(buttonStartRecording != null){
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");	
+					}
+					
 					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.CONNECTED);
 					var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
 					visuActivityEvent.sessionId = Model.getInstance().getCurrentSession().id_session;					
@@ -157,7 +165,10 @@
 				if(this.visio != null)
 				{
 					this.visio.status = VisuVisio.STATUS_RECORD;
-					buttonStartRecording.label = "Stop";				
+					// update label button on view tutorat
+					if(buttonStartRecording != null){			
+						buttonStartRecording.label = fxgt.gettext("Arreter la séance");				
+					}
 				}
 			}
 
@@ -169,7 +180,10 @@
 				if(this.visio != null)
 				{
 					this.visio.status = VisuVisio.STATUS_NONE;
-					buttonStartRecording.label = "Recording";				
+					// update label button on view tutorat
+					if(buttonStartRecording != null){
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");									
+					}
 				}
 			}
 			
@@ -182,44 +196,7 @@
 			{
 				
 			}
-			
-			protected function dropListActivity_changeHandler(event:IndexChangeEvent):void
-			{
-				
-				/*
-				var nbrElm:uint = listActivityElement.length;
-				for(var nElm:uint = 0; nElm < nbrElm; nElm++)
-				{
-					var elm:ActivityElement = listActivityElement[nElm];
-					var text:String = elm.data;
-					var type:String = elm.type_element;
-					var label:RoundedLabel = new RoundedLabel();
-					label.text = text;
-					label.doubleClickEnabled = true;
-					label.addEventListener(MouseEvent.DOUBLE_CLICK , onDoubleClickLabel);
-					if(type == "keyword"){
-						label.typeLabel = 2;
-						this.panelMotCle.addElement(label);
-					}else{
-						switch(type){	
-							case "consigne":
-								label.setStyle("color","#52ad3c");
-								label.typeLabel = 1;
-								break;
-							case "memo":
-								label.setStyle("color","#52ad3c");
-								label.typeLabel = 0;
-								break;	
-							case "document" : 
-								label.setStyle("color","#a1157f");
-								label.typeLabel = 3;
-								break;	
-						}
-						this.panelActivivtyElement.addElement(label)					
-					}
-				}
-				*/
-			}
+
 			
 			private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
 			{
@@ -273,6 +250,19 @@
 				}
 			}
 			
+			protected function updateLabelsModule(event:ApplicationMenuEvent):void
+			{
+				if(buttonStartRecording != null){
+					if(this.visio.status == VisuVisio.STATUS_NONE)
+					{				
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");									
+					}else
+					{
+						buttonStartRecording.label = fxgt.gettext("Arreter la séance");			
+					}
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -282,6 +272,7 @@
 	</modules:states>
 	<fx:Declarations>
 		<maps:TutoratMap id="tutoratMap" dispatcher="{this}"/>
+		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLabelsModule"/>
 		<mate:Listener type="{VisuActivityEvent.SHOW_LIST_ACTIVITY}"  method="updateView"/>
 		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
 		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
@@ -293,14 +284,16 @@
 		<s:VGroup width="33%" height="100%">
 			<mx:Spacer height="5" />
 			<s:Button  id="buttonStartRecording" width="100%" includeIn="MainState" height="30" 
-					  click="button1_clickHandler(event)" label="Recording"/>
+					  click="button1_clickHandler(event)">
+				<!-- Démarrer la séance -->
+			</s:Button>
 			<s:Panel height="100%" width="100%" id="panelPlanSession">
 				<s:title>Plan de séance</s:title>
 				<s:title.StudentState>Media de la séance</s:title.StudentState>
 				<sessions:SessionPlan height="100%" width="100%" 
 									  shareElement="shareActivityElement(event)"
 									  startActivity="startActivity(event)"
-									  />
+									   includeIn="MainState"/>
 			</s:Panel>
 		</s:VGroup>
 		 
