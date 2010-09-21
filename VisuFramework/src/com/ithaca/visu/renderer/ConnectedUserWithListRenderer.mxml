@@ -74,14 +74,16 @@
 
 			protected function list_creationCompleteHandler(event:FlexEvent):void
 			{
-				for each(var u:User in data.swapList)
-				{
-					if( data.user.mail == u.mail) 
+				if(data != null){
+					for each(var u:User in data.swapList)
 					{
-						list.selectedItem = u;						
-						updateStyle( u );
-						statusIcon.status = u.status;
-						return;
+						if( data.user.mail == u.mail) 
+						{
+							list.selectedItem = u;						
+							updateStyle( u );
+							statusIcon.status = u.status;
+							return;
+						}
 					}
 				}
 			}
