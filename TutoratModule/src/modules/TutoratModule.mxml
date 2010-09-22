@@ -20,6 +20,7 @@
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.lyon2.controls.RoundedLabel;
 			import com.lyon2.visu.model.ActivityElementType;
 			import com.lyon2.visu.model.Model;
@@ -29,6 +30,8 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
 			import spark.components.Button;
@@ -236,11 +239,12 @@
 				if(this.visio != null)
 				{
 					if (this.visio.status == VisuVisio.STATUS_RECORD){
-						//stop recording
-						//TODO :  asc if tutor close the session
-						var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
-						eventStopRecording.sessionId = this.currentSession.id_session;
-						dispatchEvent(eventStopRecording);														
+						//stop recording	
+						// conformation for closing the session
+						Alert.yesLabel = fxgt.gettext("Oui");
+						Alert.noLabel = fxgt.gettext("Non");
+						Alert.show(fxgt.gettext("Voulez-vous fermer la séance ?, bla bla bla....."),
+						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, closeSessionConfirmed); 	
 					}else{
 						//start recording
 						var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
@@ -248,6 +252,30 @@
 						dispatchEvent(eventStartRecording);								
 					}
 				}
+			}
+			
+			protected function closeSessionConfirmed(event:CloseEvent):void
+			{
+				var sessionStatus:int = -1;
+				if( event.detail == Alert.YES )
+				{				
+					// stop recording and close session
+					sessionStatus =  SessionStatusEnum.SESSION_CLOSE;	
+					if(buttonStartRecording != null)
+					{
+						// can't start session
+						buttonStartRecording.enabled = false;
+					}
+					
+				}else
+				{
+					// stop recording
+					sessionStatus =  SessionStatusEnum.SESSION_PAUSE;				
+				}
+				var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
+				eventStopRecording.sessionId = this.currentSession.id_session;
+				eventStopRecording.sessionStatus = sessionStatus;
+				dispatchEvent(eventStopRecording);	
 			}
 			
 			/**
