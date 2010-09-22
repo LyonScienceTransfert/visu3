@@ -13,7 +13,9 @@ package  com.lyon2.visu.model
 			public var date_session:Date;
 			public var isModel:Boolean;
 			public var description:String;
-			public var participants:ArrayCollection = new ArrayCollection();;
+			public var participants:ArrayCollection = new ArrayCollection();
+			public var date_start_recording:Date;
+			public var statusSession:int = -1;
 
 		public function Session(session:SessionVO)
 		{
@@ -23,6 +25,9 @@ package  com.lyon2.visu.model
 			this.date_session = session.date_session;
 			this.isModel = session.isModel;
 			this.description = session.description;
+			this.date_start_recording = session.start_recording;
+			this.statusSession = session.status_session;
+			
 		}
 		
 		public function getSessionId():int {return this.id_session};

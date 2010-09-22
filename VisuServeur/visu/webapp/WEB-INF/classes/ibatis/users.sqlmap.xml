@@ -79,7 +79,8 @@
 			mail = #mail:VARCHAR#, 
 			password = #password:VARCHAR#, 
 			profil = #profil:LONGVARBINARY#,
-		 	activation_key = #activation_key:VARCHAR#
+		 	activation_key = #activation_key:VARCHAR#,
+		 	avatar = #avatar:VARCHAR#
 		<selectKey keyProperty="id_user" resultClass="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>

@@ -11,5 +11,6 @@ package com.lyon2.visu.vo
 			public var isModel:Boolean;
 			public var description:String;
 			public var start_recording:Date;
+			public var status_session:int;
 	}
 }

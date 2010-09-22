@@ -16,6 +16,7 @@ public class MessageEvent extends Event
 	public var message : String;
 	public var resiverUserId:int;
 	public var sessionId:int;
+	public var sessionStatus:int;
 
 	// constructor
 	public function MessageEvent(type : String = null,
