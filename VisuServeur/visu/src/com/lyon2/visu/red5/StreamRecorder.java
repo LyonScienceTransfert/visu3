@@ -69,6 +69,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
@@ -88,6 +89,7 @@ import org.slf4j.Logger;
 
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
+import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.Application;
  
@@ -118,17 +120,11 @@ public class StreamRecorder
 		List<String> listPresentsIdUsers= new ArrayList<String>();
 		//Get the Client Scope
 		IScope scope = conn.getScope();
-		
-		//notify all the client in the scope that it is Recording
-//		invokeOnScopeClients(scope, "startRecord", null);
 	
 		GregorianCalendar calendar = new GregorianCalendar(); 
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
 		String sDate = dateFormat.format(calendar.getTime());
-		
-		// set StartTime recording of this session
-		app.setDateStartRecordingSession(session_id);
 		
 		// get users from this session
 		List<User> listUsersSession = new ArrayList<User>();	
