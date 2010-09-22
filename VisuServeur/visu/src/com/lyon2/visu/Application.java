@@ -686,8 +686,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					}
 			}
 			
-			// notification for all users that user has status "recording"
-			Object[] args = {(Integer)clientRecording.getAttribute("uid"), (Integer)clientRecording.getAttribute("status"), (Integer)clientRecording.getAttribute("sessionId") };
+			// notification for all users that user has status "recording" , send here date start recording == null , every users has this date after start recording
+			Object[] args = {(Integer)clientRecording.getAttribute("uid"), (Integer)clientRecording.getAttribute("status"), (Integer)clientRecording.getAttribute("sessionId"), null };
 			//send message to all users on "Deck"
 			log.warn("== setStatusRecording {} ",args);
 			invokeOnScopeClients(scope, "setStatusRecording", args);
