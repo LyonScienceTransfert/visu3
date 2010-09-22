@@ -25,6 +25,7 @@ public class SessionEvent extends Event
 	static public const OLD_USER_OUT_SESSION : String = 'oldUserOutSession';
 	static public const START_RECORDING_SESSION : String = 'startRecordingSession';
 	static public const STOP_RECORDING_SESSION : String = 'stopRecordingSession';
+	static public const CLOSE_SESSION : String = 'closeSession';
 	
 
 	// properties

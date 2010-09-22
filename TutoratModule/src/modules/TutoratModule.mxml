@@ -250,6 +250,17 @@
 				}
 			}
 			
+			/**
+			 * Other tuteur close session
+			 */
+			protected function onCloseSession(event:SessionEvent):void
+			{
+				if(buttonStartRecording != null)
+				{
+					buttonStartRecording.enabled = false;
+				}
+			}
+			
 			protected function updateLabelsModule(event:ApplicationMenuEvent):void
 			{
 				if(buttonStartRecording != null){
@@ -278,6 +289,7 @@
 		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
 		<mate:Listener type="{SessionEvent.START_RECORDING_SESSION}"  method="onStartRecordingSession"/>
 		<mate:Listener type="{SessionEvent.STOP_RECORDING_SESSION}"  method="onStopRecordingSession"/>
+		<mate:Listener type="{SessionEvent.CLOSE_SESSION}"  method="onCloseSession"/>
 		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">

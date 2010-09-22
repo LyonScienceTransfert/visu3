@@ -340,6 +340,13 @@ public class MainManager
 			userVO.id_user = userId;
 			// update status user 
 			Model.getInstance().updateStatusUser(userVO, status , sessionId);
+				// check if session close
+				if(sessionStatus == SessionStatusEnum.SESSION_CLOSE)
+				{
+					// notification to logged user closing session by other user
+					var closeSessionEvent:SessionEvent = new SessionEvent(SessionEvent.CLOSE_SESSION);
+					this.dispatcher.dispatchEvent(closeSessionEvent);
+				}
 			// update list user
 			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
