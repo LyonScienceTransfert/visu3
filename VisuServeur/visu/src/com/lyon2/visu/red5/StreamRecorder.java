@@ -327,8 +327,8 @@ public class StreamRecorder
 						sc.invoke("stopRecording");
 					} 	
 
-					// notification for all users that user has status "recording"
-					Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId")};
+					// notification for all users that user and session had changed status 
+					Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId"),sessionStatus};
 					//send message to all users on "Deck"
 					log.warn("==============setStatusStop");
 					log.warn("==++++ setStatusStop {} ",args);

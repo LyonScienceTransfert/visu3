@@ -844,12 +844,14 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
 		}
-		// FIXME : Mode debogage, session will be open about 3min = 200000 milliseconds
-		Long DURATION_SESSION = new Long ("200000");
-		Date startRecording = session.getStart_recording();
-		Long durationRecording = new Date().getTime() - startRecording.getTime();
-		log.warn("durationRecording = {}",durationRecording.toString());
-		if(durationRecording < DURATION_SESSION)
+		// get status session
+		// TODO static vars :
+		// SESSION_RECORDING = 3
+		// SESSION_PAUSE = 2
+		// SESSION_CLOSE = 1
+		// SESSION_OPEN = 0
+		Integer statuSession = session.getStatus_session();
+		if(statuSession == 3)
 		{
 			// set status recording
 			client.setAttribute("status", 3);
