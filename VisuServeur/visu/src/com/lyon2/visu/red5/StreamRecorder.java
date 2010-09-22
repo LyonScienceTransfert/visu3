@@ -187,9 +187,13 @@ public class StreamRecorder
 					{			
 						// generate traceId
 					    trace = app.makeTraceId(userId);
-					    typeObsel = "SessionEnter";
+					    typeObsel = "SessionStart";
 					    client.setAttribute("trace", trace);
 						log.warn("empty BD, ListObsel = null");
+						// set "date_start_recording" and "status_session" of this session
+						// TODO static vars :
+						// SESSION_RECORDING = 3
+						app.setStatusSession(session_id, 3, startRecording);
 					}
 				} catch (Exception e) {
 					log.error("Probleme lors du listing des sessions" + e);
@@ -197,7 +201,11 @@ public class StreamRecorder
 					trace = app.makeTraceId(userId);
 					typeObsel = "SessionStart";
 					client.setAttribute("trace", trace);
-					log.warn("empty BD, exception case");				
+					log.warn("empty BD, exception case");	
+					// set "date_start_recording" and "status_session" of this session
+					// TODO static vars :
+					// SESSION_RECORDING = 3
+					app.setStatusSession(session_id, 3, startRecording);
 				}
 								
 				// set status recording
@@ -316,6 +324,9 @@ public class StreamRecorder
 				Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
 				if(sessionIdClient == session_id)
 				{
+					// set status session 
+					app.setStatusSession(session_id, sessionStatus, null);
+					
 					IClient client = stream.getConnection().getClient();
 					Integer userId = (Integer)client.getAttribute("uid");
 					// set status join session

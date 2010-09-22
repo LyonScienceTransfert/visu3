@@ -864,19 +864,31 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		invokeOnScopeClients(scope, "joinSession", args);
 		
 	}
-	
-	public void setDateStartRecordingSession(Integer sessionId)
+	/**
+	 * Set date start recording and status session
+	 * @param sessionId
+	 */
+	public void setStatusSession(Integer sessionId, Integer sessionStatus, Date dateStartRecording)
 	{
 		Session session = null;
 		try
 		{
 			session = (Session) getSqlMapClient().queryForObject("sessions.getSession",sessionId);
-			log.warn("====setDateStartRecordingSession=====");
-			log.warn("session is = {}",session.toString());
+			log.warn("====setStatusSession=====");
+			log.warn("sessionId is = {}",session.getId_session().toString());
+			log.warn("status is = {}",sessionStatus.toString());
+			log.warn("dateRecording is = {}",dateStartRecording.toString());
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
 		}
-		session.setStart_recording(new Date());
+		// set start recording
+		if(dateStartRecording != null)
+		{
+			session.setStart_recording(dateStartRecording);
+		}
+		// set status session
+		session.setStatus_session(sessionStatus);
+		
 		try
 		{
 			getSqlMapClient().update("sessions.update",session);
