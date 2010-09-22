@@ -162,6 +162,24 @@ public class StreamRecorder
 			{
 				IClient client = stream.getConnection().getClient();
 				Integer userId = (Integer)client.getAttribute("uid");
+				// get recording session
+				Session session = null;
+				try
+				{
+					session = (Session) app.getSqlMapClient().queryForObject("sessions.getSession",session_id);
+				} catch (Exception e) {
+					log.error("Probleme lors du listing des sessions" + e);
+				}
+				
+				Date startRecording = null;
+				// session open
+				if(session.getStatus_session() == 0)
+				{
+					startRecording = new Date();
+				}else
+				{
+					startRecording = session.getStart_recording();
+				}
 				// generate traceId
 				String trace="";
 				List<Obsel> listObselSessionStart = null;
