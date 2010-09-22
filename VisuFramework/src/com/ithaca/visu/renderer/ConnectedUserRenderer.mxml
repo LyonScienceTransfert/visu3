@@ -13,9 +13,12 @@
 			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
 			{
 				userLabel.setStyle("fontWeight", 'normal');
-				if (data.user.role > RoleEnum.STUDENT){
-					userLabel.setStyle("fontWeight", 'bold');					
-				}		
+				if (data != null)
+				{
+					if (data.user.role > RoleEnum.STUDENT){
+						userLabel.setStyle("fontWeight", 'bold');					
+					}		
+				}
 			}
 		]]>
 	</fx:Script>
