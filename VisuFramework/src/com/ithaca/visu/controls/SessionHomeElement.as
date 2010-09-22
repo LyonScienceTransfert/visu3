@@ -7,6 +7,7 @@ package com.ithaca.visu.controls
 	import com.ithaca.visu.renderer.ConnectedUserWithListRenderer;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.lyon2.utils.TimeUtils;
 	import com.lyon2.visu.model.Session;
 	import com.lyon2.visu.model.User;
@@ -69,6 +70,8 @@ package com.ithaca.visu.controls
 		public var loggedUser:User;
 		
 		protected var open:Boolean;
+		protected var recording:Boolean;
+		protected var recordingMessage:String;
 		
 		[Bindable]
 		private var fxgt:_FxGettext;
@@ -83,6 +86,30 @@ package com.ithaca.visu.controls
 		{
 			sessionChanged = true;
 			_session = value;
+			// ercording date of fthis session
+			var dateRecording:Date = _session.date_start_recording;
+			// set status the session
+			switch (_session.statusSession) {
+				case SessionStatusEnum.SESSION_OPEN:
+					open = true;
+					break;
+				case SessionStatusEnum.SESSION_CLOSE:
+					open = false;
+					enabled = false;
+					recording = false;
+					break;
+				case SessionStatusEnum.SESSION_RECORDING:
+					open = true;
+					recording = true;
+					recordingMessage = fxgt.gettext("La séance a été demarrer de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");
+					break;
+				case SessionStatusEnum.SESSION_PAUSE:
+					open = true;
+					recording = true;
+					recordingMessage = fxgt.gettext("La séance a été demarrer de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
+					break;
+			}
+			
 			invalidateProperties();
 		}
 		
@@ -192,10 +219,16 @@ package com.ithaca.visu.controls
 			{
 				case "open":
 					subDisplay.textFlow = TextFlowUtil.importFromString(remaining_time);
-					
+					if (recording )
+					{
+						subDisplay.textFlow = TextFlowUtil.importFromString(recordingMessage);
+						subDisplay.setStyle("color", "#da3939"); 
+					}				
 					break;
+				
 				default:
 					subDisplay.textFlow = TextFlowUtil.importFromString(participants);	
+					subDisplay.setStyle("color", "#000000"); 
 					break;
 			}
 		}
@@ -222,19 +255,42 @@ package com.ithaca.visu.controls
 				}
 				users.dataProvider = d;				
 			}
+			// recording date of this session
+			var dateRecording:Date = _session.date_start_recording;
+			if(_session.statusSession == SessionStatusEnum.SESSION_RECORDING)
+			{
+				recording = true;
+				
+				if(dateRecording != null){
+					recordingMessage = fxgt.gettext("La séance a été demarrer de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");			
+				}else{
+					recordingMessage "date == NULL";
+				}
+			}else if(_session.statusSession == SessionStatusEnum.SESSION_PAUSE)
+			{
+				recording = true;
+				recordingMessage = fxgt.gettext("La séance a été demarrer de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
+			}else if(_session.statusSession == SessionStatusEnum.SESSION_CLOSE)
+			{
+				open = false;
+				enabled = false;
+				recording = false;
+			}
+				
+			invalidateSkinState();
 		}
 		
-		public function setOpenView(value:Boolean):void
+/*		public function setOpenView(value:Boolean):void
 		{
 			open=value;
 			invalidateSkinState();
-		}
+		}*/
 		
-		public function setEnabledView(value:Boolean):void
+/*		public function setEnabledView(value:Boolean):void
 		{
 			enabled=value;
 			invalidateSkinState();
-		}
+		}*/
 		
 		/* Helper functions */
 		
