@@ -86,6 +86,8 @@ import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
 
+import com.ithaca.domain.model.Obsel;
+import com.lyon2.utils.ObselStringParams;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.Application;
  
@@ -143,8 +145,8 @@ public class StreamRecorder
 			log.error("unknow user {}", e);
 		}
 		
-		
-		
+		// can have too type the obsels : SessionEnter/SessionStart
+		String typeObsel="";
 		//record all the streams in a scope
         for (String name: app.getBroadcastStreamNames(scope))
 		{			
@@ -165,8 +167,39 @@ public class StreamRecorder
 				IClient client = stream.getConnection().getClient();
 				Integer userId = (Integer)client.getAttribute("uid");
 				// generate traceId
-				String trace = app.makeTraceId(userId);
-				client.setAttribute("trace", trace);
+				String trace="";
+				List<Obsel> listObselSessionStart = null;
+				try
+				{
+					String traceParam = "%-"+userId.toString()+">%";
+					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
+					log.warn("====refParam {}",refParam);
+					ObselStringParams osp = new ObselStringParams(traceParam,refParam);
+				//	log.warn("=====OSP : {}",osp.toString());		
+					listObselSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSessionStartSessionEnter", osp);
+					if (listObselSessionStart != null)
+					{
+						Obsel obselSessionStart = listObselSessionStart.get(0);
+						trace = obselSessionStart.getTrace();
+						typeObsel = "SessionEnter";
+						client.setAttribute("trace", trace);
+					}else
+					{			
+						// generate traceId
+					    trace = app.makeTraceId(userId);
+					    typeObsel = "SessionEnter";
+					    client.setAttribute("trace", trace);
+						log.warn("empty BD, ListObsel = null");
+					}
+				} catch (Exception e) {
+					log.error("Probleme lors du listing des sessions" + e);
+					// generate traceId
+					trace = app.makeTraceId(userId);
+					typeObsel = "SessionStart";
+					client.setAttribute("trace", trace);
+					log.warn("empty BD, exception case");				
+				}
+								
 				// set status recording
 				client.setAttribute("status", 3);
 				// call client that start recording
@@ -223,7 +256,7 @@ public class StreamRecorder
     			
     			try
 					{
-						app.setObsel(key, listUserStartRecording.get(key).get(0), "SessionStart", paramsObselSessionStart);					
+						app.setObsel(key, listUserStartRecording.get(key).get(0), typeObsel, paramsObselSessionStart);					
 					}
 					catch (SQLException sqle)
 					{
