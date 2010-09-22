@@ -128,7 +128,7 @@
 		<mate:EventHandlers type="{MessageEvent.STOP_RECORDING}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="recorder.stopRecordRoom"
-							  arguments="{[event.sessionId]}"/>              
+							  arguments="{[event.sessionId,event.sessionStatus]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		

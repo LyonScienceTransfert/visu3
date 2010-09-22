@@ -6,6 +6,7 @@ import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
+import com.ithaca.visu.ui.utils.SessionStatusEnum;
 import com.lyon2.visu.model.Model;
 import com.lyon2.visu.model.Session;
 import com.lyon2.visu.model.User;
@@ -317,12 +318,23 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusRecording(userId:int, status:int, sessionId:int):void{
+	public function onSetStatusRecording(userId:int, status:int, sessionId:int, startRecording:Date):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
 			// update status user 
 			Model.getInstance().updateStatusUser(userVO, status , sessionId);
+			// update status session, "recording"
+			var session:Session = Model.getInstance().hasSessionById(sessionId);
+			if(session != null)
+			{
+				session.statusSession = SessionStatusEnum.SESSION_RECORDING; 
+				// NOTE : startRecording will be null only if user join session after start recording event, other user ready has date the start session
+				if(startRecording != null)
+				{
+					session.date_start_recording = startRecording; 
+				}
+			}
 			// update list user
 			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
@@ -334,12 +346,18 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusStop(userId:int, status:int, sessionId:int):void{
+	public function onSetStatusStop(userId:int, status:int, sessionId:int, sessionStatus:int):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
 			// update status user 
 			Model.getInstance().updateStatusUser(userVO, status , sessionId);
+			// update status session "Pause"
+			var session:Session = Model.getInstance().hasSessionById(sessionId);
+			if(session != null)
+			{
+				// status can be close/pause
+				session.statusSession = sessionStatus;
 				// check if session close
 				if(sessionStatus == SessionStatusEnum.SESSION_CLOSE)
 				{
@@ -347,6 +365,7 @@ public class MainManager
 					var closeSessionEvent:SessionEvent = new SessionEvent(SessionEvent.CLOSE_SESSION);
 					this.dispatcher.dispatchEvent(closeSessionEvent);
 				}
+			}
 			// update list user
 			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
