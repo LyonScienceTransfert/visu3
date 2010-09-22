@@ -311,7 +311,7 @@ public class StreamRecorder
 	*/
 	}
 
-	public void stopRecordRoom(IConnection conn, Integer session_id)
+	public void stopRecordRoom(IConnection conn, Integer session_id, Integer sessionStatus)
 	{
 		//Get the Client Scope
 		IScope scope = conn.getScope();
