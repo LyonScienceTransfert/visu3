@@ -197,6 +197,7 @@ public class StreamRecorder
 						trace = obselSessionStart.getTrace();
 						typeObsel = "SessionEnter";
 						client.setAttribute("trace", trace);
+						app.setStatusSession(session_id, 3, null);
 					}else
 					{			
 						// generate traceId
