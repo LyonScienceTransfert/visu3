@@ -181,7 +181,7 @@
 								var labelMessage:Label = new Label();
 								labelMessage.setStyle("fontSize", 16);
 								labelMessage.setStyle("fontWeight", "bold");
-								labelMessage.text = fxgt.gettext("Vous n'aves pas la séance pour cet date....");
+								labelMessage.text = fxgt.gettext("Vous n'avez pas de séance pour cette date...");
 								vb.addElement(labelMessage);
 							}else
 							{
@@ -542,10 +542,23 @@
 	</fx:Script>
 	<s:HGroup x="50" y="15">
 		<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
-		<s:VGroup >
+		<s:Group width="100%" height="100%" >
+			<s:layout>
+				<s:VerticalLayout gap="5"/>
+			</s:layout>
 			<controls:NavigateurDay id="navigateurDay" dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"  visible="true"   change="navigateurDay_changeHandler(event)"  width="300"/>
-			<s:HGroup id="sessionGroup" x="0"/>
-		</s:VGroup>	
+			<s:Group height="10%" width="100%">
+				
+			<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerSession">    
+				<s:Group id="sessionGroup"   width="100%"  height="297">
+					<s:layout>
+						<s:VerticalLayout  gap="5"/>
+					</s:layout>
+				</s:Group>
+			</s:Scroller> 
+			</s:Group>
+			<!--<s:HGroup id="sessionGroup" x="0"/>
+-->		</s:Group>	
 		<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
 			<s:VGroup>
 				<s:HGroup>
@@ -566,8 +579,8 @@
 					<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
 				</s:HGroup>
 				<s:HGroup verticalAlign="middle" width="450">
-					<s:TextInput id="textToSend" width="398" height="40" keyUp="onKeyUp(event)"/>
 					<mx:Image id="imageLoggedUser" width="40" height="40"/>
+					<s:TextInput id="textToSend" width="398" height="40" keyUp="onKeyUp(event)"/>
 				</s:HGroup>
 				
 				<s:List  dataProvider="{fluxActivity}" width="450" height="200">
