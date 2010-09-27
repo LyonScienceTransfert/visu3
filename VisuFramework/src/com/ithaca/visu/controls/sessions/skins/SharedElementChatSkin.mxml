@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.sessions.SharedElementChat")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=titleDisplay, type=spark.components.supportClasses.TextBase, required=false
+	-->
+	<s:Group width="100%" >				
+		<s:Rect top="0" left="1" bottom="-2" right="1">
+			<s:stroke>
+				<s:LinearGradientStroke rotation="90">
+					<s:GradientEntry color="#CCCCCC" />
+					<s:GradientEntry color="#999999" />
+				</s:LinearGradientStroke>
+			</s:stroke>
+			<s:fill>
+				<s:LinearGradient rotation="90">					
+					<s:GradientEntry color="#EFEFEF" />						
+					<s:GradientEntry color="#CCCCCC" />						
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<mx:Image id="avatar"  left="5" top="1" width="30" height="30">
+			
+		</mx:Image>
+		
+		
+		<s:RichText id="titleDisplay" left="50" top="5" right="40" color="#121212"
+				 fontSize="12" fontWeight="normal" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
+			
+			<!--<s:filters>
+				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
+			</s:filters>-->
+		</s:RichText>
+	</s:Group>
+	
+	
+</s:Skin>
