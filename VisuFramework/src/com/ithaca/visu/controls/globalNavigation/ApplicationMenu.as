@@ -211,6 +211,8 @@ package com.ithaca.visu.controls.globalNavigation
 					bt = new Button();
 					bt.label = o.label;
 					bt.name = o.value;
+					// 
+					if(o.value == "tutorat"){bt.enabled = false;}
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
 					addElement( bt );
 					// list buttons for translate the labels
