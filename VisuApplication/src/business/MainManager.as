@@ -398,12 +398,13 @@ public class MainManager
 	 * 
 	 * 
 	 */
-	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int):void
+	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String):void
 	{	
 		var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.RECEIVE_SHARED_INFO);	
 		sessionSharedEvent.typeInfo = typeInfo;
 		sessionSharedEvent.info = info;
 		sessionSharedEvent.senderUserId = senderUserId;		
+		sessionSharedEvent.url = urlElement;		
 		this.dispatcher.dispatchEvent(sessionSharedEvent);	
 	}
 	

@@ -135,7 +135,7 @@
 		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendSharedInfo"
-							  arguments="{[event.typeInfo, event.info, event.listUsers]}"/>              
+							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
