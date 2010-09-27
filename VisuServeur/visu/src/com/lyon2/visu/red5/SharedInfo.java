@@ -108,7 +108,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser)
+	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("=====typeInfo = {}",typeInfo);
@@ -129,10 +129,26 @@ public class SharedInfo
 				typeObselReceive ="ReceiveKeyword";
 				namePropertyObsel = "keyword";
 			break;
+			// FIXME SendDocument = image or video
 		case 3 :
 				typeObselSend ="SendDocument";
 				typeObselReceive ="ReceiveDocument";
 				namePropertyObsel = "url";
+			break;
+		case 4 :
+			typeObselSend ="SendDocument";
+			typeObselReceive ="ReceiveDocument";
+			namePropertyObsel = "url";
+			break;
+		case 5 :
+			typeObselSend ="SendChatMessage";
+			typeObselReceive ="ReceiveChatMessage";
+			namePropertyObsel = "content";
+			break;
+		case 6 :
+			typeObselSend ="SetMarker";
+			typeObselReceive ="ReceiveMarker";
+			namePropertyObsel = "text";
 			break;
 		default: 
 			log.warn("== havn't type {} pour {}",typeInfo,info);
@@ -189,7 +205,7 @@ public class SharedInfo
 				log.error("=====Errors===== {}", sqle);
 			}
 			// send shared info to shared users
-			Object[] args = {typeInfo, info, senderUserId};
+			Object[] args = {typeInfo, info, senderUserId, urlElement};
 			IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
 			if (connSharedUser instanceof IServiceCapableConnection) {
 				IServiceCapableConnection sc = (IServiceCapableConnection) connSharedUser;
