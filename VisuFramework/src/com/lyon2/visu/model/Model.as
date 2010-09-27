@@ -686,6 +686,20 @@ package  com.lyon2.visu.model
 			return "";
 		}
 		
+		public function getUserByUserId(userId:int):User
+		{
+			var nbrUsers:uint = this.listConnectedUsers.length;
+			for(var nUser:uint = 0; nUser < nbrUsers;nUser++)
+			{
+				var user:User = this.listConnectedUsers[nUser];
+				if(user.id_user == userId)
+				{
+					return user;
+				}
+			}
+			return null;
+		}
+		
 		/**
 		 * update client id of the user
 		 */
