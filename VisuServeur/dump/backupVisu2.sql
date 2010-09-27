@@ -1966,8 +1966,8 @@ DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id_session` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) NOT NULL,
-  `description` varchar(40) DEFAULT NULL CHARACTER SET utf8,
-  `theme` text TEXT CHARACTER SET utf8,
+  `description` varchar(40) DEFAULT NULL,
+  `theme` text,
   `date_session` datetime DEFAULT '2000-01-01 00:00:00',
   `isModel` tinyint(1) DEFAULT NULL,
   `start_recording` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
