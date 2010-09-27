@@ -299,7 +299,7 @@ package com.ithaca.visu.controls
 		 */ 
 		protected function get remaining_time():String
 		{
-			var translate:String = fxgt.gettext("la séance démarré");
+			var translate:String = fxgt.gettext("La séance commencera ");
 			return "<p textAlign='center'  fontSize='10'>"+translate+"<span fontWeight='bold'>"
 					+ TimeUtils.relativeTime(_session.date_session,null,true)
 					+"</span></p>";
