@@ -18,6 +18,7 @@ public class SessionSharedEvent extends Event
 	public var info : String;
 	public var listUsers : Array;
 	public var senderUserId : int;
+	public var url : String;
 	
 	// constructor
 	public function SessionSharedEvent(type : String,

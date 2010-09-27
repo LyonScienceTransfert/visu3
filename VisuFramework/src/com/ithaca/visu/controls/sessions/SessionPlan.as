@@ -12,12 +12,12 @@ package com.ithaca.visu.controls.sessions
 	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.controls.Image;
+	import mx.core.FlexLoader;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	
-	import spark.components.Button;
 	import spark.components.Group;
-	import spark.components.Label;
 	import spark.components.SkinnableContainer;
 	
 	[Event(name="shareElement",type="com.ithaca.visu.events.ActivityElementEvent")]
@@ -131,9 +131,17 @@ package com.ithaca.visu.controls.sessions
 		protected function shareActivityElement(event:MouseEvent):void
 		{
 			trace("shareActivityElement");
-			if( !(event.target is ActivityElementDetail )) return;
+			if( !(event.target is ActivityElementDetail  || event.target is FlexLoader )) return;
 			var e:ActivityElementEvent = new ActivityElementEvent(ActivityElementEvent.SHARE_ELEMENT);
-			e.element = ActivityElementDetail(event.target).activityElement;
+			if (event.target is ActivityElementDetail)
+			{
+				e.element = ActivityElementDetail(event.target).activityElement;
+			}else
+			{
+				var flLoader:FlexLoader = event.target as FlexLoader;
+				var imageActivity:ImageActivity=  flLoader.parent as ImageActivity;
+				e.element = imageActivity.activityElement;
+			}
 			dispatchEvent(e);
 		}
 		

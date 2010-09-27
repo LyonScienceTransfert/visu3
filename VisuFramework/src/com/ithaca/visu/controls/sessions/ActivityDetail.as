@@ -12,6 +12,7 @@ package com.ithaca.visu.controls.sessions
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.controls.Image;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -143,7 +144,10 @@ package com.ithaca.visu.controls.sessions
 					case ActivityElementType.STATEMENT:					
 						statementList.addItem(el);
 						break;
-					case ActivityElementType.DOCUMENT:
+					case ActivityElementType.IMAGE:
+						documentList.addItem(el);
+						break;
+					case ActivityElementType.VIDEO:
 						documentList.addItem(el);
 						break;
 				}
@@ -168,9 +172,17 @@ package com.ithaca.visu.controls.sessions
 		{
 			for each( var el:ActivityElement in list)
 			{
-				var d:Label = new Label();
-				d.text = el.data;
-				documentGroup.addElement(d);
+				var image:ImageActivity = new ImageActivity()
+				var source:String = "images/video.jpg";
+				if(el.type_element == "image")
+				{
+					source = el.url_element;
+				}
+				image.source = source;
+				image.toolTip = el.data;
+				image.activityElement = el;
+				image.doubleClickEnabled = true;
+				documentGroup.addElement(image);
 			}
 		}
 		
