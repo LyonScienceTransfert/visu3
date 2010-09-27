@@ -1,4 +1,4 @@
-﻿-- phpMyAdmin SQL Dump
+-- phpMyAdmin SQL Dump
 -- version 3.2.4
 -- http://www.phpmyadmin.net
 --
@@ -7,7 +7,14 @@
 -- Version du serveur: 5.1.37
 -- Version de PHP: 5.2.11
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Base de données: `visu2`
@@ -1803,9 +1810,6 @@ INSERT INTO `activities_elements` VALUES(1834, 55, 'Couverture de la bande dessi
 
 -- --------------------------------------------------------
 
---
--- Structure de la table `modules`
---
 
 DROP TABLE IF EXISTS `modules`;
 CREATE TABLE IF NOT EXISTS `modules` (
@@ -1962,8 +1966,8 @@ DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id_session` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) NOT NULL,
-  `description` varchar(40) DEFAULT NULL,
-  `theme` text,
+  `description` varchar(40) DEFAULT NULL CHARACTER SET utf8,
+  `theme` text TEXT CHARACTER SET utf8,
   `date_session` datetime DEFAULT '2000-01-01 00:00:00',
   `isModel` tinyint(1) DEFAULT NULL,
   `start_recording` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
@@ -1972,7 +1976,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   UNIQUE KEY `IDX_sessions1` (`id_session`,`id_user`),
   UNIQUE KEY `IDX_sessions2` (`id_session`),
   KEY `IDX_sessions3` (`id_user`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
 
 --
 -- Contenu de la table `sessions`
@@ -1985,16 +1989,16 @@ INSERT INTO `sessions` VALUES(4, 4, 'sdsdsdsds', 'SALUT', '2010-04-21 14:00:00',
 INSERT INTO `sessions` VALUES(5, 4, 'sdsdsdsds', 'MONSTER TRACK', '2010-09-20 15:50:00', 0, '2010-09-22 15:46:51', 0);
 INSERT INTO `sessions` VALUES(6, 4, 'Description de la séance', 'Identité Nationale et Immigration', '2010-09-20 16:55:00', 0, '2010-09-22 15:44:45', 0);
 INSERT INTO `sessions` VALUES(7, 4, 'Description de la séance', 'Le cinéma', '2010-12-15 17:00:00', 0, '2010-09-23 20:59:55', 0);
-INSERT INTO `sessions` VALUES(10, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 11:59:06', 0);
-INSERT INTO `sessions` VALUES(14, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 11:58:32', 0);
-INSERT INTO `sessions` VALUES(15, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 11:59:28', 0);
-INSERT INTO `sessions` VALUES(16, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-23 22:31:14', 0);
-INSERT INTO `sessions` VALUES(17, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 11:58:50', 0);
-INSERT INTO `sessions` VALUES(18, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 12:00:49', 0);
-INSERT INTO `sessions` VALUES(19, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-23 22:31:14', 0);
-INSERT INTO `sessions` VALUES(20, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 11:59:54', 0);
-INSERT INTO `sessions` VALUES(21, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-25 12:01:50', 0);
-INSERT INTO `sessions` VALUES(22, 7, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2010-09-28 18:15:00', 0, '2010-09-23 22:31:14', 0);
+INSERT INTO `sessions` VALUES(10, 7, '1.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 1', '2010-09-28 18:15:00', 0, '2010-09-25 11:59:06', 0);
+INSERT INTO `sessions` VALUES(14, 7, '2.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 2', '2010-09-28 18:15:00', 0, '2010-09-25 11:58:32', 0);
+INSERT INTO `sessions` VALUES(15, 7, '3.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 3', '2010-09-28 18:15:00', 0, '2010-09-25 11:59:28', 0);
+INSERT INTO `sessions` VALUES(16, 7, '4.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 4', '2010-09-28 18:15:00', 0, '2010-09-23 22:31:14', 0);
+INSERT INTO `sessions` VALUES(17, 7, '5.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 5', '2010-09-28 18:15:00', 0, '2010-09-25 11:58:50', 0);
+INSERT INTO `sessions` VALUES(18, 7, '6.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 6', '2010-09-28 18:15:00', 0, '2010-09-25 12:00:49', 0);
+INSERT INTO `sessions` VALUES(19, 7, '7.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 7', '2010-09-28 18:15:00', 0, '2010-09-23 22:31:14', 0);
+INSERT INTO `sessions` VALUES(20, 7, '8.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 8', '2010-09-28 18:15:00', 0, '2010-09-25 11:59:54', 0);
+INSERT INTO `sessions` VALUES(21, 7, '9.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 9', '2010-09-28 18:15:00', 0, '2010-09-25 12:01:50', 0);
+INSERT INTO `sessions` VALUES(22, 7, '10.Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie 10', '2010-09-28 18:15:00', 0, '2010-09-23 22:31:14', 0);
 
 -- --------------------------------------------------------
 
@@ -2132,3 +2136,13 @@ INSERT INTO `users` VALUES(28, 'VIRAPIN', 'Carole', 'VIRAPIN.Carole@visu.org', '
 INSERT INTO `users` VALUES(29, 'DEVELOTTE', 'christine', 'DEVELOTTE.christine@visu.org', 'christine', '7Yp1jBcaigCVv2kkG04JiYxiNYHyPlMF', NULL, 'https://wave.google.com/wave/static/images/unknown.jpg', '00000001000111110111');
 INSERT INTO `users` VALUES(30, 'VINCENT', 'Caroline', 'VINCENT.Caroline@visu.org', 'Caroline', 'zQymIIwZWG7lQBIfAR2oTvTh2DRabKH8', NULL, 'https://wave.google.com/wave/static/images/unknown.jpg', '00000001000111110111');
 INSERT INTO `users` VALUES(31, 'CANDEL', 'Etienne', 'CANDEL.Etienne@visu.org', 'Etienne', 'I4IE3LpVBhbjb7aqFOItggXKFigk7SmL', NULL, 'https://wave.google.com/wave/static/images/unknown.jpg', '00000000000111110111');
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
