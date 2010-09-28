@@ -520,7 +520,7 @@
 			<s:HGroup width="100%">
 				<s:Button id="buttonCloseSession" includeIn="MainState" width="50%" height="30"
 						   click="buttonCloseSession_clickHandler(event)">
-					<s:label>{fxgt.gettext("Fermer la séanse")}</s:label>
+					<s:label>{fxgt.gettext("Fermer la séance")}</s:label>
 				</s:Button>
 				<s:Button  id="buttonStartRecording" width="50%" includeIn="MainState" height="30" 
 						  click="button1_clickHandler(event)">
@@ -559,7 +559,9 @@
 						<s:Group width="100%" bottom="3" height="30">
 							<mx:TextArea  id="textChatMarker"  keyUp="richeditabletext1_keyUpHandler(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 							</mx:TextArea>
-							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="button2_clickHandler(event)" label="Poser Marquer" right="1" height="25" top="2"  width="150"/>
+							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="button2_clickHandler(event)" right="1" height="25" top="2"  width="150">
+									<mx:label>{fxgt.gettext("Poser Marqueur")}</mx:label>
+								</mx:Button>
 						</s:Group>	
 					</s:Group>
 				</s:Panel>
@@ -577,7 +579,7 @@
 				</s:Panel>
 			</mx:HDividedBox>
 			<s:Panel width="100%" height="45%">
-				<s:title>TimeLine</s:title>
+				<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
 				<s:Group top="1" width="100%"  height="100%">
 					<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelTimeLine">    
 						<s:Group id="panelTimeLine"   width="100%"  height="100%">
