@@ -66,7 +66,12 @@ package  com.lyon2.visu.model
 		
 		public function get AMFServer(): String
 		{
-			return "http://" + this.server + ":" + this.port + "/" + this.appName + "/gateway";
+			var portString:String = ":" + this.port;
+			// check if port don't using in adress
+			if (this.port == 0){
+				portString = "";
+			}
+			return "http://" + this.server + portString + "/" + this.appName + "/gateway";
 		}
 		
 		public function get rtmpServer(): String
