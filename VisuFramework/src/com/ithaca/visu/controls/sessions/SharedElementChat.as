@@ -1,6 +1,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import mx.controls.Image;
+	import mx.controls.Label;
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
@@ -15,9 +16,13 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var avatar : Image;
 		
+		[SkinPart("true")]
+		public var typeInfo :Label;
+		
 		private var infoChanged:Boolean;
 		private var _pathAvatar:String;
 		private var _nameSender:String;
+		private var _typeInfo:String;
 		private var _info:String;
 		
 		public function SharedElementChat()
@@ -54,6 +59,7 @@ package com.ithaca.visu.controls.sessions
 				avatar.source = _pathAvatar;
 				avatar.toolTip = _nameSender;
 				titleDisplay.text = _info;
+				typeInfo.text = _typeInfo;
 				this.percentWidth = 100; 
 			}
 		}
@@ -63,12 +69,13 @@ package com.ithaca.visu.controls.sessions
 			return "normal";
 		}
 		
-		public function setElementChat(pathAvatar:String, nameSender:String, info:String):void
+		public function setElementChat(pathAvatar:String, nameSender:String, info:String, typeInfo:String):void
 		{
 			infoChanged = true;
 			_pathAvatar = pathAvatar;
 			_nameSender = nameSender;
 			_info = info;
+			_typeInfo = typeInfo;
 			invalidateProperties();
 		}
 		

@@ -12,6 +12,33 @@ package com.lyon2.visu.model
 		
 		protected var value:int;
 		protected var name:String;
+		public static function getStringOfType(type:int):String
+		{
+			switch (type)
+			{
+				case 1:
+					return ActivityElementType.STATEMENT;
+					break;
+				case 2:
+					return ActivityElementType.KEYWORD;
+					break;
+				case 3:
+					return ActivityElementType.IMAGE;
+					break;
+				case 4:
+					return ActivityElementType.VIDEO;
+					break;
+				case 5:
+					return ActivityElementType.MESSAGE;
+					break;
+				case 6:
+					return ActivityElementType.MARKER;
+					break;
+				default:
+					return "void";
+					break;
+			}
+		}
 		
 		public static function valueOf(value:String):int
 		{

@@ -25,8 +25,8 @@
 			</s:stroke>
 			<s:fill>
 				<s:LinearGradient rotation="90">					
-					<s:GradientEntry color="#EFEFEF" />						
-					<s:GradientEntry color="#CCCCCC" />						
+					<s:GradientEntry color="#FFFFFF" />						
+					<s:GradientEntry color="#D8D8D8" />						
 				</s:LinearGradient>
 			</s:fill>
 		</s:Rect>
@@ -34,8 +34,9 @@
 			
 		</mx:Image>
 		
-		
-		<s:RichText id="titleDisplay" left="50" top="5" right="40" color="#121212"
+		<mx:Label id="typeInfo" left="44" top="3" fontStyle="italic" fontSize="10" color="#2A51C2"/>
+	
+		<s:RichText id="titleDisplay" left="110" top="5" right="40" color="#121212"
 				 fontSize="12" fontWeight="normal" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
 			
 			<!--<s:filters>

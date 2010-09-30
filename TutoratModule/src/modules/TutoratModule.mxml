@@ -235,7 +235,7 @@
 						if(event.senderUserId == Model.getInstance().getLoggedUser().id_user)
 						{
 							var sharedElementChat:SharedElementChat = new SharedElementChat();
-							sharedElementChat.setElementChat(pathAvatar,name,event.info);
+							sharedElementChat.setElementChat(pathAvatar,name,event.info, ActivityElementType.getStringOfType(event.typeInfo));
 							this.panelTimeLine.addElementAt(sharedElementChat,0);
 						}
 					}else
@@ -263,7 +263,7 @@
 							}
 						}
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
-						sharedElementChat.setElementChat(pathAvatar,name,event.info);
+						sharedElementChat.setElementChat(pathAvatar,name,event.info, ActivityElementType.getStringOfType(event.typeInfo));
 						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 						this.panelChatSession.addElement(sharedElementChat);
 					}
