@@ -72,6 +72,11 @@ package com.ithaca.visu.controls.sessions
 			{
 				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
 			}
+			
+			if (instance == titleDisplay)
+			{
+				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
+			}
 			if (instance == durationDisplay)
 			{
 				durationDisplay.text = "Durée prévue : " +activity.duration.toString();
@@ -200,8 +205,7 @@ package com.ithaca.visu.controls.sessions
 			dispatchEvent( new Event("activityChanged"));
 			invalidateProperties();
 		}
-	 	
-		protected function titleDisplay_clickHandler(event:MouseEvent):void
+		public function titleDisplay_clickHandler(event:MouseEvent):void
 		{
 			open = !open;
 			invalidateSkinState();
