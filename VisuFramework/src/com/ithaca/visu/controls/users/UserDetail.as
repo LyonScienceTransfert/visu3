@@ -103,6 +103,7 @@ package com.ithaca.visu.controls.users
 			if (instance == deleteButton )
 			{
 				deleteButton.addEventListener(MouseEvent.CLICK, deleteButton_clickHandler);
+				deleteButton.enabled = false;
 			}
 			if (instance == firstnameInput)
 			{
@@ -146,7 +147,7 @@ package com.ithaca.visu.controls.users
 				if( user )
 				{
 					editButton.enabled = true; 
-					deleteButton.enabled = true;
+					deleteButton.enabled = false;
 				}
 				if ( getCurrentSkinState() == "normal")
 					setDisplay();
