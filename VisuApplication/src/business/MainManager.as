@@ -1,5 +1,6 @@
 package business
 {
+import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.UserEvent;
@@ -411,6 +412,8 @@ public class MainManager
 	
 	public function onError(event : Object) : void
 	{
+		var closeConnetionEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CLOSE_CONNECTION);
+		this.dispatcher.dispatchEvent(closeConnetionEvent);
 	}
 
 	public function toString() : String

@@ -16,6 +16,7 @@
 		<mate:Listener type="{SessionEvent.JOIN_SESSION}"  method="joinSession"/>
 		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
 		<mate:Listener type="{SessionEvent.CANCEL_SESSION}"  method="cancelSession"/>
+		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 	
 		<vo:ProfileDescriptionVO />
 		
@@ -71,13 +72,17 @@
 				var language:String = event.moduleName as String;
 				setlocale(Locale.LC_MESSAGES, language);
 			}
-
+			
+			protected function onCloseConnection(event:ApplicationMenuEvent):void{
+				Alert.show(fxgt.gettext("Vous n'etes plus connecté au serveur."),fxgt.gettext("Information"));
+				this.reloadApplication();			
+			}
 			protected function onDisconnect(event:ApplicationMenuEvent):void
 			{
 				Alert.yesLabel = fxgt.gettext("Oui");
 				Alert.noLabel = fxgt.gettext("Non");
 				Alert.show(fxgt.gettext("Voulez-vous quitter l'application ?"),
-					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, logOutConfirmed); 
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, logOutConfirmed); 
 			}		
 			
 			protected function logOutConfirmed(event:CloseEvent):void
@@ -86,24 +91,30 @@
 				{				
 					// TODO : gestion the Trace
 					//VisuTrace.trace("PresenceEnd");
-					if (Capabilities.playerType == "StandAlone")
-					{
-						fscommand("quit");Model.getInstance()
-					}
-					else if (ExternalInterface.available)
-					{
-						try{
-							ExternalInterface.call("window.location.reload(true)");
-						} catch (error:Error) {
-							navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
-						}
-					}
-					else
-					{
-						navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
-					}					
+					this.reloadApplication();				
 				}
 			}
+			protected function reloadApplication():void
+			{
+				if (Capabilities.playerType == "StandAlone")
+				{
+					fscommand("quit");Model.getInstance()
+				}
+				else if (ExternalInterface.available)
+				{
+					try{
+						ExternalInterface.call("window.location.reload(true)");
+					} catch (error:Error) {
+						
+						navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
+					}
+				}
+				else
+				{
+					navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
+				}		
+			}
+			
 			protected function visuapplication1_preinitializeHandler(event:FlexEvent):void
 			{	
 				fxgt = FxGettext;
