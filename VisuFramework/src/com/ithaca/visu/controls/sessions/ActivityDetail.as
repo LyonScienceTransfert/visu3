@@ -1,5 +1,6 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.utils.ExtendToolTip;
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
 	import com.ithaca.visu.events.VisuActivityElementEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
@@ -13,6 +14,8 @@ package com.ithaca.visu.controls.sessions
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Image;
+	import mx.controls.ToolTip;
+	import mx.events.ToolTipEvent;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -56,6 +59,7 @@ package com.ithaca.visu.controls.sessions
 		private var statementList:IList;
 		private var documentList:IList; 
 		private var memo:String=""; 
+		private var TOOL_TIPS_IMAGE_WIDTH:int = 160;
 		
 		
 		public function ActivityDetail()
@@ -187,9 +191,26 @@ package com.ithaca.visu.controls.sessions
 				image.toolTip = el.data;
 				image.activityElement = el;
 				image.doubleClickEnabled = true;
+				image.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onToolTipsCreate);
+				image.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipsShown);
 				documentGroup.addElement(image);
 			}
 		}
+		private function onToolTipsCreate(event:ToolTipEvent):void{
+			event.toolTip = this.createTip(event.currentTarget.toolTip, event.currentTarget.source);
+		} 
+		
+		private function createTip(tip:String, urlImage:String):ExtendToolTip{
+			var imageToolTip:ExtendToolTip = new ExtendToolTip();
+			imageToolTip.ImageTip = urlImage;
+			imageToolTip.TipText = tip;
+			imageToolTip.setSizeImage(TOOL_TIPS_IMAGE_WIDTH);
+			return imageToolTip;
+		}
+		private function onToolTipsShown(event:ToolTipEvent):void{
+			var toolTip:ExtendToolTip = event.toolTip as ExtendToolTip;
+			toolTip.y = toolTip.y  - TOOL_TIPS_IMAGE_WIDTH;
+		}	
 		
 		[Bindable("activityChanged")]
 		public function get activity():Activity
