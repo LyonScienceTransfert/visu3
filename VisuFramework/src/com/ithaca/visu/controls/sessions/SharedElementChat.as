@@ -60,6 +60,10 @@ package com.ithaca.visu.controls.sessions
 				avatar.toolTip = _nameSender;
 				titleDisplay.text = _info;
 				typeInfo.text = _typeInfo;
+				if (_typeInfo =="")
+				{
+					titleDisplay.left = typeInfo.left;
+				}
 				this.percentWidth = 100; 
 			}
 		}
