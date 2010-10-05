@@ -642,16 +642,16 @@ package  com.lyon2.visu.model
 		/**
 		 * get list users id of the session 
 		 */
-		public function getListUsersId(listUserSession:ArrayCollection):Array
+		public function getListUsersIdByConnectedSession(sessionId:int):Array
 		{
 			var result:Array = new Array();
-			var nbrUsers:uint = listUserSession.length;
+			var nbrUsers:uint = this.listConnectedUsers.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
-				var user:User = listUserSession[nUser];
-				if(user.status == ConnectionStatus.RECORDING)
+				var user:User = this.listConnectedUsers[nUser];
+				if(user.currentSessionId == sessionId)
 				{
-					//add userId only if status Recording
+					//add userId only if user in this session(really, not planning)
 					result.push(user.getId());				
 				}
 			}

@@ -334,6 +334,7 @@
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(event.element.type_element);
 				sessionSharedEvent.info = event.element.data;
 				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.status = this.visio.status;	
 				sessionSharedEvent.url = event.element.url_element;
 				dispatchEvent(sessionSharedEvent);
 			}
@@ -433,9 +434,21 @@
 			private function sendMessage():void
 			{
 				// TODO send message to one user by click on his video
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var listUsersId:Array;
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				if (this.visio.status == VisuVisio.STATUS_NONE)
+				{
+					// all connected users
+					listUsersId = Model.getInstance().getListUsersIdByConnectedSession(sessionId);
+					sessionSharedEvent.status = -1;	
+				}else
+				{
+					// all connected users with status recording
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+					sessionSharedEvent.status = this.visio.status;
+				}
+				
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
 				// remove last character from the message
 				var message:String = textChatMessage.text.slice(0, textChatMessage.text.length-1);
@@ -471,6 +484,7 @@
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
 				sessionSharedEvent.info = textChatMarker.text;
+				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
 				dispatchEvent(sessionSharedEvent);
 				// update text
@@ -614,7 +628,7 @@
 							</s:Scroller> 
 						</s:Group>
 						<s:Group width="100%" bottom="3" height="30">
-							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="155">				
+							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="185">				
 							</mx:TextArea>
 							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
 								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
