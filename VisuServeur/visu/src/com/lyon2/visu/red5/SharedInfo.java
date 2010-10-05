@@ -108,112 +108,139 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement)
+	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement, Integer codeSharedAction)
 	{
 		log.warn("======== sendSharedInfo ");
-		log.warn("=====typeInfo = {}",typeInfo);
-		log.warn("=====info = {}",info);
-		log.warn("===== listInteger ={}",listUser);
-		String typeObselSend ="void";
-		String typeObselReceive = "void";
-		String namePropertyObsel ="void";
-		switch (typeInfo) 
+		log.warn("======== codeSharedAction = {}",codeSharedAction);
+		if (codeSharedAction == 0)
 		{
-		case 1 :
-				typeObselSend ="SendInstructions";
-				typeObselReceive ="ReceiveInstructions";
-				namePropertyObsel = "instructions";
-			break;
-		case 2 :
-				typeObselSend ="SendKeyword";
-				typeObselReceive ="ReceiveKeyword";
-				namePropertyObsel = "keyword";
-			break;
-			// FIXME SendDocument = image or video
-		case 3 :
-				typeObselSend ="SendDocument";
-				typeObselReceive ="ReceiveDocument";
-				namePropertyObsel = "url";
-			break;
-		case 4 :
-			typeObselSend ="SendDocument";
-			typeObselReceive ="ReceiveDocument";
-			namePropertyObsel = "url";
-			break;
-		case 5 :
-			typeObselSend ="SendChatMessage";
-			typeObselReceive ="ReceiveChatMessage";
-			namePropertyObsel = "content";
-			break;
-		case 6 :
-			typeObselSend ="SetMarker";
-			typeObselReceive ="ReceiveMarker";
-			namePropertyObsel = "text";
-			break;
-		default: 
-			log.warn("== havn't type {} pour {}",typeInfo,info);
-		break;
-		}
-
-		// add obsels "SendInstructions", "SendKeyword", "SendDocument"
-		IClient sender = conn.getClient();
-		IScope scope = conn.getScope();
-		Integer senderUserId = (Integer)sender.getAttribute("uid");
-		List<Object> paramsObselSend= new ArrayList<Object>();
-   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
-		try
+			// do nothing			
+			return;
+		}else 
 		{
-			app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
-		}
-			catch (SQLException sqle)
-		{
-			log.error("=====Errors===== {}", sqle);
-		}
-		
-		// get all shared clients
-		List<IClient> listSharedUsers = new ArrayList<IClient>();
-		Integer sharedUserId=0;
-		int nbrSharedUsers = listUser.length;
-		for (IClient client : scope.getClients())
-			{
-				for(int nUser=0; nUser < nbrSharedUsers; nUser++)
+			// sender the info
+			IClient sender = conn.getClient();
+			IScope scope = conn.getScope();
+			// get all shared clients
+			List<IClient> listSharedUsers = new ArrayList<IClient>();
+			Integer sharedUserId=0;
+			int nbrSharedUsers = listUser.length;
+			for (IClient client : scope.getClients())
 				{
-					sharedUserId = listUser[nUser];
-					Integer userId = (Integer)client.getAttribute("uid");
-					int diff = sharedUserId - userId;
-					if(diff == 0)
+					for(int nUser=0; nUser < nbrSharedUsers; nUser++)
 					{
-						listSharedUsers.add(client);
-						log.warn(" == added client {}",(String)client.getAttribute("id"));
-					}	
+						sharedUserId = listUser[nUser];
+						Integer userId = (Integer)client.getAttribute("uid");
+						int diff = sharedUserId - userId;
+						if(diff == 0)
+						{
+							listSharedUsers.add(client);
+							log.warn(" == added client {}",(String)client.getAttribute("id"));
+						}	
+					}
 				}
-			}
-		
-		
-		// add obsels "ReceiveInstructions", "ReceiveKeyword", "ReceiveDocument"
-		for(IClient sharedClient : listSharedUsers)
-		{
-			List<Object> paramsObselReceive= new ArrayList<Object>();
-   			paramsObselReceive.add(namePropertyObsel);paramsObselReceive.add(info);
-   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
-			try
-			{
-				app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
-			}
-				catch (SQLException sqle)
-			{
-				log.error("=====Errors===== {}", sqle);
-			}
-			// send shared info to shared users
-			Object[] args = {typeInfo, info, senderUserId, urlElement};
-			IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
-			if (connSharedUser instanceof IServiceCapableConnection) {
-				IServiceCapableConnection sc = (IServiceCapableConnection) connSharedUser;
-				sc.invoke("checkSharedInfo", args);
-				} 
-		}
-		
+			// all others shared info when session is recording, STATUS_RECORD: int = 1;
+			if (codeSharedAction == 1)
+			{	
+				log.warn("=====typeInfo = {}",typeInfo);
+				log.warn("=====info = {}",info);
+				log.warn("===== listInteger ={}",listUser);
+				String typeObselSend ="void";
+				String typeObselReceive = "void";
+				String namePropertyObsel ="void";
+				switch (typeInfo) 
+				{
+				case 1 :
+						typeObselSend ="SendInstructions";
+						typeObselReceive ="ReceiveInstructions";
+						namePropertyObsel = "instructions";
+					break;
+				case 2 :
+						typeObselSend ="SendKeyword";
+						typeObselReceive ="ReceiveKeyword";
+						namePropertyObsel = "keyword";
+					break;
+					// FIXME SendDocument = image or video
+				case 3 :
+						typeObselSend ="SendDocument";
+						typeObselReceive ="ReceiveDocument";
+						namePropertyObsel = "url";
+					break;
+				case 4 :
+					typeObselSend ="SendDocument";
+					typeObselReceive ="ReceiveDocument";
+					namePropertyObsel = "url";
+					break;
+				case 5 :
+					typeObselSend ="SendChatMessage";
+					typeObselReceive ="ReceiveChatMessage";
+					namePropertyObsel = "content";
+					break;
+				case 6 :
+					typeObselSend ="SetMarker";
+					typeObselReceive ="ReceiveMarker";
+					namePropertyObsel = "text";
+					break;
+				default: 
+					log.warn("== havn't type {} pour {}",typeInfo,info);
+				break;
+				}
 
+				// add obsels "SendInstructions", "SendKeyword", "SendDocument"
+				Integer senderUserId = (Integer)sender.getAttribute("uid");
+				List<Object> paramsObselSend= new ArrayList<Object>();
+		   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
+				try
+				{
+					app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
+				}
+					catch (SQLException sqle)
+				{
+					log.error("=====Errors===== {}", sqle);
+				}
+							
+				// add obsels "ReceiveInstructions", "ReceiveKeyword", "ReceiveDocument"
+				for(IClient sharedClient : listSharedUsers)
+				{
+					List<Object> paramsObselReceive= new ArrayList<Object>();
+		   			paramsObselReceive.add(namePropertyObsel);paramsObselReceive.add(info);
+		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
+					try
+					{
+						app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
+					}
+						catch (SQLException sqle)
+					{
+						log.error("=====Errors===== {}", sqle);
+					}		
+					// send shared info to shared users
+					Object[] args = {typeInfo, info, senderUserId, urlElement};
+					IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
+					if (connSharedUser instanceof IServiceCapableConnection) 
+					{
+						IServiceCapableConnection sc = (IServiceCapableConnection) connSharedUser;
+						sc.invoke("checkSharedInfo", args);
+					} 
+				}	
+			}else
+			// only chat message before recording session, 
+			{
+				log.warn("======== send message chat without setting the obsels ");
+				Integer senderUserId = (Integer)sender.getAttribute("uid");
+				for(IClient sharedClient : listSharedUsers)
+				{		
+					// send shared info to shared users
+					Object[] args = {typeInfo, info, senderUserId, urlElement};
+					IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
+					if (connSharedUser instanceof IServiceCapableConnection) 
+					{
+						IServiceCapableConnection sc = (IServiceCapableConnection) connSharedUser;
+						sc.invoke("checkSharedInfo", args);
+					} 
+				}
+					
+			}			
+		}		
 	}
 
 	
