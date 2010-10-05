@@ -222,6 +222,7 @@
 				{
 					var pathAvatar:String = "";
 					var name:String = "";
+					var typeInfo:String = ActivityElementType.getStringOfType(event.typeInfo);
 					var senderUser:User = Model.getInstance().getUserByUserId(event.senderUserId);
 					if(senderUser != null)
 					{
@@ -235,7 +236,7 @@
 						if(event.senderUserId == Model.getInstance().getLoggedUser().id_user)
 						{
 							var sharedElementChat:SharedElementChat = new SharedElementChat();
-							sharedElementChat.setElementChat(pathAvatar,name,event.info, ActivityElementType.getStringOfType(event.typeInfo));
+							sharedElementChat.setElementChat(pathAvatar,name,event.info, typeInfo);
 							this.panelTimeLine.addElementAt(sharedElementChat,0);
 						}
 					}else
@@ -261,9 +262,14 @@
 							{
 								this.panelMediaSession.addElementAt(image, 0);
 							}
+						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.MESSAGE))
+						{
+							// hasn't label for chat message
+							typeInfo ="";
 						}
+						
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
-						sharedElementChat.setElementChat(pathAvatar,name,event.info, ActivityElementType.getStringOfType(event.typeInfo));
+						sharedElementChat.setElementChat(pathAvatar,name,event.info, typeInfo);
 						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 						this.panelChatSession.addElement(sharedElementChat);
 					}
@@ -307,7 +313,9 @@
 			public function scrollToBottom(event:Event):void
 			{
 				removeEventListener(FlexEvent.UPDATE_COMPLETE, scrollToBottom);
-				scrollerPanelMediaSession.viewport.verticalScrollPosition = 0;
+				if (scrollerPanelMediaSession != null){
+					scrollerPanelMediaSession.viewport.verticalScrollPosition = 0;
+				}
 			}
 			
 			
@@ -540,7 +548,7 @@
 		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
-		<s:VGroup width="33%" height="100%">
+		<s:VGroup width="33%" height="100%" minWidth="200">
 			<mx:Spacer height="5" />
 			<s:HGroup width="100%">
 				<s:Button id="buttonCloseSession" includeIn="MainState" width="50%" height="30"
