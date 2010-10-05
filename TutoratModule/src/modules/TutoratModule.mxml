@@ -404,31 +404,59 @@
 			}
 			
 			/**
-			 * Send message
+			 * Checking that sending the message by click on button or click by "enter"
 			 */
-			protected function richeditabletext1_keyUpHandler(event:KeyboardEvent):void
+			protected function onSendMessage(event:*):void
 			{
-				if (event.keyCode == Keyboard.ENTER)
+				if(event is MouseEvent){
+					this.sendMessage();
+				}else if (event is KeyboardEvent) 
 				{
-					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-					var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
-					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
-					sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
-					// remove last character from the message
-					var message:String = textChatMarker.text.slice(0, textChatMarker.text.length-1);
-					sessionSharedEvent.info = message;
-					sessionSharedEvent.listUsers = listUsersId;
-					dispatchEvent(sessionSharedEvent);
-					// update text
-					textChatMarker.text = "";
+					if(event.keyCode == Keyboard.ENTER)
+					{
+						this.sendMessage();
+					}
 				}
-				
 			}
-
+			
 			/**
-			 * Set marker
+			 * Sending message
 			 */
-			protected function button2_clickHandler(event:MouseEvent):void
+			private function sendMessage():void
+			{
+				// TODO send message to one user by click on his video
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
+				// remove last character from the message
+				var message:String = textChatMessage.text.slice(0, textChatMessage.text.length-1);
+				sessionSharedEvent.info = message;
+				sessionSharedEvent.listUsers = listUsersId;
+				dispatchEvent(sessionSharedEvent);
+				// update text
+				textChatMessage.text = "";
+			}
+			
+			/**
+			 * Checking that sending the marker by click on button or click by "enter"
+			 */
+			protected function onSetMyMarker(event:*):void
+			{
+				if(event is MouseEvent){
+					this.sendMarker();
+				}else if (event is KeyboardEvent) 
+				{
+					if(event.keyCode == Keyboard.ENTER)
+					{
+						this.sendMarker();
+					}
+				}
+			}
+			/**
+			 *  Sending marker
+			 */
+			private function sendMarker():void
 			{
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
@@ -440,10 +468,7 @@
 				// update text
 				textChatMarker.text = "";
 			}
-
-
-
-
+			
  			protected function panelPlanSession_resizeHandler(event:ResizeEvent):void
 			{
 				event.target.addEventListener(FlexEvent.UPDATE_COMPLETE, resizeChildren);
@@ -546,9 +571,9 @@
 			</s:Panel>
 		</s:VGroup>
 		 
-		<mx:VDividedBox width="77%" height="100%">
+		<mx:VDividedBox width="77%" height="100%" minHeight="400" minWidth="550">
 			<mx:HDividedBox width="100%" height="55%">
-				<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}">
+				<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200">
 					<s:Group height="100%" width="100%">
 						<s:layout>
 							<s:VerticalLayout gap="3"/>
@@ -557,24 +582,36 @@
 											quality="80"
 											bandwidth="15000" autoPlay="True"  height="100%" />
 						<s:Group width="100%" bottom="3" height="30">
-							<mx:TextArea  id="textChatMarker"  keyUp="richeditabletext1_keyUpHandler(event)" enabled="true"   height="25" top="2" left="1" right="155">				
+							<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 							</mx:TextArea>
-							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="button2_clickHandler(event)" right="1" height="25" top="2"  width="150">
+							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="onSetMyMarker(event)" right="1" height="25" top="2"  width="150">
 									<mx:label>{fxgt.gettext("Poser Marqueur")}</mx:label>
 								</mx:Button>
 						</s:Group>	
 					</s:Group>
 				</s:Panel>
-				<s:Panel   height="100%" width="60%">
+				<s:Panel   height="100%" width="60%" minWidth="300">
 					<s:title>Chat</s:title>
-					<s:Group top="1" width="100%"  height="100%">
-						<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
-							<s:Group id="panelChatSession"   width="100%"  height="100%">
-								<s:layout>
-									<s:VerticalLayout  gap="10"/>
-								</s:layout>
-							</s:Group>
-						</s:Scroller> 
+					<s:Group height="100%" width="100%">
+						<s:layout>
+							<s:VerticalLayout gap="3"/>
+						</s:layout>
+						<s:Group  width="100%"  height="100%">
+							<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
+								<s:Group id="panelChatSession"   width="100%"  top="0">
+									<s:layout>
+										<s:VerticalLayout  gap="10"/>
+									</s:layout>
+								</s:Group>
+							</s:Scroller> 
+						</s:Group>
+						<s:Group width="100%" bottom="3" height="30">
+							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="155">				
+							</mx:TextArea>
+							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
+								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
+							</mx:Button>
+						</s:Group>	
 					</s:Group>
 				</s:Panel>
 			</mx:HDividedBox>
