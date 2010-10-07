@@ -483,7 +483,8 @@
 				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
-				sessionSharedEvent.info = textChatMarker.text;
+				var message:String = textChatMarker.text.slice(0, textChatMarker.text.length-1);
+				sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
 				dispatchEvent(sessionSharedEvent);
