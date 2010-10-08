@@ -4,6 +4,7 @@ package com.lyon2.visu.vo
 	[Bindable]	
 	public class SessionVO
 	{
+			public var duration_session:int;
 			public var id_session:int;
 			public var id_user:int;
 			public var theme:String;

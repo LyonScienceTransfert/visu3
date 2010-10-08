@@ -16,6 +16,7 @@ package  com.lyon2.visu.model
 			public var participants:ArrayCollection = new ArrayCollection();
 			public var date_start_recording:Date;
 			public var statusSession:int = -1;
+			public var duration_session:int;
 
 		public function Session(session:SessionVO)
 		{
@@ -27,6 +28,7 @@ package  com.lyon2.visu.model
 			this.description = session.description;
 			this.date_start_recording = session.start_recording;
 			this.statusSession = session.status_session;
+			this.duration_session = session.duration_session;
 			
 		}
 		

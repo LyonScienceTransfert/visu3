@@ -19,7 +19,8 @@
 
 
 	<resultMap class="com.lyon2.visu.domain.model.Session"
-		id="sessionResult">
+		id="sessionResult">		
+		<result column="s_duration" jdbcType="INTEGER" property="duration_session" />
 		<result column="s_id" jdbcType="INTEGER" property="id_session" />
 		<result column="u_id" jdbcType="INTEGER" property="id_user" />
         <result column="theme" jdbcType="LONGVARCHAR" property="theme" />
@@ -31,29 +32,29 @@
 	</resultMap>
     
 	<sql id="selectBase">
-		SELECT id_session as s_id, id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		SELECT sum(duration) as s_duration, id_session as s_id, id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
 	</sql>
 
 	<select id="getSession" parameterClass="int"
 		resultMap="sessionResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM sessions WHERE id_session = #value#
+		FROM sessions s, activities a WHERE s.id_session = #value# AND s.id_session = a.id_session GROUP BY s.id_session
 	</select>
 	
 	<select id="getSessions" resultMap="sessionResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM sessions  WHERE isModel = 0
+		FROM sessions s, activities a WHERE isModel = 0 AND s.id_session = a.id_session GROUP BY s.id_session
 	</select>
 
 	<select id="getSessionPlans" resultMap="sessionResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM sessions WHERE isModel = 1
+		FROM sessions s, activities a WHERE isModel = 1 AND s.id_session = a.id_session GROUP BY s.id_session
 	</select>
 
     <select id="getSessionsByUser" parameterClass="int"
 		resultMap="sessionResult" cacheModel="cache">
-		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
-		FROM session_users su, sessions s WHERE su.id_user = #value# AND su.id_session = s.id_session 
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		FROM session_users su, sessions s, activities a WHERE su.id_user = #value# AND su.id_session = s.id_session AND s.id_session = a.id_session GROUP BY s.id_session
 	</select> 
 
     <select id="getDatesSessionsByUser" parameterClass="int"
@@ -79,11 +80,13 @@
     <select id="getSessionsByDateByUser" parameterClass="userDate"
 		 resultMap="sessionResult" cacheModel="cache">
     <![CDATA[
-		SELECT s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
-		FROM session_users su, sessions s 
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		FROM session_users su, sessions s, activities a 
         WHERE s.id_session = su.id_session 
             AND CAST(s.date_session AS DATE) = #dateSession:LONGCHAR# 
             AND su.id_user = #userId:INTEGER#
+            AND s.id_session = a.id_session 
+            GROUP BY s.id_session
             ORDER BY s.date_session  
     ]]>
 	</select>
@@ -91,9 +94,11 @@
     <select id="getSessionsByDate" parameterClass="String"
 		 resultMap="sessionResult" cacheModel="cache">
     <![CDATA[
-		SELECT s.id_session as s_id, s.id_user as u_id, theme, s.date_session, isModel, description, start_recording, status_session
-		FROM sessions s 
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, s.date_session, isModel, description, start_recording, status_session
+		FROM sessions s, activities a 
         WHERE CAST(s.date_session AS DATE) = #value# 
+        	AND s.id_session = a.id_session 
+            GROUP BY s.id_session
             ORDER BY s.date_session  
     ]]>
 	</select>    
