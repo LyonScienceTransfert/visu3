@@ -32,7 +32,7 @@
 	</resultMap>
     
 	<sql id="selectBase">
-		SELECT sum(duration) as s_duration, id_session as s_id, id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		SELECT sum(duration) as s_duration, s.id_session as s_id, id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
 	</sql>
 
 	<select id="getSession" parameterClass="int"
