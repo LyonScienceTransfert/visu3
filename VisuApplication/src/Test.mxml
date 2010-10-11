@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  creationComplete="initCamera()" xmlns:media="flash.media.*">
+	<mx:Script>
+		<![CDATA[
+        
+
+		public var timer:Timer = null;
+		
+		public function initCamera(event: StatusEvent = null):void
+		{
+            if (timer)
+                timer.stop();
+
+			camera = Camera.getCamera();
+			if (camera == null)
+			{
+				clabel.text = "Pas de caméra détectée. Cliquez sur le bouton Réglages ci-dessous pour essayer de choisir un autre modèle.";
+			} 
+            else
+            {
+                camera.setMode( vd.width, vd.height, camera.fps);
+                vd.attachCamera( camera );
+                if (camera.muted)
+                {
+                    clabel.text = "Caméra détectée ["+camera.name+"] mais vous n'avez pas autorisé l'application à l'utiliser.";
+                }
+                else
+                {
+                    clabel.text = "Caméra détectée["+camera.name+"] - Vous devez vous voir dans la fenêtre ci-dessous";
+                }
+            }
+			
+			micro = Microphone.getMicrophone();
+			if (micro == null)
+			{
+				mlabel.text = "Pas de micro détecté."
+			}
+            else
+			{
+                /* 
+                 * Check for authorization updates.
+                 * Since camera-less computers are more common, we subscribe here 
+                 * at the microphone level. Since access authorization is global,
+                 * it will correctly update the webcam status also.
+                 */
+                micro.addEventListener(StatusEvent.STATUS, initCamera);
+
+				micro.setLoopBack(true);
+				micro.setUseEchoSuppression(true);
+				micro.setSilenceLevel(0);
+                if (micro.muted)
+                {
+    				mlabel.text = "Micro détecté [" + micro.name + "] mais vous n'avez pas autorisé l'application à l'utiliser.";
+                }
+                else
+                {
+                    if (! timer)
+                    {
+                        timer = new Timer(100);
+                        timer.addEventListener(TimerEvent.TIMER, checkVolume );
+                        timer.start();
+                    }
+                    else
+                    {
+                        timer.start();
+                    }
+    				mlabel.text = "Micro détecté [" + micro.name + "] - la jauge de son doit bouger";
+    			}
+            }
+        }
+		
+		private function checkVolume(event: TimerEvent = null):void
+		{
+			miclevel.setProgress(micro.activityLevel, 100);
+			if (micro.activityLevel < 70) 
+                miclevel.setStyle("barColor","haloBlue");
+            else if(micro.activityLevel > 70 && micro.activityLevel < 90 )
+                miclevel.setStyle("barColor","#FF9900");
+		    else
+                miclevel.setStyle("barColor","#CC0000");
+		}
+
+		]]>
+	</mx:Script>
+
+	<mx:VBox id="vbox" >
+		<mx:Text selectable="false" id="clabel" width="400"/>
+		<mx:VideoDisplay width="300" height="200" id="vd" />
+		<mx:Text  id="mlabel" width="400"/>
+		<mx:ProgressBar id="miclevel" mode="manual" label="" width="100%" trackHeight="10"  height="13"  />
+        <mx:Button label="Réglages" id="reglages" click="Security.showSettings( SecurityPanel.CAMERA )" />
+        <mx:Button label="Accéder à Visu" id="visu" click="navigateToURL(new URLRequest('visuclient.html'), '_self')" />
+    </mx:VBox>
+	
+	
+	<media:Microphone id="micro" rate="22" />
+	<media:Camera id="camera" />
+	
+</mx:Application>
