@@ -339,6 +339,8 @@ public class StreamRecorder
 				Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
 				if(sessionIdClient == session_id)
 				{
+					// stop recording
+					stream.stopRecording();
 					// set status session 
 					app.setStatusSession(session_id, sessionStatus, null);
 					
