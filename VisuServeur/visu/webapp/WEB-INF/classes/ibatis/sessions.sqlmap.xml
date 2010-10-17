@@ -60,7 +60,7 @@
     <select id="getDatesSessionsByUser" parameterClass="int"
 		 resultClass="Date" cacheModel="cache">
     <![CDATA[
-		SELECT DISTINCT CAST(s.date_session AS DATE)
+		SELECT DISTINCT CAST(s.date_session AS DATETIME)
 		FROM session_users su, sessions s 
         WHERE s.id_session = su.id_session 
             AND su.id_user = #value:INTEGER#
@@ -71,7 +71,7 @@
     <select id="getDatesSessions"
 		 resultClass="Date" cacheModel="cache">
     <![CDATA[
-		SELECT DISTINCT CAST(s.date_session AS DATE)
+		SELECT DISTINCT CAST(s.date_session AS DATETIME)
 		FROM sessions s 
         ORDER BY s.date_session            
     ]]>
