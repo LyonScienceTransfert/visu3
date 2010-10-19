@@ -113,7 +113,7 @@ public class SessionInfo
   	
 	protected static final Logger log = Red5LoggerFactory.getLogger(SessionInfo.class, "visu2" );
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public void getSessionsDatesByUser(IConnection conn, Integer userId ) throws SQLException 
 	{
 		log.warn("======== getSessionsDatesByUser ");
@@ -140,6 +140,14 @@ public class SessionInfo
 			}
 		}
 		log.warn("size = {}",result.size());
+		for (Date dateSession : result)
+		{	
+			// the date now is example : Tue Jan 05 00:00:00 BRST 2010
+			// time 00:00:00 will give Jan 04
+			// have to add one second for having date like this :  Tue Jan 05 00:00:01 BRST 2010
+			dateSession.setSeconds(1);
+			log.warn("sessionDate = {}",dateSession.toString());
+		}
 		Object[] args = {result};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
