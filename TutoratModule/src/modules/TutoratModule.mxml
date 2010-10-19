@@ -156,19 +156,15 @@
 			/**
 			 * Old user walk out from the session
 			 */
-			private function onOldUserOutSession(event:SessionEvent):void{
-				// check if this user in current session
-				if(Model.getInstance().getCurrentSession().hasUser(event.userId))
+			private function onOldUserOutSession(event:SessionEvent):void
+			{
+				var module:Object = Model.getInstance().getCurrentTutoratModule();
+				if(module.visio != null)
 				{
-					var module:Object = Model.getInstance().getCurrentTutoratModule();
-					if(module.visio != null)
-					{
-						// streamId of user 
-						//var streamId:String = Model.getInstance().getIdClient(event.userId);
-						var streamId:String = event.userIdClient;
-						// remove video user
-						module.visio.removeVideoStream(streamId);
-					}
+					// streamId of the user 
+					var streamId:String = event.userIdClient;
+					// remove video of the user
+					module.visio.removeVideoStream(streamId);
 				}	
 			}
 			
