@@ -10,6 +10,7 @@ package com.ithaca.visu.controls.users
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayList;
+	import mx.controls.Image;
 	
 	import spark.components.Button;
 	import spark.components.DropDownList;
@@ -45,6 +46,9 @@ package com.ithaca.visu.controls.users
 		
 		[SkinPart("true")]
 		public var passwordDisplay : Label;
+
+		[SkinPart("true")]
+		public var avatarUser : Image;
 		
 		[SkinPart("true")]
 		public var profileList : DropDownList;
@@ -63,6 +67,7 @@ package com.ithaca.visu.controls.users
 		
 		[SkinPart("true")]
 		public var deleteButton : Button;
+		
 		 
 		
 		
@@ -244,6 +249,7 @@ package com.ithaca.visu.controls.users
 			passwordInput.text = user.password;
 			passwordDisplay.text = user.password;
 			
+			avatarUser.source = user.avatar;
 			
 			updateProfileList();
 			profileDisplay.text = getProfile(user.role).short_description;
@@ -265,8 +271,9 @@ package com.ithaca.visu.controls.users
 		{
 			lastnameInput.text = user.lastname;			
 			firstnameInput.text = user.firstname;			
-			emailInput.text = user.mail;			
+			emailInput.text = user.mail;
 			passwordInput.text = user.password;
+			avatarUser.source = user.avatar;
 			updateProfileList();
 		}
 		protected function setDisplay():void
@@ -275,6 +282,7 @@ package com.ithaca.visu.controls.users
 			firstnameDisplay.text = user.firstname;
 			emailDisplay.text = user.mail;
 			passwordDisplay.text = user.password;
+			avatarUser.source = user.avatar;
 			profileDisplay.text = getProfile(user.role).short_description;
 			
 		}

@@ -33,6 +33,7 @@
 		<s:HorizontalLayout />
 	</s:layout>	
 	<s:Label id="firstname" text="{data.firstname}" />
-	<s:Label text="{data.profil}" fontSize="9" right="0" verticalAlign="top"/>
+	<s:Label text="{data.lastname}"/>
+<!--	<s:Label text="{data.profil}" fontSize="9" right="0" verticalAlign="top"/>-->
 
 </s:ItemRenderer>
