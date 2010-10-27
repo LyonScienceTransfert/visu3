@@ -279,14 +279,32 @@
 					resizeMe(event.target);
 					this.listObjectMedia.addItem(player);
 				} 
-/* 				var url:String= "";
-				if(event.target.className == "Image")
+				// send message to serveur(all users of current session exclus me/loggedUser) that user can see recived Document
+ 				var url:String= "";
+				var typeInfo:int=-1;
+				if(event.target.className == "ImageDocument")
 				{
 					url = event.target.source as String;
+					typeInfo = ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE);
 				}else{
 					url = event.target.url as String;
+					typeInfo = ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO);
 				}
-				dispatchEvent(new DataEvent(DataEvent.DATA, false, false, url)); */
+				var senderUserId:int = (event.target as IDocument).getSenderId();
+				// get list users id without logged user
+				// logged user can't partage info with himself 
+				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSessionWithoutLoggedUser(this.currentSession.id_session);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = typeInfo;
+				// this information will add to the obsel
+				sessionSharedEvent.info = event.target.toolTip;
+				sessionSharedEvent.listUsers = listUsersIds;
+				sessionSharedEvent.senderUserId = senderUserId;
+				sessionSharedEvent.status = this.visio.status;	
+				sessionSharedEvent.url = url;
+				dispatchEvent(sessionSharedEvent);			
+				
+				
 				addEventListener(FlexEvent.UPDATE_COMPLETE, scrollToBottom);
 			}
 			
