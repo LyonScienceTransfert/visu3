@@ -90,7 +90,7 @@
 				var profile:String = _loggedUser.profil;				
 				_editableSession = RightStatus.hasRight(profile, RightStatus.CAN_MODIFY_OTHER_SESSION);
 				// image of the logged user
-				imageLoggedUser.source = _loggedUser.avatar;
+				//imageLoggedUser.source = _loggedUser.avatar;
 				// promt in navigateurDay
 				navigateurDay.prompt = fxgt.gettext("Il faut choisir la date de la séance");				
 				// remove all views the session
@@ -131,15 +131,15 @@
 				dispatchEvent(event);
 				this.textToSend.text = ""; 
 				var loggerUser:User = Model.getInstance().getLoggedUser();
-				listConUsers.visible = false; 
-			}
+	/* 			listConUsers.visible = false; 
+ */			}
 			
 			/**
 			 * Send message to one user
 			 */ 
 			protected function sendMessageToUser():void
 			{
-				var userId:int = this.listConUsers.selectedItem.id_user;
+/* 				var userId:int = this.listConUsers.selectedItem.id_user;
 				var text:String = this.textToSend.text.toString();
 				var event:MessageEvent = new MessageEvent(MessageEvent.SEND_PRV_MESSAGE);
 				event.senderUserId = Model.getInstance().getLoggedUser().getId();
@@ -149,7 +149,7 @@
 				this.textToSend.text = "";  
 				var loggerUser:User = Model.getInstance().getLoggedUser();
 				Model.getInstance().addFluxActivity(loggerUser.id_user,loggerUser.firstname, loggerUser.avatar,"[private] "+text ,new Date());
-				listConUsers.visible = false;
+				listConUsers.visible = false; */
 			}
 			
 			/**
@@ -179,7 +179,7 @@
 							if(nbrSession == 0)
 							{
 								var labelMessage:Label = new Label();
-								labelMessage.setStyle("fontSize", 16);
+								labelMessage.setStyle("fontSize", 14);
 								labelMessage.setStyle("fontWeight", "bold");
 								labelMessage.text = fxgt.gettext("Vous n'avez pas de séance pour cette date...");
 								vb.addElement(labelMessage);
@@ -189,7 +189,7 @@
 								{
 									var session:Session = listSession[nSession];
 									var sessionView:SessionHomeElement = new SessionHomeElement();
-									sessionView.width = navigateurDay.width;
+									sessionView.width = navigateurDay.width - navigateurDay.rightButton.width;
 									// check connected users
 									session.checkConnectedUsers(listConnectedUser);
 									sessionView.session = session;
@@ -396,7 +396,7 @@
 			 */ 
 			protected function sendOneUser_clickHandler(event:MouseEvent):void
 			{
-				if(listConUsers.visible){
+				/* if(listConUsers.visible){
 					listConUsers.visible = false;
 				}else
 				{
@@ -406,7 +406,7 @@
 						listConUsers.dataProvider = listConnectedUserExludeLoggedUser;
 						listConUsers.visible = true;
 					}
-				}
+				} */
 			}		
 			
 		
@@ -540,70 +540,84 @@
 			}
 		]]>
 	</fx:Script>
-	<s:HGroup x="50" y="15">
-		<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
-		<s:Group width="100%" height="100%" >
-			<s:layout>
-				<s:VerticalLayout gap="5"/>
-			</s:layout>
-			<controls:NavigateurDay id="navigateurDay" dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"  visible="true"   change="navigateurDay_changeHandler(event)"  width="300"/>
-			<s:Group height="10%" width="100%">
-				
-			<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerSession">    
-				<s:Group id="sessionGroup"   width="100%"  height="297">
-					<s:layout>
-						<s:VerticalLayout  gap="5"/>
-					</s:layout>
+	<s:VGroup x="50" y="15"  gap="5" horizontalAlign="center">
+
+		<s:HGroup width="100%" height="100%" horizontalAlign="center" gap="30" verticalAlign="bottom">
+			<s:Label text="{Model.getInstance().getLoggedUser().getFirstName() + ' '+ Model.getInstance().getLoggedUser().lastname}"  fontSize="20"/>
+			<mx:Image source="{Model.getInstance().getLoggedUser().avatar}" width="50" height="50"/>
+			<s:Label text="blablabla"  fontSize="20"/>
+		</s:HGroup>
+		<s:HGroup >
+			<!--<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>-->
+			<s:Group width="100%" height="100%" >
+				<s:layout>
+					<s:VerticalLayout gap="5"/>
+				</s:layout>
+				<s:HGroup horizontalAlign="center">
+					<s:BorderContainer width="350" height="35" backgroundColor="#CCDCC8">
+						<s:HGroup width="100%" height="100%" verticalAlign="middle">
+							<s:Label width="100%" fontSize="14" color="#000000" paddingLeft="140">
+								<s:text>{fxgt.gettext("CALENDRIER")}</s:text>
+							</s:Label>
+						</s:HGroup>
+					</s:BorderContainer>
+				</s:HGroup>
+				<controls:NavigateurDay id="navigateurDay" dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"  visible="true"   change="navigateurDay_changeHandler(event)"  width="100%"/>
+				<s:Group height="10%" width="100%">
+					<s:BorderContainer  width="100%" height="255" borderVisible="true"/>
+						<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerSession">    
+								<s:VGroup id="sessionGroup"   width="100%"  height="100%" gap="15" horizontalAlign="center"/>
+						</s:Scroller> 
 				</s:Group>
-			</s:Scroller> 
-			</s:Group>
-			<!--<s:HGroup id="sessionGroup" x="0"/>
--->		</s:Group>	
-		<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
-			<s:VGroup>
-				<s:HGroup>
-					<s:BorderContainer x="86" y="287" width="450" height="35" backgroundColor="#CCDCC8">
-						<s:Label width="100%" left="15"  fontSize="14" color="#000000" y="11">
-							<s:text>{fxgt.gettext("FLUX D'ACTIVITES")}</s:text>
-						</s:Label>
-						<s:Button x="306" y="0" height="33" width="63" click="sendAll_clickHandler()">
+				<!--<s:HGroup id="sessionGroup" x="0"/>
+			-->		</s:Group>	
+			<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
+				<s:VGroup gap="5">
+					<s:HGroup horizontalAlign="center">
+						<s:BorderContainer width="450" height="35" backgroundColor="#CCDCC8">
+							<s:HGroup width="100%" height="100%" verticalAlign="middle">
+								<s:Label width="100%"  fontSize="14" color="#000000"  paddingLeft="170">
+									<s:text>{fxgt.gettext("FLUX D'ACTIVITES")}</s:text>
+								</s:Label>
+							</s:HGroup>
+						</s:BorderContainer>
+						<!--<s:List  id="listConUsers" change="sendMessageToUser()"  visible="false" labelField="firstname" width="200" height="35"/>-->
+					</s:HGroup>
+<!--					<s:HGroup>
+						<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
+					</s:HGroup>-->
+					<s:HGroup verticalAlign="middle" width="450">
+					<!--	<mx:Image id="imageLoggedUser" width="40" height="40"/>-->
+						<s:TextInput id="textToSend" width="100%" height="{navigateurDay.height}" keyUp="onKeyUp(event)"/>
+						<s:Button  height="{navigateurDay.height}" width="63" click="sendAll_clickHandler()">
 							<s:label>{fxgt.gettext("Tout")}</s:label>
 						</s:Button>	
-						<s:Button x="369" y="0" height="33" width="80" click="sendOneUser_clickHandler(event)">
+						<s:Button  height="{navigateurDay.height}" width="80" click="sendOneUser_clickHandler(event)">
 							<s:label>{fxgt.gettext("Personnel")}</s:label>
 						</s:Button>
-					</s:BorderContainer>
-					<s:List  id="listConUsers" change="sendMessageToUser()"  visible="false" labelField="firstname" width="200" height="35"/>
-				</s:HGroup>
-				<s:HGroup>
-					<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
-				</s:HGroup>
-				<s:HGroup verticalAlign="middle" width="450">
-					<mx:Image id="imageLoggedUser" width="40" height="40"/>
-					<s:TextInput id="textToSend" width="398" height="40" keyUp="onKeyUp(event)"/>
-				</s:HGroup>
-				
-				<s:List  dataProvider="{fluxActivity}" width="450" height="200">
-					<s:layout>
-						<s:VerticalLayout/>
-					</s:layout>
-					<s:itemRenderer>
-						<fx:Component>
-							<s:ItemRenderer>
-								<s:BorderContainer  height="35"  borderVisible="true" width="430" >
-									<mx:Image source="{data.pathImage}" x="3" width="25" height="25"  y="3"/>
-									<s:Label id="labelFirstName" text="{data.firstname}" fontWeight="bold"  x="35" y="8"/>
-									<s:Label text="{data.message}"   x="{labelFirstName.x + labelFirstName.width + 5}" y="{labelFirstName.y}" color="#6ca6cf"/>
-									<s:Label text="{data.time}"  fontSize="10"  right="30" y="20" color="#CCCCCC"/>
-								</s:BorderContainer>
-							</s:ItemRenderer>
-						</fx:Component>							
-					</s:itemRenderer>
-				</s:List> 	
-			</s:VGroup>		
+					</s:HGroup>
+					
+					<s:List  dataProvider="{fluxActivity}" width="450" height="255">
+						<s:layout>
+							<s:VerticalLayout/>
+						</s:layout>
+						<s:itemRenderer>
+							<fx:Component>
+								<s:ItemRenderer>
+									<s:BorderContainer  height="35"  borderVisible="true" width="430" >
+										<mx:Image source="{data.pathImage}" x="3" width="25" height="25"  y="3"/>
+										<s:Label id="labelFirstName" text="{data.firstname}" fontWeight="bold"  x="35" y="8"/>
+										<s:Label text="{data.message}"   x="{labelFirstName.x + labelFirstName.width + 5}" y="{labelFirstName.y}" color="#6ca6cf"/>
+										<s:Label text="{data.time}"  fontSize="10"  right="30" y="20" color="#CCCCCC"/>
+									</s:BorderContainer>
+								</s:ItemRenderer>
+							</fx:Component>							
+						</s:itemRenderer>
+					</s:List> 	
+				</s:VGroup>		
+			</s:HGroup>
+			
 		</s:HGroup>
-		
-	</s:HGroup>
-	
+	</s:VGroup>
 	<s:Label fontSize="20" text="/////.."  y="500" id="tx"  visible="false"/>
 </modules:VisuModuleBase>
