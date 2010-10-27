@@ -228,20 +228,17 @@
 					}
 					if((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.MARKER))
 					{
-						// show marker only for owner the marker
-						if(event.senderUserId == Model.getInstance().getLoggedUser().id_user)
-						{
-							var sharedElementChat:SharedElementChat = new SharedElementChat();
-							sharedElementChat.setElementChat(pathAvatar,name,event.info, typeInfo);
-							this.panelTimeLine.addElementAt(sharedElementChat,0);
-						}
+						// FIXME : do somethink if user add marker
 					}else
 					{
 						if((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.VIDEO)){
 							var player:YoutubePlayer = new YoutubePlayer();
+							// set id of the sender user 
+							player.setSenderId(event.senderUserId);
 							player.url = event.url;
 							player.percentWidth = 100;
 							player.height = 225;
+							player.toolTip = event.info;
 							player.addEventListener(PlayerEvent.READY, loadComplete);
 							if(this.panelMediaSession != null)
 							{
@@ -249,11 +246,13 @@
 							}
 						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.IMAGE))
 						{
-							var image:Image = new Image();
+							var image:ImageDocument = new ImageDocument();
+							// set id of the sender user
+							image.setSenderId(event.senderUserId);
 							image.load(event.url);
 							image.toolTip = event.info;
 							image.percentWidth = 100;	
-							image.addEventListener(Event.COMPLETE, loadComplete);
+							image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
 							if(this.panelMediaSession != null)
 							{
 								this.panelMediaSession.addElementAt(image, 0);
