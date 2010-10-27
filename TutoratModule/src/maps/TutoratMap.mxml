@@ -17,6 +17,8 @@
 		import com.ithaca.visu.events.VisuActivityEvent;
 		import com.lyon2.visu.model.Model;
 		
+		import com.ithaca.visu.events.MessageEvent;
+		
 		import modules.TutoratModule;
 		
 		import mx.events.FlexEvent;
@@ -67,7 +69,6 @@
 			makeObjectsBindable="true"
 			showBusyCursor="true">
 		</s:RemoteObject>
-
 		
 		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
@@ -96,9 +97,12 @@
 				</mate:faultHandlers>
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
-		
-		
 
+		<mate:EventHandlers type="{MessageEvent.GET_TRACE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getActiveTraceUser"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>		
 		
 	</fx:Declarations>
 	
