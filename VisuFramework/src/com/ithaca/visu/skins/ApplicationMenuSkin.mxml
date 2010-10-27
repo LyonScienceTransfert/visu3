@@ -72,7 +72,7 @@
 		</s:Label>	
 		<s:DropDownList id="dropListLang" includeIn="authentified"
 						 labelField="labelLang"/>
-		<s:Button id="chat" includeIn="authentified">
+		<s:Button id="chat" includeIn="authentified" enabled="false">
 			<s:label>{fxgt.gettext("Chat")}</s:label>
 		</s:Button>	
 		<s:Button id="disconnect" includeIn="authentified" >

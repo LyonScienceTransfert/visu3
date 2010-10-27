@@ -212,7 +212,12 @@ package com.ithaca.visu.controls.globalNavigation
 					bt.label = o.label;
 					bt.name = o.value;
 					// 
-					if(o.value == "tutorat"){bt.enabled = false;}
+					//FIXME : enabled module tutorat
+					// if(o.value == "tutorat"){bt.enabled = false;}
+					// FIXME : enabled module retrospection
+					if(o.value == "retrospection"){bt.enabled = false;}
+					// FIXME : enabled module session
+					if(o.value == "session"){bt.enabled = false;}
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
 					addElement( bt );
 					// list buttons for translate the labels
