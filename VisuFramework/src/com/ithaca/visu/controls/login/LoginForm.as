@@ -96,6 +96,7 @@ package com.ithaca.visu.controls.login
 			else if (instance == forgottenButton)
 			{
 				forgottenButton.label = "I've forgotten my password";
+				forgottenButton.enabled = false;		
 				forgottenButton.addEventListener(MouseEvent.CLICK, getPassword);
 			}
 		}
