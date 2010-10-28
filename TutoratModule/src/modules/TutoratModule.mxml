@@ -125,6 +125,8 @@
 				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
 					
 					fxgt = FxGettext;
+					// set group setMarker enabled for all users
+					this.setEnabledGroupSetMarker(false);
 					if(buttonStartRecording != null){
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
 						this.buttonCloseSession.enabled = false;
@@ -212,6 +214,8 @@
 				if(this.visio != null)
 				{
 					this.visio.status = VisuVisio.STATUS_RECORD;
+					// set group setMarker enabled for all users
+					this.setEnabledGroupSetMarker(true);
 					// update label button on view tutorat
 					if(buttonStartRecording != null){			
 						buttonStartRecording.label = fxgt.gettext("Arreter la séance");	
@@ -228,6 +232,8 @@
 				if(this.visio != null)
 				{
 					this.visio.status = VisuVisio.STATUS_NONE;
+					// set group setMarker enabled for all users
+					this.setEnabledGroupSetMarker(false);
 					// update label button on view tutorat
 					if(buttonStartRecording != null){
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
@@ -620,6 +626,10 @@
 					eventStopRecording.sessionStatus = sessionStatus;
 					dispatchEvent(eventStopRecording);			
 				}
+			}
+			private function setEnabledGroupSetMarker(value:Boolean):void
+			{
+				groupSetMarker.enabled = value;
 			}
 
 		]]>
