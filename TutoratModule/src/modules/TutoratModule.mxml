@@ -252,6 +252,15 @@
 				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 				if(this == currentModule)
 				{
+					// obselVO will be null only if session paused or not started
+					var obselVO:ObselVO = event.obselVO as ObselVO;
+					if( obselVO != null)
+					{
+						// set obsel to the model
+						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+						this.addObsel(obsel);
+					}
+					
 					var pathAvatar:String = "";
 					var name:String = "";
 					var sourceImageInfo:Class = null;
@@ -262,49 +271,55 @@
 						name = senderUser.firstname + " "+ senderUser.lastname;
 						
 					}
-					if((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.MARKER))
+					
+					if((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER))
 					{
-						sourceImageInfo = markerIcon;
-					}else
-					{
-						if((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.VIDEO)){
-							sourceImageInfo = videoIcon;
-							var player:YoutubePlayer = new YoutubePlayer();
-							// set id of the sender user 
-							player.setSenderId(event.senderUserId);
-							player.url = event.url;
-							player.percentWidth = 100;
-							player.height = 225;
-							player.toolTip = event.info;
-							player.addEventListener(PlayerEvent.READY, loadComplete);
-							if(this.panelMediaSession != null)
-							{
-								this.panelMediaSession.addElementAt(player, 0);
-							}
-						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.IMAGE))
+						switch (event.typeInfo as int) 
 						{
-							sourceImageInfo = fichierIconVisu1;
-							var image:ImageDocument = new ImageDocument();
-							// set id of the sender user
-							image.setSenderId(event.senderUserId);
-							image.load(event.url);
-							image.toolTip = event.info;
-							image.percentWidth = 100;	
-							image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
-							if(this.panelMediaSession != null)
-							{
-								this.panelMediaSession.addElementAt(image, 0);
-							}
-						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.MESSAGE))
-						{
-							sourceImageInfo = messageChatIconVisu1; 
-						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.KEYWORD))
-						{
-							sourceImageInfo = keywordIcon; 
-						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.STATEMENT))
-						{
-							sourceImageInfo = consigneIconVisu1; 
-							
+							case ActivityElementType.valueOf(ActivityElementType.VIDEO) :
+								sourceImageInfo = videoIcon;
+								var player:YoutubePlayer = new YoutubePlayer();
+								// set id of the sender user 
+								player.setSenderId(event.senderUserId);
+								player.url = event.url;
+								player.percentWidth = 100;
+								player.height = 225;
+								player.toolTip = event.info;
+								player.addEventListener(PlayerEvent.READY, loadComplete);
+								if(this.panelMediaSession != null)
+								{
+									this.panelMediaSession.addElementAt(player, 0);
+								}
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.IMAGE) :
+								sourceImageInfo = fichierIconVisu1;
+								var image:ImageDocument = new ImageDocument();
+								// set id of the sender user
+								image.setSenderId(event.senderUserId);
+								image.load(event.url);
+								image.toolTip = event.info;
+								image.percentWidth = 100;	
+								image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
+								if(this.panelMediaSession != null)
+								{
+									this.panelMediaSession.addElementAt(image, 0);
+								}
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.MESSAGE) :
+								sourceImageInfo = messageChatIconVisu1; 
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.KEYWORD) :
+								sourceImageInfo = keywordIcon; 
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.STATEMENT) :
+								sourceImageInfo = consigneIconVisu1; 
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE) :
+								sourceImageInfo = fichierIconVisu1;
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO) :
+								sourceImageInfo = videoIcon;
+								break;
 						}
 						
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
