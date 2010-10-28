@@ -400,15 +400,21 @@
 			protected function shareActivityElement(event:ActivityElementEvent):void
 			{
 				trace("shareActivityElement");
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
-				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
-				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(event.element.type_element);
-				sessionSharedEvent.info = event.element.data;
-				sessionSharedEvent.listUsers = listUsersId;
-				sessionSharedEvent.status = this.visio.status;	
-				sessionSharedEvent.url = event.element.url_element;
-				dispatchEvent(sessionSharedEvent);
+				if( this.visio.status != VisuVisio.STATUS_RECORD)
+				{
+					Alert.show(fxgt.gettext("For using bla bla have to start record") , fxgt.gettext("Confirmation"));
+				}else
+				{
+					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+					var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+					sessionSharedEvent.typeInfo = ActivityElementType.valueOf(event.element.type_element);
+					sessionSharedEvent.info = event.element.data;
+					sessionSharedEvent.listUsers = listUsersId;
+					sessionSharedEvent.status = this.visio.status;	
+					sessionSharedEvent.url = event.element.url_element;
+					dispatchEvent(sessionSharedEvent);
+				}
 			}
 			
 			protected function startActivity(event:VisuActivityEvent):void
