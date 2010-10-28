@@ -17,12 +17,12 @@ package com.ithaca.visu.controls.sessions
 		public var avatar : Image;
 		
 		[SkinPart("true")]
-		public var typeInfo :Label;
+		public var imageInfo :Image;
 		
 		private var infoChanged:Boolean;
 		private var _pathAvatar:String;
 		private var _nameSender:String;
-		private var _typeInfo:String;
+		private var _sourceImageInfo:Class;
 		private var _info:String;
 		
 		public function SharedElementChat()
@@ -59,11 +59,7 @@ package com.ithaca.visu.controls.sessions
 				avatar.source = _pathAvatar;
 				avatar.toolTip = _nameSender;
 				titleDisplay.text = _info;
-				typeInfo.text = _typeInfo;
-				if (_typeInfo =="")
-				{
-					titleDisplay.left = typeInfo.left;
-				}
+				imageInfo.source = _sourceImageInfo;
 				this.percentWidth = 100; 
 			}
 		}
@@ -73,13 +69,13 @@ package com.ithaca.visu.controls.sessions
 			return "normal";
 		}
 		
-		public function setElementChat(pathAvatar:String, nameSender:String, info:String, typeInfo:String):void
+		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:Class):void
 		{
 			infoChanged = true;
 			_pathAvatar = pathAvatar;
 			_nameSender = nameSender;
 			_info = info;
-			_typeInfo = typeInfo;
+			_sourceImageInfo = sourceImageInfo;
 			invalidateProperties();
 		}
 		

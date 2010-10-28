@@ -49,6 +49,7 @@
 			import spark.events.IndexChangeEvent;
 			
 			private var currentSession:Session;
+			private var _stopTimeRecording:Number = 0;
 			
 			private var listObjectMedia:ArrayCollection = new ArrayCollection();
 			[Bindable]
@@ -56,6 +57,39 @@
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
+			
+			[Bindable]
+			[Embed("images/marqueurBlanc-bas-20px.png")]
+			private var markerIcon:Class;
+			
+			[Bindable]
+			[Embed("images/messageChat.png")]
+			private var messageChatIcon:Class;
+			
+			[Bindable]
+			[Embed("images/keyword.png")]
+			private var keywordIcon:Class;
+			
+			[Bindable]
+			[Embed("images/video.jpg")]
+			private var videoIcon:Class;
+
+			[Bindable]
+			[Embed("images/chatMessageVisu1.png")]
+			private var messageChatIconVisu1:Class;
+
+			[Bindable]
+			[Embed("images/consigneVisu1.png")]
+			private var consigneIconVisu1:Class;
+
+			[Bindable]
+			[Embed("images/fichierVisu1.png")]
+			private var fichierIconVisu1:Class;
+			
+			[Bindable]
+			private var timer:Timer;
+			
+			private var testCursor:ObselButton;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -66,6 +100,8 @@
 					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentSession(session);
 					Model.getInstance().setCurrentTutoratModule(this);
+					// init list traceLines
+					Model.getInstance().initListTraceLine();
 					
 					var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_TUTORAT);
 					this.dispatchEvent(initMapEvent);
@@ -218,7 +254,7 @@
 				{
 					var pathAvatar:String = "";
 					var name:String = "";
-					var typeInfo:String = ActivityElementType.getStringOfType(event.typeInfo);
+					var sourceImageInfo:Class = null;
 					var senderUser:User = Model.getInstance().getUserByUserId(event.senderUserId);
 					if(senderUser != null)
 					{
@@ -228,10 +264,11 @@
 					}
 					if((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.MARKER))
 					{
-						// FIXME : do somethink if user add marker
+						sourceImageInfo = markerIcon;
 					}else
 					{
 						if((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.VIDEO)){
+							sourceImageInfo = videoIcon;
 							var player:YoutubePlayer = new YoutubePlayer();
 							// set id of the sender user 
 							player.setSenderId(event.senderUserId);
@@ -246,6 +283,7 @@
 							}
 						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.IMAGE))
 						{
+							sourceImageInfo = fichierIconVisu1;
 							var image:ImageDocument = new ImageDocument();
 							// set id of the sender user
 							image.setSenderId(event.senderUserId);
@@ -259,12 +297,18 @@
 							}
 						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.MESSAGE))
 						{
-							// hasn't label for chat message
-							typeInfo ="";
+							sourceImageInfo = messageChatIconVisu1; 
+						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.KEYWORD))
+						{
+							sourceImageInfo = keywordIcon; 
+						}else if ((event.typeInfo as int) == ActivityElementType.valueOf(ActivityElementType.STATEMENT))
+						{
+							sourceImageInfo = consigneIconVisu1; 
+							
 						}
 						
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
-						sharedElementChat.setElementChat(pathAvatar,name,event.info, typeInfo);
+						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo);
 						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 						this.panelChatSession.addElement(sharedElementChat);
 					}
@@ -636,7 +680,7 @@
 							<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
 								<s:Group id="panelChatSession"   width="100%"  top="0">
 									<s:layout>
-										<s:VerticalLayout  gap="10"/>
+										<s:VerticalLayout  gap="5"/>
 									</s:layout>
 								</s:Group>
 							</s:Scroller> 

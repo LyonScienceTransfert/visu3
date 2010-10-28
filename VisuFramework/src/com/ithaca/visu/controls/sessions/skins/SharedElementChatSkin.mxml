@@ -30,13 +30,9 @@
 				</s:LinearGradient>
 			</s:fill>
 		</s:Rect>
-		<mx:Image id="avatar"  left="5" top="1" width="30" height="30">
-			
-		</mx:Image>
-		
-		<mx:Label id="typeInfo" left="44" top="3" fontStyle="italic" fontSize="10" color="#2A51C2"/>
-	
-		<s:RichText id="titleDisplay" left="110" top="5" right="40" color="#121212"
+		<mx:Image id="avatar"  left="3" top="1" width="30" height="30"/>
+		<mx:Image id="imageInfo" left="44" top="5"  width="25" height="25"/>
+		<s:RichText id="titleDisplay" left="72" top="5" right="10" color="#121212"
 				 fontSize="12" fontWeight="normal" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
 			
 			<!--<s:filters>
