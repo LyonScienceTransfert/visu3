@@ -67,7 +67,7 @@
 			private var messageChatIcon:Class;
 			
 			[Bindable]
-			[Embed("images/keyword.png")]
+			[Embed("images/motCleVisu1.png")]
 			private var keywordIcon:Class;
 			
 			[Bindable]
