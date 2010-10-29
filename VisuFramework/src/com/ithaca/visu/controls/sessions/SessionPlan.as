@@ -3,6 +3,7 @@ package com.ithaca.visu.controls.sessions
 	import com.ithaca.visu.controls.sessions.skins.KeywordSkin;
 	import com.ithaca.visu.events.ActivityElementEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
+	import com.lyon2.controls.VisuVisio;
 	import com.lyon2.visu.model.Activity;
 	import com.lyon2.visu.model.ActivityElement;
 	import com.lyon2.visu.model.ActivityElementType;
@@ -10,12 +11,16 @@ package com.ithaca.visu.controls.sessions
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.controls.Image;
 	import mx.core.FlexLoader;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
+	import mx.events.FlexEvent;
 	
 	import spark.components.Group;
 	import spark.components.SkinnableContainer;
@@ -40,17 +45,61 @@ package com.ithaca.visu.controls.sessions
 		
 		public var session_id:int;
 		
+		private var _sessionStatus:int = VisuVisio.STATUS_NONE;
+		protected var sessionStatusChanged:Boolean;
+		
+		private var _currentActivityId:int = 0;
+		protected var currentActivityChanged:Boolean;
+		
+		[Bindable]
+		private var fxgt:_FxGettext;
 		
 		public function SessionPlan()
 		{
 			super();
 			_activities = new ArrayList();	
-		
+			fxgt = FxGettext;
 		}
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
+			
+			if(sessionStatusChanged)
+			{
+				sessionStatusChanged = false; 
+				var enabledStartButton:Boolean = false;
+				if (this._sessionStatus == 1)
+				{
+					enabledStartButton = true;
+				}
+				var nbrElements:int = this.numElements;
+				for(var nElement:int = 0 ; nElement < nbrElements ; nElement++)
+				{
+					var element = this.getElementAt(nElement);
+					if(element is ActivityDetail)
+					{
+						var a:ActivityDetail = this.getElementAt(nElement) as ActivityDetail;
+						a.startButton.visible = enabledStartButton;
+						checkCurrentActivity(a);
+					}
+				}
+			}
+			if(currentActivityChanged)
+			{
+				currentActivityChanged = false;
+				
+				var nbrElements:int = this.numElements;
+				for(var nElement:int = 0 ; nElement < nbrElements ; nElement++)
+				{
+					var element = this.getElementAt(nElement);
+					if(element is ActivityDetail)
+					{
+						var activityDetail:ActivityDetail = this.getElementAt(nElement) as ActivityDetail;
+						checkCurrentActivity(activityDetail);
+					}
+				}
+			}
 			if (activitiesChanged)
 			{
 				activitiesChanged = false;
@@ -61,10 +110,10 @@ package com.ithaca.visu.controls.sessions
 				for each (var activity:Activity in _activities)
 				{
 					var a:ActivityDetail =  new ActivityDetail();
-					
 					a.activity = activity;
 					a.percentWidth = 100;
 					a.addEventListener(MouseEvent.DOUBLE_CLICK, shareActivityElement);
+					a.addEventListener(FlexEvent.CREATION_COMPLETE, onAddedActivityDetailOnStage);
 					addElement( a );
 					
 					for each( var el:ActivityElement in activity.getListActivityElement())
@@ -80,11 +129,59 @@ package com.ithaca.visu.controls.sessions
 							keywordGroup.addElement(s);
 						}
 					}
-					
 				}
 			}
 		}
 		
+		private function onAddedActivityDetailOnStage(event:FlexEvent):void
+		{		
+			var activityDetail:ActivityDetail = event.currentTarget as ActivityDetail;
+			activityDetail.removeEventListener(FlexEvent.CREATION_COMPLETE, onAddedActivityDetailOnStage);
+			if (this._sessionStatus == VisuVisio.STATUS_NONE)
+			{
+				activityDetail.startButton.visible = false;
+			}else
+			{
+				checkCurrentActivity(activityDetail);
+			}
+		}
+		
+		private function checkCurrentActivity(activityDetail:ActivityDetail):void
+		{
+			if(activityDetail.activity.id_activity == _currentActivityId)
+			{
+				activityDetail.startButton.enabled = false;
+				activityDetail.startButton.label = fxgt.gettext("en cours");
+			}else
+			{
+				activityDetail.startButton.enabled = true;	
+				activityDetail.startButton.label = fxgt.gettext("start");
+			}	
+		}
+		
+		public function getCurrentActivityId():int{return this._currentActivityId;}
+		public function setCurrentActivityId(value:int):void
+		{
+			if(value != 0)
+			{
+				_currentActivityId = value;			
+			}
+			currentActivityChanged = true;
+			invalidateProperties();
+		}
+		
+		public function setSessionStatus(value:int):void
+		{
+			_sessionStatus = value;
+			// if stop recording(value == 0) than update currentActivity to 0
+			if(value == VisuVisio.STATUS_NONE)
+			{
+				_currentActivityId = 0;	
+				currentActivityChanged = true;
+			}
+			sessionStatusChanged = true;
+			invalidateProperties();
+		}
 		
 		[Bindable("updateKeywords")]
 		public function get keywords():IList { return _keywords; }

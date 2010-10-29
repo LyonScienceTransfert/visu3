@@ -67,14 +67,14 @@
 				</s:Path>
 			
 				
-				<s:Label id="titleDisplay" left="15" top="10" right="50" color="#121212"
+				<s:Label id="titleDisplay" left="15" top="10" right="90" color="#121212"
 						 fontSize="16" fontWeight="bold" maxDisplayedLines="1">
 					<s:filters>
 						<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 					</s:filters>
 				</s:Label>
 				
-				<s:Button id="startButton" label="start" right="3" width="50" cornerRadius="10" verticalCenter="0"/>
+				<s:Button id="startButton" right="3" width="80" cornerRadius="10" verticalCenter="0"/>
 			</s:Group>
 	
 			<s:Group top="30" left="5" right="5" bottom="10" includeIn="open" id="content">

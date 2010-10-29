@@ -2,7 +2,7 @@ package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.ExtendToolTip;
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
-	import com.ithaca.visu.events.VisuActivityElementEvent;
+	import com.ithaca.visu.events.TraceLineEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.lyon2.visu.model.Activity;
 	import com.lyon2.visu.model.ActivityElement;
