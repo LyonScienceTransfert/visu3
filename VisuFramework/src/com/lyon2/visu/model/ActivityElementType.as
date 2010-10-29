@@ -9,6 +9,10 @@ package com.lyon2.visu.model
 		public static const VIDEO 	    : String = "video";
 		public static const MESSAGE 	: String = "chatMessage";
 		public static const MARKER 	    : String = "marker";
+		public static const READ_DOCUMENT_IMAGE : String = "readDocumentImage";
+		public static const READ_DOCUMENT_VIDEO : String = "readDocumentVideo";
+		public static const START_ACTIVITY : String = "startActivity";
+		public static const STOP_ACTIVITY : String = "stopActivity";
 		
 		protected var value:int;
 		protected var name:String;
@@ -33,6 +37,18 @@ package com.lyon2.visu.model
 					break;
 				case 6:
 					return ActivityElementType.MARKER;
+					break;
+				case 7:
+					return ActivityElementType.READ_DOCUMENT_IMAGE;
+					break;
+				case 8:
+					return ActivityElementType.READ_DOCUMENT_VIDEO;
+					break;
+				case 9:
+					return ActivityElementType.START_ACTIVITY;
+					break;
+				case 10:
+					return ActivityElementType.STOP_ACTIVITY;
 					break;
 				default:
 					return "void";
@@ -61,6 +77,18 @@ package com.lyon2.visu.model
 					break;
 				case ActivityElementType.MARKER:
 					return 6;
+					break;
+				case ActivityElementType.READ_DOCUMENT_IMAGE:
+					return 7;
+					break;
+				case ActivityElementType.READ_DOCUMENT_VIDEO:
+					return 8;
+					break;
+				case ActivityElementType.START_ACTIVITY:
+					return 9;
+					break;
+				case ActivityElementType.STOP_ACTIVITY:
+					return 10;
 					break;
 				default:
 					return -1;
