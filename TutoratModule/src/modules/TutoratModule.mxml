@@ -9,33 +9,44 @@
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
 						currentState="BlankState" 
-						xmlns:sessions="com.ithaca.visu.controls.sessions.*">
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.traces.Obsel;
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.traces.view.ObselButton;
+			import com.ithaca.traces.view.ObselImage;
+			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+			import com.ithaca.visu.controls.sessions.ActivityDetail;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
+			import com.ithaca.visu.controls.timeline.TraceLine;
 			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;
+			import com.ithaca.visu.events.TraceLineEvent;
 			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.interfaces.IDocument;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
-			import com.lyon2.controls.RoundedLabel;
+			import com.lyon2.controls.ImageDocument;
 			import com.lyon2.controls.YoutubePlayer;
 			import com.lyon2.visu.model.ActivityElementType;
 			import com.lyon2.visu.model.Model;
 			import com.lyon2.visu.model.Session;
 			import com.lyon2.visu.model.User;
+			import com.lyon2.visu.vo.ObselVO;
 			import com.youtube.player.events.PlayerEvent;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
 			import mx.controls.Alert;
 			import mx.controls.Image;
 			import mx.core.IUIComponent;
@@ -45,8 +56,6 @@
 			
 			import spark.components.Button;
 			import spark.components.Label;
-			import spark.core.NavigationUnit;
-			import spark.events.IndexChangeEvent;
 			
 			private var currentSession:Session;
 			private var _stopTimeRecording:Number = 0;
@@ -130,6 +139,8 @@
 					if(buttonStartRecording != null){
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
 						this.buttonCloseSession.enabled = false;
+						// set buttons startActivity enabled = false
+						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
 					}
 					
 					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.CONNECTED);
@@ -220,8 +231,59 @@
 					if(buttonStartRecording != null){			
 						buttonStartRecording.label = fxgt.gettext("Arreter la séance");	
 						buttonCloseSession.enabled = false;
+						// set buttons startActivity enabled = true
+						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_RECORD);						
+						if (this._stopTimeRecording != 0)
+						{
+							// set obsel "SessionOut"
+							var viewObselButton:ObselButton = new ObselButton();
+							viewObselButton.setBegin(this._stopTimeRecording);
+							viewObselButton.setEnd(event.timeStartStop);
+							viewObselButton.setStyle("chromeColor","#000000");
+							viewObselButton.height = 5;
+	//						this.traceLine.traceLoggedUser.addElement(viewObselButton);	
+						}else
+						{
+							// if trace empty, set start time 
+							if (Model.getInstance().getListObsels() == null)
+							{
+	//							this.traceLine.traceLayout.startTime = event.timeStartStop;
+							}
+						}
+						 /*else
+						{
+							testCursor = new ObselButton();
+							testCursor.setBegin(event.timeStartStop);
+							testCursor.setEnd(event.timeStartStop+300);
+							testCursor.setStyle("chromeColor","#FF00FF");
+							testCursor.height = 45;
+							
+							this.traceLine.traceLoggedUser.addElement(testCursor);	
+							this.startTimer();
+							// first time start recording
+							// set obsel "SessionOut"
+									
+						} */
+							
 					}
 				}
+			}
+			
+			private function startTimer():void
+			{
+				if(!timer)
+				{
+					timer = new Timer(500,0);
+					timer.addEventListener(TimerEvent.TIMER, updateTime);
+				}
+				timer.start();
+			}
+			
+			private function updateTime(event:TimerEvent):void
+			{
+				this.testCursor.setBegin(this.testCursor.getBegin()+500);
+				this.testCursor.setEnd(this.testCursor.getEnd()+500);
+			//	this.traceLine.traceLayout.target.invalidateDisplayList();
 			}
 
 			/**
@@ -265,6 +327,15 @@
 						// set obsel to the model
 						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 						this.addObsel(obsel);
+					}
+					// update the buttons on planSession, view tutorat
+					if(this.sessionPlan != null && obselVO.type == TraceModel.ACTIVITY_START)
+					{
+						var obselStartSession:Obsel = Obsel.fromRDF(obselVO.rdf);
+						var aa:String = obselStartSession.props[TraceModel.ACTIVITY_ID]; 
+						var activityId:int = new int(aa);
+						
+						this.sessionPlan.setCurrentActivityId(activityId);
 					}
 					
 					var pathAvatar:String = "";
@@ -325,6 +396,9 @@
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO) :
 								sourceImageInfo = videoIcon;
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY) :
+								sourceImageInfo = fichierIconVisu1;
 								break;
 						}
 						
@@ -428,6 +502,22 @@
 				//dispatchEvent 
 				event.stopPropagation();
 				trace("TODO : start activity "+event.activity.id_activity + ":"+ event.activity.title);
+				// set button start activity enabled = false , 
+				// for interdir click again before end all of action on server side
+				var activityDetail:ActivityDetail = event.target as ActivityDetail;
+				activityDetail.startButton.enabled = false;
+				
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY);
+				sessionSharedEvent.info = event.activity.title;
+				sessionSharedEvent.listUsers = listUsersId;
+				// use url variable for sending id activity
+				sessionSharedEvent.url = event.activity.id_activity.toString();
+				sessionSharedEvent.status = this.visio.status;	
+				sessionSharedEvent.senderUserId = Model.getInstance().getLoggedUser().id_user;	
+				dispatchEvent(sessionSharedEvent);
 			}
 			
 			
@@ -440,7 +530,6 @@
 						// conformation for closing the session
 						Alert.yesLabel = fxgt.gettext("Oui");
 						Alert.noLabel = fxgt.gettext("Non");
-						//Alert.show(fxgt.gettext("Voulez-vous fermer la séance ?"),
 						Alert.show(fxgt.gettext("Voulez-vous arrêter l'enregistrement ? (vous pourrez le reprendre plus tard)"),
 						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, stopRecordingConfirmed); 	
 					}else{
@@ -460,6 +549,27 @@
 				var sessionStatus:int = -1;
 				if( event.detail == Alert.YES )
 				{				
+					// shared stop activity
+					if(this.sessionPlan != null)
+					{
+						// check if currentActivity not 0 
+						var currentActivityId:int = this.sessionPlan.getCurrentActivityId();
+						if(currentActivityId != 0)
+						{
+							var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+							var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+							sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.STOP_ACTIVITY);
+							// info == "void", we have title activity in obsel start activity
+							sessionSharedEvent.info = "void";
+							sessionSharedEvent.listUsers = listUsersId;
+							// use url variable for sending id activity
+							sessionSharedEvent.url = currentActivityId.toString();
+							sessionSharedEvent.status = this.visio.status;	
+							sessionSharedEvent.senderUserId = Model.getInstance().getLoggedUser().id_user;	
+							dispatchEvent(sessionSharedEvent);
+						}
+					}
 					// stop recording
 					sessionStatus =  SessionStatusEnum.SESSION_PAUSE;				
 					var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
@@ -493,6 +603,8 @@
 					{
 						buttonStartRecording.label = fxgt.gettext("Arreter la séance");			
 					}
+					// update labels the button start activity for translating
+					this.sessionPlan.setCurrentActivityId(0);
 				}
 			}
 			
@@ -599,7 +711,6 @@
 					// conformation for closing the session
 					Alert.yesLabel = fxgt.gettext("Oui");
 					Alert.noLabel = fxgt.gettext("Non");
-						//Alert.show(fxgt.gettext("Voulez-vous fermer la séance ?"),
 					Alert.show(fxgt.gettext("Voulez-vous fermer la séance ? (il ne sera plus possible d'y rentrer à nouveau)"),
 					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, closeSessionConfirmed); 	
 				}
@@ -627,6 +738,16 @@
 					dispatchEvent(eventStopRecording);			
 				}
 			}
+			/**
+			 * Update current activity in list activity, update label the button "start" to "en cours"
+			 */
+			private function onUpdateViewActivity(event:VisuActivityEvent):void{
+				var activityId:int = event.activityId;
+				if(this.sessionPlan != null)
+				{
+					this.sessionPlan.setCurrentActivityId(activityId);
+				}
+			}
 			private function setEnabledGroupSetMarker(value:Boolean):void
 			{
 				groupSetMarker.enabled = value;
@@ -649,6 +770,7 @@
 		<mate:Listener type="{SessionEvent.STOP_RECORDING_SESSION}"  method="onStopRecordingSession"/>
 		<mate:Listener type="{SessionEvent.CLOSE_SESSION}"  method="onCloseSession"/>
 		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
+		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
 		<s:VGroup width="33%" height="100%" minWidth="200">
@@ -675,7 +797,7 @@
 						</s:Group>
 					</s:Scroller>
 				</s:Group>
-				<sessions:SessionPlan height="100%" width="100%" 
+				<sessions:SessionPlan  id="sessionPlan" height="100%" width="100%" 
 									  shareElement="shareActivityElement(event)"
 									  startActivity="startActivity(event)"
 									   includeIn="MainState"/>
