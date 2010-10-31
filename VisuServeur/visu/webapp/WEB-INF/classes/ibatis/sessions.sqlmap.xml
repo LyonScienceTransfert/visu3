@@ -29,10 +29,12 @@
 		<result column="isModel" jdbcType="TINYINT" property="isModel" />
         <result column="start_recording" jdbcType="DATETIME" property="start_recording" />
          <result column="status_session" jdbcType="TINYINT" property="status_session" />
+         <result column="id_currentActivity" jdbcType="INTEGER" property="id_currentActivity" />
 	</resultMap>
     
 	<sql id="selectBase">
-		SELECT sum(duration) as s_duration, s.id_session as s_id, id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		SELECT sum(duration) as s_duration, s.id_session as s_id, id_user as u_id, theme, date_session, isModel, 
+		description, start_recording, status_session, id_currentActivity
 	</sql>
 
 	<select id="getSession" parameterClass="int"
@@ -53,7 +55,8 @@
 
     <select id="getSessionsByUser" parameterClass="int"
 		resultMap="sessionResult" cacheModel="cache">
-		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, 
+				isModel, description, start_recording, status_session, id_currentActivity
 		FROM session_users su, sessions s, activities a WHERE su.id_user = #value# AND su.id_session = s.id_session AND s.id_session = a.id_session GROUP BY s.id_session
 	</select> 
 
@@ -80,7 +83,8 @@
     <select id="getSessionsByDateByUser" parameterClass="userDate"
 		 resultMap="sessionResult" cacheModel="cache">
     <![CDATA[
-		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, isModel, description, start_recording, status_session
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, 
+				isModel, description, start_recording, status_session, id_currentActivity
 		FROM session_users su, sessions s, activities a 
         WHERE s.id_session = su.id_session 
             AND CAST(s.date_session AS DATE) = #dateSession:LONGCHAR# 
@@ -94,7 +98,8 @@
     <select id="getSessionsByDate" parameterClass="String"
 		 resultMap="sessionResult" cacheModel="cache">
     <![CDATA[
-		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, s.date_session, isModel, description, start_recording, status_session
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, 
+				s.date_session, isModel, description, start_recording, status_session, id_currentActivity
 		FROM sessions s, activities a 
         WHERE CAST(s.date_session AS DATE) = #value# 
         	AND s.id_session = a.id_session 
@@ -113,7 +118,8 @@
 			isModel = #isModel:TINYINT#,  
 			description = #description:LONGVARCHAR#,
             start_recording = #start_recording:DATETIME#,
-            status_session = #status_session:TINYINT#
+            status_session = #status_session:TINYINT#,
+            id_currentActivity = #id_currentActivity:INTEGER#
 		<selectKey keyProperty="id_session" resultClass="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -129,7 +135,8 @@
             isModel = #isModel:TINYINT#,  
 			id_user = #id_user:LONGVARBINARY#,
             start_recording = #start_recording:DATETIME#,
-            status_session = #status_session:TINYINT#
+            status_session = #status_session:TINYINT#,
+            id_currentActivity = #id_currentActivity:INTEGER#
 		WHERE
 			id_session = #id_session:INTEGER#
 	</update>
