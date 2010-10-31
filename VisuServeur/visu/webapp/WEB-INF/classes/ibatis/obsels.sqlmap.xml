@@ -68,6 +68,12 @@
 		FROM obsels
 		WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') and trace like #traceParam# and rdf like #refParam# 
 	</select>
+	
+    <select id="getTraceIdByObselSystemSessionStartSystemSessionEnter" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SystemSessionStart' or type_obsel = 'SystemSessionEnter') and trace like #traceParam# and rdf like #refParam# 
+	</select>
 
 	<insert id="insert" parameterClass="obsel">
 		INSERT INTO obsels
