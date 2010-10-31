@@ -346,7 +346,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     {
         super.appDisconnect(conn);
 		IClient client = conn.getClient();
-		client.setAttribute("status", 1);
 		User user = null;
 		Integer userId=0;
 		if (client.hasAttribute("uid"))
@@ -362,9 +361,35 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		}
 		// get sessionId of disconnected user
 		Integer sessionId = (Integer)client.getAttribute("sessionId");
-		//set obsel "RoomExit" if user was in the session
-		if(sessionId != 0)
+		//set obsel "RoomExit" if user was in the session and session in status recording
+		Integer statusClient = (Integer)client.getAttribute("status");
+		if(sessionId != 0 && statusClient == 3)
 		{
+			Session session = null;
+			try
+			{
+				session = (Session) getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des sessions" + e);
+			}
+			// set obsel "stopActivity" for user walk out from the recording session only if activity was started 
+			Integer activityId = session.getId_currentActivity();
+			if(activityId != 0)
+			{
+				List<Object> paramsObsel= new ArrayList<Object>();
+				paramsObsel.add("text");paramsObsel.add("void");
+				paramsObsel.add("sender");paramsObsel.add("0");
+				paramsObsel.add("activityid");paramsObsel.add(activityId.toString());;
+				try
+				{
+					Obsel obsel = setObsel((Integer)client.getAttribute("uid"), (String)client.getAttribute("trace"), "ActivityStop", paramsObsel);
+				}
+				catch (SQLException sqle)
+				{
+					log.error("=====Errors===== {}", sqle);
+				}				
+			}
+			
 			// set Obsel "SessionExit" to all connected user of this session
 			for (IClient connectedClient : this.getClients())
 			{
@@ -406,13 +431,15 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		{
 			log.error("=====Errors===== {}", sqle);
 		}
+		
+		client.setAttribute("status", 1);
 	}
 
 
 	
 	
 	@SuppressWarnings("unchecked")
-	public void setObsel(Integer subject, String trace, String typeObsel, List<Object> paramsObsel) throws SQLException 
+	public Obsel setObsel(Integer subject, String trace, String typeObsel, List<Object> paramsObsel) throws SQLException 
 	{
 	//	log.warn("===== setObsel ===== Name module est : {}",listParams);
 		// TODO : add function getHeadObsel
@@ -435,6 +462,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     	String secStr= sec.toString();
     	if(sec<10){secStr="0"+secStr;}
     	
+    	// get time in milliseconds for property hasBegin/hasEnd 
+		Long timeInMilliseconde = clnd.getTimeInMillis();
 		
     	List<String> tempList = new ArrayList<String>();
     	tempList.add("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
@@ -443,8 +472,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     	tempList.add("");
 		tempList.add(". a :"+typeObsel+";");
     	tempList.add("ktbs:hasTrace "+ trace+";");
-    	tempList.add("ktbs:hasBegin "+ clnd.getTimeInMillis()+";");
-    	tempList.add("ktbs:hasEnd "+ clnd.getTimeInMillis()+";");
+    	tempList.add("ktbs:hasBegin "+timeInMilliseconde +";");
+    	tempList.add("ktbs:hasEnd "+ timeInMilliseconde+";");
     	tempList.add("ktbs:hasSubject "+'"'+subject+'"'+";");
     	
     	String strRdf= "";
@@ -495,6 +524,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		obsel.setRdf(strRdf);
 		log.warn("=== Adding Obsel to BD ===");
 		getSqlMapClient().insert("obsels.insert",obsel);
+		
+		return obsel;
 	}
 	
 	
@@ -784,8 +815,28 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					}
 			}
 			
+			// set obsel start activity for user join the recording session only if activity was start by other user
+			Integer activityId = session.getId_currentActivity();
+			if(activityId != 0)
+			{
+				List<Object> paramsObsel= new ArrayList<Object>();
+				paramsObsel.add("text");paramsObsel.add("void");
+				paramsObsel.add("sender");paramsObsel.add("0");
+				paramsObsel.add("activityid");paramsObsel.add(activityId.toString());;
+				try
+				{
+					Obsel obsel = setObsel((Integer)clientRecording.getAttribute("uid"), (String)clientRecording.getAttribute("trace"), "ActivityStart", paramsObsel);
+				}
+				catch (SQLException sqle)
+				{
+					log.error("=====Errors===== {}", sqle);
+				}				
+			}
+			
+			log.warn(" ==== obselSessionEnterOfRecordingClient = {}",obselSessionEnterOfRecordingClient.toString());
 			// notification for all users that user has status "recording" , send here date start recording == null , every users has this date after start recording
-			Object[] args = {(Integer)clientRecording.getAttribute("uid"), (Integer)clientRecording.getAttribute("status"), (Integer)clientRecording.getAttribute("sessionId"), null };
+			// last param of the list the "args" => obsel SessionEnter of the recording client
+			Object[] args = {(Integer)clientRecording.getAttribute("uid"), (Integer)clientRecording.getAttribute("status"), (Integer)clientRecording.getAttribute("sessionId"), startRecording, obselSessionEnterOfRecordingClient};
 			//send message to all users on "Deck"
 			log.warn("== setStatusRecording {} ",args);
 			invokeOnScopeClients(scope, "setStatusRecording", args);
@@ -1040,6 +1091,34 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		// set status session
 		session.setStatus_session(sessionStatus);
 		
+		try
+		{
+			getSqlMapClient().update("sessions.update",session);
+			log.warn("updated= {} ",session.toString());
+		} catch (Exception e) {
+			log.error("Probleme lors du update des sessions" + e);
+		}
+	}
+	
+	/**
+	 * Set id of the current activity
+	 * @param sessionId
+	 */
+	public void setCurrentActivitySession(Integer sessionId, String currentActivityId)
+	{
+		Session session = null;
+		try
+		{
+			session = (Session) getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+			log.warn("====setCurrentActivitySession=====");
+			log.warn("sessionId is = {}",session.getId_session().toString());
+			log.warn("currentActivityId is = {}",currentActivityId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+		}
+		// set id of the current activity
+		Integer activityId = Integer.parseInt(currentActivityId);
+		session.setId_currentActivity(activityId);
 		try
 		{
 			getSqlMapClient().update("sessions.update",session);

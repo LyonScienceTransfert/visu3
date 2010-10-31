@@ -88,6 +88,8 @@ import org.slf4j.Logger;
 
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.Application;
+
+import com.ithaca.domain.model.Obsel;
  
 /**
  * 
@@ -108,7 +110,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement, Integer codeSharedAction)
+	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement, Integer codeSharedAction, Integer senderDocumentUserId)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
@@ -148,28 +150,32 @@ public class SharedInfo
 				String typeObselSend ="void";
 				String typeObselReceive = "void";
 				String namePropertyObsel ="void";
+				String typeDocument = "void";
+				Boolean sendObselToSender = true;
 				switch (typeInfo) 
 				{
 				case 1 :
-						typeObselSend ="SendInstructions";
-						typeObselReceive ="ReceiveInstructions";
-						namePropertyObsel = "instructions";
+					typeObselSend ="SendInstructions";
+					typeObselReceive ="ReceiveInstructions";
+					namePropertyObsel = "instructions";
 					break;
 				case 2 :
-						typeObselSend ="SendKeyword";
-						typeObselReceive ="ReceiveKeyword";
-						namePropertyObsel = "keyword";
+					typeObselSend ="SendKeyword";
+					typeObselReceive ="ReceiveKeyword";
+					namePropertyObsel = "keyword";
 					break;
 					// FIXME SendDocument = image or video
 				case 3 :
-						typeObselSend ="SendDocument";
-						typeObselReceive ="ReceiveDocument";
-						namePropertyObsel = "url";
+					typeObselSend ="SendDocument";
+					typeObselReceive ="ReceiveDocument";
+					namePropertyObsel = "text";
+					typeDocument = "image";
 					break;
 				case 4 :
 					typeObselSend ="SendDocument";
 					typeObselReceive ="ReceiveDocument";
-					namePropertyObsel = "url";
+					namePropertyObsel = "text";
+					typeDocument = "video";
 					break;
 				case 5 :
 					typeObselSend ="SendChatMessage";
@@ -181,40 +187,103 @@ public class SharedInfo
 					typeObselReceive ="ReceiveMarker";
 					namePropertyObsel = "text";
 					break;
+				case 7 :
+					//typeObselSend ="SetMarker";
+					// sendObselToSender will be false , don't send obsel to sender
+					sendObselToSender = false;
+					typeObselReceive ="ReadDocument";
+					namePropertyObsel = "text";
+					typeDocument = "image";
+					break;
+				case 8 :
+					//typeObselSend ="SetMarker";
+					// sendObselToSender will be false , don't send obsel to sender
+					sendObselToSender = false;
+					typeObselReceive ="ReadDocument";
+					namePropertyObsel = "text";
+					typeDocument = "video";
+					break;
+				case 9 :
+					// sendObselToSender will be false , don't send obsel to sender
+					sendObselToSender = false;
+					typeObselReceive ="ActivityStart";
+					namePropertyObsel = "text";
+					break;
+				case 10 :
+					// sendObselToSender will be false , don't send obsel to sender
+					sendObselToSender = false;
+					typeObselReceive ="ActivityStop";
+					namePropertyObsel = "text";
+					break;
 				default: 
 					log.warn("== havn't type {} pour {}",typeInfo,info);
 				break;
 				}
-
-				// add obsels "SendInstructions", "SendKeyword", "SendDocument"
+				
 				Integer senderUserId = (Integer)sender.getAttribute("uid");
-				List<Object> paramsObselSend= new ArrayList<Object>();
-		   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
-				try
+				if(sendObselToSender)
 				{
-					app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
+					// add obsels only for type = 1 to 6 (the key is var "sendObselToSender")
+					// add obsels "SendInstructions", "SendKeyword", "SendDocument" 
+					List<Object> paramsObselSend= new ArrayList<Object>();
+			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
+			   		// add url sending documents
+			   		if(typeInfo == 3 || typeInfo == 4)
+			   		{
+			   			paramsObselSend.add("url");paramsObselSend.add(urlElement);
+			   			paramsObselSend.add("typedocument");paramsObselSend.add(typeDocument);
+			   		}
+					try
+					{
+						app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
+					}
+						catch (SQLException sqle)
+					{
+						log.error("=====Errors===== {}", sqle);
+					}
 				}
-					catch (SQLException sqle)
+				
+				if(typeInfo == 9)
 				{
-					log.error("=====Errors===== {}", sqle);
+					// update session with new currentActivityId
+					Integer sessionId = (Integer)sender.getAttribute("sessionId");	
+					// here urlElement is id of the currentActivity
+					app.setCurrentActivitySession(sessionId, urlElement);					
 				}
-							
+				Obsel obsel = null;
 				// add obsels "ReceiveInstructions", "ReceiveKeyword", "ReceiveDocument"
 				for(IClient sharedClient : listSharedUsers)
 				{
 					List<Object> paramsObselReceive= new ArrayList<Object>();
 		   			paramsObselReceive.add(namePropertyObsel);paramsObselReceive.add(info);
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
+		   			// add url sending/reading documents
+			   		if(typeInfo == 3 || typeInfo == 4 || typeInfo == 7 || typeInfo == 8)
+			   		{
+			   			paramsObselReceive.add("url");paramsObselReceive.add(urlElement);
+			   			paramsObselReceive.add("typedocument");paramsObselReceive.add(typeDocument);
+			   			// here send obsel only if typeInfo ==7 ==8
+			   			if (!sendObselToSender)
+			   			{
+			   				paramsObselReceive.add("senderdocument");paramsObselReceive.add(senderDocumentUserId.toString());
+			   			}
+			   		}
+			   		
+			   		if(typeInfo == 9 || typeInfo == 10)
+			   		{
+			   			paramsObselReceive.add("activityid");paramsObselReceive.add(urlElement);
+			   		}
+			   		
 					try
 					{
-						app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
+						obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
 					}
 						catch (SQLException sqle)
 					{
 						log.error("=====Errors===== {}", sqle);
 					}		
 					// send shared info to shared users
-					Object[] args = {typeInfo, info, senderUserId, urlElement};
+					Object[] args = {typeInfo, info, senderUserId, urlElement, obsel};
 					IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
 					if (connSharedUser instanceof IServiceCapableConnection) 
 					{
@@ -230,7 +299,7 @@ public class SharedInfo
 				for(IClient sharedClient : listSharedUsers)
 				{		
 					// send shared info to shared users
-					Object[] args = {typeInfo, info, senderUserId, urlElement};
+					Object[] args = {typeInfo, info, senderUserId, urlElement, null};
 					IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
 					if (connSharedUser instanceof IServiceCapableConnection) 
 					{
