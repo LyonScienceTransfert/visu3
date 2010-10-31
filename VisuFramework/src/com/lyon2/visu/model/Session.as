@@ -28,7 +28,9 @@ package  com.lyon2.visu.model
 			this.description = session.description;
 			this.date_start_recording = session.start_recording;
 			this.statusSession = session.status_session;
-			this.duration_session = session.duration_session;
+			// set duration in millisecunds
+			// FIXME debug mode
+			this.duration_session = session.duration_session*1000*60;
 			
 		}
 		
