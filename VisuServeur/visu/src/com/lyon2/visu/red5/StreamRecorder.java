@@ -171,6 +171,7 @@ public class StreamRecorder
 			{
 				IClient client = stream.getConnection().getClient();
 				Integer userId = (Integer)client.getAttribute("uid");
+				User user = (User)client.getAttribute("user");
 				// get recording session
 				Session session = null;
 				try
@@ -428,28 +429,43 @@ public class StreamRecorder
 				{
 					// stop recording
 					stream.stopRecording();
+					// FIXME : easy update currentActivity in function setStatusSession....
 					// set status session 
 					app.setStatusSession(session_id, sessionStatus, null);
+					// update currentActivitydId to "0"
+					app.setCurrentActivitySession(session_id, "0");
 					
 					IClient client = stream.getConnection().getClient();
 					Integer userId = (Integer)client.getAttribute("uid");
 					// set status join session
 					client.setAttribute("status", 0);
-					// call client that start recording
+					Object[] timeStopRecording = {Calendar.getInstance().getTimeInMillis()};
+					// call client that stop recording
 					IConnection connectionClient = (IConnection)client.getAttribute("connection");
 					if (connectionClient instanceof IServiceCapableConnection) {
 						IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
-						sc.invoke("stopRecording");
+						sc.invoke("stopRecording",timeStopRecording);
 					} 	
-
+					// setObsel SessionPause
+					List<Object> paramsObselSessionPause= new ArrayList<Object>();
+					paramsObselSessionPause.add("session");paramsObselSessionPause.add(session_id.toString());
+					// id user paused the session
+					paramsObselSessionPause.add("useridsetpause");paramsObselSessionPause.add(String.valueOf(conn.getClient().getAttribute("uid")));
+	    			try
+						{
+	    					 app.setObsel((Integer)client.getAttribute("uid"), (String)client.getAttribute("trace"), "SessionPause", paramsObselSessionPause);					
+						}
+						catch (SQLException sqle)
+						{
+							log.error("=====Errors===== {}", sqle);
+						}
+				
 					// notification for all users that user and session had changed status 
 					Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId"),sessionStatus};
 					//send message to all users on "Deck"
 					log.warn("==============setStatusStop");
 					log.warn("==++++ setStatusStop {} ",args);
 					invokeOnScopeClients(scope, "setStatusStop", args);
-					
-						
 				}
 			}
 		
