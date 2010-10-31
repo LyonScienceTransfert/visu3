@@ -63,6 +63,7 @@
 package com.lyon2.controls
 {
 	
+	import com.ithaca.visu.interfaces.IDocument;
 	import com.youtube.player.YoutubeVideo;
 	import com.youtube.player.constants.PlayerStateCode;
 	import com.youtube.player.events.PlaybackQualityEvent;
@@ -83,7 +84,7 @@ package com.lyon2.controls
 
 	[Event(name="playerStateChangeEvent",type="com.youtube.player.events.PlayerStateEvent")]
 	
-	public class YoutubePlayer extends UIComponent
+	public class YoutubePlayer extends UIComponent  implements IDocument
 	{
 		public static const playerURL:String = "http://www.youtube.com/apiplayer?version=3";
 		
@@ -92,8 +93,8 @@ package com.lyon2.controls
 		private var urlChanged:Boolean;
 		private var videoID:String;
 		private var durationInitialized:Boolean;
-		
-		
+	
+		private var senderId:int;	
 	
 		protected var video:YoutubeVideo
 		protected var controlBar:VideoControlBar;
@@ -106,6 +107,15 @@ package com.lyon2.controls
  
  		}
 		
+		public function setSenderId(value:int):void
+		{
+			this.senderId = value;
+		}
+		
+		public function getSenderId():int
+		{
+			return this.senderId;
+		}
 		/**
 		 * 
 		 * UIComponents Overriden Methods
