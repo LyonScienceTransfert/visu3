@@ -65,23 +65,23 @@ package com.lyon2.visu.red5;
 
 
 import java.sql.SQLException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 import org.red5.logging.Red5LoggerFactory;
+import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
-import org.red5.server.api.IClient;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.stream.ClientBroadcastStream;
@@ -89,9 +89,10 @@ import org.slf4j.Logger;
 
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
+import com.lyon2.utils.UserColor;
+import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
-import com.lyon2.visu.Application;
  
 /**
  * 
@@ -116,8 +117,13 @@ public class StreamRecorder
 	{
         /* We store the record filenames, in order to notify clients */
         List<String> filenames = new Vector<String>();
-		Map<Integer,List<String>> listUserStartRecording = new HashMap<Integer,List<String>>(); 
+		Map<Integer,List<Object>> listUserStartRecording = new HashMap<Integer,List<Object>>(); 
 		List<String> listPresentsIdUsers= new ArrayList<String>();
+		List<String> listPresentsAvatarUsers= new ArrayList<String>();
+		List<String> listPresentsNameUsers= new ArrayList<String>();
+		List<String> listPresentsColorUsers= new ArrayList<String>();
+		List<String> listPresentsColorUsersCode= new ArrayList<String>();
+		Map<Integer,Integer> listUserCodeColor = new HashMap<Integer,Integer>(); 
 		//Get the Client Scope
 		IScope scope = conn.getScope();
 	
@@ -143,6 +149,9 @@ public class StreamRecorder
 		
 		// can have too type the obsels : SessionEnter/SessionStart
 		String typeObsel="";
+		// can have too type the obsels : SystemSessionStart/SystemSessionEnter
+		String typeObselSystem="";
+        String traceSystem="";
 		//record all the streams in a scope
         for (String name: app.getBroadcastStreamNames(scope))
 		{			
@@ -183,6 +192,37 @@ public class StreamRecorder
 				// generate traceId
 				String trace="";
 				List<Obsel> listObselSessionStart = null;
+		        // generate traceId the system 
+		        List<Obsel> listObselSystemSessionStart = null;
+		        // try find obsel the system 
+		        try
+		        {
+		        	// get list obsel "SystemSessionStart"
+					String traceParam = "%-0>%";
+					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
+					ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
+					listObselSystemSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
+		            if(listObselSystemSessionStart != null)
+		            {
+		            	// get traceId the system 
+						Obsel obselSystemSessionStart = listObselSystemSessionStart.get(0);
+						traceSystem = obselSystemSessionStart.getTrace();
+						typeObselSystem = "SystemSessionEnter";
+						// set userColor
+						listUserCodeColor = UserColor.setMapUserColor(listObselSystemSessionStart);
+		            }else
+		            {
+						// generate traceId the system, "0" => owner the trace , here it's the system 
+						traceSystem = app.makeTraceId(0);
+						typeObselSystem = "SystemSessionStart";
+		            }
+		        }catch (Exception e) {
+					// generate traceId the system, "0" => owner the trace , here it's the system 
+					traceSystem = app.makeTraceId(0);
+					typeObselSystem = "SystemSessionStart";
+		        }
+		        
+		        // try find obsel of the session 
 				try
 				{
 					String traceParam = "%-"+userId.toString()+">%";
@@ -225,11 +265,13 @@ public class StreamRecorder
 								
 				// set status recording
 				client.setAttribute("status", 3);
+				Object[] timeStartRecording = {startRecording.getTime()};
 				// call client that start recording
+				// send time for creation the obsel "SesionOut" on client side(Flex)
 				IConnection connectionClient = (IConnection)client.getAttribute("connection");
 				if (connectionClient instanceof IServiceCapableConnection) {
 					IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
-					sc.invoke("startRecording");
+					sc.invoke("startRecording",timeStartRecording);
 				} 	
 				
 				String filename = "record-" + sDate + "-" + session_id.toString() + "-" + userId.toString();
@@ -237,17 +279,30 @@ public class StreamRecorder
 				log.warn("Start recording stream {} to file {} ", stream.getPublishedName(), filename);
 
 				// save all connected users of this session 
-				List<String> listTraceFileName = new ArrayList<String>();
+				List<Object> listTraceFileName = new ArrayList<Object>();
 				listTraceFileName.add(0,trace);
 				listTraceFileName.add(1,filename);
+				listTraceFileName.add(2,client);	
+				listTraceFileName.add(3,startRecording);	
 				listUserStartRecording.put(userId,listTraceFileName);
     			listPresentsIdUsers.add(userId.toString());
-				// notification for all users that user has status "recording"
-				Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId"),startRecording};
-				//send message to all users on "Deck"
-				log.warn("==============setStatusRecording");
-				log.warn("==++++ setStatusRecording {} ",args);
-				invokeOnScopeClients(scope, "setStatusRecording", args);
+				listPresentsAvatarUsers.add(user.getAvatar());
+				listPresentsNameUsers.add(user.getFirstname());
+				listPresentsColorUsers.add("0xee8888");
+				// add code color
+				Integer codeColorUser = 0;
+				if(listUserCodeColor.containsKey(userId))
+				{
+					// get color code for this user 
+					codeColorUser = listUserCodeColor.get(userId);
+				}else
+				{
+					Integer colorCodeMax = UserColor.getMaxCodeColor(listUserCodeColor);
+					codeColorUser = colorCodeMax+1;
+					listUserCodeColor.put(userId, codeColorUser);
+				}
+				
+				listPresentsColorUsersCode.add(codeColorUser.toString());
 				
 				try 
 				{
@@ -256,6 +311,7 @@ public class StreamRecorder
 					// However, NetStream takes the generated basename,
 					// without prefix or suffix. So return only this part.
 					filenames.add(filename);
+					
 				} 
 				catch (Exception e) 
 				{
@@ -263,8 +319,21 @@ public class StreamRecorder
 				}				
 			}
 		}
-		
-		// set Obsel "RecordFileName" to connected users of this session
+		// set Obsel "SystemSessionStart"/"SystemSessionEnter"
+        List<Object> paramsObselSystem= new ArrayList<Object>();
+        paramsObselSystem.add("session");paramsObselSystem.add(session_id.toString());
+        paramsObselSystem.add("presentids");paramsObselSystem.add(listPresentsIdUsers);
+        paramsObselSystem.add("presentcolorscode");paramsObselSystem.add(listPresentsColorUsersCode);
+		try
+		{
+			Obsel obsel = app.setObsel(0, traceSystem, typeObselSystem, paramsObselSystem);
+		}
+		catch (SQLException sqle)
+		{
+			log.error("=====Errors===== {}", sqle);
+		}
+        
+		// set Obsel "RecordFileName", "StartSession"/"EnterSession" to connected users of this session
 		for (Integer key : listUserStartRecording.keySet()){
     		log.warn("userId is = {}",key);
 			    log.warn("Trace is = {}",listUserStartRecording.get(key).get(0));
@@ -274,12 +343,29 @@ public class StreamRecorder
     			paramsObselSessionStart.add("session");paramsObselSessionStart.add(session_id.toString());
     			// TODO : get durationSession of this session
     			paramsObselSessionStart.add("durationSession");paramsObselSessionStart.add("void");
-    			paramsObselSessionStart.add("userids");paramsObselSessionStart.add(listUsersIdsSession);
+    			paramsObselSessionStart.add("useridsetstart");paramsObselSessionStart.add(String.valueOf(conn.getClient().getAttribute("uid")));
+    			paramsObselSessionStart.add("uid");paramsObselSessionStart.add(key.toString());
+				paramsObselSessionStart.add("userids");paramsObselSessionStart.add(listUsersIdsSession);
     			paramsObselSessionStart.add("presentids");paramsObselSessionStart.add(listPresentsIdUsers);
-    			
+    			paramsObselSessionStart.add("presentavatars");paramsObselSessionStart.add(listPresentsAvatarUsers);
+    			paramsObselSessionStart.add("presentnames");paramsObselSessionStart.add(listPresentsNameUsers);
+    			paramsObselSessionStart.add("presentcolorscode");paramsObselSessionStart.add(listPresentsColorUsersCode);
+    			paramsObselSessionStart.add("presentcolors");paramsObselSessionStart.add(listPresentsColorUsers);
+
     			try
 					{
-						app.setObsel(key, listUserStartRecording.get(key).get(0), typeObsel, paramsObselSessionStart);					
+						Obsel obsel = app.setObsel(key, (String)listUserStartRecording.get(key).get(0), typeObsel, paramsObselSessionStart);
+						// client start recording
+						IClient clientStartRecording = (IClient)listUserStartRecording.get(key).get(2);
+						// date start recording
+						Date startRecording = (Date)listUserStartRecording.get(key).get(3);
+						// notification for all users that user has status "recording" and sending obsel StartSession or EnterSession
+						Object[] args = {key, (Integer)clientStartRecording.getAttribute("status"), (Integer)clientStartRecording.getAttribute("sessionId"),startRecording, obsel};
+						// last param of the list the "args" => obsel SessionEnter, here it is null
+						//send message to all users on "Deck"
+						log.warn("==============setStatusRecording");
+						log.warn("==++++ setStatusRecording {} ",args);
+						invokeOnScopeClients(scope, "setStatusRecording", args);
 					}
 					catch (SQLException sqle)
 					{
@@ -292,9 +378,10 @@ public class StreamRecorder
 				List<Object> paramsObselRecordFileName= new ArrayList<Object>();
     			paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(listUserStartRecording.get(keyUserId).get(1));
     			paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(session_id.toString());
+    			paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(String.valueOf(keyUserId));
 				try
 				{
-					app.setObsel(key, listUserStartRecording.get(key).get(0), "RecordFilename", paramsObselRecordFileName);					
+					app.setObsel(key, (String)listUserStartRecording.get(key).get(0), "RecordFilename", paramsObselRecordFileName);					
 				}
 				catch (SQLException sqle)
 				{

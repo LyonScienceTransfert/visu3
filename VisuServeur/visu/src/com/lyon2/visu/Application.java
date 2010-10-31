@@ -596,19 +596,53 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			log.warn("date = {}",sDate);
 			String clientRecordingId = (String)clientRecording.getAttribute("id");
 			ClientBroadcastStream stream = (ClientBroadcastStream) getBroadcastStream(scope, clientRecordingId);
-			
+			// get time start recording for sending this to client flex(for creation the obsel "SessionOut")
+			Object[] timeStartRecording = {Calendar.getInstance().getTimeInMillis()};
 			// call client that start recording
 			IConnection connectionClient = (IConnection)clientRecording.getAttribute("connection");
 			if (connectionClient instanceof IServiceCapableConnection) {
 				IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
-				sc.invoke("startRecording");
+				sc.invoke("startRecording",timeStartRecording);
 			} 	
 			
 			String filename = "record-" + sDate + "-" + clientRecording.getAttribute("sessionId").toString() + "-" + clientRecording.getAttribute("uid").toString();
 			
-			// find traceId of this session using obsels type "SessionStart" "SessionEnter"
 			Integer sessionId = (Integer)clientRecording.getAttribute("sessionId");	
 			Integer userId = (Integer)clientRecording.getAttribute("uid");
+			Map<Integer,Integer> listUserCodeColor = new HashMap<Integer,Integer>();
+			List<Obsel> listObselSystemSessionStart = null;
+			String typeObselSystem="";
+	        String traceSystem="";
+	        // try find obsel the system 
+	        try
+	        {
+	        	// get list obsel "SystemSessionStart"
+				String traceParam = "%-0>%";
+				String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
+				ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
+				listObselSystemSessionStart = (List<Obsel>) getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
+	            if(listObselSystemSessionStart != null)
+	            {
+	            	// get traceId the system 
+					Obsel obselSystemSessionStart = listObselSystemSessionStart.get(0);
+					traceSystem = obselSystemSessionStart.getTrace();
+					typeObselSystem = "SystemSessionEnter";
+					// set userColor
+					listUserCodeColor = UserColor.setMapUserColor(listObselSystemSessionStart);
+	            }else
+	            {
+					// generate traceId the system, "0" => owner the trace , here it's the system 
+					traceSystem = makeTraceId(0);
+					typeObselSystem = "SystemSessionStart";
+	            }
+	        }catch (Exception e) {
+				// generate traceId the system, "0" => owner the trace , here it's the system 
+				traceSystem = makeTraceId(0);
+				typeObselSystem = "SystemSessionStart";
+	        }
+	        
+			// find traceId of this session using obsels type "SessionStart" "SessionEnter"
+	
 			List<Obsel> listObselSessionStart = null;
 			try
 			{
@@ -637,14 +671,30 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				clientRecording.setAttribute("trace", trace);
 				log.warn("empty BD, exception case");				
 			}
+			
+			// find time start recording
+			Session session = null;
+			try
+			{
+				session = (Session) getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des sessions" + e);
+			}
+			
+			Date startRecording = session.getStart_recording();
 
 			List<IClient> listPresentsRecordingUsers = new ArrayList<IClient>();
 			List<String> listPresentsIdUsers =  new ArrayList<String>();
+			List<String> listPresentsAvatarUsers= new ArrayList<String>();
+			List<String> listPresentsNameUsers= new ArrayList<String>();
+			List<String> listPresentsColorUsers= new ArrayList<String>();
+			List<String> listPresentsColorUsersCode= new ArrayList<String>();
 
 			for (IClient client : this.getClients())
 			{
 				Integer sessionIdConnectedUser = (Integer)client.getAttribute("sessionId");
 				Integer statusConnectedUser = (Integer)client.getAttribute("status");
+				User user = (User)client.getAttribute("user");
 				if(sessionId == sessionIdConnectedUser && statusConnectedUser == 3)
 				{
 					listPresentsRecordingUsers.add(client);
@@ -652,25 +702,73 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					Integer userIdRecordingUser = (Integer)client.getAttribute("uid");
 					// have to find all recording users 
 					listPresentsIdUsers.add(userIdRecordingUser.toString());
+					listPresentsAvatarUsers.add(user.getAvatar());
+					listPresentsNameUsers.add(user.getFirstname());
+					listPresentsColorUsers.add("0xee8811");
+					// add code color
+					Integer codeColorUser = 0;
+					if(listUserCodeColor.containsKey(userIdRecordingUser))
+					{
+						// get color code for this user 
+						codeColorUser = listUserCodeColor.get(userIdRecordingUser);
+					}else
+					{
+						Integer colorCodeMax = UserColor.getMaxCodeColor(listUserCodeColor);
+						codeColorUser = colorCodeMax+1;
+						listUserCodeColor.put(userIdRecordingUser, codeColorUser);
+					}
+					
+					listPresentsColorUsersCode.add(codeColorUser.toString());
+
 				}
 			}
-						
+				
+			// set Obsel "SystemSessionStart"/"SystemSessionEnter"
+	        List<Object> paramsObselSystem= new ArrayList<Object>();
+	        paramsObselSystem.add("session");paramsObselSystem.add(sessionId.toString());
+	        paramsObselSystem.add("presentids");paramsObselSystem.add(listPresentsIdUsers);
+	        paramsObselSystem.add("presentcolorscode");paramsObselSystem.add(listPresentsColorUsersCode);
+			try
+			{
+				Obsel obsel = setObsel(0, traceSystem, typeObselSystem, paramsObselSystem);
+			}
+			catch (SQLException sqle)
+			{
+				log.error("=====Errors===== {}", sqle);
+			}
+			
 			// set Obsel "SessionEnter" and "RecordFileName" to all connected user of this session
+			// timeBegin the obsel SessionStart
+			//Long timeBeginSessionStartSessionEnter = Long.MAX_VALUE;
+			// get obsel SessinEnter of the "clientRecording"
+			Obsel obselSessionEnterOfRecordingClient = null;
 			for (IClient connectedClient : listPresentsRecordingUsers)
 			{
 					List<Object> paramsObselSessionEnter= new ArrayList<Object>();
     				paramsObselSessionEnter.add("uid");paramsObselSessionEnter.add(userId.toString());
     				paramsObselSessionEnter.add("session");paramsObselSessionEnter.add(sessionId.toString());
-    				paramsObselSessionEnter.add("presentids");paramsObselSessionEnter.add(listPresentsIdUsers);		
+    				paramsObselSessionEnter.add("presentids");paramsObselSessionEnter.add(listPresentsIdUsers);
+    				paramsObselSessionEnter.add("presentavatars");paramsObselSessionEnter.add(listPresentsAvatarUsers);
+    				paramsObselSessionEnter.add("presentnames");paramsObselSessionEnter.add(listPresentsNameUsers);
+    				paramsObselSessionEnter.add("presentcolorscode");paramsObselSessionEnter.add(listPresentsColorUsersCode);
+    				paramsObselSessionEnter.add("presentcolors");paramsObselSessionEnter.add(listPresentsColorUsers);
+
 					// add obsel "SessionEnter"
 					try
 					{
-						setObsel((Integer)connectedClient.getAttribute("uid"), (String)connectedClient.getAttribute("trace"), "SessionEnter", paramsObselSessionEnter);					
+						Obsel obsel = setObsel((Integer)connectedClient.getAttribute("uid"), (String)connectedClient.getAttribute("trace"), "SessionEnter", paramsObselSessionEnter);					
+						// get obsel for sending to client Flex
+						if(clientRecording == connectedClient)
+						{
+							obselSessionEnterOfRecordingClient = obsel;
+						}
 					}
 					catch (SQLException sqle)
 					{
 						log.error("=====Errors===== {}", sqle);
 					}
+					
+					
 					// add obsel "RecordFileName"
 					List<Object> paramsObselRecordFileName= new ArrayList<Object>();
 					paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(filename);
@@ -703,6 +801,59 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				log.error("Error while saving stream: " + stream.getName(), e);
 			}
 		}
+		
+		// try send list of the obsels to client flex
+		List <Obsel> result = null;
+		// check if trace existe
+	//	IClient client = conn.getClient();
+		String trace = (String)clientRecording.getAttribute("trace");
+		log.warn("======== trace the client = {}",trace);
+		if(trace == null)
+		{
+			// user join session when session was stopped
+			Integer userId = (Integer)clientRecording.getAttribute("uid");
+			Integer session_id = (Integer)clientRecording.getAttribute("sessionId");
+			List<Obsel> listObselSessionStart = null;
+			try
+			{
+				String traceParam = "%-"+userId.toString()+">%";
+				String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
+				//log.warn("====refParam {}",refParam);
+				ObselStringParams osp = new ObselStringParams(traceParam,refParam);		
+				listObselSessionStart = (List<Obsel>) getSqlMapClient().queryForList("obsels.getTraceIdByObselSessionStartSessionEnter", osp);
+				if (listObselSessionStart != null)
+				{
+					Obsel obselSessionStart = listObselSessionStart.get(0);
+					trace = obselSessionStart.getTrace();
+				}else
+				{
+					// hasn't trace , hasn't obsels
+					// CALLBACK
+				}
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des sessions" + e);
+				log.warn("empty BD, exception case");	
+				// hasn't trace , hasn't obsels
+				// CALLBACK
+			}
+		}
+		log.warn("======== trace in BD = {}",trace);
+		// get list obsel
+		try
+		{
+			result = (List<Obsel>) getSqlMapClient().queryForList("obsels.getTrace", trace);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des obsels" + e);
+		}
+
+		Object[] args = {result};
+		IConnection connClient = (IConnection)clientRecording.getAttribute("connection");
+		//if (conn instanceof IServiceCapableConnection) 
+		//{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListActiveObsel", args);
+		//} 
+		
 		
 	}
 	
