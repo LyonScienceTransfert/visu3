@@ -17,6 +17,7 @@ public class SessionEvent extends Event
 	static public const ADDED_SESSION : String = 'addedSession';
 	static public const UPDATE_LIST_SESSION : String = 'updateListSession';
 	static public const UPDATE_LIST_USER : String = 'updateListUser';
+	static public const UPDATE_LIST_VIEW_TRACELINE : String = 'updateListViewTraceline';
 	static public const EDIT_SESSION : String = 'editSession';
 	static public const CANCEL_SESSION : String = 'cancelSession';
 	static public const JOIN_SESSION : String = 'joinSession';
@@ -26,6 +27,7 @@ public class SessionEvent extends Event
 	static public const START_RECORDING_SESSION : String = 'startRecordingSession';
 	static public const STOP_RECORDING_SESSION : String = 'stopRecordingSession';
 	static public const CLOSE_SESSION : String = 'closeSession';
+	static public const LOAD_LIST_OBSEL : String = 'loadListObsel';
 	
 
 	// properties
@@ -37,6 +39,7 @@ public class SessionEvent extends Event
 	public var listSession : ArrayCollection;
 	public var listDate : Array;
 	public var status : int;
+	public var timeStartStop : Number;
 	
 
 	// constructor

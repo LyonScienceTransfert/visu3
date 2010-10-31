@@ -2,6 +2,7 @@ package com.ithaca.visu.events
 {
 
 import com.lyon2.visu.model.Session;
+import com.lyon2.visu.vo.ObselVO;
 
 import flash.events.Event;
 
@@ -20,6 +21,7 @@ public class SessionSharedEvent extends Event
 	public var senderUserId : int;
 	public var url : String;
 	public var status : int;	
+	public var obselVO:ObselVO;
 	
 	// constructor
 	public function SessionSharedEvent(type : String,
