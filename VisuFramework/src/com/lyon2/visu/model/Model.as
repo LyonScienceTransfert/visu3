@@ -1,15 +1,15 @@
 package  com.lyon2.visu.model
 {
+	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.visu.modules.VisuModuleBase;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
-	import com.lyon2.visu.model.Session;
 	import com.lyon2.visu.vo.SessionVO;
 	import com.lyon2.visu.vo.UserVO;
 	
 	import flash.net.NetConnection;
 	
 	import mx.collections.ArrayCollection;
-	import mx.modules.ModuleBase;
+	import mx.collections.ArrayList;
 
 
 	public final class Model
@@ -41,6 +41,12 @@ package  com.lyon2.visu.model
 		private var _homeModule:VisuModuleBase;
 		
 		private var _selectedDateLoggedUser:Object = null;
+		
+		private var listObsels:ArrayCollection;
+		private var _beginTimeSalonSynchrone:Number;
+	
+		private var listTraceLine:ArrayCollection;
+		//= new ArrayCollection() 
 		
 		public function Model(access:Private)
 		{
@@ -217,6 +223,219 @@ package  com.lyon2.visu.model
 				return dateSessionObject.listSessionDate;
 			}else
 				return null;
+		}
+		
+		/**
+		 * Set list obsels 
+		 */
+		public function setListObsel(listObsels:ArrayCollection):void
+		{
+			this.listObsels = listObsels;
+		}
+		
+		/**
+		 * Get list obsels
+		 */
+		public function getListObsels():ArrayCollection
+		{
+			return this.listObsels;
+		}
+		
+		public function setBeginTimeSalonSynchrone(value:Number):void
+		{
+			_beginTimeSalonSynchrone=value;
+		}
+		
+		public function getBeginTimeSalonSynchrone():Number
+		{
+			return this._beginTimeSalonSynchrone;
+		}
+		
+		public function getListTraceLines():ArrayCollection
+		{
+			return this.listTraceLine;
+		}
+		
+		public function initListTraceLine():void
+		{
+			this.listTraceLine = new ArrayCollection();
+		}
+		public function addTraceLine(userId:int, userName:String, userAvatar:String, userColor:String):void
+		{
+			// check if this user include in listTraceLines
+			if(!hasTraceLineByUserId(userId))
+			{
+				var listElementsTraceLine:ArrayList = new ArrayList();
+				listElementsTraceLine.addItem({id: 0, titleTraceLine: "instruction", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
+				listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
+				listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
+				listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
+				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
+			}
+		}
+		
+		/**
+		 * checking if has users trace line
+		 */
+		private function hasTraceLineByUserId(userId:int):Boolean
+		{
+			if(this.listTraceLine != null)
+			{
+				var nbrTraceLines:int = this.listTraceLine.length;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLines; nTraceLine++)
+				{
+					var traceLine:Object = this.listTraceLine[nTraceLine] as Object;
+					var id:int = traceLine.userId;
+					if(id == userId)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+			// FIXME : it's hapen when user in Accuiel , and other user start recording
+			this.initListTraceLine();
+			return false;
+		}
+		
+		/**
+		 * 
+		 */
+		public function getTraceLineByUserId(userId:int):Object
+		{
+			var nbrTraceLines:int = this.listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLines; nTraceLine++)
+			{
+				var traceLine:Object = this.listTraceLine[nTraceLine] as Object;
+				var id:int = traceLine.userId;
+				if(id == userId)
+				{
+					return traceLine;
+				}
+			}
+			return null;
+		}
+		
+		public function setObsel(obsel:*, userId:int, typeObsel:String):void
+		{
+/*			var listElementsTraceLine:ArrayList = this.listTraceLine[0] as ArrayList;
+			var obj:Object = listElementsTraceLine.getItemAt(0);
+			obj.listObsel = value;*/
+			
+			var traceLine:Object = getTraceLineByUserId(userId);
+			if(traceLine == null)
+			{
+				// TODO message
+				return;
+			}
+			var listElementTraceLine:ArrayList = traceLine.listElementTraceLine as ArrayList;
+			var traceLineElement:Object;
+			// set traceLineElement like titleTraceLine
+			if(typeObsel == TraceModel.SET_MARKER ||  typeObsel == TraceModel.RECEIVE_MARKER || typeObsel == TraceModel.SESSION_OUT)
+			{
+				var tempTitleListOnsel:ArrayCollection = traceLine.listTitleObsels as ArrayCollection;
+				if(tempTitleListOnsel == null)
+				{	
+					tempTitleListOnsel = new ArrayCollection();
+					tempTitleListOnsel.addItem(obsel);
+					traceLine.listTitleObsels = tempTitleListOnsel
+				}else
+				{
+					tempTitleListOnsel.addItem(obsel);
+				}
+			}else
+			{
+				// set traceLineElements: instruction, keyword, document, messages
+				switch (typeObsel)
+				{
+					case TraceModel.SEND_INSTRUCTIONS:
+					case TraceModel.RECEIVE_INSTRUCTIONS:
+						traceLineElement = listElementTraceLine.getItemAt(0) as Object;	
+						break;
+					case TraceModel.SEND_KEYWORD:
+					case TraceModel.RECEIVE_KEYWORD:
+						traceLineElement = listElementTraceLine.getItemAt(1) as Object;	
+						break;
+					case TraceModel.SEND_DOCUMENT:
+					case TraceModel.RECEIVE_DOCUMENT:
+					case TraceModel.READ_DOCUMENT:
+						traceLineElement = listElementTraceLine.getItemAt(2) as Object;	
+						break;
+					case TraceModel.SEND_CHAT_MESSAGE:
+					case TraceModel.RECEIVE_CHAT_MESSAGE:
+						traceLineElement = listElementTraceLine.getItemAt(3) as Object;	
+						break;
+					default:
+						
+				}
+				// add obsel on the traceLineElement
+				var lObsel:ArrayCollection =  traceLineElement.listObsel as ArrayCollection;
+				if(lObsel == null)
+				{
+					lObsel = new ArrayCollection();
+					lObsel.addItem(obsel);
+					traceLineElement.listObsel = lObsel;
+				}else
+				{
+					lObsel.addItem(obsel);
+				}	
+			}
+			
+		}
+		
+		public function setListElementsTraceLineByUserId(userId:int=0):void
+		{
+
+			var listElementsTraceLine:ArrayList = new ArrayList();
+			listElementsTraceLine.addItem({id: 0, titleTraceLine: "chat", colorTraceLine : 454545, visible : false, listObsel: null});
+			listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: null});
+			listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: null});
+			listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: null});
+			this.listTraceLine.addItem(listElementsTraceLine);
+		}
+		
+		
+		public function getListElementsTraceLineByUserId(userId:int):ArrayList
+		{
+			var traceLine:Object = getTraceLineByUserId(userId);
+			if(traceLine == null)
+			{
+				// TODO message
+				return null;
+			}
+			var listElementsTraceLine:ArrayList = traceLine.listElementTraceLine as ArrayList;
+			var nbrElements:int = listElementsTraceLine.length;
+			for(var nElement:int=0; nElement < nbrElements; nElement++)
+			{
+				var objTraceLineElement:Object = listElementsTraceLine.getItemAt(nElement);
+				var visible:Boolean = objTraceLineElement.visible;
+				if(!visible)
+				{
+					objTraceLineElement.visible = true;
+					return listElementsTraceLine;
+				}
+			}
+			return listElementsTraceLine;
+		}
+		
+		public function setUnvisibleElementTraceLineByUser(idElement:int, userId:int):void
+		{
+			var traceLine:Object = getTraceLineByUserId(userId);
+			if(traceLine == null)
+			{
+				// TODO message
+			}
+			var listElementsTraceLine:ArrayList = traceLine.listElementTraceLine as ArrayList;
+			var nbrElements:int = listElementsTraceLine.length;
+			for(var nElement:int =0; nElement < nbrElements; nElement++)
+			{
+				var objTraceLineElement:Object = listElementsTraceLine.getItemAt(nElement);
+				if(objTraceLineElement.id == idElement)
+				{
+					objTraceLineElement.visible = false;
+					return;
+				}
+			}	
 		}
 		
 		public function getObjectDateSessions(dateSession:String):Object
@@ -653,6 +872,25 @@ package  com.lyon2.visu.model
 				{
 					//add userId only if user in this session(really, not planning)
 					result.push(user.getId());				
+				}
+			}
+			return result;
+		}
+		/**
+		 * get list users id with status "RECORDING" of the recording session whitout logged user
+		 */
+		public function getListUsersIdByRecordingSessionWithoutLoggedUser(sessionId:int):Array
+		{
+			var result:Array = new Array();
+			var loggedUserId:int = this._loggedUser.getId();
+			var listUsersIdByRecordingSession:Array = this.getListUsersIdByRecordingSession(sessionId);
+			var nbrIds:int = listUsersIdByRecordingSession.length;
+			for(var nId:int = 0 ; nId < nbrIds ; nId++)
+			{
+				var id:int = listUsersIdByRecordingSession[nId]	as int;
+				if(id != loggedUserId)
+				{
+					result.push(id);
 				}
 			}
 			return result;
