@@ -542,10 +542,9 @@
 	</fx:Script>
 	<s:VGroup x="50" y="15"  gap="5" horizontalAlign="center">
 
-		<s:HGroup width="100%" height="100%" horizontalAlign="center" gap="30" verticalAlign="bottom">
-			<s:Label text="{Model.getInstance().getLoggedUser().getFirstName() + ' '+ Model.getInstance().getLoggedUser().lastname}"  fontSize="20"/>
+		<s:HGroup width="100%" height="100%"  horizontalAlign="left" gap="30" verticalAlign="bottom">
 			<mx:Image source="{Model.getInstance().getLoggedUser().avatar}" width="50" height="50"/>
-			<s:Label text="blablabla"  fontSize="20"/>
+			<s:Label text="{Model.getInstance().getLoggedUser().lastname + ' '+ Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
 		</s:HGroup>
 		<s:HGroup >
 			<!--<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>-->
@@ -554,7 +553,7 @@
 					<s:VerticalLayout gap="5"/>
 				</s:layout>
 				<s:HGroup horizontalAlign="center">
-					<s:BorderContainer width="350" height="35" backgroundColor="#CCDCC8">
+					<s:BorderContainer width="350" height="35" backgroundColor="#cedbef">
 						<s:HGroup width="100%" height="100%" verticalAlign="middle">
 							<s:Label width="100%" fontSize="14" color="#000000" paddingLeft="140">
 								<s:text>{fxgt.gettext("CALENDRIER")}</s:text>
@@ -576,8 +575,8 @@
 					<s:HGroup horizontalAlign="center">
 						<s:BorderContainer width="450" height="35" backgroundColor="#CCDCC8">
 							<s:HGroup width="100%" height="100%" verticalAlign="middle">
-								<s:Label width="100%"  fontSize="14" color="#000000"  paddingLeft="170">
-									<s:text>{fxgt.gettext("FLUX D'ACTIVITES")}</s:text>
+								<s:Label width="100%"  fontSize="14" color="#000000"  paddingLeft="90">
+									<s:text>{fxgt.gettext("FLUX D'ACTIVITES DE L'ACCUEIL")}</s:text>
 								</s:Label>
 							</s:HGroup>
 						</s:BorderContainer>
@@ -590,7 +589,7 @@
 					<!--	<mx:Image id="imageLoggedUser" width="40" height="40"/>-->
 						<s:TextInput id="textToSend" width="100%" height="{navigateurDay.height}" keyUp="onKeyUp(event)"/>
 						<s:Button  height="{navigateurDay.height}" width="63" click="sendAll_clickHandler()">
-							<s:label>{fxgt.gettext("Tout")}</s:label>
+							<s:label>{fxgt.gettext("Tous")}</s:label>
 						</s:Button>	
 						<s:Button  height="{navigateurDay.height}" width="80" click="sendOneUser_clickHandler(event)">
 							<s:label>{fxgt.gettext("Personnel")}</s:label>
