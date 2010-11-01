@@ -751,6 +751,13 @@
 			private function setEnabledGroupSetMarker(value:Boolean):void
 			{
 				groupSetMarker.enabled = value;
+				if(!value)
+				{
+					textChatMarker.text = fxgt.gettext("Poser le marqueur autorise uniquement après démarrer la séance");
+				}else
+				{
+					textChatMarker.text = "";
+				}
 			}
 
 		]]>
