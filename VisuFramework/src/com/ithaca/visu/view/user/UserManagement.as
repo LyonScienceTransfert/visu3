@@ -1,30 +1,24 @@
 package com.ithaca.visu.view.user
 {
 	import com.ithaca.controls.AdvancedTextInput;
-	import com.ithaca.controls.FilteredList;
 	import com.ithaca.visu.controls.users.UserDetail;
 	import com.ithaca.visu.controls.users.UserFilters;
 	import com.ithaca.visu.controls.users.event.UserFilterEvent;
 	import com.lyon2.utils.LemmeFormatter;
 	import com.lyon2.visu.model.Session;
 	import com.lyon2.visu.model.User;
-	import com.lyon2.visu.vo.ProfileDescriptionVO;
 	import com.lyon2.visu.vo.UserVO;
 	
-	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
-	import mx.controls.Alert;
 	import mx.events.FlexEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	
 	import spark.components.Button;
 	import spark.components.List;
-	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
@@ -44,7 +38,7 @@ package com.ithaca.visu.view.user
 		public var usersList:List;
 		
 		[SkinPart("false")]
-		public var searchDisplay:spark.components.TextInput;
+		public var searchDisplay:AdvancedTextInput;
 		
 		[SkinPart("true")]
 		public var userDetail:UserDetail;

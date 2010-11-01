@@ -59,7 +59,7 @@
 		</s:Group>
 		
 		<s:Group width="25%" height="100%">
-			<s:Button id="addUserButton">
+			<s:Button id="addUserButton" width="100%" top="14">
 				<s:label>{fxgt.gettext("Ajouter un utilisateur")}</s:label>
 			</s:Button>
 			
