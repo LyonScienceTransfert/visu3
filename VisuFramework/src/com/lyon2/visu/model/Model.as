@@ -38,7 +38,7 @@ package  com.lyon2.visu.model
 		private var _currentSession:Session;
 		private var _tutoratModule:VisuModuleBase;
 		private var _userModule:VisuModuleBase;
-		private var _homeModule:VisuModuleBase;
+		private var _homeModule:VisuModuleBase = null;
 		
 		private var _selectedDateLoggedUser:Object = null;
 		

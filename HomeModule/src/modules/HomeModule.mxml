@@ -69,12 +69,42 @@
 				// init map of this  module
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_HOME);
 				this.dispatchEvent(initMapEvent);
-				Model.getInstance().setCurrentHomeModule(this);
 			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				fxgt = FxGettext;
+				
+				// check if this is first enter in HomeModule
+				var homeModule:VisuModuleBase = Model.getInstance().getCurrentHomeModule();
+				if(homeModule == null)
+				{
+					// add mesage Welcome
+					var user:User = Model.getInstance().getLoggedUser();
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenu sur le DECK.."),new Date());		
+					// add flux activity
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" a rejoint le DECK "),new Date());
+					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
+					var strConnectedUser:String = ""
+					var nbrUser:int = listConnectedUser.length;
+					for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+					{
+						var virgulePoint:String=', ';
+						var userConnected:User = listConnectedUser.getItemAt(nUser) as User;
+						if(nUser == nbrUser-1)
+						{
+							virgulePoint = '.'	
+						}
+						strConnectedUser += userConnected.firstname+virgulePoint;
+					}
+					if(strConnectedUser != "")
+					{
+						// add message about connected users
+						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" actualement sur le DECK : ")+strConnectedUser,new Date());
+					}
+				}
+				
+				Model.getInstance().setCurrentHomeModule(this);
 				
 				_loggedUser = Model.getInstance().getLoggedUser();				
 				// check status logged user
