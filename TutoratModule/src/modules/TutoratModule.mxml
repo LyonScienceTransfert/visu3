@@ -35,6 +35,8 @@
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.lyon2.controls.ImageDocument;
 			import com.lyon2.controls.YoutubePlayer;
+			import com.lyon2.visu.model.Activity;
+			import com.lyon2.visu.model.ActivityElement;
 			import com.lyon2.visu.model.ActivityElementType;
 			import com.lyon2.visu.model.Model;
 			import com.lyon2.visu.model.Session;
@@ -59,6 +61,8 @@
 			
 			private var currentSession:Session;
 			private var _stopTimeRecording:Number = 0;
+			
+			private var _currentActivityElement:ActivityElement = null;
 			
 			private var listObjectMedia:ArrayCollection = new ArrayCollection();
 			[Bindable]
@@ -329,7 +333,7 @@
 						this.addObsel(obsel);
 					}
 					// update the buttons on planSession, view tutorat
-					if(this.sessionPlan != null && obselVO.type == TraceModel.ACTIVITY_START)
+					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
 					{
 						var obselStartSession:Obsel = Obsel.fromRDF(obselVO.rdf);
 						var aa:String = obselStartSession.props[TraceModel.ACTIVITY_ID]; 
@@ -476,24 +480,55 @@
 				scrollerPanelChatSession.viewport.verticalScrollPosition = scrollerPanelChatSession.viewport.contentHeight - scrollerPanelChatSession.height;
 			}
 			
-			
+			private function doShareActivityElement(value:ActivityElement):void
+			{
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(value.type_element);
+				sessionSharedEvent.info = value.data;
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.status = this.visio.status;	
+				sessionSharedEvent.url = value.url_element;
+				dispatchEvent(sessionSharedEvent);	
+			}
 			protected function shareActivityElement(event:ActivityElementEvent):void
 			{
 				trace("shareActivityElement");
 				if( this.visio.status != VisuVisio.STATUS_RECORD)
 				{
-					Alert.show(fxgt.gettext("For using bla bla have to start record") , fxgt.gettext("Confirmation"));
+					Alert.show(fxgt.gettext("Poser le marqueur/consigne/mot clés autorise uniquement après démarrer la séance") , fxgt.gettext("Confirmation"));
 				}else
 				{
-					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-					var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
-					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
-					sessionSharedEvent.typeInfo = ActivityElementType.valueOf(event.element.type_element);
-					sessionSharedEvent.info = event.element.data;
-					sessionSharedEvent.listUsers = listUsersId;
-					sessionSharedEvent.status = this.visio.status;	
-					sessionSharedEvent.url = event.element.url_element;
-					dispatchEvent(sessionSharedEvent);
+					// check if activityElement from current activity or activityElement is Keyword
+					var activityIdOfChoosenActivityElement:int = event.element.id_activity;
+					var currentActivityId:int = this.sessionPlan.getCurrentActivityId();
+					if(activityIdOfChoosenActivityElement == currentActivityId  || event.element.type_element == ActivityElementType.KEYWORD )
+					{
+						// shared activityElement
+						this.doShareActivityElement(event.element)
+					}else
+					{
+						_currentActivityElement = event.element;
+						Alert.yesLabel = fxgt.gettext("Oui");
+						Alert.noLabel = fxgt.gettext("Non");
+						Alert.show(fxgt.gettext("Voulez-vous change l'activity?"),
+							fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, changeActivityConfirmed); 
+					}
+				}
+			}
+			
+			private function changeActivityConfirmed(event:CloseEvent):void{
+				if( event.detail == Alert.YES )
+				{
+					var newActivityId:int = this._currentActivityElement.id_activity;
+					var activityDetail:ActivityDetail = this.sessionPlan.getActivityDetailById(newActivityId);
+					// for interdir click on the button start the new activity
+					activityDetail.startButton.enabled = false;
+					this.shareStartActivity(activityDetail.activity);	
+					// change activity, shared Activity
+					this.doShareActivityElement(this._currentActivityElement);
+					// shared activityElement
 				}
 			}
 			
@@ -506,20 +541,24 @@
 				// for interdir click again before end all of action on server side
 				var activityDetail:ActivityDetail = event.target as ActivityDetail;
 				activityDetail.startButton.enabled = false;
-				
+				// shared start activity
+				this.shareStartActivity(event.activity);
+			}
+			
+			private function shareStartActivity(value:Activity):void
+			{
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY);
-				sessionSharedEvent.info = event.activity.title;
+				sessionSharedEvent.info = value.title;
 				sessionSharedEvent.listUsers = listUsersId;
 				// use url variable for sending id activity
-				sessionSharedEvent.url = event.activity.id_activity.toString();
+				sessionSharedEvent.url = value.id_activity.toString();
 				sessionSharedEvent.status = this.visio.status;	
 				sessionSharedEvent.senderUserId = Model.getInstance().getLoggedUser().id_user;	
 				dispatchEvent(sessionSharedEvent);
 			}
-			
 			
 			protected function button1_clickHandler(event:MouseEvent):void
 			{

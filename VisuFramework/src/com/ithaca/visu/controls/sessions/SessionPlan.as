@@ -159,6 +159,25 @@ package com.ithaca.visu.controls.sessions
 			}	
 		}
 		
+		public function getActivityDetailById(value:int):ActivityDetail
+		{
+			var nbrElements:int = this.numElements;
+			for(var nElement:int = 0 ; nElement < nbrElements ; nElement++)
+			{
+				var element = this.getElementAt(nElement);
+				if(element is ActivityDetail)
+				{
+					var activityDetail:ActivityDetail = this.getElementAt(nElement) as ActivityDetail;
+					var activityId:int = activityDetail.activity.id_activity;
+					if(value == activityId)
+					{
+						return activityDetail;
+					}
+				}
+			} 
+			return null;
+		}
+		
 		public function getCurrentActivityId():int{return this._currentActivityId;}
 		public function setCurrentActivityId(value:int):void
 		{
