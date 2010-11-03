@@ -30,6 +30,7 @@
 			import com.ithaca.visu.events.SessionUserEvent;
 			import com.ithaca.visu.events.UserEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.renderer.FluxActivityRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RightStatus;
 			import com.lyon2.visu.model.Model;
@@ -211,7 +212,7 @@
 								var labelMessage:Label = new Label();
 								labelMessage.setStyle("fontSize", 14);
 								labelMessage.setStyle("fontWeight", "bold");
-								labelMessage.text = fxgt.gettext("Vous n'avez pas de séance pour cette date...");
+								labelMessage.text = fxgt.gettext("  \n\n\n Vous n'avez pas de séance pour cette date...\n\n\n");
 								vb.addElement(labelMessage);
 							}else
 							{
@@ -593,7 +594,7 @@
 				</s:HGroup>
 				<controls:NavigateurDay id="navigateurDay" dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"  visible="true"   change="navigateurDay_changeHandler(event)"  width="100%"/>
 				<s:Group height="10%" width="100%">
-					<s:BorderContainer  width="100%" height="255" borderVisible="true"/>
+					<s:BorderContainer  width="100%" height="255" borderVisible="false"/>
 						<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerSession">    
 								<s:VGroup id="sessionGroup"   width="100%"  height="100%" gap="15" horizontalAlign="center"/>
 						</s:Scroller> 
@@ -601,7 +602,7 @@
 				<!--<s:HGroup id="sessionGroup" x="0"/>
 			-->		</s:Group>	
 			<s:HGroup  id="fluxGroup" verticalAlign="middle" x="{navigateurDay.x + navigateurDay.width+10}" visible="true">
-				<s:VGroup gap="5">
+				<s:VGroup gap="5" width="450">
 					<s:HGroup horizontalAlign="center">
 						<s:BorderContainer width="450" height="35" backgroundColor="#CCDCC8">
 							<s:HGroup width="100%" height="100%" verticalAlign="middle">
@@ -615,7 +616,7 @@
 <!--					<s:HGroup>
 						<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
 					</s:HGroup>-->
-					<s:HGroup verticalAlign="middle" width="450">
+					<s:HGroup verticalAlign="middle" width="450" horizontalAlign="center">
 					<!--	<mx:Image id="imageLoggedUser" width="40" height="40"/>-->
 						<s:TextInput id="textToSend" width="100%" height="{navigateurDay.height}" keyUp="onKeyUp(event)"/>
 						<s:Button  height="{navigateurDay.height}" width="63" click="sendAll_clickHandler()">
@@ -626,11 +627,11 @@
 						</s:Button>
 					</s:HGroup>
 					
-					<s:List  dataProvider="{fluxActivity}" width="450" height="255">
+					<s:List selectionColor="#ffffff"  borderAlpha="0.0" dataProvider="{fluxActivity}" width="100%" height="255" itemRenderer="com.ithaca.visu.renderer.FluxActivityRenderer">
 						<s:layout>
-							<s:VerticalLayout/>
+							<s:VerticalLayout gap="5" horizontalAlign="center"/>
 						</s:layout>
-						<s:itemRenderer>
+						<!--<s:itemRenderer>
 							<fx:Component>
 								<s:ItemRenderer>
 									<s:BorderContainer  height="35"  borderVisible="true" width="430" >
@@ -641,7 +642,7 @@
 									</s:BorderContainer>
 								</s:ItemRenderer>
 							</fx:Component>							
-						</s:itemRenderer>
+						</s:itemRenderer>-->
 					</s:List> 	
 				</s:VGroup>		
 			</s:HGroup>

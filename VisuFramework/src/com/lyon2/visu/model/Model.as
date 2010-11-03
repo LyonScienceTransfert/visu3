@@ -751,7 +751,12 @@ package  com.lyon2.visu.model
 		public function addFluxActivity(userId:int, firstname:String, path:String, message:String , date:Date):void
 		{
 			var h:String = date.getHours().toString();
-			var m:String = date.getMinutes().toString();
+			var zeroMin:String = "";
+			if (date.getMinutes() < 10)
+			{
+				zeroMin = "0";
+			}
+			var m:String = zeroMin+date.getMinutes().toString();
 			var time:String = h+":"+m;
 			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,path,message,time);
 			this.listFluxActivity.addItemAt(fluxActivity,0);		

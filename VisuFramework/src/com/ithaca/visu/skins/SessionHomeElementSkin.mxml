@@ -112,7 +112,7 @@
 	</s:Scroller>
 	<s:Group includeIn="open"
 			 height="40" left="0" right="0" bottom="25">	
-		<s:Rect top="0" left="0" right="0" bottom="0">
+		<s:Rect top="0" left="0" right="0" bottom="0" radiusX="5">
 			<s:fill>
 				<s:SolidColor color="#000" alpha=".5" />
 			</s:fill>
