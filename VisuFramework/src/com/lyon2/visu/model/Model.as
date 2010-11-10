@@ -266,14 +266,65 @@ package  com.lyon2.visu.model
 			if(!hasTraceLineByUserId(userId))
 			{
 				var listElementsTraceLine:ArrayList = new ArrayList();
-				listElementsTraceLine.addItem({id: 0, titleTraceLine: "instruction", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
-				listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
-				listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
-				listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection()});
+				listElementsTraceLine.addItem({id: 0, titleTraceLine: "instruction", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 4, titleTraceLine: "marker", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
 				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
 			}
 		}
 		
+		/**
+		 * add list obsel to title trace line
+		 */
+		public function addListObselTitleTraceLine(userId:int , listObsel:ArrayCollection):void
+		{
+			var traceLine:Object = this.getTraceLineByUserId(userId);
+			var listTitleObsel:ArrayCollection = traceLine.listTitleObsels as ArrayCollection;
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0 ; nObsel < nbrObsel ; nObsel++)
+			{
+				var obsel = listObsel.getItemAt(nObsel);	
+				// clone obsel, can't have same(one) obsel on too traceLine
+				var newObsel = obsel.cloneMe();
+				listTitleObsel.addItem(newObsel);
+			}
+		}
+		
+		/**
+		 * remove list obsel to title trace line
+		 */
+		public function removeListObselTitleTraceLine(userId:int , listObsel:ArrayCollection):void
+		{
+			var traceLine:Object = this.getTraceLineByUserId(userId);
+			var listTitleObsel:ArrayCollection = traceLine.listTitleObsels as ArrayCollection;
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0 ; nObsel < nbrObsel ; nObsel++)
+			{
+				var obsel = listObsel.getItemAt(nObsel);	
+				// remove cloned obsel
+				removeClonedObsel(listTitleObsel, obsel);
+			}
+		}
+		
+		/**
+		 * remove obsel by property "begin" 
+		 */
+		private function removeClonedObsel(listObsel:ArrayCollection , obselOrigin:*):void
+		{
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obsel = listObsel.getItemAt(nObsel);
+				if(obsel.getBegin() == obselOrigin.getBegin())
+				{
+					listObsel.removeItemAt(nObsel);
+					return;
+				}
+			}
+			return;
+		}
 		/**
 		 * checking if has users trace line
 		 */
@@ -330,10 +381,10 @@ package  com.lyon2.visu.model
 			}
 			var listElementTraceLine:ArrayList = traceLine.listElementTraceLine as ArrayList;
 			var traceLineElement:Object;
+			var tempTitleListOnsel:ArrayCollection =  traceLine.listTitleObsels as ArrayCollection;
 			// set traceLineElement like titleTraceLine
-			if(typeObsel == TraceModel.SET_MARKER ||  typeObsel == TraceModel.RECEIVE_MARKER || typeObsel == TraceModel.SESSION_OUT)
+/*			if(typeObsel == TraceModel.SET_MARKER ||  typeObsel == TraceModel.RECEIVE_MARKER || typeObsel == TraceModel.SESSION_OUT)
 			{
-				var tempTitleListOnsel:ArrayCollection = traceLine.listTitleObsels as ArrayCollection;
 				if(tempTitleListOnsel == null)
 				{	
 					tempTitleListOnsel = new ArrayCollection();
@@ -344,8 +395,8 @@ package  com.lyon2.visu.model
 					tempTitleListOnsel.addItem(obsel);
 				}
 			}else
-			{
-				// set traceLineElements: instruction, keyword, document, messages
+			{*/
+				// set traceLineElements: instruction, keyword, document, messages, marker
 				switch (typeObsel)
 				{
 					case TraceModel.SEND_INSTRUCTIONS:
@@ -365,6 +416,10 @@ package  com.lyon2.visu.model
 					case TraceModel.RECEIVE_CHAT_MESSAGE:
 						traceLineElement = listElementTraceLine.getItemAt(3) as Object;	
 						break;
+					case TraceModel.SET_MARKER:
+					case TraceModel.RECEIVE_MARKER:
+						traceLineElement = listElementTraceLine.getItemAt(4) as Object;	
+						break;
 					default:
 						
 				}
@@ -378,22 +433,20 @@ package  com.lyon2.visu.model
 				}else
 				{
 					lObsel.addItem(obsel);
-				}	
-			}
+				}
+				
+				// check if need add obsel to titleTrcaLine
+				var addedTraceLine:Boolean = traceLineElement.added;
+				if(addedTraceLine)
+				{
+					var newObsel = obsel.cloneMe();
+					tempTitleListOnsel.addItem(newObsel);
+				}
+		//	}
+			
+			
 			
 		}
-		
-		public function setListElementsTraceLineByUserId(userId:int=0):void
-		{
-
-			var listElementsTraceLine:ArrayList = new ArrayList();
-			listElementsTraceLine.addItem({id: 0, titleTraceLine: "chat", colorTraceLine : 454545, visible : false, listObsel: null});
-			listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: null});
-			listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: null});
-			listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: null});
-			this.listTraceLine.addItem(listElementsTraceLine);
-		}
-		
 		
 		public function getListElementsTraceLineByUserId(userId:int):ArrayList
 		{
