@@ -16,11 +16,13 @@
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselButton;
 			import com.ithaca.traces.view.ObselImage;
+			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetail;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
 			import com.ithaca.visu.controls.timeline.TraceLine;
+			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
@@ -102,13 +104,16 @@
 			[Bindable]
 			private var timer:Timer;
 			
-			private var testCursor:ObselButton;
+			private var testTimeLine:TraceLineB;
+			
+			private var testCursor:ObselLine;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
 				if((event.currentTarget as TutoratModule).parameters != null)
 				{
 					var session:Session = (event.currentTarget as TutoratModule).parameters as Session ;
+					session.duration_session = session.duration_session*1.1;
 					this.currentSession = session;
 					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentSession(session);
@@ -169,6 +174,9 @@
 					}
 					// removing module from the stage
 					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+					
+					// create sessionTimeLine
+					this.createSessionTimeLine();
 				}
 			}
 			
@@ -220,7 +228,30 @@
 					module.visio.removeVideoStream(streamId);
 				}	
 			}
-			
+
+			private function createSessionTimeLine():void
+			{
+				var durationSession:int = this.currentSession.duration_session;
+				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
+				this.sessionTimeLine.sessionTimeLineLayout.startTime = 0;
+				// TODO calcul number of labels
+				var nbrLabelTime:int = 6;
+				var deltaTime:int = durationSession/nbrLabelTime;
+				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
+				{
+					var beginTimeObsel:Number = nPart*deltaTime;
+					// in seconds
+					var labelTextSec:String = (beginTimeObsel/1000).toString();
+					var labelTextMin:String = Math.round((beginTimeObsel/1000)/60).toString();
+					var obselTime:ObselTime = new ObselTime()
+					obselTime.setBegin(beginTimeObsel);
+					obselTime.setEnd(beginTimeObsel);
+					obselTime.text = labelTextMin+" min.";
+					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
+				}
+				
+				
+			}	
 			/**
 			 * Update status on recording mode
 			 */
@@ -277,7 +308,7 @@
 			{
 				if(!timer)
 				{
-					timer = new Timer(500,0);
+					timer = new Timer(2000,0);
 					timer.addEventListener(TimerEvent.TIMER, updateTime);
 				}
 				timer.start();
@@ -285,9 +316,10 @@
 			
 			private function updateTime(event:TimerEvent):void
 			{
-				this.testCursor.setBegin(this.testCursor.getBegin()+500);
-				this.testCursor.setEnd(this.testCursor.getEnd()+500);
-			//	this.traceLine.traceLayout.target.invalidateDisplayList();
+				var beginTime:Number = new Date().time - this.currentSession.date_start_recording.time;
+				this.testCursor.setBegin(beginTime);
+				this.testCursor.setEnd(beginTime);
+				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
 			}
 
 			/**
@@ -304,7 +336,13 @@
 					if(buttonStartRecording != null){
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
 						buttonCloseSession.enabled = true;
+						// TODO make that obsel "OutSession" will getting wight
+						this._stopTimeRecording = event.timeStartStop;
+						//this.timer.stop();
+						// set buttons startActivity enabled = false
+						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
 					}
+					
 				}
 			}
 			
@@ -330,7 +368,7 @@
 					{
 						// set obsel to the model
 						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-						this.addObsel(obsel);
+						this.addObsel(obsel,true);
 					}
 					// update the buttons on planSession, view tutorat
 					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
@@ -497,7 +535,7 @@
 				trace("shareActivityElement");
 				if( this.visio.status != VisuVisio.STATUS_RECORD)
 				{
-					Alert.show(fxgt.gettext("Poser le marqueur/consigne/mot clés autorise uniquement après démarrer la séance") , fxgt.gettext("Confirmation"));
+					Alert.show(fxgt.gettext("Poser le marqueur/consigne/mot clés autorisée uniquement après démarrer la séance.") , fxgt.gettext("Confirmation"));
 				}else
 				{
 					// check if activityElement from current activity or activityElement is Keyword
@@ -512,7 +550,7 @@
 						_currentActivityElement = event.element;
 						Alert.yesLabel = fxgt.gettext("Oui");
 						Alert.noLabel = fxgt.gettext("Non");
-						Alert.show(fxgt.gettext("Voulez-vous change l'activity?"),
+						Alert.show(fxgt.gettext("Voulez-vous changer l'activity?"),
 							fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, changeActivityConfirmed); 
 					}
 				}
@@ -777,6 +815,68 @@
 					dispatchEvent(eventStopRecording);			
 				}
 			}
+			private function onClickDebugButton(event:Event):void{
+				var msg:MessageEvent = new MessageEvent(MessageEvent.GET_SETMARCK);
+				//msg.message = "<trace-20100928183134-25>";
+				msg.message = "<trace-20101006153326-7>";
+				this.dispatchEvent(msg);
+				
+				
+			}
+			
+			private function addTraceLineOnViewTraceLineGroup(traceLineObj:Object):void
+			{
+				var userId:int = traceLineObj.userId;
+				var traceLine:TraceLineB = new TraceLineB();
+				traceLine.percentWidth = 100;
+			//	traceLine.height = 30;
+				traceLine.left = 0;
+				traceLine.right = 0;
+				traceLine.sourceImageUserTraceLine = traceLineObj.userAvatar;
+				traceLine.nameUserTraceLine = traceLineObj.userName;
+				traceLine.colorUserTraceLine = traceLineObj.userColor;
+				traceLine.durationSession = this.currentSession.duration_session;
+				traceLine.startTimeSession = this.currentSession.date_start_recording.getTime();				
+//				traceLine.startTimeSession = Model.getInstance().getBeginTimeSalonSynchrone();					
+				traceLine.idUserTraceLine = userId;		
+				traceLine.tempList = traceLineObj.listTitleObsels;
+				traceLine.listElementTraceline = traceLineObj.listElementTraceLine;
+				traceLine.addEventListener(TraceLineEvent.ADD_LIST_OBSEL, onAddListObsel);
+				traceLine.addEventListener(TraceLineEvent.REMOVE_LIST_OBSEL, onRemoveListObsel);
+				/* traceLine.addEventListener(TraceLineEvent.ADD_TRACE_LINE_ELEMENT, onAddTraceLineElement);
+				traceLine.addEventListener(TraceLineEvent.REMOVE_TRACE_LINE_ELEMENT, onRemoveTraceLineElement); */
+				traceLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
+				if(userId == Model.getInstance().getLoggedUser().id_user)
+				{
+					sessionTimeLine.sessionTimeLineLayout.startTime = this.currentSession.date_start_recording.getTime();	
+					sessionTimeLine.sessionTimeLineLayout.durationSession = this.currentSession.duration_session;				
+					traceLine.nameUserTraceLine = fxgt.gettext("Ma trace");
+					this.traceLineGroup.addElementAt(traceLine, 0);
+				}else
+				{
+					this.traceLineGroup.addElement(traceLine);
+				}
+				
+				traceLineObj.show = true;
+			}
+			
+			/**
+			 * add list obsel to Model 
+			 */	
+			private function onAddListObsel(event:TraceLineEvent):void{
+				var listObsel:ArrayCollection = event.listObsel;
+				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
+				Model.getInstance().addListObselTitleTraceLine(userTraceLineId, listObsel);
+			}
+			
+			/**
+			 * remove list obsel to Model 
+			 */	
+			private function onRemoveListObsel(event:TraceLineEvent):void{
+				var listObsel:ArrayCollection = event.listObsel;
+				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
+				Model.getInstance().removeListObselTitleTraceLine(userTraceLineId, listObsel);
+			}
 			/**
 			 * Update current activity in list activity, update label the button "start" to "en cours"
 			 */
@@ -787,18 +887,232 @@
 					this.sessionPlan.setCurrentActivityId(activityId);
 				}
 			}
+			
+			private function onUpdateViewTimeLine(event:SessionEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					var traceLineObj:Object = Model.getInstance().getTraceLineByUserId(event.userId);
+					var show:Boolean = traceLineObj.show;
+					if(!show)
+					{
+						this.addTraceLineOnViewTraceLineGroup(traceLineObj);
+					}					
+				}
+			}
+			
+			private function onShowViewTimeLine(event:SessionEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					
+					this.setObsels();
+					
+					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
+					if(listTraceLines != null)
+					{
+						var nbrTraceLines:int = listTraceLines.length;
+						for(var nTraceLine:int =0; nTraceLine < nbrTraceLines ; nTraceLine++)
+						{
+							var traceLineObj:Object = listTraceLines[nTraceLine] as Object;
+							var show:Boolean = traceLineObj.show;
+							if(!show)
+							{
+								this.addTraceLineOnViewTraceLineGroup(traceLineObj);
+								
+							}
+						}
+					}
+				}
+			}
+			
+			private function onCreationCompletTraceLine(event:FlexEvent):void
+			{
+				var traceLine:TraceLineB = event.currentTarget as TraceLineB;
+				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
+				traceLine.listTitleObsels = traceLine.tempList;		
+				var userId:int = traceLine.idUserTraceLine;
+				if(userId == Model.getInstance().getLoggedUser().id_user)
+				{
+					sessionTimeLine.sessionTimeLineLoggedUser.left = traceLine.traceLoggedUser.left;
+					
+					this.testCursor = new ObselLine();
+					this.testCursor.height = 50;
+					var beginTime:Number = new Date().time - this.currentSession.date_start_recording.time;
+					this.testCursor.setBegin(beginTime);
+					this.testCursor.setEnd(beginTime);
+					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(this.testCursor); 
+					this.testTimeLine = traceLine;
+					this.startTimer();
+				}
+				
+			}
+			
+			
+			private function setObsels():void{
+				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
+				if (listObsels != null)
+				{	
+					var nbrObsels:int = listObsels.length;
+					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
+					{
+						var obsel:Obsel = listObsels[nObsel] as Obsel;
+						this.addObsel(obsel,false);
+					}
+				}
+			}
+			
+			private function addObsel(obsel:Obsel,sessionReadyInit:Boolean):void
+			{
+				var typeObsel:String = obsel.type;
+				var viewObsel:ObselImage = new ObselImage();
+				viewObsel.setBegin(obsel.begin);
+				viewObsel.setEnd(obsel.end);
+				var textObsel:String;
+				var ownerObsel:int;
+				switch (typeObsel)
+				{
+					case TraceModel.SET_MARKER :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  markerIcon;
+						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.toolTip = textObsel;
+						break;
+					case TraceModel.RECEIVE_MARKER :
+						ownerObsel = obsel.props[TraceModel.SENDER];
+						viewObsel.source =  markerIcon;
+						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.toolTip = textObsel;
+						break;
+					case TraceModel.SEND_CHAT_MESSAGE :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  messageChatIconVisu1;
+						textObsel = obsel.props[TraceModel.CONTENT];
+						viewObsel.toolTip = textObsel;
+						break;
+					case TraceModel.RECEIVE_CHAT_MESSAGE :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  messageChatIconVisu1;
+						textObsel = obsel.props[TraceModel.CONTENT];
+						viewObsel.toolTip = obsel.props[TraceModel.SENDER] + ":" + textObsel;
+						initChatPanel(ownerObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+						break;
+					case TraceModel.SEND_KEYWORD :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  keywordIcon;
+						textObsel = obsel.props[TraceModel.KEYWORD];
+						viewObsel.toolTip = textObsel;
+						break;
+					case TraceModel.RECEIVE_KEYWORD :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  keywordIcon;
+						textObsel = obsel.props[TraceModel.KEYWORD];
+						viewObsel.toolTip = textObsel;
+						initChatPanel(ownerObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+						break;
+					case TraceModel.SEND_INSTRUCTIONS :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  consigneIconVisu1 ;
+						textObsel = obsel.props[TraceModel.INSTRUCTIONS];
+						viewObsel.toolTip = textObsel;
+						break;
+					case TraceModel.RECEIVE_INSTRUCTIONS :
+						ownerObsel = obsel.uid;
+						viewObsel.source =  consigneIconVisu1;
+						textObsel = obsel.props[TraceModel.INSTRUCTIONS];
+						viewObsel.toolTip = textObsel;
+						initChatPanel(ownerObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+						break;
+					case TraceModel.SEND_DOCUMENT :
+						ownerObsel = obsel.uid;
+						var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+						if(typeDocument == ActivityElementType.IMAGE)
+						{
+							viewObsel.source =  obsel.props[TraceModel.URL];  
+						}else
+						{
+							viewObsel.source = videoIcon;
+						}
+						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.toolTip = textObsel;
+						break;
+					case TraceModel.RECEIVE_DOCUMENT :
+						ownerObsel = obsel.uid;
+						var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+						if(typeDocument == ActivityElementType.IMAGE)
+						{
+							viewObsel.source =  obsel.props[TraceModel.URL];  
+						}else
+						{
+							viewObsel.source = videoIcon;
+						}
+						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.toolTip = textObsel;
+						initChatPanel(ownerObsel, textObsel, fichierIconVisu1 , sessionReadyInit);
+						break;
+					case TraceModel.READ_DOCUMENT :
+						ownerObsel = obsel.props[TraceModel.SENDER];
+						var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+						if(typeDocument == ActivityElementType.IMAGE)
+						{
+							viewObsel.source =  obsel.props[TraceModel.URL];  
+						}else
+						{
+							viewObsel.source = videoIcon;
+						} 			
+						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.toolTip = obsel.props[TraceModel.SENDER_DOCUMENT] + ":" + textObsel;
+						break;
+				}
+				// set obsel to the model
+				//	viewObsel.toolTip = viewObsel.toolTip + "=>"+ viewObsel.getBegin().toString();
+
+				Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel);
+
+			}
+			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:Class, sessionReadyInit:Boolean):void
+			{
+				// exclus the obsel "Start activity"
+				if(!sessionReadyInit && ownerObsel != 0)
+				{
+					var traceLine:Object = Model.getInstance().getTraceLineByUserId(ownerObsel); 
+					var userAvatar:String = traceLine.userAvatar as String;
+					var userName:String = traceLine.userName as String;
+					var sharedElementChat:SharedElementChat = new SharedElementChat();
+					sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass);
+					this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+					this.panelChatSession.addElement(sharedElementChat);
+				}
+			}
+			
+			// add element traceLine
+			private function onAddTraceLineElement(event:TraceLineEvent):void
+			{
+				var userId:int = event.userId;
+				var traceLine:TraceLine = event.currentTarget as TraceLine;
+				var list:ArrayList = Model.getInstance().getListElementsTraceLineByUserId(userId);
+				traceLine.elementsTraceLines = list;
+			}
+			
+			// remove element traceLine
+			private function onRemoveTraceLineElement(event:TraceLineEvent):void
+			{
+				Model.getInstance().setUnvisibleElementTraceLineByUser(event.idElement, event.userId);
+			}
+			
 			private function setEnabledGroupSetMarker(value:Boolean):void
 			{
 				groupSetMarker.enabled = value;
 				if(!value)
 				{
-					textChatMarker.text = fxgt.gettext("Poser le marqueur autorise uniquement après démarrer la séance");
+					textChatMarker.text = fxgt.gettext("Pose de marqueur non autorisée");
 				}else
 				{
 					textChatMarker.text = "";
 				}
 			}
-
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -816,7 +1130,10 @@
 		<mate:Listener type="{SessionEvent.STOP_RECORDING_SESSION}"  method="onStopRecordingSession"/>
 		<mate:Listener type="{SessionEvent.CLOSE_SESSION}"  method="onCloseSession"/>
 		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL}"  method="onShowViewTimeLine"/>
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_VIEW_TRACELINE}"  method="onUpdateViewTimeLine"/>
 		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
+		
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
 		<s:VGroup width="33%" height="100%" minWidth="200">
@@ -860,7 +1177,7 @@
 						<controls:VisuVisio id="visio" width="100%" top="0"
 											quality="80"
 											bandwidth="15000" autoPlay="True"  height="100%" />
-						<s:Group width="100%" bottom="3" height="30">
+						<s:Group width="100%" bottom="3" height="30" id="groupSetMarker">
 							<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 							</mx:TextArea>
 							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="onSetMyMarker(event)" right="1" height="25" top="2"  width="150">
@@ -894,20 +1211,56 @@
 					</s:Group>
 				</s:Panel>
 			</mx:HDividedBox>
-			<s:Panel width="100%" height="45%">
+			<s:Panel width="100%" height="45%" id="panelTimeLine">
 				<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-				<s:Group top="1" width="100%"  height="100%">
+				<s:Group width="100%" height="100%">
+					<s:layout >
+						<s:VerticalLayout gap="0"/>
+					</s:layout>
+					<local:SessionTimeLine id="sessionTimeLine" width="100%" />
+					<s:Group width="100%" height="100%">
+						<s:Scroller left="1" right="1" top="1" bottom="1">
+							<s:Group width="100%" height="100%">
+								<s:layout>
+									<s:VerticalLayout gap="5"/>
+								</s:layout>
+								
+								<s:Group id="traceLineGroup" width="100%" height="100%">
+									<!--<local:TraceLineMXML id="traceLine" width="100%" visible="false"/>-->
+									<s:layout>
+										<s:VerticalLayout gap="4"/>
+									</s:layout>
+								</s:Group>
+							</s:Group>
+						</s:Scroller>
+					</s:Group>
+				</s:Group>
+				
+				<!--<s:Group top="1" width="100%"  height="100%">
 					<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelTimeLine">    
 						<s:Group id="panelTimeLine"   width="100%"  height="100%">
 							<s:layout>
-								<s:VerticalLayout  gap="10"/>
+								<local:TimeWheelLayout durationSession="60000"/>
 							</s:layout>							
 						</s:Group>
 					</s:Scroller> 
-				</s:Group>
+				</s:Group>-->
+
 			</s:Panel>
 		</mx:VDividedBox>	
 	</mx:HDividedBox>	
 	<s:Label includeIn="BlankState" text="Rejoindre séance simplement par Accueill" fontSize="22" left="50" top="50" width="474"/>
-
+	<s:Button includeIn="BlankState" x="73" y="142" label="Button"  id="debugButton" click="onClickDebugButton(event)" />
+	<s:Panel width="700" height="45%" y="200" x="20" includeIn="BlankState">
+		<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
+		<s:Group top="1" width="100%"  height="100%">
+			<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelTimeLine_test">    
+				<s:Group id="panelTimeLine_test"   width="100%"  height="100%">
+					<s:layout>
+						<local:TimeWheelLayout/>
+					</s:layout>							
+				</s:Group>
+			</s:Scroller> 
+		</s:Group>
+	</s:Panel>
 </modules:VisuModuleBase>
