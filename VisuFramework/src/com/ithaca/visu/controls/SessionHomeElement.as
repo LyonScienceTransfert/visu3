@@ -191,6 +191,10 @@ package com.ithaca.visu.controls
 					titleDisplay.text = session.theme;
 				}
 			}
+/*			if(!open && !recording && !enabled )
+			{
+				openButton.toolTip = fxgt.gettext("La séance a eu lieu le ")+this._session.date_start_recording.toLocaleString();
+			}*/
 		}
 		
 		override protected function measure():void
@@ -225,7 +229,6 @@ package com.ithaca.visu.controls
 						subDisplay.setStyle("color", "#da3939"); 
 					}				
 					break;
-				
 				default:
 					subDisplay.textFlow = TextFlowUtil.importFromString(participants);	
 					subDisplay.setStyle("color", "#000000"); 
@@ -262,14 +265,14 @@ package com.ithaca.visu.controls
 				recording = true;
 				
 				if(dateRecording != null){
-					recordingMessage = fxgt.gettext("La séance a été démarré de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");			
+					recordingMessage = fxgt.gettext("La séance a été démarré il y a ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");			
 				}else{
 					recordingMessage "date == NULL";
 				}
 			}else if(_session.statusSession == SessionStatusEnum.SESSION_PAUSE)
 			{
 				recording = true;
-				recordingMessage = fxgt.gettext("La séance a été démarré de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
+				recordingMessage = fxgt.gettext("La séance a été démarré il y a ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
 			}else if(_session.statusSession == SessionStatusEnum.SESSION_CLOSE)
 			{
 				open = false;
