@@ -82,7 +82,7 @@
 				{
 					// add mesage Welcome
 					var user:User = Model.getInstance().getLoggedUser();
-					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenu sur le DECK.."),new Date());		
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenue sur le DECK.."),new Date());		
 					// add flux activity
 					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" a rejoint le DECK "),new Date());
 					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
@@ -101,7 +101,7 @@
 					if(strConnectedUser != "")
 					{
 						// add message about connected users
-						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" actualement sur le DECK : ")+strConnectedUser,new Date());
+						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" Actuallement sur le DECK : ")+strConnectedUser,new Date());
 					}
 				}
 				
