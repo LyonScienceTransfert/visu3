@@ -43,6 +43,12 @@ package ws.tink.spark.containers
 	
 	use namespace mx_internal;
 	
+	[SkinState("normal")]
+	[SkinState("disabled")]
+	[SkinState("errorNormal")]
+	[SkinState("errorDisabled")]
+	
+	
 	[Event(name="validChange", type="flash.events.Event")]
 	[Event(name="labelChanged", type="flash.events.Event")]
 	
@@ -177,7 +183,11 @@ package ws.tink.spark.containers
 		{
 			var state:String = super.getCurrentSkinState();
 			
-			if( _errorStrings.length ) return "error" + state.substr( 0, 1 ).toUpperCase() + state.substr( 1 );
+			/*if( _errorStrings.length ) 
+			{
+				var result:String = "error" + state.substr( 0, 1 ).toUpperCase() + state.substr( 1 );
+				return result;
+			} */
 			
 			return state;
 		}
@@ -307,6 +317,9 @@ package ws.tink.spark.containers
 			if( !enabled ) callLater( invalidateProperties );
 		}
 			
+		
+		
+		
 		override protected function commitProperties():void
 		{
 			if( _validChanged )
