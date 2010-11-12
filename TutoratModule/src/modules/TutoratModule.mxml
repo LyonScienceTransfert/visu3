@@ -17,6 +17,7 @@
 			import com.ithaca.traces.view.ObselButton;
 			import com.ithaca.traces.view.ObselImage;
 			import com.ithaca.traces.view.ObselLine;
+			import com.ithaca.traces.view.ObselMarker;
 			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetail;
@@ -692,12 +693,12 @@
 			protected function onSendMessage(event:*):void
 			{
 				if(event is MouseEvent){
-					this.sendMessage();
+					this.sendMessage(false);
 				}else if (event is KeyboardEvent) 
 				{
 					if(event.keyCode == Keyboard.ENTER)
 					{
-						this.sendMessage();
+						this.sendMessage(true);
 					}
 				}
 			}
@@ -705,7 +706,7 @@
 			/**
 			 * Sending message
 			 */
-			private function sendMessage():void
+			private function sendMessage(cutLastCharMessage:Boolean):void
 			{
 				// TODO send message to one user by click on his video
 				var listUsersId:Array;
@@ -724,8 +725,12 @@
 				}
 				
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
-				// remove last character from the message
-				var message:String = textChatMessage.text.slice(0, textChatMessage.text.length-1);
+				var message:String = textChatMessage.text;
+				if(cutLastCharMessage)
+				{
+					// remove last character from the message if was click on button "Enter"
+					message = textChatMessage.text.slice(0, textChatMessage.text.length-1);
+				}
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.listUsers = listUsersId;
 				dispatchEvent(sessionSharedEvent);
@@ -739,25 +744,30 @@
 			protected function onSetMyMarker(event:*):void
 			{
 				if(event is MouseEvent){
-					this.sendMarker();
+					this.sendMarker(false);
 				}else if (event is KeyboardEvent) 
 				{
 					if(event.keyCode == Keyboard.ENTER)
 					{
-						this.sendMarker();
+						this.sendMarker(true);
 					}
 				}
 			}
 			/**
 			 *  Sending marker
 			 */
-			private function sendMarker():void
+			private function sendMarker(cutLastCharMessage:Boolean):void
 			{
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
-				var message:String = textChatMarker.text.slice(0, textChatMarker.text.length-1);
+				var message:String = textChatMarker.text;
+				// cut last char if was click on button "Enter"
+				if(cutLastCharMessage)
+				{
+					message = textChatMarker.text.slice(0, textChatMarker.text.length-1);
+				}
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
@@ -931,6 +941,9 @@
 			
 			private function onCreationCompletTraceLine(event:FlexEvent):void
 			{
+				// add listener
+				this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+				
 				var traceLine:TraceLineB = event.currentTarget as TraceLineB;
 				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
 				traceLine.listTitleObsels = traceLine.tempList;		
