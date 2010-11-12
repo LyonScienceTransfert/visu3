@@ -447,7 +447,15 @@
 						}
 						
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
-						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo);
+						// default color of component SharedElementChatSkin 
+						// only for chat messages sended before start session(hasn't info about users)
+						var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
+						var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
+						if(traceLine != null)
+						{
+							userColor = traceLine.userColor;
+						}
+						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo,userColor);
 						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 						this.panelChatSession.addElement(sharedElementChat);
 					}
@@ -1094,9 +1102,9 @@
 					var traceLine:Object = Model.getInstance().getTraceLineByUserId(ownerObsel); 
 					var userAvatar:String = traceLine.userAvatar as String;
 					var userName:String = traceLine.userName as String;
+					var userColor:uint = traceLine.userColor;
 					var sharedElementChat:SharedElementChat = new SharedElementChat();
-					sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass);
-					this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+					sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
 					this.panelChatSession.addElement(sharedElementChat);
 				}
 			}

@@ -24,6 +24,9 @@ package com.ithaca.visu.controls.sessions
 		private var _nameSender:String;
 		private var _sourceImageInfo:Class;
 		private var _info:String;
+		private var _backGroundColor:uint;
+		
+		public var defaultColorFullColorGradientExit:uint = 0xD8D8D8;
 		
 		public function SharedElementChat()
 		{
@@ -69,15 +72,17 @@ package com.ithaca.visu.controls.sessions
 			return "normal";
 		}
 		
-		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:Class):void
+		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:Class, backGroundColor:uint):void
 		{
 			infoChanged = true;
 			_pathAvatar = pathAvatar;
 			_nameSender = nameSender;
 			_info = info;
 			_sourceImageInfo = sourceImageInfo;
+			_backGroundColor = backGroundColor;
 			invalidateProperties();
 		}
 		
+		public function get backGroundColor():uint{return this._backGroundColor};
 	}
 }

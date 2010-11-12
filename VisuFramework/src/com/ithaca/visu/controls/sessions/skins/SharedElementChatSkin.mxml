@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx">
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		preinitialize="skin1_preinitializeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.sessions.SharedElementChat")]
 	</fx:Metadata>
 	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			protected function skin1_preinitializeHandler(event:FlexEvent):void
+			{
+				fullColorGradientExit.color = this.hostComponent.backGroundColor;
+			}
+
+		]]>
+	</fx:Script>
 	<!-- states -->
 	<s:states>
 		<s:State name="normal" />
@@ -16,7 +27,7 @@
 	name=titleDisplay, type=spark.components.supportClasses.TextBase, required=false
 	-->
 	<s:Group width="100%" >				
-		<s:Rect top="0" left="1" bottom="-2" right="1">
+		<s:Rect top="0" left="1" bottom="-2" right="1" >
 			<s:stroke>
 				<s:LinearGradientStroke rotation="90">
 					<s:GradientEntry color="#CCCCCC" />
@@ -26,7 +37,7 @@
 			<s:fill>
 				<s:LinearGradient rotation="90">					
 					<s:GradientEntry color="#FFFFFF" />						
-					<s:GradientEntry color="#D8D8D8" />						
+					<s:GradientEntry id="fullColorGradientExit"/>						
 				</s:LinearGradient>
 			</s:fill>
 		</s:Rect>
