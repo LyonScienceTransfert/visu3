@@ -115,8 +115,9 @@
 					var session:Session = (event.currentTarget as TutoratModule).parameters as Session ;
 					session.duration_session = session.duration_session*1.1;
 					this.currentSession = session;
-					// FIXME many instance of TutoratModul
+					// set current session in the model for checking if new use join this session  
 					Model.getInstance().setCurrentSession(session);
+					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentTutoratModule(this);
 					// init list traceLines
 					Model.getInstance().initListTraceLine();

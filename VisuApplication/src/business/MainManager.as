@@ -319,21 +319,39 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusRecording(userId:int, status:int, sessionId:int, startRecording:Date):void{
+	public function onSetStatusRecording(userId:int, status:int, sessionId:int, startRecording:Date, obselVO:ObselVO):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
 			// update status user 
 			Model.getInstance().updateStatusUser(userVO, status , sessionId);
 			// update status session, "recording"
-			var session:Session = Model.getInstance().hasSessionById(sessionId);
-			if(session != null)
+			var session:Session = Model.getInstance().getCurrentSession();
+			if(session == null)
 			{
+				Alert.show("You have a problem with setting the current session !!!","information")
+			}
+			if(sessionId == session.id_session)
+			{
+				// set time begin in the salon synchrone only if the session start recording
+				// session started, have to set time the startRecording, not begin the obsel 
+				// FIXME : now we getting start recording time from current session
+				Model.getInstance().setBeginTimeSalonSynchrone(startRecording.time);
 				session.statusSession = SessionStatusEnum.SESSION_RECORDING; 
 				// NOTE : startRecording will be null only if user join session after start recording event, other user ready has date the start session
 				if(startRecording != null)
 				{
 					session.date_start_recording = startRecording; 
+				}
+				
+				if(obselVO != null)
+				{
+				// have to add new traceLine and update the model, list obsel of this user is empty
+					var obsel:Obsel = Obsel.fromRDF(obselVO.rdf); 
+					this.addPresentUsers(obsel);
+					var eventUpdateviewTraceLine:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_VIEW_TRACELINE);
+					eventUpdateviewTraceLine.userId = userId;
+					this.dispatcher.dispatchEvent(eventUpdateviewTraceLine);
 				}
 			}
 			// update list user
@@ -342,7 +360,7 @@ public class MainManager
 	}
 
 	/**
-	 * set status 
+	 * set status stop/pause
 	 * @param
 	 * userVO
 	 * userIdClient 
