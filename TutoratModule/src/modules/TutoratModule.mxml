@@ -989,7 +989,7 @@
 			private function addObsel(obsel:Obsel,sessionReadyInit:Boolean):void
 			{
 				var typeObsel:String = obsel.type;
-				var viewObsel:ObselImage = new ObselImage();
+				var viewObsel = new ObselImage();
 				viewObsel.setBegin(obsel.begin);
 				viewObsel.setEnd(obsel.end);
 				var textObsel:String;
@@ -997,16 +997,28 @@
 				switch (typeObsel)
 				{
 					case TraceModel.SET_MARKER :
+						viewObsel = new ObselMarker();
+						viewObsel.setBegin(obsel.begin);
+						viewObsel.setEnd(obsel.end);
 						ownerObsel = obsel.uid;
 						viewObsel.source =  markerIcon;
 						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.text = textObsel;
 						viewObsel.toolTip = textObsel;
+						var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
+						viewObsel.backGroundColor = backGroundColorObsel;
 						break;
 					case TraceModel.RECEIVE_MARKER :
-						ownerObsel = obsel.props[TraceModel.SENDER];
+						viewObsel = new ObselMarker();
+						viewObsel.setBegin(obsel.begin);
+						viewObsel.setEnd(obsel.end);
+						ownerObsel = obsel.uid;
 						viewObsel.source =  markerIcon;
 						textObsel = obsel.props[TraceModel.TEXT];
+						viewObsel.text = textObsel;
 						viewObsel.toolTip = textObsel;
+						var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
+						viewObsel.backGroundColor = backGroundColorObsel;
 						break;
 					case TraceModel.SEND_CHAT_MESSAGE :
 						ownerObsel = obsel.uid;
@@ -1019,7 +1031,8 @@
 						viewObsel.source =  messageChatIconVisu1;
 						textObsel = obsel.props[TraceModel.CONTENT];
 						viewObsel.toolTip = obsel.props[TraceModel.SENDER] + ":" + textObsel;
-						initChatPanel(ownerObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+						var senderObsel:int = obsel.props[TraceModel.SENDER];
+						initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
 						break;
 					case TraceModel.SEND_KEYWORD :
 						ownerObsel = obsel.uid;
@@ -1032,7 +1045,8 @@
 						viewObsel.source =  keywordIcon;
 						textObsel = obsel.props[TraceModel.KEYWORD];
 						viewObsel.toolTip = textObsel;
-						initChatPanel(ownerObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+						var senderObsel:int = obsel.props[TraceModel.SENDER];
+						initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
 						break;
 					case TraceModel.SEND_INSTRUCTIONS :
 						ownerObsel = obsel.uid;
@@ -1045,7 +1059,9 @@
 						viewObsel.source =  consigneIconVisu1;
 						textObsel = obsel.props[TraceModel.INSTRUCTIONS];
 						viewObsel.toolTip = textObsel;
-						initChatPanel(ownerObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+						// for reconstruction the chat
+						var senderObsel:int = obsel.props[TraceModel.SENDER];
+						initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
 						break;
 					case TraceModel.SEND_DOCUMENT :
 						ownerObsel = obsel.uid;
@@ -1072,7 +1088,8 @@
 						}
 						textObsel = obsel.props[TraceModel.TEXT];
 						viewObsel.toolTip = textObsel;
-						initChatPanel(ownerObsel, textObsel, fichierIconVisu1 , sessionReadyInit);
+						var senderObsel:int = obsel.props[TraceModel.SENDER];
+						initChatPanel(senderObsel, textObsel, fichierIconVisu1 , sessionReadyInit);
 						break;
 					case TraceModel.READ_DOCUMENT :
 						ownerObsel = obsel.props[TraceModel.SENDER];
