@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:ns1="*" skinClass="spark.skins.spark.SkinnableContainerSkin" xmlns:timeline="com.ithaca.visu.controls.timeline.*">
+
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.traces.view.IObselComponenet;
+			
+			import mx.controls.Alert;
+			import mx.core.ILayoutElement;
+			protected function sessionTimeLineLoggedUser_clickHandler(event:MouseEvent):void
+			{
+			//	Alert.show((event.currentTarget as Group).width.toString(),"");
+				var nbrChild:int = sessionTimeLineLoggedUser.numElements;
+				for(var i:int = 0; i < nbrChild; i++){
+					
+					// get the current layout element
+					var layoutElement:ILayoutElement = sessionTimeLineLoggedUser.getElementAt(i);
+					
+					var elementObsel:IObselComponenet = layoutElement as IObselComponenet;
+					var timeBegin:Number = elementObsel.getBegin();
+					var timeEnd:Number   = elementObsel.getEnd();
+					
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Label text="" left="120" top="15"  id="labelCurrentTimeSession" fontWeight="bold"/>
+
+	<s:Group top="3" right="0" height="35" id="sessionTimeLineLoggedUser" click="sessionTimeLineLoggedUser_clickHandler(event)">
+		<s:layout>
+			<timeline:TimeSessionLayout id="sessionTimeLineLayout"/>
+		</s:layout>
+	</s:Group>
+</s:SkinnableContainer>
