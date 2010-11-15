@@ -1,16 +1,21 @@
 package business
 {
+import com.ithaca.traces.Obsel;
+import com.ithaca.traces.model.TraceModel;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.UserEvent;
+import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
+import com.ithaca.visu.ui.utils.ColorEnum;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
 import com.lyon2.visu.model.Model;
 import com.lyon2.visu.model.Session;
 import com.lyon2.visu.model.User;
+import com.lyon2.visu.vo.ObselVO;
 import com.lyon2.visu.vo.SessionUserVO;
 import com.lyon2.visu.vo.SessionVO;
 import com.lyon2.visu.vo.UserVO;
@@ -190,18 +195,20 @@ public class MainManager
 	/**
 	 * notification when start recording session
 	 */
-	public function onStartRecording():void
+	public function onStartRecording(timeStart:Number):void
 	{
 		var eventRecordingSession:SessionEvent = new SessionEvent(SessionEvent.START_RECORDING_SESSION);
+		eventRecordingSession.timeStartStop = timeStart;
 		dispatcher.dispatchEvent(eventRecordingSession);
 	}
 	
 	/**
 	 * notification when start recording session
 	 */
-	public function onStopRecording():void
+	public function onStopRecording(timeStop:Number):void
 	{
 		var eventStopSession:SessionEvent = new SessionEvent(SessionEvent.STOP_RECORDING_SESSION);
+		eventStopSession.timeStartStop = timeStop;
 		dispatcher.dispatchEvent(eventStopSession);
 	}
 	
@@ -291,6 +298,133 @@ public class MainManager
 	}
 	
 	/**
+	 *  Get list obsel for salon synchrone
+	 */
+	public function onCheckListActiveObsel(listObselVO:Array):void
+	{		
+		var listObsel:ArrayCollection = null;
+		if(!(listObselVO == null || listObselVO.length == 0))
+		{
+			listObsel = new ArrayCollection();
+			var firstObselVO:ObselVO = listObselVO[0] as ObselVO;
+			var typeFirstObselVO:String = firstObselVO.type;
+			var firstObsel:Obsel = null;
+			if(typeFirstObselVO == TraceModel.SESSION_START || typeFirstObselVO == TraceModel.SESSION_ENTER)
+			{
+				firstObsel = Obsel.fromRDF(firstObselVO.rdf);
+				// add presents users(id, name, avatar, color) from start the session
+				this.addPresentUsers(firstObsel);	
+				//Model.getInstance().setBeginTimeSalonSynchrone(firstObsel.begin);
+			}else
+			{
+				Alert.show('Probleme avec le trace activities, premier obsel != SessionStart/SessionEnter',"");	
+			}
+
+			// exit from session 
+			var stopTimeSessionMsec:Number;
+			var startTimeSessionMsec:Number;
+			var activityStartId:int = 0;
+			var nbrObsels:int = listObselVO.length;
+			// try start finding obsel exclus first obsel => nObsel = 1; 
+			for(var nObsel:int = 1;nObsel < nbrObsels; nObsel++)
+			{
+				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
+				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+				var typeObsel:String = obsel.type;
+				switch (typeObsel){
+					case TraceModel.SEND_CHAT_MESSAGE:
+					case TraceModel.RECEIVE_CHAT_MESSAGE:
+					case TraceModel.SET_MARKER:
+					case TraceModel.RECEIVE_MARKER:
+					case TraceModel.SEND_KEYWORD:
+					case TraceModel.RECEIVE_KEYWORD:
+					case TraceModel.SEND_INSTRUCTIONS:
+					case TraceModel.RECEIVE_INSTRUCTIONS:
+					case TraceModel.SEND_DOCUMENT:
+					case TraceModel.RECEIVE_DOCUMENT:
+					case TraceModel.READ_DOCUMENT:
+						listObsel.addItem(obsel);
+						break;
+					case TraceModel.SESSION_EXIT:
+						var uid:int = int(obsel.props[TraceModel.UID]);
+						if (uid == Model.getInstance().getLoggedUser().id_user)
+						{
+							stopTimeSessionMsec = obsel.begin;
+						}
+						break;
+					case TraceModel.SESSION_PAUSE:
+						stopTimeSessionMsec = obsel.begin;
+						break;
+					case TraceModel.SESSION_ENTER:
+						// add obsel SessionOut
+						var uid:int = int(obsel.props[TraceModel.UID]);
+						if(uid == Model.getInstance().getLoggedUser().id_user)
+						{
+							startTimeSessionMsec = obsel.begin;
+							var obselOutSession:Obsel = new Obsel(TraceModel.SESSION_OUT);
+							obselOutSession.begin = stopTimeSessionMsec;
+							obselOutSession.end = startTimeSessionMsec;
+							obselOutSession.uid = uid;	
+							listObsel.addItem(obselOutSession);
+						}
+						// add presents users(id, name, avatar, color)
+						this.addPresentUsers(obsel);
+						break;
+					case TraceModel.ACTIVITY_START:
+						activityStartId = int(obsel.props[TraceModel.ACTIVITY_ID]);
+						break;
+					case TraceModel.ACTIVITY_STOP:
+						activityStartId = 0;
+						break;
+					
+				}
+				
+			}
+			
+		}
+		Model.getInstance().setListObsel(listObsel);
+		this.dispatcher.dispatchEvent(new SessionEvent(SessionEvent.LOAD_LIST_OBSEL));
+		// update current activity in TutoratModule
+		if(activityStartId != 0)
+		{
+			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.UPDATE_ACTIVITY);
+			visuActivityEvent.activityId = activityStartId;
+			this.dispatcher.dispatchEvent(visuActivityEvent);
+		}
+	}
+	
+	/**
+	 *  Get list obsel StartSession EnterSession for salon retrospection 
+	 */
+	public function onCheckListObselStartSession(listObselVO:Array):void
+	{
+		
+	}
+	
+	/**
+	 * Add TraceLines to Model
+	 */
+	private function addPresentUsers(obsel:Obsel):void
+	{
+		var listPresents:Array = obsel.props[TraceModel.PRESENT_IDS] as Array;
+		var listNames:Array  = obsel.props[TraceModel.PRESENT_NAMES] as Array;
+		var listAvatars:Array  = obsel.props[TraceModel.PRESENT_AVATARS] as Array;
+		var listColors:Array  = obsel.props[TraceModel.PRESENT_COLORS] as Array;
+		var listColorsCode:Array  = obsel.props[TraceModel.PRESENT_COLORS_CODE] as Array;
+		var nbrPresents:int = listPresents.length;
+		for(var nPresent:int = 0 ; nPresent < nbrPresents ; nPresent++)
+		{
+			var userId:int = listPresents[nPresent];
+			var userName:String = listNames[nPresent];
+			var userAvatar:String = listAvatars[nPresent];
+			var userColor:String = listColors[nPresent];
+			var code:String = listColorsCode[nPresent];
+			var userColorCode:String =  ColorEnum.getColorByCode(code);
+			Model.getInstance().addTraceLine(userId, userName, userAvatar, userColorCode);
+		}
+	}
+	
+	/**
 	 * call if user join the session
 	 * @param
 	 * userVO
@@ -327,10 +461,10 @@ public class MainManager
 			Model.getInstance().updateStatusUser(userVO, status , sessionId);
 			// update status session, "recording"
 			var session:Session = Model.getInstance().getCurrentSession();
-			if(session == null)
+/*			if(session == null)
 			{
 				Alert.show("You have a problem with setting the current session !!!","information")
-			}
+			}*/
 			if(sessionId == session.id_session)
 			{
 				// set time begin in the salon synchrone only if the session start recording
@@ -417,13 +551,15 @@ public class MainManager
 	 * 
 	 * 
 	 */
-	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String):void
+	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String, obselVO:ObselVO):void
 	{	
 		var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.RECEIVE_SHARED_INFO);	
 		sessionSharedEvent.typeInfo = typeInfo;
 		sessionSharedEvent.info = info;
 		sessionSharedEvent.senderUserId = senderUserId;		
-		sessionSharedEvent.url = urlElement;		
+		sessionSharedEvent.url = urlElement;	
+		// TODO : can make simple
+		sessionSharedEvent.obselVO = obselVO;		
 		this.dispatcher.dispatchEvent(sessionSharedEvent);	
 	}
 	
