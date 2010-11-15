@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<mate:EventMap 
+<mate:LocalEventMap 
 	xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/halo"
@@ -7,38 +7,33 @@
 	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 	
 	<fx:Script><![CDATA[
-		import modules.UserModule;
-		import business.UserManager;
+		
+		import  business.RetrospectionManager;
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
-		
-		import com.ithaca.visu.events.MessageEvent;
-		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.UserEvent;
-		
-		
-		import mx.core.FlexGlobals;
-		import mx.events.FlexEvent;
-		import mx.events.ModuleEvent;
-		
 		import com.ithaca.visu.events.InitMapEvent;	
+		
+		import mx.events.FlexEvent;
 		
 	]]></fx:Script>
 	
 	<fx:Declarations>
 		<mate:Debugger level="{Debugger.ALL}"/>
 		
-		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_RETROSPECTION}" debug="true">
+		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
 			<mate:ObjectBuilder generator="{RetrospectionManager}" constructorArguments="{scope.dispatcher}"/>
-			<mate:MethodInvoker generator="{RetrospectionManager}" 
-								method="onError" />
-		</mate:EventHandlers>
-		
-		
+		</mate:EventHandlers>		
+		<!-- InitMapEvent.INIT_MAP_TUTORAT __________________________________________________________________ -->		
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_RETROSPECTION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="testApp"   arguments="{['Retrospection']}" />
+			</rtmp:RtmpServiceInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getSessionsByUser"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>	
 	</fx:Declarations>
 	
-</mate:EventMap>
+</mate:LocalEventMap>

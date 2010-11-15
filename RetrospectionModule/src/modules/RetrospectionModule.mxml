@@ -20,6 +20,15 @@
 			
 			import mx.events.FlexEvent;
 			
+			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+			{			
+				if((event.currentTarget as RetrospectionModule).parameters != null)
+				{
+					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
+				}
+				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
+				this.dispatchEvent(initMapEvent); 
+			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
@@ -36,19 +45,12 @@
 				
 			}
 				
-			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
-			{			
-				if((event.currentTarget as RetrospectionModule).parameters != null)
-				{
-					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
-				}
-				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
-				this.dispatchEvent(initMapEvent); 
-			}
 		]]>
 		
 	</fx:Script>
-	
+	<fx:Declarations>
+		<maps:RetrospectionMap id="retrospectionMap"  dispatcher="{this}"/>
+	</fx:Declarations>
 <mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
