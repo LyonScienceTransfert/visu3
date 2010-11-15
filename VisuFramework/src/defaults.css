@@ -6,6 +6,10 @@
 @namespace core 	"com.ithaca.visu.core.*"; 
 @namespace login	"com.ithaca.visu.controls.login.*";
 @namespace sessions	"com.ithaca.visu.controls.sessions.*";
+@namespace trace	"com.ithaca.visu.controls.timeline.*";
+@namespace obsel	"com.ithaca.traces.view.*";
+
+
 
 
 ConnectionLight
@@ -51,3 +55,28 @@ sessions|SharedElementChat
 {
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SharedElementChatSkin");	
 }
+
+trace|TraceLine
+{
+	skin-class: ClassReference("com.ithaca.visu.controls.timeline.skins.TraceLineSkin");
+}
+
+trace|TraceLineB
+{
+	skin-class: ClassReference("com.ithaca.visu.controls.timeline.skins.TraceLineSkinB");
+}
+
+trace|TraceLineElement
+{
+	skin-class: ClassReference("com.ithaca.visu.controls.timeline.skins.TraceLineElementSkin");
+}
+
+obsel|ObselLine
+{
+	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselLineSkin");
+}
+obsel|ObselMarker
+{
+	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselMarkerSkin");
+}
+
