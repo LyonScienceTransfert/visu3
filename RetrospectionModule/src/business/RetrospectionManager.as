@@ -1,5 +1,9 @@
 package business
 {
+	import flash.events.IEventDispatcher;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
+
 	public class RetrospectionManager
 	{
 		private var logger : ILogger = Log.getLogger('TutoratManager');
