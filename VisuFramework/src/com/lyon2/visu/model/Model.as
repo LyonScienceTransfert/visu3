@@ -957,7 +957,7 @@ package  com.lyon2.visu.model
 		/**
 		 * get list users id with status "RECORDING" of the recording session 
 		 */
-		public function getListUsersIdByRecordingSession(sessionId:int):Array
+		public function getListUsersIdByRecordingSession(sessionId:int, role:int=0):Array
 		{
 			var result:Array = new Array();
 			var nbrUsers:uint = this.listConnectedUsers.length;
@@ -967,7 +967,27 @@ package  com.lyon2.visu.model
 				if((user.status == ConnectionStatus.RECORDING) && (user.currentSessionId == sessionId))
 				{
 					//add userId only if status Recording of this sessionId
-					result.push(user.getId());				
+					if(role == 0 )
+					{
+						result.push(user.getId());				
+					}
+					else if( role < RoleEnum.TUTEUR)
+						// will shared only with Tutor.....and with myself
+						{
+							if (user.role > RoleEnum.STUDENT || user.id_user == this._loggedUser.id_user)
+							{
+								result.push(user.getId());	
+							}
+						}
+					else 
+						// will shared only with himself
+					{
+						if(user.id_user == this._loggedUser.id_user)
+						{
+							result.push(user.getId());	
+						}
+					}
+					
 				}
 			}
 			return result;
