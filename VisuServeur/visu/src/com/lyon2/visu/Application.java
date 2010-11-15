@@ -420,19 +420,23 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		//notify all the client in the scope that one is disconnect from "Deck"/"Plateforme"
 		invokeOnScopeClients(scope, "outDeck", args);
         log.warn("client {} deconnect",user.getId_user());
-		try
-		{
-			if(user != null)
-			{
-				setObsel(userId, (String)client.getAttribute("trace"), "Disconnected", null);
-			}
-
-		}
-		catch (SQLException sqle)
-		{
-			log.error("=====Errors===== {}", sqle);
-		}
-		
+        boolean hasTrace = client.hasAttribute("trace");
+        // add obsel "Disconected" only if user has trace for this sessionId 
+        if(hasTrace)
+        {
+        	try
+        	{
+        		if(user != null)
+        		{
+        			setObsel(userId, (String)client.getAttribute("trace"), "Disconnected", null);
+        		}
+        		
+        	}
+        	catch (SQLException sqle)
+        	{
+        		log.error("=====Errors===== {}", sqle);
+        	}        	
+        }
 		client.setAttribute("status", 1);
 	}
 
@@ -602,8 +606,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			String clientId = (String)client.getAttribute("id");
 			log.warn("===clientId = {}",clientId);
 			Integer clientIdInt = Integer.parseInt(clientId);
-				
-			if(clientIdInt == clientIdOfStreamInt)
+			int diff = clientIdInt - clientIdOfStreamInt;
+			if(diff == 0)
 			{
 				clientRecording = client;
 			}
