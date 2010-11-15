@@ -90,6 +90,8 @@
 			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
 			<rtmp:CallbackRegistrator action="checkListDates" target="{MainManager}" method="onCheckListDates"/>
 			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
+			<rtmp:CallbackRegistrator action="checkListActiveObsel" target="{MainManager}" method="onCheckListActiveObsel"/>
+			<rtmp:CallbackRegistrator action="checkListObselStartSession" target="{MainManager}" method="onCheckListObselStartSession"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
@@ -135,7 +137,7 @@
 		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendSharedInfo"
-							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status]}"/>              
+							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
