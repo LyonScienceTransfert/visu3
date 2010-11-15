@@ -108,6 +108,27 @@ public class ObselInfo
   	
 	protected static final Logger log = Red5LoggerFactory.getLogger(ObselInfo.class, "visu2" );
 	
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<Obsel> getObselSetMark(IConnection conn) throws SQLException 
+	{
+		log.warn("====== getObselSetMark ======");
+		List<Obsel> listObselSessionStart = null;
+		try
+		{
+				
+			listObselSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getObselSetMark");
+			
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+			log.warn("empty BD, exception case");	
+			
+		}
+		log.warn("====== numbers obsel = {}",listObselSessionStart.size());
+		return listObselSessionStart;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void getActiveTraceUser(IConnection conn) throws SQLException 
 	{
