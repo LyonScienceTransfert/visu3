@@ -205,7 +205,9 @@ package com.ithaca.visu.controls
 				+ subDisplay.measuredHeight;
 			if( users  ) 
 			{ 
-				measuredHeight += 150;
+				var nbrUsers:uint = users.numElements;
+				// try to calcul height the part users
+				measuredHeight += (nbrUsers/2 + 1)*22 + 60;
 			}
 			measuredMinHeight = measuredHeight;
 		}

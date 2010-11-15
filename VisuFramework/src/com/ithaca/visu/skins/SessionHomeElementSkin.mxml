@@ -103,8 +103,8 @@
 		top="5" left="45"
 		mouseChildren="false" mouseEnabled="false"
 		/>
-	<s:Scroller maxHeight="300" includeIn="open"  top="20" bottom="20" left="5" right="5" itemDestructionPolicy="auto">		
-		<s:DataGroup id="users" top="0" bottom="0" left="0" right="0" >
+	<s:Scroller includeIn="open" top="20" bottom="20" left="5" right="5" itemDestructionPolicy="auto">		
+		<s:DataGroup id="users" top="0" bottom="0" left="0" right="0" minHeight="300">
 			<s:layout>
 				<layout:FlowLayout />
 			</s:layout>
