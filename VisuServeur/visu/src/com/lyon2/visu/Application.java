@@ -783,6 +783,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					List<Object> paramsObselSessionEnter= new ArrayList<Object>();
     				paramsObselSessionEnter.add("uid");paramsObselSessionEnter.add(userId.toString());
     				paramsObselSessionEnter.add("session");paramsObselSessionEnter.add(sessionId.toString());
+    				paramsObselSessionEnter.add("sessionTheme");paramsObselSessionEnter.add(session.getTheme());
+    			//	paramsObselSessionEnter.add("sessionstartrecording");paramsObselSessionEnter.add(Long.toString(session.getStart_recording().getTime()));
     				paramsObselSessionEnter.add("presentids");paramsObselSessionEnter.add(listPresentsIdUsers);
     				paramsObselSessionEnter.add("presentavatars");paramsObselSessionEnter.add(listPresentsAvatarUsers);
     				paramsObselSessionEnter.add("presentnames");paramsObselSessionEnter.add(listPresentsNameUsers);
@@ -809,6 +811,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					List<Object> paramsObselRecordFileName= new ArrayList<Object>();
 					paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(filename);
     				paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(sessionId.toString());
+    				paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(userId.toString());
 					// add obsel "RecordFileName"
 					try
 					{

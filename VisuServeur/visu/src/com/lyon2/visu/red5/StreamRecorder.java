@@ -152,6 +152,7 @@ public class StreamRecorder
 		// can have too type the obsels : SystemSessionStart/SystemSessionEnter
 		String typeObselSystem="";
         String traceSystem="";
+        Session session = null;
 		//record all the streams in a scope
         for (String name: app.getBroadcastStreamNames(scope))
 		{			
@@ -164,7 +165,6 @@ public class StreamRecorder
              * second. Given that in this case, the previous recorded
              * information would be useless anyway, we do not make any
              * effort to avoid that. */
-			
 			// sessionId of this client
 			Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
 			if(sessionIdClient == session_id)
@@ -173,7 +173,7 @@ public class StreamRecorder
 				Integer userId = (Integer)client.getAttribute("uid");
 				User user = (User)client.getAttribute("user");
 				// get recording session
-				Session session = null;
+				
 				try
 				{
 					session = (Session) app.getSqlMapClient().queryForObject("sessions.getSession",session_id);
@@ -289,7 +289,7 @@ public class StreamRecorder
     			listPresentsIdUsers.add(userId.toString());
 				listPresentsAvatarUsers.add(user.getAvatar());
 				listPresentsNameUsers.add(user.getFirstname());
-				listPresentsColorUsers.add("0xee8888");
+	//			listPresentsColorUsers.add("0xee8888");
 				// add code color
 				Integer codeColorUser = 0;
 				if(listUserCodeColor.containsKey(userId))
@@ -311,7 +311,7 @@ public class StreamRecorder
 					stream.saveAs(filename, false);					
 					// However, NetStream takes the generated basename,
 					// without prefix or suffix. So return only this part.
-					filenames.add(filename);
+					//filenames.add(filename);
 					
 				} 
 				catch (Exception e) 
@@ -342,7 +342,8 @@ public class StreamRecorder
     			// add obsel "SessionStart"
     			List<Object> paramsObselSessionStart= new ArrayList<Object>();
     			paramsObselSessionStart.add("session");paramsObselSessionStart.add(session_id.toString());
-    			// TODO : get durationSession of this session
+    			paramsObselSessionStart.add("sessionTheme");paramsObselSessionStart.add(session.getTheme());
+ //    			// TODO : get durationSession of this session
     			paramsObselSessionStart.add("durationSession");paramsObselSessionStart.add("void");
     			paramsObselSessionStart.add("useridsetstart");paramsObselSessionStart.add(String.valueOf(conn.getClient().getAttribute("uid")));
     			paramsObselSessionStart.add("uid");paramsObselSessionStart.add(key.toString());
