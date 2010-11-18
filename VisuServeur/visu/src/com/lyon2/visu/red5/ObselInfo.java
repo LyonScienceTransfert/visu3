@@ -184,6 +184,38 @@ public class ObselInfo
 			sc.invoke("checkListActiveObsel", args);
 		} 		
 	}
+	@SuppressWarnings("unchecked")
+	public void getTraceUser(IConnection conn, String traceId, Integer sessionId) throws SQLException 
+	{
+		log.warn("======== getTraceUser ");
+		IClient client = conn.getClient();
+		List <Obsel> result = null;
+		Session session = null;
+		// get list obsel
+		try
+		{
+			result = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTrace", traceId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des obsels" + e);
+		}
+		// get session
+		try
+		{
+			session =  (Session)app.getSqlMapClient().queryForObject("sessions.getSession", sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des session" + e);
+		}
+		Date sessionStartRecordingDate = session.getStart_recording();
+		Long sessionStartRecording = sessionStartRecordingDate.getTime();
+		Object[] args = {result, sessionStartRecording};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListUserObsel", args);
+		} 		
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
