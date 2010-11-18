@@ -90,6 +90,8 @@ import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
 
+import com.ithaca.domain.model.Obsel;
+import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
@@ -192,7 +194,74 @@ public class SessionInfo
 			sc.invoke("checkListSession", args);
 			} 	
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void getSessionsByUser(IConnection conn){
+		log.warn("====== getSessionsByUser =========");
+		IClient client = conn.getClient();
+		Integer userId = (Integer)client.getAttribute("uid");
+		log.warn("userId = {}", userId.toString() );
+		List <String> listTraceId = new ArrayList<String>();
+		List <Obsel> listObselTraceId = null;
+		List <Obsel> listResultObselOneBySession = new ArrayList<Obsel>();
+		try
+		{	
+			String traceParam = "%-"+userId.toString()+">%";
+			String refParam = "%:hasSession "+"\""+"1"+"\""+"%";
+			
+			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
+			log.warn("==== refParam  {}",osp.getRefParam());
+			log.warn("====  traceParam {}",osp.getTraceParam());
 
+			listObselTraceId = (List<Obsel>)app.getSqlMapClient().queryForList("obsels.getTracesByUserId", osp);			
+			for(Obsel obsel : listObselTraceId)
+			{
+				addTraceId(listTraceId, obsel);
+			}	
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+			log.warn("empty BD, hasn't sessions,  exception case");	
+			// hasn't trace , hasn't obsels
+		}
+		
+		List <Obsel> listObselByTraceId = new ArrayList<Obsel>(); 
+		for(String traceId : listTraceId)
+		{
+			try
+			{	
+				listObselByTraceId	 = (List<Obsel>)app.getSqlMapClient().queryForList("obsels.getObselsSessionStartSessionEnterByTraceId", traceId);	
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des sessions" + e);
+				log.warn("empty BD, hasn't obsels,  exception case");	
+			}
+			if(listObselByTraceId.size() > 0)
+			{
+				Obsel firstObsel = listObselByTraceId.get(0);
+				listResultObselOneBySession.add(firstObsel);				
+			}
+		}
+		Object[] args = {listResultObselOneBySession};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListObselStartSession", args);
+		} 	
+	}
+	
+	private void addTraceId(List <String> listTraceId, Obsel value)
+	{
+		String newTraceId = value.getTrace();
+		for(String traceId : listTraceId)
+		{
+			if(traceId.equals(newTraceId))
+			{
+				return ;
+			}
+		}
+		listTraceId.add(newTraceId);
+		return;
+	}
 	
 	public void setApplication(Application app) {
 		this.app = app;
