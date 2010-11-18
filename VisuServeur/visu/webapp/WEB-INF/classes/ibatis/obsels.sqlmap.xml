@@ -28,7 +28,12 @@
 	
 	<select id="getObsel" parameterClass="int" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM obsels WHERE id_obsel = #value#
+		FROM obsels WHERE type_obsel = #value#
+	</select>
+	
+	<select id="getObselSetMark" parameterClass="int" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels WHERE type_obsel = 'SetMark'
 	</select>
 		
 	<select id="getTraces" cacheModel="cache">
@@ -36,6 +41,24 @@
 		FROM obsels
         ORDER BY trace
 	</select>
+
+
+	
+	<select id="getTracesByUserId" cacheModel="cache" resultMap="obselResult" parameterClass="obselStringParam" >
+	  <![CDATA[  
+	  	SELECT * FROM obsels WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') and trace like #traceParam#	
+	  ]]>	
+	</select>
+	<select id="getObselsSessionStartSessionEnterByTraceId"  resultMap="obselResult" cacheModel="cache" parameterClass="String">
+	<![CDATA[  
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') 
+		AND trace =  #value#	
+		 ]]>	
+	</select>
+	        
+		
 
 	<select id="getTrace" parameterClass="String" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
