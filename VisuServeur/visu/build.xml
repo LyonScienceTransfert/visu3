@@ -1,0 +1,55 @@
+<project name="visu" basedir="." default="deploy">
+
+    <property name="APPNAME"     value="visu"/>
+
+    <property name="src.dir"     value="src"/>
+
+    <property name="red5.dir"     value="/home/red5"/>
+    <property name="webapp.dir"   value="${red5.dir}/webapps/${APPNAME}" />
+
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="${build.dir}/jar"/>
+
+    <property name="jar.file"    value="${jar.dir}/${ant.project.name}.jar" />
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac encoding="utf-8" srcdir="${src.dir}" destdir="${classes.dir}">
+          <compilerarg value="-Xlint:unchecked" />
+          <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="${red5.dir}/red5.jar"/>
+            <pathelement location="${red5.dir}/red5.jar"/>
+            <fileset dir="webapp/WEB-INF/lib" includes="*.jar"/>
+          </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.file}" basedir="${classes.dir}" />
+    </target>
+
+    <target name="deploy" depends="jar">
+
+      <mkdir dir="${webapp.dir}" />
+
+      <copy todir="${webapp.dir}">
+        <fileset dir="webapp" />
+      </copy>
+      
+      <copy file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
+
+      <copy file="../VisuClient/src/VisuClient.swf" todir="${webapp.dir}" />
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="compile"/>
+
+</project>
