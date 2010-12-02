@@ -315,7 +315,7 @@
 			{
 				if(!timer)
 				{
-					timer = new Timer(2000,0);
+					timer = new Timer(1000,0);
 					timer.addEventListener(TimerEvent.TIMER, updateTime);
 				}
 				timer.start();
@@ -326,7 +326,39 @@
 				var beginTime:Number = new Date().time - this.currentSession.date_start_recording.time;
 				this.testCursor.setBegin(beginTime);
 				this.testCursor.setEnd(beginTime);
+				this.sessionTimeLine.labelCurrentTimeSession.text = updateLabelTimer(beginTime);
 				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
+			}
+			
+			private function updateLabelTimer(value:Number):String
+			{
+
+				
+				var totalSecond:int = value/1000;
+				var minNumber:int = new int(totalSecond/60);
+				var hourNumber:int = new int(totalSecond/3600);
+				var secString:String="";
+				var minString:String="";
+				var hourString:String="";
+				var secons:Number = totalSecond - minNumber*60;
+				secString = secons.toString();
+				if(secons < 10)
+				{
+					secString = "0"+secString;
+				}
+				var min:Number = minNumber - hourNumber*60;
+				minString = min.toString();
+				if(min < 10)
+				{
+					minString = "0" + minString;
+				}
+				hourString = hourNumber.toString();
+				if(hourNumber < 10)
+				{
+					hourString = "0"+hourString;	
+				}
+				return  hourString+":"+minString+":"+secString;
+				
 			}
 
 			/**
