@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true"
+				added="itemrenderer1_addedHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+			protected function itemrenderer1_addedHandler(event:Event):void
+			{
+				this.percentWidth = 100;
+			}
+		]]>
+	</fx:Script>
+
+	
+	<s:Rect id="fill" radiusX="5"
+			left="2" right="2" top="1" bottom="1" minHeight="25">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xFFFFFF" />
+				<s:GradientEntry color="0xD8D8D8" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect id="border" radiusX="5"
+			left="2" right="2" top="0" bottom="0" >
+		<s:stroke>
+			<s:LinearGradientStroke rotation="90" weight="1">
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.5625"/>
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.75" />
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>
+	<!--<s:Label id="labelSessionDate" text="{data.sessionId}" fontWeight="bold"  left="5" top="12" width="60"/>-->
+	<s:Label id="labelSessionDate" text="Thème de la séance est : "  left="5" top="12" width="160"/>
+	<s:RichText text="{data.label}" left="25" right="35" top="32" fontWeight="bold" />
+<!--	<s:RichText text="{data.label}" left="{labelSessionDate.left + labelSessionDate.width + 5}" right="35" top="32" fontWeight="bold" />-->
+	
+</s:ItemRenderer>
