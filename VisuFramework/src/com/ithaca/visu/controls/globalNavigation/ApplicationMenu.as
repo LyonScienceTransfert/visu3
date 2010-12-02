@@ -1,6 +1,7 @@
 package com.ithaca.visu.controls.globalNavigation
 {
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+	import com.lyon2.visu.model.Model;
 	
 	import flash.events.MouseEvent;
 	
@@ -213,9 +214,13 @@ package com.ithaca.visu.controls.globalNavigation
 					bt.name = o.value;
 					// 
 					//FIXME : enabled module tutorat
-					// if(o.value == "tutorat"){bt.enabled = false;}
+					 if(o.value == "tutorat")
+					 {
+						 Model.getInstance().setButtonSalonSynchrone(bt);
+						 Model.getInstance().setEnabledButtonSalonSynchrone(false);
+					 }
 					// FIXME : enabled module retrospection
-					if(o.value == "retrospection"){bt.enabled = false;}
+//					if(o.value == "retrospection"){bt.enabled = false;}
 					// FIXME : enabled module session
 					if(o.value == "session"){bt.enabled = false;}
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);

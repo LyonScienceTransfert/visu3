@@ -37,6 +37,7 @@ package  com.lyon2.visu.model
 		private var _userIdClient:String;
 		private var _currentSession:Session = null;
 		private var _tutoratModule:VisuModuleBase;
+		private var _retroModule:VisuModuleBase;
 		private var _userModule:VisuModuleBase;
 		private var _homeModule:VisuModuleBase = null;
 		
@@ -46,7 +47,8 @@ package  com.lyon2.visu.model
 		private var _beginTimeSalonSynchrone:Number;
 	
 		private var listTraceLine:ArrayCollection;
-		//= new ArrayCollection() 
+
+		private var _buttonSalonSynchrone:Button; 
 		
 		public function Model(access:Private)
 		{
@@ -143,6 +145,18 @@ package  com.lyon2.visu.model
 			return _currentSession;
 		}
 		
+		/**
+		 * 
+		 */
+		public function setButtonSalonSynchrone(value:Button):void
+		{
+			this._buttonSalonSynchrone = value;
+		}
+		
+		public function setEnabledButtonSalonSynchrone(value:Boolean):void
+		{
+			this._buttonSalonSynchrone.enabled = value;
+		}
 		/**
 		 * current tutorat module, only for debugging
 		 */

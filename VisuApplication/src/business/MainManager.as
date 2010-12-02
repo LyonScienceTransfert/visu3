@@ -223,6 +223,43 @@ public class MainManager
 	}
 	
 	/**
+	 * get list obsels "SessionExit", "SessionPause" for updating button "Salon Tutorat"
+	 */
+	public function onCheckListObselSessionExitSessionPause(listObselVO:Array):void
+	{
+		var nbrObsel:int = listObselVO.length;
+		if(nbrObsel > 0)
+		{
+			var lastObselVO:ObselVO = listObselVO[nbrObsel-1];
+			var lastObsel:Obsel = Obsel.fromRDF(lastObselVO.rdf);
+			// last sessionId
+			var sessionId:int = lastObsel.props[TraceModel.SESSION_ID];
+			var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION);
+			sessionEvent.sessionId = sessionId;
+			this.dispatcher.dispatchEvent(sessionEvent);
+		}
+	}
+	/**
+	 * get last visited session in the salon tutorat
+	 */
+	public function onCheckLastSession(sessionVO:SessionVO):void
+	{
+		if(sessionVO != null)
+		{
+			var session:Session = new Session(sessionVO);
+			var sessionStatus:int = session.statusSession;
+			if(sessionStatus != SessionStatusEnum.SESSION_CLOSE)
+			{
+				// set current session
+				Model.getInstance().setCurrentSession(session);
+				// set button enabled true;
+				Model.getInstance().setEnabledButtonSalonSynchrone(true);
+			}
+		}
+		
+	}
+	
+	/**
 	 * notification to all connected users for updating list users
 	 * @param 
 	 * sessionVO

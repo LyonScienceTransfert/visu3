@@ -62,7 +62,7 @@
 			import spark.components.Button;
 			import spark.components.Label;
 			
-			private var currentSession:Session;
+			private var currentSession:Session = null;
 			private var _stopTimeRecording:Number = 0;
 			
 			private var _currentActivityElement:ActivityElement = null;
@@ -111,13 +111,18 @@
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
-				if((event.currentTarget as TutoratModule).parameters != null)
+				if((event.currentTarget as TutoratModule).parameters != null  || Model.getInstance().getCurrentSession() != null )
 				{
-					var session:Session = (event.currentTarget as TutoratModule).parameters as Session ;
-					session.duration_session = session.duration_session*1.1;
+					var session:Session = (event.currentTarget as TutoratModule).parameters as Session;
+					if(session == null)
+					{
+						session = Model.getInstance().getCurrentSession(); 
+					}
 					this.currentSession = session;
 					// set current session in the model for checking if new use join this session  
 					Model.getInstance().setCurrentSession(session);
+					// update button "salone synchrone"
+					Model.getInstance().setEnabledButtonSalonSynchrone(true);
 					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentTutoratModule(this);
 					// init list traceLines
@@ -677,6 +682,18 @@
 				{
 					buttonStartRecording.enabled = false;
 					buttonCloseSession.enabled = false;
+					var sessionId:int = event.sessionId;
+					var currentSession:Session = Model.getInstance().getCurrentSession();
+					if(currentSession != null)
+					{
+						var currentSessionId:int = currentSession.id_session;
+						if(currentSessionId == sessionId)
+						{
+							Model.getInstance().setCurrentSession(null);
+							Model.getInstance().setEnabledButtonSalonSynchrone(false);						
+						}
+						
+					}
 				}
 			}
 			
