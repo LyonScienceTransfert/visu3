@@ -9,7 +9,7 @@
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
 						currentState="BlankState" 
-						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*">
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.visu.controls.timeline.*">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.traces.Obsel;
@@ -153,7 +153,17 @@
 					this.setEnabledGroupSetMarker(false);
 					if(buttonStartRecording != null){
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
-						this.buttonCloseSession.enabled = false;
+						this.buttonCloseSession.enabled = true;
+						if (this.currentSession.statusSession == SessionStatusEnum.SESSION_OPEN || this.currentSession.statusSession == SessionStatusEnum.SESSION_RECORDING )
+						{
+							this.buttonCloseSession.enabled = false;
+						}
+						// checking if used has trace
+						var obj:Object = Model.getInstance().getTraceLineByUserId(Model.getInstance().getLoggedUser().id_user);
+						if(obj != null)
+						{
+							this.buttonCloseSession.enabled = true;
+						}
 						// set buttons startActivity enabled = false
 						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
 					}
@@ -406,7 +416,8 @@
 					{
 						// set obsel to the model
 						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-						this.addObsel(obsel,true);
+						//this.addObsel(obsel);
+						Model.getInstance().addObsel(obsel);
 					}
 					// update the buttons on planSession, view tutorat
 					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
@@ -492,6 +503,7 @@
 							userColor = traceLine.userColor;
 						}
 						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo,userColor);
+						sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
 						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 						this.panelChatSession.addElement(sharedElementChat);
 					}
@@ -1196,7 +1208,7 @@
 					<s:layout >
 						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<local:SessionTimeLine id="sessionTimeLine" width="100%" />
+					<timeline:TimeLineSession id="sessionTimeLine" width="100%" />
 					<s:Group width="100%" height="100%">
 						<s:Scroller left="1" right="1" top="1" bottom="1">
 							<s:Group width="100%" height="100%">
@@ -1236,7 +1248,7 @@
 			<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelTimeLine_test">    
 				<s:Group id="panelTimeLine_test"   width="100%"  height="100%">
 					<s:layout>
-						<local:TimeWheelLayout/>
+						<timeline:TimeSessionLayout/>
 					</s:layout>							
 				</s:Group>
 			</s:Scroller> 
