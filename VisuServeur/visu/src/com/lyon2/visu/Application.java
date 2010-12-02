@@ -462,7 +462,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 	
 	
 	@SuppressWarnings("unchecked")
-	public Obsel setObsel(Integer subject, String trace, String typeObsel, List<Object> paramsObsel) throws SQLException 
+	public Obsel setObsel(Integer subject, String trace, String typeObsel, List<Object> paramsObsel, String... traceType) throws SQLException 
 	{
 	//	log.warn("===== setObsel ===== Name module est : {}",listParams);
 		// TODO : add function getHeadObsel
@@ -498,6 +498,14 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     	tempList.add("ktbs:hasBegin "+timeInMilliseconde +";");
     	tempList.add("ktbs:hasEnd "+ timeInMilliseconde+";");
     	tempList.add("ktbs:hasSubject "+'"'+subject+'"'+";");
+    	// checking trace type
+    	String tempTraceType = "first";
+    	Integer nbrTraceType = traceType.length;
+    	if(nbrTraceType == 1)
+    	{
+    		tempTraceType = "second";
+    	}
+    	tempList.add("ktbs:hasTraceType "+'"'+tempTraceType+'"'+";");
     	
     	String strRdf= "";
     	for(String tmp : tempList)
@@ -646,12 +654,12 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			IScope scope = conn.getScope();
 			// start recording 
 			GregorianCalendar calendar = new GregorianCalendar(); 
-			DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
-			
+			DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");			
 			String sDate = dateFormat.format(calendar.getTime());
 			log.warn("date = {}",sDate);
-			String clientRecordingId = (String)clientRecording.getAttribute("id");
-			ClientBroadcastStream stream = (ClientBroadcastStream) getBroadcastStream(scope, clientRecordingId);
+//			String clientRecordingId = (String)clientRecording.getAttribute("id");
+//			ClientBroadcastStream stream = (ClientBroadcastStream) getBroadcastStream(scope, clientRecordingId);
+			
 			// get time start recording for sending this to client flex(for creation the obsel "SessionOut")
 			Object[] timeStartRecording = {Calendar.getInstance().getTimeInMillis()};
 			// call client that start recording
@@ -661,7 +669,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				sc.invoke("startRecording",timeStartRecording);
 			} 	
 			
-			String filename = "record-" + sDate + "-" + clientRecording.getAttribute("sessionId").toString() + "-" + clientRecording.getAttribute("uid").toString();
+//			String filename = "record-" + sDate + "-" + clientRecording.getAttribute("sessionId").toString() + "-" + clientRecording.getAttribute("uid").toString();
 			
 			Integer sessionId = (Integer)clientRecording.getAttribute("sessionId");	
 			Integer userId = (Integer)clientRecording.getAttribute("uid");
