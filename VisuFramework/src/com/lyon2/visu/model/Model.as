@@ -1,8 +1,14 @@
 package  com.lyon2.visu.model
 {
+	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.view.ObselImage;
+	import com.ithaca.traces.view.ObselMarker;
+	import com.ithaca.traces.view.ObselSessionOut;
 	import com.ithaca.visu.modules.VisuModuleBase;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
+	import com.ithaca.visu.ui.utils.IconEnum;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.lyon2.visu.vo.SessionVO;
 	import com.lyon2.visu.vo.UserVO;
 	
@@ -10,6 +16,8 @@ package  com.lyon2.visu.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	
+	import spark.components.Button;
 
 
 	public final class Model
@@ -85,6 +93,16 @@ package  com.lyon2.visu.model
 		public function get rtmpServer(): String
 		{
 			return "rtmp://" + this.server + "/" + this.appName + "/" + "monSalon";
+		}
+		
+		public function get urlServeur(): String
+		{
+			var portString:String = ":" + this.port;
+			// check if port don't using in adress
+			if (this.port == 0){
+				portString = "";
+			}
+			return "http://" + this.server + portString + "/" + this.appName;
 		}
 		
 		public function checkServeurVisuVciel():Boolean
@@ -177,6 +195,19 @@ package  com.lyon2.visu.model
 		public function getCurrentTutoratModule():VisuModuleBase
 		{
 			return _tutoratModule;
+		}
+		
+		/**
+		 * current tutorat module, only for debugging
+		 */
+		public function setCurrentRetroModule(value:VisuModuleBase):void
+		{
+			_retroModule = value;
+		}
+		
+		public function getCurrentRetroModule():VisuModuleBase
+		{
+			return _retroModule;
 		}
 		
 		/**
@@ -341,7 +372,7 @@ package  com.lyon2.visu.model
 				listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
 				listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
 				listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 4, titleTraceLine: "marker", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 4, titleTraceLine: "marker", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : true});
 				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
 			}
 		}
@@ -617,10 +648,15 @@ package  com.lyon2.visu.model
 						break;
 					case TraceModel.SET_MARKER:
 					case TraceModel.RECEIVE_MARKER:
+					case TraceModel.SESSION_IN:
 						traceLineElement = listElementTraceLine.getItemAt(4) as Object;	
 						break;
-					default:
-						
+					case TraceModel.SESSION_OUT:
+						// add obsel "SessionOut" only in thaceLineTitle
+						tempTitleListObsel.addItem(obsel);
+						return;
+						break;
+					default:		
 				}
 				// add obsel on the traceLineElement
 				var lObsel:ArrayCollection =  traceLineElement.listObsel as ArrayCollection;
@@ -639,12 +675,8 @@ package  com.lyon2.visu.model
 				if(addedTraceLine)
 				{
 					var newObsel = obsel.cloneMe();
-					tempTitleListOnsel.addItem(newObsel);
-				}
-		//	}
-			
-			
-			
+					tempTitleListObsel.addItem(newObsel);
+				}	
 		}
 		
 		public function getListElementsTraceLineByUserId(userId:int):ArrayList
