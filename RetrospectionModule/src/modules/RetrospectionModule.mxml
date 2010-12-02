@@ -490,7 +490,7 @@
 				getListObselEvent.sessionId = obj.sessionId as int; 
 				this.dispatchEvent(getListObselEvent);
 				// update label panel
-				panelTimeLine.title = fxgt.gettext("Résumé de l'activité")+" la séance : "+obj.label;
+				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance partagées: ")+obj.label;
 				this.openSession.selectedIndex = -1;
 			}
 
@@ -511,7 +511,7 @@
 				getListObselEvent.sessionId = new int(sessionId);
 				this.dispatchEvent(getListObselEvent);
 				// update panel titre
-				panelTimeLine.title = fxgt.gettext("Résumé de l'activité")+" la séance : "+obj.label;
+				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance : ")+obj.label;
 				// do it only if current state "visuvciel"
 				if(Model.getInstance().checkServeurVisuVciel())
 				{
