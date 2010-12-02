@@ -468,15 +468,19 @@ package com.lyon2.controls
         {
             return streams.hasOwnProperty(streamId);
 		}
-		
-        public function addVideoStream(streamId : String, status: int = 0) : void
+		public function getStreams():Object
+		{
+			return this.streams;
+		}
+        public function addVideoStream(streamId : String, status: int = 0) : NetStream
         {
+			var stream:NetStream = null;	
             // adding only other "streams", not my own. And do not add
             // if already present.
             if (streamId != streamID && !hasStreamId(streamId))
             {
                 logger.debug('addVideoStream ' + streamId);
-                var stream:NetStream = new NetStream(connection);
+                stream = new NetStream(connection);
 	            stream.client = this;
                 stream.play(streamId);
                // pause immediately when mode autoPlay = false
@@ -485,11 +489,11 @@ package com.lyon2.controls
                     _status = status = VisuVisio.STATUS_PAUSE;	
 	            }
                 stream.addEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
-                streams[streamId] = stream ;
+                streams[streamId] = stream;
 				
                 var vd:VideoComponent = new VideoComponent();
                 vd.status = status;
-                vd.attachNetStream( stream);
+                vd.attachNetStream(stream);
 				
                 videos[streamId] = vd;
                /* 
@@ -498,6 +502,7 @@ package com.lyon2.controls
                 */
                addChildAt( vd , 0 );
 			}
+			return stream;
 		}
 
         public function removeVideoStream(sID: String, videoOnly: Boolean = false): void
@@ -602,15 +607,17 @@ package com.lyon2.controls
 		private function remoteStreamStatusHandler(e:NetStatusEvent):void
 		{
 			logger.debug("distantStreamStatus - "+e.info.code); 
-            /*
-			switch( e.info.code)
+            
+/*			switch( e.info.code)
 			{
-				case "NetStream.Play.UnpublishNotify" :
-					(e.target as NetStream).publish();
-					
+				case "NetStream.Play.Start" :
+					var messageEvent:MessageEvent = new MessageEvent(MessageEvent.CHECK_SEEK_STREAM);
+					messageEvent.message = e.info.details;
+					messageEvent.netStream = e.currentTarget as NetStream;
+					this.dispatchEvent(messageEvent);			
 				break;
-			}
-            */
+			}*/
+            
 		}
 		
     	private function debug():String
