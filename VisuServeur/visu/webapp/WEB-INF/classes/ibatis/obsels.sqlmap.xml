@@ -57,7 +57,12 @@
 		AND trace =  #value#	
 		 ]]>	
 	</select>
-	        
+	
+	 <select id="getObselBySessionId" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+        WHERE rdf LIKE #refParam# 
+	</select>	        
 		
 
 	<select id="getTrace" parameterClass="String" resultMap="obselResult" cacheModel="cache">
@@ -96,6 +101,12 @@
         SELECT *
 		FROM obsels
 		WHERE (type_obsel = 'SystemSessionStart' or type_obsel = 'SystemSessionEnter') and trace like #traceParam# and rdf like #refParam# 
+	</select>
+	
+    <select id="getSessionExitSessionPauseObselsForUserId" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionExit' or type_obsel = 'SessionPause') and trace like #traceParam#	
 	</select>
 
 	<insert id="insert" parameterClass="obsel">

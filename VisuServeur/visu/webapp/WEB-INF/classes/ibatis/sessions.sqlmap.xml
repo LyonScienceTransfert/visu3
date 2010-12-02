@@ -58,6 +58,13 @@
 		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, 
 				isModel, description, start_recording, status_session, id_currentActivity
 		FROM session_users su, sessions s, activities a WHERE su.id_user = #value# AND su.id_session = s.id_session AND s.id_session = a.id_session GROUP BY s.id_session
+	</select>
+	 
+    <select id="getClosedSessionsByUser" parameterClass="int"
+		resultMap="sessionResult" cacheModel="cache">
+		SELECT sum(duration) as s_duration, s.id_session as s_id, s.id_user as u_id, theme, date_session, 
+				isModel, description, start_recording, status_session, id_currentActivity
+		FROM session_users su, sessions s, activities a WHERE su.id_user = #value# AND su.id_session = s.id_session AND s.id_session = a.id_session AND s.status_session="1" GROUP BY s.id_session 
 	</select> 
 
     <select id="getDatesSessionsByUser" parameterClass="int"
