@@ -147,6 +147,8 @@
 				{
 					case "play" :
 						this.visio.resumeStreams();
+						// set status play
+						this.visio.status = VisuVisio.STATUS_REPLAY;
 						// decale the time start for time on paused
 						var timePausedNumber:Number = new Date().time -  this.timePause;
 						this.timeStart = this.timeStart  + timePausedNumber;
@@ -155,6 +157,8 @@
 						break;
 					case "pause" :
 						this.visio.pauseStreams();
+						// set status pause
+						this.visio.status = VisuVisio.STATUS_PAUSE;
 						this.timer.stop();
 						// set time pause
 						this.timePause = new Date().time;
@@ -319,7 +323,9 @@
 				var stream:NetStream = event.currentTarget as NetStream;
 				switch( event.info.code)
 				{
-					case "NetStream.Play.Start" :	
+					case "NetStream.Play.Start" :
+						// set status play
+						this.visio.status = VisuVisio.STATUS_REPLAY;
 						stream.removeEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
 						var streamId:String = event.info.details;
 						var obsel:Obsel = Model.getInstance().getObselSessionInByPathStream(streamId);
@@ -537,7 +543,7 @@
 					</s:layout>
 					<controls:VisuVisio id="visio" width="100%" top="0"
 										quality="80"
-										bandwidth="15000" autoPlay="True"  height="100%" />
+										bandwidth="15000" autoPlay="True" height="100%" />
 					
 				</s:Group>
 			</s:Panel>
