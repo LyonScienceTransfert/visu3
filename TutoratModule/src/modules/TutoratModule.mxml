@@ -137,8 +137,7 @@
 					}else
 					{
 						this.setCurrentState("StudentState");		
-					}
-					
+					}		
 				}
 				else{
 					this.setCurrentState("BlankState");
@@ -657,6 +656,7 @@
 						Alert.show(fxgt.gettext("Voulez-vous arrêter l'enregistrement ? (vous pourrez le reprendre plus tard)"),
 						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, stopRecordingConfirmed); 	
 					}else{
+						
 						//start recording
 						var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
 						eventStartRecording.sessionId = this.currentSession.id_session;
@@ -816,7 +816,15 @@
 			private function sendMarker(cutLastCharMessage:Boolean):void
 			{
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var listUsersId:Array;
+				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+				{
+					// student will shared markers only with Tuter, Responsable, Admin
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT );
+				}else
+				{
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR );
+				}
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
 				var message:String = textChatMarker.text;
@@ -1008,7 +1016,6 @@
 				if(userId == Model.getInstance().getLoggedUser().id_user)
 				{
 					sessionTimeLine.sessionTimeLineLoggedUser.left = traceLine.traceLoggedUser.left;
-					
 					this.testCursor = new ObselLine();
 					this.testCursor.height = 50;
 					var beginTime:Number = new Date().time - this.currentSession.date_start_recording.time;
@@ -1017,8 +1024,7 @@
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(this.testCursor); 
 					this.testTimeLine = traceLine;
 					this.startTimer();
-				}
-				
+				}				
 			}
 			
 			
