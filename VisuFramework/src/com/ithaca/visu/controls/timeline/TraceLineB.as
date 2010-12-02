@@ -426,13 +426,14 @@ package com.ithaca.visu.controls.timeline
 			}else
 			{
 				onClickMinusTrace1(new MouseEvent(MouseEvent.CLICK));
-				traceLineIconTrace1.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIcon);
+				if(traceLineIconTrace1 != null)
+				{
+					traceLineIconTrace1.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIcon);
+				}
 			}
 		}
 		
 		private function onClickMinusTrace1(event:MouseEvent):void{
-		//	imageConsigne.visible = false;
-			buttonAddTypeObselTrace1.enabled = true;
 			var elementTrace1:Object = this._listElementTraceline.getItemAt(0) as Object;	
 			// set traceLine1 added
 			elementTrace1.added = false;
@@ -440,6 +441,7 @@ package com.ithaca.visu.controls.timeline
 			var addListObselEvent:TraceLineEvent = new TraceLineEvent(TraceLineEvent.REMOVE_LIST_OBSEL);
 			addListObselEvent.listObsel = listObselTrace1;
 			this.dispatchEvent(addListObselEvent);
+			
 		}		
 // TraceLine  Keyword		
 		private function onMouseOverTraceLineIconTrace2(event:MouseEvent):void
@@ -490,7 +492,10 @@ package com.ithaca.visu.controls.timeline
 			}else
 			{
 				onClickMinusTrace2(new MouseEvent(MouseEvent.CLICK));
-				traceLineIconTrace2.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace2);
+				if(traceLineIconTrace2 != null)
+				{
+					traceLineIconTrace2.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace2);
+				}
 			}
 		}		
 // TraceLine  Documents		
@@ -542,7 +547,10 @@ package com.ithaca.visu.controls.timeline
 			}else
 			{
 				onClickMinusTrace3(new MouseEvent(MouseEvent.CLICK));
-				traceLineIconTrace3.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace3);
+				if(traceLineIconTrace3 != null)
+				{
+					traceLineIconTrace3.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace3);
+				}
 			}
 		}
 // TraceLine  Message		
@@ -594,7 +602,10 @@ package com.ithaca.visu.controls.timeline
 			}else
 			{
 				onClickMinusTrace4(new MouseEvent(MouseEvent.CLICK));
-				traceLineIconTrace4.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace4);
+				if(traceLineIconTrace4 != null)
+				{
+					traceLineIconTrace4.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace4);
+				}
 			}
 		}
 // TraceLine  Mark		
@@ -635,6 +646,7 @@ package com.ithaca.visu.controls.timeline
 			var addListObselEvent:TraceLineEvent = new TraceLineEvent(TraceLineEvent.REMOVE_LIST_OBSEL);
 			addListObselEvent.listObsel = listObselTrace5;
 			this.dispatchEvent(addListObselEvent);
+			
 		}
 		
 		private function onChangeCheckBoxMarkerObsel(event:Event):void
@@ -646,7 +658,10 @@ package com.ithaca.visu.controls.timeline
 			}else
 			{
 				onClickMinusTrace5(new MouseEvent(MouseEvent.CLICK));
-				traceLineIconTrace5.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace5);
+				if(traceLineIconTrace5 != null)
+				{
+					traceLineIconTrace5.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace5);
+				}
 			}
 		}
 		 		
