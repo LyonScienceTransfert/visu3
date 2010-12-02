@@ -28,6 +28,14 @@ public class SessionEvent extends Event
 	static public const STOP_RECORDING_SESSION : String = 'stopRecordingSession';
 	static public const CLOSE_SESSION : String = 'closeSession';
 	static public const LOAD_LIST_OBSEL : String = 'loadListObsel';
+	static public const LOAD_LIST_SESSION_SALON_RETROSPECTION : String = 'loadListSessionSalonRetrospection';
+	static public const GET_SESSION : String = 'getSession';
+	static public const LOAD_LIST_OBSEL_RETRO : String = 'loadListObselRetro';
+	static public const LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION : String = 'loadListClosedSessionSalonRetrospection';
+	static public const GET_LIST_OBSEL : String = 'getListObsel';
+	static public const GET_LIST_SESSION : String = 'getListSession';
+	static public const GET_LIST_CLOSED_SESSION : String = 'getListClosedSession';
+	static public const GET_LIST_OBSEL_CLOSED_SESSION : String = 'getListObselClosedSession';
 	
 
 	// properties
@@ -40,6 +48,8 @@ public class SessionEvent extends Event
 	public var listDate : Array;
 	public var status : int;
 	public var timeStartStop : Number;
+	public var durationSessionRetro : Number;
+	public var traceId : String;
 	
 
 	// constructor
