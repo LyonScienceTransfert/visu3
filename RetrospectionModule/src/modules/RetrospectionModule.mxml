@@ -7,18 +7,60 @@
 						width="100%" height="100%" 
 						creationComplete="visumodulebase1_creationCompleteHandler(event)" 
 						configure="visumodulebase1_configureHandler(event)" 
-						xmlns:maps="maps.*"	> 
+						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
+						xmlns:timeline="com.ithaca.visu.controls.timeline.*"
+						xmlns:controls="com.lyon2.controls.*" > 
 	<fx:Script>
 		<![CDATA[ 
+			import com.ithaca.traces.Obsel;
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.traces.view.ObselButton;
+			import com.ithaca.traces.view.ObselImage;
+			import com.ithaca.traces.view.ObselLine;
+			import com.ithaca.traces.view.ObselSessionOut;
+			import com.ithaca.traces.view.ObselTime;
+			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.TraceLineEvent;
 			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.renderer.SessionRetroRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.lyon2.visu.model.Model;
 			import com.lyon2.visu.model.User;
 			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+			
+			private var testCursor:ObselLine;
+			private var testTimeLine:TraceLineB;
+			
+			[Bindable]
+			private var timer:Timer;
+			
+			[Bindable]
+			public var listSessionOpen : ArrayCollection;
+			
+			[Bindable]
+			public var listSessionClose : ArrayCollection;
+					
+			private var timeStart:Number;
+			private var deltaTime:Number = 0;
+			private var timePause:Number = 0;
+			private var checkingSumFluxVideo:Number = 0;
+			
+			private var pickCheryClick:Number = 0;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
@@ -26,12 +68,25 @@
 				{
 					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
 				}
+				// set current module
+				Model.getInstance().setCurrentRetroModule(this);
+				
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
 				this.dispatchEvent(initMapEvent); 
 			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
+				fxgt = FxGettext;
+				// set current state 
+				if(Model.getInstance().checkServeurVisuVciel())
+				{
+					this.currentState="vciel";
+					// get list closed session where was(have to been) logged user
+					var getClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION);
+					this.dispatchEvent(getClosedSessionEvent);
+				}
+				
 				// check status logged user
 				var loggedUser:User =  Model.getInstance().getLoggedUser();
 				var statusLoggedUser:int =loggedUser.status; 
@@ -42,27 +97,503 @@
 					outSession.userId = loggedUser.id_user;
 					this.dispatchEvent(outSession);
 				}
+				/* var getSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_SESSION);
+				this.dispatchEvent(getSessionEvent); */
+				
+ 				this.visio.connection = Model.getInstance().getNetConnection();
+				
+				// removing module from the stage
+				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+				this.sessionTimeLine.addEventListener(MessageEvent.CHECK_SEEK_STREAM, onCheckSeekStream);
+			}
+			
+			/**
+			 * Removing all streams and local devices
+			 */
+			private function onRemovedModuleFromStage(event:Event):void{
+				if(this.visio != null)
+				{
+					this.removeAllStreams();
+					if(this.timer)
+					{
+						this.timer.stop();			
+					}
+				}
+			}
+			
+			/**
+			 * remove all listeners the stream here and remove the streams from VisuVisio
+			 */
+			// FIXME it's not necessary to remove all listeners
+			private function removeAllStreams():void
+			{
+			//	var streams:Object = this.visio.getStreams();
+				// remove listeners
+			//	for (var n: String in streams)
+			//	{
+			//		streams[n].removeEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);						
+			//	}
+				// remove streams
+				this.visio.removeAllStreams();
+			}
+			
+			/**
+			 * play/pause of the streams
+			 */
+			private function onCheckSeekStream(event:MessageEvent):void
+			{
+				var typeMessage:String = event.message;
+				switch (typeMessage)
+				{
+					case "play" :
+						this.visio.resumeStreams();
+						// decale the time start for time on paused
+						var timePausedNumber:Number = new Date().time -  this.timePause;
+						this.timeStart = this.timeStart  + timePausedNumber;
+						this.timer.start();
+						this.timePause = 0;
+						break;
+					case "pause" :
+						this.visio.pauseStreams();
+						this.timer.stop();
+						// set time pause
+						this.timePause = new Date().time;
+						break;
+					default :
+						break;
+				}
+			}
+			
+			private function createSessionTimeLine(durationSession:Number,startSession:Number):void
+			{
+				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
+				this.sessionTimeLine.sessionTimeLineLayout.startTime = startSession;
+				// TODO calcul number of labels
+				var nbrLabelTime:int = 6;
+				var deltaTime:int = durationSession/nbrLabelTime;
+				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
+				{
+					var beginTimeObsel:Number = nPart*deltaTime;
+					// in seconds
+					var labelTextSec:String = (beginTimeObsel/1000).toString();
+					var labelTextMin:String = Math.round((beginTimeObsel/1000)/60).toString();
+					var obselTime:ObselTime = new ObselTime()
+					obselTime.setBegin(beginTimeObsel);
+					obselTime.setEnd(beginTimeObsel);
+					obselTime.text = labelTextMin+" min.";
+					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
+				}
+			}
+			private function updateListClosedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var listSession:ArrayCollection = event.listSession;
+					this.listSessionClose = event.listSession;
+				}
+			}
+						
+			private function updateListSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var listSession:ArrayCollection = event.listSession;
+					this.listSessionOpen = event.listSession;
+				}
+			}
+			
+			private function updateTimeLine(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var durationSession:Number = event.durationSessionRetro;
+					var startRecordingSession:Number = event.timeStartStop;
+					this.setObsels();
+					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
+					if(listTraceLines != null)
+					{
+						var nbrTraceLines:int = listTraceLines.length;
+						for(var nTraceLine:int =0; nTraceLine < nbrTraceLines ; nTraceLine++)
+						{
+							var traceLineObj:Object = listTraceLines[nTraceLine] as Object;						
+							this.addTraceLineOnViewTraceLineGroup(traceLineObj,durationSession,startRecordingSession);
+						}
+					}
+				}
+			}
+			
+			private function addTraceLineOnViewTraceLineGroup(traceLineObj:Object, durationSession:Number,startRecordingSession:Number):void
+			{
+				var userId:int = traceLineObj.userId;
+				var traceLine:TraceLineB = new TraceLineB()
+				traceLine.percentWidth = 100;
+				//	traceLine.height = 30;
+				traceLine.left = 0;
+				traceLine.right = 0;
+				traceLine.sourceImageUserTraceLine = traceLineObj.userAvatar;
+				traceLine.nameUserTraceLine = traceLineObj.userName;
+				traceLine.colorUserTraceLine = traceLineObj.userColor;
+				traceLine.durationSession = durationSession;
+				traceLine.startTimeSession = startRecordingSession;								
+				traceLine.idUserTraceLine = userId;		
+				traceLine.tempList = traceLineObj.listTitleObsels;
+				traceLine.listElementTraceline = traceLineObj.listElementTraceLine;
+ 				traceLine.addEventListener(TraceLineEvent.ADD_LIST_OBSEL, onAddListObsel);
+				traceLine.addEventListener(TraceLineEvent.REMOVE_LIST_OBSEL, onRemoveListObsel); 
+				
+				traceLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
+			
+				if(userId == Model.getInstance().getLoggedUser().id_user)
+				{
+					// create sessionTimeLine
+					this.createSessionTimeLine(durationSession,0); 
+					this.testTimeLine = traceLine;
+					
+					traceLine.nameUserTraceLine = fxgt.gettext("Ma trace");
+					this.traceLineGroup.addElementAt(traceLine, 0); 
+					
+				}else
+				{
+					this.traceLineGroup.addElement(traceLine);
+				}
+				traceLineObj.show = true;
+			}
+			
+			private function onMouseClickOnTimeLine(event:MouseEvent):void
+			{
+				var target:Object = event.target as Object;
+				var deltaXObselTime:Number = 0;
+				// checing if user clicked on ObselTime
+				if (target is ObselTime)
+				{
+					deltaXObselTime = target.x;
+				}
+				var localX:Number = event.localX + deltaXObselTime;
+				var timeStartSession:Number = this.testTimeLine.startTimeSession;
+				var duration:Number = this.testTimeLine.durationSession;
+				var groupTimeLine:Group = event.currentTarget as Group;
+				var wightGroup:Number = groupTimeLine.width;
+				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
+				updateTimeCursor(delta);
+				var begin :Number = delta + timeStartSession;
+				this.pickCheryClick = begin;
+				
+				// remove all streams and listeners
+				this.removeAllStreams();
+				var listObselSessionIn:ArrayCollection = Model.getInstance().getObselSessionInByTimestamp(begin);
+				// update checking sum flux video
+				this.checkingSumFluxVideo = this.getSumBeginTimeObselSI(listObselSessionIn);
+				this.addFluxVideo(listObselSessionIn);
+				// running the flux video
+				if(!this.timer.running)
+				{
+					var timePausedNumber:Number = new Date().time -  this.timePause;
+					this.timeStart = this.timeStart  + timePausedNumber;
+					this.timer.start();
+					this.sessionTimeLine.setShowButtonNavigation(true);
+				}
+				
+				/* panelTimeLine.title = begin.toString();
+				panelTimeLine.title += "  >>> "+listObselSessionIn.length.toString(); */
 				
 			}
+			
+			 private function addFluxVideo(listObselSessionIn:ArrayCollection):void
+			 {
+				 var nbrObsel:int = listObselSessionIn.length;
+				 for(var nObsel:int= 0; nObsel < nbrObsel; nObsel++ )
+				 {
+					 var obsel:Obsel = listObselSessionIn.getItemAt(nObsel) as Obsel;
+					 var pathVideo:String = obsel.props[TraceModel.PATH];
+					 var stream:NetStream = this.visio.addVideoStream(pathVideo);
+					 // add listener for this stream
+					 if (stream != null)
+					 {
+						 stream.addEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
+					 }
+				 }
+			 }
+			
+			private function remoteStreamStatusHandler(event:NetStatusEvent):void
+			{
+				var stream:NetStream = event.currentTarget as NetStream;
+				switch( event.info.code)
+				{
+					case "NetStream.Play.Start" :	
+						stream.removeEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
+						var streamId:String = event.info.details;
+						var obsel:Obsel = Model.getInstance().getObselSessionInByPathStream(streamId);
+						if(obsel == null)
+						{
+							Alert.show("Salon retrospection, hasn't obsel with path = "+streamId,"Message ....."); 
+						}
+						var timeBeginRFN:Number = obsel.begin;
+						var deltaSecond:Number = (this.pickCheryClick - timeBeginRFN)/1000;
+						stream.seek(deltaSecond);		
+						break;
+				}
 				
+			}
+					
+			private function startTimer():void
+			{
+				this.timeStart = new Date().time;
+				if(!timer)
+				{
+					timer = new Timer(1000,0);
+					timer.addEventListener(TimerEvent.TIMER, updateTime);
+				}
+				timer.start();
+			}
+			
+			private function updateTime(event:TimerEvent):void
+			{
+				var beginTime:Number = new Date().time - this.timeStart + this.deltaTime;
+				this.testCursor.setBegin(beginTime);
+				this.testCursor.setEnd(beginTime);
+				this.sessionTimeLine.labelCurrentTimeSession.text = updateLabelTimer(beginTime);
+				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
+				this.checkFluxVideo(beginTime + this.testTimeLine.startTimeSession);
+			}
+			
+			private function updateTimeCursor(value:Number):void
+			{
+				this.timeStart = new Date().time;
+				this.deltaTime = value;
+			}
+			
+			private function checkFluxVideo(value:Number):void
+			{
+				var sumBeginTimeStamp:Number = 0;
+				var listObselSI:ArrayCollection = Model.getInstance().getObselSessionInByTimestamp(value);
+				var nbrObsel:int = listObselSI.length;
+				if(nbrObsel == 0 ){this.removeAllStreams(); return;}
+				// get sem the begin of obsels sessionIn 
+				sumBeginTimeStamp = this.getSumBeginTimeObselSI(listObselSI);
+				if(sumBeginTimeStamp != this.checkingSumFluxVideo)
+				{
+					this.removeAllStreams();
+					this.addFluxVideo(listObselSI);
+					this.checkingSumFluxVideo = sumBeginTimeStamp;
+				}	
+			}
+			
+			private function getSumBeginTimeObselSI(listObselSI:ArrayCollection):Number
+			{
+				var result:Number = 0;
+				var nbrObsel:int = listObselSI.length;
+				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++ )
+				{
+					var obsel:Obsel = listObselSI.getItemAt(nObsel) as Obsel;
+					var begin:Number = obsel.begin;
+					result += begin;
+				}	
+				return result;
+			}
+			
+			private function updateLabelTimer(value:Number):String
+			{
+				var totalSecond:int = value/1000;
+				var minNumber:int = new int(totalSecond/60);
+				var hourNumber:int = new int(totalSecond/3600);
+				var secString:String="";
+				var minString:String="";
+				var hourString:String="";
+				var secons:Number = totalSecond - minNumber*60;
+				secString = secons.toString();
+				if(secons < 10)
+				{
+					secString = "0"+secString;
+				}
+				var min:Number = minNumber - hourNumber*60;
+				minString = min.toString();
+				if(min < 10)
+				{
+					minString = "0" + minString;
+				}
+				hourString = hourNumber.toString();
+				if(hourNumber < 10)
+				{
+					hourString = "0"+hourString;	
+				}
+				return  hourString+":"+minString+":"+secString;
+				
+			}
+			
+			private function onAddListObsel(event:TraceLineEvent):void{
+				var listObsel:ArrayCollection = event.listObsel;
+				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
+				Model.getInstance().addListObselTitleTraceLine(userTraceLineId, listObsel);
+			}
+			/**
+			 * remove list obsel to Model 
+			 */	
+			private function onRemoveListObsel(event:TraceLineEvent):void{
+				var listObsel:ArrayCollection = event.listObsel;
+				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
+				Model.getInstance().removeListObselTitleTraceLine(userTraceLineId, listObsel);
+			}
+			private function onCreationCompletTraceLine(event:FlexEvent):void
+			{
+				var traceLine:TraceLineB = event.currentTarget as TraceLineB;
+				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
+				traceLine.listTitleObsels = traceLine.tempList;		
+ 				var userId:int = traceLine.idUserTraceLine;
+				if(userId == Model.getInstance().getLoggedUser().id_user)
+				{
+					sessionTimeLine.sessionTimeLineLoggedUser.left = traceLine.traceLoggedUser.left;
+					sessionTimeLine.sessionTimeLineLoggedUser.addEventListener(MouseEvent.CLICK, onMouseClickOnTimeLine);
+					this.testCursor = new ObselLine();
+					this.testCursor.height = 50;
+					var beginTime:Number = new Date().time - this.testTimeLine.startTimeSession;
+					this.testCursor.setBegin(beginTime);
+					this.testCursor.setEnd(beginTime);
+					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(this.testCursor); 
+					// set pickCherryClick
+					this.pickCheryClick = 0;
+					this.startTimer();
+					// show buttons navigation
+					this.sessionTimeLine.setShowButtonNavigation(true)
+				} 
+				
+			}
+			private function setObsels():void{
+				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
+				if (listObsels != null)
+				{	
+					var nbrObsels:int = listObsels.length;
+					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
+					{
+						var obsel:Obsel = listObsels[nObsel] as Obsel;
+					//	this.addObsel(obsel);
+						Model.getInstance().addObsel(obsel);
+					}
+				}
+			}
+			
+			protected function closeSession_changeHandler(event:IndexChangeEvent):void
+			{
+				// init list traceLines
+				Model.getInstance().initListTraceLine();
+				this.traceLineGroup.removeAllElements();
+				this.sessionTimeLine.sessionTimeLineLoggedUser.removeAllElements();
+				this.deltaTime = 0;
+				
+				var obj:Object = (event.currentTarget as List).selectedItem;
+				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
+				getListObselEvent.sessionId = obj.sessionId as int; 
+				this.dispatchEvent(getListObselEvent);
+				// update label panel
+				panelTimeLine.title = fxgt.gettext("Résumé de l'activité")+" la séance : "+obj.label;
+				this.openSession.selectedIndex = -1;
+			}
+
+
+			protected function openSession_changeHandler(event:IndexChangeEvent):void
+			{
+				// init list traceLines
+				Model.getInstance().initListTraceLine();
+				this.traceLineGroup.removeAllElements();
+				this.sessionTimeLine.sessionTimeLineLoggedUser.removeAllElements();
+				this.deltaTime = 0;
+
+				var obj:Object = (event.currentTarget as List).selectedItem
+				var traceId:String = obj.traceId;
+				var sessionId:String = obj.sessionId;
+				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL);
+				getListObselEvent.traceId = traceId;
+				getListObselEvent.sessionId = new int(sessionId);
+				this.dispatchEvent(getListObselEvent);
+				// update panel titre
+				panelTimeLine.title = fxgt.gettext("Résumé de l'activité")+" la séance : "+obj.label;
+				// do it only if current state "visuvciel"
+				if(Model.getInstance().checkServeurVisuVciel())
+				{
+					this.closeSession.selectedIndex = -1;
+				}
+			}
+
 		]]>
 		
 	</fx:Script>
+	<modules:states>
+		<s:State name="State1"/>
+		<s:State name="vciel"/>
+	</modules:states>
 	<fx:Declarations>
 		<maps:RetrospectionMap id="retrospectionMap"  dispatcher="{this}"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_SESSION_SALON_RETROSPECTION}"  method="updateListSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION}"  method="updateListClosedSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_RETRO}"  method="updateTimeLine"/>
 	</fx:Declarations>
 <mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
 			<s:Panel height="100%" width="70%">
 				<s:title>Video</s:title>
+				<s:Group height="100%" width="100%">
+					<s:layout>
+						<s:HorizontalLayout gap="0"/>
+					</s:layout>
+					<controls:VisuVisio id="visio" width="100%" top="0"
+										quality="80"
+										bandwidth="15000" autoPlay="True"  height="100%" />
+					
+				</s:Group>
 			</s:Panel>
-			<s:Panel height="100%" width="30%">
-				<s:title>Iconographie</s:title>
-			</s:Panel>
+			<mx:VDividedBox width="30%" height="100%">
+				<s:Panel width="100%" height="50%">
+					<s:title>{fxgt.gettext("Mes séances(consernent uniquement vos activités dans les séances)")}</s:title>
+					<!--<s:toolTip>{fxgt.gettext("(consernent uniquement vos activités dans les séances)")}</s:toolTip>-->
+					<s:Group width="100%" height="100%" top="5">
+						<s:layout >
+							<s:VerticalLayout gap="0"/>
+						</s:layout>
+						<s:List  id="openSession"  borderVisible="false" dataProvider="{listSessionOpen}" width="100%" height="100%" itemRenderer="com.ithaca.visu.renderer.SessionRetroRenderer"  change="openSession_changeHandler(event)" >
+							<s:layout>
+								<s:VerticalLayout gap="5" horizontalAlign="center"/>
+							</s:layout>
+						</s:List>
+					</s:Group>
+				</s:Panel>
+				<s:Panel width="100%" height="50%" includeIn="vciel">
+					<s:title>{fxgt.gettext("Les séances partagées(consernent les séances fermés uniquement)")}</s:title>
+					<!--<s:toolTip>{fxgt.gettext("(consernent les séances fermés uniquement)")}</s:toolTip>-->
+					<s:Group width="100%" height="100%" top="5">
+						<s:layout >
+							<s:VerticalLayout gap="0"/>
+						</s:layout>
+						<s:List id="closeSession" borderVisible="false" dataProvider="{listSessionClose}" width="100%"  height="100%" itemRenderer="com.ithaca.visu.renderer.SessionRetroRenderer"  change="closeSession_changeHandler(event)">
+							<s:layout>
+								<s:VerticalLayout gap="5" horizontalAlign="center"/>
+							</s:layout>
+						</s:List>
+					</s:Group>
+				</s:Panel>
+			</mx:VDividedBox>
 		</mx:HDividedBox>
-		<s:Panel width="100%" height="40%">
-			<s:title>Timeline</s:title>
+		<s:Panel width="100%" height="40%" id="panelTimeLine">
+			<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
+			<s:Group width="100%" height="100%">
+				<s:layout >
+					<s:VerticalLayout gap="0"/>
+				</s:layout>
+				<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false"/>
+				<s:Group width="100%" height="100%">
+					<s:Scroller left="1" right="1" top="1" bottom="1">
+						<s:Group width="100%" height="100%">
+							<s:layout>
+								<s:VerticalLayout gap="5"/>
+							</s:layout>
+							<s:Group id="traceLineGroup" width="100%" height="100%">
+								<s:layout>
+									<s:VerticalLayout gap="4"/>
+								</s:layout>
+							</s:Group>
+						</s:Group>
+					</s:Scroller>
+				</s:Group>
+			</s:Group>
 		</s:Panel>
 	</mx:VDividedBox>
 </mx:HDividedBox>

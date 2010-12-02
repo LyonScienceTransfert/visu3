@@ -15,6 +15,7 @@
 		import com.ithaca.visu.events.InitMapEvent;	
 		
 		import mx.events.FlexEvent;
+		import com.ithaca.visu.events.SessionEvent;
 		
 	]]></fx:Script>
 	
@@ -34,6 +35,25 @@
 				<mate:Request action="sessionInfo.getSessionsByUser"   arguments="{[]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>	
+		
+		<mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getListClosedSessionByUser"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>	
+		
+		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getTraceUser"   arguments="{[event.traceId, event.sessionId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>	
+		
+		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
 	</fx:Declarations>
 	
 </mate:LocalEventMap>
