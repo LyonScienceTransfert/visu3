@@ -93,7 +93,7 @@ package  com.lyon2.visu.model
 			{
 				return true;
 			}
-			return true;
+			return false;
 		}
 		
 		public function setLoggedUser(value:UserVO):void
