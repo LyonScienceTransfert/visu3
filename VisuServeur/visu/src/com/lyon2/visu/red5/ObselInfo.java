@@ -62,8 +62,6 @@
  */
 package com.lyon2.visu.red5;
 
-
-
 import java.sql.SQLException;
 
 import java.text.DateFormat;
@@ -96,169 +94,245 @@ import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.Application;
- 
+
 /**
  * 
- *  Service d'enregistrement des streams video dans un salon
- *
+ * Service d'enregistrement des streams video dans un salon
+ * 
  */
-public class ObselInfo 
-{
+public class ObselInfo {
 	private Application app;
-  	
-	protected static final Logger log = Red5LoggerFactory.getLogger(ObselInfo.class, "visu2" );
-	
-	
-	
+
+	protected static final Logger log = Red5LoggerFactory.getLogger(
+			ObselInfo.class, "visu2");
+
 	@SuppressWarnings("unchecked")
-	public List<Obsel> getObselSetMark(IConnection conn) throws SQLException 
-	{
-		log.warn("====== getObselSetMark ======");
-		List<Obsel> listObselSessionStart = null;
-		try
-		{
-				
-			listObselSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getObselSetMark");
-			
+	public void getObselSessionExitSessionPause(IConnection conn)
+			throws SQLException {
+		log.warn("====== getObselSessionExitSessionPause ======");
+		IClient client = conn.getClient();
+		Integer userId = (Integer) client.getAttribute("uid");
+		List<Obsel> listObselSessionExitSessionPause = null;
+		try {
+			String traceParam = "%-" + userId.toString() + ">%";
+			String refParam = "void";
+			// log.warn("====refParam {}",refParam);
+			ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+			listObselSessionExitSessionPause = (List<Obsel>) app
+					.getSqlMapClient().queryForList(
+							"obsels.getSessionExitSessionPauseObselsForUserId",
+							osp);
+
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
-			log.warn("empty BD, exception case");	
-			
+			log.warn("empty BD, exception case");
+
 		}
-		log.warn("====== numbers obsel = {}",listObselSessionStart.size());
+		log.warn("====== numbers obsel = {}", listObselSessionExitSessionPause
+				.size());
+		Object[] args = { listObselSessionExitSessionPause };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListObselSessionExitSessionPause", args);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Obsel> getObselSetMark(IConnection conn) throws SQLException {
+		log.warn("====== getObselSetMark ======");
+		List<Obsel> listObselSessionStart = null;
+		try {
+			listObselSessionStart = (List<Obsel>) app.getSqlMapClient()
+					.queryForList("obsels.getObselSetMark");
+
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+			log.warn("empty BD, exception case");
+
+		}
+		log.warn("====== numbers obsel = {}", listObselSessionStart.size());
 		return listObselSessionStart;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void getActiveTraceUser(IConnection conn) throws SQLException 
-	{
+	public void getActiveTraceUser(IConnection conn) throws SQLException {
 		log.warn("======== getActiveTraceUser ");
-		List <Obsel> result = null;
+		List<Obsel> result = null;
 		// check if trace existe
 		IClient client = conn.getClient();
-		String trace = (String)client.getAttribute("trace");
-		log.warn("======== trace the client = {}",trace);
-		if(trace == null)
-		{
+		String trace = (String) client.getAttribute("trace");
+		log.warn("======== trace the client = {}", trace);
+		if (trace == null) {
 			// user join session when session was stopped
-			Integer userId = (Integer)client.getAttribute("uid");
-			Integer session_id = (Integer)client.getAttribute("sessionId");
+			Integer userId = (Integer) client.getAttribute("uid");
+			Integer session_id = (Integer) client.getAttribute("sessionId");
 			List<Obsel> listObselSessionStart = null;
-			try
-			{
-				String traceParam = "%-"+userId.toString()+">%";
-				String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
-				//log.warn("====refParam {}",refParam);
-				ObselStringParams osp = new ObselStringParams(traceParam,refParam);		
-				listObselSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSessionStartSessionEnter", osp);
-				if (listObselSessionStart != null)
-				{
+			try {
+				String traceParam = "%-" + userId.toString() + ">%";
+				String refParam = "%:hasSession " + "\""
+						+ session_id.toString() + "\"" + "%";
+				// log.warn("====refParam {}",refParam);
+				ObselStringParams osp = new ObselStringParams(traceParam,
+						refParam);
+				listObselSessionStart = (List<Obsel>) app
+						.getSqlMapClient()
+						.queryForList(
+								"obsels.getTraceIdByObselSessionStartSessionEnter",
+								osp);
+				if (listObselSessionStart != null) {
 					Obsel obselSessionStart = listObselSessionStart.get(0);
 					trace = obselSessionStart.getTrace();
-				}else
-				{
+				} else {
 					// hasn't trace , hasn't obsels
 					// CALLBACK
 				}
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des sessions" + e);
-				log.warn("empty BD, exception case");	
+				log.warn("empty BD, exception case");
 				// hasn't trace , hasn't obsels
 				// CALLBACK
 			}
 		}
-		log.warn("======== trace in BD = {}",trace);
+		log.warn("======== trace in BD = {}", trace);
 		// get list obsel
-		try
-		{
-			result = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTrace", trace);
+		try {
+			result = (List<Obsel>) app.getSqlMapClient().queryForList(
+					"obsels.getTrace", trace);
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
 
-		Object[] args = {result};
-		IConnection connClient = (IConnection)client.getAttribute("connection");
-		if (conn instanceof IServiceCapableConnection) 
-		{
+		Object[] args = { result };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListActiveObsel", args);
-		} 		
+		}
 	}
+
 	@SuppressWarnings("unchecked")
-	public void getTraceUser(IConnection conn, String traceId, Integer sessionId) throws SQLException 
-	{
+	public void getTraceUser(IConnection conn, String traceId, Integer sessionId)
+			throws SQLException {
 		log.warn("======== getTraceUser ");
 		IClient client = conn.getClient();
-		List <Obsel> result = null;
+		List<Obsel> result = null;
 		Session session = null;
 		// get list obsel
-		try
-		{
-			result = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTrace", traceId);
+		try {
+			result = (List<Obsel>) app.getSqlMapClient().queryForList(
+					"obsels.getTrace", traceId);
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
 		// get session
-		try
-		{
-			session =  (Session)app.getSqlMapClient().queryForObject("sessions.getSession", sessionId);
+		try {
+			session = (Session) app.getSqlMapClient().queryForObject(
+					"sessions.getSession", sessionId);
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des session" + e);
 		}
 		Date sessionStartRecordingDate = session.getStart_recording();
 		Long sessionStartRecording = sessionStartRecordingDate.getTime();
-		Object[] args = {result, sessionStartRecording};
-		IConnection connClient = (IConnection)client.getAttribute("connection");
-		if (conn instanceof IServiceCapableConnection) 
-		{
+		Object[] args = { result, sessionStartRecording };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListUserObsel", args);
-		} 		
+		}
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
-	{
+	public void getSessionsByDateByUser(IConnection conn, Integer userId,
+			String date) {
 		log.warn("======== getSessionsByDateByUser ");
-		log.warn("=====userId = {}",userId);
-		log.warn("=====date = {}",date);
+		log.warn("=====userId = {}", userId);
+		log.warn("=====date = {}", date);
 		// get role of logged user
 		IClient client = conn.getClient();
-		User user = (User)client.getAttribute("user");
+		User user = (User) client.getAttribute("user");
 		Integer roleUser = app.getRoleUser(user.getProfil());
-		List <Session> result = null;
+		List<Session> result = null;
 		// create Object
-		UserDate userDate = new UserDate(userId,date);
+		UserDate userDate = new UserDate(userId, date);
 		// check if user has rights admin or responsable
-		if((roleUser == 2) || (roleUser == 1)){
-			try
-			{
-				result = (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsByDate",date);
+		if ((roleUser == 2) || (roleUser == 1)) {
+			try {
+				result = (List<Session>) app.getSqlMapClient().queryForList(
+						"sessions.getSessionsByDate", date);
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des utilisateurs" + e);
 			}
-		}else{
-			try
-			{
-				result = (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsByDateByUser",userDate);
+		} else {
+			try {
+				result = (List<Session>) app.getSqlMapClient().queryForList(
+						"sessions.getSessionsByDateByUser", userDate);
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des utilisateurs" + e);
 			}
 		}
-		Object[] args = {result,date};
-		IConnection connClient = (IConnection)client.getAttribute("connection");
+		Object[] args = { result, date };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListSession", args);
-			} 	
+		}
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	public void getObselByClosedSession(IConnection conn, Integer sessionId) {
+		log.warn("======== getObselByClosedSession ");
+
+		IClient client = conn.getClient();
+		List<Obsel> result = null;
+		Session session = null;
+		String traceParam = "%-" + "void" + ">%";
+		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
+				+ "%";
+		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+		try {
+			result = (List<Obsel>) app.getSqlMapClient().queryForList(
+					"obsels.getObselBySessionId", osp);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des obsels" + e);
+		}
+		// get session
+		try {
+			session = (Session) app.getSqlMapClient().queryForObject(
+					"sessions.getSession", sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des session" + e);
+		}
+		Date sessionStartRecordingDate = session.getStart_recording();
+		Long sessionStartRecording = sessionStartRecordingDate.getTime();
+		Object[] args = { result, sessionStartRecording };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListObselClosedSession", args);
+		}
+	}
+
+	public void addListObsel(List<Obsel> listObsel) {
+		Integer nbrObsel = listObsel.size();
+		log.warn("== nbrObsel = {}", nbrObsel.toString());
+		for (Obsel obsel : listObsel) {
+			try {
+				app.getSqlMapClient().insert("obsels.insert", obsel);
+			} catch (Exception e) {
+				log.error("Probleme lors du adding obsel" + e);
+			}
+		}
+	}
+
 	public void setApplication(Application app) {
 		this.app = app;
 		log.debug("set application " + app);
 	}
-	
- 
+
 }

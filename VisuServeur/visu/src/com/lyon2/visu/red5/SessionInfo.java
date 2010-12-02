@@ -196,6 +196,49 @@ public class SessionInfo
 	}
 	
 	@SuppressWarnings("unchecked")
+	public void getListClosedSessionByUser(IConnection conn)
+	{
+		log.warn("====== getListClosedSessionByUser =========");
+		IClient client = conn.getClient();
+		Integer userId = (Integer)client.getAttribute("uid");
+		List <Session> result = null;
+		try
+		{
+			result = (List<Session>)app.getSqlMapClient().queryForList("sessions.getClosedSessionsByUser",userId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+		}
+		Object[] args = {result};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListClosedSession", args);
+		} 		
+	}
+	@SuppressWarnings("unchecked")
+	public void getSessionById(IConnection conn, Integer sessionId)
+	{
+		log.warn("====== getSessionById =========");
+		IClient client = conn.getClient();
+		Session session = null;
+		// get session
+		try {
+			session = (Session) app.getSqlMapClient().queryForObject(
+					"sessions.getSession", sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des session" + e);
+		}
+		Object[] args = {session};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkLastSession", args);
+		} 	
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void getSessionsByUser(IConnection conn){
 		log.warn("====== getSessionsByUser =========");
 		IClient client = conn.getClient();
