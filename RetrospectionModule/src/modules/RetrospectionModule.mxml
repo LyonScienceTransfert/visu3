@@ -335,6 +335,7 @@
 						}
 						var timeBeginRFN:Number = obsel.begin;
 						var deltaSecond:Number = (this.pickCheryClick - timeBeginRFN)/1000;
+						//panelTimeLine.title = deltaSecond.toString() + "cherry pick = "+ this.pickCheryClick.toString();
 						stream.seek(deltaSecond);		
 						break;
 				}
@@ -445,6 +446,7 @@
 				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
 				traceLine.listTitleObsels = traceLine.tempList;		
  				var userId:int = traceLine.idUserTraceLine;
+				traceLine.checkBoxMarkerObsel.selected = true;
 				if(userId == Model.getInstance().getLoggedUser().id_user)
 				{
 					sessionTimeLine.sessionTimeLineLoggedUser.left = traceLine.traceLoggedUser.left;
