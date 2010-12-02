@@ -469,28 +469,12 @@ public class MainManager
 		var listObselSI:ArrayCollection = new ArrayCollection();
 		var durationSession :Number = 0;
 		var tempSharedSession:Boolean = false;
-	//	var startRecordingSession:Number = 0;
 		if(!(listObselVO == null || listObselVO.length == 0))
 		{
 			// begin session
 			var timeSessionStart:Number = 0;
 			var timeSessionEnd:Number = 0;
 			listObsel = new ArrayCollection();
-			var firstObselVO:ObselVO = listObselVO[0] as ObselVO;
-			var typeFirstObselVO:String = firstObselVO.type;
-			var firstObsel:Obsel = null;
-			if(typeFirstObselVO == TraceModel.SESSION_START || typeFirstObselVO == TraceModel.SESSION_ENTER)
-			{
-				firstObsel = Obsel.fromRDF(firstObselVO.rdf);
-				// get session start time from first obsel
-				timeSessionStart = firstObsel.begin;
-			//	startRecordingSession = new Number(firstObsel.props[TraceModel.SESSION_START_RECORDING]);
-				//this.addPresentUsers(firstObsel);	
-			}else
-			{
-			//	Alert.show('Probleme avec le trace activities, premier obsel != SessionStart/SessionEnter',"");	
-			}
-			
 			// exit from session 
 			var stopTimeSessionMsec:Number;
 			var startTimeSessionMsec:Number;
@@ -551,14 +535,14 @@ public class MainManager
 								var ownerSI:String = obselSI.props[TraceModel.UID];
 								var obselRFN:Obsel = getObselByUserIdByType("RFN",ownerSI);
 								obselSI.begin = obselRFN.begin;
-								obselSI.props[TraceModel.PATH] = obselRFN.props[TraceModel.PATH];
+								var path:String = obselRFN.props[TraceModel.PATH];
+								obselSI.props[TraceModel.PATH] = path;
 								obselSI.end = obsel.begin;
 								listObsel.addItem(obselSI);
 							}
-							
-						//removeTempObsel("RFN", owner);
-						//listObselRFN.removeAll();
-						
+						// remove all path of video	
+						listObselRFN.removeAll();	
+						//remove only user walk out
 						removeTempObsel("SI", owner);
 						
 						var loggedUserId:String = Model.getInstance().getLoggedUser().id_user.toString();
@@ -642,6 +626,7 @@ public class MainManager
 			var listObselByType:ArrayCollection = getListObselByType(type);
 			var nbrObsel:int = listObselByType.length;
 			var index:int = 0;
+			//var listSameOwnerObsel:ArrayCollection  = new ArrayCollection();
 			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
 			{
 				var obsel:Obsel = listObselByType.getItemAt(nObsel) as Obsel;
@@ -650,8 +635,16 @@ public class MainManager
 				{
 					listObselByType.removeItemAt(nObsel);
 					return;
+					// FIXME : for remove all the same obsels have to add same obsel in array and than remove it
+					//listSameOwnerObsel.addItem(nObsel);
 				}
 			}
+			/*var nbrSameObsel:int = listSameOwnerObsel.length;
+			for(var nSameObsel:int = nbrSameObsel; nSameObsel > 0 ; nSameObsel--  )
+			{
+				var orderSameObselInListObselByType:int = listSameOwnerObsel.getItemAt(nSameObsel-1) as int;
+				listObselByType.removeItemAt(orderSameObselInListObselByType);
+			}	*/		
 		}
 		
 		function getListObselByType(type:String):ArrayCollection
@@ -828,7 +821,6 @@ public class MainManager
 			var session:SessionVO = listSessionVO[nSession];
 			var sessionTheme:String = session.theme;
 			var sessionId:int = session.id_session;
-			//listSession.addItem({label:"CLOSED SESSION => " + sessionTheme, sessionId:sessionId})
 			listSession.addItem({label:sessionTheme, sessionId:sessionId})
 		}
 		var eventLoadListClosedSessionSalonRetrospection:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION);
@@ -841,6 +833,7 @@ public class MainManager
 		// creation trace for logged user
 		var listUserObselVO:Array = new Array();
 		var listTimeStampedObsel:ArrayCollection = new ArrayCollection();
+		var listPathStampedObsel:ArrayCollection = new ArrayCollection();
 		var nbrObsel:int = listObselClosedSessionVO.length;
 		for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
 		{
@@ -853,8 +846,13 @@ public class MainManager
 				var owner:String = obsel.props[TraceModel.UID];
 				if(subject == owner)	
 				{
-				}
 					listUserObselVO.push(obselVO);
+				}
+				// FIXME : checking if have the obsel with same path
+				/*if(!hasObselWithSamePathFile(obselVO))
+				{
+					listUserObselVO.push(obselVO);
+				}*/
 			}
 			// only chat messages will show
 			else if( typeObsel == TraceModel.SESSION_EXIT || typeObsel == TraceModel.SESSION_PAUSE || typeObsel == TraceModel.SESSION_START || typeObsel == TraceModel.SESSION_ENTER)
@@ -863,7 +861,8 @@ public class MainManager
 				{		
 					listUserObselVO.push(obselVO);
 				}
-			}else if( typeObsel == TraceModel.RECEIVE_CHAT_MESSAGE)
+			}
+			else if( typeObsel == TraceModel.RECEIVE_CHAT_MESSAGE)
 			{
 				listUserObselVO.push(obselVO);
 			}
@@ -900,9 +899,26 @@ public class MainManager
 			listTimeStampedObsel.addItem(obselChecking);
 			return false;
 		}
+		
+		function hasObselWithSamePathFile(obselVO:ObselVO):Boolean
+		{
+			var obselChecking:Obsel = Obsel.fromRDF(obselVO.rdf);
+			var path:String = obselChecking.props[TraceModel.PATH];
+			var nbrObsel:int = listPathStampedObsel.length;
+			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+			{
+				var obsel:Obsel = listPathStampedObsel.getItemAt(nObsel) as Obsel;
+				var pathStamp:String = obsel.props[TraceModel.PATH];
+				if(pathStamp == path)
+				{
+					return true;
+				}
+			}
+			// add obsel path
+			listPathStampedObsel.addItem(obselChecking);
+			return false;
+		}
 	}
-	
-	
 	
 	/**
 	 * Add TraceLines to Model
