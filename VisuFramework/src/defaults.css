@@ -75,8 +75,14 @@ obsel|ObselLine
 {
 	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselLineSkin");
 }
+
 obsel|ObselMarker
 {
 	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselMarkerSkin");
+}
+
+obsel|ObselSessionOut
+{
+	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselSessionOutSkin");
 }
 
