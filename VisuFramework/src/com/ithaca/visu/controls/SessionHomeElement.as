@@ -304,14 +304,17 @@ package com.ithaca.visu.controls
 		 */ 
 		protected function get remaining_time():String
 		{
-			var translate:String = fxgt.gettext("La séance commencera ");
+			var translate:String = fxgt.gettext("La séance devait commencer ");
+			var diff:Number = new Date().time - _session.date_session.time;
+			if(diff < 0)
+			{
+				translate = fxgt.gettext("La séance commencera ");				
+			}
 			return "<p textAlign='center'  fontSize='10'>"+translate+"<span fontWeight='bold'>"
 					+ TimeUtils.relativeTime(_session.date_session,null,true)
 					+"</span></p>";
 		}
-		 
-		
-		
+		 		
 		/**
 		 * return String a textflow markup string representation of the session participants
 		 * (tutor are placed in front, in bold, followed by students 
