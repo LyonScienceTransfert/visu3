@@ -62,68 +62,69 @@
  */
 package com.ithaca.visu.ui.utils
 {
-	public class ColorEnum
-	{
-		// color for user was out the session
-		static public var VOID : String = "0x231043";
-		static public var YELLOW : String = "0xefed44";
-		static public var BLUE : String = "0xcedbef";
-		static public var RED : String = "0xf4b1b1";
-		static public var GREEN : String = "0x8df82f";
-		static public var VIOLET : String = "0xef96f5";
-		static public var BLUEMARIN : String = "0xbdf7f6";
-		static public var VOID1 : String = "0xcff795";
-		static public var VOID2 : String = "0xf5cb66";
-		static public var VOID3 : String = "0x6f7bea";
-		static public var VOID4 : String = "0xd879f0";
-		static public var VOID5 : String = "0xebcbd2";
+	public class IconEnum
+	{	
+		import com.ithaca.traces.model.TraceModel;
 		
-		public static function getColorByCode(code:String):String
+		[Bindable]
+		[Embed("images/marqueurBlanc-bas-20px.png")]
+		static private var markerIcon:Class;
+		
+		[Bindable]
+		[Embed("images/messageChat.png")]
+		static private var messageChatIcon:Class;
+		
+		[Bindable]
+		[Embed("images/motCleVisu1.png")]
+		static private var keywordIcon:Class;
+		
+		[Bindable]
+		[Embed("images/video.jpg")]
+		static private var videoIcon:Class;
+		
+		[Bindable]
+		[Embed("images/chatMessageVisu1.png")]
+		static private var messageChatIconVisu1:Class;
+		
+		[Bindable]
+		[Embed("images/consigneVisu1.png")]
+		static private var consigneIconVisu1:Class;
+		
+		[Bindable]
+		[Embed("images/fichierVisu1.png")]
+		static private var fichierIconVisu1:Class;
+		
+		public static function getIconByTypeObsel(code:String):Class
 		{
-			var color:String = "0xffffff";
+			var icon:Class;
 			switch (code)
 			{
-				case "0" : 
-					color = VOID;
+				case TraceModel.SET_MARKER: 
+				case TraceModel.RECEIVE_MARKER: 
+					icon = markerIcon;
 					break;
-				case "1" : 
-					color = YELLOW;
+				case TraceModel.SEND_CHAT_MESSAGE: 
+				case TraceModel.RECEIVE_CHAT_MESSAGE: 
+					icon = messageChatIconVisu1;
 					break;
-				case "2" : 
-					color = BLUE;
+				case TraceModel.SEND_KEYWORD: 
+				case TraceModel.RECEIVE_KEYWORD: 
+					icon = keywordIcon;
 					break;
-				case "3" : 
-					color = RED;
+				case TraceModel.SEND_INSTRUCTIONS: 
+				case TraceModel.RECEIVE_INSTRUCTIONS: 
+					icon = consigneIconVisu1;
 					break;
-				case "4" : 
-					color = GREEN;
-					break;
-				case "5" : 
-					color = VIOLET;
-					break;
-				case "6" : 
-					color = BLUEMARIN;
-					break;
-				case "7" : 
-					color = VOID1;
-					break;
-				case "8" : 
-					color = VOID2;
-					break;
-				case "9" : 
-					color = VOID3;
-					break;
-				case "10" : 
-					color = VOID4;
-					break;
-				case "11" : 
-					color = VOID5;
+				case TraceModel.SEND_DOCUMENT: 
+				case TraceModel.RECEIVE_DOCUMENT: 
+				case TraceModel.READ_DOCUMENT: 
+					icon = videoIcon;
 					break;
 				default :
 					break;				
 			}
-			return color;
+			return icon;
 		}
-			
+		
 	}
 }
