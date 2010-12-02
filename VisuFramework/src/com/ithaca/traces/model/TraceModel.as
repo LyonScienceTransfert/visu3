@@ -114,8 +114,10 @@ package com.ithaca.traces.model
         public static const SESSION_EXIT: String = "SessionExit";
         public static const SESSION_PAUSE: String = "SessionPause";
         public static const SESSION_OUT: String = "SessionOut";
+        public static const SESSION_IN: String = "SessionIn";
         public static const ACTIVITY_START: String = "ActivityStart";
         public static const ACTIVITY_STOP: String = "ActivityStop";
+        public static const RECORD_FILE_NAME: String = "RecordFilename";
 		
 		
         public static const UID: String = "uid";
@@ -134,6 +136,10 @@ package com.ithaca.traces.model
         public static const SENDER_DOCUMENT: String = "senderdocument";
         public static const TYPE_DOCUMENT: String = "typedocument";
         public static const ACTIVITY_ID: String = "activityid";
+        public static const PATH: String = "path";
+        public static const SESSION_THEME: String = "sessionTheme";
+        public static const SESSION_ID: String = "session";
+        public static const TIMESTAMP: String = "timestamp";
 		
     }
 
