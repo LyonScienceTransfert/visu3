@@ -484,6 +484,8 @@
 				this.traceLineGroup.removeAllElements();
 				this.sessionTimeLine.sessionTimeLineLoggedUser.removeAllElements();
 				this.deltaTime = 0;
+				// set checksum in zero
+				this.checkingSumFluxVideo = 0;
 				
 				var obj:Object = (event.currentTarget as List).selectedItem;
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
@@ -502,6 +504,8 @@
 				this.traceLineGroup.removeAllElements();
 				this.sessionTimeLine.sessionTimeLineLoggedUser.removeAllElements();
 				this.deltaTime = 0;
+				// set checksum in zero
+				this.checkingSumFluxVideo = 0;
 
 				var obj:Object = (event.currentTarget as List).selectedItem
 				var traceId:String = obj.traceId;
