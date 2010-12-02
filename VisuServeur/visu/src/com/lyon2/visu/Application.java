@@ -363,6 +363,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				log.error("Probleme lors du listing des utilisateurs" + e);
 			}
 		}
+		// list user how staying in the session
+		List<IClient> listStayingClient = new ArrayList<IClient>();
 		// get sessionId of disconnected user
 		Integer sessionId = (Integer)client.getAttribute("sessionId");
 		//set obsel "RoomExit" if user was in the session and session in status recording
@@ -414,17 +416,29 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					{
 						log.error("=====Errors===== {}", sqle);
 					}
+					// add staying client to list
+					Integer connectedClientId = (Integer)connectedClient.getAttribute("uid");
+					Integer diff= userId - connectedClientId;
+					if(diff != 0)
+					{
+						listStayingClient.add(connectedClient);
+					}
+					
 				}
 			}
 		}
 				
-		Object [] args = {user};
 		//Get the Client Scope
 		IScope scope = conn.getScope();
+		// start recording file for users how stay in session
+		this.updateRecordingWhenUserWalkOutSession(scope, listStayingClient);
+		Object [] args = {user};
 		//notify all the client in the scope that one is disconnect from "Deck"/"Plateforme"
 		invokeOnScopeClients(scope, "outDeck", args);
         log.warn("client {} deconnect",user.getId_user());
         boolean hasTrace = client.hasAttribute("trace");
+		List<Object> paramsObselDisconnected= new ArrayList<Object>();
+		paramsObselDisconnected.add("session");paramsObselDisconnected.add(sessionId.toString());
         // add obsel "Disconected" only if user has trace for this sessionId 
         if(hasTrace)
         {
@@ -432,7 +446,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
         	{
         		if(user != null)
         		{
-        			setObsel(userId, (String)client.getAttribute("trace"), "Disconnected", null);
+        			setObsel(userId, (String)client.getAttribute("trace"), "Disconnected", paramsObselDisconnected);
         		}
         		
         	}
@@ -739,14 +753,24 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				User user = (User)client.getAttribute("user");
 				if(sessionId == sessionIdConnectedUser && statusConnectedUser == 3)
 				{
+					
 					listPresentsRecordingUsers.add(client);
+					// generate fileName
+//					String recordFileName = "record-" + sDate + "-" + client.getAttribute("sessionId").toString() + "-" + client.getAttribute("uid").toString();
+//					client.setAttribute("recordFileName", recordFileName);
+//					String clientId = (String)client.getAttribute("id");
+//					ClientBroadcastStream streamByClientId = (ClientBroadcastStream) getBroadcastStream(scope, clientId);
+					// add stream
+//					client.setAttribute("stream", streamByClientId);
+					// stop recording
+//					streamByClientId.stopRecording();
+					
 					// set id recording users
 					Integer userIdRecordingUser = (Integer)client.getAttribute("uid");
 					// have to find all recording users 
 					listPresentsIdUsers.add(userIdRecordingUser.toString());
 					listPresentsAvatarUsers.add(user.getAvatar());
 					listPresentsNameUsers.add(user.getFirstname());
-					listPresentsColorUsers.add("0xee8811");
 					// add code color
 					Integer codeColorUser = 0;
 					if(listUserCodeColor.containsKey(userIdRecordingUser))
@@ -813,22 +837,41 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 						log.error("=====Errors===== {}", sqle);
 					}
 					
-					
-					// add obsel "RecordFileName"
-					List<Object> paramsObselRecordFileName= new ArrayList<Object>();
-					paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(filename);
-    				paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(sessionId.toString());
-    				paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(userId.toString());
-					// add obsel "RecordFileName"
-					try
-					{
-						setObsel((Integer)connectedClient.getAttribute("uid"), (String)connectedClient.getAttribute("trace"), "RecordFilename", paramsObselRecordFileName);					
-					}
-					catch (SQLException sqle)
-					{
-						log.error("=====Errors===== {}", sqle);
-					}
+//					mjmj
+//					// start save files 
+//					String clientId = (String)connectedClient.getAttribute("id");
+//					ClientBroadcastStream streamByClientId = (ClientBroadcastStream) getBroadcastStream(scope, clientId);
+//					String fileName = (String)connectedClient.getAttribute("recordFileName");
+//					try 
+//					{
+//						// Save the stream to disk.
+//						streamByClientId.saveAs(fileName, false);
+//					} 
+//					catch (Exception e) 
+//					{
+//						log.error("Error while saving stream: " + streamByClientId.getName(), e);
+//					}
+//					
+//					// add obsel "RecordFileName" to all recording users of this session
+//					for (IClient clientRFN : listPresentsRecordingUsers)
+//					{
+//						Integer ownerFileName = (Integer)clientRFN.getAttribute("uid");
+//						List<Object> paramsObselRecordFileName= new ArrayList<Object>();
+//						paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(fileName);
+//	    				paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(sessionId.toString());
+//	    				paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(ownerFileName.toString());
+//						// add obsel "RecordFileName"
+//						try
+//						{
+//							setObsel(ownerFileName, (String)clientRFN.getAttribute("trace"), "RecordFilename", paramsObselRecordFileName);					
+//						}
+//						catch (SQLException sqle)
+//						{
+//							log.error("=====Errors===== {}", sqle);
+//						}
+//					}
 			}
+			this.updateRecordingWhenUserWalkOutSession(scope, listPresentsRecordingUsers);
 			
 			// set obsel start activity for user join the recording session only if activity was start by other user
 			Integer activityId = session.getId_currentActivity();
@@ -856,16 +899,16 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			log.warn("== setStatusRecording {} ",args);
 			invokeOnScopeClients(scope, "setStatusRecording", args);
 			
-			try 
-			{
-				// Save the stream to disk.
-				stream.saveAs(filename, false);
-				
-			} 
-			catch (Exception e) 
-			{
-				log.error("Error while saving stream: " + stream.getName(), e);
-			}
+//			try 
+//			{
+//				// Save the stream to disk.
+//				stream.saveAs(filename, false);
+//				
+//			} 
+//			catch (Exception e) 
+//			{
+//				log.error("Error while saving stream: " + stream.getName(), e);
+//			}
 		}
 		
 		// try send list of the obsels to client flex
@@ -1218,9 +1261,20 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					{
 						log.error("=====Errors===== {}", sqle);
 					}
+					// add staying client to list
+					Integer connectedClientId = (Integer)connectedClient.getAttribute("uid");
+					Integer diff= loggedUserId - connectedClientId;
+					if(diff != 0)
+					{
+						listStayingClient.add(connectedClient);
+					}
 				}
 			}
 		}
+		//Get the Client Scope
+		IScope scope = conn.getScope();
+		// start recording fila for users how staying in session
+		this.updateRecordingWhenUserWalkOutSession(scope, listStayingClient);
 		// TODO var static status
 		// set status client
 		client.setAttribute("status", 2);
@@ -1239,13 +1293,60 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		}
 		
 		Object[] args = {loggedUser, 2};
-		//Get the Client Scope
-		IScope scope = conn.getScope();
 		//send message to all users on "Deck"
 		invokeOnScopeClients(scope, "outSession", args);	
 	}
 
+    public void updateRecordingWhenUserWalkOutSession(IScope scope, List<IClient> listConnectedCleint)
+    {
+		GregorianCalendar calendar = new GregorianCalendar(); 
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+		String sDate = dateFormat.format(calendar.getTime());
 
+		for(IClient connectedClient : listConnectedCleint)
+    	{
+    		// start save files 
+    		String clientId = (String)connectedClient.getAttribute("id");
+    		Integer userId = (Integer)connectedClient.getAttribute("uid");
+    		Integer sessionId = (Integer)connectedClient.getAttribute("sessionId");
+    		
+    		ClientBroadcastStream streamByClientId = (ClientBroadcastStream) getBroadcastStream(scope, clientId);
+    		// stop recording
+    		streamByClientId.stopRecording();
+			// generate fileName
+			String recordFileName = "record-" + sDate + "-" + sessionId + "-" + userId;
+
+    		try 
+    		{
+    			// save the stream to disk
+    			streamByClientId.saveAs(recordFileName, false);
+    		} 
+    		catch (Exception e) 
+    		{
+    			log.error("Error while saving stream: " + streamByClientId.getName(), e);
+    		}
+    		
+    		// add obsel "RecordFileName" to all recording users of this session
+    		for (IClient clientRFN : listConnectedCleint)
+    		{
+    			List<Object> paramsObselRecordFileName= new ArrayList<Object>();
+    			paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(recordFileName);
+    			paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(sessionId.toString());
+    			paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(userId.toString());
+    			// add obsel "RecordFileName"
+    			try
+    			{
+    				setObsel((Integer)clientRFN.getAttribute("uid"), (String)clientRFN.getAttribute("trace"), "RecordFilename", paramsObselRecordFileName);					
+    			}
+    			catch (SQLException sqle)
+    			{
+    				log.error("=====Errors===== {}", sqle);
+    			}
+    		}
+    	}
+    	
+		
+    }
 
     public void setSqlMapClient(SqlMapClient sqlMapClient)
     {
