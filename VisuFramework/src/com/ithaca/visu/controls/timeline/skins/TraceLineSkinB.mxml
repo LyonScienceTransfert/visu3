@@ -73,10 +73,10 @@
 			var LEFT_TRACE_LINE_OBSEL:int = 210;
 			var VERICAL_CENTER_IMAGE_TITLE_TRACELINE:int = 5;
 			private function onClick():void{
-				nameUser.text = traceLoggedUser.width.toString();
+//				nameUser.text = traceLoggedUser.width.toString();
 			}
 			private function onClickTrace1():void{
-				labelTrace1.text = trace1.width.toString();
+//				labelTrace1.text = trace1.width.toString();
 			}
 
 
