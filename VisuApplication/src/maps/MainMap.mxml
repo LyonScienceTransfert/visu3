@@ -65,6 +65,18 @@
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{'clientInfo'}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselSessionExitSessionPause"   arguments="{[]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.GET_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getSessionById"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+		
 <!--		<mate:EventHandlers type="{'testApp'}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="testApp"   arguments="{['Main']}" />
@@ -92,6 +104,11 @@
 			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
 			<rtmp:CallbackRegistrator action="checkListActiveObsel" target="{MainManager}" method="onCheckListActiveObsel"/>
 			<rtmp:CallbackRegistrator action="checkListObselStartSession" target="{MainManager}" method="onCheckListObselStartSession"/>
+			<rtmp:CallbackRegistrator action="checkListUserObsel" target="{MainManager}" method="onCheckListUserObsel"/>
+			<rtmp:CallbackRegistrator action="checkListClosedSession" target="{MainManager}" method="onCheckListClosedSession"/>
+			<rtmp:CallbackRegistrator action="checkListObselClosedSession" target="{MainManager}" method="onCheckListObselClosedSession"/>
+			<rtmp:CallbackRegistrator action="checkListObselSessionExitSessionPause" target="{MainManager}" method="onCheckListObselSessionExitSessionPause"/>
+			<rtmp:CallbackRegistrator action="checkLastSession" target="{MainManager}" method="onCheckLastSession"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
