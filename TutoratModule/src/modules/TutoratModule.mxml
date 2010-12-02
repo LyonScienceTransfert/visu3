@@ -998,140 +998,23 @@
 					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
 					{
 						var obsel:Obsel = listObsels[nObsel] as Obsel;
-						this.addObsel(obsel,false);
+						var arrayInfoObsel:Array = Model.getInstance().addObsel(obsel);
+						if(arrayInfoObsel.length > 0)
+						{
+							var infoObsel:Object = arrayInfoObsel[0];
+							var senderObsel:int = infoObsel.senderId;
+							var textObsel:String = infoObsel.textObsel; 
+							var source:Class = infoObsel.source; 
+							initChatPanel(senderObsel, textObsel, source);
+						}
 					}
 				}
 			}
-			
-			private function addObsel(obsel:Obsel,sessionReadyInit:Boolean):void
-			{
-				var typeObsel:String = obsel.type;
-				var viewObsel = new ObselImage();
-				viewObsel.setBegin(obsel.begin);
-				viewObsel.setEnd(obsel.end);
-				var textObsel:String;
-				var ownerObsel:int;
-				switch (typeObsel)
-				{
-					case TraceModel.SET_MARKER :
-						viewObsel = new ObselMarker();
-						viewObsel.setBegin(obsel.begin);
-						viewObsel.setEnd(obsel.end);
-						ownerObsel = obsel.uid;
-						viewObsel.source =  markerIcon;
-						textObsel = obsel.props[TraceModel.TEXT];
-						viewObsel.text = textObsel;
-						viewObsel.toolTip = textObsel;
-						var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
-						viewObsel.backGroundColor = backGroundColorObsel;
-						break;
-					case TraceModel.RECEIVE_MARKER :
-						viewObsel = new ObselMarker();
-						viewObsel.setBegin(obsel.begin);
-						viewObsel.setEnd(obsel.end);
-						ownerObsel = obsel.uid;
-						viewObsel.source =  markerIcon;
-						textObsel = obsel.props[TraceModel.TEXT];
-						viewObsel.text = textObsel;
-						viewObsel.toolTip = textObsel;
-						var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
-						viewObsel.backGroundColor = backGroundColorObsel;
-						break;
-					case TraceModel.SEND_CHAT_MESSAGE :
-						ownerObsel = obsel.uid;
-						viewObsel.source =  messageChatIconVisu1;
-						textObsel = obsel.props[TraceModel.CONTENT];
-						viewObsel.toolTip = textObsel;
-						break;
-					case TraceModel.RECEIVE_CHAT_MESSAGE :
-						ownerObsel = obsel.uid;
-						viewObsel.source =  messageChatIconVisu1;
-						textObsel = obsel.props[TraceModel.CONTENT];
-						viewObsel.toolTip = obsel.props[TraceModel.SENDER] + ":" + textObsel;
-						var senderObsel:int = obsel.props[TraceModel.SENDER];
-						initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
-						break;
-					case TraceModel.SEND_KEYWORD :
-						ownerObsel = obsel.uid;
-						viewObsel.source =  keywordIcon;
-						textObsel = obsel.props[TraceModel.KEYWORD];
-						viewObsel.toolTip = textObsel;
-						break;
-					case TraceModel.RECEIVE_KEYWORD :
-						ownerObsel = obsel.uid;
-						viewObsel.source =  keywordIcon;
-						textObsel = obsel.props[TraceModel.KEYWORD];
-						viewObsel.toolTip = textObsel;
-						var senderObsel:int = obsel.props[TraceModel.SENDER];
-						initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
-						break;
-					case TraceModel.SEND_INSTRUCTIONS :
-						ownerObsel = obsel.uid;
-						viewObsel.source =  consigneIconVisu1 ;
-						textObsel = obsel.props[TraceModel.INSTRUCTIONS];
-						viewObsel.toolTip = textObsel;
-						break;
-					case TraceModel.RECEIVE_INSTRUCTIONS :
-						ownerObsel = obsel.uid;
-						viewObsel.source =  consigneIconVisu1;
-						textObsel = obsel.props[TraceModel.INSTRUCTIONS];
-						viewObsel.toolTip = textObsel;
-						// for reconstruction the chat
-						var senderObsel:int = obsel.props[TraceModel.SENDER];
-						initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
-						break;
-					case TraceModel.SEND_DOCUMENT :
-						ownerObsel = obsel.uid;
-						var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
-						if(typeDocument == ActivityElementType.IMAGE)
-						{
-							viewObsel.source =  obsel.props[TraceModel.URL];  
-						}else
-						{
-							viewObsel.source = videoIcon;
-						}
-						textObsel = obsel.props[TraceModel.TEXT];
-						viewObsel.toolTip = textObsel;
-						break;
-					case TraceModel.RECEIVE_DOCUMENT :
-						ownerObsel = obsel.uid;
-						var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
-						if(typeDocument == ActivityElementType.IMAGE)
-						{
-							viewObsel.source =  obsel.props[TraceModel.URL];  
-						}else
-						{
-							viewObsel.source = videoIcon;
-						}
-						textObsel = obsel.props[TraceModel.TEXT];
-						viewObsel.toolTip = textObsel;
-						var senderObsel:int = obsel.props[TraceModel.SENDER];
-						initChatPanel(senderObsel, textObsel, fichierIconVisu1 , sessionReadyInit);
-						break;
-					case TraceModel.READ_DOCUMENT :
-						ownerObsel = obsel.props[TraceModel.SENDER];
-						var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
-						if(typeDocument == ActivityElementType.IMAGE)
-						{
-							viewObsel.source =  obsel.props[TraceModel.URL];  
-						}else
-						{
-							viewObsel.source = videoIcon;
-						} 			
-						textObsel = obsel.props[TraceModel.TEXT];
-						viewObsel.toolTip = obsel.props[TraceModel.SENDER_DOCUMENT] + ":" + textObsel;
-						break;
-				}
-				// set obsel to the model
-				//	viewObsel.toolTip = viewObsel.toolTip + "=>"+ viewObsel.getBegin().toString();
 
-				Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel);
-
-			}
-			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:Class, sessionReadyInit:Boolean):void
+			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:Class):void
 			{
 				// exclus the obsel "Start activity"
-				if(!sessionReadyInit && ownerObsel != 0)
+				if( ownerObsel != 0)
 				{
 					var traceLine:Object = Model.getInstance().getTraceLineByUserId(ownerObsel); 
 					var userAvatar:String = traceLine.userAvatar as String;
@@ -1139,9 +1022,11 @@
 					var userColor:uint = traceLine.userColor;
 					var sharedElementChat:SharedElementChat = new SharedElementChat();
 					sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
+					sharedElementChat.statVciel = Model.getInstance().checkServeurVisuVciel();
 					this.panelChatSession.addElement(sharedElementChat);
 				}
 			}
+			
 			
 			// add element traceLine
 			private function onAddTraceLineElement(event:TraceLineEvent):void
