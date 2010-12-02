@@ -93,6 +93,8 @@ import com.lyon2.utils.UserColor;
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
+
+import java.util.Date;
  
 /**
  * 
@@ -115,8 +117,10 @@ public class StreamRecorder
 	@SuppressWarnings("unchecked")
 	public void startRecordRoom(IConnection conn, Integer session_id)
 	{
+		Date date = new Date();
+		Long timeStamp = date.getTime();
         /* We store the record filenames, in order to notify clients */
-        List<String> filenames = new Vector<String>();
+      //  List<String> filenames = new Vector<String>();
 		Map<Integer,List<Object>> listUserStartRecording = new HashMap<Integer,List<Object>>(); 
 		List<String> listPresentsIdUsers= new ArrayList<String>();
 		List<String> listPresentsAvatarUsers= new ArrayList<String>();
@@ -341,6 +345,8 @@ public class StreamRecorder
     			//log.warn("FileName is = {}",listUserStartRecording.get(key).get(1));
     			// add obsel "SessionStart"
     			List<Object> paramsObselSessionStart= new ArrayList<Object>();
+    			// add timeStamp
+    			paramsObselSessionStart.add("timestamp");paramsObselSessionStart.add(timeStamp.toString());
     			paramsObselSessionStart.add("session");paramsObselSessionStart.add(session_id.toString());
     			paramsObselSessionStart.add("sessionTheme");paramsObselSessionStart.add(session.getTheme());
  //    			// TODO : get durationSession of this session
@@ -417,6 +423,9 @@ public class StreamRecorder
 
 	public void stopRecordRoom(IConnection conn, Integer session_id, Integer sessionStatus)
 	{
+		// set timestamp
+		Date date = new Date();
+		Long timeStamp = date.getTime();
 		//Get the Client Scope
 		IScope scope = conn.getScope();
 		 for (String name: app.getBroadcastStreamNames(scope))
@@ -447,11 +456,15 @@ public class StreamRecorder
 						IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
 						sc.invoke("stopRecording",timeStopRecording);
 					} 	
+					
 					// setObsel SessionPause
 					List<Object> paramsObselSessionPause= new ArrayList<Object>();
 					paramsObselSessionPause.add("session");paramsObselSessionPause.add(session_id.toString());
+					 // add timeStamp
+					paramsObselSessionPause.add("timestamp");paramsObselSessionPause.add(timeStamp.toString());
 					// id user paused the session
 					paramsObselSessionPause.add("useridsetpause");paramsObselSessionPause.add(String.valueOf(conn.getClient().getAttribute("uid")));
+					paramsObselSessionPause.add("uid");paramsObselSessionPause.add(userId.toString());
 	    			try
 						{
 	    					 app.setObsel((Integer)client.getAttribute("uid"), (String)client.getAttribute("trace"), "SessionPause", paramsObselSessionPause);					

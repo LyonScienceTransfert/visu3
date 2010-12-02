@@ -346,6 +346,9 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     public void appDisconnect(IConnection conn)
     {
         super.appDisconnect(conn);
+		// set timestamp
+		Date date = new Date();
+		Long timeStamp = date.getTime();
 		IClient client = conn.getClient();
 		User user = null;
 		Integer userId=0;
@@ -390,7 +393,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					log.error("=====Errors===== {}", sqle);
 				}				
 			}
-			
 			// set Obsel "SessionExit" to all connected user of this session
 			for (IClient connectedClient : this.getClients())
 			{
@@ -399,6 +401,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				{
 					List<Object> paramsObsel= new ArrayList<Object>();
     				paramsObsel.add("uid");paramsObsel.add(userId.toString());
+    				 // add timeStamp
+    				paramsObsel.add("timestamp");paramsObsel.add(timeStamp.toString());
     				paramsObsel.add("session");paramsObsel.add(sessionId.toString());
     				paramsObsel.add("typeExit");paramsObsel.add("disconnect");
 					// add obsel "RoomExit"
@@ -614,6 +618,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		}
 		log.warn("=== client id = {}", clientRecording.getAttribute("uid"));
 		
+		Date date = new Date();
+		Long timeStamp = date.getTime();
 		// this client start streaming 
 		Integer status = (Integer)clientRecording.getAttribute("status");
 		log.warn("status = {}",status.toString());
@@ -775,7 +781,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			
 			// set Obsel "SessionEnter" and "RecordFileName" to all connected user of this session
 			// timeBegin the obsel SessionStart
-			//Long timeBeginSessionStartSessionEnter = Long.MAX_VALUE;
 			// get obsel SessinEnter of the "clientRecording"
 			Obsel obselSessionEnterOfRecordingClient = null;
 			for (IClient connectedClient : listPresentsRecordingUsers)
@@ -784,12 +789,14 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     				paramsObselSessionEnter.add("uid");paramsObselSessionEnter.add(userId.toString());
     				paramsObselSessionEnter.add("session");paramsObselSessionEnter.add(sessionId.toString());
     				paramsObselSessionEnter.add("sessionTheme");paramsObselSessionEnter.add(session.getTheme());
-    			//	paramsObselSessionEnter.add("sessionstartrecording");paramsObselSessionEnter.add(Long.toString(session.getStart_recording().getTime()));
     				paramsObselSessionEnter.add("presentids");paramsObselSessionEnter.add(listPresentsIdUsers);
     				paramsObselSessionEnter.add("presentavatars");paramsObselSessionEnter.add(listPresentsAvatarUsers);
     				paramsObselSessionEnter.add("presentnames");paramsObselSessionEnter.add(listPresentsNameUsers);
     				paramsObselSessionEnter.add("presentcolorscode");paramsObselSessionEnter.add(listPresentsColorUsersCode);
     				paramsObselSessionEnter.add("presentcolors");paramsObselSessionEnter.add(listPresentsColorUsers);
+    	   			// add timeStamp
+    				paramsObselSessionEnter.add("timestamp");paramsObselSessionEnter.add(timeStamp.toString());
+
 
 					// add obsel "SessionEnter"
 					try
@@ -1145,10 +1152,16 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 	{
 		log.warn("====checkOutSession====");
 		log.warn("loggedUserId = {}",loggedUserId.toString());
+		// set timestamp
+		Date date = new Date();
+		Long timeStamp = date.getTime();
+
 		// change users status 
 		IClient client = conn.getClient();
 		// get status client
 		Integer statusClient= (Integer) client.getAttribute("status");
+		// list user how staying in the session
+		List<IClient> listStayingClient = new ArrayList<IClient>();
 		// set Obsel "SessionExit" only if status recording
 		if(statusClient == 3)
 		{
@@ -1187,6 +1200,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				{
 					List<Object> paramsObsel= new ArrayList<Object>();
 	    			paramsObsel.add("uid");paramsObsel.add(loggedUserId.toString());
+	    			 // add timeStamp
+	    			paramsObsel.add("timestamp");paramsObsel.add(timeStamp.toString());
 	    			paramsObsel.add("session");paramsObsel.add(sessionId.toString());
 	    			paramsObsel.add("typeExit");paramsObsel.add("normal");
 					
