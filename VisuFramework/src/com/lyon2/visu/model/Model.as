@@ -240,7 +240,49 @@ package  com.lyon2.visu.model
 		{
 			return this.listObsels;
 		}
+		/**
+		 * get list obsel "SessionIn" for this moment the time
+		 */
+		public function getObselSessionInByTimestamp(value:Number):ArrayCollection
+		{
+			var result:ArrayCollection = new ArrayCollection();
+			var nbrObsel:int = this.listObsels.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obsel:Obsel = this.listObsels.getItemAt(nObsel) as Obsel;
+				var typeObsel:String = obsel.type;
+				if(typeObsel == TraceModel.SESSION_IN)
+				{
+					var begin:Number = obsel.begin;
+					var end:Number = obsel.end;
+					if(begin < value && value < end)
+					{
+						result.addItem(obsel);	
+					}
+				}
+			}
+			return result;
+		}
 		
+		public function getObselSessionInByPathStream(value:String):Obsel
+		{
+			var nbrObsel:int = this.listObsels.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obsel:Obsel = this.listObsels.getItemAt(nObsel) as Obsel;
+				var typeObsel:String = obsel.type;
+				if(typeObsel == TraceModel.SESSION_IN)
+				{
+					var pathStream:String = obsel.props[TraceModel.PATH];
+					if(pathStream == value)
+					{
+						return obsel;
+					}
+				}
+			}
+			return null;
+		}
+			
 		public function setBeginTimeSalonSynchrone(value:Number):void
 		{
 			_beginTimeSalonSynchrone=value;
@@ -249,6 +291,12 @@ package  com.lyon2.visu.model
 		public function getBeginTimeSalonSynchrone():Number
 		{
 			return this._beginTimeSalonSynchrone;
+		}
+		public function setSS(value:ArrayCollection):void
+		{
+			var listElementsTraceLine:ArrayList = this.listTraceLine[0] as ArrayList;
+			var obj:Object = listElementsTraceLine.getItemAt(0);
+			obj.listObsel = value;
 		}
 		
 		public function getListTraceLines():ArrayCollection
@@ -367,12 +415,154 @@ package  com.lyon2.visu.model
 			return null;
 		}
 		
+		/**
+		 * create view obsel and add on the traceLine
+		 */
+		public function addObsel(obsel:Obsel):Array
+		{
+			var result:Array = new Array();
+			var typeObsel:String = obsel.type;
+			var viewObsel = new ObselImage()
+			viewObsel.setBegin(obsel.begin);
+			viewObsel.setEnd(obsel.end);
+			var textObsel:String;
+			var ownerObsel:int;
+			switch (typeObsel)
+			{
+				case TraceModel.SET_MARKER :
+					viewObsel = new ObselMarker()
+					viewObsel.setBegin(obsel.begin);
+					viewObsel.setEnd(obsel.end);
+					ownerObsel = obsel.uid;
+					viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.TEXT];
+					viewObsel.text = textObsel;
+					viewObsel.toolTip = textObsel;
+					var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
+					viewObsel.backGroundColor = backGroundColorObsel;
+					break;
+				case TraceModel.RECEIVE_MARKER :
+					viewObsel = new ObselMarker();
+					viewObsel.setBegin(obsel.begin);
+					viewObsel.setEnd(obsel.end);
+					ownerObsel = obsel.props[TraceModel.SENDER];
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.TEXT];
+					viewObsel.text = textObsel;
+					viewObsel.toolTip = textObsel;
+					var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
+					viewObsel.backGroundColor = backGroundColorObsel;
+					break;
+				case TraceModel.SEND_CHAT_MESSAGE :
+					ownerObsel = obsel.uid;
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.CONTENT];
+					viewObsel.toolTip = textObsel;
+					break;
+				case TraceModel.RECEIVE_CHAT_MESSAGE :
+					ownerObsel = obsel.uid;
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.CONTENT];
+					var labelSender:String ="";
+					if(!checkServeurVisuVciel())
+					{
+						labelSender = obsel.props[TraceModel.SENDER]+":"; 
+					}
+					viewObsel.toolTip =  labelSender + textObsel;
+					var senderObsel:int = obsel.props[TraceModel.SENDER];
+					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
+					break;
+				case TraceModel.SEND_KEYWORD :
+					ownerObsel = obsel.uid;
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.KEYWORD];
+					viewObsel.toolTip = textObsel;
+					break;
+				case TraceModel.RECEIVE_KEYWORD :
+					ownerObsel = obsel.uid;
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.KEYWORD];
+					viewObsel.toolTip = textObsel;
+					var senderObsel:int = obsel.props[TraceModel.SENDER];
+					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
+				//	initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+					break;
+				case TraceModel.SEND_INSTRUCTIONS :
+					ownerObsel = obsel.uid;
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.INSTRUCTIONS];
+					viewObsel.toolTip = textObsel;
+					break;
+				case TraceModel.RECEIVE_INSTRUCTIONS :
+					ownerObsel = obsel.uid;
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.INSTRUCTIONS];
+					viewObsel.toolTip = textObsel;
+					var senderObsel:int = obsel.props[TraceModel.SENDER];
+					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
+			//		initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
+					break;
+				case TraceModel.SEND_DOCUMENT :
+					ownerObsel = obsel.uid;
+					var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+					if(typeDocument == ActivityElementType.IMAGE)
+					{
+						viewObsel.source =  obsel.props[TraceModel.URL];  
+					}else
+					{
+						viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
+					}
+					textObsel = obsel.props[TraceModel.TEXT];
+					viewObsel.toolTip = textObsel;
+					break;
+				case TraceModel.RECEIVE_DOCUMENT :
+					ownerObsel = obsel.uid;
+					var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+					if(typeDocument == ActivityElementType.IMAGE)
+					{
+						viewObsel.source =  obsel.props[TraceModel.URL];  
+					}else
+					{
+						viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
+					}
+					textObsel = obsel.props[TraceModel.TEXT];
+					viewObsel.toolTip = textObsel;
+					var senderObsel:int = obsel.props[TraceModel.SENDER];
+					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
+				//	initChatPanel(senderObsel, textObsel, fichierIconVisu1 , sessionReadyInit);
+					break;
+				case TraceModel.READ_DOCUMENT :
+					ownerObsel = obsel.props[TraceModel.SENDER];
+					var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+					if(typeDocument == ActivityElementType.IMAGE)
+					{
+						viewObsel.source =  obsel.props[TraceModel.URL];  
+					}else
+					{
+						viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
+					} 			
+					textObsel = obsel.props[TraceModel.TEXT];
+					viewObsel.toolTip = obsel.props[TraceModel.SENDER_DOCUMENT] + ":" + textObsel;
+					break;
+				//case TraceModel.SESSION_IN :
+				case TraceModel.SESSION_OUT :		
+					viewObsel = new ObselSessionOut()
+					viewObsel.toolTip = obsel.begin.toString();
+					viewObsel.setBegin(obsel.begin);
+					viewObsel.setEnd(obsel.end);
+					ownerObsel = obsel.props[TraceModel.UID];
+					break;
+			}
+			// set obsel to the model
+			//	viewObsel.toolTip = viewObsel.toolTip + "=>"+ viewObsel.getBegin().toString();
+			
+			Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel)
+				
+			return result;
+		}
+
 		public function setObsel(obsel:*, userId:int, typeObsel:String):void
 		{
-/*			var listElementsTraceLine:ArrayList = this.listTraceLine[0] as ArrayList;
-			var obj:Object = listElementsTraceLine.getItemAt(0);
-			obj.listObsel = value;*/
-			
 			var traceLine:Object = getTraceLineByUserId(userId);
 			if(traceLine == null)
 			{
@@ -381,21 +571,7 @@ package  com.lyon2.visu.model
 			}
 			var listElementTraceLine:ArrayList = traceLine.listElementTraceLine as ArrayList;
 			var traceLineElement:Object;
-			var tempTitleListOnsel:ArrayCollection =  traceLine.listTitleObsels as ArrayCollection;
-			// set traceLineElement like titleTraceLine
-/*			if(typeObsel == TraceModel.SET_MARKER ||  typeObsel == TraceModel.RECEIVE_MARKER || typeObsel == TraceModel.SESSION_OUT)
-			{
-				if(tempTitleListOnsel == null)
-				{	
-					tempTitleListOnsel = new ArrayCollection();
-					tempTitleListOnsel.addItem(obsel);
-					traceLine.listTitleObsels = tempTitleListOnsel
-				}else
-				{
-					tempTitleListOnsel.addItem(obsel);
-				}
-			}else
-			{*/
+			var tempTitleListObsel:ArrayCollection =  traceLine.listTitleObsels as ArrayCollection;
 				// set traceLineElements: instruction, keyword, document, messages, marker
 				switch (typeObsel)
 				{
