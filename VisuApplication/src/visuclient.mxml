@@ -98,12 +98,15 @@
 			{
 				if (Capabilities.playerType == "StandAlone")
 				{
-					fscommand("quit");Model.getInstance()
+					fscommand("quit");
 				}
 				else if (ExternalInterface.available)
 				{
 					try{
-						ExternalInterface.call("window.location.reload(true)");
+						// get url the instance without link on the module
+						var urlPageReload:String = Model.getInstance().urlServeur;
+						var commandCalling:String = "window.open("+"'"+urlPageReload+"'"+",'_self')";
+						ExternalInterface.call(commandCalling);
 					} catch (error:Error) {
 						
 						navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
