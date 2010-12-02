@@ -1,12 +1,13 @@
 package com.ithaca.visu.controls.sessions
 {
 	import mx.controls.Image;
-	import mx.controls.Label;
-	
+
+	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
 	
 	[SkinState("normal")]
+	[SkinState("vciel")]
 	
 	public class SharedElementChat extends SkinnableComponent
 	{
@@ -19,12 +20,18 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var imageInfo :Image;
 		
+		[SkinPart("false")]
+		public var nameUser :Label;
+		
+		
 		private var infoChanged:Boolean;
 		private var _pathAvatar:String;
 		private var _nameSender:String;
 		private var _sourceImageInfo:Class;
 		private var _info:String;
 		private var _backGroundColor:uint;
+		
+		private var _viewVciel:Boolean = false;
 		
 		public var defaultColorFullColorGradientExit:uint = 0xD8D8D8;
 		
@@ -63,12 +70,21 @@ package com.ithaca.visu.controls.sessions
 				avatar.toolTip = _nameSender;
 				titleDisplay.text = _info;
 				imageInfo.source = _sourceImageInfo;
+				nameUser.text = _nameSender;
 				this.percentWidth = 100; 
 			}
 		}
-		
+		public function set statVciel(value:Boolean):void
+		{
+			this._viewVciel = value;
+			this.invalidateSkinState();
+		}
 		override protected function getCurrentSkinState():String
 		{
+			if(this._viewVciel)
+			{
+				return "vciel";
+			}
 			return "normal";
 		}
 		

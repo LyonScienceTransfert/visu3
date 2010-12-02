@@ -21,6 +21,7 @@
 	<!-- states -->
 	<s:states>
 		<s:State name="normal" />
+		<s:State name="vciel"/>
 	</s:states>
 	
 	<!-- SkinParts
@@ -42,8 +43,9 @@
 			</s:fill>
 		</s:Rect>
 		<mx:Image id="avatar"  left="3" top="1" width="30" height="30"/>
-		<mx:Image id="imageInfo" left="44" top="5"  width="25" height="25"/>
-		<s:RichText id="titleDisplay" left="72" top="5" right="10" color="#121212"
+		<s:Label id="nameUser"  visible.vciel="true" visible.normal="false" top="5" left="40"  width="70"/>
+		<mx:Image id="imageInfo" left.normal="44"  left.vciel="115" top="5"  width="25" height="25"/>
+		<s:RichText id="titleDisplay" left.normal="72" left.vciel="40" top.normal="5" top.vciel="30" right="10" color="#121212"
 				 fontSize="12" fontWeight="normal" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
 			
 			<!--<s:filters>

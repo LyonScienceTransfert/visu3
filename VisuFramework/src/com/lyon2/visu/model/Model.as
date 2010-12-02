@@ -87,6 +87,15 @@ package  com.lyon2.visu.model
 			return "rtmp://" + this.server + "/" + this.appName + "/" + "monSalon";
 		}
 		
+		public function checkServeurVisuVciel():Boolean
+		{
+			if (this.appName == "visuvciel")
+			{
+				return true;
+			}
+			return true;
+		}
+		
 		public function setLoggedUser(value:UserVO):void
 		{ 	
 			_loggedUser = new User(value); 
