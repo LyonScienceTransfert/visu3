@@ -28,6 +28,7 @@
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.renderer.SessionRetroRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.lyon2.visu.model.Model;
 			import com.lyon2.visu.model.User;
 			
@@ -78,15 +79,21 @@
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
 				fxgt = FxGettext;
-				// set current state 
-				if(Model.getInstance().checkServeurVisuVciel())
+				// only for admin, can see all closed session
+				if(Model.getInstance().getLoggedUser().role > RoleEnum.RESPONSABLE)
+				{
+					this.currentState="vciel";
+					// get list all closed session
+					var getAllClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION_ALL);
+					this.dispatchEvent(getAllClosedSessionEvent);
+				}
+				else if(Model.getInstance().checkServeurVisuVciel())
 				{
 					this.currentState="vciel";
 					// get list closed session where was(have to been) logged user
 					var getClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION);
 					this.dispatchEvent(getClosedSessionEvent);
 				}
-				
 				// check status logged user
 				var loggedUser:User =  Model.getInstance().getLoggedUser();
 				var statusLoggedUser:int =loggedUser.status; 

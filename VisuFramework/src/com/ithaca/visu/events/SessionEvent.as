@@ -35,6 +35,7 @@ public class SessionEvent extends Event
 	static public const GET_LIST_OBSEL : String = 'getListObsel';
 	static public const GET_LIST_SESSION : String = 'getListSession';
 	static public const GET_LIST_CLOSED_SESSION : String = 'getListClosedSession';
+	static public const GET_LIST_CLOSED_SESSION_ALL : String = 'getListClosedSessionAll';
 	static public const GET_LIST_OBSEL_CLOSED_SESSION : String = 'getListObselClosedSession';
 	
 

@@ -65,7 +65,7 @@ package com.ithaca.visu.ui.utils
 	public class ColorEnum
 	{
 		// color for user was out the session
-		static public var VOID : String = "0x231043";
+		static public var VOID : String = "0xebcbd2";
 		static public var YELLOW : String = "0xefed44";
 		static public var BLUE : String = "0xcedbef";
 		static public var RED : String = "0xf4b1b1";

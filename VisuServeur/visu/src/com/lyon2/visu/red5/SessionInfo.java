@@ -216,6 +216,28 @@ public class SessionInfo
 			sc.invoke("checkListClosedSession", args);
 		} 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void getListClosedSession(IConnection conn)
+	{
+		log.warn("====== getListClosedSession =========");
+		IClient client = conn.getClient();
+		List <Session> result = null;
+		try
+		{
+			result = (List<Session>)app.getSqlMapClient().queryForList("sessions.getClosedSessions");
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+		}
+		Object[] args = {result};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListClosedSession", args);
+		} 		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void getSessionById(IConnection conn, Integer sessionId)
 	{

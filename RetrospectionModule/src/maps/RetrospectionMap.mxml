@@ -40,6 +40,12 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.getListClosedSessionByUser"   arguments="{[]}" />
 			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION_ALL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getListClosedSession"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>	
 		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL}" debug="true">
