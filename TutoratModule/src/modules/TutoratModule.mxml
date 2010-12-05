@@ -212,22 +212,24 @@
 			 */
 			private function onNewUserJoinSession(event:SessionEvent):void{	
 				// check if user in current session
-				//	if(this.currentSession.id_session == event.sessionId)
-				//	{
-				if(Model.getInstance().getCurrentSession().id_session == event.sessionId)
+				var currentSession:Session = Model.getInstance().getCurrentSession();
+				if(currentSession != null)
 				{
-					var module:Object = Model.getInstance().getCurrentTutoratModule();
-					if(module.visio != null)
+					if(currentSession.id_session == event.sessionId)
 					{
-						module.visio.addVideoStream(event.userIdClient);
-						// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
-						if(event.status == ConnectionStatus.RECORDING)
+						var module:Object = Model.getInstance().getCurrentTutoratModule();
+						if(module.visio != null)
 						{
-							module.visio.status = VisuVisio.STATUS_RECORD;
+							module.visio.addVideoStream(event.userIdClient);
+							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
+							if(event.status == ConnectionStatus.RECORDING)
+							{
+								module.visio.status = VisuVisio.STATUS_RECORD;
+							}
 						}
-					}
-				}							
-				//}
+					}							
+					
+				}
 			}
 			
 			/**
@@ -375,7 +377,8 @@
 			 */
 			private function onStopRecordingSession(event:SessionEvent):void
 			{
-				if(this.visio != null)
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
 				{
 					this.visio.status = VisuVisio.STATUS_NONE;
 					// set group setMarker enabled for all users
