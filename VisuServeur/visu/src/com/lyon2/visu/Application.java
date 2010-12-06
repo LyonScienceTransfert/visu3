@@ -82,55 +82,48 @@ package com.lyon2.visu;
  */
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Collection;
-import java.util.Set;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
-
-
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
-import org.red5.server.api.service.IServiceCapableConnection;
-import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.api.Red5;
-import org.red5.server.api.so.ISharedObject;
-import org.red5.server.api.stream.IBroadcastStream;
-import org.red5.server.api.IConnection;
 import org.red5.server.api.scheduling.IScheduledJob;
 import org.red5.server.api.scheduling.ISchedulingService;
+import org.red5.server.api.service.IServiceCapableConnection;
+import org.red5.server.api.service.ServiceUtils;
+import org.red5.server.api.so.ISharedObject;
+import org.red5.server.api.stream.IBroadcastStream;
+import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.lyon2.visu.domain.model.User;
-import com.lyon2.visu.domain.model.SessionUser;
-import com.lyon2.visu.domain.model.Session;
-import com.lyon2.visu.domain.model.Module;
 import com.ithaca.domain.model.Obsel;
-
+import com.lyon2.utils.MailerFacade;
+import com.lyon2.utils.ObselStringParams;
+import com.lyon2.utils.UserColor;
+import com.lyon2.utils.UserDate;
+import com.lyon2.visu.domain.model.Module;
+import com.lyon2.visu.domain.model.ProfileDescription;
+import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.SessionUser;
+import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
-//import com.lyon2.visu.red5.StreamRecorder;
-import com.lyon2.utils.MailerFacade;
-import com.lyon2.utils.UserColor;
-import com.lyon2.utils.UserDate;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-import org.red5.server.stream.ClientBroadcastStream;
-import com.lyon2.utils.ObselStringParams;
-import com.lyon2.visu.domain.model.ProfileDescription;
 
 
 /**
@@ -143,10 +136,10 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 
     private SqlMapClient sqlMapClient;
     private String smtpserver = "";
-//	public List<Integer> recordingSession = new Vector<Integer>();
+    // sheduling interval is 5 min.
+    private static Integer SHEDULING_INTERVAL_MSEC = 5*60*1000;
 
     private static Logger log = Red5LoggerFactory.getLogger( Application.class , "visu2" );
-
 
     public Application()
     {
@@ -154,20 +147,63 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 
         log.info("======== Instanciated {} ==========", Application.class.toString());
     }
-
+    @SuppressWarnings("unchecked")
     public void execute(ISchedulingService service)
-    {
-        // Make a dummy SQL request in order to keep the connection alive.
-        try
-        {
-            sqlMapClient.queryForList("profile_descriptions.getProfils");
-        }
-        catch (Exception e)
-        {
-            log.error("Could not do a scheduled query : {}", e.toString());
-        }
+    {         
+    	// get list recording/paused sessions 
+    	List <Session> listSession = null;
+    	try
+    	{
+    		listSession = (List<Session>)getSqlMapClient().queryForList("sessions.getRecordingPausedSessions");
+    	} catch (Exception e) {
+    		log.error("Probleme lors du listing des sessions" + e);
+    	}
+    	for(Session session : listSession)
+    	{
+    		Integer sessionId = session.getId_session();
+    		Date dateNow = new Date();
+    		// duration session in min.
+    		Integer sessionDuration = session.getDuration_session();
+    		// start recording session
+    		Date sessionStartTime = session.getStart_recording();
+    		Long durationReal = dateNow.getTime() - sessionStartTime.getTime();
+    		log.warn("==== session = {} , duration =  {}",session.getTheme(),Long.toString(durationReal/(1000*60)) + "...."+sessionDuration.toString());	
+    		// check really duration of the session
+    		if(durationReal > sessionDuration)
+    		{   			
+	    		// TODO static variables
+	    		Integer sessionStatus = 1;
+	    		// checking if has user in session
+	    		if(!hasUserInSession(sessionId))
+	    		{
+	    			// close session 
+	    			setStatusSession(sessionId, sessionStatus, null);
+					// notification for all users that session had closed
+					Object[] args = {0, 0, sessionId, sessionStatus};
+					//send message to all users on "Deck"
+					log.warn("============== setStatusClose {} ",args);
+					invokeOnScopeClients(scope, "setStatusStop", args);
+	    		}
+    		}
+    	}		
     }
 
+	private boolean hasUserInSession(Integer sessionId)
+	{
+		for( IClient clientConnected : this.getClients())
+		{
+			// get sessionId for connected user
+			Integer userSessionId = (Integer)clientConnected.getAttribute("sessionId");
+			Integer diff = sessionId - userSessionId;
+		    if(diff == 0)
+			{
+				log.warn("==== has user(s) in sessionId : {}", sessionId.toString());
+				return true;
+			}
+		}
+		return false;
+	}
+	
     public boolean appStart(IScope app)
     {
 
@@ -181,11 +217,10 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
         registerSharedObjectSecurity( new RemoteAppSecurityHandler() );
 
         // Query the SQL server every hour, so the connection does not time out.
-        this.addScheduledJob(60 * 60 * 1000, this);
+        this.addScheduledJob(SHEDULING_INTERVAL_MSEC, this);
         return super.appStart(app);
     }
 
-	@SuppressWarnings("unchecked")
     public boolean appConnect(IConnection conn, Object[] params)
     {
 		log.warn("param 0 .... {} ", params[0]);

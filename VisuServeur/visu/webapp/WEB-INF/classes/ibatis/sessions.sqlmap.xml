@@ -72,6 +72,11 @@
 		FROM sessions s, activities a WHERE isModel = 0 AND s.id_session = a.id_session AND s.status_session="1" GROUP BY s.id_session
 	</select> 
 	
+    <select id="getRecordingPausedSessions" resultMap="sessionResult" cacheModel="cache">
+		<include refid="selectBase" />
+        FROM sessions s, activities a WHERE isModel = 0 AND s.id_session = a.id_session AND s.status_session="2" OR s.status_session="3" GROUP BY s.id_session
+	</select> 
+	
     <select id="getDatesSessionsByUser" parameterClass="int"
 		 resultClass="Date" cacheModel="cache">
     <![CDATA[
