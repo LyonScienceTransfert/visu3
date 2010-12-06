@@ -803,6 +803,13 @@
 					// remove last character from the message if was click on button "Enter"
 					message = textChatMessage.text.slice(0, textChatMessage.text.length-1);
 				}
+				var nbrSymbolMessage:int = message.length;
+				if(nbrSymbolMessage == 0)
+				{
+					// don't send empty message
+					textChatMessage.text = "";
+					return;
+				}
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.listUsers = listUsersId;
 				dispatchEvent(sessionSharedEvent);
@@ -847,6 +854,11 @@
 				if(cutLastCharMessage)
 				{
 					message = textChatMarker.text.slice(0, textChatMarker.text.length-1);
+				}
+				var nbrSymbolMessage:int = message.length;
+				if(nbrSymbolMessage == 0)
+				{
+					message = fxgt.gettext("(vide)");
 				}
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
@@ -1199,7 +1211,7 @@
 						<s:Group width="100%" bottom="3" height="30">
 							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="185">				
 							</mx:TextArea>
-							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
+							<mx:Button icon="@Embed(source='images/chatMessageVisu1.png')" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
 								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
 							</mx:Button>
 						</s:Group>	
