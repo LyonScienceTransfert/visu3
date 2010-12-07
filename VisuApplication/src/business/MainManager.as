@@ -462,8 +462,9 @@ public class MainManager
 	/**
 	 * Get list obsel for salon retro
 	 */
-	public function onCheckListUserObsel(listObselVO:Array, startRecordingSession:Number, sharedSession:Boolean = false):void
+	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, sharedSession:Boolean = false):void
 	{
+		var startRecordingSession:Number = dateStartRecordingSession.time;
 		var listObsel:ArrayCollection = null;
 		var listObselRFN:ArrayCollection = new ArrayCollection();
 		var listObselSI:ArrayCollection = new ArrayCollection();
@@ -616,7 +617,7 @@ public class MainManager
 		this.addObselSessionOut(listObsel,startRecordingSession);
 		Model.getInstance().setListObsel(listObsel);
 		var loadListObselRetro:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_OBSEL_RETRO);
-		loadListObselRetro.timeStartStop = startRecordingSession;
+		loadListObselRetro.dateStartRecording = dateStartRecordingSession;
 		loadListObselRetro.durationSessionRetro = durationSession;
 		
 		this.dispatcher.dispatchEvent(loadListObselRetro);
@@ -828,7 +829,7 @@ public class MainManager
 		this.dispatcher.dispatchEvent(eventLoadListClosedSessionSalonRetrospection);		
 	}
 	
-	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, startRecordingSession:Number):void
+	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, dateStartRecordingSession:Date):void
 	{
 		// creation trace for logged user
 		var listUserObselVO:Array = new Array();
@@ -878,7 +879,7 @@ public class MainManager
 		}
 		
 		// creation timeLine
-		this.onCheckListUserObsel(reversedListUserObselVO, startRecordingSession, true);
+		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, true);
 		
 		
 		function hasObselWithTimeStamp(obselVO:ObselVO):Boolean

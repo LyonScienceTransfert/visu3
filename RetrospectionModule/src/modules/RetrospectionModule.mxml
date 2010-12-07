@@ -14,17 +14,13 @@
 		<![CDATA[ 
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.traces.view.ObselButton;
-			import com.ithaca.traces.view.ObselImage;
 			import com.ithaca.traces.view.ObselLine;
-			import com.ithaca.traces.view.ObselSessionOut;
 			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
-			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.renderer.SessionRetroRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
@@ -218,7 +214,13 @@
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					var durationSession:Number = event.durationSessionRetro;
-					var startRecordingSession:Number = event.timeStartStop;
+					var startRecordingSession:Number = event.dateStartRecording.time;
+					// update label start session recording
+					var dateStartRecording:Date = event.dateStartRecording;
+					this.panelTimeLine.title = this.panelTimeLine.title + ""+ 
+						fxgt.gettext("(la séance a été enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
+						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+" à "+	 
+						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString()+")";
 					this.setObsels();
 					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
 					if(listTraceLines != null)

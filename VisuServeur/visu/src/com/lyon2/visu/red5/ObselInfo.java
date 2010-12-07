@@ -235,10 +235,8 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des session" + e);
 		}
 		Date sessionStartRecordingDate = session.getStart_recording();
-		Long sessionStartRecording = sessionStartRecordingDate.getTime();
-		Object[] args = { result, sessionStartRecording };
-		IConnection connClient = (IConnection) client
-				.getAttribute("connection");
+		Object[] args = { result, sessionStartRecordingDate };
+		IConnection connClient = (IConnection) client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListUserObsel", args);
@@ -308,8 +306,7 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des session" + e);
 		}
 		Date sessionStartRecordingDate = session.getStart_recording();
-		Long sessionStartRecording = sessionStartRecordingDate.getTime();
-		Object[] args = { result, sessionStartRecording };
+		Object[] args = { result, sessionStartRecordingDate };
 		IConnection connClient = (IConnection) client
 				.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {

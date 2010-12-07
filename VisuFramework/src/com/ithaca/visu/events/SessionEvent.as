@@ -51,6 +51,7 @@ public class SessionEvent extends Event
 	public var timeStartStop : Number;
 	public var durationSessionRetro : Number;
 	public var traceId : String;
+	public var dateStartRecording : Date;
 	
 
 	// constructor
