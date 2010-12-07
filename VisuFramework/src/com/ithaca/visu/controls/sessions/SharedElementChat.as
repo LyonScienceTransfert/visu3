@@ -27,7 +27,7 @@ package com.ithaca.visu.controls.sessions
 		private var infoChanged:Boolean;
 		private var _pathAvatar:String;
 		private var _nameSender:String;
-		private var _sourceImageInfo:Class;
+		private var _sourceImageInfo;
 		private var _info:String;
 		private var _backGroundColor:uint;
 		
@@ -88,7 +88,7 @@ package com.ithaca.visu.controls.sessions
 			return "normal";
 		}
 		
-		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:Class, backGroundColor:uint):void
+		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:*, backGroundColor:uint):void
 		{
 			infoChanged = true;
 			_pathAvatar = pathAvatar;

@@ -434,7 +434,7 @@
 					
 					var pathAvatar:String = "";
 					var name:String = "";
-					var sourceImageInfo:Class = null;
+					var sourceImageInfo:* = null;
 					var senderUser:User = Model.getInstance().getUserByUserId(event.senderUserId);
 					if(senderUser != null)
 					{
@@ -463,7 +463,7 @@
 								}
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.IMAGE) :
-								sourceImageInfo = fichierIconVisu1;
+								sourceImageInfo = event.url;
 								var image:ImageDocument = new ImageDocument();
 								// set id of the sender user
 								image.setSenderId(event.senderUserId);
@@ -505,7 +505,7 @@
 						{
 							userColor = traceLine.userColor;
 						}
-						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo,userColor);
+						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo, userColor);
 						sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
 						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 						this.panelChatSession.addElement(sharedElementChat);
@@ -1070,14 +1070,50 @@
 							var infoObsel:Object = arrayInfoObsel[0];
 							var senderObsel:int = infoObsel.senderId;
 							var textObsel:String = infoObsel.textObsel; 
-							var source:Class = infoObsel.source; 
+							// source can be class or paths the type String
+							var source = infoObsel.source; 
 							initChatPanel(senderObsel, textObsel, source);
-						}
+							// add documents on the panel the student
+							if(obsel.type == TraceModel.RECEIVE_DOCUMENT)
+							{
+								switch (obsel.props[TraceModel.TYPE_DOCUMENT])
+								{
+									case ActivityElementType.VIDEO :
+										var player:YoutubePlayer = new YoutubePlayer();
+										// set id of the sender user 
+										player.setSenderId(infoObsel.senderId);
+										player.url = obsel.props[TraceModel.URL];
+										player.percentWidth = 100;
+										player.height = 225;
+										player.toolTip = obsel.props[TraceModel.TEXT];
+										player.addEventListener(PlayerEvent.READY, loadComplete);
+										if(this.panelMediaSession != null)
+										{
+											this.panelMediaSession.addElementAt(player, 0);
+										}
+										break;
+									
+									case ActivityElementType.IMAGE :
+										var image:ImageDocument = new ImageDocument();
+										// set id of the sender user
+										image.setSenderId(infoObsel.senderId);
+										image.load(obsel.props[TraceModel.URL]);
+										image.toolTip = obsel.props[TraceModel.TEXT];
+										image.percentWidth = 100;	
+										image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
+										if(this.panelMediaSession != null)
+										{
+											this.panelMediaSession.addElementAt(image, 0);
+										}
+										break;
+								}
+							}						
+						}						
 					}
 				}
 			}
 
-			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:Class):void
+			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:*):void
 			{
 				// exclus the obsel "Start activity"
 				if( ownerObsel != 0)
