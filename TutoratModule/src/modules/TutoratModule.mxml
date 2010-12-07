@@ -282,7 +282,7 @@
 					this.setEnabledGroupSetMarker(true);
 					// update label button on view tutorat
 					if(buttonStartRecording != null){			
-						buttonStartRecording.label = fxgt.gettext("Arreter la séance");	
+						buttonStartRecording.label = fxgt.gettext("Suspendre la séance");	
 						buttonCloseSession.enabled = false;
 						// set buttons startActivity enabled = true
 						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_RECORD);						
@@ -752,7 +752,7 @@
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");									
 					}else
 					{
-						buttonStartRecording.label = fxgt.gettext("Arreter la séance");			
+						buttonStartRecording.label = fxgt.gettext("Suspendre la séance");			
 					}
 					// update labels the button start activity for translating
 					this.sessionPlan.setCurrentActivityId(0);
@@ -891,7 +891,7 @@
 					// conformation for closing the session
 					Alert.yesLabel = fxgt.gettext("Oui");
 					Alert.noLabel = fxgt.gettext("Non");
-					Alert.show(fxgt.gettext("Voulez-vous fermer la séance ? (il ne sera plus possible d'y rentrer à nouveau)"),
+					Alert.show(fxgt.gettext("Voulez-vous clôturer la séance ? (il ne sera plus possible d'y rentrer à nouveau)"),
 					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, closeSessionConfirmed); 	
 				}
 			}
@@ -1148,7 +1148,7 @@
 			<s:HGroup width="100%">
 				<s:Button id="buttonCloseSession" includeIn="MainState" width="50%" height="30"
 						   click="buttonCloseSession_clickHandler(event)">
-					<s:label>{fxgt.gettext("Fermer la séance")}</s:label>
+					<s:label>{fxgt.gettext("Clôturer la séance")}</s:label>
 				</s:Button>
 				<s:Button  id="buttonStartRecording" width="50%" includeIn="MainState" height="30" 
 						  click="button1_clickHandler(event)">
