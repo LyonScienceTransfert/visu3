@@ -244,6 +244,10 @@
 					var streamId:String = event.userIdClient;
 					// remove video of the user
 					module.visio.removeVideoStream(streamId);
+					// add message in the chat
+					// TODO icon for this event
+					this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");
+					
 				}	
 			}
 
