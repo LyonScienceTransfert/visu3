@@ -527,8 +527,8 @@
 				this.dispatchEvent(getListObselEvent);
 				// update panel titre
 				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance : ")+obj.label;
-				// do it only if current state "visuvciel"
-				if(Model.getInstance().checkServeurVisuVciel())
+				// do it only if current state "visuvciel" or logged user is admin
+				if(this.closeSession != null)
 				{
 					this.closeSession.selectedIndex = -1;
 				}
