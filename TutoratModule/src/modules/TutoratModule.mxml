@@ -237,17 +237,19 @@
 			 */
 			private function onOldUserOutSession(event:SessionEvent):void
 			{
-				var module:Object = Model.getInstance().getCurrentTutoratModule();
-				if(module.visio != null)
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
 				{
 					// streamId of the user 
 					var streamId:String = event.userIdClient;
 					// remove video of the user
-					module.visio.removeVideoStream(streamId);
-					// add message in the chat
+					currentModule.visio.removeVideoStream(streamId);
+					// add message in the chat for not logged users 
 					// TODO icon for this event
-					this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");
-					
+					if(event.userId != Model.getInstance().getLoggedUser().id_user)
+					{
+						this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");					
+					}
 				}	
 			}
 
@@ -1135,13 +1137,16 @@
 				if( ownerObsel != 0)
 				{
 					var traceLine:Object = Model.getInstance().getTraceLineByUserId(ownerObsel); 
-					var userAvatar:String = traceLine.userAvatar as String;
-					var userName:String = traceLine.userName as String;
-					var userColor:uint = traceLine.userColor;
-					var sharedElementChat:SharedElementChat = new SharedElementChat();
-					sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
-					sharedElementChat.statVciel = Model.getInstance().checkServeurVisuVciel();
-					this.panelChatSession.addElement(sharedElementChat);
+					if(traceLine != null)
+					{
+						var userAvatar:String = traceLine.userAvatar as String;
+						var userName:String = traceLine.userName as String;
+						var userColor:uint = traceLine.userColor;
+						var sharedElementChat:SharedElementChat = new SharedElementChat();
+						sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
+						sharedElementChat.statVciel = Model.getInstance().checkServeurVisuVciel();
+						this.panelChatSession.addElement(sharedElementChat);
+					}
 				}
 			}
 			
