@@ -1181,7 +1181,10 @@
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
 						sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
 						sharedElementChat.statVciel = Model.getInstance().checkServeurVisuVciel();
-						this.panelChatSession.addElement(sharedElementChat);
+						if(this.panelChatSession != null && this == Model.getInstance().getCurrentTutoratModule() as TutoratModule)
+						{
+							this.panelChatSession.addElement(sharedElementChat);
+						}
 					}
 				}
 			}
