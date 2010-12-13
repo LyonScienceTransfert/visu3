@@ -114,6 +114,7 @@ package com.ithaca.traces.model
         public static const SESSION_EXIT: String = "SessionExit";
         public static const SESSION_PAUSE: String = "SessionPause";
         public static const SESSION_OUT: String = "SessionOut";
+        public static const SESSION_OUT_VOID_DURATION: String = "SessionOutVoidDuration";
         public static const SESSION_IN: String = "SessionIn";
         public static const ACTIVITY_START: String = "ActivityStart";
         public static const ACTIVITY_STOP: String = "ActivityStop";

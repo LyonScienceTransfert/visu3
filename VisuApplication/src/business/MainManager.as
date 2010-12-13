@@ -340,90 +340,29 @@ public class MainManager
 	/**
 	 *  Get list obsel for salon synchrone
 	 */
-	public function onCheckListActiveObsel(listObselVO:Array):void
+	public function onCheckListActiveObsel(listObselVO:Array, dateStartRecording:Date):void
 	{		
 		var listObsel:ArrayCollection = null;
 		if(!(listObselVO == null || listObselVO.length == 0))
 		{
-			listObsel = new ArrayCollection();
-			var firstObselVO:ObselVO = listObselVO[0] as ObselVO;
-			var typeFirstObselVO:String = firstObselVO.type;
-			var firstObsel:Obsel = null;
-			if(typeFirstObselVO == TraceModel.SESSION_START || typeFirstObselVO == TraceModel.SESSION_ENTER)
-			{
-				firstObsel = Obsel.fromRDF(firstObselVO.rdf);
-				// add presents users(id, name, avatar, color) from start the session
-				this.addPresentUsers(firstObsel);	
-				//Model.getInstance().setBeginTimeSalonSynchrone(firstObsel.begin);
-			}else
-			{
-				Alert.show('Probleme avec le trace activities, premier obsel != SessionStart/SessionEnter',"");	
-			}
-
-			// exit from session 
-			var stopTimeSessionMsec:Number;
-			var startTimeSessionMsec:Number;
+			this.onCheckListUserObsel(listObselVO,dateStartRecording,false,true)
 			var activityStartId:int = 0;
 			var nbrObsels:int = listObselVO.length;
-			// try start finding obsel exclus first obsel => nObsel = 1; 
-			for(var nObsel:int = 1;nObsel < nbrObsels; nObsel++)
+			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 			{
 				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				var typeObsel:String = obsel.type;
 				switch (typeObsel){
-					case TraceModel.SEND_CHAT_MESSAGE:
-					case TraceModel.RECEIVE_CHAT_MESSAGE:
-					case TraceModel.SET_MARKER:
-					case TraceModel.RECEIVE_MARKER:
-					case TraceModel.SEND_KEYWORD:
-					case TraceModel.RECEIVE_KEYWORD:
-					case TraceModel.SEND_INSTRUCTIONS:
-					case TraceModel.RECEIVE_INSTRUCTIONS:
-					case TraceModel.SEND_DOCUMENT:
-					case TraceModel.RECEIVE_DOCUMENT:
-					case TraceModel.READ_DOCUMENT:
-						listObsel.addItem(obsel);
-						break;
-					case TraceModel.SESSION_EXIT:
-						var uid:int = int(obsel.props[TraceModel.UID]);
-						if (uid == Model.getInstance().getLoggedUser().id_user)
-						{
-							stopTimeSessionMsec = obsel.begin;
-						}
-						break;
-					case TraceModel.SESSION_PAUSE:
-						stopTimeSessionMsec = obsel.begin;
-						break;
-					case TraceModel.SESSION_ENTER:
-						// add obsel SessionOut
-						var uid:int = int(obsel.props[TraceModel.UID]);
-						if(uid == Model.getInstance().getLoggedUser().id_user)
-						{
-							startTimeSessionMsec = obsel.begin;
-							var obselOutSession:Obsel = new Obsel(TraceModel.SESSION_OUT);
-							obselOutSession.begin = stopTimeSessionMsec;
-							obselOutSession.end = startTimeSessionMsec;
-							obselOutSession.uid = uid;	
-							listObsel.addItem(obselOutSession);
-						}
-						// add presents users(id, name, avatar, color)
-						this.addPresentUsers(obsel);
-						break;
 					case TraceModel.ACTIVITY_START:
 						activityStartId = int(obsel.props[TraceModel.ACTIVITY_ID]);
 						break;
 					case TraceModel.ACTIVITY_STOP:
 						activityStartId = 0;
 						break;
-					
-				}
-				
+				}	
 			}
-			
 		}
-		Model.getInstance().setListObsel(listObsel);
-		this.dispatcher.dispatchEvent(new SessionEvent(SessionEvent.LOAD_LIST_OBSEL));
 		// update current activity in TutoratModule
 		if(activityStartId != 0)
 		{
@@ -456,13 +395,10 @@ public class MainManager
 	}
 	
 	
-	
-	
-	
 	/**
 	 * Get list obsel for salon retro
 	 */
-	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, sharedSession:Boolean = false):void
+	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, sharedSession:Boolean = false , salonTutorat:Boolean = false):void
 	{
 		var startRecordingSession:Number = dateStartRecordingSession.time;
 		var listObsel:ArrayCollection = null;
@@ -614,13 +550,46 @@ public class MainManager
 		// add if logged user hasn't timeline
 		var loggedUser:User = Model.getInstance().getLoggedUser();
 		Model.getInstance().addTraceLine(loggedUser.id_user, loggedUser.firstname, loggedUser.avatar, ColorEnum.getColorByCode("0"));
-		this.addObselSessionOut(listObsel,startRecordingSession);
+		// for salon tutorat on add last obsels "SessionIn" with begin == end
+		if(salonTutorat)
+		{
+			var nbrObselSI:int = listObselSI.length;
+			for(var nObselSI:int = 0 ; nObselSI < nbrObselSI ; nObselSI++)
+			{
+				var obselSI:Obsel = listObselSI[nObselSI];
+				listObsel.addItem(obselSI);
+			}
+		}
+		// get last obsel "SessionIn"
+		var lastObselSessionIn:Obsel = this.addObselSessionOut(listObsel,startRecordingSession);
 		Model.getInstance().setListObsel(listObsel);
-		var loadListObselRetro:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_OBSEL_RETRO);
-		loadListObselRetro.dateStartRecording = dateStartRecordingSession;
-		loadListObselRetro.durationSessionRetro = durationSession;
 		
-		this.dispatcher.dispatchEvent(loadListObselRetro);
+		if(salonTutorat)
+		{
+			// check if all users in the session
+			var session:Session = Model.getInstance().getCurrentSession();
+			if(session == null)
+			{ 
+				Alert.show("The problem with current session ","Bug....");
+			}
+			else 
+			{
+				if(session.statusSession == SessionStatusEnum.SESSION_PAUSE)
+				{
+					Model.getInstance().setObselSessionOutForAllUser(session.id_session);
+				}else
+				{
+					Model.getInstance().setObselSessionOutForUserWalkOutSession(session, lastObselSessionIn);
+				}
+			}
+			this.dispatcher.dispatchEvent(new SessionEvent(SessionEvent.LOAD_LIST_OBSEL));
+		}else
+		{
+			var loadListObselRetro:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_OBSEL_RETRO);
+			loadListObselRetro.dateStartRecording = dateStartRecordingSession;
+			loadListObselRetro.durationSessionRetro = durationSession;		
+			this.dispatcher.dispatchEvent(loadListObselRetro);			
+		}
 			
 		function removeTempObsel(type:String, userId:String):void
 		{
@@ -688,12 +657,12 @@ public class MainManager
 		}	
 	}
 	
-	
 	/**
 	 * 
 	 */
-	private function addObselSessionOut(listObsel:ArrayCollection, startSession:Number):void
+	private function addObselSessionOut(listObsel:ArrayCollection, startSession:Number):Obsel
 	{
+		var lastObselSessionIn:Obsel = null;
 		var listObselSO:ArrayCollection = new ArrayCollection();
 		var listNewObselSO:ArrayCollection = new ArrayCollection();
 		// set all users SessionOut
@@ -711,6 +680,7 @@ public class MainManager
 			listObselSO.addItem(obselSessionOut);
 		}
 		var obsel:Obsel= null;
+		var obselSessionOut:Obsel = null;
 		var nbrObsels:int = listObsel.length;
 		for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 		{	
@@ -720,7 +690,7 @@ public class MainManager
 			switch (typeObsel)
 			{
 				case TraceModel.SESSION_IN:
-					var obselSessionOut:Obsel = getObselByUserIdByType("SO",owner);
+					obselSessionOut = getObselByUserIdByType("SO",owner);
 					if(obselSessionOut != null)
 					{
 						obselSessionOut.end = obsel.begin;
@@ -731,11 +701,17 @@ public class MainManager
 						}
 						removeTempObsel("SO",owner);			
 					}					
-					// create new onsel
-					obselSessionOut = Obsel.fromRDF(obsel.toRDF());
-					obselSessionOut.begin = obsel.end;
-					obselSessionOut.type = TraceModel.SESSION_OUT;
-					addTempObsel("SO" , obselSessionOut);
+					// create new onsel only if in obsel sessionIn begin != end, it's last obsel in the salon synchrone
+					if(obsel.begin != obsel.end)
+					{
+						obselSessionOut = Obsel.fromRDF(obsel.toRDF());
+						obselSessionOut.begin = obsel.end;
+						obselSessionOut.type = TraceModel.SESSION_OUT;
+						addTempObsel("SO" , obselSessionOut);					
+					}else
+					{
+						lastObselSessionIn = obsel;
+					}
 					break;
 			}	
 		}
@@ -750,6 +726,7 @@ public class MainManager
 		}
 		// add new obsels to the basic list
 		listObsel.addAll(listNewObselSO);
+		return lastObselSessionIn;
 	
 	
 	function removeTempObsel(type:String, userId:String):void
@@ -879,7 +856,7 @@ public class MainManager
 		}
 		
 		// creation timeLine
-		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, true);
+		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, true, false);
 		
 		
 		function hasObselWithTimeStamp(obselVO:ObselVO):Boolean
@@ -985,28 +962,31 @@ public class MainManager
 			{
 				Alert.show("You have a problem with setting the current session !!!","information")
 			}*/
-			if(sessionId == session.id_session)
+			if(session != null)
 			{
-				// set time begin in the salon synchrone only if the session start recording
-				// session started, have to set time the startRecording, not begin the obsel 
-				// FIXME : now we getting start recording time from current session
-				Model.getInstance().setBeginTimeSalonSynchrone(startRecording.time);
-				session.statusSession = SessionStatusEnum.SESSION_RECORDING; 
-				// NOTE : startRecording will be null only if user join session after start recording event, other user ready has date the start session
-				if(startRecording != null)
+				if(sessionId == session.id_session)
 				{
-					session.date_start_recording = startRecording; 
-				}
-				
-				if(obselVO != null)
-				{
-				// have to add new traceLine and update the model, list obsel of this user is empty
-					var obsel:Obsel = Obsel.fromRDF(obselVO.rdf); 
-					this.addPresentUsers(obsel);
-					var eventUpdateviewTraceLine:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_VIEW_TRACELINE);
-					eventUpdateviewTraceLine.userId = userId;
-					this.dispatcher.dispatchEvent(eventUpdateviewTraceLine);
-				}
+					// set time begin in the salon synchrone only if the session start recording
+					// session started, have to set time the startRecording, not begin the obsel 
+					// FIXME : now we getting start recording time from current session
+					Model.getInstance().setBeginTimeSalonSynchrone(startRecording.time);
+					session.statusSession = SessionStatusEnum.SESSION_RECORDING; 
+					// NOTE : startRecording will be null only if user join session after start recording event, other user ready has date the start session
+					if(startRecording != null)
+					{
+						session.date_start_recording = startRecording; 
+					}
+					
+					if(obselVO != null)
+					{
+					// have to add new traceLine and update the model, list obsel of this user is empty
+						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf); 
+						this.addPresentUsers(obsel);
+						var eventUpdateviewTraceLine:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_VIEW_TRACELINE);
+						eventUpdateviewTraceLine.userId = userId;
+						this.dispatcher.dispatchEvent(eventUpdateviewTraceLine);
+					}
+				}	
 			}
 			// update list user
 			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
