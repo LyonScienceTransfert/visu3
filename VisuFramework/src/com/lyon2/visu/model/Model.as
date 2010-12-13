@@ -57,6 +57,7 @@ package  com.lyon2.visu.model
 		private var listTraceLine:ArrayCollection;
 
 		private var _buttonSalonSynchrone:Button; 
+		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
 		
 		public function Model(access:Private)
 		{
@@ -293,6 +294,36 @@ package  com.lyon2.visu.model
 		public function getListObsels():ArrayCollection
 		{
 			return this.listObsels;
+		}
+		
+		/**
+		 * check if user enter in the session second time
+		 */
+		public function isFirstEnterSession(userId:int):Boolean
+		{
+			var result:Boolean = true;
+			var arr:Array = new Array();
+		//	var userId:int = this._loggedUser.id_user;
+			if(this.listObsels != null)
+			{
+				var nbrObsel:int = this.listObsels.length;
+				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
+				{
+					var obsel:Obsel = this.listObsels.getItemAt(nObsel) as Obsel;
+					var typeObsel:String = obsel.type;
+					if(typeObsel == TraceModel.SESSION_OUT && obsel.props[TraceModel.UID] == userId)
+					{
+						arr.push(obsel);
+					}
+				}			
+			}
+			var nbrObselSessionOut:int = arr.length;
+			// for first enter in the session only one obsel "sessionOut"
+			if(nbrObselSessionOut > 1)
+			{
+				result = false;
+			}
+			return result;	
 		}
 		/**
 		 * get list obsel "SessionIn" for this moment the time
@@ -601,14 +632,22 @@ package  com.lyon2.visu.model
 				//case TraceModel.SESSION_IN :
 				case TraceModel.SESSION_OUT :		
 					viewObsel = new ObselSessionOut()
-					viewObsel.toolTip = obsel.begin.toString();
 					viewObsel.setBegin(obsel.begin);
 					viewObsel.setEnd(obsel.end);
 					ownerObsel = obsel.props[TraceModel.UID];
 					break;
+				case TraceModel.SESSION_OUT_VOID_DURATION :
+					ownerObsel = obsel.props[TraceModel.UID];
+					viewObsel = new ObselSessionOut()
+					viewObsel.setBegin(obsel.begin);
+					viewObsel.setEnd(obsel.end);
+					viewObsel.setOwner(ownerObsel);
+					// add viewObsel for updating his duration
+					this._listViewObselSessionOut.addItem(viewObsel);
+					// add viewObsel like "SessionOut"
+					typeObsel = TraceModel.SESSION_OUT;
+					break;
 			}
-			// set obsel to the model
-			//	viewObsel.toolTip = viewObsel.toolTip + "=>"+ viewObsel.getBegin().toString();
 			
 			Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel)
 				
@@ -1146,6 +1185,169 @@ package  com.lyon2.visu.model
 			return result;
 		}
 		
+		/**
+		 * update duration viewObsels "SessionOut" 
+		 */
+		public function setTimeViewObselSessionOut(value:Number):void
+		{
+			var viewObsel:ObselSessionOut;
+			for each(viewObsel in this._listViewObselSessionOut)
+			{
+				viewObsel.setEnd(value);	
+			}
+		}
+		
+		/**
+		 * add viewObsel "SessionOut" 
+		 */
+		public function addViewObselSessionOut(timeBegin:Number, userId:int):void
+		{
+			var viewObsel:ObselSessionOut = new ObselSessionOut();
+			viewObsel.setOwner(userId);
+			viewObsel.setBegin(timeBegin);
+			viewObsel.setEnd(timeBegin+100);
+			this.setObsel(viewObsel,userId,TraceModel.SESSION_OUT);
+			this._listViewObselSessionOut.addItem(viewObsel);
+			
+		}
+		/**
+		 * remove viewObsel "SessionOut"
+		 */
+		public function removeViewObselSessionOut(userId:int):Boolean
+		{
+			var result:Boolean = false;
+			var listSameOwnerObsel:ArrayCollection  = new ArrayCollection();
+			var nbrViewObsel:int = this._listViewObselSessionOut.length;
+			for(var nViewObsel:int ; nViewObsel < nbrViewObsel ; nViewObsel++)
+			{
+				var viewObsel:ObselSessionOut = this._listViewObselSessionOut.getItemAt(nViewObsel) as ObselSessionOut;
+				var owner:int = viewObsel.getOwner();
+				if(owner == userId)
+				{
+					//this._listViewObselSessionOut.removeItemAt(nViewObsel);
+					listSameOwnerObsel.addItem(nViewObsel);
+				//	return true;
+				}
+			}		
+			var nbrSameObsel:int = listSameOwnerObsel.length;
+			for(var nSameObsel:int = nbrSameObsel; nSameObsel > 0 ; nSameObsel--  )
+			{
+				var orderSameObselInList:int = listSameOwnerObsel.getItemAt(nSameObsel-1) as int;
+				this._listViewObselSessionOut.removeItemAt(orderSameObselInList);
+			}	
+			if(nbrSameObsel > 0)
+			{
+				result =  true
+			}
+			return result;
+		}
+		
+		public function removeObselSessionOutCurrentUser(sessionId:int):void
+		{
+			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
+			var listTraceLine:ArrayCollection = this.getListTraceLines();
+			var nbrTraceLine:int = listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			{
+				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+				// id of the user having traceLine
+				var userId:int = traceLine.userId;
+				if(hasUserInSession(listUserId,userId))
+				{
+					// stop MAJ duration of the obsel "SessionOut"
+					this.removeViewObselSessionOut(userId);
+				}
+			}
+		}
+		/**
+		 * paused session  => add obsel "SessionOut" for all users
+		 */
+		public function setObselSessionOutForAllUser(sessionId:int):void
+		{
+			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
+			var listTraceLine:ArrayCollection = this.getListTraceLines();
+			var nbrTraceLine:int = listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			{
+				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+				// id of the user having traceLine
+				var userId:int = traceLine.userId;
+				var viewObsel:ObselSessionOut = new ObselSessionOut();
+				viewObsel.setOwner(userId);
+				viewObsel.setBegin(new Date().time);
+				// TODO gestion currentTime
+				viewObsel.setEnd(new Date().time + 100);
+				this.addViewObselSessionOut(viewObsel.getBegin(), userId);
+			}			
+		}
+		/**
+		 * add obsel "SessionOut for user presents in the session, after click on boutton "stop recording"
+		 */
+		public function setObselSessionOutForCurrentUser(sessionId:int):void
+		{
+			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
+			var listTraceLine:ArrayCollection = this.getListTraceLines();
+			var nbrTraceLine:int = listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			{
+				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+				// id of the user having traceLine
+				var userId:int = traceLine.userId;
+				if(hasUserInSession(listUserId,userId))
+				{
+					var viewObsel:ObselSessionOut = new ObselSessionOut();
+					viewObsel.setOwner(userId);
+					viewObsel.setBegin(new Date().time);
+					// TODO gestion currentTime
+					viewObsel.setEnd(new Date().time + 100);
+					// show obsel on traceLine
+	//				this.setObsel(viewObsel,userId,TraceModel.SESSION_OUT);
+					// add obsel in the list for update duration
+					this.addViewObselSessionOut(viewObsel.getBegin(), userId);
+				}
+			}		
+		}
+		/**
+		 * set obsels "SessionOut" for users had walk out from TutoratModule 
+		 * before creation "TimeLine" for logged user
+		 */
+		public function setObselSessionOutForUserWalkOutSession(session:Session, obsel:Obsel):void
+		{
+			var sessionId:int = session.id_session;
+			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
+			var listTraceLine:ArrayCollection = this.getListTraceLines();
+			var nbrTraceLine:int = listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			{
+				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+				// id of the user having traceLine
+				var userId:int = traceLine.userId;
+				if(!hasUserInSession(listUserId,userId) && obsel != null)
+				{
+					// user walk out from session
+					var obselSessionOut:Obsel = Obsel.fromRDF((obsel.toRDF()));
+					obselSessionOut.type = TraceModel.SESSION_OUT_VOID_DURATION;
+					obselSessionOut.props[TraceModel.UID] = userId.toString();
+					obselSessionOut.end = obselSessionOut.begin + 100;
+					// add obsel to collection the obsel for show in TimeLine
+					this.listObsels.addItem(obselSessionOut);
+				}
+			}		
+		}
+		
+		private function hasUserInSession(listUserId:Array, value:int):Boolean
+		{
+			var nbrUser:int = listUserId.length;
+			for(var nUser:int = 0; nUser < nbrUser; nUser++)
+			{
+				var id:int = listUserId[nUser];
+				if(id == value)
+				{
+					return true;	
+				}
+			}
+			return false;
+		}
 		
 		/**
 		 * get list users id of the session 
