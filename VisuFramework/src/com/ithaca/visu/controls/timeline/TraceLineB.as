@@ -42,6 +42,8 @@ package com.ithaca.visu.controls.timeline
 		
 		[SkinPart("true")] 
 		public var traceLoggedUser:Group;
+		[SkinPart("true")] 
+		public var timeLayoutTitle:TimeLayout;
 		
 		[SkinPart("false")] 
 		public var checkBoxMarkerObsel:CheckBox;
@@ -115,6 +117,7 @@ package com.ithaca.visu.controls.timeline
 		private var listObselTraceLine5Change:Boolean;
 		
 		private var open:Boolean;
+		private var durationChanged:Boolean;
 		public var tempList:ArrayCollection;
 		public var _listElementTraceline:IList;
 		private var elementsOpen:Boolean;
@@ -148,7 +151,12 @@ package com.ithaca.visu.controls.timeline
 		public function get colorUserTraceLine():uint{return this._colorUserTraceLine};
 		public function set startTimeSession(value:Number):void{this._startTimeSession = value;}
 		public function get startTimeSession():Number{return this._startTimeSession};
-		public function set durationSession(value:Number):void{this._durationSession = value;}
+		public function set durationSession(value:Number):void
+		{
+			this._durationSession = value;
+			durationChanged = true;
+			invalidateProperties();
+		}
 		public function get durationSession():Number{return this._durationSession};
 		
 		public function get listTitleObsels():ArrayCollection { return this._listTitleObsels; }
@@ -680,6 +688,21 @@ package com.ithaca.visu.controls.timeline
 						var obsel = this._listTitleObsels.getItemAt(nObsel);
 						traceLoggedUser.addElement(obsel);
 					}
+				}
+			}
+			
+			if(durationChanged)
+			{
+				durationChanged = false;
+				
+				timeLayoutTitle.durationSession = this._durationSession;
+				if(open)
+				{
+					timeLayoutTrace1.durationSession = this._durationSession;
+					timeLayoutTrace2.durationSession = this._durationSession;
+					timeLayoutTrace3.durationSession = this._durationSession;
+					timeLayoutTrace4.durationSession = this._durationSession;
+					timeLayoutTrace5.durationSession = this._durationSession;
 				}
 			}
 			
