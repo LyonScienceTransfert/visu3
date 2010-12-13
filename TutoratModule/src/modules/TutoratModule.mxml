@@ -303,8 +303,10 @@
 					obselTime.text = labelTextMin+" min.";
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
 				}
-				
-				
+				// creation slider session duration
+				this.durationSessionSlider.minimum = 0;
+				this.durationSessionSlider.maximum = durationSession*2;
+				this.durationSessionSlider.value  = durationSession;			
 			}	
 			/**
 			 * Update status on recording mode
@@ -1219,6 +1221,21 @@
 					textChatMarker.text = "";
 				}
 			}
+
+			protected function durationSessionSlider_valueCommitHandler(event:FlexEvent):void
+			{
+				var hSlider:HSlider = event.currentTarget as HSlider;
+				var duration:int = hSlider.value;
+				// TODO gestion time the session
+				this.sessionTimeLine.sessionTimeLineLayout.durationSession = duration;
+				var nbrTraceLine:int = this.traceLineGroup.numElements;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
+				{
+					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
+					traceLine.durationSession = duration;
+				}				
+			}
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1323,7 +1340,7 @@
 					<s:layout >
 						<s:VerticalLayout gap="0"/>
 					</s:layout>
-					<timeline:TimeLineSession id="sessionTimeLine" width="100%" />
+					<timeline:TimeLineSession id="sessionTimeLine" width="100%"/>
 					<s:Group width="100%" height="100%">
 						<s:Scroller left="1" right="1" top="1" bottom="1">
 							<s:Group width="100%" height="100%">
@@ -1340,6 +1357,10 @@
 							</s:Group>
 						</s:Scroller>
 					</s:Group>
+					<s:HGroup>
+						<s:HSlider id="durationSessionSlider" 
+								   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)"/>
+					</s:HGroup>
 				</s:Group>
 				
 				<!--<s:Group top="1" width="100%"  height="100%">
