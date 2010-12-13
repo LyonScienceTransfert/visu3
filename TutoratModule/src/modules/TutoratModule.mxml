@@ -275,7 +275,10 @@
 					// TODO icon for this event
 					if(event.userId != Model.getInstance().getLoggedUser().id_user)
 					{
-						this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");					
+						this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");	
+						// add viewObsel "SessionOut"
+						// FIXME gestion time
+						Model.getInstance().addViewObselSessionOut(new Date().time,event.userId)
 					}
 				}	
 			}
