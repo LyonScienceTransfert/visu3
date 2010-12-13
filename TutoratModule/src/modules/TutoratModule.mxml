@@ -14,10 +14,8 @@
 		<![CDATA[
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.traces.view.ObselButton;
-			import com.ithaca.traces.view.ObselImage;
 			import com.ithaca.traces.view.ObselLine;
-			import com.ithaca.traces.view.ObselMarker;
+			import com.ithaca.traces.view.ObselSessionOut;
 			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetail;
@@ -68,6 +66,7 @@
 			private var _currentActivityElement:ActivityElement = null;
 			
 			private var listObjectMedia:ArrayCollection = new ArrayCollection();
+			private var _listTempViewObselSessionOut:ArrayCollection = new ArrayCollection();
 			[Bindable]
 			public var listActivities:ArrayCollection;
 			
@@ -205,6 +204,8 @@
 					this.visio.removeAllStreams();
 					this.visio.removeLocalDevice();				
 				}
+				Model.getInstance().setCurrentTutoratModule(null);
+				this._listTempViewObselSessionOut = new ArrayCollection();
 			}
 			
 			/**
@@ -217,8 +218,8 @@
 				{
 					if(currentSession.id_session == event.sessionId)
 					{
-						var module:Object = Model.getInstance().getCurrentTutoratModule();
-						if(module.visio != null)
+						var module:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+						if(module == this && module.visio != null)
 						{
 							module.visio.addVideoStream(event.userIdClient);
 							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
@@ -226,9 +227,35 @@
 							{
 								module.visio.status = VisuVisio.STATUS_RECORD;
 							}
+							// status session
+							var statusSession:int = currentSession.statusSession;
+							if(statusSession != SessionStatusEnum.SESSION_OPEN )
+							{								
+								if(statusSession == SessionStatusEnum.SESSION_PAUSE)
+								{
+									var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.userId)
+									// TODO gestion currentTime
+									Model.getInstance().addViewObselSessionOut(new Date().time , event.userId);
+									
+								}else
+								{
+									// remove viwSessionOut
+									var isUserSecondTimeEnterSession:Boolean = Model.getInstance().removeViewObselSessionOut(event.userId);
+									// will false when user enter first time in the session
+									if(!isUserSecondTimeEnterSession)
+									{
+										var viewObsel:ObselSessionOut = new ObselSessionOut();
+										viewObsel.setOwner(event.userId);
+										viewObsel.setBegin(currentSession.date_start_recording.time);
+										// TODO gestion currentTime
+										viewObsel.setEnd(new Date().time);
+										// add viewObsel in temp list before adding to traceLine, traveLine don't ready now
+										this._listTempViewObselSessionOut.addItem(viewObsel);
+									}																
+								}
+							}	
 						}
 					}							
-					
 				}
 			}
 			
@@ -291,40 +318,12 @@
 						buttonStartRecording.label = fxgt.gettext("Suspendre la séance");	
 						buttonCloseSession.enabled = false;
 						// set buttons startActivity enabled = true
-						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_RECORD);						
-						if (this._stopTimeRecording != 0)
-						{
-							// set obsel "SessionOut"
-							var viewObselButton:ObselButton = new ObselButton();
-							viewObselButton.setBegin(this._stopTimeRecording);
-							viewObselButton.setEnd(event.timeStartStop);
-							viewObselButton.setStyle("chromeColor","#000000");
-							viewObselButton.height = 5;
-	//						this.traceLine.traceLoggedUser.addElement(viewObselButton);	
-						}else
-						{
-							// if trace empty, set start time 
-							if (Model.getInstance().getListObsels() == null)
-							{
-	//							this.traceLine.traceLayout.startTime = event.timeStartStop;
-							}
-						}
-						 /*else
-						{
-							testCursor = new ObselButton();
-							testCursor.setBegin(event.timeStartStop);
-							testCursor.setEnd(event.timeStartStop+300);
-							testCursor.setStyle("chromeColor","#FF00FF");
-							testCursor.height = 45;
-							
-							this.traceLine.traceLoggedUser.addElement(testCursor);	
-							this.startTimer();
-							// first time start recording
-							// set obsel "SessionOut"
-									
-						} */
-							
+						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_RECORD);							
 					}
+					// current session
+					var session:Session = Model.getInstance().getCurrentSession();
+					// remove all user paused presentred in the session
+					Model.getInstance().removeObselSessionOutCurrentUser(session.id_session);	
 				}
 			}
 			
@@ -340,17 +339,23 @@
 			
 			private function updateTime(event:TimerEvent):void
 			{
-				var beginTime:Number = new Date().time - this.currentSession.date_start_recording.time;
+				var beginTime:Number =  new Date().time - this.currentSession.date_start_recording.time;
 				this.testCursor.setBegin(beginTime);
 				this.testCursor.setEnd(beginTime);
 				this.sessionTimeLine.labelCurrentTimeSession.text = updateLabelTimer(beginTime);
 				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
+				// update obsels "SessionOut"
+				Model.getInstance().setTimeViewObselSessionOut(beginTime + this.currentSession.date_start_recording.time);
+				var nbrTraceLine:int = this.traceLineGroup.numElements;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
+				{
+					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
+					traceLine.updateDurationObsel();
+				}	 			
 			}
 			
 			private function updateLabelTimer(value:Number):String
 			{
-
-				
 				var totalSecond:int = value/1000;
 				var minNumber:int = new int(totalSecond/60);
 				var hourNumber:int = new int(totalSecond/3600);
@@ -399,6 +404,10 @@
 						// set buttons startActivity enabled = false
 						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
 					}
+					// current session
+					var session:Session = Model.getInstance().getCurrentSession()
+					// add obsel "SessionOut" for user in the session
+					Model.getInstance().setObselSessionOutForCurrentUser(session.id_session);
 					
 				}
 			}
@@ -681,7 +690,7 @@
 						//start recording
 						var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
 						eventStartRecording.sessionId = this.currentSession.id_session;
-						dispatchEvent(eventStartRecording);								
+						dispatchEvent(eventStartRecording);	
 					}
 				}
 			}
@@ -694,6 +703,7 @@
 				var sessionStatus:int = -1;
 				if( event.detail == Alert.YES )
 				{				
+					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 					// shared stop activity
 					if(this.sessionPlan != null)
 					{
@@ -701,7 +711,6 @@
 						var currentActivityId:int = this.sessionPlan.getCurrentActivityId();
 						if(currentActivityId != 0)
 						{
-							var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 							var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
 							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 							sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.STOP_ACTIVITY);
@@ -720,7 +729,7 @@
 					var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
 					eventStopRecording.sessionId = this.currentSession.id_session;
 					eventStopRecording.sessionStatus = sessionStatus;
-					dispatchEvent(eventStopRecording);	
+					dispatchEvent(eventStopRecording);		
 				}
 			}
 			
@@ -1015,11 +1024,17 @@
 				if(this == currentModule)
 				{
 					var traceLineObj:Object = Model.getInstance().getTraceLineByUserId(event.userId);
-					var show:Boolean = traceLineObj.show;
-					if(!show)
+					if(traceLineObj != null)
 					{
-						this.addTraceLineOnViewTraceLineGroup(traceLineObj);
-					}					
+						var show:Boolean = traceLineObj.show;
+						if(!show)
+						{
+							this.addTraceLineOnViewTraceLineGroup(traceLineObj);
+						}					
+					}else
+					{
+						Alert.show("Hasn't time for add new traceline to the model","Bug...");
+					}
 				}
 			}
 			
@@ -1042,7 +1057,6 @@
 							if(!show)
 							{
 								this.addTraceLineOnViewTraceLineGroup(traceLineObj);
-								
 							}
 						}
 					}
@@ -1070,7 +1084,29 @@
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(this.testCursor); 
 					this.testTimeLine = traceLine;
 					this.startTimer();
-				}				
+				}	
+				// get viewObsel for adding him on traceLine
+				var viewObsel:ObselSessionOut = getViewObselSessionOut(this._listTempViewObselSessionOut , userId);
+				var isFirstEnterSession: Boolean = Model.getInstance().isFirstEnterSession(userId);
+				if(viewObsel != null && isFirstEnterSession)
+				{
+					Model.getInstance().setObsel(viewObsel, userId, TraceModel.SESSION_OUT);	
+				}
+				
+				function getViewObselSessionOut(list:ArrayCollection, userId:int):ObselSessionOut
+				{
+					var nbrViewObsel:int = list.length;
+					for(var nViewObsel:int = 0 ; nViewObsel < nbrViewObsel ; nViewObsel++)
+					{
+						var viewObsel:ObselSessionOut = list.getItemAt(nViewObsel) as ObselSessionOut;
+						if(viewObsel.getOwner() == userId)
+						{
+							list.removeItemAt(nViewObsel);
+							return viewObsel;
+						}
+					}
+					return null;
+				}
 			}
 			
 			
