@@ -21,6 +21,11 @@
 			{
 				this.buttonPause.visible = this.buttonPlay.visible = value;
 			}
+			public function setStatusPlay(value:Boolean):void
+			{
+				this.buttonPlay.enabled = !value;
+				this.buttonPause.enabled = value;
+			}
 			
 			protected function sessionTimeLineLoggedUser_clickHandler(event:MouseEvent):void
 			{

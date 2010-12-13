@@ -305,7 +305,8 @@
 					this.timer.start();
 					this.sessionTimeLine.setShowButtonNavigation(true);
 				}
-				
+				// update buttons play/stop
+				this.sessionTimeLine.setStatusPlay(true);
 				/* panelTimeLine.title = begin.toString();
 				panelTimeLine.title += "  >>> "+listObselSessionIn.length.toString(); */
 				
