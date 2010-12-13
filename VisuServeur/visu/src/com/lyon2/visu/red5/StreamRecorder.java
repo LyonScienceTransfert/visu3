@@ -151,7 +151,7 @@ public class StreamRecorder
 			log.error("unknow user {}", e);
 		}
 		
-		// can have too type the obsels : SessionEnter/SessionStart
+		// can have two type the obsels : SessionEnter/SessionStart
 		String typeObsel="";
 		// can have too type the obsels : SystemSessionStart/SystemSessionEnter
 		String typeObselSystem="";

@@ -156,62 +156,62 @@ public class ObselInfo {
 		return listObselSessionStart;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void getActiveTraceUser(IConnection conn) throws SQLException {
-		log.warn("======== getActiveTraceUser ");
-		List<Obsel> result = null;
-		// check if trace existe
-		IClient client = conn.getClient();
-		String trace = (String) client.getAttribute("trace");
-		log.warn("======== trace the client = {}", trace);
-		if (trace == null) {
-			// user join session when session was stopped
-			Integer userId = (Integer) client.getAttribute("uid");
-			Integer session_id = (Integer) client.getAttribute("sessionId");
-			List<Obsel> listObselSessionStart = null;
-			try {
-				String traceParam = "%-" + userId.toString() + ">%";
-				String refParam = "%:hasSession " + "\""
-						+ session_id.toString() + "\"" + "%";
-				// log.warn("====refParam {}",refParam);
-				ObselStringParams osp = new ObselStringParams(traceParam,
-						refParam);
-				listObselSessionStart = (List<Obsel>) app
-						.getSqlMapClient()
-						.queryForList(
-								"obsels.getTraceIdByObselSessionStartSessionEnter",
-								osp);
-				if (listObselSessionStart != null) {
-					Obsel obselSessionStart = listObselSessionStart.get(0);
-					trace = obselSessionStart.getTrace();
-				} else {
-					// hasn't trace , hasn't obsels
-					// CALLBACK
-				}
-			} catch (Exception e) {
-				log.error("Probleme lors du listing des sessions" + e);
-				log.warn("empty BD, exception case");
-				// hasn't trace , hasn't obsels
-				// CALLBACK
-			}
-		}
-		log.warn("======== trace in BD = {}", trace);
-		// get list obsel
-		try {
-			result = (List<Obsel>) app.getSqlMapClient().queryForList(
-					"obsels.getTrace", trace);
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des obsels" + e);
-		}
-
-		Object[] args = { result };
-		IConnection connClient = (IConnection) client
-				.getAttribute("connection");
-		if (conn instanceof IServiceCapableConnection) {
-			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-			sc.invoke("checkListActiveObsel", args);
-		}
-	}
+//	@SuppressWarnings("unchecked")
+//	public void getActiveTraceUser(IConnection conn) throws SQLException {
+//		log.warn("======== getActiveTraceUser ");
+//		List<Obsel> result = null;
+//		// check if trace existe
+//		IClient client = conn.getClient();
+//		String trace = (String) client.getAttribute("trace");
+//		log.warn("======== trace the client = {}", trace);
+//		if (trace == null) {
+//			// user join session when session was stopped
+//			Integer userId = (Integer) client.getAttribute("uid");
+//			Integer session_id = (Integer) client.getAttribute("sessionId");
+//			List<Obsel> listObselSessionStart = null;
+//			try {
+//				String traceParam = "%-" + userId.toString() + ">%";
+//				String refParam = "%:hasSession " + "\""
+//						+ session_id.toString() + "\"" + "%";
+//				// log.warn("====refParam {}",refParam);
+//				ObselStringParams osp = new ObselStringParams(traceParam,
+//						refParam);
+//				listObselSessionStart = (List<Obsel>) app
+//						.getSqlMapClient()
+//						.queryForList(
+//								"obsels.getTraceIdByObselSessionStartSessionEnter",
+//								osp);
+//				if (listObselSessionStart != null) {
+//					Obsel obselSessionStart = listObselSessionStart.get(0);
+//					trace = obselSessionStart.getTrace();
+//				} else {
+//					// hasn't trace , hasn't obsels
+//					// CALLBACK
+//				}
+//			} catch (Exception e) {
+//				log.error("Probleme lors du listing des sessions" + e);
+//				log.warn("empty BD, exception case");
+//				// hasn't trace , hasn't obsels
+//				// CALLBACK
+//			}
+//		}
+//		log.warn("======== trace in BD = {}", trace);
+//		// get list obsel
+//		try {
+//			result = (List<Obsel>) app.getSqlMapClient().queryForList(
+//					"obsels.getTrace", trace);
+//		} catch (Exception e) {
+//			log.error("Probleme lors du listing des obsels" + e);
+//		}
+//
+//		Object[] args = { result };
+//		IConnection connClient = (IConnection) client
+//				.getAttribute("connection");
+//		if (conn instanceof IServiceCapableConnection) {
+//			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+//			sc.invoke("checkListActiveObsel", args);
+//		}
+//	}
 
 	@SuppressWarnings("unchecked")
 	public void getTraceUser(IConnection conn, String traceId, Integer sessionId)

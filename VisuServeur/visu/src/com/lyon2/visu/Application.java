@@ -137,7 +137,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     private SqlMapClient sqlMapClient;
     private String smtpserver = "";
     // sheduling interval is 5 min.
-    private static Integer SHEDULING_INTERVAL_MSEC = 5*60*1000;
+    private static Integer SHEDULING_INTERVAL_MSEC = 50*60*1000;
 
     private static Logger log = Red5LoggerFactory.getLogger( Application.class , "visu2" );
 
@@ -185,7 +185,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					invokeOnScopeClients(scope, "setStatusStop", args);
 	    		}
     		}
-    	}		
+    	}
+    	log.warn("============= SchedulingService END");
     }
 
 	private boolean hasUserInSession(Integer sessionId)
@@ -716,7 +717,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			
 //			String filename = "record-" + sDate + "-" + clientRecording.getAttribute("sessionId").toString() + "-" + clientRecording.getAttribute("uid").toString();
 			
-			Integer sessionId = (Integer)clientRecording.getAttribute("sessionId");	
 			Integer userId = (Integer)clientRecording.getAttribute("uid");
 			Map<Integer,Integer> listUserCodeColor = new HashMap<Integer,Integer>();
 			List<Obsel> listObselSystemSessionStart = null;
@@ -781,17 +781,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				log.warn("empty BD, exception case");				
 			}
 			
-			// find time start recording
-			Session session = null;
-			try
-			{
-				session = (Session) getSqlMapClient().queryForObject("sessions.getSession",sessionId);
-			} catch (Exception e) {
-				log.error("Probleme lors du listing des sessions" + e);
-			}
-			
-			Date startRecording = session.getStart_recording();
-
 			List<IClient> listPresentsRecordingUsers = new ArrayList<IClient>();
 			List<String> listPresentsIdUsers =  new ArrayList<String>();
 			List<String> listPresentsAvatarUsers= new ArrayList<String>();
@@ -808,16 +797,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				{
 					
 					listPresentsRecordingUsers.add(client);
-					// generate fileName
-//					String recordFileName = "record-" + sDate + "-" + client.getAttribute("sessionId").toString() + "-" + client.getAttribute("uid").toString();
-//					client.setAttribute("recordFileName", recordFileName);
-//					String clientId = (String)client.getAttribute("id");
-//					ClientBroadcastStream streamByClientId = (ClientBroadcastStream) getBroadcastStream(scope, clientId);
-					// add stream
-//					client.setAttribute("stream", streamByClientId);
-					// stop recording
-//					streamByClientId.stopRecording();
-					
 					// set id recording users
 					Integer userIdRecordingUser = (Integer)client.getAttribute("uid");
 					// have to find all recording users 
@@ -889,40 +868,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					{
 						log.error("=====Errors===== {}", sqle);
 					}
-					
-//					mjmj
-//					// start save files 
-//					String clientId = (String)connectedClient.getAttribute("id");
-//					ClientBroadcastStream streamByClientId = (ClientBroadcastStream) getBroadcastStream(scope, clientId);
-//					String fileName = (String)connectedClient.getAttribute("recordFileName");
-//					try 
-//					{
-//						// Save the stream to disk.
-//						streamByClientId.saveAs(fileName, false);
-//					} 
-//					catch (Exception e) 
-//					{
-//						log.error("Error while saving stream: " + streamByClientId.getName(), e);
-//					}
-//					
-//					// add obsel "RecordFileName" to all recording users of this session
-//					for (IClient clientRFN : listPresentsRecordingUsers)
-//					{
-//						Integer ownerFileName = (Integer)clientRFN.getAttribute("uid");
-//						List<Object> paramsObselRecordFileName= new ArrayList<Object>();
-//						paramsObselRecordFileName.add("path");paramsObselRecordFileName.add(fileName);
-//	    				paramsObselRecordFileName.add("session");paramsObselRecordFileName.add(sessionId.toString());
-//	    				paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(ownerFileName.toString());
-//						// add obsel "RecordFileName"
-//						try
-//						{
-//							setObsel(ownerFileName, (String)clientRFN.getAttribute("trace"), "RecordFilename", paramsObselRecordFileName);					
-//						}
-//						catch (SQLException sqle)
-//						{
-//							log.error("=====Errors===== {}", sqle);
-//						}
-//					}
 			}
 			this.updateRecordingWhenUserWalkOutSession(scope, listPresentsRecordingUsers);
 			
@@ -951,17 +896,6 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			//send message to all users on "Deck"
 			log.warn("== setStatusRecording {} ",args);
 			invokeOnScopeClients(scope, "setStatusRecording", args);
-			
-//			try 
-//			{
-//				// Save the stream to disk.
-//				stream.saveAs(filename, false);
-//				
-//			} 
-//			catch (Exception e) 
-//			{
-//				log.error("Error while saving stream: " + stream.getName(), e);
-//			}
 		}
 		
 		// try send list of the obsels to client flex
