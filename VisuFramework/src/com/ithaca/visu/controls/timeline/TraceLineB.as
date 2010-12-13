@@ -819,7 +819,13 @@ package com.ithaca.visu.controls.timeline
 				}	
 			}
 			
-	}
+		}
+		
+		public function updateDurationObsel():void
+		{
+			listObselChange = true;
+			invalidateProperties();
+		}
 		override protected function getCurrentSkinState():String
 		{
 			var result:String = !enabled? "disable" : open? "open" : "normal"
