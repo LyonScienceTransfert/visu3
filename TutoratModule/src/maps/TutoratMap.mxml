@@ -97,18 +97,11 @@
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
 
-		<mate:EventHandlers type="{MessageEvent.GET_TRACE}" debug="true">
+<!--		<mate:EventHandlers type="{MessageEvent.GET_TRACE}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="obselInfo.getActiveTraceUser"/>              
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>		
-		
-		<mate:EventHandlers type="{}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="obselInfo.getObselSetMark"/>              
-			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
-		
+		</mate:EventHandlers>	-->	
 		
 		<mate:EventHandlers type="{MessageEvent.GET_SETMARCK}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
