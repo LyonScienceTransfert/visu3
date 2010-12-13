@@ -68,6 +68,7 @@ package com.ithaca.traces.view
 	{
 		private var _begin:Number;
 		private var _end:Number;
+		private var _owner:Number;
 		
 		
 		public function ObselSessionOut()
@@ -95,11 +96,22 @@ package com.ithaca.traces.view
 		{
 			return this._end;
 		}
+		
+		public function setOwner(value:Number):void
+		{
+			this._owner = value;
+		}
+		
+		public function getOwner():Number
+		{
+			return this._owner;
+		}
 		public function cloneMe():ObselSessionOut
 		{
 			var result:ObselSessionOut = new ObselSessionOut();
 			result._begin = this._begin;
 			result._end = this._end;
+			result._owner =  this._owner;
 			return result;
 		}
 	}
