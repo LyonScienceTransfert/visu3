@@ -680,6 +680,16 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		// this client start streaming 
 		Integer status = (Integer)clientRecording.getAttribute("status");
 		log.warn("status = {}",status.toString());
+		// find time start recording
+		Integer sessionId = (Integer)clientRecording.getAttribute("sessionId");	
+		Session session = null;
+		try
+		{
+			session = (Session) getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+		}		
+		Date startRecording = session.getStart_recording();
 		
 		// check if mode recording for this client
 		if(status == 3)
@@ -998,7 +1008,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			log.error("Probleme lors du listing des obsels" + e);
 		}
 
-		Object[] args = {result};
+		Object[] args = {result, startRecording};
 		IConnection connClient = (IConnection)clientRecording.getAttribute("connection");
 		//if (conn instanceof IServiceCapableConnection) 
 		//{
