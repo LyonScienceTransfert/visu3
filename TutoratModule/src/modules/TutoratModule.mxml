@@ -15,8 +15,11 @@
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
+			import com.ithaca.traces.view.ObselMarker;
 			import com.ithaca.traces.view.ObselSessionOut;
 			import com.ithaca.traces.view.ObselTime;
+			import com.ithaca.traces.view.skins.ObselMarkerSkin;
+			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetail;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
@@ -25,6 +28,7 @@
 			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
+			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
@@ -1063,6 +1067,8 @@
 				
 				var traceLine:TraceLineB = event.currentTarget as TraceLineB;
 				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
+				// add listener edit obsel
+				traceLine.addEventListener(ObselEvent.EDIT_OBSEL, onEditObsel);				
 				traceLine.listTitleObsels = traceLine.tempList;		
 				var userId:int = traceLine.idUserTraceLine;
 				traceLine.checkBoxMarkerObsel.selected = true;
@@ -1101,7 +1107,25 @@
 					return null;
 				}
 			}
-			
+			/**
+			 * listener of the obsel type "SetMarqueur"
+			 */
+			private function onEditObsel(event:ObselEvent):void
+			{
+				var obselSkin:ObselMarkerSkin = event.target as ObselMarkerSkin;
+				var obselMarker:ObselMarker = obselSkin.hostComponent;
+				var text:String = obselMarker.text;
+				var obsel:Obsel = obselMarker.parentObsel;
+				var typeObsel:String = obsel.type;
+				var ownerObsel:int = obsel.props[TraceModel.SENDER];
+				if(Model.getInstance().getLoggedUser().id_user == ownerObsel)
+				{
+					var showWindowEditObselMarker:ObselEvent = new ObselEvent(ObselEvent.SHOW_WINDOW_EDIT_OBSEL);
+					showWindowEditObselMarker.obsel = obsel;
+					showWindowEditObselMarker.textObsel = text;					
+					this.dispatchEvent(showWindowEditObselMarker);
+				}
+			}
 			
 			private function setObsels():void{
 				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
