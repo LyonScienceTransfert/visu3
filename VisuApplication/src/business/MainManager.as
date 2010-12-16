@@ -531,7 +531,8 @@ public class MainManager
 						break;
 					case TraceModel.SEND_CHAT_MESSAGE:
 					case TraceModel.RECEIVE_CHAT_MESSAGE:
-					case TraceModel.SET_MARKER:
+				// exclus obsels "SetMarker" => hasn't property "Sender"		
+				//	case TraceModel.SET_MARKER:
 					case TraceModel.RECEIVE_MARKER:
 					case TraceModel.SEND_KEYWORD:
 					case TraceModel.RECEIVE_KEYWORD:
