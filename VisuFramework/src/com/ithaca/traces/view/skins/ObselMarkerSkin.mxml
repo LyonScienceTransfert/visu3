@@ -15,6 +15,8 @@
 
     <fx:Script fb:purpose="styling">
         <![CDATA[         
+			import com.ithaca.visu.events.ObselEvent;
+			
 			import mx.events.FlexEvent;
             /**
              *  @private
@@ -43,6 +45,14 @@
 				this.textMarker.text = this.hostComponent.text;
 				this.textMarker.setStyle("backgroundColor", this.hostComponent.backGroundColor );
 				this.bgFill.color = this.hostComponent.backGroundColor;
+				this.doubleClickEnabled = true;
+				this.addEventListener(MouseEvent.DOUBLE_CLICK, onMouseDoubleClickMarcker);
+			}
+			
+			private function onMouseDoubleClickMarcker(event:MouseEvent):void
+			{
+				var eventEditObsel:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
+				this.dispatchEvent(eventEditObsel);
 			}
         ]]>        
     </fx:Script>
