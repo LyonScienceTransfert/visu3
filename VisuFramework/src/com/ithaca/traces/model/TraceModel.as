@@ -100,6 +100,7 @@ package com.ithaca.traces.model
         public static const SET_MARKER: String = "SetMarker";
         public static const RECEIVE_MARKER: String = "ReceiveMarker";
         public static const UPDATE_MARKER: String = "UpdateMarker";
+        public static const SYSTEM_UPDATE_MARKER: String = "SystemUpdateMarker";
         public static const RECEIVE_KEYWORD: String = "ReceiveKeyword";
         public static const SEND_CHAT_MESSAGE: String = "SendChatMessage";
         public static const SEND_KEYWORD: String = "SendKeyword";
