@@ -547,7 +547,9 @@ public class MainManager
 					case TraceModel.UPDATE_MARKER:
 						listObselUM.addItem(obsel);
 						break;
-						
+					case TraceModel.SYSTEM_UPDATE_MARKER:
+						listObselUM.addItem(obsel);
+						break;
 				}
 			}
 			// duration session 
