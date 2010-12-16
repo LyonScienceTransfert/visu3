@@ -109,6 +109,7 @@
 			<rtmp:CallbackRegistrator action="checkListObselClosedSession" target="{MainManager}" method="onCheckListObselClosedSession"/>
 			<rtmp:CallbackRegistrator action="checkListObselSessionExitSessionPause" target="{MainManager}" method="onCheckListObselSessionExitSessionPause"/>
 			<rtmp:CallbackRegistrator action="checkLastSession" target="{MainManager}" method="onCheckLastSession"/>
+			<rtmp:CallbackRegistrator action="checkUpdatedMarker" target="{MainManager}" method="onCheckUpdatedMarker"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
@@ -155,6 +156,13 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendSharedInfo"
 							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionSharedEvent.SEND_EDITED_MARKER}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="shared.sendEditedMarker"
+							  arguments="{[ event.info, event.listUsers, event.timeStamp]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
