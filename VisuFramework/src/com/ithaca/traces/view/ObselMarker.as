@@ -62,6 +62,8 @@
  */
 package com.ithaca.traces.view
 {
+	import com.ithaca.traces.Obsel;
+	
 	import spark.components.SkinnableContainer;
 	
 	[SkinState("normal")]
@@ -76,6 +78,8 @@ package com.ithaca.traces.view
 		private var _source:Class;
 		private var _text:String;
 		private var _backGroundColor:uint;
+		private var _parentObsel:Obsel;
+		private var _order:int;
 		
 		private var open:Boolean;
 		
@@ -91,6 +95,10 @@ package com.ithaca.traces.view
 		public function get text():String{return this._text}
 		public function set backGroundColor(value:uint):void{_backGroundColor = value; invalidateProperties();}
 		public function get backGroundColor():uint{return this._backGroundColor}
+		public function set parentObsel(value:Obsel):void{_parentObsel = value;}
+		public function get parentObsel():Obsel{return this._parentObsel}
+		public function set order(value:int):void{_order = value;}
+		public function get order():int{return this._order}
 		
 		
 		public function setBegin(value:Number):void
@@ -131,6 +139,8 @@ package com.ithaca.traces.view
 			result.toolTip = this.toolTip;
 			result.text = this.text;
 			result.backGroundColor = this.backGroundColor;
+			result._parentObsel = this.parentObsel;
+			result._order = this._order;
 			return result;
 		}
 		
