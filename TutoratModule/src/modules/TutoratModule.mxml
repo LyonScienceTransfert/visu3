@@ -355,7 +355,7 @@
 				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
 				{
 					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
-					traceLine.updateDurationObsel();
+					traceLine.updateObsel();
 				}	 			
 			}
 			

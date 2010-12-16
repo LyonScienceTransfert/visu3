@@ -844,7 +844,7 @@ package com.ithaca.visu.controls.timeline
 			
 		}
 		
-		public function updateDurationObsel():void
+		public function updateObsel():void
 		{
 			listObselChange = true;
 			invalidateProperties();
