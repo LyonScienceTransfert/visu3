@@ -824,7 +824,7 @@
 					message = textChatMessage.text.slice(0, textChatMessage.text.length-1);
 				}
 				// check if message empty
-				if(isEmptyMessage(message))
+				if(UtilFunction.isEmptyMessage(message))
 				{
 					// don't send empty message
 					textChatMessage.text = "";
@@ -836,19 +836,7 @@
 				// update text
 				textChatMessage.text = "";
 			}
-			private function isEmptyMessage(value:String):Boolean
-			{
-				var nbrChar:int = value.length;
-				for(var nChar:int = 0; nChar < nbrChar ; nChar++)
-				{
-					var char:String = value.charAt(nChar);
-					if(char != " ")
-					{
-						return false;
-					}
-				}
-				return true;
-			}
+			
 			/**
 			 * Checking that sending the marker by click on button or click by "enter"
 			 */
@@ -888,7 +876,7 @@
 					message = textChatMarker.text.slice(0, textChatMarker.text.length-1);
 				}
 				// check if message empty
-				if(isEmptyMessage(message))
+				if(UtilFunction.isEmptyMessage(message))
 				{
 					message = fxgt.gettext("(vide)");
 				}
