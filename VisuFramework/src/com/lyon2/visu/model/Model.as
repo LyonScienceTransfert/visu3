@@ -570,6 +570,7 @@ package  com.lyon2.visu.model
 					viewObsel = new ObselMarker()
 					viewObsel.setBegin(obsel.begin);
 					viewObsel.setEnd(obsel.end);
+					viewObsel.parentObsel = obsel;
 					ownerObsel = obsel.uid;
 					viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
 					textObsel = obsel.props[TraceModel.TEXT];
@@ -582,6 +583,7 @@ package  com.lyon2.visu.model
 					viewObsel = new ObselMarker();
 					viewObsel.setBegin(obsel.begin);
 					viewObsel.setEnd(obsel.end);
+					viewObsel.parentObsel = obsel;
 					ownerObsel = obsel.props[TraceModel.SENDER];
 					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
 					textObsel = obsel.props[TraceModel.TEXT];
