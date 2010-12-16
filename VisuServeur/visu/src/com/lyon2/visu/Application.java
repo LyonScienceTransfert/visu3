@@ -943,16 +943,28 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
-
+		// get list obsel update marker 
+		List <Obsel> listObselUpdatedMarker = null;
+        try
+        {
+        	// get list obsel "SystemSessionStart"
+			String traceParam = "%-0>%";
+			String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
+			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
+			listObselUpdatedMarker = (List<Obsel>) getSqlMapClient().queryForList("obsels.getObselSystemUpdateMarker", osp);
+        } catch (Exception e) {
+			log.error("Probleme lors du listing des obsels" + e);
+		}
+        Integer nbrObselSystemUpdateMarker = listObselUpdatedMarker.size();
+        if(nbrObselSystemUpdateMarker > 0)
+        {
+        	result.addAll(listObselUpdatedMarker);      	
+        }
+        log.warn("===== nbrSystemObselUpdateMarker = {}",nbrObselSystemUpdateMarker);
 		Object[] args = {result, startRecording};
 		IConnection connClient = (IConnection)clientRecording.getAttribute("connection");
-		//if (conn instanceof IServiceCapableConnection) 
-		//{
-			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-			sc.invoke("checkListActiveObsel", args);
-		//} 
-		
-		
+		IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+		sc.invoke("checkListActiveObsel", args);
 	}
 	
     public void streamPublishStart(IBroadcastStream stream)
