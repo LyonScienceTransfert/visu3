@@ -921,6 +921,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				{
 					Obsel obselSessionStart = listObselSessionStart.get(0);
 					trace = obselSessionStart.getTrace();
+					// set trace for this client, it's be need for update obsel marker if session paused
+					clientRecording.setAttribute("trace", trace);
 				}else
 				{
 					// hasn't trace , hasn't obsels
