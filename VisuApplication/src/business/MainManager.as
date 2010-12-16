@@ -404,6 +404,7 @@ public class MainManager
 		var listObsel:ArrayCollection = null;
 		var listObselRFN:ArrayCollection = new ArrayCollection();
 		var listObselSI:ArrayCollection = new ArrayCollection();
+		var listObselUM:ArrayCollection = new ArrayCollection();
 		var durationSession :Number = 0;
 		var tempSharedSession:Boolean = false;
 		if(!(listObselVO == null || listObselVO.length == 0))
@@ -543,11 +544,24 @@ public class MainManager
 					case TraceModel.READ_DOCUMENT:
 						listObsel.addItem(obsel);
 						break;	
+					case TraceModel.UPDATE_MARKER:
+						listObselUM.addItem(obsel);
+						break;
+						
 				}
 			}
 			// duration session 
 			durationSession = timeSessionEnd - startRecordingSession;
 		}
+		// update marker
+		var nbrObselUM:int = listObselUM.length;
+		for(var nObselUM:int = 0; nObselUM < nbrObselUM; nObselUM++)
+		{
+			var obselUm:Obsel = listObselUM.getItemAt(nObselUM) as Obsel;
+			// update text obsel marker with the same timestamp
+			updateObselMarker(listObsel, obselUm);	
+		}
+		
 		// add if logged user hasn't timeline
 		var loggedUser:User = Model.getInstance().getLoggedUser();
 		Model.getInstance().addTraceLine(loggedUser.id_user, loggedUser.firstname, loggedUser.avatar, ColorEnum.getColorByCode("0"));
@@ -655,7 +669,26 @@ public class MainManager
 		{
 			var listObselByType:ArrayCollection = getListObselByType(type);
 			listObselByType.addItem(obsel);
-		}	
+		}
+		
+		function updateObselMarker(listObsel:ArrayCollection, obsel:Obsel):void
+		{
+			var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obselTemp:Obsel = listObsel.getItemAt(nObsel) as Obsel;
+				var obselTempType:String = obselTemp.type;
+				if(obselTempType == TraceModel.SET_MARKER || obselTempType == TraceModel.RECEIVE_MARKER)
+				{
+					var timeStampMarker:Number = obselTemp.props[TraceModel.TIMESTAMP];
+					if(timeStamp == timeStampMarker)
+					{
+						obselTemp.props[TraceModel.TEXT] = obsel.props[TraceModel.TEXT];
+					}
+				}
+			}
+		}
 	}
 	
 	/**
