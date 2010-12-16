@@ -65,32 +65,20 @@ package com.lyon2.visu.red5;
 
 
 import java.sql.SQLException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Date;
+import java.util.List;
 
 import org.red5.logging.Red5LoggerFactory;
+import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
-import org.red5.server.api.IClient;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.red5.server.api.service.ServiceUtils;
-import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
 
-import com.lyon2.visu.domain.model.User;
-import com.lyon2.visu.Application;
-
 import com.ithaca.domain.model.Obsel;
+import com.lyon2.utils.ObselStringParams;
+import com.lyon2.visu.Application;
  
 /**
  * 
@@ -312,12 +300,12 @@ public class SharedInfo
 						IServiceCapableConnection sc = (IServiceCapableConnection) connSharedUser;
 						sc.invoke("checkSharedInfo", args);
 					} 
-				}
-					
+				}			
 			}			
 		}		
 	}
 
+	@SuppressWarnings("unchecked")
 	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp )
 	{
 		log.warn("======== sendEditedMarker ");
@@ -367,7 +355,44 @@ public class SharedInfo
 				sc.invoke("checkUpdatedMarker", args);
 			} 
 		}
-		// TODO add info to the SystemTrace
+		// add obsel update marker in the trace the system
+		// FIXME : have to add obsel "SystemUpdateMarker" in the trace the system only for users 
+		//         walk out from session, they was in the session with user updated obsel marker
+		//         when user set obsel marker
+		IClient client = conn.getClient();
+		Integer sessionId = (Integer)client.getAttribute("sessionId");
+		List<Obsel> listObselSystemSessionStart;
+		String traceSystem="";
+        // try find trace the system 
+        try
+        {
+        	// get list obsel "SystemSessionStart"
+			String traceParam = "%-0>%";
+			String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
+			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
+			listObselSystemSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
+            if(listObselSystemSessionStart != null)
+            {
+            	// get traceId the system 
+				Obsel obselSystemSessionStart = listObselSystemSessionStart.get(0);
+				traceSystem = obselSystemSessionStart.getTrace();
+				// have to add param sessionId 
+				paramsObsel.add("session");paramsObsel.add(sessionId.toString());
+				try
+				{
+					obsel = app.setObsel(0, traceSystem, "SystemUpdateMarker", paramsObsel);					
+				}
+					catch (SQLException sqle)
+				{
+					log.error("=====Errors===== {}", sqle);
+				}			
+           }else
+            {
+        	   log.warn("=== Error in sendEditedMarker(), hasn't trace the system...of the sessionId = {}", sessionId.toString() ); 
+            }
+        }catch (Exception e) {
+			log.error("Probleme lors du listing des sessions" + e);
+        }
 	}
 	
 	public void setApplication(Application app) {
