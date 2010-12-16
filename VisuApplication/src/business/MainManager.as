@@ -1107,6 +1107,12 @@ public class MainManager
 		this.dispatcher.dispatchEvent(sessionSharedEvent);	
 	}
 	
+	public function onCheckUpdatedMarker(text:String ,senderUserId:int , obselVO:ObselVO):void
+	{
+		var obsel:Obsel =  Obsel.fromRDF(obselVO.rdf);
+		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
+		Model.getInstance().updateTextObselMarker(senderUserId, timeStampObsel, text);
+	}
 	public function onError(event : Object) : void
 	{
 		var closeConnetionEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CLOSE_CONNECTION);

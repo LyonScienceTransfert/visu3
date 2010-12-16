@@ -407,6 +407,58 @@ package  com.lyon2.visu.model
 				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
 			}
 		}
+		/**
+		 * update new text and tooltips the obsel marker
+		 */
+		public function updateTextObselMarker(userId:int , timeStampUpdatedObsel:Number , text:String):void
+		{
+			var traceLine:Object = this.getTraceLineByUserId(userId);
+			var listTitleObsels:ArrayCollection = traceLine.listTitleObsels;
+			var obselView:ObselMarker = updateTextObsel(listTitleObsels, timeStampUpdatedObsel);
+			if(obselView != null)
+			{
+				var newObselView:ObselMarker = obselView.cloneMe();
+				newObselView.text = text;
+				newObselView.toolTip = text;
+				var order:int = newObselView.order;
+				listTitleObsels.addItemAt(newObselView, order);
+			}
+			var traceLineElementList:ArrayList = traceLine.listElementTraceLine;
+			var traceLineElement:Object = traceLineElementList.getItemAt(4);
+			var listMarkerObsel:ArrayCollection = traceLineElement.listObsel;
+			var obselViewElement:ObselMarker = updateTextObsel(listMarkerObsel, timeStampUpdatedObsel);
+			if(obselViewElement != null)
+			{
+				var newObselView:ObselMarker = obselViewElement.cloneMe();
+				newObselView.text = text;
+				newObselView.toolTip = text;
+				var order:int = newObselView.order;
+				listMarkerObsel.addItemAt(newObselView,order);
+			}
+			
+			function updateTextObsel(listObsels:ArrayCollection, timeStampUpdatedObsel:Number):ObselMarker
+			{
+				var nbrObsel:int = listObsels.length;
+				for(var nObsel:int = 0 ; nObsel < nbrObsel ; nObsel++)
+				{
+					var obselView = listObsels.getItemAt(nObsel);
+					if(obselView is ObselMarker){
+						var obsel:Obsel = obselView.parentObsel;
+						if(obsel != null && (obsel.type == TraceModel.SET_MARKER || obsel.type == TraceModel.RECEIVE_MARKER ))
+						{
+							var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
+							if(timeStamp == timeStampUpdatedObsel)
+							{
+								listObsels.removeItemAt(nObsel);
+								obselView.order = nObsel;
+								return obselView;
+							}
+						}
+					}
+				}
+				return null;
+			}	
+		}
 		
 		/**
 		 * add list obsel to title trace line
