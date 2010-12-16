@@ -13,6 +13,7 @@ public class SessionSharedEvent extends Event
 	// constants
 	static public const SEND_SHARED_INFO : String = 'sendSharedInfo';
 	static public const RECEIVE_SHARED_INFO : String = 'receiveSharedInfo';
+	static public const SEND_EDITED_MARKER : String = 'sendEditedMarker';
 
 	// properties
 	public var typeInfo : int;
@@ -22,6 +23,7 @@ public class SessionSharedEvent extends Event
 	public var url : String;
 	public var status : int;	
 	public var obselVO:ObselVO;
+	public var timeStamp:Number;
 	
 	// constructor
 	public function SessionSharedEvent(type : String,
