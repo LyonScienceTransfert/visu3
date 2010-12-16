@@ -1444,14 +1444,20 @@ package  com.lyon2.visu.model
 		/**
 		 * get list users id with status "RECORDING" of the recording session 
 		 */
-		public function getListUsersIdByRecordingSession(sessionId:int, role:int=0):Array
+		public function getListUsersIdByRecordingSession(sessionId:int, role:int=0, filter:Boolean = false):Array
 		{
+			var status:int = ConnectionStatus.RECORDING;
+			if(filter)
+			{
+				// have to add users with status recording and paused
+				status = ConnectionStatus.CONNECTED;
+			}
 			var result:Array = new Array();
 			var nbrUsers:uint = this.listConnectedUsers.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
 				var user:User = this.listConnectedUsers[nUser];
-				if((user.status == ConnectionStatus.RECORDING) && (user.currentSessionId == sessionId))
+				if((user.status == ConnectionStatus.RECORDING || user.status == status) && (user.currentSessionId == sessionId))
 				{
 					//add userId only if status Recording of this sessionId
 					if(role == 0 )
