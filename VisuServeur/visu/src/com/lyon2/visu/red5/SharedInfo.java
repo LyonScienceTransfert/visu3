@@ -69,6 +69,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
@@ -120,6 +121,9 @@ public class SharedInfo
 			return;
 		}else 
 		{
+			// set timestamp
+			Date date = new Date();
+			Long timeStamp = date.getTime();
 			// sender the info
 			IClient sender = conn.getClient();
 			IScope scope = conn.getScope();
@@ -227,6 +231,7 @@ public class SharedInfo
 					// add obsels "SendInstructions", "SendKeyword", "SendDocument" 
 					List<Object> paramsObselSend= new ArrayList<Object>();
 			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
+			   		paramsObselSend.add("timestamp");paramsObselSend.add(timeStamp.toString());
 			   		// add url sending documents
 			   		if(typeInfo == 3 || typeInfo == 4)
 			   		{
@@ -257,6 +262,7 @@ public class SharedInfo
 					List<Object> paramsObselReceive= new ArrayList<Object>();
 		   			paramsObselReceive.add(namePropertyObsel);paramsObselReceive.add(info);
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
+		   			paramsObselReceive.add("timestamp");paramsObselReceive.add(timeStamp.toString());
 		   			// add url sending/reading documents
 			   		if(typeInfo == 3 || typeInfo == 4 || typeInfo == 7 || typeInfo == 8)
 			   		{
@@ -312,6 +318,57 @@ public class SharedInfo
 		}		
 	}
 
+	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp )
+	{
+		log.warn("======== sendEditedMarker ");
+		// sender the info
+		IClient sender = conn.getClient();
+		IScope scope = conn.getScope();
+		// get all shared clients
+		List<IClient> listSharedUsers = new ArrayList<IClient>();
+		Integer sharedUserId=0;
+		int nbrSharedUsers = listUser.length;
+		for (IClient client : scope.getClients())
+			{
+				for(int nUser=0; nUser < nbrSharedUsers; nUser++)
+				{
+					sharedUserId = listUser[nUser];
+					Integer userId = (Integer)client.getAttribute("uid");
+					int diff = sharedUserId - userId;
+					if(diff == 0)
+					{
+						listSharedUsers.add(client);
+						log.warn(" == added client {}",(String)client.getAttribute("id"));
+					}	
+				}
+			}
+		Integer senderUserId = (Integer)sender.getAttribute("uid");
+		List<Object> paramsObsel= new ArrayList<Object>();
+		paramsObsel.add("text");paramsObsel.add(info);
+		paramsObsel.add("sender");paramsObsel.add(senderUserId.toString());
+		paramsObsel.add("timestamp");paramsObsel.add(timeStimp.toString());
+		Obsel obsel = null;
+		for(IClient sharedClient : listSharedUsers)
+		{
+			try
+			{
+				obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), "UpdateMarker", paramsObsel);					
+			}
+				catch (SQLException sqle)
+			{
+				log.error("=====Errors===== {}", sqle);
+			}
+			// send shared info to shared users
+			Object[] args = {info, senderUserId, obsel};
+			IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
+			if (connSharedUser instanceof IServiceCapableConnection) 
+			{
+				IServiceCapableConnection sc = (IServiceCapableConnection) connSharedUser;
+				sc.invoke("checkUpdatedMarker", args);
+			} 
+		}
+		// TODO add info to the SystemTrace
+	}
 	
 	public void setApplication(Application app) {
 		this.app = app;
