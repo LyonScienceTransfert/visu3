@@ -103,6 +103,12 @@
 		WHERE (type_obsel = 'SystemSessionStart' or type_obsel = 'SystemSessionEnter') and trace like #traceParam# and rdf like #refParam# 
 	</select>
 	
+    <select id="getObselSystemUpdateMarker" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE type_obsel = 'SystemUpdateMarker' and trace like #traceParam# and rdf like #refParam# 
+	</select>
+	
     <select id="getSessionExitSessionPauseObselsForUserId" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
         SELECT *
 		FROM obsels
