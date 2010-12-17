@@ -37,15 +37,12 @@
 			import com.lyon2.visu.model.Session;
 			import com.lyon2.visu.model.User;
 			import com.lyon2.visu.vo.SessionUserVO;
-			import com.lyon2.visu.vo.SessionVO;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
-			import mx.events.IndexChangedEvent;
-			import mx.events.ModuleEvent;
 			
 			import spark.events.IndexChangeEvent;
 			
@@ -251,7 +248,6 @@
 				{
 					Model.getInstance().setSessionDate(event.listDate);
 					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
-					
 					var elementDateStartToday:Object = getObjectDateSessionStartToday(this.listDateForNavigateurDay);
 					var labelDate:String = elementDateStartToday.labelDate;
 					Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(elementDateStartToday);
