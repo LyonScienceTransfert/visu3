@@ -59,6 +59,10 @@ package  com.lyon2.visu.model
 		private var _buttonSalonSynchrone:Button; 
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
 		
+		// time of the serveur red5
+		private var _timeServeur:Number;
+		private var _timeJoinDECK:Number;
+		
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -113,6 +117,25 @@ package  com.lyon2.visu.model
 				return true;
 			}
 			return false;
+		}
+		
+		/**
+		 *  set time of the serveur red5
+		 */
+		public function setTimeServeur(value:Number):void
+		{
+			this._timeServeur = value;
+			// start synchronisation the time with serveur red5
+			this._timeJoinDECK = new Date().time;
+		}
+		
+		/**
+		 * get calculated time of the serveur red5  
+		 */
+		public function getTimeServeur():Number
+		{
+			var timePresentsOnTheDeck:Number = new Date().time - this._timeJoinDECK;
+			return this._timeServeur + timePresentsOnTheDeck;
 		}
 		
 		public function setLoggedUser(value:UserVO):void

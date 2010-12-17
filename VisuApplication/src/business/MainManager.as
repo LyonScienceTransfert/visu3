@@ -222,7 +222,10 @@ public class MainManager
 	public function getClientInfo(ar:Array):void
 	{
 		var userIdClient:String = ar['id'];
-		Model.getInstance().setUserIdClient(userIdClient);		
+		Model.getInstance().setUserIdClient(userIdClient);
+		var timeServeurString:String = ar['timeNumber'];
+		var timeServeur:Number = new Number(timeServeurString);		
+		Model.getInstance().setTimeServeur(timeServeur);
 	}
 	
 	/**

@@ -614,7 +614,9 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 
         Map<String,String> o = new HashMap<String, String>();
         o.put("id", client.getId());
-       // o.put("username", (String)client.getAttribute("username"));		
+        // set time server to the client flex
+        Long timeNumber = new Date().getTime();
+        o.put("timeNumber", Long.toString(timeNumber));			
         return o;
     }
 

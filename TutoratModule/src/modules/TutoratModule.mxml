@@ -348,7 +348,8 @@
 			
 			private function updateTime(event:TimerEvent):void
 			{
-				var beginTime:Number =  new Date().time - this.currentSession.date_start_recording.time;
+				var currentTimeServeur:Number = Model.getInstance().getTimeServeur();
+				var beginTime:Number =  currentTimeServeur - this.currentSession.date_start_recording.time;
 				this.testCursor.setBegin(beginTime);
 				this.testCursor.setEnd(beginTime);
 				this.sessionTimeLine.labelCurrentTimeSession.text = updateLabelTimer(beginTime);
