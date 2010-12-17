@@ -142,6 +142,7 @@ public class SessionInfo
 			}
 		}
 		log.warn("size = {}",result.size());
+		List <String> listDateString= new ArrayList<String>();
 		for (Date dateSession : result)
 		{	
 			// the date now is example : Tue Jan 05 00:00:00 BRST 2010
@@ -149,8 +150,16 @@ public class SessionInfo
 			// have to add one second for having date like this :  Tue Jan 05 00:00:01 BRST 2010
 			dateSession.setSeconds(1);
 			log.warn("sessionDate = {}",dateSession.toString());
+			String year = String.valueOf(dateSession.getYear()+1900);
+			String mount = String.valueOf(dateSession.getMonth());
+			String day = String.valueOf(dateSession.getDate());
+			String hour = String.valueOf(dateSession.getHours());
+			String minute = String.valueOf(dateSession.getMinutes());
+			String seconde = String.valueOf(dateSession.getSeconds());
+			// add string 
+			listDateString.add(year+"-"+mount+"-"+day+"-"+hour+"-"+minute+"-"+seconde);
 		}
-		Object[] args = {result};
+		Object[] args = {listDateString};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;

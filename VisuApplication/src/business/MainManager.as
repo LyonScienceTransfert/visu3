@@ -153,11 +153,15 @@ public class MainManager
 	{
 		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.avatar,fxgt.gettext("[public] ")+message ,new Date());	
 	}	
-
-	public function onCheckListDates(listDate : Array):void
+	
+	/**
+	 * check list date of the session in format string
+	 * it's easy than control UTC time localy. 
+	 */
+	public function onCheckListDates(listDateString:Array):void
 	{
 		var eventListDate:SessionEvent = new SessionEvent(SessionEvent.SHOW_LIST_DATE_SESSION);
-		eventListDate.listDate = listDate;
+		eventListDate.listDate = listDateString;
 		dispatcher.dispatchEvent(eventListDate);
 	}	
 	

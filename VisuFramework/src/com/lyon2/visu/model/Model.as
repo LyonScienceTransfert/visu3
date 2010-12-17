@@ -1070,7 +1070,10 @@ package  com.lyon2.visu.model
 		{
 			var nbrDates:uint = ar.length;
 			for(var nDate:uint = 0; nDate < nbrDates ; nDate++){
-				var date:Date = ar[nDate] as Date;
+				var dateString:String = ar[nDate] as String;
+				var arrDate:Array = dateString.split("-");
+				// create new date similaire like on the serveur
+				var date:Date = new Date(new Number(arrDate[0]), new Number(arrDate[1]),new Number(arrDate[2]));
 				var labelDate:String = getDateFormatYYY_MM_DD(date);
 				this.listDateSession.addItem({labelDate:labelDate, fullDate:date, listSessionDate:null});
 			}
