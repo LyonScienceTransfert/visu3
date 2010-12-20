@@ -93,6 +93,22 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/fichierVisu1.png")]
 		static private var fichierIconVisu1:Class;
+
+		[Bindable]
+		[Embed("images/ShareThisToOtherGreenVer1.png")]
+		static private var sharedOkThisToOther:Class;
+		
+		[Bindable]
+		[Embed("images/ShareOtherToThisGreenVer1.png")]
+		static private var sharedOkOtherToThis:Class;
+
+		[Bindable]
+		[Embed("images/ShareThisToOtherRedVer1.png")]
+		static private var sharedNonThisToOther:Class;
+		
+		[Bindable]
+		[Embed("images/ShareOtherToThisRedVer1.png")]
+		static private var sharedNonOtherToThis:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -119,6 +135,29 @@ package com.ithaca.visu.ui.utils
 				case TraceModel.RECEIVE_DOCUMENT: 
 				case TraceModel.READ_DOCUMENT: 
 					icon = videoIcon;
+					break;
+				default :
+					break;				
+			}
+			return icon;
+		}
+		
+		public static function getIconByCodeShared(code:String):Class
+		{
+			var icon:Class;
+			switch (code)
+			{
+				case SharedSatusEnum.SHARED_OK_THIS_TO_OTHER : 
+					icon = sharedOkThisToOther;
+					break;
+				case SharedSatusEnum.SHARED_OK_OTHER_TO_THIS : 
+					icon = sharedOkOtherToThis;
+					break;
+				case SharedSatusEnum.SHARED_NON_THIS_TO_OTHER : 
+					icon = sharedNonThisToOther;
+					break;
+				case SharedSatusEnum.SHARED_NON_OTHER_TO_THIS : 
+					icon = sharedNonOtherToThis;
 					break;
 				default :
 					break;				
