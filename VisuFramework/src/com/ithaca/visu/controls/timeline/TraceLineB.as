@@ -1,6 +1,7 @@
 package com.ithaca.visu.controls.timeline
 {
 	import com.ithaca.visu.events.TraceLineEvent;
+	import com.ithaca.visu.ui.utils.IconEnum;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -115,6 +116,8 @@ package com.ithaca.visu.controls.timeline
 		[SkinPart("false")] 
 		public var labelTrace5:Label;
 		private var listObselTraceLine5Change:Boolean;
+		[SkinPart("false")] 
+		public var sharedIconMarker:Image;
 		
 		private var open:Boolean;
 		private var durationChanged:Boolean;
@@ -134,6 +137,9 @@ package com.ithaca.visu.controls.timeline
 		private var _startTimeSession:Number;
 		private var _durationSession:Number;
 		private var _userId:int;
+		
+		private var _sharedIconMarkerCode:String;
+		private var sharedIconMarkerCodeChange:Boolean;
 		
 		public function TraceLineB()
 		{
@@ -172,6 +178,13 @@ package com.ithaca.visu.controls.timeline
 				this._listTitleObsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, listTitleObsels_ChangeHandler);
 			}
 		}
+		public function set sharedIconMarkerCode(value:String):void
+		{
+			this._sharedIconMarkerCode = value;
+			sharedIconMarkerCodeChange = true;
+			invalidateProperties();
+		}
+		public function get sharedIconMarkerCode():String{return this._sharedIconMarkerCode};
 		
 		protected function listTitleObsels_ChangeHandler(event:CollectionEvent):void
 		{
@@ -706,6 +719,16 @@ package com.ithaca.visu.controls.timeline
 				}
 			}
 			
+			if(sharedIconMarkerCodeChange)
+			{
+				sharedIconMarkerCodeChange = false;
+				if(sharedIconMarker != null)
+				{
+					// set source the shared icon  
+					sharedIconMarker.source = IconEnum.getIconByCodeShared(this._sharedIconMarkerCode);
+				}				
+			}
+			
 			if(elementsOpen)
 			{
 				elementsOpen = false;
@@ -758,7 +781,7 @@ package com.ithaca.visu.controls.timeline
 					var obsel= listObsel.getItemAt(nObsel);
 					trace4.addElement(obsel);	
 				}	
-				// traceLine5
+				// traceLine5 : marker
 				var element:Object = this._listElementTraceline.getItemAt(4) as Object;
 				timeLayoutTrace5.durationSession = this._durationSession;
 				timeLayoutTrace5.startTime = this._startTimeSession;
@@ -770,6 +793,8 @@ package com.ithaca.visu.controls.timeline
 					var obsel= listObsel.getItemAt(nObsel);
 					trace5.addElement(obsel);	
 				}	
+				// set source the shared icon  
+				sharedIconMarker.source = IconEnum.getIconByCodeShared(this._sharedIconMarkerCode);
 			}
 			
 			if(listObselTraceLine1Change)

@@ -16,8 +16,6 @@
 
     <fx:Script fb:purpose="styling">
         <![CDATA[         
-			import com.ithaca.visu.skins.LinkButtonSkin;
-			
 			import mx.events.FlexEvent;
 			
 			[Bindable]
@@ -282,18 +280,14 @@
 		
 		<s:Label text="marker" left="45"  maxWidth="55" id="labelTrace5" top="10"/>
 		<s:Group id="traceLineIconTrace5" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
-			<!--<s:BorderContainer  left="0" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}" backgroundColor="#D8EFC2" visible="true">-->
 			<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace5" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
-			<!--<mx:Button width="15" height="15" left="16"  bottom="0" id="buttonAddTypeObsel2Trace1" visible="false" chromeColor="#000000" icon="@Embed(source='images/iconMinus.png')" />-->
 			<mx:Image source="{markerIcon}"  left="10" />
-			<!--</s:BorderContainer>-->
+			<mx:Image id="sharedIconMarker" left="55"  height="26" width="26"/>
 		</s:Group>
 		<s:Group  id="trace5" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}">
 			<s:layout>
 				<timeline:TimeLayout id="timeLayoutTrace5"/>
 			</s:layout>
-			<!--<s:BorderContainer left="0" right="0" height="{contentGroupTraceLine.height}" borderColor="#cacaca"  borderWeight="1" borderVisible="true">
-			</s:BorderContainer>-->
 		</s:Group>
 	</s:Group>
 	
