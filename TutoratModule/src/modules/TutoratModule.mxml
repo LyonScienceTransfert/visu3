@@ -775,7 +775,7 @@
 							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 							sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.STOP_ACTIVITY);
 							// info == "void", we have title activity in obsel start activity
-							sessionSharedEvent.info = "void";
+							sessionSharedEvent.info = fxgt.gettext("a suspendre la séance.");	
 							sessionSharedEvent.listUsers = listUsersId;
 							// use url variable for sending id activity
 							sessionSharedEvent.url = currentActivityId.toString();
