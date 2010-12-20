@@ -9,6 +9,7 @@
 	minWidth="900" minHeight="600"
 	preinitialize="visuapplication1_preinitializeHandler(event)"
 	creationComplete="visuapplication1_creationCompleteHandler(event)" xmlns:vo="com.lyon2.visu.vo.*"
+	updateComplete="visuapplication1_updateCompleteHandler(event)"
 	>
 	<fx:Declarations>
 		<map:MainMap id="mainMap"/>
@@ -49,6 +50,7 @@
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
 			import mx.managers.PopUpManager;
 			import mx.utils.URLUtil;
 			
@@ -67,8 +69,6 @@
 				menu.listLang = listLang;
 				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onCnangeLanguage);
 				menu.addEventListener(ApplicationMenuEvent.DISCONNECT, onDisconnect);	
-				// richText component for getting new value the obsel marker
-				markerEdited.addEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker)
 			}
 			
 			protected function onCnangeLanguage(event:ApplicationMenuEvent):void
@@ -266,6 +266,24 @@
 					sessionSharedEvent.listUsers = listUsersId;
 					dispatchEvent(sessionSharedEvent);			
 				}
+			}
+			
+			/**
+			 *  exclus listener for updating marker when user will change the size of the application
+			 */
+			protected function visuapplication1_resizeHandler(event:ResizeEvent):void
+			{
+				markerEdited.removeEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker);
+				removeEventListener(ResizeEvent.RESIZE , visuapplication1_resizeHandler);
+			}
+			
+			/**
+			 *  add listener for updating marker
+			 */
+			protected function visuapplication1_updateCompleteHandler(event:FlexEvent):void
+			{
+				markerEdited.addEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker);
+				addEventListener(ResizeEvent.RESIZE , visuapplication1_resizeHandler);
 			}
 
 		]]>
