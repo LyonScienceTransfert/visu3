@@ -121,6 +121,7 @@ package com.ithaca.visu.controls.timeline
 		
 		private var open:Boolean;
 		private var durationChanged:Boolean;
+		private var startSessionChanged:Boolean;
 		public var tempList:ArrayCollection;
 		public var _listElementTraceline:IList;
 		private var elementsOpen:Boolean;
@@ -155,7 +156,12 @@ package com.ithaca.visu.controls.timeline
 		public function get sourceImageUserTraceLine():String{return this._sourceImageUserTraceLine};
 		public function set colorUserTraceLine(value:uint):void{this._colorUserTraceLine = value;}
 		public function get colorUserTraceLine():uint{return this._colorUserTraceLine};
-		public function set startTimeSession(value:Number):void{this._startTimeSession = value;}
+		public function set startTimeSession(value:Number):void
+		{
+			this._startTimeSession = value;
+			startSessionChanged = true;
+			invalidateProperties();
+		}
 		public function get startTimeSession():Number{return this._startTimeSession};
 		public function set durationSession(value:Number):void
 		{
@@ -701,6 +707,21 @@ package com.ithaca.visu.controls.timeline
 						var obsel = this._listTitleObsels.getItemAt(nObsel);
 						traceLoggedUser.addElement(obsel);
 					}
+				}
+			}
+					
+			if(startSessionChanged)
+			{
+				startSessionChanged = false;
+				
+				timeLayoutTitle.startTime = this._startTimeSession;
+				if(open)
+				{
+					timeLayoutTrace1.startTime = this._startTimeSession;
+					timeLayoutTrace2.startTime = this._startTimeSession;
+					timeLayoutTrace3.startTime = this._startTimeSession;
+					timeLayoutTrace4.startTime = this._startTimeSession;
+					timeLayoutTrace5.startTime = this._startTimeSession;
 				}
 			}
 			
