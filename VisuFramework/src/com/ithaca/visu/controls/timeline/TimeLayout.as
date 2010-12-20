@@ -64,9 +64,16 @@ public class TimeLayout extends LayoutBase
 				var elementObsel:IObselComponenet =layoutElement as IObselComponenet;
 				var timeBegin:Number = elementObsel.getBegin();
 				var timeEnd:Number   = elementObsel.getEnd();
-				
-				minTime = Math.min(timeBegin, minTime);
-				maxTime = Math.max(maxTime, timeEnd);
+				// check only obsel with begin > than startTime
+				if(timeBegin >= _startTime)
+				{
+					minTime = Math.min(timeBegin, minTime);
+					maxTime = Math.max(maxTime, timeEnd);
+					elementObsel.setObselViewVisible(true);
+				}else
+				{
+					elementObsel.setObselViewVisible(false);
+				}
 			}	
 			maxTime= minTime+_durationSession;
 			

@@ -78,7 +78,7 @@
 
 	<s:Group top="3" right="0" height="35" id="sessionTimeLineLoggedUser" click="sessionTimeLineLoggedUser_clickHandler(event)">
 		<s:layout>
-			<timeline:TimeSessionLayout id="sessionTimeLineLayout"/>
+			<timeline:TimeLayout id="sessionTimeLineLayout"/>
 		</s:layout>
 	</s:Group>
 </s:SkinnableContainer>
