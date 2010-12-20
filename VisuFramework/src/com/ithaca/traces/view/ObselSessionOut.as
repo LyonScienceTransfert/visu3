@@ -106,6 +106,10 @@ package com.ithaca.traces.view
 		{
 			return this._owner;
 		}
+		public function setObselViewVisible(value:Boolean):void
+		{
+			this.visible = value;
+		}
 		public function cloneMe():ObselSessionOut
 		{
 			var result:ObselSessionOut = new ObselSessionOut();

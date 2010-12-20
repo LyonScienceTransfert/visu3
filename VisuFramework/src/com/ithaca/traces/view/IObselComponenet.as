@@ -68,5 +68,6 @@
 	 	function getBegin():Number;
 		function setEnd(value:Number):void;
 		function getEnd():Number;	
+		function setObselViewVisible(value:Boolean):void;
 	}
 }

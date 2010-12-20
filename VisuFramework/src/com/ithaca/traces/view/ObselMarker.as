@@ -120,6 +120,10 @@ package com.ithaca.traces.view
 		{
 			return this._end;
 		}
+		public function setObselViewVisible(value:Boolean):void
+		{
+			this.visible = value;
+		}
 		override protected function commitProperties():void
 		{
 			super.commitProperties();

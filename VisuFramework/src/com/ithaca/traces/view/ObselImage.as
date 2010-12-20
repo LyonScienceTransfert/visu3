@@ -93,7 +93,10 @@ package com.ithaca.traces.view
 		{
 			return this._end;
 		}
-		
+		public function setObselViewVisible(value:Boolean):void
+		{
+			this.visible = value;
+		}
 		public function cloneMe():ObselImage
 		{
 			var result:ObselImage = new ObselImage();
