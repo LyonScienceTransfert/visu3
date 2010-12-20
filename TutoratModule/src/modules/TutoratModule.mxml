@@ -328,11 +328,40 @@
 					obselTime.text = labelTextMin+" min.";
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
 				}
+				// creation slider session startTime
+				var startSession:Number = this.currentSession.date_start_recording.getTime();
+				this.startTimeSessionSlider.minimum = startSession;
+				this.startTimeSessionSlider.maximum = startSession + durationSession - 60000;
+				this.startTimeSessionSlider.value = startSession;
+				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
+				this.startTimeSessionSlider.toolTip = "Temps debut de la séance";
+				
 				// creation slider session duration
-				this.durationSessionSlider.minimum = 0;
+				this.durationSessionSlider.minimum = 60000;
 				this.durationSessionSlider.maximum = durationSession*2;
-				this.durationSessionSlider.value  = durationSession;			
-			}	
+				this.durationSessionSlider.value  = durationSession;		
+				this.durationSessionSlider.dataTipFormatFunction = formatDurationSlider;
+				this.durationSessionSlider.toolTip = "Durée de la séance"
+			}
+			
+			/**
+			 * format text slider duration of the session
+			 */
+			private function formatDurationSlider(value:Number):Object { 
+				var duration:int = value/60000;
+				var result:String = duration.toString() + " min.";
+				return result;
+			}
+			
+			/**
+			 * format text slider start session
+			 */
+			private function formatStartTimeSlider(value:Number):Object { 
+				var duration:int = (value - this.currentSession.date_start_recording.getTime())/60000;
+				var result:String = duration.toString() + " min.";
+				return result;
+			}
+			
 			/**
 			 * Update status on recording mode
 			 */
@@ -1000,7 +1029,7 @@
 				var sharedIconMarkerCode:String ="";
 				if(userId == loggedUser.id_user)
 				{
-					sessionTimeLine.sessionTimeLineLayout.startTime = this.currentSession.date_start_recording.getTime();	
+					sessionTimeLine.sessionTimeLineLayout.startTime = 0;	
 					sessionTimeLine.sessionTimeLineLayout.durationSession = this.currentSession.duration_session;				
 					traceLine.nameUserTraceLine = fxgt.gettext("Ma trace");
 					this.traceLineGroup.addElementAt(traceLine, 0);
@@ -1293,6 +1322,22 @@
 				}				
 			}
 
+
+			protected function startTimeSessionSlider_valueCommitHandler(event:FlexEvent):void
+			{
+				var hSlider:HSlider = event.currentTarget as HSlider;
+				var startTime:Number = hSlider.value;
+				// TODO gestion time the session`
+				var startTimeSessionTimeLayout:Number = startTime - this.currentSession.date_start_recording.time;
+				this.sessionTimeLine.sessionTimeLineLayout.startTime = startTimeSessionTimeLayout;
+				var nbrTraceLine:int = this.traceLineGroup.numElements;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
+				{
+					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
+					traceLine.startTimeSession = startTime;
+				}
+			}
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1415,21 +1460,12 @@
 						</s:Scroller>
 					</s:Group>
 					<s:HGroup>
+						<s:HSlider id="startTimeSessionSlider" 
+								   liveDragging="true" width="300"  valueCommit="startTimeSessionSlider_valueCommitHandler(event)" visible="true"/>
 						<s:HSlider id="durationSessionSlider" 
 								   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)"/>
 					</s:HGroup>
 				</s:Group>
-				
-				<!--<s:Group top="1" width="100%"  height="100%">
-					<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelTimeLine">    
-						<s:Group id="panelTimeLine"   width="100%"  height="100%">
-							<s:layout>
-								<local:TimeWheelLayout durationSession="60000"/>
-							</s:layout>							
-						</s:Group>
-					</s:Scroller> 
-				</s:Group>-->
-
 			</s:Panel>
 		</mx:VDividedBox>	
 	</mx:HDividedBox>	
