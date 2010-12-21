@@ -1,7 +1,7 @@
 package com.ithaca.visu.controls.users
 {
 	import com.ithaca.visu.controls.users.event.UserFilterEvent;
-	import com.lyon2.visu.vo.ProfileDescriptionVO;
+	import com.ithaca.visu.model.vo.ProfileDescriptionVO;
 	
 	import flash.events.Event;
 	

@@ -6,7 +6,7 @@ package business
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.Model;
-	import com.lyon2.visu.vo.ObselVO;
+	import com.ithaca.visu.model.vo.ObselVO;
 	
 	import flash.events.IEventDispatcher;
 	

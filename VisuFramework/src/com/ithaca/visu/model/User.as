@@ -59,12 +59,13 @@
  * knowledge of the CeCILL-C license and that you accept its terms.
  * 
  * -- End of licenses
- */package   com.ithaca.visu.model
+ */
+package   com.ithaca.visu.model
 {
 	
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.RightStatus;
-	import com.lyon2.visu.vo.UserVO;
+	import com.ithaca.visu.model.vo.UserVO;
 
 	public class User extends UserVO
 	{

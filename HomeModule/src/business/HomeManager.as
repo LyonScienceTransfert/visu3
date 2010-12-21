@@ -4,7 +4,7 @@ package business
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.model.Model;
-import com.lyon2.visu.vo.SessionVO;
+import com.ithaca.visu.model.vo.SessionVO;
 
 import flash.events.IEventDispatcher;
 

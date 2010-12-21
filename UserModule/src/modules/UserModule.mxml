@@ -9,7 +9,7 @@
 		   configure="configureHandler(event)"
 		   creationComplete="creationCompleteHandler(event)"
 		   top="0" bottom="0" left="0" right="0" 
-		   xmlns:vo="com.lyon2.visu.vo.*" 
+		   xmlns:vo="com.ithaca.visu.model.vo.*" 
 		   xmlns:user="com.ithaca.visu.view.user.*" 
 		   >
 	<fx:Declarations>
@@ -25,7 +25,7 @@
 			import com.ithaca.visu.view.user.skins.UserManagementSkin;
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.User;
-			import com.lyon2.visu.vo.UserVO;
+			import com.ithaca.visu.model.vo.UserVO;
 			
 			import mx.events.FlexEvent;			
 

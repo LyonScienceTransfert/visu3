@@ -6,8 +6,8 @@ import com.ithaca.visu.modules.ModuleInfo;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.ServerInfo;
 import com.ithaca.visu.model.User;
-import com.lyon2.visu.vo.ProfileDescriptionVO;
-import com.lyon2.visu.vo.UserVO;
+import com.ithaca.visu.model.vo.ProfileDescriptionVO;
+import com.ithaca.visu.model.vo.UserVO;
 
 import flash.events.IEventDispatcher;
 

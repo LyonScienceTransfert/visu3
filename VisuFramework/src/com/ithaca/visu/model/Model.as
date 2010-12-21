@@ -71,8 +71,8 @@ package  com.ithaca.visu.model
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
-	import com.lyon2.visu.vo.SessionVO;
-	import com.lyon2.visu.vo.UserVO;
+	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.model.vo.UserVO;
 	
 	import flash.net.NetConnection;
 	

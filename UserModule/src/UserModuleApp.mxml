@@ -8,7 +8,7 @@
 			   xmlns:mate="http://mate.asfusion.com" 
 			   xmlns:bootstrap="com.ithaca.visu.bootstrap.*" 
 			   xmlns:modules="ws.tink.spark.modules.*" 
-			   xmlns:vo="com.lyon2.visu.vo.*"			   
+			   xmlns:vo="com.ithaca.visu.model.vo.*"			   
 			   >
 	
 	<fx:Script>

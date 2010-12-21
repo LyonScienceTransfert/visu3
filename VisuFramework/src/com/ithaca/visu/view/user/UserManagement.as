@@ -7,7 +7,7 @@ package com.ithaca.visu.view.user
 	import com.lyon2.utils.LemmeFormatter;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
-	import com.lyon2.visu.vo.UserVO;
+	import com.ithaca.visu.model.vo.UserVO;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;

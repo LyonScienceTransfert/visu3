@@ -63,7 +63,7 @@
 package  com.ithaca.visu.model
 {
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
-	import com.lyon2.visu.vo.SessionVO;
+	import com.ithaca.visu.model.vo.SessionVO;
 	
 	import mx.collections.ArrayCollection;
 

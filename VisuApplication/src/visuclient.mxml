@@ -8,8 +8,8 @@
 	xmlns:mate="http://mate.asfusion.com/"
 	minWidth="900" minHeight="600"
 	preinitialize="visuapplication1_preinitializeHandler(event)"
-	creationComplete="visuapplication1_creationCompleteHandler(event)" xmlns:vo="com.lyon2.visu.vo.*"
-	updateComplete="visuapplication1_updateCompleteHandler(event)"
+	creationComplete="visuapplication1_creationCompleteHandler(event)"
+	updateComplete="visuapplication1_updateCompleteHandler(event)" xmlns:vo="com.ithaca.visu.model.vo.*"
 	>
 	<fx:Declarations>
 		<map:MainMap id="mainMap"/>

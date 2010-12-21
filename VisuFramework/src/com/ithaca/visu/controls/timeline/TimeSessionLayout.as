@@ -66,19 +66,8 @@ public class TimeSessionLayout extends LayoutBase
 				
 				minTime = Math.min(timeBegin, minTime);
 				maxTime = Math.max(maxTime, timeEnd);
-				
-				//widthLastObsel = timeEnd - timeBegin;
 			}	
 			maxTime= minTime+_durationSession;
-			
-			/*if(widthLastObsel == 0)
-			{ 
-				widthLastObsel = MIN_WIDTH; 
-			}else
-			{
-				var part:Number = widthLastObsel/(maxTime - minTime);
-				widthLastObsel = part*target.width;
-			}*/
 		}
 		return new Point(minTime, maxTime);
 	}

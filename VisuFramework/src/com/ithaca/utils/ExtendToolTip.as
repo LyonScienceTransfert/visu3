@@ -21,7 +21,6 @@ package com.ithaca.utils
 		private var tipText:String;
 		private var _sizeImage:int;
 		
-		[Bindable]
 		public function set ImageTip(img:*):void{
 			if(img is Class){
 				imageHolder.source = new img().bitmapData;

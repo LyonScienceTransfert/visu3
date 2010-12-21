@@ -60,25 +60,16 @@
  * 
  * -- End of licenses
  */
-package com.lyon2.visu.vo 
+package com.ithaca.visu.model.vo
 {
-    /**
-     * Serializable object binding to the corresponding object on the
-     * server side (java).
-     */
-    [RemoteClass(alias="com.ithaca.domain.model.Obsel")]
-    [Bindable]
-    public class ObselVO
-    {
-        public var id: int;
-        public var trace: String;
-        public var type: String;
-        public var begin: Date;
-        public var rdf: String;
-
-        public function toString():String
-        {
-            return this.rdf;
-        }
-    }
+	[RemoteClass(alias="com.lyon2.visu.domain.model.Activity")]
+	[Bindable] 	
+	public class ActivityVO
+	{
+		public var id_activity:int;
+		public var id_session:int;
+		public var title:String;
+		public var duration:int;
+		public var ind:int;
+	}
 }

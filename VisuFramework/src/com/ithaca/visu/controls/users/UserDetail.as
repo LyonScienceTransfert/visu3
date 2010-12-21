@@ -3,8 +3,8 @@ package com.ithaca.visu.controls.users
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.ui.utils.RightStatus;
 	import com.ithaca.visu.model.User;
-	import com.lyon2.visu.vo.ProfileDescriptionVO;
-	import com.lyon2.visu.vo.UserVO;
+	import com.ithaca.visu.model.vo.ProfileDescriptionVO;
+	import com.ithaca.visu.model.vo.UserVO;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;

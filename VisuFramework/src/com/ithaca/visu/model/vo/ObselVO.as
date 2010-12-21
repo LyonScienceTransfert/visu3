@@ -60,55 +60,25 @@
  * 
  * -- End of licenses
  */
-package com.ithaca.visu.model
+package com.ithaca.visu.model.vo 
 {
-	import com.ithaca.visu.model.vo.ActivityVO;
-	
-	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
-	
-	public class Activity 
-	{
-		private var _listActivityElement:ArrayCollection = new ArrayCollection();
-		
-		public var id_activity:int;
-		public var id_session:int;
-		public var duration:int;
-		public var title:String;
-		public var ind:int;
+    /**
+     * Serializable object binding to the corresponding object on the
+     * server side (java).
+     */
+    [RemoteClass(alias="com.ithaca.domain.model.Obsel")]
+    [Bindable]
+    public class ObselVO
+    {
+        public var id: int;
+        public var trace: String;
+        public var type: String;
+        public var begin: Date;
+        public var rdf: String;
 
-		public function Activity(activity:Object)
-		{
-			
-			this.id_activity = activity.id_activity;
-			this.id_session = activity.id_session;
-			this.duration = activity.duration;
-			this.title = activity.title;
-			this.ind = activity.ind;
-		}
-		
-		public function get activityElements():ArrayCollection
-		{
-			return _listActivityElement;
-		}
-		
-		
-		public function getListActivityElement():ArrayCollection
-		{
-			return _listActivityElement;
-		}
-		
-		public function setListActivityElement(arrActivityElement:Array):void
-		{
-			var nbrActivityElement:uint = arrActivityElement.length;
-			for(var nActivityElement:uint = 0; nActivityElement < nbrActivityElement;nActivityElement++ )
-			{
-				var value:Object = arrActivityElement[nActivityElement];
-				var activityElement:ActivityElement = new ActivityElement(value);
-				this._listActivityElement.addItem(activityElement);
-			}
-		}
-		
-
-	}
+        public function toString():String
+        {
+            return this.rdf;
+        }
+    }
 }

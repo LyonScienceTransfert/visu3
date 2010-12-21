@@ -2,7 +2,7 @@ package com.ithaca.visu.events
 {
 
 import com.ithaca.visu.model.Session;
-import com.lyon2.visu.vo.ObselVO;
+import com.ithaca.visu.model.vo.ObselVO;
 
 import flash.events.Event;
 

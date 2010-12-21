@@ -62,7 +62,7 @@
  */
 package com.ithaca.visu.model
 {
-	import com.lyon2.visu.vo.ProfileDescriptionVO;
+	import com.ithaca.visu.model.vo.ProfileDescriptionVO;
 
 	public class Profile extends ProfileDescriptionVO
 	{

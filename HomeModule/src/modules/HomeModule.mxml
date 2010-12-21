@@ -36,7 +36,7 @@
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
-			import com.lyon2.visu.vo.SessionUserVO;
+			import com.ithaca.visu.model.vo.SessionUserVO;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;

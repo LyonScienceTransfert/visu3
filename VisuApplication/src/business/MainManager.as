@@ -16,10 +16,10 @@ import com.ithaca.visu.ui.utils.SessionStatusEnum;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.User;
-import com.lyon2.visu.vo.ObselVO;
-import com.lyon2.visu.vo.SessionUserVO;
-import com.lyon2.visu.vo.SessionVO;
-import com.lyon2.visu.vo.UserVO;
+import com.ithaca.visu.model.vo.ObselVO;
+import com.ithaca.visu.model.vo.SessionUserVO;
+import com.ithaca.visu.model.vo.SessionVO;
+import com.ithaca.visu.model.vo.UserVO;
 
 import flash.events.Event;
 import flash.events.IEventDispatcher;
