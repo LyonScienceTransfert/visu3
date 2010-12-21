@@ -1,7 +1,7 @@
 package  com.ithaca.visu.events
 {
 	import com.lyon2.visu.model.Session;
-	import com.lyon2.visu.model.User;
+	import com.ithaca.visu.model.User;
 	
 	import flash.events.Event;
 	

@@ -2,7 +2,7 @@ package com.ithaca.visu.controls.users
 {
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.ui.utils.RightStatus;
-	import com.lyon2.visu.model.User;
+	import com.ithaca.visu.model.User;
 	import com.lyon2.visu.vo.ProfileDescriptionVO;
 	import com.lyon2.visu.vo.UserVO;
 	

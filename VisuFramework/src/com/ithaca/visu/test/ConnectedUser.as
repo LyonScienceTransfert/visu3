@@ -1,7 +1,7 @@
 package com.ithaca.visu.test
 {
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
-	import com.lyon2.visu.model.User;
+	import com.ithaca.visu.model.User;
 	
 	import flash.events.KeyboardEvent;
 	

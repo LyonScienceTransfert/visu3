@@ -4,6 +4,7 @@ package  com.lyon2.visu.model
 	import com.lyon2.visu.vo.SessionVO;
 	
 	import mx.collections.ArrayCollection;
+	import com.ithaca.visu.model.User;
 
 	public class Session
 	{

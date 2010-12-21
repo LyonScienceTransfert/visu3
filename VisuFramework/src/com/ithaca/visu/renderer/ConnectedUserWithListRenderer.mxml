@@ -9,7 +9,7 @@
 			import com.ithaca.visu.dataStrutures.UserSwapList;
 			import com.ithaca.visu.events.SessionHomeElementEvent;
 			import com.ithaca.visu.ui.utils.RoleEnum;
-			import com.lyon2.visu.model.User;
+			import com.ithaca.visu.model.User;
 			
 			import mx.collections.IList;
 			import mx.controls.Alert;

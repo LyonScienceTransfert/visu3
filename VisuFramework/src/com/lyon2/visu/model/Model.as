@@ -18,6 +18,7 @@ package  com.lyon2.visu.model
 	import mx.collections.ArrayList;
 	
 	import spark.components.Button;
+	import com.ithaca.visu.model.User;
 
 
 	public final class Model

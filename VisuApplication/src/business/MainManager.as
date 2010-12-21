@@ -15,7 +15,7 @@ import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
 import com.lyon2.visu.model.Model;
 import com.lyon2.visu.model.Session;
-import com.lyon2.visu.model.User;
+import com.ithaca.visu.model.User;
 import com.lyon2.visu.vo.ObselVO;
 import com.lyon2.visu.vo.SessionUserVO;
 import com.lyon2.visu.vo.SessionVO;

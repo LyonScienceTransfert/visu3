@@ -1,6 +1,6 @@
 package com.ithaca.visu.dataStrutures
 {
-	import com.lyon2.visu.model.User;
+	import com.ithaca.visu.model.User;
 	
 	import mx.collections.IList;
 	

@@ -17,7 +17,7 @@ package com.ithaca.visu.core
 	import com.lyon2.visu.model.Model;
 	
 	import com.lyon2.visu.model.Session;
-	import com.lyon2.visu.model.User;
+	import com.ithaca.visu.model.User;
 	import com.lyon2.visu.vo.UserVO;
 	
 	import flash.events.Event;

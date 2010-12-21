@@ -8,7 +8,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.RoleEnum;
-			import com.lyon2.visu.model.User;
+			import com.ithaca.visu.model.User;
 			
 			import mx.events.FlexEvent;
 
