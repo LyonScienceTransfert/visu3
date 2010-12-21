@@ -194,9 +194,6 @@
 					}
 					// removing module from the stage
 					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
-					
-					// create sessionTimeLine
-					this.createSessionTimeLine();
 				}
 			}
 			
@@ -308,9 +305,9 @@
 				}	
 			}
 
-			private function createSessionTimeLine():void
+			private function createSessionTimeLine(currentSession:Session):void
 			{
-				var durationSession:int = this.currentSession.duration_session;
+				var durationSession:int = currentSession.duration_session;
 				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
 				this.sessionTimeLine.sessionTimeLineLayout.startTime = 0;
 				// TODO calcul number of labels
@@ -329,13 +326,12 @@
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
 				}
 				// creation slider session startTime
-				var startSession:Number = this.currentSession.date_start_recording.getTime();
+				var startSession:Number = currentSession.date_start_recording.getTime();
 				this.startTimeSessionSlider.minimum = startSession;
 				this.startTimeSessionSlider.maximum = startSession + durationSession - 60000;
 				this.startTimeSessionSlider.value = startSession;
 				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
-				this.startTimeSessionSlider.toolTip = "Temps debut de la séance";
-				
+				this.startTimeSessionSlider.toolTip = "Temps debut de la séance";			
 				// creation slider session duration
 				this.durationSessionSlider.minimum = 60000;
 				this.durationSessionSlider.maximum = durationSession*2;
@@ -394,6 +390,15 @@
 					timer.addEventListener(TimerEvent.TIMER, updateTime);
 				}
 				timer.start();
+				var currentsession:Session = Model.getInstance().getCurrentSession();
+				if(currentsession == null)
+				{
+					Alert.show("Bug report", "You have problem with curent session");
+				}else
+				{
+					// create SessionTimeLine
+					this.createSessionTimeLine(currentsession);
+				}
 			}
 			
 			private function updateTime(event:TimerEvent):void
