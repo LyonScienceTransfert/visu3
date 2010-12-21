@@ -67,12 +67,12 @@ package  com.ithaca.visu.model
 	import com.ithaca.traces.view.ObselImage;
 	import com.ithaca.traces.view.ObselMarker;
 	import com.ithaca.traces.view.ObselSessionOut;
+	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
-	import com.ithaca.visu.model.vo.SessionVO;
-	import com.ithaca.visu.model.vo.UserVO;
 	
 	import flash.net.NetConnection;
 	
@@ -960,6 +960,10 @@ package  com.ithaca.visu.model
 				var dateSession:String = obj.labelDate;				
 				if (dateSession == labelDate){
 						var listSessionDateTemp:ArrayCollection = obj.listSessionDate;
+						if(listSessionDateTemp == null)
+						{
+							listSessionDateTemp = new ArrayCollection();	
+						}
 						listSessionDateTemp.addItem(session);
 						return labelDate;
 				}					
