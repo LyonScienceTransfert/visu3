@@ -4,7 +4,7 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx">
 	<fx:Script>
 		<![CDATA[
-			import com.lyon2.visu.model.ActivityElement;
+			import com.ithaca.visu.model.ActivityElement;
 			public var activityElement:ActivityElement;
 		]]>
 	</fx:Script>

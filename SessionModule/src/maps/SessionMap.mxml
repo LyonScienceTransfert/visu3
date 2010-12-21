@@ -34,7 +34,7 @@
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
 		import com.ithaca.visu.events.InitMapEvent;
 		import com.ithaca.visu.events.SessionEvent;
-		import com.lyon2.visu.model.Model;
+		import com.ithaca.visu.model.Model;
 		
 		import mx.events.FlexEvent;
 		

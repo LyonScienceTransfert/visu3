@@ -18,7 +18,7 @@
 		import com.ithaca.visu.events.SessionUserEvent;
 		import com.ithaca.visu.events.SessionSharedEvent;
 		import com.ithaca.visu.events.SessionEvent;
-		import com.lyon2.visu.model.Model;
+		import com.ithaca.visu.model.Model;
 		
 		import mx.events.FlexEvent;
 

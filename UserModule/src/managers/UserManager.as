@@ -1,7 +1,7 @@
 package managers
 {
 	import com.ithaca.visu.events.UserEvent;
-	import com.lyon2.visu.model.Model;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
 	import com.lyon2.visu.vo.UserVO;
 	

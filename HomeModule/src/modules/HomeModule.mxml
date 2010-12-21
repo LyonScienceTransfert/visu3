@@ -33,8 +33,8 @@
 			import com.ithaca.visu.renderer.FluxActivityRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RightStatus;
-			import com.lyon2.visu.model.Model;
-			import com.lyon2.visu.model.Session;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
 			import com.lyon2.visu.vo.SessionUserVO;
 			

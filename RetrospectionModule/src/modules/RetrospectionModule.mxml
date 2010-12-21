@@ -25,7 +25,7 @@
 			import com.ithaca.visu.renderer.SessionRetroRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
-			import com.lyon2.visu.model.Model;
+			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.User;
 			
 			import gnu.as3.gettext.FxGettext;

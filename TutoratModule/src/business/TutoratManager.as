@@ -4,8 +4,8 @@ package business
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.visu.events.VisuActivityElementEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
-	import com.lyon2.visu.model.Activity;
-	import com.lyon2.visu.model.Model;
+	import com.ithaca.visu.model.Activity;
+	import com.ithaca.visu.model.Model;
 	import com.lyon2.visu.vo.ObselVO;
 	
 	import flash.events.IEventDispatcher;

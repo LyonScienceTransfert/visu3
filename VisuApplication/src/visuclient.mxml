@@ -35,7 +35,7 @@
 			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.ui.utils.RoleEnum;
-			import com.lyon2.visu.model.Model;
+			import com.ithaca.visu.model.Model;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext.ISO_3166;

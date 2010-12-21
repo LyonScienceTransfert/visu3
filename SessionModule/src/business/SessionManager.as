@@ -2,7 +2,7 @@ package business
 {
 	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
-	import com.lyon2.visu.model.Model;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
 	
 	import flash.events.Event;

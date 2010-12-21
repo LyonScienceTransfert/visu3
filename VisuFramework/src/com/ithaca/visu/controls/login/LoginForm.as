@@ -1,7 +1,7 @@
 package com.ithaca.visu.controls.login
 {
 	import com.ithaca.visu.controls.login.event.LoginFormEvent;
-	import com.lyon2.visu.model.Model;
+	import com.ithaca.visu.model.Model;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;

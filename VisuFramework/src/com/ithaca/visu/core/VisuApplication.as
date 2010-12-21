@@ -14,9 +14,9 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.modules.ModuleNavigator;
 	import com.lyon2.visu.*;
 	
-	import com.lyon2.visu.model.Model;
+	import com.ithaca.visu.model.Model;
 	
-	import com.lyon2.visu.model.Session;
+	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.lyon2.visu.vo.UserVO;
 	

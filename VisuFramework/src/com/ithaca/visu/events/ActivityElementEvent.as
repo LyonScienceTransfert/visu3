@@ -1,6 +1,6 @@
 package com.ithaca.visu.events
 {
-	import com.lyon2.visu.model.ActivityElement;
+	import com.ithaca.visu.model.ActivityElement;
 	
 	import flash.events.Event;
 	

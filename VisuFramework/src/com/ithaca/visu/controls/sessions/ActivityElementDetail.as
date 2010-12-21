@@ -1,6 +1,6 @@
 package com.ithaca.visu.controls.sessions
 {
-	import com.lyon2.visu.model.ActivityElement;
+	import com.ithaca.visu.model.ActivityElement;
 	
 	import spark.components.supportClasses.ButtonBase;
 	import spark.components.supportClasses.SkinnableComponent;

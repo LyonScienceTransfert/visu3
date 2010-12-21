@@ -9,7 +9,7 @@ package com.ithaca.visu.controls
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.lyon2.utils.TimeUtils;
-	import com.lyon2.visu.model.Session;
+	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	
 	import flash.display.DisplayObject;

@@ -4,9 +4,9 @@ package com.ithaca.visu.controls.sessions
 	import com.ithaca.visu.events.ActivityElementEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.lyon2.controls.VisuVisio;
-	import com.lyon2.visu.model.Activity;
-	import com.lyon2.visu.model.ActivityElement;
-	import com.lyon2.visu.model.ActivityElementType;
+	import com.ithaca.visu.model.Activity;
+	import com.ithaca.visu.model.ActivityElement;
+	import com.ithaca.visu.model.ActivityElementType;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
