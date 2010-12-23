@@ -651,6 +651,14 @@ package  com.ithaca.visu.model
 			var ownerObsel:int;
 			switch (typeObsel)
 			{
+				case TraceModel.PLAY_VIDEO:
+				case TraceModel.PAUSE_VIDEO:
+				case TraceModel.END_VIDEO:
+					ownerObsel = obsel.props[TraceModel.SENDER];
+					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
+					textObsel = obsel.props[TraceModel.TEXT];
+					viewObsel.toolTip = textObsel;
+					break;
 				case TraceModel.SET_MARKER :
 					viewObsel = new ObselMarker()
 					viewObsel.setBegin(obsel.begin);
@@ -818,6 +826,9 @@ package  com.ithaca.visu.model
 					case TraceModel.SEND_DOCUMENT:
 					case TraceModel.RECEIVE_DOCUMENT:
 					case TraceModel.READ_DOCUMENT:
+					case TraceModel.PLAY_VIDEO:
+					case TraceModel.PAUSE_VIDEO:
+					case TraceModel.END_VIDEO:
 						traceLineElement = listElementTraceLine.getItemAt(2) as Object;	
 						break;
 					case TraceModel.SEND_CHAT_MESSAGE:
