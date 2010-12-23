@@ -68,6 +68,7 @@ package com.lyon2.controls
 	import com.youtube.player.constants.PlayerStateCode;
 	import com.youtube.player.events.PlaybackQualityEvent;
 	import com.youtube.player.events.PlayerEvent;
+	import com.youtube.player.events.PlayerSharedEvent;
 	import com.youtube.player.events.PlayerStateEvent;
 	import com.youtube.player.events.SimpleVideoEvent;
 	import com.youtube.player.events.VideoErrorEvent;
@@ -96,6 +97,7 @@ package com.lyon2.controls
 		private var durationInitialized:Boolean;
 	
 		private var senderId:int;	
+		private var _idDocument:Number;	
 	
 		protected var video:YoutubeVideo
 		protected var controlBar:VideoControlBar;
@@ -116,10 +118,23 @@ package com.lyon2.controls
 		public function getSenderId():int
 		{
 			return this.senderId;
+		}
+		
+		public function setIdDocument(value:Number):void
+		{
+			this._idDocument = value;
+		}
+		
+		public function getIdDocument():Number
+		{
+			return this._idDocument;
+		}
+		
 		public function isPlaying():Boolean
 		{
 			return this._playing;
 		}
+		
 		/**
 		 * 
 		 * UIComponents Overriden Methods
@@ -133,7 +148,6 @@ package com.lyon2.controls
 				video.addEventListener(PlayerStateEvent.PLAYER_STATE_CHANGE, onPlayerStateChange);
 				video.addEventListener(VideoErrorEvent.VIDEO_ERROR, onVideoError);
 				video.addEventListener(PlaybackQualityEvent.PLAYBACK_QUALITY_CHANGE, onPlaybackQualityChange);
-				
 			}
 			addChild( video );
 			if( controlBar==null)
@@ -231,8 +245,7 @@ package com.lyon2.controls
 		{
 			controlBar.enabled = true;
 		}
-		
-		
+					
 		/**
 		 * 
 		 * Youtube apiplayer event handlers
