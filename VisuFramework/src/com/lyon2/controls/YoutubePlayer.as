@@ -89,6 +89,7 @@ package com.lyon2.controls
 		public static const playerURL:String = "http://www.youtube.com/apiplayer?version=3";
 		
 		private var _ready:Boolean;
+		private var _playing:Boolean = false;
 		private var _url:String;
 		private var urlChanged:Boolean;
 		private var videoID:String;
@@ -115,6 +116,9 @@ package com.lyon2.controls
 		public function getSenderId():int
 		{
 			return this.senderId;
+		public function isPlaying():Boolean
+		{
+			return this._playing;
 		}
 		/**
 		 * 

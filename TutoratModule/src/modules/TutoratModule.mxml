@@ -208,6 +208,22 @@
 				}
 				Model.getInstance().setCurrentTutoratModule(null);
 				this._listTempViewObselSessionOut = new ArrayCollection();
+				// remove all images from panelMediaSession
+				if(this.panelMediaSession != null)
+				{ 	
+					var player:YoutubePlayer;
+					for each(player in this.listObjectMedia)
+					{
+						var isPlaying:Boolean = player.isPlaying();
+						if(isPlaying)
+						{
+						// FIXME : maybe send shared info thet user walk out from session when player is on play
+							
+						}
+						player.pauseVideo();
+					}
+					this.panelMediaSession.removeAllElements();
+				}
 			}
 			
 			/**
