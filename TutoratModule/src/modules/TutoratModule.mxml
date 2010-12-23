@@ -35,20 +35,22 @@
 			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.interfaces.IDocument;
+			import com.ithaca.visu.model.Activity;
+			import com.ithaca.visu.model.ActivityElement;
+			import com.ithaca.visu.model.ActivityElementType;
+			import com.ithaca.visu.model.DocumentActionType;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.vo.ObselVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.ui.utils.SharedSatusEnum;
 			import com.lyon2.controls.ImageDocument;
 			import com.lyon2.controls.YoutubePlayer;
-			import com.ithaca.visu.model.Activity;
-			import com.ithaca.visu.model.ActivityElement;
-			import com.ithaca.visu.model.ActivityElementType;
-			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.model.Session;
-			import com.ithaca.visu.model.vo.ObselVO;
 			import com.youtube.player.events.PlayerEvent;
+			import com.youtube.player.events.PlayerSharedEvent;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
@@ -548,6 +550,7 @@
 								var player:YoutubePlayer = new YoutubePlayer();
 								// set id of the sender user 
 								player.setSenderId(event.senderUserId);
+								player.setIdDocument(idDocument);
 								player.url = event.url;
 								player.percentWidth = 100;
 								player.height = 225;
@@ -563,6 +566,7 @@
 								var image:ImageDocument = new ImageDocument();
 								// set id of the sender user
 								image.setSenderId(event.senderUserId);
+								image.setIdDocument(idDocument);
 								image.load(event.url);
 								image.toolTip = event.info;
 								image.percentWidth = 100;	
