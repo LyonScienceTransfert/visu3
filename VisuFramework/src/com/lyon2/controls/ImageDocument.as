@@ -69,6 +69,7 @@ package com.lyon2.controls
 	public class ImageDocument extends Image implements IDocument
 	{
 		private var senderId:int;
+		private var _idDocument:Number;
 		
 		public function ImageDocument()
 		{
@@ -83,6 +84,16 @@ package com.lyon2.controls
 		public function getSenderId():int
 		{
 			return this.senderId;
+		}
+		
+		public function setIdDocument(value:Number):void
+		{
+			this._idDocument = value;
+		}
+		
+		public function getIdDocument():Number
+		{
+			return this._idDocument;
 		}
 	}
 }

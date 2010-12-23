@@ -66,5 +66,7 @@ package com.ithaca.visu.interfaces
 	{
 		function setSenderId(value:int):void;
 		function getSenderId():int;
+		function setIdDocument(value:Number):void;
+		function getIdDocument():Number;
 	}
 }
