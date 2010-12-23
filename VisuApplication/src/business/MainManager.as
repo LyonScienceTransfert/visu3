@@ -557,6 +557,11 @@ public class MainManager
 					case TraceModel.SYSTEM_UPDATE_MARKER:
 						listObselUM.addItem(obsel);
 						break;
+					case TraceModel.PLAY_VIDEO:
+					case TraceModel.PAUSE_VIDEO:
+					case TraceModel.END_VIDEO:
+						listObsel.addItem(obsel);
+						break;
 				}
 			}
 			// duration session 
