@@ -537,11 +537,14 @@
 					if(senderUser != null)
 					{
 						pathAvatar = senderUser.avatar;
-						name = senderUser.firstname + " "+ senderUser.lastname;
-						
+						name = senderUser.firstname + " "+ senderUser.lastname;						
 					}
+					// get id document
+					var obselVO:ObselVO = event.obselVO;
+					var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+					var idDocument:Number = obsel.props[TraceModel.ID_DOCUMENT];
 					
-					if((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER))
+					if(((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER)) && ((event.typeInfo as int) != DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO)))
 					{
 						switch (event.typeInfo as int) 
 						{
@@ -613,6 +616,30 @@
 				}
 			}
 			
+			private function onSharedActionPlayer(event:PlayerSharedEvent):void
+			{
+				var player:YoutubePlayer = event.target as YoutubePlayer;
+				var action:String = event.action;
+				var currentTime:Number = event.currentTime;
+				var idDocument:Number = player.getIdDocument();
+				this.panelPlanSession.title = action+ " "+ int(currentTime).toString();
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
+				// this information will add to the obsel
+				sessionSharedEvent.info = event.target.toolTip;
+				sessionSharedEvent.listUsers = listUsersIds;
+				sessionSharedEvent.senderUserId = 	player.getSenderId();
+				// set status record for add obsel sharedPlayerAction when session on Paused
+				sessionSharedEvent.status = VisuVisio.STATUS_RECORD;	
+				sessionSharedEvent.url = player.url;
+				sessionSharedEvent.idDocument = idDocument;
+				sessionSharedEvent.currentTimeVideoPlayer = currentTime;
+				sessionSharedEvent.action = action;
+				dispatchEvent(sessionSharedEvent);			
+			}
+
 			public function loadComplete(event:Event):void
 			{
 				var player:YoutubePlayer = event.target as YoutubePlayer;
@@ -620,6 +647,7 @@
 					trace('loadComplete');
 					resizeMe(event.target);
 					this.listObjectMedia.addItem(player);
+					player.addEventListener(PlayerSharedEvent.SHARED, onSharedActionPlayer);
 				} 
 				// send message to serveur(all users of current session exclus me/loggedUser) that user can see recived Document
  				var url:String= "";
@@ -633,9 +661,10 @@
 					typeInfo = ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO);
 				}
 				var senderUserId:int = (event.target as IDocument).getSenderId();
+				var idDocument:Number = (event.target as IDocument).getIdDocument();
 				// get list users id without logged user
 				// logged user can't partage info with himself 
-				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSessionWithoutLoggedUser(this.currentSession.id_session);
+				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(this.currentSession.id_session, RoleEnum.STUDENT, true);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = typeInfo;
 				// this information will add to the obsel
@@ -644,9 +673,9 @@
 				sessionSharedEvent.senderUserId = senderUserId;
 				sessionSharedEvent.status = this.visio.status;	
 				sessionSharedEvent.url = url;
+				sessionSharedEvent.idDocument = idDocument;
 				dispatchEvent(sessionSharedEvent);			
-				
-				
+								
 				addEventListener(FlexEvent.UPDATE_COMPLETE, scrollToBottom);
 			}
 			
@@ -983,7 +1012,6 @@
 				}
 			} 
 
-
 			protected function buttonCloseSession_clickHandler(event:MouseEvent):void
 			{
 				if(this.visio != null)
@@ -1246,6 +1274,8 @@
 							// add documents on the panel the student
 							if(obsel.type == TraceModel.RECEIVE_DOCUMENT)
 							{
+								// get id document
+								var idDocument:Number = obsel.props[TraceModel.ID_DOCUMENT];
 								switch (obsel.props[TraceModel.TYPE_DOCUMENT])
 								{
 									case ActivityElementType.VIDEO :
@@ -1256,6 +1286,7 @@
 										player.percentWidth = 100;
 										player.height = 225;
 										player.toolTip = obsel.props[TraceModel.TEXT];
+										player.setIdDocument(idDocument);
 										player.addEventListener(PlayerEvent.READY, loadComplete);
 										if(this.panelMediaSession != null)
 										{
@@ -1270,6 +1301,7 @@
 										image.load(obsel.props[TraceModel.URL]);
 										image.toolTip = obsel.props[TraceModel.TEXT];
 										image.percentWidth = 100;	
+										image.setIdDocument(idDocument);
 										image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
 										if(this.panelMediaSession != null)
 										{
