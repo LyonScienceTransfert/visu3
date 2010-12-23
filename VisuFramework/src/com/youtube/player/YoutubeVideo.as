@@ -126,6 +126,10 @@ package com.youtube.player
 			_loader.content.addEventListener(PlayerEvent.QUALITY_CHANGE, _onVideoPlaybackQualityChange);	
 
 		}
+		public function getLoader():Loader
+		{
+			return this._loader;
+		}
 		private function playerIOError():void
 		{
 			throw new IOError("Cannot load youtube as3 api player");
