@@ -62,6 +62,8 @@
  */
 package com.ithaca.traces.model
 {
+	import com.youtube.player.events.PlayerSharedEvent;
+
     /* Generated code, see below */
     public final class TraceModel
     {
@@ -121,6 +123,11 @@ package com.ithaca.traces.model
         public static const ACTIVITY_START: String = "ActivityStart";
         public static const ACTIVITY_STOP: String = "ActivityStop";
         public static const RECORD_FILE_NAME: String = "RecordFilename";
+		// get value like name obsel from PlayerSharedEvent
+        public static const PLAY_VIDEO: String = PlayerSharedEvent.PLAY;
+        public static const PAUSE_VIDEO: String = PlayerSharedEvent.PAUSE;
+        public static const END_VIDEO: String = PlayerSharedEvent.END;
+		
 		
 		
         public static const UID: String = "uid";
@@ -143,6 +150,7 @@ package com.ithaca.traces.model
         public static const SESSION_THEME: String = "sessionTheme";
         public static const SESSION_ID: String = "session";
         public static const TIMESTAMP: String = "timestamp";
+        public static const ID_DOCUMENT: String = "iddocument";
 		
     }
 
