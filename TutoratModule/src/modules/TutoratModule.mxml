@@ -44,6 +44,7 @@
 			import com.ithaca.visu.model.User;
 			import com.ithaca.visu.model.vo.ObselVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.ui.utils.SharedSatusEnum;
@@ -79,31 +80,7 @@
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
-			
-			[Bindable]
-			[Embed("images/marqueurBlanc-bas-20px.png")]
-			private var markerIcon:Class;
-			
-			[Bindable]
-			[Embed("images/messageChat.png")]
-			private var messageChatIcon:Class;
-			
-			[Bindable]
-			[Embed("images/motCleVisu1.png")]
-			private var keywordIcon:Class;
-			
-			[Bindable]
-			[Embed("images/video.jpg")]
-			private var videoIcon:Class;
-
-			[Bindable]
-			[Embed("images/chatMessageVisu1.png")]
-			private var messageChatIconVisu1:Class;
-
-			[Bindable]
-			[Embed("images/consigneVisu1.png")]
-			private var consigneIconVisu1:Class;
-
+					
 			[Bindable]
 			[Embed("images/fichierVisu1.png")]
 			private var fichierIconVisu1:Class;
@@ -549,7 +526,7 @@
 						switch (event.typeInfo as int) 
 						{
 							case ActivityElementType.valueOf(ActivityElementType.VIDEO) :
-								sourceImageInfo = videoIcon;
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);;
 								var player:YoutubePlayer = new YoutubePlayer();
 								// set id of the sender user 
 								player.setSenderId(event.senderUserId);
@@ -580,19 +557,19 @@
 								}
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.MESSAGE) :
-								sourceImageInfo = messageChatIconVisu1; 
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE);
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.KEYWORD) :
-								sourceImageInfo = keywordIcon; 
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_KEYWORD);; 
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.STATEMENT) :
-								sourceImageInfo = consigneIconVisu1; 
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_INSTRUCTIONS);
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE) :
 								sourceImageInfo = fichierIconVisu1;
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO) :
-								sourceImageInfo = videoIcon;
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
 								break;
 							case ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY) :
 								sourceImageInfo = fichierIconVisu1;
@@ -1462,7 +1439,7 @@
 						<s:Group width="100%" bottom="3" height="30" id="groupSetMarker">
 							<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 							</mx:TextArea>
-							<mx:Button icon="@Embed(source='images/marqueurBlanc-bas-20px.png')" click="onSetMyMarker(event)" right="1" height="25" top="2"  width="150">
+							<mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" click="onSetMyMarker(event)" right="1" height="25" top="2"  width="150">
 									<mx:label>{fxgt.gettext("Poser Marqueur")}</mx:label>
 								</mx:Button>
 						</s:Group>	
@@ -1486,7 +1463,7 @@
 						<s:Group width="100%" bottom="3" height="30">
 							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="185">				
 							</mx:TextArea>
-							<mx:Button icon="@Embed(source='images/chatMessageVisu1.png')" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
+							<mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE)}" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
 								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
 							</mx:Button>
 						</s:Group>	
