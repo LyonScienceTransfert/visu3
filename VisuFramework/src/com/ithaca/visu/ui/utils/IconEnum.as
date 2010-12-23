@@ -62,6 +62,8 @@
  */
 package com.ithaca.visu.ui.utils
 {
+	
+
 	public class IconEnum
 	{	
 		import com.ithaca.traces.model.TraceModel;
@@ -110,6 +112,18 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/ShareOtherToThisRedVer1.png")]
 		static private var sharedNonOtherToThis:Class;
 		
+		[Bindable]
+		[Embed("images/Play.jpg")]
+		static private var playPlayer:Class;
+		
+		[Bindable]
+		[Embed("images/Pause.jpg")]
+		static private var pausePlayer:Class;
+		
+		[Bindable]
+		[Embed("images/Stop.jpg")]
+		static private var stopPlayer:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -135,6 +149,15 @@ package com.ithaca.visu.ui.utils
 				case TraceModel.RECEIVE_DOCUMENT: 
 				case TraceModel.READ_DOCUMENT: 
 					icon = videoIcon;
+					break;
+				case TraceModel.PLAY_VIDEO: 
+					icon = playPlayer;
+					break;
+				case TraceModel.PAUSE_VIDEO: 
+					icon = pausePlayer;
+					break;
+				case TraceModel.END_VIDEO: 
+					icon = stopPlayer;
 					break;
 				default :
 					break;				
@@ -164,6 +187,5 @@ package com.ithaca.visu.ui.utils
 			}
 			return icon;
 		}
-		
 	}
 }
