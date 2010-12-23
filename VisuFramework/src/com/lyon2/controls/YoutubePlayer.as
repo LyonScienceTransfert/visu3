@@ -84,6 +84,8 @@ package com.lyon2.controls
 	[Event(name="onReady",type="com.youtube.player.events.PlayerEvent")]
 
 	[Event(name="playerStateChangeEvent",type="com.youtube.player.events.PlayerStateEvent")]
+	// shared events
+	[Event(name="shared",type="com.youtube.player.events.PlayerSharedEvent")]
 	
 	public class YoutubePlayer extends UIComponent  implements IDocument
 	{
@@ -262,7 +264,7 @@ package com.lyon2.controls
 		protected function onPlayerStateChange(event:PlayerStateEvent):void 
 		{
 		    trace("player state change : " , event.stateCode,"-",event.state);
-		    
+			//     
 		    switch(event.stateCode)
 		    {
 		    	case PlayerStateCode.READY:
@@ -271,6 +273,9 @@ package com.lyon2.controls
 		    		dispatchEvent( new PlayerEvent( PlayerEvent.READY) );
 					invalidateSize();
 					invalidateDisplayList();
+					// add listener for the first click on the player, 
+					// FIXME : didn't find more easy way for dispatch event the first action play
+					video.getLoader().content.addEventListener(MouseEvent.CLICK, onLoaderFirstClick);
 		    		break;
 		    	case PlayerStateCode.PLAYING:
 		    		video.addEventListener(SimpleVideoEvent.PLAYHEAD_UPDATE, onPlayHeadUpdate);
@@ -284,6 +289,11 @@ package com.lyon2.controls
 		    	case PlayerStateCode.PAUSED:			    	
 					break;
 				case PlayerStateCode.ENDED:
+					var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
+					playerSharedEvent.currentTime = controlBar.playHeadSlider.value;	
+					playerSharedEvent.action = PlayerSharedEvent.END;
+					dispatchEvent(playerSharedEvent);
+					_playing = false;
 					break;
 				case PlayerStateCode.VIDEO_CUED:
 					invalidateSize();
@@ -319,18 +329,44 @@ package com.lyon2.controls
 		protected function playClickHandler(event:MouseEvent):void
 		{
 			//Play			
-			trace("click handler " , controlBar.playButton.selected  );			
+			trace("click handler " , controlBar.playButton.selected  );	
+			var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
+			playerSharedEvent.currentTime = controlBar.playHeadSlider.value;
 			if( controlBar.playButton.selected )
 			{
 				video.playVideo();
+				playerSharedEvent.action = PlayerSharedEvent.PLAY;
+				// remove listener MouseEvent.CLICK if don't remove yet
+				if(video.getLoader().content.hasEventListener(MouseEvent.CLICK))
+				{
+					video.getLoader().content.removeEventListener(MouseEvent.CLICK, onLoaderFirstClick); 
+				}	
+				_playing = true;
 			}
 			else
 			{
 				video.pauseVideo();
+				playerSharedEvent.action = PlayerSharedEvent.PAUSE;
+				_playing = false;
 			}
-			
-			
+			this.dispatchEvent(playerSharedEvent);
 		}
+		
+		/**
+		 * listener the first click, play video 
+		 */
+		private function onLoaderFirstClick(event:MouseEvent):void
+		{
+			// remove listener 
+			video.getLoader().content.removeEventListener(MouseEvent.CLICK, onLoaderFirstClick); 
+			// dispatch event 
+			var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
+			playerSharedEvent.currentTime = controlBar.playHeadSlider.value;
+			playerSharedEvent.action = PlayerSharedEvent.PLAY;
+			this.dispatchEvent(playerSharedEvent);
+			_playing = true;
+		}
+		
 		protected function soundClickHandler(event:MouseEvent):void
 		{
 			//toggleSound 
@@ -349,10 +385,18 @@ package com.lyon2.controls
 		{
 			trace("Slider thumb Press");
 			video.removeEventListener(SimpleVideoEvent.PLAYHEAD_UPDATE, onPlayHeadUpdate);
+			var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
+			playerSharedEvent.currentTime = event.value;
+			playerSharedEvent.action = PlayerSharedEvent.SLIDER_PRESS;
+			this.dispatchEvent(playerSharedEvent);		
 		}
 		protected function playHeadSliderThumbRelease(event:SliderEvent):void
 		{
 			trace("Slider thumb Release");
+			var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
+			playerSharedEvent.currentTime = event.value;
+			playerSharedEvent.action = PlayerSharedEvent.SLIDER_RELEASE;
+			this.dispatchEvent(playerSharedEvent);
 			video.seekTo(event.value);
 		}
 		protected function playHeadSliderThumbDrag(event:SliderEvent):void
@@ -412,6 +456,16 @@ package com.lyon2.controls
 	 	{
 	 		video.stopVideo();
 	 		controlBar.playHeadSlider.value = 0;
+			_playing = false;
+	 	}
+		
+		/**
+		 *  pause video 
+		 */
+	 	public function pauseVideo():void
+	 	{
+	 		video.pauseVideo();
+			_playing = false;
 	 	}
 	 	
 	 	/**
