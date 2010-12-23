@@ -99,7 +99,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement, Integer codeSharedAction, Integer senderDocumentUserId)
+	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement, Integer codeSharedAction, Integer senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
@@ -180,7 +180,6 @@ public class SharedInfo
 					namePropertyObsel = "text";
 					break;
 				case 7 :
-					//typeObselSend ="SetMarker";
 					// sendObselToSender will be false , don't send obsel to sender
 					sendObselToSender = false;
 					typeObselReceive ="ReadDocument";
@@ -188,7 +187,6 @@ public class SharedInfo
 					typeDocument = "image";
 					break;
 				case 8 :
-					//typeObselSend ="SetMarker";
 					// sendObselToSender will be false , don't send obsel to sender
 					sendObselToSender = false;
 					typeObselReceive ="ReadDocument";
@@ -207,6 +205,13 @@ public class SharedInfo
 					typeObselReceive ="ActivityStop";
 					namePropertyObsel = "text";
 					break;
+				case 100 :
+					sendObselToSender = false;
+					typeObselSend = actionUser;
+					typeObselReceive = actionUser;
+					namePropertyObsel = "text";
+					typeDocument = "video";
+					break;
 				default: 
 					log.warn("== havn't type {} pour {}",typeInfo,info);
 				break;
@@ -221,10 +226,11 @@ public class SharedInfo
 			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
 			   		paramsObselSend.add("timestamp");paramsObselSend.add(timeStamp.toString());
 			   		// add url sending documents
-			   		if(typeInfo == 3 || typeInfo == 4)
+			   		if(typeInfo == 3 || typeInfo == 4 )
 			   		{
 			   			paramsObselSend.add("url");paramsObselSend.add(urlElement);
 			   			paramsObselSend.add("typedocument");paramsObselSend.add(typeDocument);
+			   			paramsObselSend.add("iddocument");paramsObselSend.add(timeStamp.toString());
 			   		}
 					try
 					{
@@ -252,7 +258,7 @@ public class SharedInfo
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
 		   			paramsObselReceive.add("timestamp");paramsObselReceive.add(timeStamp.toString());
 		   			// add url sending/reading documents
-			   		if(typeInfo == 3 || typeInfo == 4 || typeInfo == 7 || typeInfo == 8)
+			   		if(typeInfo == 3 || typeInfo == 4 || typeInfo == 7 || typeInfo == 8 || typeInfo == 100)
 			   		{
 			   			paramsObselReceive.add("url");paramsObselReceive.add(urlElement);
 			   			paramsObselReceive.add("typedocument");paramsObselReceive.add(typeDocument);
@@ -260,7 +266,15 @@ public class SharedInfo
 			   			if (!sendObselToSender)
 			   			{
 			   				paramsObselReceive.add("senderdocument");paramsObselReceive.add(senderDocumentUserId.toString());
+			   				paramsObselReceive.add("iddocument");paramsObselReceive.add(Long.toString(idDocument));
+			   			}else
+			   			{
+			   				paramsObselReceive.add("iddocument");paramsObselReceive.add(timeStamp.toString());
 			   			}
+				   		if(typeInfo  == 100)
+				   		{
+				   			paramsObselReceive.add("currenttime");paramsObselReceive.add(Long.toString(currentTimeVideoPlayer));
+				   		}
 			   		}
 			   		
 			   		if(typeInfo == 9 || typeInfo == 10)
