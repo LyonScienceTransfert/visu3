@@ -24,6 +24,9 @@ public class SessionSharedEvent extends Event
 	public var status : int;	
 	public var obselVO:ObselVO;
 	public var timeStamp:Number;
+	public var idDocument:Number = 0;
+	public var currentTimeVideoPlayer:Number = 0;
+	public var action:String = "";
 	
 	// constructor
 	public function SessionSharedEvent(type : String,
