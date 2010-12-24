@@ -65,11 +65,12 @@
                 
                 super.updateDisplayList(unscaledWidth, unscaledHeight);
             } */
-			var LEFT_LABEL:String = "15";
-			var SIZE_IMAGE_TITLE_TRACELINE:int = 20;
-			var WIDTH_GROUP_ICON:int = 50;
-			var LEFT_TRACE_LINE_OBSEL:int = 210;
-			var VERICAL_CENTER_IMAGE_TITLE_TRACELINE:int = 5;
+			private var LEFT_LABEL:String = "15";
+			private var SIZE_IMAGE_TITLE_TRACELINE:int = 20;
+			private var WIDTH_GROUP_ICON:int = 50;
+			private var LEFT_TRACE_LINE_OBSEL:int = 210;
+			private var DELTA_POSSITION_LINE_VERTICAL_START_SESSION:int = -2;
+			private var VERICAL_CENTER_IMAGE_TITLE_TRACELINE:int = 5;
 			private function onClick():void{
 //				nameUser.text = traceLoggedUser.width.toString();
 			}
@@ -194,6 +195,11 @@
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
 		</s:Line>
+		<s:Line   bottom="0" top="0"  left="{LEFT_TRACE_LINE_OBSEL+DELTA_POSSITION_LINE_VERTICAL_START_SESSION}">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
 		<s:Group  id="traceLoggedUser" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}" click="onClick()">
 				<s:layout>
 					<timeline:TimeLayout id="timeLayoutTitle"/>
@@ -284,6 +290,11 @@
 			<mx:Image source="{markerIcon}"  left="10" />
 			<mx:Image id="sharedIconMarker" left="55"  height="26" width="26"/>
 		</s:Group>
+		<s:Line   bottom="0" top="0"  left="{LEFT_TRACE_LINE_OBSEL+DELTA_POSSITION_LINE_VERTICAL_START_SESSION}">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
 		<s:Group  id="trace5" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}">
 			<s:layout>
 				<timeline:TimeLayout id="timeLayoutTrace5"/>
@@ -355,6 +366,11 @@
 				<mx:Image source="{consigneIconVisu1}"  left="10" />
 			<!--</s:BorderContainer>-->
 		</s:Group>
+		<s:Line   bottom="0" top="0"  left="{LEFT_TRACE_LINE_OBSEL+DELTA_POSSITION_LINE_VERTICAL_START_SESSION}">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
 		<s:Group  id="trace1" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}" click="onClickTrace1()">
 			<s:layout>
 				<timeline:TimeLayout id="timeLayoutTrace1"/>
@@ -425,6 +441,11 @@
 				<mx:Image source="{keywordIcon}"  left="10" />
 			<!--</s:BorderContainer>-->
 		</s:Group>
+		<s:Line   bottom="0" top="0"  left="{LEFT_TRACE_LINE_OBSEL+DELTA_POSSITION_LINE_VERTICAL_START_SESSION}">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
 		<s:Group  id="trace2" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}">
 			<!--<s:BorderContainer left="0" right="0" height="{contentGroupTraceLine.height}" borderColor="#cacaca"  borderWeight="1" borderVisible="true">
 			</s:BorderContainer>-->
@@ -492,6 +513,11 @@
 			<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace3" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
 			<mx:Image source="{fichierIconVisu1}"  left="10" />
 		</s:Group>
+		<s:Line   bottom="0" top="0"  left="{LEFT_TRACE_LINE_OBSEL+DELTA_POSSITION_LINE_VERTICAL_START_SESSION}">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
 		<s:Group  id="trace3" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}">
 			<s:layout>
 				<timeline:TimeLayout id="timeLayoutTrace3"/>
@@ -546,6 +572,11 @@
 			<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace4" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
 			<mx:Image source="{messageChatIconVisu1}"  left="10"/>
 		</s:Group>
+		<s:Line   bottom="0" top="0"  left="{LEFT_TRACE_LINE_OBSEL+DELTA_POSSITION_LINE_VERTICAL_START_SESSION}">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
 		<s:Group  id="trace4" left="{LEFT_TRACE_LINE_OBSEL}" right="2" height="{contentGroupTraceLine.height}">
 			<s:layout>
 				<timeline:TimeLayout id="timeLayoutTrace4"/>
