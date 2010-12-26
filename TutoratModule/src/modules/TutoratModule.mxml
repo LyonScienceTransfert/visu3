@@ -196,10 +196,26 @@
 						var isPlaying:Boolean = player.isPlaying();
 						if(isPlaying)
 						{
-						// FIXME : maybe send shared info thet user walk out from session when player is on play
-							
+							// shared info : student walk out from session  
+							var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+							var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+							sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
+							// this information will add to the obsel
+							sessionSharedEvent.info = event.target.toolTip;
+							sessionSharedEvent.listUsers = listUsersIds;
+							sessionSharedEvent.senderUserId = 	player.getSenderId();
+							sessionSharedEvent.info = player.toolTip;
+							// set status record for add obsel sharedPlayerAction when session on Paused
+							sessionSharedEvent.status = VisuVisio.STATUS_RECORD;	
+							sessionSharedEvent.url = player.url;
+							sessionSharedEvent.idDocument = player.getIdDocument();;
+							sessionSharedEvent.currentTimeVideoPlayer = player.getCurrentTime();
+							sessionSharedEvent.action = TraceModel.STOP_VIDEO;
+							dispatchEvent(sessionSharedEvent);	
+							// set pause video
+							player.pauseVideo();
 						}
-						player.pauseVideo();
 					}
 					this.panelMediaSession.removeAllElements();
 				}
