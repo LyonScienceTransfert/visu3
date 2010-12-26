@@ -9,10 +9,6 @@ import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
-import com.ithaca.visu.ui.utils.ColorEnum;
-import com.ithaca.visu.ui.utils.ConnectionStatus;
-import com.ithaca.visu.ui.utils.RightStatus;
-import com.ithaca.visu.ui.utils.SessionStatusEnum;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.User;
@@ -20,6 +16,10 @@ import com.ithaca.visu.model.vo.ObselVO;
 import com.ithaca.visu.model.vo.SessionUserVO;
 import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
+import com.ithaca.visu.ui.utils.ColorEnum;
+import com.ithaca.visu.ui.utils.ConnectionStatus;
+import com.ithaca.visu.ui.utils.RightStatus;
+import com.ithaca.visu.ui.utils.SessionStatusEnum;
 
 import flash.events.Event;
 import flash.events.IEventDispatcher;
@@ -379,6 +379,11 @@ public class MainManager
 		}
 	}
 	
+	public function onCheckSessionSalonRetro(session:SessionVO):void
+	{
+		
+	}
+	
 	/**
 	 *  Get list obsel StartSession EnterSession for salon retrospection 
 	 */
@@ -393,14 +398,18 @@ public class MainManager
 			var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var sessionTheme:String = obsel.props[TraceModel.SESSION_THEME];
 			var sessionId:String = obsel.props[TraceModel.SESSION_ID];
-			listSession.addItem({label:sessionTheme, traceId:traceId, sessionId:sessionId})
+			listSession.addItem({label:sessionTheme, traceId:traceId, sessionId:sessionId});
+			// get detaile the session for salon retro
+			var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
+			sessionSalonRetroEvent.sessionId = int(sessionId);
+			this.dispatcher.dispatchEvent(sessionSalonRetroEvent);
 		}
 		
 		var eventLoadListSessionSalonRetrospection:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION_SALON_RETROSPECTION);
 		eventLoadListSessionSalonRetrospection.listSession = listSession;
 		this.dispatcher.dispatchEvent(eventLoadListSessionSalonRetrospection);
 	}
-	
+	 
 	
 	/**
 	 * Get list obsel for salon retro
