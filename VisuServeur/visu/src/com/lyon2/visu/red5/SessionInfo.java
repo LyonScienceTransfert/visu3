@@ -269,6 +269,27 @@ public class SessionInfo
 		} 	
 	}
 	
+	public void getSessionByIdSalonRetro(IConnection conn, Integer sessionId)
+	{
+		log.warn("====== getSessionByIdSalonRetro =========");
+		IClient client = conn.getClient();
+		Session session = null;
+		// get session
+		try {
+			session = (Session) app.getSqlMapClient().queryForObject(
+					"sessions.getSession", sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des session" + e);
+		}
+		Object[] args = {session};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkSessionSalonRetro", args);
+		} 	
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void getSessionsByUser(IConnection conn){
 		log.warn("====== getSessionsByUser =========");
