@@ -70,6 +70,7 @@ package com.youtube.player.events
 		static public const PLAY : String = 'PlayDocumentVideo';			
 		static public const PAUSE : String = 'PauseDocumentVideo';			
 		static public const END : String = 'EndDocumentVideo';	
+		// it's miean user walk out from session when use playing the video
 		static public const STOP : String = 'StopDocumentVideo';	
 		static public const SLIDER_PRESS : String = 'SliderPressDocumentVideo';	
 		static public const SLIDER_RELEASE : String = 'SliderReleaseDocumentVideo';	
