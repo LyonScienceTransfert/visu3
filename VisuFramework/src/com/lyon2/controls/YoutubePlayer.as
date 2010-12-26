@@ -136,7 +136,11 @@ package com.lyon2.controls
 		{
 			return this._playing;
 		}
-		
+		 
+		public function getCurrentTime():Number
+		{
+			return controlBar.playHeadSlider.value;
+		}
 		/**
 		 * 
 		 * UIComponents Overriden Methods
