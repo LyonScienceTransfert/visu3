@@ -97,33 +97,45 @@ package com.ithaca.visu.ui.utils
 		static private var fichierIconVisu1:Class;
 
 		[Bindable]
-		[Embed("images/ShareThisToOtherGreenVer1.png")]
+		[Embed("images/SharedThisToOtherVer1.png")]
 		static private var sharedOkThisToOther:Class;
 		
 		[Bindable]
-		[Embed("images/ShareOtherToThisGreenVer1.png")]
+		[Embed("images/SharedOtherToThisVer1.png")]
 		static private var sharedOkOtherToThis:Class;
 
 		[Bindable]
-		[Embed("images/ShareThisToOtherRedVer1.png")]
+		[Embed("images/SharedThisToOtherRedVer1.png")]
 		static private var sharedNonThisToOther:Class;
 		
 		[Bindable]
-		[Embed("images/ShareOtherToThisRedVer1.png")]
+		[Embed("images/SharedOtherToThisRedVer1.png")]
 		static private var sharedNonOtherToThis:Class;
 		
 		[Bindable]
-		[Embed("images/Play.jpg")]
+		[Embed("images/PlayVer4.png")]
 		static private var playPlayer:Class;
 		
 		[Bindable]
-		[Embed("images/Pause.jpg")]
+		[Embed("images/PauseVer4.png")]
 		static private var pausePlayer:Class;
 		
 		[Bindable]
-		[Embed("images/Stop.jpg")]
+		[Embed("images/StopVer4.png")]
 		static private var stopPlayer:Class;
+
+		[Bindable]
+		[Embed("images/PlayWalkOutVer5.png")]
+		static private var playWalkOutPlayer:Class;
 		
+		[Bindable]
+		[Embed("images/PressSliderVer5.png")]
+		static private var pressSlider:Class;
+
+		[Bindable]
+		[Embed("images/ReleaseSliderVer5.png")]
+		static private var releaseSlider:Class;
+
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -158,6 +170,15 @@ package com.ithaca.visu.ui.utils
 					break;
 				case TraceModel.END_VIDEO: 
 					icon = stopPlayer;
+					break;
+				case TraceModel.STOP_VIDEO: 
+					icon = playWalkOutPlayer;
+					break;
+				case TraceModel.PRESS_SLIDER_VIDEO: 
+					icon = pressSlider;
+					break;
+				case TraceModel.RELEASE_SLIDER_VIDEO: 
+					icon = releaseSlider;
 					break;
 				default :
 					break;				
