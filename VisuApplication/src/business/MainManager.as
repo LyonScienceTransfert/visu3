@@ -560,6 +560,9 @@ public class MainManager
 					case TraceModel.PLAY_VIDEO:
 					case TraceModel.PAUSE_VIDEO:
 					case TraceModel.END_VIDEO:
+					case TraceModel.STOP_VIDEO:
+					case TraceModel.PRESS_SLIDER_VIDEO:
+					case TraceModel.RELEASE_SLIDER_VIDEO:
 						listObsel.addItem(obsel);
 						break;
 				}
