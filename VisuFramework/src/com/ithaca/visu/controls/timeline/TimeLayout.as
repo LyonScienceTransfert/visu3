@@ -30,7 +30,7 @@ public class TimeLayout extends LayoutBase
     //
     //--------------------------------------------------------------------------
 
-  	private var MIN_WIDTH:int = 25;
+  	private var MIN_WIDTH:int = 26;
 	
 	private var _durationSession:Number;
 	public function set durationSession(value:Number):void
