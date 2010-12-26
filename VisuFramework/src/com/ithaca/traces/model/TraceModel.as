@@ -127,9 +127,10 @@ package com.ithaca.traces.model
         public static const PLAY_VIDEO: String = PlayerSharedEvent.PLAY;
         public static const PAUSE_VIDEO: String = PlayerSharedEvent.PAUSE;
         public static const END_VIDEO: String = PlayerSharedEvent.END;
-		
-		
-		
+        public static const STOP_VIDEO: String = PlayerSharedEvent.STOP;
+        public static const PRESS_SLIDER_VIDEO: String = PlayerSharedEvent.SLIDER_PRESS;
+        public static const RELEASE_SLIDER_VIDEO: String = PlayerSharedEvent.SLIDER_RELEASE;
+			
         public static const UID: String = "uid";
         public static const SENDER: String = "sender";
         public static const TEXT: String = "text";

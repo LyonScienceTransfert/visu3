@@ -651,6 +651,9 @@ package  com.ithaca.visu.model
 			var ownerObsel:int;
 			switch (typeObsel)
 			{
+				case TraceModel.STOP_VIDEO:
+				case TraceModel.PRESS_SLIDER_VIDEO:
+				case TraceModel.RELEASE_SLIDER_VIDEO:
 				case TraceModel.PLAY_VIDEO:
 				case TraceModel.PAUSE_VIDEO:
 				case TraceModel.END_VIDEO:
@@ -826,6 +829,9 @@ package  com.ithaca.visu.model
 					case TraceModel.SEND_DOCUMENT:
 					case TraceModel.RECEIVE_DOCUMENT:
 					case TraceModel.READ_DOCUMENT:
+					case TraceModel.STOP_VIDEO:
+					case TraceModel.PRESS_SLIDER_VIDEO:
+					case TraceModel.RELEASE_SLIDER_VIDEO:
 					case TraceModel.PLAY_VIDEO:
 					case TraceModel.PAUSE_VIDEO:
 					case TraceModel.END_VIDEO:
