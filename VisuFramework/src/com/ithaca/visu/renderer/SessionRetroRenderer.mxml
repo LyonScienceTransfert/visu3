@@ -3,14 +3,29 @@
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
 				autoDrawBackground="true"
-				added="itemrenderer1_addedHandler(event)">
+				added="itemrenderer1_addedHandler(event)"
+				creationComplete="itemrenderer1_creationCompleteHandler(event)">
 
 	<fx:Script>
 		<![CDATA[
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+			
 			protected function itemrenderer1_addedHandler(event:Event):void
 			{
 				this.percentWidth = 100;
 			}
+
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
 		]]>
 	</fx:Script>
 
@@ -36,9 +51,17 @@
 			</s:LinearGradientStroke>
 		</s:stroke>
 	</s:Rect>
-	<!--<s:Label id="labelSessionDate" text="{data.sessionId}" fontWeight="bold"  left="5" top="12" width="60"/>-->
-	<s:Label id="labelSessionDate" text="Thème de la séance est : "  left="5" top="12" width="160"/>
-	<s:RichText text="{data.label}" left="25" right="35" top="32" fontWeight="bold" />
-<!--	<s:RichText text="{data.label}" left="{labelSessionDate.left + labelSessionDate.width + 5}" right="35" top="32" fontWeight="bold" />-->
-	
+	<s:Group top="10" left="5" bottom="10">
+		<s:layout>
+			<s:VerticalLayout gap="5"/>
+		</s:layout>
+		<s:Label id="labelSessionDate"  width="160">
+			<s:text>{fxgt.gettext("Thème de la séance est : ")}</s:text>
+		</s:Label>	
+		<s:RichText text="{data.label}"  paddingLeft="25" right="35" fontWeight="bold" />
+		<s:Label  width="200">
+			<s:text>{fxgt.gettext("La séance a été enregistrée le : ")}</s:text>
+		</s:Label>	
+		<s:RichText text="{data.dateRecording}" right="35" fontWeight="bold"  paddingLeft="25"/>
+	</s:Group>
 </s:ItemRenderer>

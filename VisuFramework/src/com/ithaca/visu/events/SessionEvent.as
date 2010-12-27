@@ -12,6 +12,7 @@ public class SessionEvent extends Event
 	static public const LOAD_LIST_SESSION : String = 'loadListSession';
 	static public const LOAD_LIST_DATE_SESSION : String = 'loadListDateSession';
 	static public const LOAD_SESSION : String = 'loadSession';
+	static public const LOAD_SESSION_SALON_RETROSPECTION : String = 'loadSessionSalonRetrospection';
 	static public const SHOW_LIST_DATE_SESSION : String = 'showListDateSession';
 	static public const SHOW_LIST_SESSION : String = 'showListSession';
 	static public const ADDED_SESSION : String = 'addedSession';
