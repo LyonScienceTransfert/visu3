@@ -379,9 +379,12 @@ public class MainManager
 		}
 	}
 	
-	public function onCheckSessionSalonRetro(session:SessionVO):void
+	public function onCheckSessionSalonRetro(sessionVO:SessionVO):void
 	{
-		
+		var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_SESSION_SALON_RETROSPECTION);
+		var session:Session = new Session(sessionVO);
+		sessionEvent.session = session;
+		this.dispatcher.dispatchEvent(sessionEvent);
 	}
 	
 	/**
@@ -398,7 +401,7 @@ public class MainManager
 			var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var sessionTheme:String = obsel.props[TraceModel.SESSION_THEME];
 			var sessionId:String = obsel.props[TraceModel.SESSION_ID];
-			listSession.addItem({label:sessionTheme, traceId:traceId, sessionId:sessionId});
+			listSession.addItem({label:sessionTheme, traceId:traceId, sessionId:sessionId, dateRecording:"waiting....."});
 			// get detaile the session for salon retro
 			var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
 			sessionSalonRetroEvent.sessionId = int(sessionId);
@@ -859,7 +862,7 @@ public class MainManager
 			var session:SessionVO = listSessionVO[nSession];
 			var sessionTheme:String = session.theme;
 			var sessionId:int = session.id_session;
-			listSession.addItem({label:sessionTheme, sessionId:sessionId})
+			listSession.addItem({label:sessionTheme, sessionId:sessionId, dateRecording:"waiting....."})
 		}
 		var eventLoadListClosedSessionSalonRetrospection:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION);
 		eventLoadListClosedSessionSalonRetrospection.listSession = listSession;

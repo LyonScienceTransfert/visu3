@@ -22,11 +22,12 @@
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.User;
 			import com.ithaca.visu.renderer.SessionRetroRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
-			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.model.User;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
@@ -65,6 +66,7 @@
 				{
 					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
 				}
+				fxgt = FxGettext;
 				// set current module
 				Model.getInstance().setCurrentRetroModule(this);
 				
@@ -74,7 +76,6 @@
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
-				fxgt = FxGettext;
 				// only for admin, can see all closed session
 				if(Model.getInstance().getLoggedUser().role > RoleEnum.RESPONSABLE)
 				{
@@ -209,6 +210,35 @@
 				}
 			}
 			
+			/**
+			 * set date and time startRecording for the session 
+			 */
+			private function updateSessionDate(event:SessionEvent):void
+			{
+				var session:Session = event.session;
+				setDateRecording(this.listSessionOpen, session);
+				setDateRecording(this.listSessionClose, session);		
+			}
+			
+			private function setDateRecording(list:ArrayCollection , session:Session):void
+			{
+				var value:int = session.id_session;
+				var obj:Object;
+				for each(obj in list)
+				{
+					var sessionId:int = obj.sessionId;
+					if(sessionId == value)
+					{
+						var dateStartRecording:Date = session.date_start_recording;
+						obj.dateRecording = dateStartRecording.getDate().toString()+"-"+
+							(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+
+							fxgt.gettext(" à ")+	 
+							dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
+						return;
+					}			
+				}
+			}
+			
 			private function updateTimeLine(event:SessionEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -219,7 +249,7 @@
 					var dateStartRecording:Date = event.dateStartRecording;
 					this.panelTimeLine.title = this.panelTimeLine.title + ""+ 
 						fxgt.gettext("(la séance a été enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
-						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+" à "+	 
+						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
 						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString()+")";
 					this.setObsels();
 					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
@@ -547,6 +577,7 @@
 		<mate:Listener type="{SessionEvent.LOAD_LIST_SESSION_SALON_RETROSPECTION}"  method="updateListSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION}"  method="updateListClosedSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_RETRO}"  method="updateTimeLine"/>
+		<mate:Listener type="{SessionEvent.LOAD_SESSION_SALON_RETROSPECTION}"  method="updateSessionDate"/>
 	</fx:Declarations>
 <mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
