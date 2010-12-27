@@ -74,6 +74,7 @@
 			private var _currentActivityElement:ActivityElement = null;
 			
 			private var listObjectMedia:ArrayCollection = new ArrayCollection();
+			private var _listObjectMediaPlaying:ArrayCollection = new ArrayCollection();
 			private var _listTempViewObselSessionOut:ArrayCollection = new ArrayCollection();
 			[Bindable]
 			public var listActivities:ArrayCollection;
@@ -542,7 +543,21 @@
 						switch (event.typeInfo as int) 
 						{
 							case ActivityElementType.valueOf(ActivityElementType.VIDEO) :
-								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);;
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
+								// set players on paused than add new player and than start playing(without shared info)
+								if(this.listObjectMedia.length > 0)
+								{
+									var playerOnStage:YoutubePlayer;
+									for each(playerOnStage in this.listObjectMedia)
+									{
+										var isPlaying:Boolean = playerOnStage.isPlaying();
+										if(isPlaying)
+										{
+											playerOnStage.pauseVideo();
+											this._listObjectMediaPlaying.addItem(playerOnStage);
+										}
+									}
+								}
 								var player:YoutubePlayer = new YoutubePlayer();
 								// set id of the sender user 
 								player.setSenderId(event.senderUserId);
@@ -552,6 +567,7 @@
 								player.height = 225;
 								player.toolTip = event.info;
 								player.addEventListener(PlayerEvent.READY, loadComplete);
+								player.addEventListener(FlexEvent.UPDATE_COMPLETE, onPlayerUpdateComplete);
 								if(this.panelMediaSession != null)
 								{
 									this.panelMediaSession.addElementAt(player, 0);
@@ -668,8 +684,6 @@
 				sessionSharedEvent.url = url;
 				sessionSharedEvent.idDocument = idDocument;
 				dispatchEvent(sessionSharedEvent);			
-								
-				addEventListener(FlexEvent.UPDATE_COMPLETE, scrollToBottom);
 			}
 			
 			public function resizeMe(o:Object):void
@@ -683,19 +697,31 @@
 				{
 					ratio = 4/3;
 				}
-				o.height =  o.width / ratio ;
-				
+				o.height =  o.width / ratio ;			
 			}
 			
-			public function scrollToBottom(event:Event):void
+			private function onPlayerUpdateComplete(event:FlexEvent):void
 			{
-				removeEventListener(FlexEvent.UPDATE_COMPLETE, scrollToBottom);
+				var player:YoutubePlayer = event.target as YoutubePlayer;
+				player.removeEventListener(FlexEvent.UPDATE_COMPLETE, onPlayerUpdateComplete);
 				if (scrollerPanelMediaSession != null){
 					scrollerPanelMediaSession.viewport.verticalScrollPosition = 0;
 				}
+				this.setPlyingAllPlayerWasPaused();
 			}
 			
-			
+			private function setPlyingAllPlayerWasPaused():void
+			{
+				if(this._listObjectMediaPlaying.length > 0)
+				{
+					var playerPaused:YoutubePlayer;
+					for each (playerPaused in this._listObjectMediaPlaying)
+					{
+						playerPaused.playVideo();
+					}
+					this._listObjectMediaPlaying.removeAll();
+				}
+			}
 			protected function onUpdateChatSession(event:FlexEvent):void{
 				// update scroll possition
 				scrollerPanelChatSession.viewport.verticalScrollPosition = scrollerPanelChatSession.viewport.contentHeight - scrollerPanelChatSession.height;
