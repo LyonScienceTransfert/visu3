@@ -283,12 +283,12 @@ package com.lyon2.controls
 		    		break;
 		    	case PlayerStateCode.PLAYING:
 		    		video.addEventListener(SimpleVideoEvent.PLAYHEAD_UPDATE, onPlayHeadUpdate);
-		    		if( !durationInitialized )
-		    		{
-		    			durationInitialized = true;
-		    			controlBar.duration = video.duration;
-		    			controlBar.playButton.selected = true;
-		    		}
+					if( !durationInitialized )
+					{
+						durationInitialized = true;
+						controlBar.duration = video.duration;
+						controlBar.playButton.selected = true;
+					}
 		    		break;
 		    	case PlayerStateCode.PAUSED:			    	
 					break;
@@ -297,6 +297,7 @@ package com.lyon2.controls
 					playerSharedEvent.currentTime = controlBar.playHeadSlider.value;	
 					playerSharedEvent.action = PlayerSharedEvent.END;
 					dispatchEvent(playerSharedEvent);
+					controlBar.playButton.selected = false;
 					_playing = false;
 					break;
 				case PlayerStateCode.VIDEO_CUED:
@@ -361,13 +362,16 @@ package com.lyon2.controls
 		 */
 		private function onLoaderFirstClick(event:MouseEvent):void
 		{
-			// remove listener 
-			video.getLoader().content.removeEventListener(MouseEvent.CLICK, onLoaderFirstClick); 
-			// dispatch event 
-			var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
-			playerSharedEvent.currentTime = controlBar.playHeadSlider.value;
-			playerSharedEvent.action = PlayerSharedEvent.PLAY;
-			this.dispatchEvent(playerSharedEvent);
+			if(video.getLoader().content.hasEventListener(MouseEvent.CLICK))
+			{
+				// dispatch event 
+				var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
+				playerSharedEvent.currentTime = controlBar.playHeadSlider.value;
+				playerSharedEvent.action = PlayerSharedEvent.PLAY;
+				this.dispatchEvent(playerSharedEvent);
+				// remove listener 
+				video.getLoader().content.removeEventListener(MouseEvent.CLICK, onLoaderFirstClick); 
+			}
 			_playing = true;
 		}
 		
@@ -402,10 +406,15 @@ package com.lyon2.controls
 			playerSharedEvent.action = PlayerSharedEvent.SLIDER_RELEASE;
 			this.dispatchEvent(playerSharedEvent);
 			video.seekTo(event.value);
+			controlBar.playHeadTime = event.value;
+			this.pauseVideo()
+			// simulation the first click on play button 
+			onLoaderFirstClick(new MouseEvent(MouseEvent.CLICK));
 		}
 		protected function playHeadSliderThumbDrag(event:SliderEvent):void
 		{
 			trace("Slider thumb Drag");
+			controlBar.playHeadTime = event.value;
 			
 		}
 		protected function playHeadSliderChange(event:SliderEvent):void
@@ -469,7 +478,18 @@ package com.lyon2.controls
 	 	public function pauseVideo():void
 	 	{
 	 		video.pauseVideo();
+			controlBar.playButton.selected = false;
 			_playing = false;
+	 	}
+		
+		/**
+		 *  play video 
+		 */
+	 	public function playVideo():void
+	 	{
+	 		video.playVideo();
+			controlBar.playButton.selected = true;
+			_playing = true;
 	 	}
 	 	
 	 	/**
