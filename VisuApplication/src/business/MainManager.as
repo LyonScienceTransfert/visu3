@@ -863,7 +863,13 @@ public class MainManager
 			var sessionTheme:String = session.theme;
 			var sessionId:int = session.id_session;
 			listSession.addItem({label:sessionTheme, sessionId:sessionId, dateRecording:"waiting....."})
+			// get detaile the closed session for salon retro
+			// FIXME : can be easy the getting the detail of the session 
+			var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
+			sessionSalonRetroEvent.sessionId = int(sessionId);
+			this.dispatcher.dispatchEvent(sessionSalonRetroEvent);
 		}
+		
 		var eventLoadListClosedSessionSalonRetrospection:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION);
 		eventLoadListClosedSessionSalonRetrospection.listSession = listSession;
 		this.dispatcher.dispatchEvent(eventLoadListClosedSessionSalonRetrospection);		
