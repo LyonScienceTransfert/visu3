@@ -70,6 +70,7 @@ package  com.ithaca.visu.model
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
+	import com.ithaca.visu.ui.utils.ActionObselEnum;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;

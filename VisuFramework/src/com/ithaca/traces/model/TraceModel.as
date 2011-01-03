@@ -103,6 +103,8 @@ package com.ithaca.traces.model
         public static const RECEIVE_MARKER: String = "ReceiveMarker";
         public static const UPDATE_MARKER: String = "UpdateMarker";
         public static const SYSTEM_UPDATE_MARKER: String = "SystemUpdateMarker";
+        public static const DELETE_MARKER: String = "DeleteMarker";
+        public static const SYSTEM_DELETE_MARKER: String = "SystemDeleteMarker";
         public static const RECEIVE_KEYWORD: String = "ReceiveKeyword";
         public static const SEND_CHAT_MESSAGE: String = "SendChatMessage";
         public static const SEND_KEYWORD: String = "SendKeyword";
@@ -152,6 +154,7 @@ package com.ithaca.traces.model
         public static const SESSION_ID: String = "session";
         public static const TIMESTAMP: String = "timestamp";
         public static const ID_DOCUMENT: String = "iddocument";
+        public static const CURRENT_TIME_PLAYER: String = "currenttime";
 		
     }
 
