@@ -423,7 +423,10 @@ public class MainManager
 		var listObsel:ArrayCollection = null;
 		var listObselRFN:ArrayCollection = new ArrayCollection();
 		var listObselSI:ArrayCollection = new ArrayCollection();
+		// list obsel update marker
 		var listObselUM:ArrayCollection = new ArrayCollection();
+		// list obsel delete marker
+		var listObselDM:ArrayCollection = new ArrayCollection();
 		var durationSession :Number = 0;
 		var tempSharedSession:Boolean = false;
 		if(!(listObselVO == null || listObselVO.length == 0))
@@ -569,6 +572,12 @@ public class MainManager
 					case TraceModel.SYSTEM_UPDATE_MARKER:
 						listObselUM.addItem(obsel);
 						break;
+					case TraceModel.DELETE_MARKER:
+						listObselDM.addItem(obsel);
+						break;
+					case TraceModel.SYSTEM_DELETE_MARKER:
+						listObselDM.addItem(obsel);
+						break;
 					case TraceModel.PLAY_VIDEO:
 					case TraceModel.PAUSE_VIDEO:
 					case TraceModel.END_VIDEO:
@@ -590,7 +599,11 @@ public class MainManager
 			// update text obsel marker with the same timestamp
 			updateObselMarker(listObsel, obselUm);	
 		}
-		
+		// remove obsel if user delete it
+		for each (var obselDM:Obsel in listObselDM)
+		{	
+			deleteObselMarker(listObsel, obselDM);		
+		}
 		// add if logged user hasn't timeline
 		var loggedUser:User = Model.getInstance().getLoggedUser();
 		Model.getInstance().addTraceLine(loggedUser.id_user, loggedUser.firstname, loggedUser.avatar, ColorEnum.getColorByCode("0"));
@@ -718,6 +731,34 @@ public class MainManager
 				}
 			}
 		}
+		
+		function deleteObselMarker(listObsel:ArrayCollection, obsel:Obsel):void
+		{
+			var listIndexDeletingObsel:Array = new Array()
+			var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obselTemp:Obsel = listObsel.getItemAt(nObsel) as Obsel;
+				var obselTempType:String = obselTemp.type;
+				if(obselTempType == TraceModel.SET_MARKER || obselTempType == TraceModel.RECEIVE_MARKER)
+				{
+					var timeStampMarker:Number = obselTemp.props[TraceModel.TIMESTAMP];
+					if(timeStamp == timeStampMarker)
+					{
+						listIndexDeletingObsel.push(nObsel);
+					}
+				}
+			}
+			if(listIndexDeletingObsel.length > 0)
+			{
+				listIndexDeletingObsel.reverse();
+				for each(var index:int in listIndexDeletingObsel)
+				{
+					listObsel.removeItemAt(index);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -728,6 +769,9 @@ public class MainManager
 		var lastObselSessionIn:Obsel = null;
 		var listObselSO:ArrayCollection = new ArrayCollection();
 		var listNewObselSO:ArrayCollection = new ArrayCollection();
+		var obsel:Obsel= null;
+		var obselSessionOut:Obsel = null;
+		var nbrObsels:int = listObsel.length;
 		// set all users SessionOut
 		var listPresentsUsers:ArrayCollection  = Model.getInstance().getListTraceLines();
 		var nbrTraceLine:int = listPresentsUsers.length;
@@ -742,9 +786,6 @@ public class MainManager
 			obselSessionOut.begin = startSession;
 			listObselSO.addItem(obselSessionOut);
 		}
-		var obsel:Obsel= null;
-		var obselSessionOut:Obsel = null;
-		var nbrObsels:int = listObsel.length;
 		for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 		{	
 			obsel = listObsel.getItemAt(nObsel) as Obsel;
@@ -1146,7 +1187,7 @@ public class MainManager
 	{
 		var obsel:Obsel =  Obsel.fromRDF(obselVO.rdf);
 		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
-		Model.getInstance().updateTextObselMarker(senderUserId, timeStampObsel, text);
+		Model.getInstance().updateTextObselMarker(senderUserId, timeStampObsel, text, obsel.type);
 	}
 	public function onError(event : Object) : void
 	{
