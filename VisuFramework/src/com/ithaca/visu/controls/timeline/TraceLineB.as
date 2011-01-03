@@ -234,6 +234,7 @@ package com.ithaca.visu.controls.timeline
 		{
 			if(open)
 			{
+				trace1.removeAllElements();
 				listObselTraceLine1Change = true;
 				invalidateProperties();
 			}
@@ -243,6 +244,7 @@ package com.ithaca.visu.controls.timeline
 		{
 			if(open)
 			{
+				trace2.removeAllElements();
 				listObselTraceLine2Change = true;
 				invalidateProperties();
 			}
@@ -252,6 +254,7 @@ package com.ithaca.visu.controls.timeline
 		{
 			if(open)
 			{
+				trace3.removeAllElements();
 				listObselTraceLine3Change = true;
 				invalidateProperties();
 			}
@@ -261,6 +264,7 @@ package com.ithaca.visu.controls.timeline
 		{
 			if(open)
 			{
+				trace4.removeAllElements();
 				listObselTraceLine4Change = true;
 				invalidateProperties();
 			}
@@ -270,6 +274,7 @@ package com.ithaca.visu.controls.timeline
 		{
 			if(open)
 			{
+				trace5.removeAllElements();
 				listObselTraceLine5Change = true;
 				invalidateProperties();
 			}
