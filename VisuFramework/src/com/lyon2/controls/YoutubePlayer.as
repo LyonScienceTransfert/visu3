@@ -392,11 +392,11 @@ package com.lyon2.controls
 		protected function playHeadSliderThumbPress(event:SliderEvent):void
 		{
 			trace("Slider thumb Press");
-			video.removeEventListener(SimpleVideoEvent.PLAYHEAD_UPDATE, onPlayHeadUpdate);
+/*			video.removeEventListener(SimpleVideoEvent.PLAYHEAD_UPDATE, onPlayHeadUpdate);
 			var playerSharedEvent:PlayerSharedEvent = new PlayerSharedEvent(PlayerSharedEvent.SHARED);
 			playerSharedEvent.currentTime = event.value;
 			playerSharedEvent.action = PlayerSharedEvent.SLIDER_PRESS;
-			this.dispatchEvent(playerSharedEvent);		
+			this.dispatchEvent(playerSharedEvent);*/		
 		}
 		protected function playHeadSliderThumbRelease(event:SliderEvent):void
 		{
