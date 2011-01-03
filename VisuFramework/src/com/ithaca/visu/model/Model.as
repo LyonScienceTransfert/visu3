@@ -495,12 +495,12 @@ package  com.ithaca.visu.model
 		/**
 		 * update new text and tooltips the obsel marker
 		 */
-		public function updateTextObselMarker(userId:int , timeStampUpdatedObsel:Number , text:String):void
+		public function updateTextObselMarker(userId:int , timeStampUpdatedObsel:Number , text:String, typeObsel:String):void
 		{
 			var traceLine:Object = this.getTraceLineByUserId(userId);
 			var listTitleObsels:ArrayCollection = traceLine.listTitleObsels;
 			var obselView:ObselMarker = updateTextObsel(listTitleObsels, timeStampUpdatedObsel);
-			if(obselView != null)
+			if(obselView != null && typeObsel == TraceModel.UPDATE_MARKER)
 			{
 				var newObselView:ObselMarker = obselView.cloneMe();
 				newObselView.text = text;
@@ -512,7 +512,7 @@ package  com.ithaca.visu.model
 			var traceLineElement:Object = traceLineElementList.getItemAt(4);
 			var listMarkerObsel:ArrayCollection = traceLineElement.listObsel;
 			var obselViewElement:ObselMarker = updateTextObsel(listMarkerObsel, timeStampUpdatedObsel);
-			if(obselViewElement != null)
+			if(obselViewElement != null && typeObsel == TraceModel.UPDATE_MARKER)
 			{
 				var newObselView:ObselMarker = obselViewElement.cloneMe();
 				newObselView.text = text;
