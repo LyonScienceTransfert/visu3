@@ -77,5 +77,17 @@ package com.ithaca.utils
 			}
 			return true;
 		}
+		
+		public static function getLabelDate(date:Date):String
+		{
+			var day:int = date.getDate();
+			var dayString:String = day.toString();
+			if(day < 10){ dayString = "0"+dayString;};
+			var mount:int = date.getMonth() +1;
+			var mountString:String = mount.toString();
+			if(mount < 10){	mountString = "0"+mountString;};
+			var result:String = dayString+"."+mountString+"."+date.getUTCFullYear().toString();
+			return result;
+		}
 	}
 }
