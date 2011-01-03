@@ -505,6 +505,7 @@
 				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 				if(this == currentModule)
 				{
+					var idDocument:Number=0;
 					// obselVO will be null only if session paused or not started
 					var obselVO:ObselVO = event.obselVO as ObselVO;
 					if( obselVO != null)
@@ -513,6 +514,8 @@
 						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 						//this.addObsel(obsel);
 						Model.getInstance().addObsel(obsel);
+						// get id document
+						idDocument = obsel.props[TraceModel.ID_DOCUMENT];
 					}
 					// update the buttons on planSession, view tutorat
 					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
@@ -533,10 +536,6 @@
 						pathAvatar = senderUser.avatar;
 						name = senderUser.firstname + " "+ senderUser.lastname;						
 					}
-					// get id document
-					var obselVO:ObselVO = event.obselVO;
-					var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-					var idDocument:Number = obsel.props[TraceModel.ID_DOCUMENT];
 					
 					if(((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER)) && ((event.typeInfo as int) != DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO)))
 					{
