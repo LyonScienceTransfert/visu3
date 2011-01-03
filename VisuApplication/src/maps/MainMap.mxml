@@ -169,7 +169,7 @@
 		<mate:EventHandlers type="{SessionSharedEvent.SEND_EDITED_MARKER}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendEditedMarker"
-							  arguments="{[ event.info, event.listUsers, event.timeStamp]}"/>              
+							  arguments="{[ event.info, event.listUsers, event.timeStamp, event.action]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		

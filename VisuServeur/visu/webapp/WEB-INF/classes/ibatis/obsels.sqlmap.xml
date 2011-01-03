@@ -106,7 +106,7 @@
     <select id="getObselSystemUpdateMarker" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
         SELECT *
 		FROM obsels
-		WHERE type_obsel = 'SystemUpdateMarker' and trace like #traceParam# and rdf like #refParam# 
+		WHERE type_obsel = 'SystemUpdateMarker' OR type_obsel = 'SystemDeleteMarker' and trace like #traceParam# and rdf like #refParam# 
 	</select>
 	
     <select id="getSessionExitSessionPauseObselsForUserId" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">

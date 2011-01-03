@@ -320,9 +320,18 @@ public class SharedInfo
 	}
 
 	@SuppressWarnings("unchecked")
-	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp )
+	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp, String action)
 	{
 		log.warn("======== sendEditedMarker ");
+		String typeObselUser="UpdateMarker";
+		String typeObselSystem="SystemUpdateMarker";
+		Integer resultCompareString = action.compareTo("editTextObsel");
+		log.warn("======== resultCompareString = {} ",resultCompareString.toString());
+		if(resultCompareString != 0)
+		{
+			typeObselUser = "DeleteMarker";
+			typeObselSystem = "SystemDeleteMarker";
+		}
 		// sender the info
 		IClient sender = conn.getClient();
 		IScope scope = conn.getScope();
@@ -354,7 +363,7 @@ public class SharedInfo
 		{
 			try
 			{
-				obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), "UpdateMarker", paramsObsel);					
+				obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselUser, paramsObsel);					
 			}
 				catch (SQLException sqle)
 			{
@@ -394,7 +403,7 @@ public class SharedInfo
 				paramsObsel.add("session");paramsObsel.add(sessionId.toString());
 				try
 				{
-					obsel = app.setObsel(0, traceSystem, "SystemUpdateMarker", paramsObsel);					
+					obsel = app.setObsel(0, traceSystem, typeObselSystem, paramsObsel);					
 				}
 					catch (SQLException sqle)
 				{
