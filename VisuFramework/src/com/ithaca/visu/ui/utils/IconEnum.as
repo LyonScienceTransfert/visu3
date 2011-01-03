@@ -195,13 +195,15 @@ package com.ithaca.visu.ui.utils
 					icon = sharedOkThisToOther;
 					break;
 				case SharedSatusEnum.SHARED_OK_OTHER_TO_THIS : 
-					icon = sharedOkOtherToThis;
+					icon = sharedOkThisToOther;
+				//	icon = sharedOkOtherToThis;
 					break;
 				case SharedSatusEnum.SHARED_NON_THIS_TO_OTHER : 
 					icon = sharedNonThisToOther;
 					break;
 				case SharedSatusEnum.SHARED_NON_OTHER_TO_THIS : 
-					icon = sharedNonOtherToThis;
+					icon = sharedNonThisToOther;
+				//	icon = sharedNonOtherToThis;
 					break;
 				default :
 					break;				
