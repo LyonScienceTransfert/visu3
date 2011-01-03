@@ -660,7 +660,8 @@ package  com.ithaca.visu.model
 					ownerObsel = obsel.props[TraceModel.SENDER];
 					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
 					textObsel = obsel.props[TraceModel.TEXT];
-					viewObsel.toolTip = textObsel;
+					var currentTimePlayer:String = obsel.props[TraceModel.CURRENT_TIME_PLAYER];
+					viewObsel.toolTip = textObsel+"("+currentTimePlayer+"s.)";
 					break;
 				case TraceModel.SET_MARKER :
 					viewObsel = new ObselMarker()
