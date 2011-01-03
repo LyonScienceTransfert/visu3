@@ -72,6 +72,7 @@ package  com.ithaca.visu.events
 	{
 		// constants
 		static public const EDIT_OBSEL : String = 'editObsel';
+		static public const DELETE_OBSEL : String = 'deleteObsel';
 		static public const SHOW_WINDOW_EDIT_OBSEL : String = 'showWindowEditObsel';
 		
 		// properties

@@ -34,8 +34,9 @@
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
-			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.ui.utils.ActionObselEnum;
+			import com.ithaca.visu.ui.utils.RoleEnum;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext.ISO_3166;
@@ -232,6 +233,8 @@
 				editObselMarker.tempRichText = markerEdited;
 				// set focus
 				stage.focus = editObselMarker;
+				// set listener delete obsel
+				editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObsel);
 			}
 			/**
 			 * add marker "UpdateMarker" on the serveur
@@ -264,8 +267,33 @@
 					sessionSharedEvent.info = message;
 					sessionSharedEvent.timeStamp = this.currentObselEdit.props[TraceModel.TIMESTAMP];
 					sessionSharedEvent.listUsers = listUsersId;
+					sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
 					dispatchEvent(sessionSharedEvent);			
 				}
+			}
+			
+			/**
+			 * shared info "delete obsel"
+			 */
+			protected function onDeleteObsel(event:ObselEvent):void
+			{
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersId:Array;
+				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+				{
+					// student will shared markers only with Tuter, Responsable, Admin 
+					// will shared if session paused or recording
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+				}else
+				{
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+				}
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
+				sessionSharedEvent.info = "";
+				sessionSharedEvent.timeStamp = this.currentObselEdit.props[TraceModel.TIMESTAMP];
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.action = ActionObselEnum.DELETE_OBSEL;
+				dispatchEvent(sessionSharedEvent);				
 			}
 			
 			/**

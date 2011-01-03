@@ -13,8 +13,10 @@ You cannot run it independently. -->
 	
 	<fx:Script>
 		<![CDATA[       
-			import gnu.as3.gettext._FxGettext;
+			import com.ithaca.visu.events.ObselEvent;
+			
 			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
@@ -47,6 +49,11 @@ You cannot run it independently. -->
 				tempRichText.text=textMarker.text; 
 				PopUpManager.removePopUp(this);						
 			}
+			private function onDeleteMarker(event:MouseEvent):void
+			{
+				this.dispatchEvent(new ObselEvent(ObselEvent.DELETE_OBSEL));
+				PopUpManager.removePopUp(this);						
+			}
 
 		]]>
 	</fx:Script>
@@ -63,7 +70,7 @@ You cannot run it independently. -->
 	</s:HGroup>
 	
 	<s:HGroup>
-		<s:Button>
+		<s:Button click="onDeleteMarker(event)">
 			<s:label>{fxgt.gettext("Delete")}</s:label>
 		</s:Button>
 		<s:Button click="returnResult(event);">
