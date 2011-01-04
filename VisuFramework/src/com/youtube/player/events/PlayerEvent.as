@@ -81,5 +81,6 @@ package com.youtube.player.events
 	    public static const READY 			: String = "onReady";
 		public static const STATE_CHANGE 	: String = "onStateChange";
 		public static const QUALITY_CHANGE 	: String = "onPlaybackQualityChange";
+		public static const ERROR_PROPERTY_ADRESSE	: String = "onErrorPropertyAdresse";
 	}
 }

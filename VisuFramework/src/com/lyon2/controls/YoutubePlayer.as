@@ -77,6 +77,8 @@ package com.lyon2.controls
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import flashx.textLayout.container.ScrollPolicy;
+	
 	import mx.core.UIComponent;
 	import mx.events.SliderEvent;
 	import mx.utils.URLUtil;
@@ -109,7 +111,7 @@ package com.lyon2.controls
 		
 		public function YoutubePlayer()
 		{
- 
+
  		}
 		
 		public function setSenderId(value:int):void
@@ -160,6 +162,7 @@ package com.lyon2.controls
 			{
 				controlBar = new VideoControlBar();
 				controlBar.enabled = false;
+				controlBar.horizontalScrollPolicy =  ScrollPolicy.OFF;
 			}
 			addChild( controlBar );
 		}
@@ -449,12 +452,19 @@ package com.lyon2.controls
 	 	public function set url(value:String):void
 	 	{
 	 		if( _url != value)
-	 		{
-	 			_url = value;
-	 			urlChanged = true;
+	 		{		
 	 			videoID = getVideoId( value);
-	 			invalidateProperties();
-	 			dispatchEvent( new Event("urlChanged"));
+				if(videoID == null)
+				{
+					var errorPropertyAdresseEvent:PlayerEvent = new PlayerEvent(PlayerEvent.ERROR_PROPERTY_ADRESSE);
+		 			dispatchEvent(errorPropertyAdresseEvent);					
+				}else
+				{
+					_url = value;
+					urlChanged = true;
+		 			invalidateProperties();
+		 			dispatchEvent( new Event("urlChanged"));
+				}
 	 		}
 	 	}
 	 	
