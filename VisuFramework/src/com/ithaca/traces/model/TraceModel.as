@@ -155,6 +155,8 @@ package com.ithaca.traces.model
         public static const TIMESTAMP: String = "timestamp";
         public static const ID_DOCUMENT: String = "iddocument";
         public static const CURRENT_TIME_PLAYER: String = "currenttime";
+        public static const IMAGE: String = "image";
+        public static const VIDEO: String = "video";
 		
     }
 
