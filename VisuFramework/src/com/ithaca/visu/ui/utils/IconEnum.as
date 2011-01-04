@@ -135,7 +135,24 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/ReleaseSliderVer5.png")]
 		static private var releaseSlider:Class;
+		// icon Statement composant
 
+		[Bindable]
+		[Embed("images/ArrowUp.png")]
+		static private var arrowUp:Class;
+
+		[Bindable]
+		[Embed("images/ArrowDown.png")]
+		static private var arrowDown:Class;
+
+		[Bindable]
+		[Embed("images/Poubelle.png")]
+		static private var poubelle:Class;
+
+		[Bindable]
+		[Embed("images/Editer.png")]
+		static private var edit:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -204,6 +221,29 @@ package com.ithaca.visu.ui.utils
 				case SharedSatusEnum.SHARED_NON_OTHER_TO_THIS : 
 					icon = sharedNonThisToOther;
 				//	icon = sharedNonOtherToThis;
+					break;
+				default :
+					break;				
+			}
+			return icon;
+		}
+		
+		public static function getIconByName(code:String):Class
+		{
+			var icon:Class;
+			switch (code)
+			{
+				case "up" : 
+					icon = arrowUp;
+					break;
+				case "down" : 
+					icon = arrowDown;
+					break;
+				case "delete" : 
+					icon = poubelle;
+					break;
+				case "edit" : 
+					icon = edit;
 					break;
 				default :
 					break;				
