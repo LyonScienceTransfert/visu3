@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		creationComplete="skin1_creationCompleteHandler(event)">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.controls.DocumentEdit")]
+	</fx:Metadata>
+	<fx:Declarations>
+	</fx:Declarations>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="closed"/>
+		<s:State name="error" />
+		<s:State name="open" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			import com.lyon2.controls.YoutubePlayer;
+			import com.youtube.player.events.PlayerEvent;
+			
+			import flashx.textLayout.container.ScrollPolicy;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.CursorManager;
+			
+			
+			private var widthAppendix:int = 40;
+			private var currentMouseCursor:String;
+			private var player:YoutubePlayer;
+			private var image:Image;
+			
+			public var currentUrl:String;
+			public var currentText:String;
+			public var typeDocument:String = "image";
+			
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.currentState="normal";
+				// set current mouse cursor
+				currentMouseCursor = Mouse.cursor;
+				// set listeners mouse over
+				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				// set listeners mouse out
+				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				// set tool tips
+				this.buttonDelete.toolTip = "effacer";
+				this.buttonEdit.toolTip = "editer";
+				// add player 
+				this.currentUrl = "http://livedocs.adobe.com/flex/3/html/images/adobe.png?v=PSWhxORaJvY&feature=related";
+				if(this.typeDocument == TraceModel.IMAGE)
+				{
+					this.addImage(this.currentUrl);	
+				}else
+				{
+					this.addPlayer(this.currentUrl);	
+				}
+			}
+			
+			private function addPlayer(path:String):void
+			{
+				this.panelContent.removeAllElements();
+				player = new YoutubePlayer();
+				player.addEventListener(PlayerEvent.ERROR_PROPERTY_ADRESSE, onErrorAdresse);
+				player.url = path;
+				player.percentWidth = 100;
+				player.addEventListener(PlayerEvent.READY, onLoadPlayerComplete);
+				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+				this.panelContent.addElement(player);
+			}
+			
+			private function addImage(path:String):void
+			{
+				this.panelContent.removeAllElements();
+				image = new Image();
+				image.addEventListener(HTTPStatusEvent.HTTP_STATUS, onImageHttpStatus);
+				image.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onErrorAdresse);
+				image.addEventListener(IOErrorEvent.IO_ERROR, onErrorAdresse);
+				image.source = path;
+				image.percentWidth = 100;
+				image.percentHeight = 100;
+				image.maxHeight= 160;
+				this.panelContent.addElement(image);
+			}
+			
+			private function onImageHttpStatus(event:HTTPStatusEvent):void {
+				switch (event.status) {
+					case 200:
+						// Valid image, do nothing.
+						break;
+					case 404:
+						// Invalid image, PANIC!
+						this.onErrorAdresse();
+						break;
+					default:
+						this.onErrorAdresse();
+						break;
+				}
+			}
+
+			private function onLoadPlayerComplete(event:PlayerEvent):void
+			{
+			}
+			private function onRemoveFromStage(event:Event):void
+			{
+				this.player.pauseVideo();
+			}
+			private function onErrorAdresse(event:*= null):void
+			{
+				this.currentState = "error";
+			}
+			
+			// set cursor mouse BUTTON 
+			protected function onMouseOverButton(event:MouseEvent):void
+			{
+				var image:Image = event.target as Image;
+				Mouse.cursor = MouseCursor.BUTTON;		
+			}
+			
+			// set cursor mouse AROOW  
+			protected function onMouseOutButton(event:MouseEvent):void
+			{
+				Mouse.cursor = this.currentMouseCursor;
+			}
+			
+			// click on label edit
+			protected function onClickButtonEdit(event:MouseEvent):void
+			{
+				this.currentState = "open";
+				if(this.player != null){
+					this.player.pauseVideo()
+					this.editableLien.text = this.player.url;
+					this.currentUrl = this.player.url;
+				}else{
+					this.editableLien.text = this.image.source as String;
+					this.currentUrl = this.image.source as String;
+				}
+				this.editableContent.text = this.panelContent.title;
+				stage.focus = this.editableContent;
+				// save current attributes		
+				this.currentText = this.panelContent.title;
+			}
+			
+			// on click butoon cancel
+			protected function onClickButtonCancel(event:MouseEvent):void
+			{
+				this.currentState = "normal";
+				// set curent atttributes
+				this.panelContent.title = this.currentText;
+				if(this.player != null)
+				{
+					this.addPlayer(this.currentUrl);
+				}else{
+					this.addImage(this.currentUrl);
+				}
+			}
+			
+			// on click butoon cancel
+			protected function onClickButtonValider(event:MouseEvent):void
+			{
+				// check contenue url adress
+				if(this.editableLien.text.length == 0)
+				{
+					this.currentState = "error";
+					return;
+				}
+				this.currentState = "normal";
+				this.panelContent.title = this.editableContent.text;
+				this.addImage(this.editableLien.text);
+			}
+			// on click on button ok of the panel error
+			protected function onClickButtonOkPanelError(eent:MouseEvent):void
+			{
+				this.currentState="open";
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%">
+			<s:Rect id="fill" radiusX="5"
+					left="2" right="2" top="1" bottom="1" minHeight="25">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="border" radiusX="5"
+					left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<!-- APPENDIX LEFT SIDE -->
+			<s:Rect id="fillOpen" radiusX="5" topRightRadiusX="0"  bottomRightRadiusX="0"
+					left="{-widthAppendix}"  width="{widthAppendix+2}" top="12"  height="16" includeIn="normal">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="borderOpen" radiusX="5" topRightRadiusX="0"  bottomRightRadiusX="0"
+					left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16"  includeIn="normal">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<!-- ALFA VERTICAL LINE APPENDIX -->
+			<s:Line  includeIn="normal"  left="2" top="12" height="16" >
+				<s:stroke>
+					<!--<s:SolidColorStroke color="0xFFFFFF" weight="1" joints="miter"/>-->
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0xFFFFFF"/>
+						<s:GradientEntry color="0xD8D8D8"/>
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Line>
+			
+			<!-- BUTTONS -->
+			<s:HGroup top="13"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
+				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"/>
+				<s:Line height="11" >
+					<s:stroke>
+						<s:SolidColorStroke color="#6370D7"/>
+					</s:stroke>
+				</s:Line>
+				<!--<s:Label text=" editer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
+				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="onClickButtonEdit(event)"/>
+				
+			</s:HGroup>
+			<s:Panel includeIn="normal,closed"  id="panelContent"  title="Video the yotube..."
+					 minHeight="100"  minWidth="160"  maxWidth="200" top="10" left="10" right="10" bottom="10">
+			</s:Panel>
+<!-- STATE EDIT -->
+			<s:Label includeIn="open" top="10" left="10">
+				<s:text>Titre du document : </s:text>
+			</s:Label>
+			<s:TextArea id="editableContent"  includeIn="open" maxHeight="24" text="rtr" top="27" left="30" right="10" bottom="56"
+						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+			<s:Label includeIn="open" top="60" left="9" right="6">
+				<s:text>Le lien est :</s:text>
+			</s:Label>
+			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
+<!-- STATE ERROR -->
+			<s:RichText  includeIn="error"  left="10" top="10" right="10">
+				<s:text>Le lien n'est pas correct...</s:text>
+			</s:RichText>
+			<s:Button includeIn="error" top="35" left="35" click="onClickButtonOkPanelError(event)" bottom="10">
+				<s:label>OK</s:label>
+			</s:Button>			
+		</s:Group>
+		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
+			<s:Button includeIn="open" click="onClickButtonValider(event)">
+				<s:label>Valider</s:label>
+			</s:Button>
+			<s:Button click="onClickButtonCancel(event)">
+				<s:label>Cancel</s:label>
+			</s:Button>
+		</s:HGroup>
+
+	</s:Group>
+</s:Skin>

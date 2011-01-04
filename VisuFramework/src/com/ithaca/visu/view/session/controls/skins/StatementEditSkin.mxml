@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		creationComplete="skin1_creationCompleteHandler(event)"
+		>
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.controls.StatementEdit")]
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="closed"/>
+		<s:State name="open" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.ui.utils.IconEnum;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.CursorManager;
+			
+
+			private var widthAppendix:int = 70;
+			private var currentMouseCursor:String;
+			
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.currentState="normal";
+				// set current mouse cursor
+				currentMouseCursor = Mouse.cursor;
+				// set listeners mouse over
+				this.buttonUp.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				this.buttonDown.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				// set listeners mouse out
+				this.buttonUp.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				this.buttonDown.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				// set tool tips
+				this.buttonUp.toolTip = "move up";
+				this.buttonDown.toolTip = "move down";
+				this.buttonDelete.toolTip = "effacer";
+				this.buttonEdit.toolTip = "editer";
+			}
+			
+			// set cursor mouse BUTTON 
+			protected function onMouseOverButton(event:MouseEvent):void
+			{
+				var image:Image = event.target as Image;
+				Mouse.cursor = MouseCursor.BUTTON;		
+			}
+			
+			// set cursor mouse AROOW  
+			protected function onMouseOutButton(event:MouseEvent):void
+			{
+				Mouse.cursor = this.currentMouseCursor;
+			}
+			
+			// click on label edit
+			protected function label1_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "open";
+				this.editableContent.text = this.textContent.text;
+				stage.focus = this.editableContent;
+			}
+			
+			// on click butoon cancel
+			protected function onClickButtonCancel(event:MouseEvent):void
+			{
+				this.currentState = "normal";
+			}
+			
+			// on click butoon cancel
+			protected function onClickButtonValider(event:MouseEvent):void
+			{
+				this.currentState = "normal";
+				this.textContent.text = this.editableContent.text;
+			}
+
+		]]>
+	</fx:Script>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%">
+			<s:Rect id="fill" radiusX="5"
+					left="2" right="2" top="1" bottom="1" minHeight="25">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="border" radiusX="5"
+					left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+		<!-- APPENDIX LEFT SIDE -->
+			<s:Rect id="fillOpen" radiusX="5" topRightRadiusX="0"  bottomRightRadiusX="0"
+					left="{-widthAppendix}"  width="{widthAppendix+2}" top="12"  height="16" includeIn="normal">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="borderOpen" radiusX="5" topRightRadiusX="0"  bottomRightRadiusX="0"
+					left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16"  includeIn="normal">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+		<!-- ALFA VERTICAL LINE APPENDIX -->
+			<s:Line  includeIn="normal"  left="2" top="12" height="16" >
+				<s:stroke>
+					<!--<s:SolidColorStroke color="0xFFFFFF" weight="1" joints="miter"/>-->
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0xFFFFFF"/>
+						<s:GradientEntry color="0xD8D8D8"/>
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Line>
+
+		<!-- BUTTONS -->
+			<s:HGroup top="13"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
+				<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12"/>
+				<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12"/>
+				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"/>
+				<s:Line height="11" >
+					<s:stroke>
+						<s:SolidColorStroke color="#6370D7"/>
+					</s:stroke>
+				</s:Line>
+				<!--<s:Label text=" editer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
+				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="label1_clickHandler(event)"/>
+				
+			</s:HGroup>
+			<s:RichText includeIn="normal,closed"  id="textContent" text="ghgGgh JHGjgjg   jhgjhghjg 
+						dfd
+						 zezezarez" minHeight="40" top="10" left="10" right="10" bottom="10"
+									paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+			<s:TextArea id="editableContent"  includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
+															  paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+
+		</s:Group>
+		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
+		<s:Button includeIn="open" click="onClickButtonValider(event)">
+			<s:label>Valider</s:label>
+		</s:Button>
+		<s:Button click="onClickButtonCancel(event)">
+			<s:label>Cancel</s:label>
+		</s:Button>
+		</s:HGroup>
+	</s:Group>
+</s:Skin>

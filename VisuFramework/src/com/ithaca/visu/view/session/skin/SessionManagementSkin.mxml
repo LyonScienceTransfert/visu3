@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:users="com.ithaca.visu.controls.users.*"
+		xmlns:controls="com.ithaca.controls.*"
+		creationComplete="skin1_creationCompleteHandler(event)" xmlns:controls1="com.ithaca.visu.view.session.controls.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.SessionManagement")]
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.controls.skins.AdvancedTextInputSkin;
+			import com.ithaca.visu.renderer.SessionRenderer;
+			import com.ithaca.visu.view.session.controls.skins.SessionDetailSkin;
+			import com.ithaca.visu.view.session.controls.skins.SessionFilterSkin;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
+			
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<s:Group top="0" left="0" right="0" bottom="0">
+		<s:layout>
+			<s:HorizontalLayout  />
+		</s:layout>
+		<s:Group top="0" width="20%" height="100%">
+			<s:Panel top="40"
+					 width="100%">	
+				<s:title>{fxgt.gettext("Afficher...")}</s:title>
+				<controls1:SessionFilters 
+					width="100%"					  
+					id="filter"
+					 skinClass="com.ithaca.visu.view.session.controls.skins.SessionFilterSkin"/>
+			</s:Panel>
+		</s:Group>
+		
+		<s:Group width="25%" height="100%">
+			<s:Button id="addSessionButton" width="100%" top="14">
+				<s:label>{fxgt.gettext("Créer une séance")}</s:label>
+			</s:Button>
+			
+			
+			<s:Panel top="40" width="100%" height="100%">
+				<s:title>{fxgt.gettext("Liste de séances...")}</s:title>
+				<!--<controls:FilteredList-->
+				<controls:AdvancedTextInput
+					id="searchDisplay" prompt="Taper nom séance..."
+					top="0" left="0" right="0" height="25" 
+					skinClass="com.ithaca.controls.skins.AdvancedTextInputSkin">
+				</controls:AdvancedTextInput>
+				
+				<s:List	
+					id="sessionsList"
+					top="25" bottom="0" left="0" right="0"
+					itemRenderer="com.ithaca.visu.renderer.SessionRenderer"
+					/>
+			</s:Panel>
+		</s:Group>
+		
+		<s:Group width="55%" height="100%">
+			<s:Panel top="40" 
+					 width="100%" height="100%">	
+				<s:title>{fxgt.gettext("Détails de la séance")}</s:title>
+				<controls1:SessionDetail id="sessionDetail" 
+								  top="0" bottom="0" left="0" right="0"
+								  skinClass="com.ithaca.visu.view.session.controls.skins.SessionDetailSkin" />
+			</s:Panel>
+		</s:Group>		
+	</s:Group> 	
+</s:Skin>
