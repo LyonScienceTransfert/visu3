@@ -8,7 +8,7 @@
 @namespace sessions	"com.ithaca.visu.controls.sessions.*";
 @namespace trace	"com.ithaca.visu.controls.timeline.*";
 @namespace obsel	"com.ithaca.traces.view.*";
-
+@namespace plan 	"com.ithaca.visu.view.session.controls.*";
 
 
 
@@ -86,3 +86,27 @@ obsel|ObselSessionOut
 	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselSessionOutSkin");
 }
 
+plan|SessionPlanEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.SessionPlanEditSkin");
+}
+
+plan|ActivityDetailEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.ActivityDetailEditSkin");
+}
+
+plan|StatementEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.StatementEditSkin");
+}
+
+plan|KeywordEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.KeywordEditSkin");
+}
+
+plan|DocumentEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.DocumentEditSkin");
+}
