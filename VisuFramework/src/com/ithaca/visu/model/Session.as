@@ -62,8 +62,8 @@
  */
 package  com.ithaca.visu.model
 {
-	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	
 	import mx.collections.ArrayCollection;
 
@@ -73,7 +73,7 @@ package  com.ithaca.visu.model
 			public var id_user:int;
 			public var theme:String;
 			public var date_session:Date;
-			public var isModel:Boolean;
+			private var _isModel:Boolean;
 			public var description:String;
 			public var participants:ArrayCollection = new ArrayCollection();
 			public var date_start_recording:Date;
@@ -86,7 +86,7 @@ package  com.ithaca.visu.model
 			this.id_user = session.id_user;
 			this.theme = session.theme;
 			this.date_session = session.date_session;
-			this.isModel = session.isModel;
+			this._isModel = session.isModel;
 			this.description = session.description;
 			this.date_start_recording = session.start_recording;
 			this.statusSession = session.status_session;
@@ -98,7 +98,10 @@ package  com.ithaca.visu.model
 		
 		public function getSessionId():int {return this.id_session};
 		public function getSessionDate():Date {return this.date_session};
+		public function getSessionDateStartRecording():Date {return this.date_start_recording};
 		public function getTheme():String {return this.theme};
+		public function getStatusSession():int {return this.statusSession};
+		public function get isModel():Boolean {return this._isModel};
 		
 		public function setUsers(arUsers:Array):void
 		{
