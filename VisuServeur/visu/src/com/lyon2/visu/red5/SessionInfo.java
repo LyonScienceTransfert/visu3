@@ -166,6 +166,18 @@ public class SessionInfo
 			sc.invoke("checkListDates", args);
 			} 	
 	}
+	@SuppressWarnings("unchecked")
+    public List<Session> getListSessionsAndPlans() throws SQLException
+    {
+        log.debug("getListSessions");
+        try
+        {
+            return (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlans");
+        } catch (Exception e) {
+            log.error("Probleme lors du listing des utilisateurs" + e);
+        }
+        return null;
+    }
 	
 	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
