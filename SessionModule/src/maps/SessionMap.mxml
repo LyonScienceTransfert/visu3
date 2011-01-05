@@ -5,11 +5,38 @@
 	xmlns:mx="library://ns.adobe.com/flex/halo"
 	xmlns:mate="http://mate.asfusion.com/"
 	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	<fx:Script><![CDATA[
+		import business.SessionManager;
+		
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.model.Model;
+		
+		import com.ithaca.visu.view.session.SessionManagement;
+		import mx.events.FlexEvent;
+		
+	]]></fx:Script>	
 	<fx:Declarations>
 		<mate:Debugger level="{Debugger.ALL}"/>
 		
 		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}" debug="true">
 			<mate:ObjectBuilder generator="{SessionManager}" constructorArguments="{scope.dispatcher}"/>
+				<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+					<mate:Request action="sessionInfo.getListSessionsAndPlans" />				
+					<rtmp:resultHandlers>
+						<mate:MethodInvoker generator="{SessionManager}"
+											method="setSessionAndPlan" 
+											arguments="{[currentEvent.data]}" />
+					</rtmp:resultHandlers>
+					
+					<rtmp:faultHandlers>
+						<mate:MethodInvoker generator="{SessionManager}" 
+											method="onError" 
+											arguments="{[currentEvent]}"/>
+					</rtmp:faultHandlers>
+				</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
@@ -22,21 +49,17 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
+
+		
 		<mate:Injectors target="{SessionManager}">
 			<mate:PropertyInjector targetKey="model" source="{Model.getInstance()}" />
 		</mate:Injectors>
+		
+		<mate:Injectors target="{SessionManagement}" >
+			<mate:PropertyInjector source="{SessionManager}"
+								   sourceKey="sessions"
+								   targetKey="sessions"
+								   />
+		</mate:Injectors>
 	</fx:Declarations>
-	
-	<fx:Script><![CDATA[
-		import business.SessionManager;
-		
-		import com.asfusion.mate.utils.debug.Debugger;
-		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.ithaca.visu.events.InitMapEvent;
-		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.model.Model;
-		
-		import mx.events.FlexEvent;
-		
-	]]></fx:Script>	
 </mate:LocalEventMap>
