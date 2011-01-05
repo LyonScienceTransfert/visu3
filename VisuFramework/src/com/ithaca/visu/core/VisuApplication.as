@@ -12,7 +12,6 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.events.VisuModuleEvent;
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
-	import com.lyon2.visu.*;
 	
 	import com.ithaca.visu.model.Model;
 	
