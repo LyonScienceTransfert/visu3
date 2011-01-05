@@ -86,6 +86,11 @@ obsel|ObselSessionOut
 	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselSessionOutSkin");
 }
 
+plan|SessionDetail
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.SessionDetailSkin");
+}
+
 plan|SessionPlanEdit
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.SessionPlanEditSkin");
