@@ -155,9 +155,7 @@
 				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="label1_clickHandler(event)"/>
 				
 			</s:HGroup>
-			<s:RichText includeIn="normal,closed"  id="textContent" text="ghgGgh JHGjgjg   jhgjhghjg 
-						dfd
-						 zezezarez" minHeight="40" top="10" left="10" right="10" bottom="10"
+			<s:RichText includeIn="normal,closed"  id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
 									paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 			<s:TextArea id="editableContent"  includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
 															  paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
