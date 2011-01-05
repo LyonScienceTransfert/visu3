@@ -2,7 +2,8 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		creationComplete="skin1_creationCompleteHandler(event)" xmlns:layout="sparks.layout.*">
+		creationComplete="skin1_creationCompleteHandler(event)" 
+		xmlns:layout="sparks.layout.*">
 	<fx:Script>
 		<![CDATA[
 			import gnu.as3.gettext.FxGettext;
@@ -10,14 +11,18 @@
 			
 			import mx.events.FlexEvent;
 			
+			import spark.events.TextOperationEvent;
+			
 			[Bindable]
 			private var fxgt:_FxGettext;
+
 			
 			private static var LIFT_EDITABLED_COMPONENT:int = 75; 
-
+			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
 				fxgt = FxGettext;
+
 			}
 			protected function group1_clickHandler(event:MouseEvent):void
 			{
@@ -26,6 +31,72 @@
 					this.hostComponent.titleDisplay_clickHandler(event);
 				}
 			}
+// STATEMANT
+			protected function addStatement_focusInHandler(event:FocusEvent):void
+			{
+				if(addStatement.text == "ajout une nouvelle consigne ici"){
+					addStatement.text = "";
+					addStatement.setStyle("fontStyle","normal");
+					addStatement.setStyle("color","#000000");
+				}
+			}
+
+			protected function addStatement_focusOutHandler(event:FocusEvent):void
+			{
+				if(addStatement.text == ""){
+					this.setMessageStatement();
+				}
+			}
+			
+			protected function addStatement_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode == Keyboard.ENTER && addStatement.text != "")
+				{
+					this.validStatementButton_clickHandler(event);
+				}
+			}
+			
+			protected function validStatementButton_clickHandler(event:*):void
+			{
+				// add statement
+				if(addStatement.text != "ajout une nouvelle consigne ici" && addStatement.text != "")
+				{
+					this.hostComponent.addStatement(addStatement.text);
+					addStatement.text = "";
+					stage.focus = addStatement;
+				}
+			}
+
+			private function setMessageStatement():void
+			{
+				addStatement.text = "ajout une nouvelle consigne ici";
+				addStatement.setStyle("fontStyle","italic");
+				addStatement.setStyle("color","#BBBBBB");
+			}
+// MEMO
+
+			protected function memoDisplay_focusInHandler(event:FocusEvent):void
+			{
+				if(memoDisplay.text == "entrer un nouveau memo ici")
+				{
+					memoDisplay.text = "";
+					memoDisplay.setStyle("fontStyle","normal");
+					memoDisplay.setStyle("color","#000000");
+				}
+			}
+
+
+			protected function memoDisplay_focusOutHandler(event:FocusEvent):void
+			{
+				if(memoDisplay.text == ""){
+					this.hostComponent.setMessageMemo();
+				}else
+				{
+					// add memo
+					this.hostComponent.addMemo(memoDisplay.text);
+				}
+			}
+
 		]]>
 	</fx:Script>
 	<!-- host component -->
@@ -73,13 +144,14 @@
 			<!--<s:text>{fxgt.gettext("titre : ")}</s:text>-->
 			<s:text>Titre : </s:text>
 		</s:Label>
-		<s:Label id="titleActivity" left="{LIFT_EDITABLED_COMPONENT}" top="10" right="80" color="#121212"
-				 fontSize="16" fontWeight="bold" maxDisplayedLines="1">
-			<s:filters>
+<!-- LABEL ACTIVITY-->
+		<s:TextInput id="titleActivity" left="{LIFT_EDITABLED_COMPONENT}" top="5" right="80" color="#121212"
+				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80" top.open="5" left.open="{LIFT_EDITABLED_COMPONENT}" right.open="100">
+			<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
-			</s:filters>
-		</s:Label>
-		<!-- DURATION -->
+			</s:filters>-->
+		</s:TextInput>
+<!-- DURATION -->
 		<s:Label id="durationDisplay" right="3" top="10" text="duration : 25"/>
 	</s:Group>
 	
@@ -89,37 +161,67 @@
 		</s:layout>
 <!-- STATEMENTS -->
 		<s:Group width="100%">
-			<s:Label left="5" text="Consignes : "/>
+			<s:Label paddingLeft="5" text="Consignes : "/>
 			<s:Group id="statementGroup" left="{LIFT_EDITABLED_COMPONENT}" width="100%">
 				<s:layout>
 					<s:VerticalLayout />
 				</s:layout>
 			</s:Group>
 		</s:Group>
+<!-- ADD STATEMENT -->
+		<s:Group  width="100%">
+			<s:TextArea  id="addStatement" maxHeight="25" right="15" fontStyle="italic" color="#BBBBBB"
+						left="{LIFT_EDITABLED_COMPONENT+5}" verticalScrollPolicy="auto" textAlign="justify" 
+						focusIn="addStatement_focusInHandler(event)"
+						keyUp="addStatement_keyUpHandler(event)" 
+						focusOut="addStatement_focusOutHandler(event)">
+				<s:text>ajout une nouvelle consigne ici</s:text>
+			</s:TextArea>	
+			<s:Button right="15" top="27" bottom="2" click="validStatementButton_clickHandler(event)">
+				<s:label>Valider</s:label>
+			</s:Button>
+		</s:Group>
 <!-- DOCUMENTS -->		
 		<s:Group width="100%">
 			<s:Label left="5" text="Documents : "/>
 			<s:Group id="documentGroup" left="{LIFT_EDITABLED_COMPONENT}" width="100%">
 				<s:layout>
-					<s:TileLayout rowHeight="50" columnWidth="50" />
+					<s:TileLayout requestedColumnCount="2" horizontalGap="50"/>
 				</s:layout>
 			</s:Group>	
 		</s:Group>
 <!-- MEMO -->	
 		<s:Group width="100%">
 			<s:Label left="5" text="Memo : "/>
-			<s:Label id="memoDisplay" maxDisplayedLines="2" left="{LIFT_EDITABLED_COMPONENT}"
-					 width="100%" 
-					 fontStyle="italic" color="#666666"/>
-		</s:Group>
-<!-- KEYWORD -->	
-		<s:Group width="100%">
-			<s:Label left="5" text="Mots-clés : "/>
-			<s:Group id="keywordGroup" width="100%">
-				<s:layout>
-					<layout:FlowLayout/>
-				</s:layout>
-			</s:Group>	
+			<s:Group width="100%"  left="{LIFT_EDITABLED_COMPONENT}">
+				<s:Rect id="fill" radiusX="5"
+						left="2" right="2" top="1" bottom="1" minHeight="25">
+					<s:fill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="0xFFFFFF" />
+							<s:GradientEntry color="0xD8D8D8" />
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:Rect id="border" radiusX="5"
+						left="2" right="2" top="0" bottom="0">
+					<s:stroke>
+						<s:LinearGradientStroke rotation="90" weight="1">
+							<s:GradientEntry color="0x000000" 
+											 alpha="0.5625"/>
+							<s:GradientEntry color="0x000000" 
+											 alpha="0.75" />
+						</s:LinearGradientStroke>
+					</s:stroke>
+				</s:Rect>
+				<s:RichEditableText
+					id="memoDisplay" 
+						 top="8" bottom="7" maxHeight="40"
+						 focusIn="memoDisplay_focusInHandler(event)"
+						 focusOut="memoDisplay_focusOutHandler(event)" left="10" right="10">
+					<s:text>This </s:text>
+				</s:RichEditableText>
+			</s:Group>
 		</s:Group>
 	</s:Group>
 	<s:transitions>
