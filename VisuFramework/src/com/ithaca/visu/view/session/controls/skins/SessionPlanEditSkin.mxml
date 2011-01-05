@@ -2,7 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5"
 	creationComplete="skin1_creationCompleteHandler(event)"
-	 addedToStage="skin1_addedToStageHandler(event)" xmlns:renderer="com.ithaca.visu.renderer.*">
+	 addedToStage="skin1_addedToStageHandler(event)" xmlns:renderer="com.ithaca.visu.renderer.*" xmlns:layout="sparks.layout.*">
     <fx:Metadata>[HostComponent("com.ithaca.visu.controls.sessions.SessionPlan")]</fx:Metadata>
 
     <fx:Script fb:purpose="styling">
@@ -58,7 +58,7 @@
     <s:Rect id="background" left="0" right="0" top="0" bottom="0">
         <s:fill>
             <!--- @private -->
-            <s:SolidColor id="bgFill" color="#FFFFFF"/>
+            <s:SolidColor id="bgFill" color="#ffffff"/>
         </s:fill>
     </s:Rect>
     
@@ -68,43 +68,44 @@
         more about it here: http://bugs.adobe.com/jira/browse/SDK-21143
     -->
     <!--- @copy spark.components.SkinnableContainer#contentGroup -->
-    <s:Group id="contentGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0" width="100%">
+    <s:Group id="contentGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
         <s:layout>
             <s:VerticalLayout gap="3"/>
         </s:layout>
-		<s:HGroup left="0" right="0" top="0" width="100%" verticalAlign="middle">
-			<s:Label left="2">
+		<s:Group width="100%">
+			<s:Label left="5" top="3" fontWeight.normal="bold" top.normal="5" left.normal="5">
 				<!--<s:text>{fxgt.gettext("Plan de séance")}</s:text>-->
 				<s:text>{"Plan de séance"}</s:text>
 			</s:Label>
-			<s:Button label.normal="{&quot;importer&quot;}">
+			<s:Button right="140">
 				<!--<s:label>{fxgt.gettext("importer")}</s:label>-->
 				<s:label>{"importer"}</s:label>
 			</s:Button>
-			<s:Button>
+			<s:Button right="65">
 				<!--<s:label>{fxgt.gettext("exporter")}</s:label>-->
 				<s:label>{"exporter"}</s:label>
 			</s:Button>
-			<s:Label>
+			<s:Label right="5" top.normal="5" right.normal="5" color.normal="#4398E0">
 				<!--<s:text>{fxgt.gettext("initialiser")}</s:text>-->
 				<s:text>{"initialiser"}</s:text>
 			</s:Label>
-		</s:HGroup>	
-		
+		</s:Group>	
+	
+		<s:Group width="100%">
+			<s:Button left="10">
+				<s:label>ajouter une activité</s:label>
+			</s:Button>
+	        <s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="125" fontSize.normal="14">
+				<s:text>{"Activité : "}</s:text>
+			</s:Label>
+			<s:ComboBox  width="45" right="5" width.normal="120"/>
+		</s:Group>
+<!-- LINE -->	
 		<s:Line left="50" right="2" top="10" width="100%">
 			<s:stroke>
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
 		</s:Line>
-		<s:Group width="100%">
-			<s:Button left="10">
-				<s:label>ajouter une activité</s:label>
-			</s:Button>
-	        <s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="125">
-				<s:text>{"Activité : "}</s:text>
-			</s:Label>
-			<s:ComboBox  width="45" right="5" width.normal="120"/>
-		</s:Group>
 		
 		<s:Scroller top="0" left="0" right="0" bottom="0" height="100%" width="100%">
 			<s:Group id="activityGroup">
@@ -113,6 +114,25 @@
 				</s:layout>
 			</s:Group>
 		</s:Scroller>
+		
+<!-- KEYWORD -->	
+		<s:Group  width="100%" height="80">
+<!-- LINE -->	
+			<s:Line left="5" right="5" width="100%" top="1">
+				<s:stroke>
+					<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+				</s:stroke>
+			</s:Line>
+			<s:Label left="15" text="Mots-clés : " top="7"/>
+			<s:Scroller top="8" left="80" right="0" bottom="0" height="100%" width="100%">
+				<s:Group id="keywordGroup"  left="0" width="100%" height="100%"  top="0">
+					<s:layout>
+						<layout:FlowLayout/>
+					</s:layout>
+				</s:Group>	
+			</s:Scroller>
+		</s:Group>
+		
 		
     </s:Group>
 </s:Skin>
