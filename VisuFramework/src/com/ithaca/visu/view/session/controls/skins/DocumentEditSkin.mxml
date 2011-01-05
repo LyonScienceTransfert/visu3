@@ -2,7 +2,8 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		creationComplete="skin1_creationCompleteHandler(event)">
+		creationComplete="skin1_creationCompleteHandler(event)"
+		 preinitialize="skin1_preinitializeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.DocumentEdit")]
@@ -11,22 +12,19 @@
 	</fx:Declarations>
 	<s:states>
 		<s:State name="normal"/>
-		<s:State name="closed"/>
+		<s:State name="close"/>
 		<s:State name="error" />
 		<s:State name="open" />
 	</s:states>
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.visu.model.ActivityElementType;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.lyon2.controls.YoutubePlayer;
 			import com.youtube.player.events.PlayerEvent;
 			
-			import flashx.textLayout.container.ScrollPolicy;
-			
 			import mx.events.FlexEvent;
-			import mx.managers.CursorManager;
 			
 			
 			private var widthAppendix:int = 40;
@@ -34,13 +32,14 @@
 			private var player:YoutubePlayer;
 			private var image:Image;
 			
-			public var currentUrl:String;
-			public var currentText:String;
-			public var typeDocument:String = "image";
+			private var currentUrl:String;
+			private var currentText:String;
+			private var typeDocument:String;
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
 				this.currentState="normal";
+				this.panelContent.title = this.currentText;
 				// set current mouse cursor
 				currentMouseCursor = Mouse.cursor;
 				// set listeners mouse over
@@ -53,8 +52,8 @@
 				this.buttonDelete.toolTip = "effacer";
 				this.buttonEdit.toolTip = "editer";
 				// add player 
-				this.currentUrl = "http://livedocs.adobe.com/flex/3/html/images/adobe.png?v=PSWhxORaJvY&feature=related";
-				if(this.typeDocument == TraceModel.IMAGE)
+				//this.currentUrl = "http://livedocs.adobe.com/flex/3/html/images/adobe.png?v=PSWhxORaJvY&feature=related";
+				if(this.typeDocument == ActivityElementType.IMAGE) 
 				{
 					this.addImage(this.currentUrl);	
 				}else
@@ -85,7 +84,8 @@
 				image.source = path;
 				image.percentWidth = 100;
 				image.percentHeight = 100;
-				image.maxHeight= 160;
+				//image.maxWidth = 120;
+				image.maxHeight = 160; 
 				this.panelContent.addElement(image);
 			}
 			
@@ -109,7 +109,10 @@
 			}
 			private function onRemoveFromStage(event:Event):void
 			{
-				this.player.pauseVideo();
+				if(this.player != null && this.player.isPlaying())
+				{
+					this.player.pauseVideo();
+				}
 			}
 			private function onErrorAdresse(event:*= null):void
 			{
@@ -172,7 +175,12 @@
 				}
 				this.currentState = "normal";
 				this.panelContent.title = this.editableContent.text;
-				this.addImage(this.editableLien.text);
+				if(this.player != null)
+				{
+					this.addPlayer(this.editableLien.text);
+				}else{
+					this.addImage(this.editableLien.text);
+				}
 			}
 			// on click on button ok of the panel error
 			protected function onClickButtonOkPanelError(eent:MouseEvent):void
@@ -181,6 +189,15 @@
 			}
 			
 			
+
+			protected function skin1_preinitializeHandler(event:FlexEvent):void
+			{
+				// set const
+				this.currentUrl = this.hostComponent.currentUrl;
+				this.currentText = this.hostComponent.currentText;
+				this.typeDocument = this.hostComponent.typeDocument;
+			}
+
 		]]>
 	</fx:Script>
 	<s:Group width="100%">
@@ -252,8 +269,9 @@
 				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="onClickButtonEdit(event)"/>
 				
 			</s:HGroup>
-			<s:Panel includeIn="normal,closed"  id="panelContent"  title="Video the yotube..."
-					 minHeight="100"  minWidth="160"  maxWidth="200" top="10" left="10" right="10" bottom="10">
+			<s:Panel includeIn="normal,close"  id="panelContent"  title="Video the yotube..."
+					 minHeight="100"  minWidth="160"  maxWidth="200" top="10" left="10" right="10" bottom="10"
+					 >
 			</s:Panel>
 <!-- STATE EDIT -->
 			<s:Label includeIn="open" top="10" left="10">
@@ -266,10 +284,10 @@
 			</s:Label>
 			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
 <!-- STATE ERROR -->
-			<s:RichText  includeIn="error"  left="10" top="10" right="10">
+			<s:RichText  includeIn="error" top="10" width="137" horizontalCenter="0">
 				<s:text>Le lien n'est pas correct...</s:text>
 			</s:RichText>
-			<s:Button includeIn="error" top="35" left="35" click="onClickButtonOkPanelError(event)" bottom="10">
+			<s:Button includeIn="error" top="35" click="onClickButtonOkPanelError(event)" bottom="10" horizontalCenter="0">
 				<s:label>OK</s:label>
 			</s:Button>			
 		</s:Group>
