@@ -32,7 +32,11 @@
 
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
-				this.currentState="closed";
+				this.currentState="normal";
+				
+				this.textContent.text = this.hostComponent.textKeyword;
+				
+				
 				buttonEdit.addEventListener(MouseEvent.CLICK, onClickEditButton);
 				// set current mouse cursor
 				currentMouseCursor = Mouse.cursor;
