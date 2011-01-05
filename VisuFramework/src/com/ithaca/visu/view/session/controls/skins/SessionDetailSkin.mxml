@@ -6,6 +6,60 @@
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.SessionDetail")]
 	</fx:Metadata>
-	<s:List width="100%" height="40%"/>
-	<controls:SessionPlanEdit width="100%" height="60%"/>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+
+	<s:Panel width="100%" height="100%" backgroundColor="#e4e4e4">
+		<s:title>Détails de la séance</s:title>
+		<s:VGroup gap="0" width="100%" height="100%" horizontalAlign="center">
+			<s:Group height="160" width="100%">
+				<s:HGroup width="100%" height="100%">
+					<!-- LABELS -->
+					<s:Group height="100%" width="20%">
+						<s:Label right="5" top="10" fontWeight="bold" fontSize="14">
+							<s:text>Themé :</s:text>
+						</s:Label>
+						<s:Label right="5" verticalCenter="-3" fontWeight="bold" fontSize="14">
+							<s:text>Passasion :</s:text>
+						</s:Label>
+						<s:Label right="5" bottom="35" fontWeight="bold" fontSize="14">
+							<s:text>Description :</s:text>
+						</s:Label>
+					</s:Group>
+					<!-- DATE HEUR -->	
+					<s:Group height="100%" width="40%">
+						<s:RichEditableText height="44" left="5" right="5" top="5" backgroundColor="#FFFFFF"  verticalAlign.normal="middle" textAlign.normal="center">
+							<s:text>Les identités nationales</s:text>
+						</s:RichEditableText>
+						<mx:DateField left="5" verticalCenter="0"/>
+						<s:TextInput height="22" right="5"  width="40" verticalCenter="0">
+							<s:text>17:15</s:text>
+						</s:TextInput>
+						<s:RichEditableText height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF" verticalAlign.normal="middle" textAlign.normal="center" fontStyle.normal="italic">
+							<s:text>in this session you will learn how you can go to other country..</s:text>
+						</s:RichEditableText>
+					</s:Group>
+					<!-- USERS -->
+					<s:Group height="100%" width="40%">
+						<s:Button left="5" right="5" top="5">
+							<s:label>Ajouter une utilisateur</s:label>
+						</s:Button>
+						<s:Group  left="5" right="5" top="30" bottom="5">
+							
+						</s:Group>
+					</s:Group>
+				</s:HGroup>
+			</s:Group>
+			<controls:SessionPlanEdit  id="sessionPlanEdit" width="96%" height="60%" horizontalCenter="0" backgroundColor.normal="#FFFFFF"/>
+		</s:VGroup>
+	</s:Panel>
 </s:Skin>
