@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true"
+				preinitialize="itemrenderer1_preinitializeHandler(event)"
+				addedToStage="itemrenderer1_addedToStageHandler(event)"
+				minWidth="45"
+			    >
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.core.INavigatorContent;
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+			protected function updateStyle():void
+			{
+				if(data != null)
+				{
+					// check if session is model
+					if(data.isModel)
+					{
+						labelTheme.setStyle("fontStyle","italic");
+						labelMessageDate.visible = false;
+						messageDate.visible = false;
+					}else
+					{
+						var dateSession:Date;
+						var statusSession:int =  data.getStatusSession();
+						switch (statusSession)
+						{
+							case SessionStatusEnum.SESSION_OPEN:
+								labelTheme.setStyle("fontWeight","bold");
+								labelMessageDate.text = fxgt.gettext("planifiée le :");
+								dateSession = data.getSessionDate();
+							break;
+							case SessionStatusEnum.SESSION_CLOSE:
+								labelTheme.setStyle("fontWeight","normal");
+								labelMessageDate.text = fxgt.gettext("effectuée le :");
+								dateSession = data.getSessionDateStartRecording();
+							break;
+							default:
+								labelTheme.setStyle("color","#EA8A8A");
+								labelMessageDate.text = fxgt.gettext("recording ....");
+								dateSession = data.getSessionDateStartRecording();
+							break;
+						}
+						messageDate.text = UtilFunction.getLabelDate(dateSession);
+					}
+				}
+			}
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				updateStyle();
+				this.invalidateDisplayList();
+			}
+
+			protected function itemrenderer1_preinitializeHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
+
+			protected function itemrenderer1_addedToStageHandler(event:Event):void
+			{
+				this.percentWidth = 100;
+			}
+
+		]]>
+	</fx:Script>
+	<s:Group  left="3" right="3">	
+		<s:layout>
+			<s:VerticalLayout gap="5">		
+			</s:VerticalLayout>
+		</s:layout>
+		<s:RichText text="{data.theme}" id="labelTheme" fontSize="18"/>
+		<s:Group>
+			<s:layout>
+				<s:HorizontalLayout gap="5"/>
+			</s:layout>
+			<s:Label id="labelMessageDate"/>
+			<s:Label  id="messageDate"/>	
+		</s:Group>
+	</s:Group>
+</s:ItemRenderer>
