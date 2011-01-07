@@ -1,15 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:controls="com.ithaca.visu.view.session.controls.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:controls="com.ithaca.visu.view.session.controls.*" xmlns:datetime="com.visualempathy.display.controls.datetime.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.SessionDetail")]
 	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			
 			import mx.events.FlexEvent;
 			
+
+
+			protected function themeSession_focusOutHandler(event:FocusEvent):void
+			{
+				if(themeSession.text == ""){
+					this.hostComponent.setMessageTheme();
+				}else
+				{
+					this.hostComponent.updateTheme(themeSession.text);
+				}
+			}
+
+
+			protected function themeSession_focusInHandler(event:FocusEvent):void
+			{
+				if(themeSession.text == "entrer un nouveau themè de la séance ici")
+				{
+					themeSession.text = "";
+					themeSession.setStyle("fontStyle","normal");
+					themeSession.setStyle("color","#000000");
+				}
+			}
+
+
+			protected function descriptionSession_focusOutHandler(event:FocusEvent):void
+			{
+				if(descriptionSession.text == ""){
+					this.hostComponent.setMessageDescription();
+				}else
+				{
+					this.hostComponent.updateDescription(descriptionSession.text);
+				}
+			}
+
+
+			protected function descriptionSession_focusInHandler(event:FocusEvent):void
+			{
+				if(descriptionSession.text == "entrer un nouveau description de la séance ici")
+				{
+					descriptionSession.text = "";
+					descriptionSession.setStyle("fontStyle","normal");
+					descriptionSession.setStyle("color","#000000");
+				}
+			}
+			
+			protected function picker_updateDateTimeHandler(event:SessionEditEvent):void
+			{
+				this.hostComponent.updateDateSession(this.picker.selectedDate);
+			}
 
 		]]>
 	</fx:Script>
@@ -37,16 +88,23 @@
 					</s:Group>
 					<!-- DATE HEUR -->	
 					<s:Group height="100%" width="40%">
-						<s:RichEditableText height="44" left="5" right="5" top="5" backgroundColor="#FFFFFF"  verticalAlign.normal="middle" textAlign.normal="center">
+						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" top="5" backgroundColor="#FFFFFF"  verticalAlign.normal="middle" textAlign.normal="center"
+											  focusOut="themeSession_focusOutHandler(event)"
+											   focusIn="themeSession_focusInHandler(event)">
 							<s:text>Les identités nationales</s:text>
 						</s:RichEditableText>
-						<mx:DateField left="5" verticalCenter="0"/>
+<!--						<mx:DateField left="5" verticalCenter="0"/>
 						<s:TextInput height="22" right="5"  width="40" verticalCenter="0">
 							<s:text>17:15</s:text>
-						</s:TextInput>
-						<s:RichEditableText height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF" verticalAlign.normal="middle" textAlign.normal="center" fontStyle.normal="italic">
+						</s:TextInput>-->
+<!-- DATE TIME -->	
+						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" verticalCenter="0" 
+												     updateDateTime="picker_updateDateTimeHandler(event)"/>
+						<s:RichEditableText  id="descriptionSession" height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF" verticalAlign.normal="middle" textAlign.normal="center" fontStyle.normal="italic"
+											  focusOut="descriptionSession_focusOutHandler(event)"
+											   focusIn="descriptionSession_focusInHandler(event)">
 							<s:text>in this session you will learn how you can go to other country..</s:text>
-						</s:RichEditableText>
+						</s:RichEditableText> 
 					</s:Group>
 					<!-- USERS -->
 					<s:Group height="100%" width="40%">
