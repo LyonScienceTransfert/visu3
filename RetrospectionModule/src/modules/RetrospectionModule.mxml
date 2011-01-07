@@ -373,6 +373,7 @@
 						{
 							Alert.show("Salon retrospection, hasn't obsel with path = "+streamId,"Message ....."); 
 						}
+						// here error ???
 						var timeBeginRFN:Number = obsel.begin;
 						var deltaSecond:Number = (this.pickCheryClick - timeBeginRFN)/1000;
 						//panelTimeLine.title = deltaSecond.toString() + "cherry pick = "+ this.pickCheryClick.toString();
