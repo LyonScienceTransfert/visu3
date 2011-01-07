@@ -6,12 +6,17 @@
 		xmlns:layout="sparks.layout.*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.utils.URLValidator;
+			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.visu.model.ActivityElementType;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
-			
-			import spark.events.TextOperationEvent;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -93,8 +98,113 @@
 				}else
 				{
 					// add memo
-					this.hostComponent.addMemo(memoDisplay.text);
+					this.hostComponent.updateMemo(memoDisplay.text);
 				}
+			}
+
+// DOCUMENT
+			protected function addTitreDocument_focusOutHandler(event:FocusEvent):void
+			{
+				if(addTitreDocument.text == ""){ 
+					this.setMessageTitreDocument();
+				}
+			}
+
+
+			protected function addTitreDocument_focusInHandler(event:FocusEvent):void
+			{
+				if(addTitreDocument.text == "ajout une nouvelle titre de document ici"){
+					addTitreDocument.text = "";
+					addTitreDocument.setStyle("fontStyle","normal");
+					addTitreDocument.setStyle("color","#000000");
+				}
+			}
+
+
+			protected function addLienDocument_focusInHandler(event:FocusEvent):void
+			{
+				if(addLienDocument.text == "ajout une nouvelle lien de document ici"){
+					addLienDocument.text = "";
+					addLienDocument.setStyle("fontStyle","normal");
+					addLienDocument.setStyle("color","#000000");
+				}
+			}
+
+			protected function addLienDocument_focusOutHandler(event:FocusEvent):void
+			{
+				if(addLienDocument.text == ""){
+					this.setMessageLienDocument();
+				}
+			}
+
+			protected function validButtonDocument_clickHandler(event:MouseEvent):void
+			{
+				var type:String="";
+				var titre:String = addTitreDocument.text;
+				if(URLValidator.isUrl(addLienDocument.text))
+				{
+					// check if lient is video the toytube
+					if(UtilFunction.checkVideoId(addLienDocument.text))
+					{
+						type = ActivityElementType.VIDEO;
+					}else
+					{
+						type = ActivityElementType.IMAGE;
+					}
+					if(titre =="ajout une nouvelle titre de document ici")
+					{
+						titre = "...document...";
+					}
+					this.hostComponent.addDocument(titre, addLienDocument.text, type);
+					addLienDocument.text = "";
+					stage.focus = addLienDocument;					
+				}else
+				{
+					// set text to addLienDocument
+					addLienDocument.text = "ajout une nouvelle lien de document ici";
+					stage.focus = addLienDocument;
+				}
+			}
+
+			private function setMessageTitreDocument():void
+			{
+				addTitreDocument.text = "ajout une nouvelle titre de document ici";
+				addTitreDocument.setStyle("fontStyle","italic");
+				addTitreDocument.setStyle("color","#BBBBBB");
+			}
+			private function setMessageLienDocument():void
+			{
+				addLienDocument.text = "ajout une nouvelle lien de document ici";
+				addLienDocument.setStyle("fontStyle","italic");
+				addLienDocument.setStyle("color","#BBBBBB");
+			}
+// TITRE ACTIVITY			
+			protected function titleActivity_focusOutHandler(event:FocusEvent):void
+			{
+				this.hostComponent.addTitreActivity(titleActivity.text);
+			}
+
+// DELETE ACTIVITY
+			protected function buttonDeleteActivity_clickHandler(event:MouseEvent):void
+			{
+				Alert.yesLabel = "Oui";
+				Alert.noLabel = "Non";
+				Alert.show("Voulez-vous supprimer l'activity?",
+					"Confirmation", Alert.YES|Alert.NO, null, deleteActivityConfirmed); 
+				
+			}
+			private function deleteActivityConfirmed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{
+					this.hostComponent.deleteActivity();
+				}
+			}
+
+			protected function durationActivity_changeHandler(event:Event):void
+			{
+				var numericStepper:NumericStepper = event.target as NumericStepper;
+				this.hostComponent.changeDuration(numericStepper.value);
+			
 			}
 
 		]]>
@@ -108,6 +218,13 @@
 		<s:State name="normal" />
 		<s:State name="open" />
 	</s:states>
+	
+	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<!--- @private -->
+			<s:SolidColor id="bgFill" color="#ffffff"/>
+		</s:fill>
+	</s:Rect>
 	
 	<s:Group width="100%" height="30" click="group1_clickHandler(event)">				
 		<!--<s:Rect top="0" left="0" bottom="0" right="0">
@@ -145,14 +262,24 @@
 			<s:text>Titre : </s:text>
 		</s:Label>
 <!-- LABEL ACTIVITY-->
-		<s:TextInput id="titleActivity" left="{LIFT_EDITABLED_COMPONENT}" top="5" right="80" color="#121212"
-				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80" top.open="5" left.open="{LIFT_EDITABLED_COMPONENT}" right.open="100">
+		<s:TextInput id="titleActivity" left="{LIFT_EDITABLED_COMPONENT}" top="5" right="250" color="#121212"
+				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
+				  focusOut="titleActivity_focusOutHandler(event)">
 			<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 			</s:filters>-->
 		</s:TextInput>
 <!-- DURATION -->
-		<s:Label id="durationDisplay" right="3" top="10" text="duration : 25"/>
+		<s:NumericStepper id="durationActivity" top="3" width="44" right="2" 
+						  maximum="200" value="10"
+						   change="durationActivity_changeHandler(event)"/>
+		<s:Label id="durationDisplay" right="50" top="10" text="durée"/>
+<!-- DELETE ACTIVITY -->
+		<mx:Button  id="buttonDeleteActivity" top="5" right="90" 
+					icon="{IconEnum.getIconByName('delete')}"
+					click="buttonDeleteActivity_clickHandler(event)">
+			<mx:label>supprimer l'acitivité</mx:label>
+		</mx:Button>
 	</s:Group>
 	
 	<s:Group top="30" left="5" right="5" bottom="10" includeIn="open" id="content">
@@ -190,6 +317,25 @@
 				</s:layout>
 			</s:Group>	
 		</s:Group>
+<!-- ADD DOCUMENT -->
+		<s:Group width="100%" left="10">
+			<s:TextArea  id="addTitreDocument" top="0" right="5" maxHeight="22" minWidth="290" textAlign="center"
+						 fontStyle="italic" color="#BBBBBB"
+						 focusOut="addTitreDocument_focusOutHandler(event)"
+						   focusIn="addTitreDocument_focusInHandler(event)">
+				<s:text>ajout une nouvelle titre de document ici</s:text>
+			</s:TextArea>
+			<s:TextArea  id="addLienDocument" right="80" maxHeight="22" top="25" minWidth="220"
+						 fontStyle="italic" color="#BBBBBB"
+						  focusIn="addLienDocument_focusInHandler(event)"
+						   focusOut="addLienDocument_focusOutHandler(event)">
+				<s:text>ajout une nouvelle lien de document ici</s:text>
+			</s:TextArea>
+			<s:Button  id="validButtonDocument" right="5" top="25"
+					    click="validButtonDocument_clickHandler(event)">
+				<s:label>Valider</s:label>
+			</s:Button>
+		</s:Group>
 <!-- MEMO -->	
 		<s:Group width="100%">
 			<s:Label left="5" text="Memo : "/>
@@ -219,7 +365,7 @@
 						 top="8" bottom="7" maxHeight="40"
 						 focusIn="memoDisplay_focusInHandler(event)"
 						 focusOut="memoDisplay_focusOutHandler(event)" left="10" right="10">
-					<s:text>This </s:text>
+					<s:text>This ic memo</s:text>
 				</s:RichEditableText>
 			</s:Group>
 		</s:Group>
