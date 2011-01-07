@@ -19,11 +19,15 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.utils.URLValidator;
+			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.model.ActivityElementType;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.lyon2.controls.YoutubePlayer;
 			import com.youtube.player.events.PlayerEvent;
 			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
 			
@@ -173,17 +177,38 @@
 					this.currentState = "error";
 					return;
 				}
-				this.currentState = "normal";
+/* 				this.currentState = "normal";
 				this.panelContent.title = this.editableContent.text;
 				if(this.player != null)
 				{
 					this.addPlayer(this.editableLien.text);
 				}else{
 					this.addImage(this.editableLien.text);
+				} */
+				
+				
+				if(URLValidator.isUrl(editableLien.text))
+				{
+					var type:String;
+					// check if lient is video the toytube
+					if(UtilFunction.checkVideoId(editableLien.text))
+					{
+						type = ActivityElementType.VIDEO;
+						this.addPlayer(editableLien.text);
+					}else
+					{
+						type = ActivityElementType.IMAGE;
+						this.addImage(editableLien.text);
+					}
+					this.currentState = "normal";
+					this.panelContent.title = this.editableContent.text;
+					this.hostComponent.updateDocument(this.panelContent.title, editableLien.text, type);
+				}else{
+					this.currentState = "error";
 				}
 			}
 			// on click on button ok of the panel error
-			protected function onClickButtonOkPanelError(eent:MouseEvent):void
+			protected function onClickButtonOkPanelError(event:MouseEvent):void
 			{
 				this.currentState="open";
 			}
@@ -196,6 +221,22 @@
 				this.currentUrl = this.hostComponent.currentUrl;
 				this.currentText = this.hostComponent.currentText;
 				this.typeDocument = this.hostComponent.typeDocument;
+			}
+
+
+			protected function buttonDelete_clickHandler(event:MouseEvent):void
+			{
+				Alert.yesLabel = "Oui";
+				Alert.noLabel = "Non";
+				Alert.show("Voulez-vous supprimer document?",
+					"Confirmation", Alert.YES|Alert.NO, null, deleteDocumentConfirmed); 
+				
+			}
+			private function deleteDocumentConfirmed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{
+					this.hostComponent.deleteDocument();
+				}
 			}
 
 		]]>
@@ -259,7 +300,8 @@
 			
 			<!-- BUTTONS -->
 			<s:HGroup top="13"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
-				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"/>
+				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"
+						    click="buttonDelete_clickHandler(event)"/>
 				<s:Line height="11" >
 					<s:stroke>
 						<s:SolidColorStroke color="#6370D7"/>
@@ -284,7 +326,7 @@
 			</s:Label>
 			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
 <!-- STATE ERROR -->
-			<s:RichText  includeIn="error" top="10" width="137" horizontalCenter="0">
+			<s:RichText  includeIn="error" top="10" horizontalCenter="0" right="10" left="10">
 				<s:text>Le lien n'est pas correct...</s:text>
 			</s:RichText>
 			<s:Button includeIn="error" top="35" click="onClickButtonOkPanelError(event)" bottom="10" horizontalCenter="0">
