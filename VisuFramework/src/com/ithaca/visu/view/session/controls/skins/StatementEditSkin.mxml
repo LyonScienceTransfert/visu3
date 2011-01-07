@@ -19,8 +19,9 @@
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
-			import mx.managers.CursorManager;
 			
 
 			private var widthAppendix:int = 70;
@@ -75,11 +76,48 @@
 				this.currentState = "normal";
 			}
 			
-			// on click butoon cancel
-			protected function onClickButtonValider(event:MouseEvent):void
+			// on click butoon valider
+			protected function onClickButtonValider(event:*=null):void
 			{
 				this.currentState = "normal";
-				this.textContent.text = this.editableContent.text;
+				if(this.textContent.text != this.editableContent.text){
+					this.textContent.text = this.editableContent.text;
+					this.hostComponent.updateStatement(this.textContent.text);
+				}
+			}
+
+			protected function buttonDelete_clickHandler(event:MouseEvent):void
+			{
+				Alert.yesLabel = "Oui";
+				Alert.noLabel = "Non";
+				Alert.show("Voulez-vous supprimer consigne?",
+					"Confirmation", Alert.YES|Alert.NO, null, deleteStatementConfirmed); 
+				
+			}
+			private function deleteStatementConfirmed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{
+					this.hostComponent.deleteStatement();
+				}
+			}
+
+
+			protected function editableContent_focusOutHandler(event:FocusEvent):void
+			{
+				editableContent.removeEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+				if (!event.isRelatedObjectInaccessible){
+					this.onClickButtonValider();
+				}else 
+					if ((event.relatedObject as Object).id != "buttonCancel")
+						{
+						this.onClickButtonValider();
+						}	
+			}
+
+
+			protected function editableContent_focusInHandler(event:FocusEvent):void
+			{
+				editableContent.addEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
 			}
 
 		]]>
@@ -145,7 +183,8 @@
 			<s:HGroup top="13"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
 				<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12"/>
 				<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12"/>
-				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"/>
+				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"
+						    click="buttonDelete_clickHandler(event)"/>
 				<s:Line height="11" >
 					<s:stroke>
 						<s:SolidColorStroke color="#6370D7"/>
@@ -158,14 +197,15 @@
 			<s:RichText includeIn="normal,closed"  id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
 									paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 			<s:TextArea id="editableContent"  includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
-															  paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+															  paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+									  focusIn="editableContent_focusInHandler(event)"/>
 
 		</s:Group>
 		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
 		<s:Button includeIn="open" click="onClickButtonValider(event)">
 			<s:label>Valider</s:label>
 		</s:Button>
-		<s:Button click="onClickButtonCancel(event)">
+		<s:Button  id="buttonCancel" click="onClickButtonCancel(event)">
 			<s:label>Cancel</s:label>
 		</s:Button>
 		</s:HGroup>
