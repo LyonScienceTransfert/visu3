@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2" horizontalGap="0" verticalAlign="middle">
+    
+    <mx:Metadata>
+        [Event(name="updateDateTime", type="com.ithaca.visu.view.session.controls.event.SessionEditEvent")]
+    </mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			
+			import mx.events.CalendarLayoutChangeEvent;
+			
+			[Bindable] private var _selectedDate:Date = new Date();
+			
+			[Bindable] 
+			[Inspectable(defaultValue='5', category="Other", enumeration="1,5,10,15,30")] 
+			public var minuteIncrement:int = 5;
+			
+			public function get selectedDate():Date
+			{
+				var militaryHours:int = hours.value;
+				var selDate:Date = this.date.selectedDate;
+				var date:Date = new Date(
+										selDate.getFullYear(),
+										selDate.getMonth(),
+										selDate.getDate(),
+										militaryHours,
+										minutes.value)
+				return date;
+			}
+			
+			public function set selectedDate(value:Date):void
+			{
+				this._selectedDate = value
+				this.date.selectedDate = this._selectedDate
+				this.hours.value = value.getHours();
+				this.minutes.value = value.getMinutes();	
+			}
+
+			public function handleFocusOut():void
+			{
+				this.dispatchEvent(new SessionEditEvent(SessionEditEvent.UPDATE_DATE_TIME));
+			}
+			protected function hours_focusInHandler(event:FocusEvent):void
+			{
+				hours.addEventListener(FocusEvent.FOCUS_OUT, hours_focusOutHandler);
+			}
+			protected function hours_focusOutHandler(event:FocusEvent):void
+			{
+				hours.removeEventListener(FocusEvent.FOCUS_OUT, hours_focusOutHandler);
+				this.handleFocusOut();
+			}
+			protected function date_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				this.handleFocusOut();
+			}
+			protected function minutes_focusInHandler(event:FocusEvent):void
+			{
+				minutes.addEventListener(FocusEvent.FOCUS_OUT, minutes_focusOutHandler)
+			}
+			
+			protected function minutes_focusOutHandler(event:FocusEvent):void
+			{
+				minutes.removeEventListener(FocusEvent.FOCUS_OUT, minutes_focusOutHandler);
+				this.handleFocusOut();
+			}
+
+		]]>
+	</mx:Script>
+	<mx:DateField id="date" formatString="DD/MM/YYYY"
+   		dayNames="['D','L','M','M','J','V','S']"
+		monthNames="['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']"
+		firstDayOfWeek="1"
+		change="date_changeHandler(event)"
+		/>
+	<mx:Spacer width="20"/>
+	<mx:NumericStepper id="hours" minimum="1" maximum="24" stepSize="1" textAlign="center"
+		 focusIn="hours_focusInHandler(event)"
+		 />
+	<mx:Label text=":" textAlign="center"/>
+	<mx:NumericStepper id="minutes" minimum="0"  maximum="55" stepSize="{minuteIncrement}" textAlign="center"
+					     focusIn="minutes_focusInHandler(event)"/>
+</mx:HBox>
