@@ -63,6 +63,9 @@
 
 package com.ithaca.visu.view.session.controls
 {
+	import com.ithaca.visu.model.ActivityElement;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+	
 	import spark.components.TextArea;
 	import spark.components.supportClasses.SkinnableComponent;
 	
@@ -70,10 +73,30 @@ package com.ithaca.visu.view.session.controls
 	{
 
 		public var textKeyword:String;
+		protected var _activityElement:ActivityElement;
 		
 		public function KeywordEdit()
 		{
 			super();
+		}
+		public function get activityElement():ActivityElement {return _activityElement; }
+		public function set activityElement(value:ActivityElement):void
+		{
+			_activityElement = value;
+		}
+		public function deleteKeyword():void
+		{
+			var deleteKeyword:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT);
+			deleteKeyword.activityElement = _activityElement;
+			this.dispatchEvent(deleteKeyword);				
+		}
+		
+		public function updateKeyword(value:String):void
+		{
+			var updateKeyword:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT);
+			_activityElement.data = value;
+			updateKeyword.activityElement = _activityElement;
+			this.dispatchEvent(updateKeyword);				
 		}
 	}
 }
