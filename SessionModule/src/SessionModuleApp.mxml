@@ -5,10 +5,19 @@
 			   xmlns:modules="ws.tink.spark.modules.*"
 			   minWidth="955" minHeight="600"
 			   backgroundColor="#CCCCCC" 
-			   xmlns:core="com.ithaca.visu.core.*" xmlns:bootstrap="com.ithaca.visu.bootstrap.*" 
-			   >
+			   xmlns:core="com.ithaca.visu.core.*" xmlns:bootstrap="com.ithaca.visu.bootstrap.*" xmlns:controls="com.ithaca.visu.view.session.controls.*" 
+			    creationComplete="application1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.model.Activity;
+			import com.ithaca.visu.model.ActivityElement;
+			import com.ithaca.visu.model.ActivityElementType;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.vo.SessionVO;
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			import mx.events.ModuleEvent;
 			import mx.logging.LogEventLevel;
 			protected function moduleloader1_errorHandler(event:ModuleEvent):void
@@ -40,6 +49,125 @@
 				moduleloader.unloadModule();
 			}
 
+
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				var obj:Object = new Object();
+				obj.id_activity = 1;
+				obj.id_session = 1;
+				obj.duration = 12;
+				obj.title = "Cinema for everybody";
+				obj.ind = 1;
+				var activity:Activity = new Activity(obj);
+				var ar:ArrayCollection = new ArrayCollection();
+				ar.addItem(activity);
+				// activityElement
+				var keyObj:Object = new Object();
+				keyObj.id_element = 123;
+				keyObj.data = "masion";
+				keyObj.type_element =  ActivityElementType.KEYWORD;
+				var keyArr:Array = new Array();
+				keyArr.push(keyObj);
+				keyObj.data = "Stroitel"
+				keyArr.push(keyObj);
+				keyArr.push(keyObj);
+				keyArr.push(keyObj);
+				keyArr.push(keyObj);
+				// statement	
+				var stObj:Object = new Object();
+				stObj.data = "Statement from sessionModule";
+				stObj.id_element = 1;
+				stObj.type_element =  ActivityElementType.STATEMENT;
+				keyArr.push(stObj);
+				keyArr.push(stObj);
+				keyArr.push(stObj);
+				// document 
+				var docObj:Object = new Object();
+				docObj.type_element = ActivityElementType.IMAGE;
+				docObj.id_element = 1;
+				docObj.data = "Image of the sky";
+				docObj.url_element = "http://photo.malakut.org/upload/2006/01/Sky2.jpg";
+				keyArr.push(docObj);
+				keyArr.push(docObj);
+				
+				var docObj:Object = new Object();
+				docObj.type_element = ActivityElementType.VIDEO;
+				docObj.id_element = 2;
+				docObj.data = "Video";
+				docObj.url_element = "http://www.youtube.com/watch?v=tzDnftVzA3s&feature=rec-LGOUT-exp_r2-2r-22-HM";
+				keyArr.push(docObj);
+				keyArr.push(docObj);
+				
+				activity.setListActivityElement(keyArr);
+				
+				obj.title = "Afice de l'anne";
+				obj.id_activity = 2;
+				obj.duration = 15;
+				activity = new Activity(obj);
+				ar.addItem(activity);					
+				obj.title = "Finis bien";
+				obj.id_activity = 3;
+				obj.duration = 33;
+				activity = new Activity(obj);
+				ar.addItem(activity);		
+
+				var activityElement:ActivityElement = new ActivityElement(keyObj);
+				
+				var sessionVO:SessionVO = new SessionVO();
+				sessionVO.theme = "THEME";
+				sessionVO.description = "DESCRIPTION";
+				sessionVO.id_user = 7;
+				sessionVO.date_session = new Date();
+				var session:Session = new Session(sessionVO);
+				sessionDetail.session = session;
+				
+				sessionDetail.sessionPlanEdit.activities = ar;
+				
+				sessionDetail.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateActivity,true);
+				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY, onAddActivity,true);
+				sessionDetail.addEventListener(SessionEditEvent.DELETE_ACTIVITY_ELEMENT, onDeleteActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_SESSION, onUpdateSession);
+			}
+			
+			private function onDeleteActivity(event:SessionEditEvent):void
+			{
+				
+			}
+			private function onUpdateActivity(event:SessionEditEvent):void
+			{
+				
+			}
+			private function onAddActivity(event:SessionEditEvent):void
+			{
+				
+			}
+			private function onDeleteActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var t:int = 1;
+			}
+			private function onUpdateActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var t:int = 1;
+			}
+			private function onAddActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var t:int = 1;
+			}
+			private function onUpdateSession(event:SessionEditEvent):void
+			{
+				var session:Session = event.session;
+				var t:int = 1;
+			}
+
 		]]>
 	</fx:Script>
 	
@@ -51,6 +179,12 @@
 		<s:Button label="load" click="load_clickHandler(event)" />
 		<s:Button label="unload" click="unload_clickHandler(event)" />
 	</s:controlBarContent>
+	<s:Group width="100%" height="100%">
+		<s:layout>
+			<s:HorizontalLayout gap="10"/>
+		</s:layout>
 	<modules:ModuleLoader id="moduleloader" 
-						  top="0" left="0" right="0" bottom="0" />
+						  top="0" left="0" bottom="0" width="20%" />
+	<controls:SessionDetail  id="sessionDetail" height="100%" width="650"/>
+	</s:Group>
 </s:Application>
