@@ -62,6 +62,8 @@
  */
 package com.ithaca.utils
 {
+	import mx.utils.URLUtil;
+
 	public class UtilFunction
 	{
 		public static function isEmptyMessage(value:String):Boolean
@@ -89,5 +91,20 @@ package com.ithaca.utils
 			var result:String = dayString+"."+mountString+"."+date.getUTCFullYear().toString();
 			return result;
 		}
+		
+		public static function checkVideoId(value:String):Boolean
+		{
+			var ar:Array=value.split('?');
+			if(ar.length==2)
+			{
+				var params:Object = URLUtil.stringToObject(ar[1],"&");	 		
+				if( params.hasOwnProperty("v"))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
 	}
 }
