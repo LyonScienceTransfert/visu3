@@ -64,6 +64,7 @@
 package com.ithaca.visu.view.session.controls
 {
 	import com.ithaca.visu.model.ActivityElement;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.MouseEvent;
 	
@@ -113,10 +114,20 @@ package com.ithaca.visu.view.session.controls
 			return !enabled? "disable" : open? "open" : "normal";
 		}
 		
-		public function mouseOverNormalStateHandler(event:MouseEvent):void
+		public function deleteStatement():void
 		{
-			open = !open;
-			invalidateSkinState();
+			var deleteStatement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT);
+			deleteStatement.activityElement = _activityElement;
+			this.dispatchEvent(deleteStatement);
 		}
+		public function updateStatement(value:String):void
+		{
+			var updateStatement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT);
+			_activityElement.data = value;
+			updateStatement.activityElement = _activityElement;
+			this.dispatchEvent(updateStatement);
+		}
+		
+		
 	}
 }
