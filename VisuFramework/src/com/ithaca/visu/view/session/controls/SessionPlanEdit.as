@@ -66,13 +66,17 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.ActivityElementType;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.Event;
 	
 	import mx.collections.IList;
+	import mx.controls.Alert;
 	
+	import spark.components.ComboBox;
 	import spark.components.Group;
 	import spark.components.SkinnableContainer;
+	import spark.components.TextArea;
 	
 	public class SessionPlanEdit extends SkinnableContainer
 	{
@@ -83,8 +87,8 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var keywordGroup:Group;
 		
-		
-		
+		[SkinPart("true")] 
+		public var comboBoxActivity:ComboBox;
 		private var _activities:IList;
 		protected var activitiesChanged:Boolean;
 		
@@ -102,6 +106,11 @@ package com.ithaca.visu.view.session.controls
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
+			if (instance == comboBoxActivity)
+			{
+				comboBoxActivity.labelFunction = setLabelComboboxActivity;
+			}
+			
 
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -115,17 +124,19 @@ package com.ithaca.visu.view.session.controls
 			if (activitiesChanged)
 			{
 				activitiesChanged = false;
-				
-		/*		removeAllElements();
-				keywordGroup.removeAllElements();*/
+				// remove all elements from activityGroup 
+				if(activityGroup != null)
+				{
+					activityGroup.removeAllElements();
+				}
+				keywordGroup.removeAllElements();
 				
 				for each (var activity:Activity in _activities)
 				{
 					var activityDetailEdit:ActivityDetailEdit =  new ActivityDetailEdit();
 					activityDetailEdit.activity = activity;
 					activityDetailEdit.percentWidth = 100;
-				//	activityDetailEdit.titleActivity.text = "kok";
-	//				activityDetailEdit.addEventListener(FlexEvent.CREATION_COMPLETE, onAddedActivityDetailOnStage);
+					activityDetailEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity);
 					activityGroup.addElement( activityDetailEdit );
 					
 					for each( var el:ActivityElement in activity.getListActivityElement())
@@ -133,13 +144,21 @@ package com.ithaca.visu.view.session.controls
 						if (el.type_element == ActivityElementType.KEYWORD)
 						{
 							var keywordEdit:KeywordEdit = new KeywordEdit();
+							keywordEdit.activityElement = el;
 							keywordEdit.textKeyword = el.data;
+							keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
+							keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
 							keywordGroup.addElement(keywordEdit);
 						}
 					}
 				}
+				// set dataprovider for combobox
+				if(_activities.length > 0)
+				{
+					comboBoxActivity.dataProvider = _activities;
+					comboBoxActivity.selectedIndex = 0;
+				}
 			}
-			
 		}
 		
 		override protected function getCurrentSkinState():String
@@ -171,6 +190,110 @@ package com.ithaca.visu.view.session.controls
 			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
 			_activities.dispatchEvent(event);*/
 			
+		}
+// KEYWORD	
+		public function addKeyword(value:String):void
+		{
+			var keyObj:Object = new Object();
+			keyObj.id_element = 4;
+			keyObj.data = "SOS => koko";
+			keyObj.type_element =  ActivityElementType.KEYWORD;
+			var activityElement:ActivityElement = new ActivityElement(keyObj);
+			
+			var addActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
+			// keyword hasn't activity
+			addActivityElement.activity = null;
+			addActivityElement.activityElement = activityElement;
+			this.dispatchEvent(addActivityElement);
+			
+			var keywordEdit:KeywordEdit = new KeywordEdit();
+			keywordEdit.textKeyword = value;
+			keywordEdit.activityElement = activityElement;
+			keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
+			keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
+			keywordGroup.addElement(keywordEdit);
+		}
+		// delete keyword 
+		private function onDeleteKeywordActivElement(event:SessionEditEvent):void
+		{
+			var deletingKeyword:ActivityElement = event.activityElement;				
+			var nbrElement:int = keywordGroup.numElements;
+			
+			for(var nElement:int =0; nElement < nbrElement; nElement++)
+			{
+				var documentEdit:KeywordEdit = keywordGroup.getElementAt(nElement) as KeywordEdit;
+				if(documentEdit.activityElement.id_element == deletingKeyword.id_element)
+				{
+					keywordGroup.removeElementAt(nElement);
+					var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
+					// keyword hasn't activity
+					deletedActivityElement.activity = null;
+					deletedActivityElement.activityElement = deletingKeyword;
+					this.dispatchEvent(deletedActivityElement);
+					return;
+				}
+			}
+		}
+		// update keyword
+		private function onUpdateKeywordActivElement(event:SessionEditEvent):void
+		{
+			var updatedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			// keyword hasn't activity
+			updatedActivityElement.activity = null;
+			updatedActivityElement.activityElement = event.activityElement;
+			this.dispatchEvent(updatedActivityElement);
+			
+		}
+// COMBOBOX ACTIVITY
+		private function setLabelComboboxActivity(item:Object):String
+		{
+			var activity:Activity = item as Activity;
+			if(activity != null)
+			{
+				return activity.title;
+			}
+			return "";
+		}
+		
+		private function onDeleteActivity(event:SessionEditEvent):void
+		{
+			var activityDeleting:Activity = event.activity;
+			var index:int= -1;
+			var nbrActivity:int = _activities.length;
+			for(var nActivity:int = 0; nActivity < nbrActivity ; nActivity++)
+			{
+				var activity:Activity = _activities.getItemAt(nActivity) as Activity;
+				if(activityDeleting.id_activity == activity.id_activity)
+				{
+					index = nActivity;
+				}
+			}
+			if(index == -1)
+			{
+				Alert.show("You havn't activity with title = "+activityDeleting.title,"message error");
+			}else{
+				_activities.removeItemAt(index);
+				activitiesChanged = true;
+				invalidateProperties();
+			}
+		}
+// ACTIVITY		
+		public function addActivity():void
+		{
+			var obj:Object = new Object();
+/*			obj.id_activity = 1;
+			obj.id_session = 1;*/
+			obj.duration = 12;
+			obj.title = "New activity";
+			var activity:Activity = new Activity(obj);
+			activity.ind = 0;
+			_activities.addItemAt(activity,0);
+			activitiesChanged = true;
+			invalidateProperties();
+			
+			var addActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY);
+			addActivityEvent.activity = activity;
+			this.dispatchEvent(addActivityEvent);
 		}
 	}
 }
