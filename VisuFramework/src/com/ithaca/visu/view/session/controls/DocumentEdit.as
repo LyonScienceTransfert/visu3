@@ -64,6 +64,7 @@
 package com.ithaca.visu.view.session.controls
 {
 	import com.ithaca.visu.model.ActivityElement;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	
@@ -104,6 +105,24 @@ package com.ithaca.visu.view.session.controls
 		override protected function getCurrentSkinState():String
 		{
 			return !enabled? "disable" : open? "open" : "normal";
+		}
+		
+		public function deleteDocument():void
+		{
+			var deleteDocument:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT);
+			deleteDocument.activityElement = _activityElement;
+			this.dispatchEvent(deleteDocument);				
+		}
+		
+		public function updateDocument(titre:String, link:String, type:String):void
+		{
+			_activityElement.data = titre;
+			_activityElement.url_element = link;
+			_activityElement.type_element = type;
+			
+			var updateDocumentEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT);
+			updateDocumentEvent.activityElement = _activityElement;
+			this.dispatchEvent(updateDocumentEvent);			
 		}
 	}
 }
