@@ -64,9 +64,11 @@
 package com.ithaca.visu.view.session.controls
 {
 	import com.ithaca.visu.controls.sessions.ActivityElementDetail;
+	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.ActivityElementType;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.ithaca.visu.view.session.controls.skins.StatementEditSkin;
 	
 	import flash.events.Event;
@@ -74,9 +76,12 @@ package com.ithaca.visu.view.session.controls
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.controls.Alert;
+	import mx.core.ILayoutElement;
 	
 	import spark.components.Group;
 	import spark.components.Label;
+	import spark.components.NumericStepper;
 	import spark.components.RichEditableText;
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
@@ -98,11 +103,15 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var memoDisplay:RichEditableText;
 		
+		[SkinPart("true")]
+		public var durationActivity:NumericStepper;
+		
 		private var open:Boolean;
 		
 		private var _activity:Activity; 
 		private var activityChanged : Boolean;
 		public var memo:String=""; 
+		private var memoActivityElement:ActivityElement;
 		private var statementList:IList;
 		private var documentList:IList; 
 		
@@ -119,7 +128,6 @@ package com.ithaca.visu.view.session.controls
 			if (instance == titleActivity)
 			{
 				titleActivity.text = "ghghghgh";
-				//titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
 			}
 			
 			if (instance == statementGroup)
@@ -137,6 +145,10 @@ package com.ithaca.visu.view.session.controls
 			}
 			
 	/*		
+			if (instance == titleDisplay)
+			{
+				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
+			}
 			if (instance == titleDisplay)
 			{
 				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
@@ -199,7 +211,8 @@ package com.ithaca.visu.view.session.controls
 				activityChanged = false;
 				
 				titleActivity.toolTip = titleActivity.text = _activity.title;
-			//	if (durationDisplay) durationDisplay.text = "Durée prévue : " + _activity.duration.toString();
+				if (durationActivity) durationActivity.value = _activity.duration;
+				
 				parseActivityElements();
 				
 			}
@@ -221,6 +234,8 @@ package com.ithaca.visu.view.session.controls
 				var statementEdit:StatementEdit = new StatementEdit();
 				statementEdit.percentWidth = 100;
 				statementEdit.activityElement = activityElement;
+				statementEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
+				statementEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
 				statementGroup.addElement(statementEdit);
 			}
 		}
@@ -231,6 +246,8 @@ package com.ithaca.visu.view.session.controls
 			{
 				var document:DocumentEdit = new DocumentEdit()
 				document.activityElement = el;
+				document.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteDocumentActivityElement);
+				document.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateDocumentActivityElement);
 				documentGroup.addElement(document);
 			}
 		}
@@ -241,6 +258,7 @@ package com.ithaca.visu.view.session.controls
 				switch(el.type_element)
 				{
 					case ActivityElementType.MEMO:
+						memoActivityElement = el;
 						memo = el.data;				
 						break;
 					case ActivityElementType.STATEMENT:					
@@ -282,32 +300,204 @@ package com.ithaca.visu.view.session.controls
 			dispatchEvent( new Event("activityChanged"));
 			invalidateProperties();
 		}
-		
+// STATEMENT		
 		public function addStatement(value:String):void
 		{
-			// TODO dispatcher
 			var stObj:Object = new Object();
 			stObj.data = "Statement activity" + " : "+ value;
+			stObj.id_element = 4;
 			stObj.type_element =  ActivityElementType.STATEMENT;
 			var activityElement:ActivityElement = new ActivityElement(stObj);
 			statementList.addItem(activityElement);
-		
+			
+			var addStatementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
+			addStatementEvent.activity = _activity;
+			addStatementEvent.activityElement = activityElement;
+			this.dispatchEvent(addStatementEvent);
+			
 			var statementEdit:StatementEdit = new StatementEdit();
 			statementEdit.percentWidth = 100;
 			statementEdit.activityElement = activityElement;
+			statementEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
+			statementEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
 			statementGroup.addElement(statementEdit);
 		}
+		// update statement
+		private function onUpdateStatementActivityElement(event:SessionEditEvent):void
+		{
+			var updateActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			updateActivityElement.activity = _activity;
+			updateActivityElement.activityElement = event.activityElement;
+			this.dispatchEvent(updateActivityElement);
+		}
+		// delete statement		
+		private function onDeleteStatementActivityElement(event:SessionEditEvent):void
+		{
+			var deletingStatement:ActivityElement = event.activityElement;
+			var index:int= -1;
+			var nbrStatement:int = statementList.length;
+			for(var nStatement:int = 0; nStatement < nbrStatement ; nStatement++)
+			{
+				var statement:ActivityElement = statementList.getItemAt(nStatement) as ActivityElement;
+				if(deletingStatement.id_element == statement.id_element)
+				{
+					index = nStatement;
+				}
+			}
+			if(index == -1)
+			{
+				Alert.show("You havn't activityElement with title = "+deletingStatement.data,"message error");
+			}else{
+				statementList.removeItemAt(index);
+// TODO update order activity elements !!!
+				
+				var nbrElement:int = statementGroup.numElements;
+				
+				for(var nElement:int =0; nElement < nbrElement; nElement++)
+				{
+					var statementEdit:StatementEdit = statementGroup.getElementAt(nElement) as StatementEdit;
+					if(statementEdit.activityElement.id_element == deletingStatement.id_element)
+					{
+						statementGroup.removeElementAt(nElement);
+						var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
+						deletedActivityElement.activity = _activity;
+						deletedActivityElement.activityElement = deletingStatement;
+						this.dispatchEvent(deletedActivityElement);
+						return;
+					}
+				}
+			}
+		}
+		
 // MEMO		
 		public function setMessageMemo():void
 		{
 			memoDisplay.text = "entrer un nouveau memo ici";
 			memoDisplay.setStyle("fontStyle","italic");
-			memoDisplay.setStyle("color","#BBBBBB");
+			memoDisplay.setStyle("color","#000000");
+			// add memo if havn't
+			if(memoActivityElement == null){
+				var stObj:Object = new Object();
+				stObj.data = "";
+				stObj.type_element =  ActivityElementType.MEMO;
+				stObj.id_element = 4;
+				memoActivityElement = new ActivityElement(stObj);
+// add memo				
+				var addMemoEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
+				addMemoEvent.activity = _activity;
+				addMemoEvent.activityElement = memoActivityElement;
+				this.dispatchEvent(addMemoEvent);	
+			}
 		}
-		public function addMemo(value:String):void
+		// update memo
+		public function updateMemo(value:String):void
+		{	
+			if(memo != value)
+			{
+				memo = value;
+				memoActivityElement.data = value;
+				var updateMemoEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+				updateMemoEvent.activity = _activity;
+				updateMemoEvent.activityElement = memoActivityElement;
+				this.dispatchEvent(updateMemoEvent);	
+			}
+		}
+// DOCUMENT
+		public function addDocument(text:String, link:String, type:String):void
 		{
-			// TODO dispatcher
-			memo = value;
+
+			var stObj:Object = new Object();
+			stObj.data = text;
+			stObj.url_element = link;
+			stObj.type_element =  type;
+			stObj.id_element = 4;
+			var activityElement:ActivityElement = new ActivityElement(stObj);
+			documentList.addItem(activityElement);
+			
+			var addDocumentEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
+			addDocumentEvent.activity = _activity;
+			addDocumentEvent.activityElement = activityElement;
+			this.dispatchEvent(addDocumentEvent);
+			
+			var documentEdit:DocumentEdit = new DocumentEdit();
+			documentEdit.percentWidth = 100;
+			documentEdit.activityElement = activityElement;
+			documentEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteDocumentActivityElement);
+			documentEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateDocumentActivityElement);
+			documentGroup.addElement(documentEdit);
+		}
+		
+		// update document
+		private function onUpdateDocumentActivityElement(event:SessionEditEvent):void
+		{
+			var updateDocumentElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			updateDocumentElement.activity = _activity;
+			updateDocumentElement.activityElement = event.activityElement;
+			this.dispatchEvent(updateDocumentElement);
+		}
+		// delete document
+		private function onDeleteDocumentActivityElement(event:SessionEditEvent):void
+		{
+			var deletingDocument:ActivityElement = event.activityElement;
+			var index:int= -1;
+			var nbrDocument:int = documentList.length;
+			for(var nDocument:int = 0; nDocument < nbrDocument ; nDocument++)
+			{
+				var document:ActivityElement = documentList.getItemAt(nDocument) as ActivityElement;
+				if(deletingDocument.id_element == document.id_element)
+				{
+					index = nDocument;
+				}
+			}
+			if(index == -1)
+			{
+				Alert.show("You havn't activityElement with title = "+deletingDocument.data,"message error");
+			}else{
+				documentList.removeItemAt(index);
+				
+				var nbrElement:int = documentGroup.numElements;
+				
+				for(var nElement:int =0; nElement < nbrElement; nElement++)
+				{
+					var documentEdit:DocumentEdit = documentGroup.getElementAt(nElement) as DocumentEdit;
+					if(documentEdit.activityElement.id_element == deletingDocument.id_element)
+					{
+						documentGroup.removeElementAt(nElement);
+						var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
+						deletedActivityElement.activity = _activity;
+						deletedActivityElement.activityElement = deletingDocument;
+						this.dispatchEvent(deletedActivityElement);
+						return;
+					}
+				}
+			}
+		}
+// TITRE ACTIVITY
+		public function addTitreActivity(value:String):void
+		{
+			if(_activity.title != value)
+			{
+				_activity.title = value;
+				var changeTitreEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+				changeTitreEvent.activity = _activity;
+				this.dispatchEvent(changeTitreEvent); 
+			}
+		}
+// DELETE ACTIVITY
+		public function deleteActivity():void
+		{
+			var deleteActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY);
+			deleteActivityEvent.activity = _activity;
+			this.dispatchEvent(deleteActivityEvent);
+		}
+// DURATION 
+		public function changeDuration(value:Number):void
+		{
+			_activity.duration = value;
+			var changeDurationEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+			changeDurationEvent.activity = _activity;
+			this.dispatchEvent(changeDurationEvent);
+			
 		}
 	}
 }
