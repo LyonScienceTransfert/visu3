@@ -3,7 +3,7 @@
     xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5"
 	creationComplete="skin1_creationCompleteHandler(event)"
 	 addedToStage="skin1_addedToStageHandler(event)" xmlns:renderer="com.ithaca.visu.renderer.*" xmlns:layout="sparks.layout.*">
-    <fx:Metadata>[HostComponent("com.ithaca.visu.controls.sessions.SessionPlan")]</fx:Metadata>
+    <fx:Metadata>[HostComponent("com.ithaca.visu.view.session.controls.SessionPlanEdit")]</fx:Metadata>
 
     <fx:Script fb:purpose="styling">
         <![CDATA[  
@@ -46,6 +46,52 @@
 				this.percentWidth = 100;
 			}
 
+// KEYWORD
+			protected function addKeyword_focusInHandler(event:FocusEvent):void
+			{
+				if(addKeyword.text == "entrer nouveau mot-clé"){
+					addKeyword.text = "";
+					addKeyword.setStyle("fontStyle","normal");
+					addKeyword.setStyle("color","#000000");
+				}
+			}
+
+
+			protected function addKeyword_focusOutHandler(event:FocusEvent):void
+			{
+				if(addKeyword.text == ""){
+					this.setMessageKeyword();
+				}
+			}
+
+
+			protected function addKeyword_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode == Keyboard.ENTER && addKeyword.text != "")
+				{
+					// add statement
+					if(addKeyword.text != "entrer nouveau mot-clé" && addKeyword.text != "")
+					{
+						this.hostComponent.addKeyword(addKeyword.text);
+						addKeyword.text = "";
+						stage.focus = addKeyword;
+					}
+				}
+			}
+
+			private function setMessageKeyword():void
+			{
+				addKeyword.text = "entrer nouveau mot-clé";
+				addKeyword.setStyle("fontStyle","italic");
+				addKeyword.setStyle("color","#BBBBBB");
+			}
+			
+
+			protected function buttonAddActivity_clickHandler(event:MouseEvent):void
+			{
+				this.hostComponent.addActivity();
+			}
+
         ]]>        
     </fx:Script>
     
@@ -73,7 +119,7 @@
             <s:VerticalLayout gap="3"/>
         </s:layout>
 		<s:Group width="100%">
-			<s:Label left="5" top="3" fontWeight.normal="bold" top.normal="5" left.normal="5">
+			<s:Label left="5" top="3" fontWeight="bold">
 				<!--<s:text>{fxgt.gettext("Plan de séance")}</s:text>-->
 				<s:text>{"Plan de séance"}</s:text>
 			</s:Label>
@@ -85,20 +131,21 @@
 				<!--<s:label>{fxgt.gettext("exporter")}</s:label>-->
 				<s:label>{"exporter"}</s:label>
 			</s:Button>
-			<s:Label right="5" top.normal="5" right.normal="5" color.normal="#4398E0">
+			<s:Label right="5" top="5" color="#4398E0">
 				<!--<s:text>{fxgt.gettext("initialiser")}</s:text>-->
 				<s:text>{"initialiser"}</s:text>
 			</s:Label>
 		</s:Group>	
 	
 		<s:Group width="100%">
-			<s:Button left="10">
+			<s:Button id="buttonAddActivity" left="10"
+					   click="buttonAddActivity_clickHandler(event)" >
 				<s:label>ajouter une activité</s:label>
 			</s:Button>
-	        <s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="125" fontSize.normal="14">
+	        <s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="160" fontSize.normal="14" top.normal="5">
 				<s:text>{"Activité : "}</s:text>
 			</s:Label>
-			<s:ComboBox  width="45" right="5" width.normal="120"/>
+			<s:ComboBox   id="comboBoxActivity" width="45" right="5" width.normal="150"/>
 		</s:Group>
 <!-- LINE -->	
 		<s:Line left="50" right="2" top="10" width="100%">
@@ -116,21 +163,29 @@
 		</s:Scroller>
 		
 <!-- KEYWORD -->	
-		<s:Group  width="100%" height="80">
+		<s:Group  width="100%" height="100">
 <!-- LINE -->	
-			<s:Line left="5" right="5" width="100%" top="1">
+			<s:Line left="1" right="1" width="100%" top="1">
 				<s:stroke>
 					<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 				</s:stroke>
 			</s:Line>
 			<s:Label left="15" text="Mots-clés : " top="7"/>
-			<s:Scroller top="8" left="80" right="0" bottom="0" height="100%" width="100%">
+			<s:Scroller top="8" left="80" right="0" bottom="0" height.disabled="100%" width.disabled="100%" top.normal="8" left.normal="80" bottom.normal="25" right.normal="2">
 				<s:Group id="keywordGroup"  left="0" width="100%" height="100%"  top="0">
 					<s:layout>
 						<layout:FlowLayout/>
 					</s:layout>
 				</s:Group>	
 			</s:Scroller>
+<!-- ADD KEYWORD -->
+			<s:TextArea  id="addKeyword" height="22" right="2" bottom="2"
+						 fontStyle="italic" color="#BBBBBB"
+						  focusIn="addKeyword_focusInHandler(event)"
+						   focusOut="addKeyword_focusOutHandler(event)"
+						    keyUp="addKeyword_keyUpHandler(event)" textAlign.normal="center">
+				<s:text>entrer nouveau mot-clé</s:text>
+			</s:TextArea>
 		</s:Group>
 		
 		
