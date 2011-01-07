@@ -63,6 +63,11 @@
 
 package com.ithaca.visu.view.session.controls
 {
+	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+	import com.visualempathy.display.controls.datetime.DateTimePickerFR;
+	
+	import spark.components.RichEditableText;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class SessionDetail  extends SkinnableComponent
@@ -70,9 +75,122 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var sessionPlanEdit:SessionPlanEdit;
 		
+		[SkinPart("true")]
+		public var themeSession:RichEditableText;
+		
+		[SkinPart("true")]
+		public var picker:DateTimePickerFR;
+		
+		public var theme:String="";
+		public var description:String="";
+		private var _session:Session;
+		private var sessionChanged:Boolean;
+		
+		[SkinPart("true")]
+		public var descriptionSession:RichEditableText;
+		
 		public function SessionDetail()
 		{
 			super();
+		}
+		
+		override protected function partAdded(partName:String, instance:Object):void
+		{
+			if (instance == themeSession)
+			{
+				
+			}
+			if (instance == descriptionSession)
+			{
+				
+			}
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if (sessionChanged)
+			{
+				sessionChanged = false;
+				
+				theme = _session.theme;
+				description = _session.description;
+				picker.selectedDate = _session.date_session;
+				
+				if(theme != "")
+				{
+					themeSession.text = themeSession.toolTip = theme;
+				}else
+				{
+					setMessageTheme();
+				}
+				
+				if(description != "")
+				{
+					descriptionSession.text = descriptionSession.toolTip = description;
+				}else
+				{
+					setMessageDescription();
+				}
+				
+			}
+		}
+		
+// SETTER/GETTER
+		public function get session():Session
+		{
+			return _session;
+		}
+		
+		public function set session(value:Session):void
+		{
+			if( _session == value) return;
+			_session = value;
+			sessionChanged = true;
+			invalidateProperties();
+		}
+
+// THEME 		
+		public function updateTheme(value:String):void
+		{
+			_session.theme = value;
+			var updateSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_SESSION);
+			updateSession.session = _session;
+			this.dispatchEvent(updateSession);
+			
+		}
+		public function setMessageTheme():void
+		{
+			themeSession.text = "entrer un nouveau themè de la séance ici";
+			themeSession.setStyle("fontStyle","italic");
+			themeSession.setStyle("color","#CCCCCC");
+		}	
+// DESCRIPTION		
+		public function updateDescription(value:String):void
+		{
+			_session.description = value;
+			var updateSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_SESSION);
+			updateSession.session = _session;
+			this.dispatchEvent(updateSession);
+			
+		}
+		
+		public function setMessageDescription():void
+		{
+			descriptionSession.text = "entrer un nouveau description de la séance ici";
+			descriptionSession.setStyle("fontStyle","italic");
+			descriptionSession.setStyle("color","#CCCCCC");
+		}
+// DATE
+		public function updateDateSession(value:Date):void
+		{
+			if( _session.date_session.time != value.time)
+			{
+				_session.date_session = value;
+				var updateSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_SESSION);
+				updateSession.session = _session;
+				this.dispatchEvent(updateSession);
+			}
 		}
 	}
 }
