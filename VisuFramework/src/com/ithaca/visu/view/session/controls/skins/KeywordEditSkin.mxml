@@ -12,6 +12,8 @@
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
 			private var currentMouseCursor:String;
@@ -23,11 +25,14 @@
 			}
 			
 			// on click butoon cancel
-			protected function onClickButtonValider(event:MouseEvent):void
+			protected function onClickButtonValider(event:MouseEvent=null):void
 			{
 				this.currentState = "normal";
-				this.textContent.text = this.editableContent.text;
-				this.textContent.toolTip = this.textContent.text;
+				if(this.textContent.text != this.editableContent.text){
+					this.textContent.text = this.editableContent.text;
+					this.textContent.toolTip = this.textContent.text;
+					this.hostComponent.updateKeyword(this.textContent.text);
+				}
 			}
 
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
@@ -72,6 +77,39 @@
 				this.editableContent.text = this.textContent.text;
 				stage.focus = this.editableContent;
 			}
+
+			protected function buttonDelete_clickHandler(event:MouseEvent):void
+			{
+				Alert.yesLabel = "Oui";
+				Alert.noLabel = "Non";
+				Alert.show("Voulez-vous supprimer mot-clé?",
+					"Confirmation", Alert.YES|Alert.NO, null, deleteKeywordConfirmed); 
+				
+			}
+			private function deleteKeywordConfirmed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{
+					this.hostComponent.deleteKeyword();
+				}
+			}
+
+			protected function editableContent_focusInHandler(event:FocusEvent):void
+			{
+				editableContent.addEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+			}
+			
+			protected function editableContent_focusOutHandler(event:FocusEvent):void
+			{
+				editableContent.removeEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+				if (!event.isRelatedObjectInaccessible){
+					this.onClickButtonValider();
+				}else 
+					if ((event.relatedObject as Object).id != "buttonCancel")
+					{
+						this.onClickButtonValider();
+					}	
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
@@ -109,16 +147,18 @@
 			<s:Label includeIn="normal,closed"  id="textContent" text="ghgkkkhhkhkhkhkjhkjhkhgjgjgj  jgjg jj j gjgjhg jgjgjghjgj   j jg j jkhkGgh" top="1" left.closed="10" left="42" right="10"
 								   paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" bottom="2"/>
 			<s:TextArea id="editableContent"  includeIn="open" text="jkhgljhglgkjghkjgkjhgkljf" top="1" left="10" right="10" bottom="1"
-						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+						focusIn="editableContent_focusInHandler(event)"/>
 <!-- BOUTTONS -->
-			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16" left="10" top="3"/>
+			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16" left="10" top="3"
+					    click="buttonDelete_clickHandler(event)"/>
 			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14" width="14" left="26" top="5"/>
 		</s:Group>
 		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
 			<s:Button includeIn="open" click="onClickButtonValider(event)">
 				<s:label>Valider</s:label>
 			</s:Button>
-			<s:Button click="onClickButtonCancel(event)">
+			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
 				<s:label>Cancel</s:label>
 			</s:Button>
 		</s:HGroup>
