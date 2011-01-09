@@ -1,0 +1,21 @@
+#!/bin/sh
+
+DIR=$(dirname $0)
+APPNAME=visu
+BACKUP_DIR=sauvegarde
+cd "$DIR"
+echo "Création du repertoire $BACKUP_DIR"
+[ -d "$BACKUP_DIR"/$(date "+%Y-%m-%d") ] || mkdir -p "$BACKUP_DIR"/$(date "+%Y-%m-%d")
+
+
+echo "Backup de la base"
+mysqldump -u php -p ${APPNAME} > "$BACKUP_DIR"/$(date "+%Y-%m-%d")/$(date "+%Y-%m-%d").sql
+
+echo "backup des vidéos"
+cp -r ../red5/webapps/${APPNAME}/streams/* "$BACKUP_DIR"/$(date "+%Y-%m-%d")
+
+echo "Targzip du repertoire"
+tar zcf "$BACKUP_DIR"/$(date "+%Y-%m-%d").tar.gz "$BACKUP_DIR"/$(date "+%Y-%m-%d")
+
+echo "Clean du repertoire"
+rm "$BACKUP_DIR"/$(date "+%Y-%m-%d")/*.flv
