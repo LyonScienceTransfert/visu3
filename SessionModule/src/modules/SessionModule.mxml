@@ -5,18 +5,28 @@
 		xmlns:modules="com.ithaca.visu.modules.*"
 		xmlns:maps="maps.*"
 		width="100%" height="100%" 
-		configure="visumodulebase1_configureHandler(event)"> 
+		configure="visumodulebase1_configureHandler(event)" 
+		 creationComplete="visumodulebase1_creationCompleteHandler(event)"
+		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*"> 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
-			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.model.Activity;
+			import com.ithaca.visu.model.ActivityElement;
 			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.vo.ActivityElementVO;
+			import com.ithaca.visu.model.vo.ActivityVO;
+			import com.ithaca.visu.model.vo.SessionVO;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.view.session.controls.SessionDetail;
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 			
 			import mx.events.FlexEvent;
-
+			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
 				if((event.currentTarget as SessionModule).parameters != null)
@@ -28,13 +38,129 @@
 					}
 				}
 			}
+			
+			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
+			{
+				var sessionDetail:SessionDetail = sessionManagement.sessionDetail;
+				sessionDetail.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateActivity,true);
+				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY, onAddActivity,true);
+				sessionDetail.addEventListener(SessionEditEvent.DELETE_ACTIVITY_ELEMENT, onDeleteActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_SESSION, onUpdateSession);
+			}
+// ACTIVITY
+			private function onDeleteActivity(event:SessionEditEvent):void
+			{
+				var activityVO:ActivityVO = this.setActivityVO(event.activity);
+				var deleteActivity:SessionEvent = new SessionEvent(SessionEvent.DELETE_ACTIVITY);
+				deleteActivity.activityVO = activityVO;
+				this.dispatchEvent(deleteActivity);
+			}
+			private function onUpdateActivity(event:SessionEditEvent):void
+			{	
+				var activityVO:ActivityVO = this.setActivityVO(event.activity);
+				var updateActivity:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY);
+				updateActivity.activityVO = activityVO;
+				this.dispatchEvent(updateActivity);
+				
+			}
+			private function onAddActivity(event:SessionEditEvent):void
+			{
+				var activityVO:ActivityVO = this.setActivityVO(event.activity);
+				var addActivity:SessionEvent = new SessionEvent(SessionEvent.ADD_ACTIVITY);
+				addActivity.activityVO = activityVO;
+				this.dispatchEvent(addActivity);
+			}
+			private function setActivityVO(activity:Activity):ActivityVO
+			{
+				var activityVO:ActivityVO = new ActivityVO();
+				activityVO.id_activity = activity.id_activity; 
+				activityVO.id_session = Model.getInstance().getCurrentSessionId();
+				activityVO.title = activity.title;
+				activityVO.duration = activity.duration;
+				activityVO.ind = activity.ind;
+				return activityVO;
+			}
+// ACTIVITYELEMENT
+			private function onDeleteActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
+				
+				var deleteActivtyElementEvent:SessionEvent = new SessionEvent(SessionEvent.DELETE_ACTIVITY_ELEMENT);
+				deleteActivtyElementEvent.activityElementVO = activityElementVO;
+				this.dispatchEvent(deleteActivtyElementEvent);
+			}
+			private function onUpdateActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
+				
+				var updateActivityElement:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY_ELEMENT);
+				updateActivityElement.activityElementVO = activityElementVO;
+				this.dispatchEvent(updateActivityElement);		
+			}
+			private function onAddActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
+				
+				var addActivityElement:SessionEvent = new SessionEvent(SessionEvent.ADD_ACTIVITY_ELEMENT);
+				addActivityElement.activityElementVO = activityElementVO;
+				this.dispatchEvent(addActivityElement);		
+			}
+			private function setActivityElementVO(activityElement:ActivityElement, activity:Activity):ActivityElementVO
+			{
+				var alm:ActivityElementVO = new ActivityElementVO();
+				alm.id_element = activityElement.id_element;
+				var idActivity:int;
+				if(activity == null)
+				{
+					idActivity = 0;
+				}else{
+					idActivity = activity.id_activity
+				}
+				alm.id_activity = idActivity;
+				alm.data = activityElement.data;
+				alm.url_element = activityElement.url_element;
+				alm.type_element = activityElement.type_element;
+				alm.type_mime = activityElement.type_mime;
+				return alm;
+			}
+			//private function setActivityVO(activityElement:ActivityElement, 
+// SESSION
+			private function onUpdateSession(event:SessionEditEvent):void
+			{
+				var updateSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_SESSION);
+				var session:Session = event.session;
+				var sessionVO:SessionVO = new SessionVO();
+				sessionVO.duration_session = session.duration_session;
+				sessionVO.id_session = session.id_session;
+				sessionVO.id_user = session.id_user;
+				sessionVO.theme = session.theme;
+				sessionVO.date_session = session.date_session;
+				sessionVO.isModel = session.isModel;
+				sessionVO.description = session.description;
+				sessionVO.start_recording = session.date_start_recording;
+				sessionVO.status_session = session.statusSession;
+				sessionVO.id_currentActivity = 0;
+				updateSession.sessionVO = sessionVO;
+				this.dispatchEvent(updateSession);
+			}
+
 		]]>
 	
 	</fx:Script>
 	<s:VGroup >
-		<s:Label   text="Gestion des séances" fontSize="20" />
+		<s:Label   text="Gestion des séances" fontSize="20"  fontStyle="italic"/>
 		<s:Label  id="testLabel" fontSize="20" />
 	</s:VGroup>
+	<session:SessionManagement id="sessionManagement" top="0" left="0" right="0" bottom="0" skinClass="com.ithaca.visu.view.session.skin.SessionManagementSkin"/>
 	<fx:Declarations>
 		<maps:SessionMap dispatcher="{this}"/>
 	</fx:Declarations>
