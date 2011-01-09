@@ -68,10 +68,10 @@
 			
 				
 				<s:Label id="titleDisplay" left="15" top="10" right="90" color="#121212"
-						 fontSize="16" fontWeight="bold" maxDisplayedLines="1">
-					<s:filters>
+						 fontSize="16" fontWeight="bold" maxDisplayedLines="1" color.normal="#406885" fontSize.normal="15" fontSize.open="15" color.open="#406885">
+					<!--<s:filters>
 						<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
-					</s:filters>
+					</s:filters>-->
 				</s:Label>
 				
 				<s:Button id="startButton" right="3" width="80" cornerRadius="10" verticalCenter="0"/>
