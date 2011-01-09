@@ -15,6 +15,7 @@
 		<s:State name="close"/>
 		<s:State name="error" />
 		<s:State name="open" />
+		<s:State name="errorMessage"/>
 	</s:states>
 	
 	<fx:Script>
@@ -42,19 +43,12 @@
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
-				this.currentState="normal";
+				//this.currentState="normal";
 				this.panelContent.title = this.currentText;
 				// set current mouse cursor
-				currentMouseCursor = Mouse.cursor;
+				this.hostComponent.currentMouseCursor = Mouse.cursor;
 				// set listeners mouse over
-				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				// set listeners mouse out
-				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				// set tool tips
-				this.buttonDelete.toolTip = "effacer";
-				this.buttonEdit.toolTip = "editer";
+
 				// add player 
 				//this.currentUrl = "http://livedocs.adobe.com/flex/3/html/images/adobe.png?v=PSWhxORaJvY&feature=related";
 				if(this.typeDocument == ActivityElementType.IMAGE) 
@@ -120,7 +114,12 @@
 			}
 			private function onErrorAdresse(event:*= null):void
 			{
-				this.currentState = "error";
+				if(this.currentState == "close" || this.currentState == "errorMessage"){
+					this.currentState = "errorMessage";
+				}else
+				{
+					this.currentState = "open";					
+				}
 			}
 			
 			// set cursor mouse BUTTON 
@@ -177,15 +176,6 @@
 					this.currentState = "error";
 					return;
 				}
-/* 				this.currentState = "normal";
-				this.panelContent.title = this.editableContent.text;
-				if(this.player != null)
-				{
-					this.addPlayer(this.editableLien.text);
-				}else{
-					this.addImage(this.editableLien.text);
-				} */
-				
 				
 				if(URLValidator.isUrl(editableLien.text))
 				{
@@ -204,7 +194,11 @@
 					this.panelContent.title = this.editableContent.text;
 					this.hostComponent.updateDocument(this.panelContent.title, editableLien.text, type);
 				}else{
-					this.currentState = "error";
+					if(this.currentState == "close"){
+						this.currentState = "errorMessage"
+					}else{
+						this.currentState = "error";						
+					}
 				}
 			}
 			// on click on button ok of the panel error
@@ -213,8 +207,6 @@
 				this.currentState="open";
 			}
 			
-			
-
 			protected function skin1_preinitializeHandler(event:FlexEvent):void
 			{
 				// set const
@@ -222,7 +214,6 @@
 				this.currentText = this.hostComponent.currentText;
 				this.typeDocument = this.hostComponent.typeDocument;
 			}
-
 
 			protected function buttonDelete_clickHandler(event:MouseEvent):void
 			{
@@ -238,7 +229,6 @@
 					this.hostComponent.deleteDocument();
 				}
 			}
-
 		]]>
 	</fx:Script>
 	<s:Group width="100%">
@@ -326,7 +316,7 @@
 			</s:Label>
 			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
 <!-- STATE ERROR -->
-			<s:RichText  includeIn="error" top="10" horizontalCenter="0" right="10" left="10">
+			<s:RichText  includeIn="error,errorMessage" top="10" horizontalCenter="0" right="10" left="10" top.errorMessage="40" left.errorMessage="10" right.errorMessage="10" horizontalCenter.errorMessage="0" bottom.errorMessage="40">
 				<s:text>Le lien n'est pas correct...</s:text>
 			</s:RichText>
 			<s:Button includeIn="error" top="35" click="onClickButtonOkPanelError(event)" bottom="10" horizontalCenter="0">

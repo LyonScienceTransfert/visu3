@@ -66,15 +66,27 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
+	import flash.events.MouseEvent;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
+	
+	import spark.components.Button;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class DocumentEdit extends SkinnableComponent
 	{
 		public var currentUrl:String;
 		public var currentText:String;
+		public var currentMouseCursor:String;
 		public var typeDocument:String;
 		
-		private var open:Boolean;
+		[SkinPart("true")] 
+		public var buttonDelete:Button;
+		
+		[SkinPart("true")] 
+		public var buttonEdit:Button;
+
+		private var normal:Boolean = true;
 		protected var _activityElement:ActivityElement;
 
 		public function DocumentEdit()
@@ -85,6 +97,18 @@ package com.ithaca.visu.view.session.controls
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
+			if(instance == buttonDelete)
+			{
+				 buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				 buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				 buttonDelete.toolTip = "effacer";
+			}
+			if(instance == buttonEdit)
+			{
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonEdit.toolTip = "editer";
+			}
 			
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -104,7 +128,23 @@ package com.ithaca.visu.view.session.controls
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled? "disable" : open? "open" : "normal";
+			return !enabled? "disabled" : normal? "normal" : "close";
+		}
+		public function setEditabled(value:Boolean):void
+		{
+			normal = value;
+			this.invalidateSkinState();
+		}
+		
+		protected function onMouseOverButton(event:MouseEvent):void
+		{
+			Mouse.cursor = MouseCursor.BUTTON;	
+		}
+		
+		// set cursor mouse AROOW  
+		protected function onMouseOutButton(event:MouseEvent):void
+		{
+			Mouse.cursor = this.currentMouseCursor;
 		}
 		
 		public function deleteDocument():void
