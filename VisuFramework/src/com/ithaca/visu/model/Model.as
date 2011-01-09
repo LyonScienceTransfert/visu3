@@ -126,6 +126,8 @@ package  com.ithaca.visu.model
 		private var _timeServeur:Number;
 		private var _timeJoinDECK:Number;
 		
+		private var _currentSessionId:int;
+		
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -180,6 +182,15 @@ package  com.ithaca.visu.model
 				return true;
 			}
 			return false;
+		}
+		
+		public function setCurrentSessionId(value:int):void
+		{
+			_currentSessionId = value;
+		}
+		public function getCurrentSessionId():int
+		{
+			return _currentSessionId;
 		}
 		
 		/**
