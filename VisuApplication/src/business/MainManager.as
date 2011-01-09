@@ -618,7 +618,11 @@ public class MainManager
 			}
 		}
 		// get last obsel "SessionIn"
-		var lastObselSessionIn:Obsel = this.addObselSessionOut(listObsel,startRecordingSession);
+		var lastObselSessionIn:Obsel;
+		if(listObsel != null)
+		{
+			lastObselSessionIn = this.addObselSessionOut(listObsel,startRecordingSession);
+		}
 		Model.getInstance().setListObsel(listObsel);
 		
 		if(salonTutorat)
