@@ -530,7 +530,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     	tempList.add("@prefix : <../visu/> .");
     	tempList.add("");
 		tempList.add(". a :"+typeObsel+";");
-    	tempList.add("ktbs:hasTrace "+ trace+";");
+    	tempList.add("ktbs:hasTrace "+ "<"+trace+"> ;");
     	tempList.add("ktbs:hasBegin "+timeInMilliseconde +";");
     	tempList.add("ktbs:hasEnd "+ timeInMilliseconde+";");
     	tempList.add("ktbs:hasSubject "+'"'+subject+'"'+";");
@@ -1462,7 +1462,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     	String secStr= sec.toString();
     	if(sec<10){secStr="0"+secStr;}
 
-		String tarceStr= "<trace-"+year.toString()+monthStr+dayStr+hourStr+minStr+secStr+"-"+userId.toString()+">";
+		String tarceStr= "trace-"+year.toString()+monthStr+dayStr+hourStr+minStr+secStr+"-"+userId.toString();
 		return tarceStr;
 	}
 	
