@@ -1,6 +1,9 @@
 package  com.ithaca.visu.events
 {
 import com.ithaca.visu.model.Session;
+import com.ithaca.visu.model.vo.ActivityElementVO;
+import com.ithaca.visu.model.vo.ActivityVO;
+import com.ithaca.visu.model.vo.SessionVO;
 
 import flash.events.Event;
 
@@ -16,9 +19,17 @@ public class SessionEvent extends Event
 	static public const SHOW_LIST_DATE_SESSION : String = 'showListDateSession';
 	static public const SHOW_LIST_SESSION : String = 'showListSession';
 	static public const ADDED_SESSION : String = 'addedSession';
+	static public const ADD_SESSION : String = 'addSession';
+	static public const ADD_ACTIVITY : String = 'addActivity';
+	static public const ADD_ACTIVITY_ELEMENT : String = 'addActivityElement';
+	static public const DELETE_ACTIVITY : String = 'deleteActivity';
+	static public const DELETE_ACTIVITY_ELEMENT : String = 'deleteActivityElement';
 	static public const UPDATE_LIST_SESSION : String = 'updateListSession';
 	static public const UPDATE_LIST_USER : String = 'updateListUser';
 	static public const UPDATE_LIST_VIEW_TRACELINE : String = 'updateListViewTraceline';
+	static public const UPDATE_SESSION : String = 'updateSession';
+	static public const UPDATE_ACTIVITY : String = 'updateActivity';
+	static public const UPDATE_ACTIVITY_ELEMENT : String = 'updateActivityElement';
 	static public const EDIT_SESSION : String = 'editSession';
 	static public const CANCEL_SESSION : String = 'cancelSession';
 	static public const JOIN_SESSION : String = 'joinSession';
@@ -47,6 +58,9 @@ public class SessionEvent extends Event
 	public var sessionId : int;
 	public var sessionDate : String;
 	public var session : Session;
+	public var sessionVO :SessionVO;
+	public var activityVO :ActivityVO;
+	public var activityElementVO :ActivityElementVO;
 	public var listSession : ArrayCollection;
 	public var listDate : Array;
 	public var status : int;
