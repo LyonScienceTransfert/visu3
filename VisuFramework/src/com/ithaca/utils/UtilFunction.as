@@ -88,7 +88,7 @@ package com.ithaca.utils
 			var mount:int = date.getMonth() +1;
 			var mountString:String = mount.toString();
 			if(mount < 10){	mountString = "0"+mountString;};
-			var result:String = dayString+"."+mountString+"."+date.getUTCFullYear().toString();
+			var result:String = date.getUTCFullYear().toString()+"/"+mountString+"/"+dayString;
 			return result;
 		}
 		
