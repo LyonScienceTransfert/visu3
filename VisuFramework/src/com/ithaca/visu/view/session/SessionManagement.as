@@ -64,6 +64,7 @@
 package com.ithaca.visu.view.session
 {
 	import com.ithaca.controls.AdvancedTextInput;
+	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.ui.utils.SessionFilterEnum;
@@ -132,7 +133,22 @@ package com.ithaca.visu.view.session
 				dispatchEvent( new Event("update") );
 			}
 		} 
-		
+		// TODO update session item
+		public function updateSession(value:Session):void
+		{
+			var nbrSession:int = sessionsList.dataProvider.length;
+			for(var nSession:int = 0 ; nSession < nbrSession; nSession++)
+			{
+				var session:Session = sessionsList.dataProvider.getItemAt(nSession) as Session;
+				if(session.id_session == value.id_session)
+				{
+					session.date_session = value.date_session;
+					session.theme = value.theme;
+					session.description = value.description;
+					return;
+				}
+			}
+		}
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -144,7 +160,7 @@ package com.ithaca.visu.view.session
 			super.partAdded(partName,instance);
 			if (instance == sessionsList)
 			{
-				sessionsList.addEventListener(IndexChangeEvent.CHANGE, userList_indexChangeHandler);
+				sessionsList.addEventListener(IndexChangeEvent.CHANGE, sessionList_indexChangeHandler);
 			}
 			if (instance == filter)
 			{
@@ -165,7 +181,7 @@ package com.ithaca.visu.view.session
 			super.partRemoved(partName,instance);
 			if (instance == sessionsList)
 			{
-				sessionsList.removeEventListener(IndexChangeEvent.CHANGE, userList_indexChangeHandler);
+				sessionsList.removeEventListener(IndexChangeEvent.CHANGE, sessionList_indexChangeHandler);
 			}
 			if (instance == filter)
 			{
@@ -178,9 +194,7 @@ package com.ithaca.visu.view.session
 			if (instance == addSessionButton)
 			{
 				addSessionButton.removeEventListener(MouseEvent.CLICK, addButton_clickHandler);
-			}
-			
-			
+			}		
 		}
 		
 		override protected function commitProperties():void
@@ -212,15 +226,24 @@ package com.ithaca.visu.view.session
 		/**
 		 * @private
 		 */
-		protected function userList_indexChangeHandler(event:IndexChangeEvent):void
+		protected function sessionList_indexChangeHandler(event:IndexChangeEvent):void
 		{
-		//	userDetail.user = User(usersList.dataProvider.getItemAt(event.newIndex));
+			var session:Session = Session(sessionsList.dataProvider.getItemAt(event.newIndex));
+			sessionDetail.session = session;
+			var editable:Boolean = false;
+			if(session.statusSession == SessionStatusEnum.SESSION_OPEN){
+				editable = true;
+			}
+			sessionDetail.setEditabled(editable);
+			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
+			visuActivityEvent.sessionId = session.id_session;					
+			dispatchEvent(visuActivityEvent);
 		}
 		
 		protected function onFilterViewHandler(event:SessionFilterEvent):void
 		{
 			log.debug("filter session is :  " + event.filterSession );
-			var filter:uint = event.filterSession;
+			this.filterSession = event.filterSession;
 			sessionCollection.refresh();
 		}
 
@@ -237,23 +260,23 @@ package com.ithaca.visu.view.session
 
 		protected function userFilterFunction(item:Object):Boolean
 		{
-			// FIXME : wat will be with session en recording
+			// FIXME : ? will be with session en recording
 			var result:Boolean = false;
 			var session :Session = item as Session;
-			if(this.filterSession != -1)
-			{
-				
+		//	this.filterSession = session.statusSession;
 				switch (this.filterSession)
 				{
-					case SessionFilterEnum.SESSION_PLAN:				
-						result = session.isModel;
+					case SessionFilterEnum.SESSION_PLAN:
+						if(session.isModel){
+							result = true;
+						}
 						break;
 					case SessionFilterEnum.SESSION_ALL:
-						this.filterSession = -1;
+						//this.filterSession = -1;
 						result = true;
 						break;
 					case SessionFilterEnum.SESSION_WAS:
-						if(session.statusSession == SessionStatusEnum.SESSION_CLOSE)
+						if(session.statusSession == SessionStatusEnum.SESSION_CLOSE && !session.isModel)
 						{
 							result = true;
 						}				
@@ -273,8 +296,8 @@ package com.ithaca.visu.view.session
 					default:
 						break;	
 				}
+
 				return result;
-			}
 						
 			var dict :String = LemmeFormatter.format( session.theme );
 			
