@@ -27,8 +27,8 @@
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
 				fxgt = FxGettext;
-
 			}
+			
 			protected function group1_clickHandler(event:MouseEvent):void
 			{
 				if(event.target is Group)
@@ -79,7 +79,6 @@
 				addStatement.setStyle("color","#BBBBBB");
 			}
 // MEMO
-
 			protected function memoDisplay_focusInHandler(event:FocusEvent):void
 			{
 				if(memoDisplay.text == "entrer un nouveau memo ici")
@@ -89,7 +88,6 @@
 					memoDisplay.setStyle("color","#000000");
 				}
 			}
-
 
 			protected function memoDisplay_focusOutHandler(event:FocusEvent):void
 			{
@@ -101,7 +99,6 @@
 					this.hostComponent.updateMemo(memoDisplay.text);
 				}
 			}
-
 // DOCUMENT
 			protected function addTitreDocument_focusOutHandler(event:FocusEvent):void
 			{
@@ -109,8 +106,7 @@
 					this.setMessageTitreDocument();
 				}
 			}
-
-
+			
 			protected function addTitreDocument_focusInHandler(event:FocusEvent):void
 			{
 				if(addTitreDocument.text == "ajout une nouvelle titre de document ici"){
@@ -119,7 +115,6 @@
 					addTitreDocument.setStyle("color","#000000");
 				}
 			}
-
 
 			protected function addLienDocument_focusInHandler(event:FocusEvent):void
 			{
@@ -172,6 +167,7 @@
 				addTitreDocument.setStyle("fontStyle","italic");
 				addTitreDocument.setStyle("color","#BBBBBB");
 			}
+			
 			private function setMessageLienDocument():void
 			{
 				addLienDocument.text = "ajout une nouvelle lien de document ici";
@@ -183,7 +179,6 @@
 			{
 				this.hostComponent.addTitreActivity(titleActivity.text);
 			}
-
 // DELETE ACTIVITY
 			protected function buttonDeleteActivity_clickHandler(event:MouseEvent):void
 			{
@@ -193,6 +188,7 @@
 					"Confirmation", Alert.YES|Alert.NO, null, deleteActivityConfirmed); 
 				
 			}
+			
 			private function deleteActivityConfirmed(event:CloseEvent):void{
 				if( event.detail == Alert.YES)
 				{
@@ -217,6 +213,8 @@
 	<s:states>
 		<s:State name="normal" />
 		<s:State name="open" />
+		<s:State name="normalEditable"/>
+		<s:State name="openEditable"/>
 	</s:states>
 	
 	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
@@ -244,9 +242,9 @@
 		<s:Path data="M 0 0 L 7 5 L 0 10 L 0 0 Z" 
 				rotation.open="90"
 				verticalCenter="0" left="3"
-				>
+				 rotation.openEditable="90">
 			<s:postLayoutTransformOffsets>
-				<s:TransformOffsets id="tOffsets" x.open="0" y.open="0"/>  
+				<s:TransformOffsets id="tOffsets" x.open="0" y.open="0" x.openEditable="0" y.openEditable="0"/>  
 			</s:postLayoutTransformOffsets>
 			<s:fill>
 				<s:SolidColor color="#333333"/>
@@ -264,7 +262,7 @@
 <!-- LABEL ACTIVITY-->
 		<s:TextInput id="titleActivity" left="{LIFT_EDITABLED_COMPONENT}" top="5" right="250" color="#121212"
 				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
-				  focusOut="titleActivity_focusOutHandler(event)">
+				  focusOut="titleActivity_focusOutHandler(event)" includeIn="normalEditable,openEditable">
 			<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 			</s:filters>-->
@@ -272,19 +270,22 @@
 <!-- DURATION -->
 		<s:NumericStepper id="durationActivity" top="3" width="44" right="2" 
 						  maximum="200" value="10"
-						   change="durationActivity_changeHandler(event)"/>
-		<s:Label id="durationDisplay" right="50" top="10" text="durée"/>
+						   change="durationActivity_changeHandler(event)" includeIn="normalEditable,openEditable"/>
+		<s:Label id="durationDisplay" right="50" top="10" text="durée" text.normal="durée :" text.normalEditable="durée :" text.open="durée :" text.openEditable="durée :"/>
 <!-- DELETE ACTIVITY -->
 		<mx:Button  id="buttonDeleteActivity" top="5" right="90" 
 					icon="{IconEnum.getIconByName('delete')}"
-					click="buttonDeleteActivity_clickHandler(event)">
+					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable">
 			<mx:label>supprimer l'acitivité</mx:label>
 		</mx:Button>
+		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="14"/>
+		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
+		<s:Label includeIn="normal,open" height="22" textAlign="justify" text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold"/>
 	</s:Group>
 	
-	<s:Group top="30" left="5" right="5" bottom="10" includeIn="open" id="content">
+	<s:Group top="30" left="5" right="5" bottom="10" includeIn="open,openEditable" id="content">
 		<s:layout>
-			<s:VerticalLayout />
+			<s:VerticalLayout  gap="10"/>
 		</s:layout>
 <!-- STATEMENTS -->
 		<s:Group width="100%">
@@ -301,10 +302,10 @@
 						left="{LIFT_EDITABLED_COMPONENT+5}" verticalScrollPolicy="auto" textAlign="justify" 
 						focusIn="addStatement_focusInHandler(event)"
 						keyUp="addStatement_keyUpHandler(event)" 
-						focusOut="addStatement_focusOutHandler(event)">
+						focusOut="addStatement_focusOutHandler(event)" includeIn="openEditable">
 				<s:text>ajout une nouvelle consigne ici</s:text>
 			</s:TextArea>	
-			<s:Button right="15" top="27" bottom="2" click="validStatementButton_clickHandler(event)">
+			<s:Button right="15" top="27" bottom="2" click="validStatementButton_clickHandler(event)" includeIn="openEditable">
 				<s:label>Valider</s:label>
 			</s:Button>
 		</s:Group>
@@ -322,19 +323,21 @@
 			<s:TextArea  id="addTitreDocument" top="0" right="5" maxHeight="22" minWidth="290" textAlign="center"
 						 fontStyle="italic" color="#BBBBBB"
 						 focusOut="addTitreDocument_focusOutHandler(event)"
-						   focusIn="addTitreDocument_focusInHandler(event)">
+						   focusIn="addTitreDocument_focusInHandler(event)" includeIn="openEditable">
 				<s:text>ajout une nouvelle titre de document ici</s:text>
 			</s:TextArea>
-			<s:TextArea  id="addLienDocument" right="80" maxHeight="22" top="25" minWidth="220"
+			<s:TextArea  id="addLienDocument" right="140" maxHeight="22" top="25" minWidth="220"
 						 fontStyle="italic" color="#BBBBBB"
 						  focusIn="addLienDocument_focusInHandler(event)"
-						   focusOut="addLienDocument_focusOutHandler(event)">
+						   focusOut="addLienDocument_focusOutHandler(event)" includeIn="openEditable">
 				<s:text>ajout une nouvelle lien de document ici</s:text>
 			</s:TextArea>
 			<s:Button  id="validButtonDocument" right="5" top="25"
-					    click="validButtonDocument_clickHandler(event)">
-				<s:label>Valider</s:label>
+					    click="validButtonDocument_clickHandler(event)" includeIn="openEditable">
+				<s:label>Ajouter le document</s:label>
 			</s:Button>
+			<s:Label includeIn="openEditable" text="Titre de document :" top="5" right="300"/>
+			<s:Label includeIn="openEditable" text="Url de document :" top="30" right="365"/>
 		</s:Group>
 <!-- MEMO -->	
 		<s:Group width="100%">
@@ -364,7 +367,7 @@
 					id="memoDisplay" 
 						 top="8" bottom="7" maxHeight="40"
 						 focusIn="memoDisplay_focusInHandler(event)"
-						 focusOut="memoDisplay_focusOutHandler(event)" left="10" right="10">
+						 focusOut="memoDisplay_focusOutHandler(event)" left="10" right="10" enabled.open="false">
 					<s:text>This ic memo</s:text>
 				</s:RichEditableText>
 			</s:Group>

@@ -63,13 +63,10 @@
 
 package com.ithaca.visu.view.session.controls
 {
-	import com.ithaca.visu.controls.sessions.ActivityElementDetail;
-	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.ActivityElementType;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-	import com.ithaca.visu.view.session.controls.skins.StatementEditSkin;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -77,7 +74,6 @@ package com.ithaca.visu.view.session.controls
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Alert;
-	import mx.core.ILayoutElement;
 	
 	import spark.components.Group;
 	import spark.components.Label;
@@ -88,6 +84,7 @@ package com.ithaca.visu.view.session.controls
 	
 	[SkinState("normal")]
 	[SkinState("open")]
+	[SkinState("normalEditable")]
 	
 	public class ActivityDetailEdit extends SkinnableComponent
 	{
@@ -106,7 +103,14 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var durationActivity:NumericStepper;
 		
+		[SkinPart("true")]
+		public var durationActivityLabel:Label;
+		
+		[SkinPart("true")]
+		public var titleActivityLable:Label;
+		
 		private var open:Boolean;
+		private var editabled:Boolean;
 		
 		private var _activity:Activity; 
 		private var activityChanged : Boolean;
@@ -127,7 +131,17 @@ package com.ithaca.visu.view.session.controls
 			super.partAdded(partName,instance);
 			if (instance == titleActivity)
 			{
-				titleActivity.text = "ghghghgh";
+				titleActivity.toolTip = titleActivity.text = _activity.title;
+			}
+			
+			if (instance == titleActivityLable)
+			{
+				titleActivityLable.text = titleActivityLable.toolTip =   _activity.title;
+			}
+			
+			if (instance == durationActivityLabel)
+			{
+				durationActivityLabel.text = _activity.duration.toString();
 			}
 			
 			if (instance == statementGroup)
@@ -143,38 +157,7 @@ package com.ithaca.visu.view.session.controls
 				if (documentList.length > 0) 
 					addDocuments(documentList);
 			}
-			
-	/*		
-			if (instance == titleDisplay)
-			{
-				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
-			}
-			if (instance == titleDisplay)
-			{
-				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
-			}
-			if (instance == durationDisplay)
-			{
-				durationDisplay.text = "Durée prévue : " +activity.duration.toString();
-			}
-			if (instance == startButton)
-			{
-				startButton.addEventListener(MouseEvent.CLICK,startButton_clickHandler);
-			}
-			if (instance == statementGroup)
-			{
-				trace("add statementGroup");
-				if (statementList.length > 0) 
-					addStatements(statementList);
-			}
-			
-			if (instance == documentGroup)
-			{
-				trace("add documentGroup");
-				if (documentList.length > 0) 
-					addDocuments(documentList);
-			}
-			*/
+
 			if (instance == memoDisplay)
 			{
 				if (_activity != null)
@@ -193,14 +176,6 @@ package com.ithaca.visu.view.session.controls
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
-/*			if (instance == titleDisplay)
-			{
-				titleDisplay.removeEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
-			}
-			if (instance == startButton)
-			{
-				startButton.removeEventListener(MouseEvent.CLICK,startButton_clickHandler);
-			}*/
 		}
 		
 		override protected function commitProperties():void
@@ -210,23 +185,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				activityChanged = false;
 				
-				titleActivity.toolTip = titleActivity.text = _activity.title;
 				if (durationActivity) durationActivity.value = _activity.duration;
 				
 				parseActivityElements();
 				
 			}
-			if(open)
-			{
-			/*	var pl:DocumentEdit = new DocumentEdit();
-				statementGroup.addElement(pl);*/
-/*				var statementEdit:KeywordEdit = new KeywordEdit();
-				statementGroup.addElement(statementEdit);*/
-/*				var statementEdit:StatementEdit = new StatementEdit();
-				statementEdit.percentWidth = 100;
-				statementGroup.addElement(statementEdit);*/
-			}
 		}
+		
 		protected function addStatements(list:IList):void
 		{
 			for each( var activityElement:ActivityElement in list)
@@ -234,6 +199,7 @@ package com.ithaca.visu.view.session.controls
 				var statementEdit:StatementEdit = new StatementEdit();
 				statementEdit.percentWidth = 100;
 				statementEdit.activityElement = activityElement;
+				statementEdit.setEditabled(this.editabled);
 				statementEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
 				statementEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
 				statementGroup.addElement(statementEdit);
@@ -246,11 +212,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				var document:DocumentEdit = new DocumentEdit()
 				document.activityElement = el;
+				document.setEditabled(this.editabled);				
 				document.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteDocumentActivityElement);
 				document.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateDocumentActivityElement);
 				documentGroup.addElement(document);
 			}
 		}
+		
 		protected function parseActivityElements():void
 		{
 			for each (var el:ActivityElement in _activity.getListActivityElement())
@@ -276,14 +244,36 @@ package com.ithaca.visu.view.session.controls
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled? "disable" : open? "open" : "normal";
+			if (!enabled)
+			{
+				return "disable";
+			}else
+			if(open){
+				if(editabled){
+					return "openEditable";
+				}else{
+					return "open";
+				}
+			}else
+			{
+				if(editabled){
+					return "normalEditable";
+				}else{
+					return "normal";
+				}
+			} 
 		}
 		
 		public function titleDisplay_clickHandler(event:MouseEvent):void
 		{
 			open = !open;
 			invalidateSkinState();
-			//invalidateProperties();
+		}
+		
+		public function setEditabled(value:Boolean):void
+		{
+			editabled = value;
+			this.invalidateProperties();
 		}
 		
 		[Bindable("activityChanged")]
@@ -305,7 +295,7 @@ package com.ithaca.visu.view.session.controls
 		{
 			var stObj:Object = new Object();
 			stObj.data = "Statement activity" + " : "+ value;
-			stObj.id_element = 4;
+			stObj.id_element = 0;
 			stObj.type_element =  ActivityElementType.STATEMENT;
 			var activityElement:ActivityElement = new ActivityElement(stObj);
 			statementList.addItem(activityElement);
@@ -367,8 +357,7 @@ package com.ithaca.visu.view.session.controls
 					}
 				}
 			}
-		}
-		
+		}	
 // MEMO		
 		public function setMessageMemo():void
 		{
@@ -380,7 +369,7 @@ package com.ithaca.visu.view.session.controls
 				var stObj:Object = new Object();
 				stObj.data = "";
 				stObj.type_element =  ActivityElementType.MEMO;
-				stObj.id_element = 4;
+				stObj.id_element = 0;
 				memoActivityElement = new ActivityElement(stObj);
 // add memo				
 				var addMemoEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
@@ -405,12 +394,11 @@ package com.ithaca.visu.view.session.controls
 // DOCUMENT
 		public function addDocument(text:String, link:String, type:String):void
 		{
-
 			var stObj:Object = new Object();
 			stObj.data = text;
 			stObj.url_element = link;
 			stObj.type_element =  type;
-			stObj.id_element = 4;
+			stObj.id_element = 0;
 			var activityElement:ActivityElement = new ActivityElement(stObj);
 			documentList.addItem(activityElement);
 			
@@ -496,8 +484,7 @@ package com.ithaca.visu.view.session.controls
 			_activity.duration = value;
 			var changeDurationEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
 			changeDurationEvent.activity = _activity;
-			this.dispatchEvent(changeDurationEvent);
-			
+			this.dispatchEvent(changeDurationEvent);	
 		}
 	}
 }
