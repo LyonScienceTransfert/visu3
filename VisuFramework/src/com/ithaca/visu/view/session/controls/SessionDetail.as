@@ -63,11 +63,24 @@
 
 package com.ithaca.visu.view.session.controls
 {
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.visualempathy.display.controls.datetime.DateTimePickerFR;
 	
+	import flash.events.Event;
+	
+	import mx.collections.ArrayList;
+	import mx.collections.IList;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
+	
+	import spark.components.Group;
+	import spark.components.Label;
 	import spark.components.RichEditableText;
+	import spark.components.RichText;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class SessionDetail  extends SkinnableComponent
@@ -81,10 +94,33 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var picker:DateTimePickerFR;
 		
+		[SkinPart("true")] 
+		public var themeSessionLabel:RichText;
+		
+		[SkinPart("true")] 
+		public var descriptionSessionLabel:RichText;
+		
+		[SkinPart("true")] 
+		public var dateLabel:Label;
+		
+		[SkinPart("true")] 
+		public var heurLabel:Label;
+		
+		[SkinPart("true")] 
+		public var minLabel:Label;
+		
+		[SkinPart("true")] 
+		public var groupUser:Group;
+			
 		public var theme:String="";
 		public var description:String="";
+		public var dateSession:Date= null;
 		private var _session:Session;
+		private var _activities:IList;
+		private var _listUser:IList;
 		private var sessionChanged:Boolean;
+		private var activitiesChanged:Boolean;
+		private var editabled:Boolean;
 		
 		[SkinPart("true")]
 		public var descriptionSession:RichEditableText;
@@ -92,15 +128,47 @@ package com.ithaca.visu.view.session.controls
 		public function SessionDetail()
 		{
 			super();
+			_activities = new ArrayList();
+			_listUser = new ArrayList();
 		}
 		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
+			if (instance == groupUser)
+			{
+				var uvo:UserVO = new UserVO();
+				uvo.lastname = "koko";
+				uvo.firstname = "azaz";
+				uvo.avatar = "https://lh3.googleusercontent.com/_r4tG6k7JBcg/S0H_ok3HOSI/AAAAAAAACH8/U3Un09ysGqw/s104-c/avatar-2.jpg";
+				var user:User = new User(uvo);
+				var userEdit:UserEdit = new UserEdit();
+				userEdit.user = user;
+				userEdit.percentWidth = 100;
+				groupUser.addElement(userEdit);
+			}
+			
 			if (instance == themeSession)
 			{
 				
 			}
+			
 			if (instance == descriptionSession)
+			{
+				
+			}
+			
+			if (instance == descriptionSessionLabel)
+			{
+			
+
+			}
+			
+			if (instance == themeSessionLabel)
+			{
+				
+			}
+
+			if (instance == picker)
 			{
 				
 			}
@@ -115,23 +183,66 @@ package com.ithaca.visu.view.session.controls
 				
 				theme = _session.theme;
 				description = _session.description;
-				picker.selectedDate = _session.date_session;
+				dateSession = _session.date_session;
 				
-				if(theme != "")
+				if(themeSession)
 				{
-					themeSession.text = themeSession.toolTip = theme;
-				}else
-				{
-					setMessageTheme();
+					if(theme != "")
+					{
+						themeSession.text = themeSession.toolTip = theme;
+					}else
+					{
+						setMessageTheme();
+					}	
 				}
 				
-				if(description != "")
+				if(themeSessionLabel) themeSessionLabel.text = themeSessionLabel.toolTip = theme;
+				if(dateLabel)
 				{
-					descriptionSession.text = descriptionSession.toolTip = description;
-				}else
-				{
-					setMessageDescription();
+					dateLabel.text =  UtilFunction.getLabelDate(dateSession);
 				}
+				if(heurLabel)
+				{ 
+					var heureString:String = dateSession.getHours().toString();
+					var  heure:Number = dateSession.getHours(); if(heure < 10 ){heureString = "0"+heureString;}
+					heurLabel.text = heureString;
+				}
+				if(minLabel)
+				{
+					var minuteString:String = dateSession.getMinutes().toString();
+					var  minute:Number = dateSession.getMinutes(); if(minute < 10 ){minuteString = "0"+minuteString;}
+					minLabel.text = minuteString;
+				}
+				
+				if(descriptionSession)
+				{
+					if(description != "")
+					{
+						descriptionSession.text = descriptionSession.toolTip = description;
+						
+					}else
+					{
+						setMessageDescription();
+					}
+				}
+				
+				if(descriptionSessionLabel) descriptionSessionLabel.text = descriptionSessionLabel.toolTip = description;
+				
+				if(picker){
+					if(dateSession != null)
+					{
+						picker.selectedDate = dateSession;
+					}
+					
+				}
+			}
+			
+			if(activitiesChanged)
+			{
+				activitiesChanged = false;
+				
+				sessionPlanEdit.setEditabled(this.editabled);
+				sessionPlanEdit.activities = _activities;
 				
 			}
 		}
@@ -149,7 +260,51 @@ package com.ithaca.visu.view.session.controls
 			sessionChanged = true;
 			invalidateProperties();
 		}
+		
+		public function get activities():IList
+		{
+			return _activities;
+		}
 
+		public function set activities(value:IList):void
+		{
+			if (_activities == value) return;
+			
+			if (_activities != null)
+			{
+				_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+			}
+			
+			_activities = value;
+			activitiesChanged = true;
+			invalidateProperties();
+			
+			if (_activities)
+			{
+				_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+			}
+			
+			dispatchEvent( new Event("updateActivities"));
+			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
+			_activities.dispatchEvent(event);
+		}
+		
+		protected function activities_ChangeHandler(event:CollectionEvent):void
+		{
+			activitiesChanged = true;
+			invalidateProperties();
+		}
+
+		override protected function getCurrentSkinState():String
+		{
+			return !enabled? "disabled" : editabled? "normalEditable" : "normal";
+		}
+		
+		public function setEditabled(value:Boolean):void
+		{
+			editabled = value;
+			this.invalidateSkinState();
+		}
 // THEME 		
 		public function updateTheme(value:String):void
 		{
