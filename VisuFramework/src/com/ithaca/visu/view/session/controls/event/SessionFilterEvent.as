@@ -60,7 +60,6 @@
  * 
  * -- End of licenses
  */
-
 package com.ithaca.visu.view.session.controls.event
 {
 	import flash.events.Event;

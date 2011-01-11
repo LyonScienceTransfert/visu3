@@ -206,8 +206,6 @@ package com.ithaca.visu.view.session.controls
 			_activityElement.data = value;
 			updateStatement.activityElement = _activityElement;
 			this.dispatchEvent(updateStatement);
-		}
-		
-		
+		}	
 	}
 }
