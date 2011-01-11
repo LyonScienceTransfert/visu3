@@ -43,14 +43,8 @@
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
-				//this.currentState="normal";
 				this.panelContent.title = this.currentText;
-				// set current mouse cursor
-				this.hostComponent.currentMouseCursor = Mouse.cursor;
-				// set listeners mouse over
-
 				// add player 
-				//this.currentUrl = "http://livedocs.adobe.com/flex/3/html/images/adobe.png?v=PSWhxORaJvY&feature=related";
 				if(this.typeDocument == ActivityElementType.IMAGE) 
 				{
 					this.addImage(this.currentUrl);	
@@ -120,19 +114,6 @@
 				{
 					this.currentState = "open";					
 				}
-			}
-			
-			// set cursor mouse BUTTON 
-			protected function onMouseOverButton(event:MouseEvent):void
-			{
-				var image:Image = event.target as Image;
-				Mouse.cursor = MouseCursor.BUTTON;		
-			}
-			
-			// set cursor mouse AROOW  
-			protected function onMouseOutButton(event:MouseEvent):void
-			{
-				Mouse.cursor = this.currentMouseCursor;
 			}
 			
 			// click on label edit

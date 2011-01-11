@@ -70,7 +70,8 @@ package com.ithaca.visu.view.session.controls
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	
-	import spark.components.Button;
+	import mx.controls.Image;
+	
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class DocumentEdit extends SkinnableComponent
@@ -81,16 +82,17 @@ package com.ithaca.visu.view.session.controls
 		public var typeDocument:String;
 		
 		[SkinPart("true")] 
-		public var buttonDelete:Button;
+		public var buttonDelete:Image;
 		
 		[SkinPart("true")] 
-		public var buttonEdit:Button;
+		public var buttonEdit:Image;
 
 		private var normal:Boolean = true;
 		protected var _activityElement:ActivityElement;
 
 		public function DocumentEdit()
 		{
+			this.currentMouseCursor = Mouse.cursor;
 			super();
 		}
 		
@@ -114,7 +116,16 @@ package com.ithaca.visu.view.session.controls
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
-			
+			if(instance == buttonDelete)
+			{
+				buttonDelete.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				buttonDelete.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
+			if(instance == buttonEdit)
+			{
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
 		}
 		
 		public function get activityElement():ActivityElement {return _activityElement; }
@@ -135,7 +146,7 @@ package com.ithaca.visu.view.session.controls
 			normal = value;
 			this.invalidateSkinState();
 		}
-		
+		// srt cursor mouse HAND
 		protected function onMouseOverButton(event:MouseEvent):void
 		{
 			Mouse.cursor = MouseCursor.BUTTON;	
