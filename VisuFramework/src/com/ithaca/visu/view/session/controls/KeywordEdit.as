@@ -66,23 +66,100 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
-	import spark.components.TextArea;
+	import flash.events.MouseEvent;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
+	
+	import mx.controls.Image;
+	
+	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class KeywordEdit extends SkinnableComponent
 	{
+		[SkinPart("true")]
+		public var textContent:Label;
 
+		[SkinPart("true")] 
+		public var buttonDelete:Image;
+		
+		[SkinPart("true")] 
+		public var buttonEdit:Image;
+		
+		public var currentMouseCursor:String;
+		private var normal:Boolean = true;
 		public var textKeyword:String;
 		protected var _activityElement:ActivityElement;
 		
 		public function KeywordEdit()
 		{
 			super();
+			currentMouseCursor  = Mouse.cursor; 
 		}
 		public function get activityElement():ActivityElement {return _activityElement; }
 		public function set activityElement(value:ActivityElement):void
 		{
 			_activityElement = value;
+		}
+		
+		override protected function partAdded(partName:String, instance:Object):void
+		{
+			super.partAdded(partName,instance);
+			if(instance == buttonDelete)
+			{
+				buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonDelete.toolTip = "effacer";
+			}
+			if(instance == buttonEdit)
+			{
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonEdit.toolTip = "editer";
+			}
+			
+			if(instance == textContent)
+			{
+				textContent.text = textKeyword;
+				textContent.toolTip = textKeyword;
+			}			
+		}
+		
+		override protected function partRemoved(partName:String, instance:Object):void
+		{
+			super.partRemoved(partName,instance);
+			if(instance == buttonDelete)
+			{
+				buttonDelete.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				buttonDelete.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
+			if(instance == buttonEdit)
+			{
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}			
+		}
+		
+		override protected function getCurrentSkinState():String
+		{
+			return !enabled? "disabled" : normal? "normal" : "close";
+		}
+		
+		public function setEditabled(value:Boolean):void
+		{
+			normal = value;
+			this.invalidateSkinState();
+		}
+		// set cursor mouse HAND
+		protected function onMouseOverButton(event:MouseEvent):void
+		{
+			Mouse.cursor = MouseCursor.BUTTON;	
+		}
+		
+		// set cursor mouse AROOW  
+		protected function onMouseOutButton(event:MouseEvent):void
+		{
+			Mouse.cursor = this.currentMouseCursor;
 		}
 		public function deleteKeyword():void
 		{

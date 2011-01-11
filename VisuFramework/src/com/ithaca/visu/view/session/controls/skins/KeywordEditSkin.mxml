@@ -2,7 +2,6 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		 creationComplete="skin1_creationCompleteHandler(event)"
 		  maxWidth="140">
 	<!-- host component -->
 	<fx:Metadata>
@@ -34,50 +33,7 @@
 					this.hostComponent.updateKeyword(this.textContent.text);
 				}
 			}
-
-			protected function skin1_creationCompleteHandler(event:FlexEvent):void
-			{
-				this.currentState="normal";
-				
-				this.textContent.text = this.hostComponent.textKeyword;
-				
-				
-				buttonEdit.addEventListener(MouseEvent.CLICK, onClickEditButton);
-				// set current mouse cursor
-				currentMouseCursor = Mouse.cursor;
-				// set listeners mouse over
-				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				// set listeners mouse out
-				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				// set tools tips
-				this.buttonDelete.toolTip = "effacer";
-				this.buttonEdit.toolTip = "editer";
-				this.textContent.toolTip = this.textContent.text;
-			}
 			
-			// set cursor mouse BUTTON 
-			protected function onMouseOverButton(event:MouseEvent):void
-			{
-				var image:Image = event.target as Image;
-				Mouse.cursor = MouseCursor.BUTTON;		
-			}
-			
-			// set cursor mouse AROOW  
-			protected function onMouseOutButton(event:MouseEvent):void
-			{
-				Mouse.cursor = this.currentMouseCursor;
-			}
-			
-			//
-			protected function onClickEditButton(event:MouseEvent):void
-			{
-				this.currentState = "open";
-				this.editableContent.text = this.textContent.text;
-				stage.focus = this.editableContent;
-			}
-
 			protected function buttonDelete_clickHandler(event:MouseEvent):void
 			{
 				Alert.yesLabel = "Oui";
@@ -110,11 +66,18 @@
 					}	
 			}
 
+			protected function buttonEdit_clickHandler(event:MouseEvent):void
+			{
+				this.currentState = "open";
+				this.editableContent.text = this.textContent.text;
+				stage.focus = this.editableContent;
+			}
+
 		]]>
 	</fx:Script>
 	<s:states>
 		<s:State name="normal"/>
-		<s:State name="closed"/>
+		<s:State name="close"/>
 		<s:State name="open" />
 	</s:states>
 	
@@ -144,7 +107,7 @@
 				</s:stroke>
 			</s:Rect>
 <!-- TEXT -->   		
-			<s:Label includeIn="normal,closed"  id="textContent" text="ghgkkkhhkhkhkhkjhkjhkhgjgjgj  jgjg jj j gjgjhg jgjgjghjgj   j jg j jkhkGgh" top="1" left.closed="10" left="42" right="10"
+			<s:Label includeIn="normal,close"  id="textContent" text="ghgkkkhhkhkhkhkjhkjhkhgjgjgj  jgjg jj j gjgjhg jgjgjghjgj   j jg j jkhkGgh" top="1" left.close="10" left="42" right="10"
 								   paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" bottom="2"/>
 			<s:TextArea id="editableContent"  includeIn="open" text="jkhgljhglgkjghkjgkjhgkljf" top="1" left="10" right="10" bottom="1"
 						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
@@ -152,7 +115,8 @@
 <!-- BOUTTONS -->
 			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16" left="10" top="3"
 					    click="buttonDelete_clickHandler(event)"/>
-			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14" width="14" left="26" top="5"/>
+			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  
+					    click="buttonEdit_clickHandler(event)" height="14" width="14" left="26" top="5"/>
 		</s:Group>
 		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
 			<s:Button includeIn="open" click="onClickButtonValider(event)">
