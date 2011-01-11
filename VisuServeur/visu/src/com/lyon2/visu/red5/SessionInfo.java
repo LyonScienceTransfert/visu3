@@ -167,15 +167,31 @@ public class SessionInfo
 			} 	
 	}
 	@SuppressWarnings("unchecked")
-    public List<Session> getListSessionsAndPlans() throws SQLException
+    public List<Session> getListSessionsAndPlans(IConnection conn) throws SQLException
     {
-        log.debug("getListSessions");
-        try
-        {
-            return (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlans");
-        } catch (Exception e) {
-            log.error("Probleme lors du listing des utilisateurs" + e);
-        }
+        log.debug("getListSessionsAndPlans");
+        IClient client = conn.getClient();
+		User user = (User)client.getAttribute("user");
+		Integer roleUser = app.getRoleUser(user.getProfil());
+		// logged user responsable or admin
+		if((roleUser == 2) || (roleUser == 1)){
+			try
+			{
+				return (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlans");
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des sessions" + e);
+			}			
+		}else if(roleUser == 3)
+			// logged user is tuteur
+		{
+			Integer idUser = user.getId_user();
+			try
+			{
+				return (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlansByIdUser",idUser);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des session and plans for idUser = {}" + e,idUser.toString());
+			}			
+		}  
         return null;
     }
 	
