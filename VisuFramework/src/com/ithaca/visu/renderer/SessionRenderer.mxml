@@ -77,18 +77,11 @@
 
 		]]>
 	</fx:Script>
-	<s:Group  left="3" right="3">	
-		<s:layout>
-			<s:VerticalLayout gap="5">		
-			</s:VerticalLayout>
-		</s:layout>
-		<s:RichText text="{data.theme}" id="labelTheme" fontSize="18"/>
-		<s:Group>
-			<s:layout>
-				<s:HorizontalLayout gap="5"/>
-			</s:layout>
-			<s:Label id="labelMessageDate"/>
-			<s:Label  id="messageDate"/>	
-		</s:Group>
+	<s:Group  left="0" right="0">	
+		<s:RichText text="{data.theme}" id="labelTheme" fontSize="14" top="5" maxWidth="200" />
+		<s:HGroup width="100%"  top="35" horizontalAlign="right">
+			<s:Label id="labelMessageDate" right="55"/>
+			<s:Label  id="messageDate" right="5"/>	
+		</s:HGroup>
 	</s:Group>
 </s:ItemRenderer>
