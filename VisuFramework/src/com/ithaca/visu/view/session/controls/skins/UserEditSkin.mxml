@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.controls.UserEdit")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="editable" />
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+		
+		import mx.controls.Alert;
+		import mx.events.CloseEvent;
+		import mx.events.FlexEvent;
+			
+		]]>
+	</fx:Script>
+	<!-- SkinParts
+	name=textContent, type=spark.components.RichText, required=false
+	name=buttonEdit, type=mx.controls.Image, required=false
+	name=buttonDelete, type=mx.controls.Image, required=false
+	name=avatarUser, type=mx.controls.Image, required=false
+	-->
+	<s:Group width="100%" height.editable="40">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%"  height.normal="30">
+			<s:Rect id="fill" radiusX="10"
+					left="2" right="2" top="1" bottom="1">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="border" radiusX="10"
+					left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<!-- IMAGE -->
+			<mx:Image id="avatarUser" left="5" top="5" width="26" top.normal="2" left.normal="10" height.editable="26" width.normal="25" height.normal="25"/>
+			<!-- TEXT -->   		
+			<s:Label includeIn="normal"  id="textContent" text="Petipolis" top="3" left="42" right="10"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" height="22"/>
+			<!-- BOUTTONS -->
+			<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"
+					   right.normal="20" top.normal="10" height.normal="32"/>
+			<!--<s:Label text=" editer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
+			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" right.normal="5" height.editable="14" width.normal="14" top.normal="10" height.normal="32"/>
+		</s:Group>
+	</s:Group>
+</s:Skin>

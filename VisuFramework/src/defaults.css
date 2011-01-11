@@ -115,3 +115,7 @@ plan|DocumentEdit
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.DocumentEditSkin");
 }
+plan|UserEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.UserEditSkin");
+}
