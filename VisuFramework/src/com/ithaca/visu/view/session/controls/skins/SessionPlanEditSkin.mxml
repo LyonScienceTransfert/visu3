@@ -40,7 +40,6 @@
 				fxgt = FxGettext;
 			}
 
-
 			protected function skin1_addedToStageHandler(event:Event):void
 			{
 				this.percentWidth = 100;
@@ -56,14 +55,12 @@
 				}
 			}
 
-
 			protected function addKeyword_focusOutHandler(event:FocusEvent):void
 			{
 				if(addKeyword.text == ""){
 					this.setMessageKeyword();
 				}
 			}
-
 
 			protected function addKeyword_keyUpHandler(event:KeyboardEvent):void
 			{
@@ -86,7 +83,6 @@
 				addKeyword.setStyle("color","#BBBBBB");
 			}
 			
-
 			protected function buttonAddActivity_clickHandler(event:MouseEvent):void
 			{
 				this.hostComponent.addActivity();
@@ -98,6 +94,7 @@
     <s:states>
         <s:State name="normal" />
         <s:State name="disabled" />
+        <s:State name="normalEditable"/>
     </s:states>
     
     <!--- Defines the appearance of the SkinnableContainer class's background. -->
@@ -123,29 +120,25 @@
 				<!--<s:text>{fxgt.gettext("Plan de séance")}</s:text>-->
 				<s:text>{"Plan de séance"}</s:text>
 			</s:Label>
-			<s:Button right="140">
+			<s:Button right="140" enabled.normal="false" right.normalEditable="130" right.normal="130">
 				<!--<s:label>{fxgt.gettext("importer")}</s:label>-->
-				<s:label>{"importer"}</s:label>
+				<s:label>{"Créer une nouvelle séance"}</s:label>
 			</s:Button>
-			<s:Button right="65">
+			<s:Button right="65" enabled.normal="false" right.normalEditable="5" right.normal="5">
 				<!--<s:label>{fxgt.gettext("exporter")}</s:label>-->
-				<s:label>{"exporter"}</s:label>
+				<s:label>{"Rendre public"}</s:label>
 			</s:Button>
-			<s:Label right="5" top="5" color="#4398E0">
-				<!--<s:text>{fxgt.gettext("initialiser")}</s:text>-->
-				<s:text>{"initialiser"}</s:text>
-			</s:Label>
 		</s:Group>	
 	
 		<s:Group width="100%">
 			<s:Button id="buttonAddActivity" left="10"
-					   click="buttonAddActivity_clickHandler(event)" >
+					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter un activité">
 				<s:label>ajouter une activité</s:label>
 			</s:Button>
-	        <s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="160" fontSize.normal="14" top.normal="5">
+	        <!--<s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="160" fontSize.normal="14" top.normal="5" fontSize.normalEditable="14" right.normalEditable="160" top.normalEditable="5">
 				<s:text>{"Activité : "}</s:text>
 			</s:Label>
-			<s:ComboBox   id="comboBoxActivity" width="45" right="5" width.normal="150"/>
+			<s:ComboBox   id="comboBoxActivity" width="45" right="5" width.normal="150" width.normalEditable="150"/>-->
 		</s:Group>
 <!-- LINE -->	
 		<s:Line left="50" right="2" top="10" width="100%">
@@ -171,7 +164,7 @@
 				</s:stroke>
 			</s:Line>
 			<s:Label left="15" text="Mots-clés : " top="7"/>
-			<s:Scroller top="8" left="80" right="0" bottom="0" height.disabled="100%" width.disabled="100%" top.normal="8" left.normal="80" bottom.normal="25" right.normal="2">
+			<s:Scroller top="8" left="80" right="0" bottom="0" height.disabled="100%" width.disabled="100%" top.normal="8" left.normal="80" bottom.normal="5" right.normal="2" bottom.normalEditable="25" left.normalEditable="80" right.normalEditable="2" top.normalEditable="8">
 				<s:Group id="keywordGroup"  left="0" width="100%" height="100%"  top="0">
 					<s:layout>
 						<layout:FlowLayout/>
@@ -183,7 +176,7 @@
 						 fontStyle="italic" color="#BBBBBB"
 						  focusIn="addKeyword_focusInHandler(event)"
 						   focusOut="addKeyword_focusOutHandler(event)"
-						    keyUp="addKeyword_keyUpHandler(event)" textAlign.normal="center">
+						    keyUp="addKeyword_keyUpHandler(event)" textAlign.normalEditable="center" includeIn="disabled,normalEditable">
 				<s:text>entrer nouveau mot-clé</s:text>
 			</s:TextArea>
 		</s:Group>

@@ -72,11 +72,11 @@ package com.ithaca.visu.view.session.controls
 	
 	import mx.collections.IList;
 	import mx.controls.Alert;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
 	
-	import spark.components.ComboBox;
 	import spark.components.Group;
 	import spark.components.SkinnableContainer;
-	import spark.components.TextArea;
 	
 	public class SessionPlanEdit extends SkinnableContainer
 	{
@@ -87,8 +87,10 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var keywordGroup:Group;
 		
-		[SkinPart("true")] 
-		public var comboBoxActivity:ComboBox;
+	/*	[SkinPart("true")] 
+		public var comboBoxActivity:ComboBox;*/
+		
+		private var editabled:Boolean;
 		private var _activities:IList;
 		protected var activitiesChanged:Boolean;
 		
@@ -106,12 +108,10 @@ package com.ithaca.visu.view.session.controls
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == comboBoxActivity)
+			/*if (instance == comboBoxActivity)
 			{
 				comboBoxActivity.labelFunction = setLabelComboboxActivity;
-			}
-			
-
+			}*/
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
@@ -135,6 +135,7 @@ package com.ithaca.visu.view.session.controls
 				{
 					var activityDetailEdit:ActivityDetailEdit =  new ActivityDetailEdit();
 					activityDetailEdit.activity = activity;
+					activityDetailEdit.setEditabled(this.editabled);
 					activityDetailEdit.percentWidth = 100;
 					activityDetailEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity);
 					activityGroup.addElement( activityDetailEdit );
@@ -146,6 +147,7 @@ package com.ithaca.visu.view.session.controls
 							var keywordEdit:KeywordEdit = new KeywordEdit();
 							keywordEdit.activityElement = el;
 							keywordEdit.textKeyword = el.data;
+							keywordEdit.setEditabled(this.editabled);
 							keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
 							keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
 							keywordGroup.addElement(keywordEdit);
@@ -153,17 +155,23 @@ package com.ithaca.visu.view.session.controls
 					}
 				}
 				// set dataprovider for combobox
-				if(_activities.length > 0)
+				/*if(_activities.length > 0)
 				{
 					comboBoxActivity.dataProvider = _activities;
 					comboBoxActivity.selectedIndex = 0;
-				}
+				}*/
 			}
 		}
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled ? "disabled" : "normal"; 
+			return !enabled? "disabled" : editabled? "normalEditable" : "normal";
+		}
+		
+		public function setEditabled(value:Boolean):void
+		{
+			editabled = value;
+			this.invalidateSkinState();
 		}
 		
 		[Bindable("updateActivities")] 
@@ -174,28 +182,34 @@ package com.ithaca.visu.view.session.controls
 			
 			if (_activities != null)
 			{
-				//_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+				_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
 			}
 			
 			_activities = value;
 			activitiesChanged = true;
 			invalidateProperties();
 			
-/*			if (_activities)
+			if (_activities)
 			{
 				_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
 			}
-			*/
-			/*dispatchEvent(new Event("updateActivities"));
-			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
-			_activities.dispatchEvent(event);*/
 			
+			dispatchEvent(new Event("updateActivities"));
+			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
+			_activities.dispatchEvent(event);
+			
+		}
+		
+		protected function activities_ChangeHandler(event:CollectionEvent):void
+		{
+			activitiesChanged = true;
+			invalidateProperties();
 		}
 // KEYWORD	
 		public function addKeyword(value:String):void
 		{
 			var keyObj:Object = new Object();
-			keyObj.id_element = 4;
+			keyObj.id_element = 0;
 			keyObj.data = "SOS => koko";
 			keyObj.type_element =  ActivityElementType.KEYWORD;
 			var activityElement:ActivityElement = new ActivityElement(keyObj);
@@ -245,7 +259,7 @@ package com.ithaca.visu.view.session.controls
 			
 		}
 // COMBOBOX ACTIVITY
-		private function setLabelComboboxActivity(item:Object):String
+/*		private function setLabelComboboxActivity(item:Object):String
 		{
 			var activity:Activity = item as Activity;
 			if(activity != null)
@@ -253,7 +267,7 @@ package com.ithaca.visu.view.session.controls
 				return activity.title;
 			}
 			return "";
-		}
+		}*/
 		
 		private function onDeleteActivity(event:SessionEditEvent):void
 		{
@@ -281,8 +295,6 @@ package com.ithaca.visu.view.session.controls
 		public function addActivity():void
 		{
 			var obj:Object = new Object();
-/*			obj.id_activity = 1;
-			obj.id_session = 1;*/
 			obj.duration = 12;
 			obj.title = "New activity";
 			var activity:Activity = new Activity(obj);
