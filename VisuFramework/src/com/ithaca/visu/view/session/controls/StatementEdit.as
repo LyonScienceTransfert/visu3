@@ -67,6 +67,10 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.MouseEvent;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
+	
+	import mx.controls.Image;
 	
 	import spark.components.RichText;
 	import spark.components.supportClasses.SkinnableComponent;
@@ -79,29 +83,89 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var textContent:RichText;
 		
-		private var open:Boolean;
+		[SkinPart("true")] 
+		public var buttonDelete:Image;
+		
+		[SkinPart("true")] 
+		public var buttonEdit:Image;
+		
+		[SkinPart("true")] 
+		public var buttonUp:Image;
+
+		[SkinPart("true")] 
+		public var buttonDown:Image;
+
+		public var currentMouseCursor:String;
+		private var normal:Boolean = true;
 		protected var _activityElement:ActivityElement;
 		
 		public function StatementEdit()
 		{
 			super();
+			currentMouseCursor  = Mouse.cursor; 
 		}
 		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == textContent)
+			if(instance == buttonDelete)
+			{
+				buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonDelete.toolTip = "effacer";
+			}
+			if(instance == buttonEdit)
+			{
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonEdit.toolTip = "editer";
+			}
+			
+			if(instance == buttonUp)
+			{
+				buttonUp.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonUp.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonUp.toolTip = "move up";
+			}
+			
+			if(instance == buttonDown)
+			{
+				buttonDown.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonDown.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonDown.toolTip = "move down";
+			}
+			
+			if(instance == textContent)
 			{
 				textContent.text = _activityElement.data;
 			}
-	
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
+			if(instance == buttonDelete)
+			{
+				buttonDelete.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
+				buttonDelete.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
+			if(instance == buttonEdit)
+			{
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
 			
+			if(instance == buttonUp)
+			{
+				buttonUp.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonUp.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
+			
+			if(instance == buttonDown)
+			{
+				buttonDown.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonDown.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+			}
 		}
-
 		
 		public function get activityElement():ActivityElement {return _activityElement; }
 		public function set activityElement(value:ActivityElement):void
@@ -111,9 +175,25 @@ package com.ithaca.visu.view.session.controls
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled? "disable" : open? "open" : "normal";
+			return !enabled? "disabled" : normal? "normal" : "close";
 		}
 		
+		public function setEditabled(value:Boolean):void
+		{
+			normal = value;
+			this.invalidateSkinState();
+		}
+		// srt cursor mouse HAND
+		protected function onMouseOverButton(event:MouseEvent):void
+		{
+			Mouse.cursor = MouseCursor.BUTTON;	
+		}
+		
+		// set cursor mouse AROOW  
+		protected function onMouseOutButton(event:MouseEvent):void
+		{
+			Mouse.cursor = this.currentMouseCursor;
+		}
 		public function deleteStatement():void
 		{
 			var deleteStatement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT);

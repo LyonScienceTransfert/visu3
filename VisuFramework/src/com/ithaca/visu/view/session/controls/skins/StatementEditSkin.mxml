@@ -2,7 +2,6 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		creationComplete="skin1_creationCompleteHandler(event)"
 		>
 	<!-- host component -->
 	<fx:Metadata>
@@ -11,7 +10,7 @@
 	
 	<s:states>
 		<s:State name="normal"/>
-		<s:State name="closed"/>
+		<s:State name="close"/>
 		<s:State name="open" />
 	</s:states>
 	
@@ -26,41 +25,6 @@
 
 			private var widthAppendix:int = 70;
 			private var currentMouseCursor:String;
-			
-			protected function skin1_creationCompleteHandler(event:FlexEvent):void
-			{
-				this.currentState="normal";
-				// set current mouse cursor
-				currentMouseCursor = Mouse.cursor;
-				// set listeners mouse over
-				this.buttonUp.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				this.buttonDown.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				// set listeners mouse out
-				this.buttonUp.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				this.buttonDown.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				this.buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				this.buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				// set tool tips
-				this.buttonUp.toolTip = "move up";
-				this.buttonDown.toolTip = "move down";
-				this.buttonDelete.toolTip = "effacer";
-				this.buttonEdit.toolTip = "editer";
-			}
-			
-			// set cursor mouse BUTTON 
-			protected function onMouseOverButton(event:MouseEvent):void
-			{
-				var image:Image = event.target as Image;
-				Mouse.cursor = MouseCursor.BUTTON;		
-			}
-			
-			// set cursor mouse AROOW  
-			protected function onMouseOutButton(event:MouseEvent):void
-			{
-				Mouse.cursor = this.currentMouseCursor;
-			}
 			
 			// click on label edit
 			protected function label1_clickHandler(event:MouseEvent):void
@@ -94,13 +58,13 @@
 					"Confirmation", Alert.YES|Alert.NO, null, deleteStatementConfirmed); 
 				
 			}
+			
 			private function deleteStatementConfirmed(event:CloseEvent):void{
 				if( event.detail == Alert.YES)
 				{
 					this.hostComponent.deleteStatement();
 				}
 			}
-
 
 			protected function editableContent_focusOutHandler(event:FocusEvent):void
 			{
@@ -113,7 +77,6 @@
 						this.onClickButtonValider();
 						}	
 			}
-
 
 			protected function editableContent_focusInHandler(event:FocusEvent):void
 			{
@@ -194,7 +157,7 @@
 				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="label1_clickHandler(event)"/>
 				
 			</s:HGroup>
-			<s:RichText includeIn="normal,closed"  id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
+			<s:RichText includeIn="normal,close"  id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
 									paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 			<s:TextArea id="editableContent"  includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
 															  paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
