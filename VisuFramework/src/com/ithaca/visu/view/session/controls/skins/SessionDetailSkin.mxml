@@ -82,17 +82,14 @@
 							<s:text>Description :</s:text>
 						</s:Label>
 					</s:Group>
-					<!-- DATE HEUR -->	
+<!-- THEME -->	
 					<s:Group height="100%" width="40%">
 						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" top="5" backgroundColor="#FFFFFF"
 											  focusOut="themeSession_focusOutHandler(event)"
 											   focusIn="themeSession_focusInHandler(event)" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" enabled.normalEditable="true" includeIn="disabled,normalEditable">
 							<s:text>Les identités nationales</s:text>
 						</s:RichEditableText>
-<!--						<mx:DateField left="5" verticalCenter="0"/>
-						<s:TextInput height="22" right="5"  width="40" verticalCenter="0">
-							<s:text>17:15</s:text>
-						</s:TextInput>-->
+
 <!-- DATE TIME -->	
 						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" verticalCenter="0" 
 												     updateDateTime="picker_updateDateTimeHandler(event)" includeIn="disabled,normalEditable"/>
@@ -101,24 +98,28 @@
 											   focusIn="descriptionSession_focusInHandler(event)" fontStyle.normalEditable="italic" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" includeIn="disabled,normalEditable">
 							<s:text>in this session you will learn how you can go to other country..</s:text>
 						</s:RichEditableText> 
-						<s:RichText includeIn="normal" text="RichText" right="5" top="5" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
-						<s:RichText includeIn="normal" text="RichText" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
+						<s:RichText includeIn="normal" right="5" top="5" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
+						<s:RichText includeIn="normal" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
 						<s:Group  includeIn="normal" verticalCenter="0" left="0" horizontalCenter="0" height="22">
-							<s:Label  id="dateLabel" text="2010/21/12" verticalCenter="0" left="0" fontSize="14"/>
+							<s:Label  id="dateLabel" verticalCenter="0" left="0" fontSize="14"/>
 							<s:Label text="à" verticalCenter="0" left="75" fontSize="14"/>
-							<s:Label  id="heurLabel" text="22" verticalCenter="0" left="90" fontSize="14"/>
+							<s:Label  id="heurLabel" verticalCenter="0" left="90" fontSize="14"/>
 							<s:Label text=":" verticalCenter="0" left="110" fontSize="14"/>
-							<s:Label  id="minLabel" text="55" verticalCenter="0" left="120" fontSize="14"/>
+							<s:Label  id="minLabel" verticalCenter="0" left="120" fontSize="14"/>
 						</s:Group>
 					</s:Group>
 					<!-- USERS -->
 					<s:Group height="100%" width="40%">
-						<s:Button left="5" right="5" top="5">
+						<s:Button left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="false">
 							<s:label>Ajouter une utilisateur</s:label>
 						</s:Button>
-						<s:Group  id="groupUser" left="5" right="5" top="30" bottom="5">
-							
-						</s:Group>
+						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">
+							<s:Group id="groupUser">
+								<s:layout>
+									<s:VerticalLayout gap="5" />
+								</s:layout>
+							</s:Group>
+						</s:Scroller>
 					</s:Group>
 				</s:HGroup>
 			</s:Group>
