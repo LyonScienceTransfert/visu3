@@ -1,6 +1,7 @@
 package business
 {
 	import com.ithaca.visu.events.SessionEvent;
+	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.VisuActivityElementEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
@@ -9,6 +10,7 @@ package business
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.ActivityElementVO;
 	import com.ithaca.visu.model.vo.ActivityVO;
+	import com.ithaca.visu.model.vo.SessionUserVO;
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
@@ -178,6 +180,16 @@ package business
 			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
 			addSession.session = session;
 			this.dispatcher.dispatchEvent(addSession);
+			// add logged user to the new session
+			var sessionUserVO:SessionUserVO = new SessionUserVO();
+			sessionUserVO.id_session = sessionVO.id_session;
+			sessionUserVO.id_user = model.getLoggedUser().id_user;
+			sessionUserVO.mask = 0;
+			var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
+			sessionUserEvent.newSessionUser = sessionUserVO;
+			this.dispatcher.dispatchEvent(sessionUserEvent);
+			// clear liste date the session
+			model.clearDateSession();
 			// ADD ACTIVITY
 			var nbrActivity:int = this.listActivities.length;
 			for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
@@ -189,11 +201,8 @@ package business
 				addActivity.activityId = activity.id_activity;
 				this.dispatcher.dispatchEvent(addActivity);
 			}
-		}
-		
-		
-		
-		
+		}		
+// ADD ACTIVITY		
 		public function onAddClonedActivity(activityVO:ActivityVO, activityId:int):void
 		{
 			
@@ -215,7 +224,11 @@ package business
 		{
 			
 		}
-		
+// ADD USER
+		public function onAddSessionUser(sessionUserVO:SessionUserVO):void
+		{
+			
+		}
 		/**
 		 * Default error Handler for rtmp method call
 		 */
