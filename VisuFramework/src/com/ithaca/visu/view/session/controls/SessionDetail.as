@@ -64,6 +64,7 @@
 package com.ithaca.visu.view.session.controls
 {
 	import com.ithaca.utils.UtilFunction;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.UserVO;
@@ -120,6 +121,7 @@ package com.ithaca.visu.view.session.controls
 		private var _listUser:IList;
 		private var sessionChanged:Boolean;
 		private var activitiesChanged:Boolean;
+		private var usersChanged:Boolean;
 		private var editabled:Boolean;
 		
 		[SkinPart("true")]
@@ -136,7 +138,7 @@ package com.ithaca.visu.view.session.controls
 		{
 			if (instance == groupUser)
 			{
-				var uvo:UserVO = new UserVO();
+				/*var uvo:UserVO = new UserVO();
 				uvo.lastname = "koko";
 				uvo.firstname = "azaz";
 				uvo.avatar = "https://lh3.googleusercontent.com/_r4tG6k7JBcg/S0H_ok3HOSI/AAAAAAAACH8/U3Un09ysGqw/s104-c/avatar-2.jpg";
@@ -145,7 +147,7 @@ package com.ithaca.visu.view.session.controls
 				userEdit.user = user;
 				userEdit.percentWidth = 100;
 				groupUser.addElement(userEdit);
-			}
+*/			}
 			
 			if (instance == themeSession)
 			{
@@ -245,6 +247,23 @@ package com.ithaca.visu.view.session.controls
 				sessionPlanEdit.activities = _activities;
 				
 			}
+			
+			if(usersChanged)
+			{
+				usersChanged = false;
+				
+				groupUser.removeAllElements();
+				var nbrUser:int = this._listUser.length;
+				for(var nUser:int = 0; nUser < nbrUser; nUser++)
+				{
+					var user:User = this._listUser.getItemAt(nUser) as User;
+					var userEdit:UserEdit = new UserEdit();
+					userEdit.user = user;
+					userEdit.setEditabled(this.editabled);
+					userEdit.percentWidth = 100;
+					groupUser.addElement(userEdit);			
+				}
+			}
 		}
 		
 // SETTER/GETTER
@@ -259,6 +278,34 @@ package com.ithaca.visu.view.session.controls
 			_session = value;
 			sessionChanged = true;
 			invalidateProperties();
+		}
+		
+		public function get users():IList
+		{
+			return _listUser;
+		}
+		
+		public function set users(value:IList):void
+		{
+			if (_listUser == value) return;
+			
+/*			if (_listUser != null)
+			{
+				_listUser.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+			}*/
+			
+			_listUser = value;
+			usersChanged = true;
+			invalidateProperties();
+			
+			if (_listUser)
+			{
+				_listUser.addEventListener(CollectionEvent.COLLECTION_CHANGE, users_ChangeHandler);
+			}
+			
+/*			dispatchEvent( new Event("updateActivities"));
+			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
+			_activities.dispatchEvent(event);*/
 		}
 		
 		public function get activities():IList
@@ -292,6 +339,12 @@ package com.ithaca.visu.view.session.controls
 		protected function activities_ChangeHandler(event:CollectionEvent):void
 		{
 			activitiesChanged = true;
+			invalidateProperties();
+		}
+
+		protected function users_ChangeHandler(event:CollectionEvent):void
+		{
+			usersChanged = true;
 			invalidateProperties();
 		}
 
