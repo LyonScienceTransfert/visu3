@@ -82,6 +82,8 @@ package com.ithaca.visu.view.session.controls.event
 		
 		public static const UPDATE_DATE_TIME:String="updateDateTime";
 		public static const UPDATE_SESSION:String="updateSession";
+		public static const PRE_ADD_SESSION:String="preAddSession";
+		public static const ADD_SESSION:String="addSession";
 		
 		public var activity:Activity;
 		public var activityElement:ActivityElement;
