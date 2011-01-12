@@ -1182,6 +1182,10 @@ package  com.ithaca.visu.model
 			this.listDateSession.addItemAt({labelDate:labelDate, fullDate:date, listSessionDate:null},index);
 			return this.listDateSession.getItemAt(index);
 		}
+		public function clearDateSession():void
+		{
+			this.listDateSession.removeAll();
+		}
 		public function hasDateSession():Boolean
 		{
 			if(this.listDateSession.length > 0)
