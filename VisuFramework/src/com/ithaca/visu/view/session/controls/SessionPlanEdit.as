@@ -69,12 +69,15 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Alert;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.SkinnableContainer;
 	
@@ -86,6 +89,9 @@ package com.ithaca.visu.view.session.controls
 		
 		[SkinPart("true")] 
 		public var keywordGroup:Group;
+		
+		[SkinPart("true")] 
+		public var buttonCreateSessionByTemplate:Button;
 		
 	/*	[SkinPart("true")] 
 		public var comboBoxActivity:ComboBox;*/
@@ -108,6 +114,10 @@ package com.ithaca.visu.view.session.controls
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
+			if (instance == buttonCreateSessionByTemplate)
+			{
+				buttonCreateSessionByTemplate.addEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
+			}
 			/*if (instance == comboBoxActivity)
 			{
 				comboBoxActivity.labelFunction = setLabelComboboxActivity;
@@ -116,6 +126,10 @@ package com.ithaca.visu.view.session.controls
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
+			if (instance == buttonCreateSessionByTemplate)
+			{
+				buttonCreateSessionByTemplate.removeEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
+			}
 		}
 		
 		override protected function commitProperties():void
@@ -124,6 +138,7 @@ package com.ithaca.visu.view.session.controls
 			if (activitiesChanged)
 			{
 				activitiesChanged = false;
+				
 				// remove all elements from activityGroup 
 				if(activityGroup != null)
 				{
@@ -213,7 +228,14 @@ package com.ithaca.visu.view.session.controls
 			keyObj.data = "SOS => koko";
 			keyObj.type_element =  ActivityElementType.KEYWORD;
 			var activityElement:ActivityElement = new ActivityElement(keyObj);
-			
+			var activity:Activity= this._activities.getItemAt(0) as Activity;
+			if(activity == null)
+			{
+				Alert.show("You havn't activity","message error");
+			}else
+			{
+				activity.getListActivityElement().addItem(activityElement);
+			}
 			var addActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
 			// keyword hasn't activity
 			addActivityElement.activity = null;
@@ -231,6 +253,9 @@ package com.ithaca.visu.view.session.controls
 		private function onDeleteKeywordActivElement(event:SessionEditEvent):void
 		{
 			var deletingKeyword:ActivityElement = event.activityElement;				
+			// delet activityElement from activity
+			this.deleteActivityElement(deletingKeyword);
+			// delete activityElement from keywordGroup
 			var nbrElement:int = keywordGroup.numElements;
 			
 			for(var nElement:int =0; nElement < nbrElement; nElement++)
@@ -307,5 +332,37 @@ package com.ithaca.visu.view.session.controls
 			addActivityEvent.activity = activity;
 			this.dispatchEvent(addActivityEvent);
 		}
+		
+		public function onMouseClickButtonCreateSessionByTemplate(event:MouseEvent):void
+		{
+			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+			this.dispatchEvent(sessionAddEvent);
+		}
+
+// DELETE ACTIVITY ELEMENT FROM ACTIVITY
+		private function deleteActivityElement(deletingActivityElemen:ActivityElement):void
+		{
+			var indexAr:int = -1;
+			for each(var activity:Activity in this._activities)
+			{
+				var arrActivityElement:ArrayCollection = activity.getListActivityElement();
+				var nbrActivityElement:int = arrActivityElement.length;
+				for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement ; nActivityElement++)
+				{
+					var activityElement:ActivityElement = arrActivityElement.getItemAt(nActivityElement) as ActivityElement;
+					if(deletingActivityElemen.id_element == activityElement.id_element)
+					{
+						indexAr = nActivityElement;
+					}
+				}
+				if(indexAr == -1)
+				{
+					Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
+				}else{
+					arrActivityElement.removeItemAt(indexAr);
+				}	
+				
+			}
+		}		
 	}
 }
