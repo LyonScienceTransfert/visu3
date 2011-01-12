@@ -20,8 +20,11 @@ public class SessionEvent extends Event
 	static public const SHOW_LIST_SESSION : String = 'showListSession';
 	static public const ADDED_SESSION : String = 'addedSession';
 	static public const ADD_SESSION : String = 'addSession';
+	static public const ADD_CLONED_SESSION : String = 'addClonedSession';
 	static public const ADD_ACTIVITY : String = 'addActivity';
+	static public const ADD_CLONED_ACTIVITY : String = 'addClonedActivity';
 	static public const ADD_ACTIVITY_ELEMENT : String = 'addActivityElement';
+	static public const ADD_CLONED_ACTIVITY_ELEMENT : String = 'addClonedActivityElement';
 	static public const DELETE_ACTIVITY : String = 'deleteActivity';
 	static public const DELETE_ACTIVITY_ELEMENT : String = 'deleteActivityElement';
 	static public const UPDATE_LIST_SESSION : String = 'updateListSession';
@@ -60,6 +63,7 @@ public class SessionEvent extends Event
 	public var session : Session;
 	public var sessionVO :SessionVO;
 	public var activityVO :ActivityVO;
+	public var activityId :int;
 	public var activityElementVO :ActivityElementVO;
 	public var listSession : ArrayCollection;
 	public var listDate : Array;
