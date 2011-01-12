@@ -48,7 +48,7 @@
 		</s:layout>
 		<s:Group top="0" width="20%" height="100%">
 			<s:Panel top="40"
-					 width="100%">	
+					 width="100%" enabled.normal="false">	
 				<s:title>{fxgt.gettext("Afficher...")}</s:title>
 				<controls1:SessionFilters 
 					width="100%"					  
@@ -58,7 +58,7 @@
 		</s:Group>
 		
 		<s:Group width="25%" height="100%">
-			<s:Button id="addSessionButton" width="100%" top="14">
+			<s:Button id="addSessionButton" width="100%" top="14" enabled="false">
 				<s:label>{fxgt.gettext("Créer une séance")}</s:label>
 			</s:Button>
 			
