@@ -127,12 +127,26 @@ package com.ithaca.visu.view.session
 			{
 				_sessions = value;
 				sessionCollection = new ArrayCollection( _sessions);
-				sessionCollection.filterFunction = userFilterFunction;
+				//sessionCollection.filterFunction = userFilterFunction;
 				
 				sessionsList.dataProvider = sessionCollection;
 				dispatchEvent( new Event("update") );
+				
+				var showFirstSession:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE);
+				showFirstSession.newIndex = 0;
+				sessionList_indexChangeHandler(showFirstSession);
 			}
 		} 
+		
+		[Bindable("update")]
+		public function addSession(session:Session):void{
+			if(sessionCollection  != null)
+			{
+				sessionCollection.addItem(session);
+				sessionCollection.refresh();
+				dispatchEvent( new Event("update") );
+			}
+		}
 		// TODO update session item
 		public function updateSession(value:Session):void
 		{
@@ -263,6 +277,7 @@ package com.ithaca.visu.view.session
 			// FIXME : ? will be with session en recording
 			var result:Boolean = false;
 			var session :Session = item as Session;
+			return true;
 		//	this.filterSession = session.statusSession;
 				switch (this.filterSession)
 				{
