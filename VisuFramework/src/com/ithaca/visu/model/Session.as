@@ -102,6 +102,9 @@ package  com.ithaca.visu.model
 		public function getTheme():String {return this.theme};
 		public function getStatusSession():int {return this.statusSession};
 		public function get isModel():Boolean {return this._isModel};
+		public function setModel(value:Boolean){
+			this._isModel = value;
+		}
 		
 		public function setUsers(arUsers:Array):void
 		{
