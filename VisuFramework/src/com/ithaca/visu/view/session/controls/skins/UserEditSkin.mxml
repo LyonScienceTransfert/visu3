@@ -28,11 +28,11 @@
 	name=buttonDelete, type=mx.controls.Image, required=false
 	name=avatarUser, type=mx.controls.Image, required=false
 	-->
-	<s:Group width="100%" height.editable="40">
+	<s:Group width="100%">
 		<s:layout>
 			<s:VerticalLayout gap="4"/>
 		</s:layout>
-		<s:Group width="100%"  height.normal="30">
+		<s:Group width="100%"  height="30">
 			<s:Rect id="fill" radiusX="10"
 					left="2" right="2" top="1" bottom="1">
 				<s:fill>
@@ -54,15 +54,14 @@
 				</s:stroke>
 			</s:Rect>
 			<!-- IMAGE -->
-			<mx:Image id="avatarUser" left="5" top="5" width="26" top.normal="2" left.normal="10" height.editable="26" width.normal="25" height.normal="25"/>
+			<mx:Image id="avatarUser" left="10" top="2" width="26" height="26"/>
 			<!-- TEXT -->   		
-			<s:Label includeIn="normal"  id="textContent" text="Petipolis" top="3" left="42" right="10"
-					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" height="22"/>
+			<s:Label  id="textContent" text="Petipolis" top="3" left="42" right="10"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" height="22" fontWeight="bold"/>
 			<!-- BOUTTONS -->
-			<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"
-					   right.normal="20" top.normal="10" height.normal="32"/>
-			<!--<s:Label text=" editer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
-			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" right.normal="5" height.editable="14" width.normal="14" top.normal="10" height.normal="32"/>
+			<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  visible.editable="false" width="16"
+					   right="20" top="10" height="32"/>
+			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" visible.editable="false" right="5"  width="14" top="10" height="32"/>
 		</s:Group>
 	</s:Group>
 </s:Skin>
