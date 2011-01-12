@@ -144,6 +144,11 @@ package com.ithaca.visu.view.session.controls
 				durationActivityLabel.text = _activity.duration.toString();
 			}
 			
+			if (instance == durationActivity)
+			{
+				durationActivity.value = _activity.duration;
+			}
+			
 			if (instance == statementGroup)
 			{
 				trace("add statementGroup");
@@ -184,8 +189,6 @@ package com.ithaca.visu.view.session.controls
 			if (activityChanged)
 			{
 				activityChanged = false;
-				
-				if (durationActivity) durationActivity.value = _activity.duration;
 				
 				parseActivityElements();
 				
@@ -294,11 +297,13 @@ package com.ithaca.visu.view.session.controls
 		public function addStatement(value:String):void
 		{
 			var stObj:Object = new Object();
-			stObj.data = "Statement activity" + " : "+ value;
+			stObj.data = value;
 			stObj.id_element = 0;
 			stObj.type_element =  ActivityElementType.STATEMENT;
 			var activityElement:ActivityElement = new ActivityElement(stObj);
 			statementList.addItem(activityElement);
+			// add activityElement in activity
+			this._activity.activityElements.addItem(activityElement);
 			
 			var addStatementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
 			addStatementEvent.activity = _activity;
@@ -323,6 +328,7 @@ package com.ithaca.visu.view.session.controls
 		// delete statement		
 		private function onDeleteStatementActivityElement(event:SessionEditEvent):void
 		{
+			// delete activityElement from statementList
 			var deletingStatement:ActivityElement = event.activityElement;
 			var index:int= -1;
 			var nbrStatement:int = statementList.length;
@@ -339,22 +345,24 @@ package com.ithaca.visu.view.session.controls
 				Alert.show("You havn't activityElement with title = "+deletingStatement.data,"message error");
 			}else{
 				statementList.removeItemAt(index);
+			}
 // TODO update order activity elements !!!
-				
-				var nbrElement:int = statementGroup.numElements;
-				
-				for(var nElement:int =0; nElement < nbrElement; nElement++)
+			// delete activityElement from activity
+			this.deleteActivityElement(deletingStatement);
+			// delete activityElement from statementGroup
+			var nbrElement:int = statementGroup.numElements;
+			
+			for(var nElement:int = 0; nElement < nbrElement; nElement++)
+			{
+				var statementEdit:StatementEdit = statementGroup.getElementAt(nElement) as StatementEdit;
+				if(statementEdit.activityElement.id_element == deletingStatement.id_element)
 				{
-					var statementEdit:StatementEdit = statementGroup.getElementAt(nElement) as StatementEdit;
-					if(statementEdit.activityElement.id_element == deletingStatement.id_element)
-					{
-						statementGroup.removeElementAt(nElement);
-						var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
-						deletedActivityElement.activity = _activity;
-						deletedActivityElement.activityElement = deletingStatement;
-						this.dispatchEvent(deletedActivityElement);
-						return;
-					}
+					statementGroup.removeElementAt(nElement);
+					var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
+					deletedActivityElement.activity = _activity;
+					deletedActivityElement.activityElement = deletingStatement;
+					this.dispatchEvent(deletedActivityElement);
+					return;
 				}
 			}
 		}	
@@ -370,8 +378,9 @@ package com.ithaca.visu.view.session.controls
 				stObj.data = "";
 				stObj.type_element =  ActivityElementType.MEMO;
 				stObj.id_element = 0;
-				memoActivityElement = new ActivityElement(stObj);
-// add memo				
+				memoActivityElement = new ActivityElement(stObj);	
+				// add activityElement in activity
+				this._activity.activityElements.addItem(memoActivityElement);
 				var addMemoEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
 				addMemoEvent.activity = _activity;
 				addMemoEvent.activityElement = memoActivityElement;
@@ -401,7 +410,8 @@ package com.ithaca.visu.view.session.controls
 			stObj.id_element = 0;
 			var activityElement:ActivityElement = new ActivityElement(stObj);
 			documentList.addItem(activityElement);
-			
+			// add activityElement in activity
+			this._activity.activityElements.addItem(activityElement);
 			var addDocumentEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
 			addDocumentEvent.activity = _activity;
 			addDocumentEvent.activityElement = activityElement;
@@ -426,6 +436,7 @@ package com.ithaca.visu.view.session.controls
 		// delete document
 		private function onDeleteDocumentActivityElement(event:SessionEditEvent):void
 		{
+			// delete from documenList
 			var deletingDocument:ActivityElement = event.activityElement;
 			var index:int= -1;
 			var nbrDocument:int = documentList.length;
@@ -442,23 +453,26 @@ package com.ithaca.visu.view.session.controls
 				Alert.show("You havn't activityElement with title = "+deletingDocument.data,"message error");
 			}else{
 				documentList.removeItemAt(index);
-				
-				var nbrElement:int = documentGroup.numElements;
-				
-				for(var nElement:int =0; nElement < nbrElement; nElement++)
+			}
+			// delete from activity
+			this.deleteActivityElement(deletingDocument);
+			// delete from documentGroup
+			var nbrElement:int = documentGroup.numElements;
+			
+			for(var nElement:int =0; nElement < nbrElement; nElement++)
+			{
+				var documentEdit:DocumentEdit = documentGroup.getElementAt(nElement) as DocumentEdit;
+				if(documentEdit.activityElement.id_element == deletingDocument.id_element)
 				{
-					var documentEdit:DocumentEdit = documentGroup.getElementAt(nElement) as DocumentEdit;
-					if(documentEdit.activityElement.id_element == deletingDocument.id_element)
-					{
-						documentGroup.removeElementAt(nElement);
-						var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
-						deletedActivityElement.activity = _activity;
-						deletedActivityElement.activityElement = deletingDocument;
-						this.dispatchEvent(deletedActivityElement);
-						return;
-					}
+					documentGroup.removeElementAt(nElement);
+					var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
+					deletedActivityElement.activity = _activity;
+					deletedActivityElement.activityElement = deletingDocument;
+					this.dispatchEvent(deletedActivityElement);
+					return;
 				}
 			}
+			
 		}
 // TITRE ACTIVITY
 		public function addTitreActivity(value:String):void
@@ -485,6 +499,27 @@ package com.ithaca.visu.view.session.controls
 			var changeDurationEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
 			changeDurationEvent.activity = _activity;
 			this.dispatchEvent(changeDurationEvent);	
+		}
+// DELETE ACTIVITY ELEMENT FROM ACTIVITY
+		private function deleteActivityElement(deletingActivityElement:ActivityElement):void
+		{
+			var indexAr:int = -1;
+			var arrActivityElement:ArrayCollection = this._activity.getListActivityElement();
+			var nbrActivityElement:int = arrActivityElement.length;
+			for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement ; nActivityElement++)
+			{
+				var activityElement:ActivityElement = arrActivityElement.getItemAt(nActivityElement) as ActivityElement;
+				if(deletingActivityElement.id_element == activityElement.id_element)
+				{
+					indexAr = nActivityElement;
+				}
+			}
+			if(indexAr == -1)
+			{
+				Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
+			}else{
+				arrActivityElement.removeItemAt(indexAr);
+			}	
 		}
 	}
 }
