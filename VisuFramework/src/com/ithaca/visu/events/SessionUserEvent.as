@@ -8,9 +8,9 @@ package  com.ithaca.visu.events
 	public class SessionUserEvent extends Event
 	{
 		// constants
-		static public const REMOVE_SESSION_USER : String = 'removeSessionUser';
+		static public const REMOVE_SESSION_USER : String = 'removeSessionUser';		
 		static public const UPDATE_SESSION_USER : String = 'updateSessionUser';
-		
+		static public const ADD_SESSION_USER : String = 'addSessionUser';
 		// properties
 		public var oldSessionUser : SessionUserVO;
 		public var newSessionUser : SessionUserVO;
