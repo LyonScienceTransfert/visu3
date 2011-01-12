@@ -7,7 +7,7 @@
 		width="100%" height="100%" 
 		configure="visumodulebase1_configureHandler(event)" 
 		 creationComplete="visumodulebase1_creationCompleteHandler(event)"
-		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*"> 
+		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*" xmlns:mate="http://mate.asfusion.com/"> 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.visu.events.InitMapEvent;
@@ -22,6 +22,7 @@
 			import com.ithaca.visu.model.vo.ActivityVO;
 			import com.ithaca.visu.model.vo.SessionVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.view.session.controls.SessionDetail;
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 			
@@ -49,6 +50,7 @@
 				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);
 				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
 				sessionDetail.addEventListener(SessionEditEvent.UPDATE_SESSION, onUpdateSession);
+				sessionDetail.addEventListener(SessionEditEvent.ADD_SESSION, onAddSession);
 			}
 // ACTIVITY
 			private function onDeleteActivity(event:SessionEditEvent):void
@@ -91,7 +93,7 @@
 				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
 				
 				var deleteActivtyElementEvent:SessionEvent = new SessionEvent(SessionEvent.DELETE_ACTIVITY_ELEMENT);
-				deleteActivtyElementEvent.activityElementVO = activityElementVO;
+				deleteActivtyElementEvent.activityElementVO = activityElementVO;				
 				this.dispatchEvent(deleteActivtyElementEvent);
 			}
 			private function onUpdateActivityElement(event:SessionEditEvent):void
@@ -151,18 +153,45 @@
 				sessionVO.id_currentActivity = 0;
 				updateSession.sessionVO = sessionVO;
 				this.dispatchEvent(updateSession);
+				// update dataProvider the session
+				sessionManagement.updateSession(session);
+			}
+			
+			private function onAddSession(event:SessionEditEvent):void
+			{
+				var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
+				var session:Session = event.session;
+				var sessionVO:SessionVO = new SessionVO();
+				sessionVO.duration_session = session.duration_session;
+				sessionVO.id_session = session.id_session;
+				sessionVO.id_user = Model.getInstance().getLoggedUser().id_user
+				sessionVO.theme = session.theme;
+				sessionVO.date_session = session.date_session;
+				sessionVO.isModel = false;
+				sessionVO.description = session.description;
+				sessionVO.start_recording = session.date_start_recording;
+				sessionVO.status_session = SessionStatusEnum.SESSION_OPEN
+				sessionVO.id_currentActivity = 0;
+				addSession.sessionVO = sessionVO;
+				this.dispatchEvent(addSession);
 			}
 
+			private function addClonedSession(event:SessionEvent):void
+			{
+				var session:Session = event.session;
+				sessionManagement.addSession(session);
+			}
 		]]>
 	
 	</fx:Script>
-	<s:VGroup >
+	<s:VGroup  visible="false">
 		<s:Label   text="Gestion des séances" fontSize="20"  fontStyle="italic"/>
 		<s:Label  id="testLabel" fontSize="20" />
 	</s:VGroup>
 	<session:SessionManagement id="sessionManagement" top="0" left="0" right="0" bottom="0" skinClass="com.ithaca.visu.view.session.skin.SessionManagementSkin"/>
 	<fx:Declarations>
 		<maps:SessionMap dispatcher="{this}"/>
+		<mate:Listener type="{SessionEvent.ADD_CLONED_SESSION}"  method="addClonedSession"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 
