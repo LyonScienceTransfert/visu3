@@ -64,6 +64,7 @@
 package com.ithaca.visu.view.session.controls
 {	
 	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	
 	import flash.events.MouseEvent;
 	import flash.ui.Mouse;
@@ -125,11 +126,32 @@ package com.ithaca.visu.view.session.controls
 			if(instance == avatarUser)
 			{
 				avatarUser.source = _user.avatar;
+				
+				if(_user.role < RoleEnum.TUTEUR)
+				{
+					avatarUser.toolTip = "Etudiant";
+				}else
+					if(_user.role < RoleEnum.RESPONSABLE)
+					{
+						avatarUser.toolTip = "Tuteur";
+					}else 
+						if(_user.role < RoleEnum.ADMINISTRATEUR)
+						{
+							avatarUser.toolTip = "Responsable";
+						}else
+						{
+							avatarUser.toolTip = "Administrateur";							
+						}
 			}
 
 			if(instance == textContent)
 			{
 				textContent.text = _user.lastname + " "+_user.firstname;
+				
+				if(_user.role < RoleEnum.TUTEUR)
+				{
+					textContent.setStyle("fontWeight","normal");
+				}
 			}
 			
 		}
