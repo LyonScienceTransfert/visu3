@@ -12,6 +12,7 @@
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
 		import com.ithaca.visu.events.InitMapEvent;
 		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
 		import com.ithaca.visu.events.VisuActivityElementEvent;
 		import com.ithaca.visu.events.VisuActivityEvent;
 		import com.ithaca.visu.events.UserEvent;
@@ -87,6 +88,14 @@
 			showBusyCursor="true">
 		</s:RemoteObject>
 		
+		<s:RemoteObject
+			id="remoteSessionUser"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="SessionUserService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+		
 		
 		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}" useCapture="true" debug="true">
 			<mate:MethodInvoker generator="{SessionManager}" method="setCurrentSessionId" arguments="{event.sessionId}"/>
@@ -118,7 +127,19 @@
 				</mate:faultHandlers>
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
-
+<!-- USERS -->
+		<mate:EventHandlers type="{SessionUserEvent.ADD_SESSION_USER}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteSessionUser}" method="addSessionUser" arguments="{event.newSessionUser}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onAddSessionUser" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
 <!-- SESSION -->		
 		<mate:EventHandlers type="{SessionEvent.UPDATE_SESSION}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="updateSession" arguments="{event.sessionVO}">
