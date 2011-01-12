@@ -10,12 +10,14 @@ package business
 	import com.ithaca.visu.model.vo.ActivityElementVO;
 	import com.ithaca.visu.model.vo.ActivityVO;
 	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.utils.ObjectUtil;
@@ -33,6 +35,8 @@ package business
 		public var sessions:Array=[];
 		[Bindable]
 		public var listActivities:ArrayCollection = new ArrayCollection();
+		[Bindable]
+		public var listUser:ArrayCollection = new ArrayCollection();
 		
 		public function SessionManager(dispatcher:IEventDispatcher)
 		{
@@ -56,7 +60,6 @@ package business
 			for each (var sessionVO:SessionVO in value)
 			{
 				var session:Session = new Session(sessionVO);
-				session.statusSession
 				ar.push(session);   
 			}
 			sessions = ar;
@@ -97,6 +100,18 @@ package business
 			}
 		}
 		
+		public function onLoadListUsersSession(listUserVO:Array, sessionId:int):void
+		{
+			this.listUser.removeAll();
+			var nbrUserVO:int = listUserVO.length;
+			for(var nUserVO:int = 0; nUserVO < nbrUserVO; nUserVO++)
+			{
+				var userVO:UserVO = listUserVO[nUserVO];
+				var user:User = new User(userVO);
+				this.listUser.addItem(user);
+			}
+		}
+		
 		public function onUpdateSession(sessionVO:SessionVO):void
 		{
 			
@@ -117,14 +132,14 @@ package business
 		{
 			
 		}
-		public function onDeleteActivityElement(activityElementId:int):void
-		{
-			
+		public function onDeleteActivityElement(activityElementId:int, activityId:int):void
+		{	
+
 		}
 		
 		public function onAddActivityElement(value:ActivityElementVO):void
 		{
-			var idElement:int = value.id_activity;
+			var idElement:int = value.id_element;
 			if(idElement != 0)
 			{
 				var arrActivityElement:ArrayCollection = this.getActivityById(value.id_activity).activityElements;
@@ -134,7 +149,7 @@ package business
 				var nbrActivity:int = this.listActivities.length;
 				for(var nActivity:int=0; nActivity < nbrActivity; nActivity++)
 				{
-					var activity:Activity = this.listActivities.getItemIndex(nActivity) as Activity;
+					var activity:Activity = this.listActivities.getItemAt(nActivity) as Activity;
 					var arrActivityElement:ArrayCollection = activity.activityElements;
 					var isSet:Boolean = setIdElement(idElement, arrActivityElement);
 					if(isSet){ return;}
@@ -150,12 +165,57 @@ package business
 					if(activityElement.id_element == 0)
 					{
 						activityElement.id_element = id;
-						return true
+						return true;
 					}
 				}
 				return false;
 			}
 		}
+/// ADD SESSION
+		public function onAddSession(sessionVO:SessionVO):void
+		{
+			var session:Session = new Session(sessionVO);
+			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
+			addSession.session = session;
+			this.dispatcher.dispatchEvent(addSession);
+			// ADD ACTIVITY
+			var nbrActivity:int = this.listActivities.length;
+			for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
+			{
+				var activity:Activity = this.listActivities.getItemAt(nActivity) as Activity;
+				var activityVO:ActivityVO = setActivityVO(activity,sessionVO.id_session);
+				var addActivity:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY);
+				addActivity.activityVO = activityVO;
+				addActivity.activityId = activity.id_activity;
+				this.dispatcher.dispatchEvent(addActivity);
+			}
+		}
+		
+		
+		
+		
+		public function onAddClonedActivity(activityVO:ActivityVO, activityId:int):void
+		{
+			
+			var activity:Activity = this.getActivityById(activityId);
+				var arrActivityElement:ArrayCollection = activity.activityElements;
+				var nbrActivityElement:int = arrActivityElement.length;
+				for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
+				{
+					var activityElement:ActivityElement = arrActivityElement.getItemAt(nActivityElement) as ActivityElement;
+					var activityElementVO: ActivityElementVO = setActivityElementVO(activityElement, activityVO.id_activity);
+					var addActivityElement:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY_ELEMENT);
+					addActivityElement.activityElementVO = activityElementVO;
+					this.dispatcher.dispatchEvent(addActivityElement);
+				}
+		}
+		
+		
+		public function onAddClonedActivityElement(value:ActivityElementVO):void
+		{
+			
+		}
+		
 		/**
 		 * Default error Handler for rtmp method call
 		 */
@@ -177,6 +237,29 @@ package business
 				dispatcher.dispatchEvent(outSession);
 			}
 		}
+		
+		private function setActivityVO(activity:Activity,sessionId:int):ActivityVO
+		{
+			var activityVO:ActivityVO = new ActivityVO();
+			activityVO.id_activity = activity.id_activity; 
+			activityVO.id_session = sessionId;
+			activityVO.title = activity.title;
+			activityVO.duration = activity.duration;
+			activityVO.ind = activity.ind;
+			return activityVO;
+		}
+		private function setActivityElementVO(activityElement:ActivityElement, idActivity:int):ActivityElementVO
+		{
+			var alm:ActivityElementVO = new ActivityElementVO();
+			var idActivity:int;
+			alm.id_activity = idActivity;
+			alm.data = activityElement.data;
+			alm.url_element = activityElement.url_element;
+			alm.type_element = activityElement.type_element;
+			alm.type_mime = activityElement.type_mime;
+			return alm;
+		}
+		
 		
 		private function getActivityById(value:int):Activity
 		{
