@@ -174,6 +174,20 @@ package com.ithaca.visu.view.session.controls
 			{
 				
 			}
+			
+			if (instance == sessionPlanEdit)
+			{
+				sessionPlanEdit.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
+			}
+		}
+		
+		override protected function partRemoved(partName:String, instance:Object):void
+		{
+			super.partRemoved(partName,instance);
+			if (instance == sessionPlanEdit)
+			{
+				sessionPlanEdit.removeEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
+			}
 		}
 		
 		override protected function commitProperties():void
@@ -399,6 +413,17 @@ package com.ithaca.visu.view.session.controls
 				updateSession.session = _session;
 				this.dispatchEvent(updateSession);
 			}
+		}
+// ADD SESSION
+		private function onPreAddSession(event:SessionEditEvent):void
+		{
+			var addSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_SESSION);
+			_session.date_session = new Date();
+/*			_session.id_user = Model.getInstance().getLoggedUser().id_user;
+			_session.setModel(false);
+			_session.statusSession = 0;*/
+			addSession.session = _session;
+			this.dispatchEvent(addSession);
 		}
 	}
 }
