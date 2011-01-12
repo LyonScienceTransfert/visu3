@@ -120,11 +120,12 @@
 				<!--<s:text>{fxgt.gettext("Plan de séance")}</s:text>-->
 				<s:text>{"Plan de séance"}</s:text>
 			</s:Label>
-			<s:Button right="140" enabled.normal="false" right.normalEditable="130" right.normal="130">
+<!-- BUTTONS -->
+			<s:Button  id="buttonCreateSessionByTemplate" right="130" top.disabled="5" right.disabled="130" top.normal="5" right.normal="130" top.normalEditable="5" right.normalEditable="130">
 				<!--<s:label>{fxgt.gettext("importer")}</s:label>-->
 				<s:label>{"Créer une nouvelle séance"}</s:label>
 			</s:Button>
-			<s:Button right="65" enabled.normal="false" right.normalEditable="5" right.normal="5">
+			<s:Button enabled="false" right="5" top.disabled="5" right.disabled="5" top.normal="5" right.normal="5" top.normalEditable="5" right.normalEditable="5">
 				<!--<s:label>{fxgt.gettext("exporter")}</s:label>-->
 				<s:label>{"Rendre public"}</s:label>
 			</s:Button>
