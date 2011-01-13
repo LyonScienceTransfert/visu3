@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="350" 
+			   xmlns:user="com.ithaca.visu.view.user.*"
+			   close="PopUpManager.removePopUp(this);" 
+			    creationComplete="titlewindow1_creationCompleteHandler(event)">
+	<s:title>{fxgt.gettext("Selection d'utilisateur...")}</s:title>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.events.UserEvent;
+			import com.ithaca.visu.model.User;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.RichText;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var user:User = addUserManagement.addUserDetail.user;
+				var selectedUser:UserEvent = new UserEvent(UserEvent.SELECTED_USER);
+				selectedUser.user = user;
+				this.dispatchEvent(selectedUser);
+				PopUpManager.removePopUp(this);			
+			}
+
+		]]>
+	</fx:Script>
+	<user:AddUserManagement  id="addUserManagement" top="0" left="0" right="0" bottom="40"
+						  skinClass="com.ithaca.visu.view.user.skins.AddUserManagementSkin"
+						  />
+		
+	<s:Button id="buttonCancel" click="PopUpManager.removePopUp(this);" bottom="10" right="20">
+		<s:label>{fxgt.gettext("Cancel")}</s:label>
+	</s:Button>
+	<s:Button bottom="10" right="120" click="button1_clickHandler(event)">
+		<s:label>{fxgt.gettext("OK")}</s:label>
+	</s:Button>
+</s:TitleWindow>
