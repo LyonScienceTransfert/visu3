@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		 creationComplete="skin1_creationCompleteHandler(event)">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.user.AddUserDetail")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.RichText;
+
+			[Bindable]
+			private var fxgt:_FxGettext;
+			
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
+		]]>
+	</fx:Script>
+	<s:Group height="120">	
+		<mx:Image  left="5"  top="5" id="avatarUser" bottom="5" width="100"/>
+		<s:Group left="125"  right="5" top="5"
+				  bottom="5" verticalCenter="0">
+			<s:Label text="Nom: " top="10" left="18"/> 	    <s:Label  id="nameUser" text="Sayfulin"  left="50" top="10"/> 
+			<s:Label text="Prenom:" verticalCenter="0"/>    <s:Label  id="prenomUser" text="Serguei" left="50"  verticalCenter="0"/>
+			<s:Label text="Role:" bottom="10" left="18"/>             <s:Label  id="roleUser" text="Adminisatrateur" left="50" bottom="10"/>      
+		</s:Group>
+	</s:Group>
+</s:Skin>
