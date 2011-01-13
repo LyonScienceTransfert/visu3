@@ -12,6 +12,7 @@
 		<![CDATA[ 
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.UserEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.model.Activity;
 			import com.ithaca.visu.model.ActivityElement;
@@ -20,10 +21,13 @@
 			import com.ithaca.visu.model.User;
 			import com.ithaca.visu.model.vo.ActivityElementVO;
 			import com.ithaca.visu.model.vo.ActivityVO;
+			import com.ithaca.visu.model.vo.SessionUserVO;
 			import com.ithaca.visu.model.vo.SessionVO;
+			import com.ithaca.visu.model.vo.UserVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.view.session.controls.SessionDetail;
+			import com.ithaca.visu.view.session.controls.UserEdit;
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 			
 			import mx.events.FlexEvent;
@@ -51,6 +55,7 @@
 				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
 				sessionDetail.addEventListener(SessionEditEvent.UPDATE_SESSION, onUpdateSession);
 				sessionDetail.addEventListener(SessionEditEvent.ADD_SESSION, onAddSession);
+				sessionDetail.addEventListener(SessionEditEvent.PRE_LOAD_USERS, onPreLoadUsers);
 			}
 // ACTIVITY
 			private function onDeleteActivity(event:SessionEditEvent):void
@@ -170,17 +175,31 @@
 				sessionVO.isModel = false;
 				sessionVO.description = session.description;
 				sessionVO.start_recording = session.date_start_recording;
-				sessionVO.status_session = SessionStatusEnum.SESSION_OPEN
+				sessionVO.status_session = SessionStatusEnum.SESSION_OPEN;
 				sessionVO.id_currentActivity = 0;
 				addSession.sessionVO = sessionVO;
 				this.dispatchEvent(addSession);
 			}
 
+			private function onPreLoadUsers(event:SessionEditEvent):void
+			{
+				var loadUsers:SessionEditEvent = new SessionEditEvent(SessionEditEvent.LOAD_LIST_USERS);
+				this.dispatchEvent(loadUsers);
+			}
 			private function addClonedSession(event:SessionEvent):void
 			{
 				var session:Session = event.session;
 				sessionManagement.addSession(session);
 			}
+			private function onLoadedAllUsers(event:UserEvent):void
+			{
+				if(sessionManagement.sessionDetail)
+				{
+					sessionManagement.sessionDetail.allUsers = event.listUser;
+				}
+			}
+			
+			
 		]]>
 	
 	</fx:Script>
@@ -192,6 +211,7 @@
 	<fx:Declarations>
 		<maps:SessionMap dispatcher="{this}"/>
 		<mate:Listener type="{SessionEvent.ADD_CLONED_SESSION}"  method="addClonedSession"/>
+		<mate:Listener type="{UserEvent.LOADED_ALL_USERS}"  method="onLoadedAllUsers"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 
