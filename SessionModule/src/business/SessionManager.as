@@ -2,6 +2,7 @@ package business
 {
 	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.events.SessionUserEvent;
+	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.events.VisuActivityElementEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
@@ -14,6 +15,7 @@ package business
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -116,7 +118,7 @@ package business
 		
 		public function onUpdateSession(sessionVO:SessionVO):void
 		{
-			
+			model.clearDateSession();
 		}
 		public function onUpdateActivity(activityVO:ActivityVO):void
 		{
@@ -224,10 +226,27 @@ package business
 		{
 			
 		}
-// ADD USER
+// USER
 		public function onAddSessionUser(sessionUserVO:SessionUserVO):void
 		{
+			model.clearDateSession();	
+		}
+
+		public function onRemoveSessionUser(value:int):void
+		{
+			model.clearDateSession();	
+		}
+		public function onLoadListUsers(value:Array):void
+		{
+			var ar:Array = []
+			for each (var vo:UserVO in value)
+			{
+				ar.push(new User(vo)) ; 
+			}
 			
+			var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS,true);
+			onLoadedAllUsers.listUser = ar;
+			this.dispatcher.dispatchEvent(onLoadedAllUsers);
 		}
 		/**
 		 * Default error Handler for rtmp method call
