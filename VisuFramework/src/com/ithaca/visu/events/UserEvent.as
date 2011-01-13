@@ -10,15 +10,18 @@ package  com.ithaca.visu.events
 		// constants
 		static public const LOAD_LIST_USERS_SESSION : String = 'loadListUsersSession';
 		static public const LOAD_USERS : String = 'loadUsers';
+		static public const LOADED_ALL_USERS : String = 'loadedAllUsers';
 		static public const UPDATE_USER : String = 'updateUser';
 		static public const ADD_USER : String = 'addViewUser';
 		static public const DELETE_USER : String = 'deleteViewUser';
+		static public const SELECTED_USER : String = 'selectedUser';
 		
 		// properties
 		public var sessionId : int;
 		public var sessionDate : String;
 		public var user : User;
 		public var userVO: UserVO;
+		public var listUser:Array;
 		
 		// constructor
 		public function UserEvent(type : String,
