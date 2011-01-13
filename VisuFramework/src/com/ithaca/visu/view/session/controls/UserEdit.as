@@ -63,14 +63,18 @@
 
 package com.ithaca.visu.view.session.controls
 {	
+	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.MouseEvent;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
 	
+	import mx.controls.Alert;
 	import mx.controls.Image;
+	import mx.events.CloseEvent;
 	
 	import spark.components.Label;
 	import spark.components.RichText;
@@ -114,12 +118,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonDelete.addEventListener(MouseEvent.CLICK, onButtonDeleteClick);
 				buttonDelete.toolTip = "effacer";
 			}
 			if(instance == buttonEdit)
 			{
-				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
-				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				/*buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);*/
 				buttonEdit.toolTip = "editer";
 			}
 			
@@ -127,15 +132,15 @@ package com.ithaca.visu.view.session.controls
 			{
 				avatarUser.source = _user.avatar;
 				
-				if(_user.role < RoleEnum.TUTEUR)
+				if(_user.role < RoleEnum.STUDENT)
 				{
 					avatarUser.toolTip = "Etudiant";
 				}else
-					if(_user.role < RoleEnum.RESPONSABLE)
+					if(_user.role < RoleEnum.TUTEUR)
 					{
 						avatarUser.toolTip = "Tuteur";
 					}else 
-						if(_user.role < RoleEnum.ADMINISTRATEUR)
+						if(_user.role < RoleEnum.RESPONSABLE)
 						{
 							avatarUser.toolTip = "Responsable";
 						}else
@@ -148,7 +153,7 @@ package com.ithaca.visu.view.session.controls
 			{
 				textContent.text = _user.lastname + " "+_user.firstname;
 				
-				if(_user.role < RoleEnum.TUTEUR)
+				if(_user.role < RoleEnum.STUDENT)
 				{
 					textContent.setStyle("fontWeight","normal");
 				}
@@ -162,11 +167,12 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonDelete.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				buttonDelete.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonDelete.removeEventListener(MouseEvent.CLICK, onButtonDeleteClick);
 			}
 			if(instance == buttonEdit)
 			{
-				buttonEdit.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
-				buttonEdit.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				/*buttonEdit.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
+				buttonEdit.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);*/
 			}
 		}
 		
@@ -190,6 +196,23 @@ package com.ithaca.visu.view.session.controls
 		protected function onMouseOutButton(event:MouseEvent):void
 		{
 			Mouse.cursor = this.currentMouseCursor;
+		}
+		
+		protected function onButtonDeleteClick(event:MouseEvent):void
+		{
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous supprimer "+ _user.lastname +" "+_user.firstname + "?",
+				"Confirmation", Alert.YES|Alert.NO, null, deleteUserConformed); 
+		}
+		
+		private function deleteUserConformed(event:CloseEvent):void{
+			if( event.detail == Alert.YES)
+			{
+				var preDeleteUser:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_SESSION_USER);
+				preDeleteUser.user = _user;
+				this.dispatchEvent(preDeleteUser);
+			}
 		}
 	}
 }
