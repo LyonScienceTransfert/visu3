@@ -65,6 +65,7 @@ package com.ithaca.visu.view.session.controls.event
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.model.User;
 	
 	import flash.events.Event;
 	
@@ -85,9 +86,15 @@ package com.ithaca.visu.view.session.controls.event
 		public static const PRE_ADD_SESSION:String="preAddSession";
 		public static const ADD_SESSION:String="addSession";
 		
+		public static const PRE_DELETE_SESSION_USER:String="preDeleteSessionUser";
+		public static const PRE_LOAD_USERS:String="preLoadUsers";
+		public static const LOAD_LIST_USERS:String="loadListUsers";
+		
 		public var activity:Activity;
 		public var activityElement:ActivityElement;
 		public var session:Session;
+		public var user:User;
+		public var listUser:Array;
 		
 		public function SessionEditEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

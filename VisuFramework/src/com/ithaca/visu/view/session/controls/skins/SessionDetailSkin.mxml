@@ -110,7 +110,7 @@
 					</s:Group>
 					<!-- USERS -->
 					<s:Group height="100%" width="40%">
-						<s:Button left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="false">
+						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true">
 							<s:label>Ajouter une utilisateur</s:label>
 						</s:Button>
 						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">

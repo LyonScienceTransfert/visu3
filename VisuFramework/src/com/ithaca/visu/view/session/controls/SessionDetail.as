@@ -63,21 +63,30 @@
 
 package com.ithaca.visu.view.session.controls
 {
+	import com.ithaca.utils.AddUserTitleWindow;
 	import com.ithaca.utils.UtilFunction;
+	import com.ithaca.visu.events.SessionUserEvent;
+	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.model.vo.SessionUserVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.visualempathy.display.controls.datetime.DateTimePickerFR;
 	
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.controls.Alert;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
+	import mx.managers.PopUpManager;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.RichEditableText;
@@ -113,12 +122,17 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var groupUser:Group;
 			
+		[SkinPart("true")] 
+		public var buttonAddUser:Button;
+		
 		public var theme:String="";
 		public var description:String="";
 		public var dateSession:Date= null;
 		private var _session:Session;
 		private var _activities:IList;
 		private var _listUser:IList;
+		private var _profiles:Array;
+		
 		private var sessionChanged:Boolean;
 		private var activitiesChanged:Boolean;
 		private var usersChanged:Boolean;
@@ -179,6 +193,11 @@ package com.ithaca.visu.view.session.controls
 			{
 				sessionPlanEdit.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
 			}
+
+			if (instance == buttonAddUser)
+			{
+				buttonAddUser.addEventListener(MouseEvent.CLICK , onClickButtonAddUser);
+			}
 		}
 		
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -187,6 +206,11 @@ package com.ithaca.visu.view.session.controls
 			if (instance == sessionPlanEdit)
 			{
 				sessionPlanEdit.removeEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
+			}
+			
+			if (instance == buttonAddUser)
+			{
+				buttonAddUser.removeEventListener(MouseEvent.CLICK , onClickButtonAddUser);
 			}
 		}
 		
@@ -272,6 +296,7 @@ package com.ithaca.visu.view.session.controls
 				{
 					var user:User = this._listUser.getItemAt(nUser) as User;
 					var userEdit:UserEdit = new UserEdit();
+					userEdit.addEventListener(SessionEditEvent.PRE_DELETE_SESSION_USER, onPreDeleteUser);
 					userEdit.user = user;
 					userEdit.setEditabled(this.editabled);
 					userEdit.percentWidth = 100;
@@ -292,6 +317,30 @@ package com.ithaca.visu.view.session.controls
 			_session = value;
 			sessionChanged = true;
 			invalidateProperties();
+		}
+		
+		public function set allUsers(value:Array):void
+		{
+			var listUserShow:Array = this.getListUserShow(value);
+			// message if list users for adding empty
+			if(listUserShow.length == 0)
+			{
+				Alert.show("Hasn't utilisateur for adding to session.","Message");
+			}else
+			{
+				var addUser:AddUserTitleWindow = AddUserTitleWindow(PopUpManager.createPopUp( 
+					this, AddUserTitleWindow , true) as spark.components.TitleWindow);
+				addUser.addEventListener(UserEvent.SELECTED_USER, onSelectUser);
+				addUser.x = (this.parentApplication.width - addUser.width)/2;
+				addUser.y = (this.parentApplication.height - addUser.height)/2;
+				addUser.addUserManagement.users = listUserShow;
+				addUser.addUserManagement.profiles = _profiles;
+			}		
+		}
+		
+		public function set profiles(value:Array):void
+		{
+			this._profiles = value;
 		}
 		
 		public function get users():IList
@@ -419,11 +468,93 @@ package com.ithaca.visu.view.session.controls
 		{
 			var addSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_SESSION);
 			_session.date_session = new Date();
-/*			_session.id_user = Model.getInstance().getLoggedUser().id_user;
-			_session.setModel(false);
-			_session.statusSession = 0;*/
 			addSession.session = _session;
 			this.dispatchEvent(addSession);
 		}
+// USER
+		private function onClickButtonAddUser(event:MouseEvent):void
+		{
+			var userEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_LOAD_USERS);
+			this.dispatchEvent(userEvent);
+		}
+		private function onSelectUser(event:UserEvent):void
+		{
+			this._listUser.addItemAt(event.user,0);
+			this.usersChanged = true;
+			this.invalidateProperties();
+			// add user in to session
+			var sessionUserVO:SessionUserVO = new SessionUserVO();
+			sessionUserVO.id_session = _session.id_session;
+			sessionUserVO.id_user = event.user.id_user;
+			sessionUserVO.mask = 0;
+			var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
+			sessionUserEvent.newSessionUser = sessionUserVO;
+			this.dispatchEvent(sessionUserEvent);			
+		}
+		
+		private function getListUserShow(value:Array):Array
+		{
+			var result:Array = new Array();
+			var nbrUser:int = value.length;
+			for(var nUser:int= 0; nUser < nbrUser ; nUser++)
+			{
+				var user:User = value[nUser]
+				var hasUser:Boolean = hasUserInSession(user.id_user, this._listUser)
+				if(!hasUser)
+				{
+					result.push(user);
+				}
+			}
+			 return result;
+			
+			function hasUserInSession(id:int, list:ArrayCollection):Boolean
+			{
+				var nbrUser:int = list.length;
+				for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+				{
+					var user:User = list.getItemAt(nUser) as User;
+					if (id == user.id_user)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+		
+		private function onPreDeleteUser(event:SessionEditEvent):void
+		{
+			var deletingUser:User = event.user;
+			// delete user from the list
+			var index:int = -1;
+		    var nbrUser:int = this._listUser.length;
+			for(var nUser:int = 0; nUser < nbrUser; nUser++)
+			{
+				var user:User = this._listUser.getItemAt(nUser) as User;
+				if(user.id_user == deletingUser.id_user)
+				{
+					index = nUser;
+				}
+			}
+			if(index == -1)
+			{
+				Alert.show("You havn't user with name = "+deletingUser.firstname,"message error");
+			}else{
+				this._listUser.removeItemAt(index);
+				usersChanged = true;
+				
+				this.invalidateProperties();
+				var deleteUser:SessionUserEvent = new SessionUserEvent(SessionUserEvent.REMOVE_SESSION_USER);
+				var sessionUserVO:SessionUserVO = new SessionUserVO();
+				sessionUserVO.id_session = _session.id_session;
+				sessionUserVO.id_user = deletingUser.id_user;
+				sessionUserVO.mask = 0;
+				deleteUser.newSessionUser = sessionUserVO;
+				this.dispatchEvent(deleteUser);
+			}
+			
+	
+		}
+		
 	}
 }
