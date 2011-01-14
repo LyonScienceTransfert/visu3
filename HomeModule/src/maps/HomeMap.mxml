@@ -15,8 +15,11 @@
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.events.UserEvent;
 		import com.ithaca.visu.model.Model;
+		import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 		
 		import modules.HomeModule;
+		
+		import mx.events.FlexEvent;
 		
         ]]></fx:Script>
 
@@ -79,7 +82,31 @@
 				</mate:resultHandlers>
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
+
+<!-- USERS -->
+		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{UserEvent.UPDATE_USER}" useCapture="true"  debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="updateUser" arguments="{event.userVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}" method="onUpdateUser" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
     </fx:Declarations>
 
 </mate:LocalEventMap>
