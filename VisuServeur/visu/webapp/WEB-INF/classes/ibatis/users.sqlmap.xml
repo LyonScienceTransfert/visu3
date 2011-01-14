@@ -27,11 +27,11 @@
 		<result column="activation_key" jdbcType="TINYINT" property="activation_key" />
 		<result column="recovery_key" jdbcType="TINYINT" property="recovery_key" />
 		<result column="avatar" jdbcType="VARCHAR" property="avatar" />
-		
+		<result column="message" jdbcType="VARCHAR" property="message" />	
 	</resultMap>
 
 	<sql id="selectBase">
-		select id_user as u_id, lastname, firstname, mail, password, profil, avatar, activation_key, recovery_key
+		select id_user as u_id, lastname, firstname, mail, password, profil, avatar, activation_key, recovery_key, message
 	</sql>
 	
 	<select id="getUsers" parameterClass="user"
@@ -48,8 +48,6 @@
         WHERE id_user = #value#
 	</select>
 
-	
-
 	<select id="getUserByUsernamePassword" parameterClass="java.util.HashMap"
 		resultMap="userResult"  cacheModel="cache">
     	<include refid="selectBase" />
@@ -59,14 +57,12 @@
         	
         	mail = #username#
         AND 
-      		password = #password#
-	
+      		password = #password#	
     </select>
-    
     
     <select id="getUsersFromSession" parameterClass="int"
 		resultMap="userResult" cacheModel="cache">
-		SELECT u.id_user as u_id, lastname, firstname, mail, password, profil, avatar, activation_key, recovery_key 
+		SELECT u.id_user as u_id, lastname, firstname, mail, password, profil, avatar, activation_key, recovery_key, message
         FROM users u , session_users s
         WHERE s.id_session = #value# AND s.id_user = u.id_user
     </select>
@@ -80,7 +76,8 @@
 			password = #password:VARCHAR#, 
 			profil = #profil:LONGVARBINARY#,
 		 	activation_key = #activation_key:VARCHAR#,
-		 	avatar = #avatar:VARCHAR#
+		 	avatar = #avatar:VARCHAR#,
+		 	message = #message:VARCHAR#
 		<selectKey keyProperty="id_user" resultClass="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -100,7 +97,8 @@
 			profil = #profil:BIGINT#,
 			activation_key = #activation_key:VARCHAR#,
 			recovery_key = #recovery_key:VARCHAR#,
-			avatar = #avatar:VARCHAR#
+			avatar = #avatar:VARCHAR#,
+			message = #message:VARCHAR#
 		WHERE id_user = #id_user:BIGINT#
 	</update>
 
@@ -108,6 +106,7 @@
 		parameterClass="user">		 
 		DELETE FROM users WHERE id_user = #id_user:BIGINT#
 	</delete>
+	
 	
 	
 </sqlMap>
