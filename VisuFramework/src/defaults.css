@@ -9,6 +9,7 @@
 @namespace trace	"com.ithaca.visu.controls.timeline.*";
 @namespace obsel	"com.ithaca.traces.view.*";
 @namespace plan 	"com.ithaca.visu.view.session.controls.*";
+@namespace user 	"com.ithaca.visu.view.user.*";
 
 
 
@@ -115,7 +116,13 @@ plan|DocumentEdit
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.DocumentEditSkin");
 }
+
 plan|UserEdit
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.UserEditSkin");
+}
+
+user|MessageUser
+{
+	skin-class: ClassReference("com.ithaca.visu.view.user.skins.MessageUserSkin");
 }

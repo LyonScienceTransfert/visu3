@@ -83,6 +83,7 @@ package   com.ithaca.visu.model
 			this.avatar = user.avatar;
 			this.profil = user.profil || "";
 			this.password = user.password || "";
+			this.message = user.message;
 		}
 		public function getId():int
 		{

@@ -11,6 +11,7 @@ package  com.ithaca.visu.events
 		static public const LOAD_LIST_USERS_SESSION : String = 'loadListUsersSession';
 		static public const LOAD_USERS : String = 'loadUsers';
 		static public const LOADED_ALL_USERS : String = 'loadedAllUsers';
+		static public const LOADED_ALL_USERS_SALON_HOME : String = 'loadedAllUsersSalonHome';
 		static public const UPDATE_USER : String = 'updateUser';
 		static public const ADD_USER : String = 'addViewUser';
 		static public const DELETE_USER : String = 'deleteViewUser';
