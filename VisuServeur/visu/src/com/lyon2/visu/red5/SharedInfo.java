@@ -390,7 +390,7 @@ public class SharedInfo
         try
         {
         	// get list obsel "SystemSessionStart"
-			String traceParam = "%-0>%";
+			String traceParam = "%-0%";
 			String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
 			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 			listObselSystemSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);

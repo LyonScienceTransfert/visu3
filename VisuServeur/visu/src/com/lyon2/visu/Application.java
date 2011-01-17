@@ -728,7 +728,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 	        try
 	        {
 	        	// get list obsel "SystemSessionStart"
-				String traceParam = "%-0>%";
+				String traceParam = "%-0%";
 				String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
 				ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 				listObselSystemSessionStart = (List<Obsel>) getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
@@ -757,7 +757,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			List<Obsel> listObselSessionStart = null;
 			try
 			{
-				String traceParam = "%-"+userId.toString()+">%";
+				String traceParam = "%-"+userId.toString()+"%";
 				String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
 				log.warn("====refParam {}",refParam);
 				ObselStringParams osp = new ObselStringParams(traceParam,refParam);
@@ -914,7 +914,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			List<Obsel> listObselSessionStart = null;
 			try
 			{
-				String traceParam = "%-"+userId.toString()+">%";
+				String traceParam = "%-"+userId.toString()+"%";
 				String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
 				//log.warn("====refParam {}",refParam);
 				ObselStringParams osp = new ObselStringParams(traceParam,refParam);		
@@ -950,7 +950,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
         try
         {
         	// get list obsel "SystemSessionStart"
-			String traceParam = "%-0>%";
+			String traceParam = "%-0%";
 			String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
 			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 			listObselUpdatedMarker = (List<Obsel>) getSqlMapClient().queryForList("obsels.getObselSystemUpdateMarker", osp);

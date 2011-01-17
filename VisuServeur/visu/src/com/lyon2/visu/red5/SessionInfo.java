@@ -329,7 +329,7 @@ public class SessionInfo
 		List <Obsel> listResultObselOneBySession = new ArrayList<Obsel>();
 		try
 		{	
-			String traceParam = "%-"+userId.toString()+">%";
+			String traceParam = "%-"+userId.toString()+"%";
 			String refParam = "%:hasSession "+"\""+"1"+"\""+"%";
 			
 			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	

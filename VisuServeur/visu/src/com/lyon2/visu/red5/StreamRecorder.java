@@ -203,7 +203,7 @@ public class StreamRecorder
 		        try
 		        {
 		        	// get list obsel "SystemSessionStart"
-					String traceParam = "%-0>%";
+					String traceParam = "%-0%";
 					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
 					ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 					listObselSystemSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
@@ -230,7 +230,7 @@ public class StreamRecorder
 		        // try find obsel of the session 
 				try
 				{
-					String traceParam = "%-"+userId.toString()+">%";
+					String traceParam = "%-"+userId.toString()+"%";
 					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
 					log.warn("====refParam {}",refParam);
 					ObselStringParams osp = new ObselStringParams(traceParam,refParam);

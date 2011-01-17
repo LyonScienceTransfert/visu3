@@ -114,7 +114,7 @@ public class ObselInfo {
 		Integer userId = (Integer) client.getAttribute("uid");
 		List<Obsel> listObselSessionExitSessionPause = null;
 		try {
-			String traceParam = "%-" + userId.toString() + ">%";
+			String traceParam = "%-" + userId.toString() + "%";
 			String refParam = "void";
 			// log.warn("====refParam {}",refParam);
 			ObselStringParams osp = new ObselStringParams(traceParam, refParam);
@@ -288,7 +288,7 @@ public class ObselInfo {
 		IClient client = conn.getClient();
 		List<Obsel> result = null;
 		Session session = null;
-		String traceParam = "%-" + "void" + ">%";
+		String traceParam = "%-" + "void" + "%";
 		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
 				+ "%";
 		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
