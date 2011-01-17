@@ -92,6 +92,9 @@ package com.ithaca.visu.view.session.controls
 		
 		[SkinPart("true")] 
 		public var buttonCreateSessionByTemplate:Button;
+
+		[SkinPart("true")] 
+		public var buttonExportSession:Button;
 		
 	/*	[SkinPart("true")] 
 		public var comboBoxActivity:ComboBox;*/
@@ -118,6 +121,11 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonCreateSessionByTemplate.addEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
 			}
+
+			if (instance == buttonExportSession)
+			{
+				buttonExportSession.addEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
+			}
 			/*if (instance == comboBoxActivity)
 			{
 				comboBoxActivity.labelFunction = setLabelComboboxActivity;
@@ -130,6 +138,12 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonCreateSessionByTemplate.removeEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
 			}
+			
+			if (instance == buttonExportSession)
+			{
+				buttonExportSession.removeEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
+			}
+
 		}
 		
 		override protected function commitProperties():void
@@ -338,6 +352,15 @@ package com.ithaca.visu.view.session.controls
 			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
 			this.dispatchEvent(sessionAddEvent);
 		}
+		
+		public function onMouseClickButtonExportSession(event:MouseEvent):void
+		{
+			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+			sessionAddEvent.isModel = true;
+			this.dispatchEvent(sessionAddEvent);
+		}
+		
+		
 
 // DELETE ACTIVITY ELEMENT FROM ACTIVITY
 		private function deleteActivityElement(deletingActivityElemen:ActivityElement):void
