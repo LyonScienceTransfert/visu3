@@ -66,8 +66,8 @@ package com.ithaca.visu.ui.utils
 	{
 		static public var STUDENT : uint = 32;
 		static public var TUTEUR : uint = 511;
-		static public var RESPONSABLE : uint = 4599;
-		static public var ADMINISTRATEUR : uint = 70135;
+		static public var RESPONSABLE : uint = 70135;
+		static public var ADMINISTRATEUR : uint = 170135;
 	}
 }
 
