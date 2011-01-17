@@ -469,6 +469,7 @@ package com.ithaca.visu.view.session.controls
 			var addSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_SESSION);
 			_session.date_session = new Date();
 			addSession.session = _session;
+			addSession.isModel = event.isModel;
 			this.dispatchEvent(addSession);
 		}
 // USER
