@@ -182,16 +182,18 @@ package business
 			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
 			addSession.session = session;
 			this.dispatcher.dispatchEvent(addSession);
-			// add logged user to the new session
-			var sessionUserVO:SessionUserVO = new SessionUserVO();
-			sessionUserVO.id_session = sessionVO.id_session;
-			sessionUserVO.id_user = model.getLoggedUser().id_user;
-			sessionUserVO.mask = 0;
-			var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
-			sessionUserEvent.newSessionUser = sessionUserVO;
-			this.dispatcher.dispatchEvent(sessionUserEvent);
-			// clear liste date the session
-			model.clearDateSession();
+			if(!session.isModel){
+				// add logged user to the new session
+				var sessionUserVO:SessionUserVO = new SessionUserVO();
+				sessionUserVO.id_session = sessionVO.id_session;
+				sessionUserVO.id_user = model.getLoggedUser().id_user;
+				sessionUserVO.mask = 0;
+				var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
+				sessionUserEvent.newSessionUser = sessionUserVO;
+				this.dispatcher.dispatchEvent(sessionUserEvent);
+				// clear liste date the session
+				model.clearDateSession();
+			}
 			// ADD ACTIVITY
 			var nbrActivity:int = this.listActivities.length;
 			for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)

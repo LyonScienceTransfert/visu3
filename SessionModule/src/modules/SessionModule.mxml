@@ -172,10 +172,15 @@
 				sessionVO.id_user = Model.getInstance().getLoggedUser().id_user
 				sessionVO.theme = session.theme;
 				sessionVO.date_session = session.date_session;
-				sessionVO.isModel = false;
+				sessionVO.isModel = event.isModel;
 				sessionVO.description = session.description;
 				sessionVO.start_recording = session.date_start_recording;
-				sessionVO.status_session = SessionStatusEnum.SESSION_OPEN;
+				var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
+				if(event.isModel)
+				{
+					statusSession = SessionStatusEnum.SESSION_CLOSE; 
+				}
+				sessionVO.status_session = statusSession;
 				sessionVO.id_currentActivity = 0;
 				addSession.sessionVO = sessionVO;
 				this.dispatchEvent(addSession);
