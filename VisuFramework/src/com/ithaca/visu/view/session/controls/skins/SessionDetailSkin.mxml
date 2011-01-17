@@ -72,11 +72,11 @@
 				<s:HGroup width="100%" height="100%">
 					<!-- LABELS -->
 					<s:Group height="100%" width="20%">
-						<s:Label right="5" top="10" fontWeight="bold" fontSize="14" text.normalEditable="Thème :">
-							<s:text>Themé :</s:text>
+						<s:Label right="5" fontWeight="bold" fontSize="14" top.disabled="10" right.normalEditable="5" verticalCenter.normalEditable="-3" right.normal="5" verticalCenter.normal="-3">
+							<s:text>Théme :</s:text>
 						</s:Label>
-						<s:Label right="5" verticalCenter="-3" fontWeight="bold" fontSize="14" text.normalEditable="Date planifiée :">
-							<s:text>Passasion :</s:text>
+						<s:Label right="5" fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" verticalCenter.disabled="-3" right.normal="5" top.normal="10">
+							<s:text>Date du passassion :</s:text>
 						</s:Label>
 						<s:Label right="5" bottom="35" fontWeight="bold" fontSize="14">
 							<s:text>Description :</s:text>
@@ -84,23 +84,23 @@
 					</s:Group>
 <!-- THEME -->	
 					<s:Group height="100%" width="40%">
-						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" top="5" backgroundColor="#FFFFFF"
+						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" verticalCenter="0" backgroundColor="#FFFFFF"
 											  focusOut="themeSession_focusOutHandler(event)"
 											   focusIn="themeSession_focusInHandler(event)" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" enabled.normalEditable="true" includeIn="disabled,normalEditable">
 							<s:text>Les identités nationales</s:text>
 						</s:RichEditableText>
 
 <!-- DATE TIME -->	
-						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" verticalCenter="0" 
+						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" top="5" 
 												     updateDateTime="picker_updateDateTimeHandler(event)" includeIn="disabled,normalEditable"/>
 						<s:RichEditableText  id="descriptionSession" height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF"
 											  focusOut="descriptionSession_focusOutHandler(event)"
 											   focusIn="descriptionSession_focusInHandler(event)" fontStyle.normalEditable="italic" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" includeIn="disabled,normalEditable">
 							<s:text>in this session you will learn how you can go to other country..</s:text>
 						</s:RichEditableText> 
-						<s:RichText includeIn="normal" right="5" top="5" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
+						<s:RichText includeIn="normal" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
 						<s:RichText includeIn="normal" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
-						<s:Group  includeIn="normal" verticalCenter="0" left="0" horizontalCenter="0" height="22">
+						<s:Group  includeIn="normal" left="0" top="5" height="22">
 							<s:Label  id="dateLabel" verticalCenter="0" left="0" fontSize="14"/>
 							<s:Label text="à" verticalCenter="0" left="75" fontSize="14"/>
 							<s:Label  id="heurLabel" verticalCenter="0" left="90" fontSize="14"/>
