@@ -94,6 +94,7 @@ package com.ithaca.visu.view.session.controls.event
 		public var activityElement:ActivityElement;
 		public var session:Session;
 		public var user:User;
+		public var isModel:Boolean = false;
 		public var listUser:Array;
 		
 		public function SessionEditEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
