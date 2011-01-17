@@ -77,7 +77,7 @@
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
 				// only for admin, can see all closed session
-				if(Model.getInstance().getLoggedUser().role > RoleEnum.RESPONSABLE)
+				if(Model.getInstance().getLoggedUser().role >= RoleEnum.RESPONSABLE)
 				{
 					this.currentState="vciel";
 					// get list all closed session
