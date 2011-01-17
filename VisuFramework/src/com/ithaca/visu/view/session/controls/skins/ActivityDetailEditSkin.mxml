@@ -257,12 +257,12 @@
 		
 		<s:Label left="25" top="10">
 			<!--<s:text>{fxgt.gettext("titre : ")}</s:text>-->
-			<s:text>Titre : </s:text>
+			<s:text>Titre d'acitivité: </s:text>
 		</s:Label>
 <!-- LABEL ACTIVITY-->
-		<s:TextInput id="titleActivity" left="{LIFT_EDITABLED_COMPONENT}" top="5" right="250" color="#121212"
+		<s:TextInput id="titleActivity" left="200" top="5" right="150" color="#121212"
 				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
-				  focusOut="titleActivity_focusOutHandler(event)" includeIn="normalEditable,openEditable">
+				  focusOut="titleActivity_focusOutHandler(event)" includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="150" top.openEditable="5" left.openEditable="120" right.openEditable="150">
 			<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 			</s:filters>-->
@@ -275,12 +275,12 @@
 <!-- DELETE ACTIVITY -->
 		<mx:Button  id="buttonDeleteActivity" top="5" right="90" 
 					icon="{IconEnum.getIconByName('delete')}"
-					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable">
-			<mx:label>supprimer l'acitivité</mx:label>
+					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="95">
+			<mx:toolTip>Supprimer l'acitivité</mx:toolTip>
 		</mx:Button>
 		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="14"/>
 		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
-		<s:Label includeIn="normal,open" height="22" textAlign="justify" text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold"/>
+		<s:Label includeIn="normal,open" height="22" textAlign="justify" text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right.normal="100" top.open="10" left.open="120" right.open="100"/>
 	</s:Group>
 	
 	<s:Group top="30" left="5" right="5" bottom="10" includeIn="open,openEditable" id="content">
