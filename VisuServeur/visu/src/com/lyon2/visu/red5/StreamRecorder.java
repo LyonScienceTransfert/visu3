@@ -230,7 +230,8 @@ public class StreamRecorder
 		        // try find obsel of the session 
 				try
 				{
-					String traceParam = "%-"+userId.toString()+"%";
+//					String traceParam = "%-"+userId.toString()+"%";
+					String traceParam = "%-"+userId.toString();
 					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
 					log.warn("====refParam {}",refParam);
 					ObselStringParams osp = new ObselStringParams(traceParam,refParam);

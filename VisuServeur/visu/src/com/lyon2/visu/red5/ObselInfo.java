@@ -236,7 +236,8 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des session" + e);
 		}
 		// get list comments
-		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"'+"%";
+		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"';
+//		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"'+"%";
 		try {
 			comment = (List<Obsel>) app.getSqlMapClient().queryForList(
 					"obsels.getTraceComment", paramTraceId);

@@ -770,7 +770,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			List<Obsel> listObselSessionStart = null;
 			try
 			{
-				String traceParam = "%-"+userId.toString()+"%";
+//				String traceParam = "%-"+userId.toString()+"%";
+				String traceParam = "%-"+userId.toString();
 				String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
 				log.warn("====refParam {}",refParam);
 				ObselStringParams osp = new ObselStringParams(traceParam,refParam);
@@ -927,7 +928,8 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			List<Obsel> listObselSessionStart = null;
 			try
 			{
-				String traceParam = "%-"+userId.toString()+"%";
+		//		String traceParam = "%-"+userId.toString()+"%";
+				String traceParam = "%-"+userId.toString();
 				String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
 				//log.warn("====refParam {}",refParam);
 				ObselStringParams osp = new ObselStringParams(traceParam,refParam);		

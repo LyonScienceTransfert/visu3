@@ -309,6 +309,7 @@ public class SessionInfo
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des session" + e);
 		}
+		log.warn("sessionId = {}, session = {} ",sessionId.toString(), session.toString());
 		Object[] args = {session};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) 
@@ -329,23 +330,36 @@ public class SessionInfo
 		List <Obsel> listResultObselOneBySession = new ArrayList<Obsel>();
 		try
 		{	
-			String traceParam = "%-"+userId.toString()+"%";
+			String traceParam = "%-"+userId.toString();
 			String refParam = "%:hasSession "+"\""+"1"+"\""+"%";
 			
 			ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 			log.warn("==== refParam  {}",osp.getRefParam());
 			log.warn("====  traceParam {}",osp.getTraceParam());
 
-			listObselTraceId = (List<Obsel>)app.getSqlMapClient().queryForList("obsels.getTracesByUserId", osp);			
+			listObselTraceId = (List<Obsel>)app.getSqlMapClient().queryForList("obsels.getTracesByUserId", osp);	
+			
+			log.warn("size ={}",listObselTraceId.size());
+
 			for(Obsel obsel : listObselTraceId)
 			{
+				log.warn("obsel of the user = {}",obsel.toString());
 				addTraceId(listTraceId, obsel);
-			}	
+			}
+			
+			for(String str : listTraceId)
+			{
+				log.warn("traceID for user  = {}",str);	
+			}
+			
+			
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
 			log.warn("empty BD, hasn't sessions,  exception case");	
 			// hasn't trace , hasn't obsels
 		}
+		
+		log.warn("listTraceId ={}",listTraceId.size());
 		
 		List <Obsel> listObselByTraceId = new ArrayList<Obsel>(); 
 		for(String traceId : listTraceId)
@@ -357,6 +371,9 @@ public class SessionInfo
 				log.error("Probleme lors du listing des sessions" + e);
 				log.warn("empty BD, hasn't obsels,  exception case");	
 			}
+			
+			log.warn("listObselByTraceId ={}",listObselByTraceId.size());
+			
 			if(listObselByTraceId.size() > 0)
 			{
 				Obsel firstObsel = listObselByTraceId.get(0);
@@ -375,8 +392,11 @@ public class SessionInfo
 	private void addTraceId(List <String> listTraceId, Obsel value)
 	{
 		String newTraceId = value.getTrace();
+//		log.warn("newTraceId = {}",newTraceId);
 		for(String traceId : listTraceId)
 		{
+//			log.warn("traceId = {}",traceId);
+			
 			if(traceId.equals(newTraceId))
 			{
 				return ;
