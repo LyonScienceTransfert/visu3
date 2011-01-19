@@ -522,26 +522,39 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
     	if(sec<10){secStr="0"+secStr;}
     	
     	// get time in milliseconds for property hasBegin/hasEnd 
-		Long timeInMilliseconde = clnd.getTimeInMillis();
+		Long timeBeginInMilliseconde = clnd.getTimeInMillis();
+		Long timeEndInMilliseconde = timeBeginInMilliseconde;
+		Integer nbrTraceType = traceType.length;
+		if(nbrTraceType > 0)
+		{
+			if(traceType[0].equals("commentObsel"))
+			{
+				String timeBeginString = traceType[1];
+				timeBeginInMilliseconde = Long.parseLong(timeBeginString);
+				log.warn("timeBeginInMilliseconde= {}",timeBeginInMilliseconde.toString());
+				String timeEndString = traceType[2];
+				timeEndInMilliseconde = Long.parseLong(timeEndString);
+			}
+		}
 		
     	List<String> tempList = new ArrayList<String>();
     	tempList.add("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
     	tempList.add("@prefix ktbs: <http://liris.cnrs.fr/silex/2009/ktbs/> .");
     	tempList.add("@prefix : <../visu/> .");
     	tempList.add("");
-		tempList.add(". a :"+typeObsel+";");
+		tempList.add("[] a :"+typeObsel+";");
     	tempList.add("ktbs:hasTrace "+ "<"+trace+"> ;");
-    	tempList.add("ktbs:hasBegin "+timeInMilliseconde +";");
-    	tempList.add("ktbs:hasEnd "+ timeInMilliseconde+";");
+    	tempList.add("ktbs:hasBegin "+timeBeginInMilliseconde +";");
+    	tempList.add("ktbs:hasEnd "+ timeEndInMilliseconde+";");
     	tempList.add("ktbs:hasSubject "+'"'+subject+'"'+";");
     	// checking trace type
-    	String tempTraceType = "first";
-    	Integer nbrTraceType = traceType.length;
-    	if(nbrTraceType == 1)
-    	{
-    		tempTraceType = "second";
-    	}
-    	tempList.add("ktbs:hasTraceType "+'"'+tempTraceType+'"'+";");
+//    	String tempTraceType = "first";
+//    	Integer nbrTraceType = traceType.length;
+//    	if(nbrTraceType == 1)
+//    	{
+//    		tempTraceType = "second";
+//    	}
+//    	tempList.add("ktbs:hasTraceType "+'"'+tempTraceType+'"'+";");
     	
     	String strRdf= "";
     	for(String tmp : tempList)

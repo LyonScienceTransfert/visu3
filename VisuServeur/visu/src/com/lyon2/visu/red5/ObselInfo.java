@@ -219,6 +219,7 @@ public class ObselInfo {
 		log.warn("======== getTraceUser ");
 		IClient client = conn.getClient();
 		List<Obsel> result = null;
+		List<Obsel> comment = null;
 		Session session = null;
 		// get list obsel
 		try {
@@ -234,8 +235,21 @@ public class ObselInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des session" + e);
 		}
+		// get list comments
+		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"'+"%";
+		try {
+			comment = (List<Obsel>) app.getSqlMapClient().queryForList(
+					"obsels.getTraceComment", paramTraceId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des obsels comments" + e);
+		}
+		log.warn("TRACE ID + {}",paramTraceId);
+		for(Obsel obsel : comment)
+		{
+			log.warn("== OBSEL  = {} == {}",obsel.getTrace(),obsel.getId());
+		}
 		Date sessionStartRecordingDate = session.getStart_recording();
-		Object[] args = { result, sessionStartRecordingDate };
+		Object[] args = { result, sessionStartRecordingDate, comment};
 		IConnection connClient = (IConnection) client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
@@ -312,6 +326,50 @@ public class ObselInfo {
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListObselClosedSession", args);
+		}
+	}
+	
+	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, Long timeStamp )
+	{
+		IClient client = conn.getClient();
+		User user = (User)client.getAttribute("user");
+		Integer userId = user.getId_user();
+		if(traceComment.equals("void"))
+		{
+			// generate traceId user
+			traceComment = app.makeTraceId(userId);
+		}
+		// set timestamp
+		if(timeStamp == 0){
+			Date date = new Date();
+			timeStamp = date.getTime();			
+		}
+		
+		List<Object> paramsObsel= new ArrayList<Object>();
+		paramsObsel.add("foruser");paramsObsel.add(forUserId.toString());
+		 // add timeStamp
+		paramsObsel.add("timestamp");paramsObsel.add(timeStamp.toString());
+		paramsObsel.add("session");paramsObsel.add(sessionId.toString());
+		paramsObsel.add("parentTrace");paramsObsel.add(traceParent.toString());
+		paramsObsel.add("text");paramsObsel.add(textComment.toString());
+
+		log.debug("paramsObsel {}",paramsObsel);
+		Obsel obsel = null;
+		try
+		{
+			obsel = app.setObsel(userId, traceComment, typeObsel, paramsObsel, "commentObsel", beginTime, endTime );					
+		}
+		catch (SQLException sqle)
+		{
+			log.error("=====Errors===== {}", sqle);
+		}
+		
+		Object[] args = { obsel, beginTime, endTime };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkAddObselComment", args);
 		}
 	}
 

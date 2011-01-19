@@ -64,11 +64,16 @@
         WHERE rdf LIKE #refParam# 
 	</select>	        
 		
-
 	<select id="getTrace" parameterClass="String" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
 		FROM obsels
 		WHERE trace = #value#
+	</select>
+	
+	<select id="getTraceComment" parameterClass="String" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels
+		WHERE rdf LIKE #value# 
 	</select>
 
 	<select id="getSessionStartObselsForUserId" parameterClass="String" resultMap="obselResult" cacheModel="cache">
