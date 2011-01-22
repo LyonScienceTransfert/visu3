@@ -16,9 +16,12 @@
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.traces.view.ObselTime;
+			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
+			import com.ithaca.visu.controls.timeline.TraceLineComment;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
+			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
@@ -59,6 +62,7 @@
 			private var checkingSumFluxVideo:Number = 0;
 			
 			private var pickCheryClick:Number = 0;
+			private var commentTimeLine:TraceLineComment;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
@@ -111,6 +115,74 @@
 				this.sessionTimeLine.addEventListener(MessageEvent.CHECK_SEEK_STREAM, onCheckSeekStream);
 			}
 			
+			private function onAddObselComment(event:ObselEvent):void
+			{
+				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.ADD_COMMENT_OBSEL);
+				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+				addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
+				addObselComment.textComment = "...."; 
+				var beginTime:String = (commentTimeLine.startTimeSession + this.testCursor.getBegin()).toString();
+				var deltaXObselTime:Number = 0;
+				if(!event.clickOnButtonAdd)
+				{
+					var localX:Number = event.clickLocalX + deltaXObselTime;
+					var timeStartSession:Number = this.testTimeLine.startTimeSession;
+					var duration:Number = this.testTimeLine.durationSession;
+					var wightGroup:Number = commentTimeLine.traceTitleLoggedUser.width;
+					var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
+					var begin :Number = delta + timeStartSession;
+					beginTime = begin.toString();
+				}
+				addObselComment.beginTime = beginTime;
+				addObselComment.endTime = beginTime;
+				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
+				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+				addObselComment.timeStamp = 0;
+				this.dispatchEvent(addObselComment);
+			}
+			
+			private function onEditObselComment(event:ObselEvent):void
+			{
+ 				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+				addObselComment.typeObsel  = TraceModel.UPDATE_TEXT_COMMENT;
+				var text:String = event.textObsel; 
+				// check if message empty
+				if(UtilFunction.isEmptyMessage(text))
+				{
+					text = fxgt.gettext("(vide)");
+				}
+				addObselComment.textComment = text;
+				addObselComment.beginTime = event.obsel.begin.toString();
+				addObselComment.endTime = event.obsel.end.toString();
+				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
+				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+				addObselComment.timeStamp = event.obsel.props[TraceModel.TIMESTAMP];
+				this.dispatchEvent(addObselComment); 
+			}
+			
+			private function onDeleteObselComment(event:ObselEvent):void
+			{
+				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+				addObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
+				var text:String = event.textObsel; 
+				// check if message empty
+				if(UtilFunction.isEmptyMessage(text))
+				{
+					text = fxgt.gettext("(vide)");
+				}
+				addObselComment.textComment = text;
+				addObselComment.beginTime = event.obsel.begin.toString();
+				addObselComment.endTime = event.obsel.begin.toString();
+				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
+				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+				addObselComment.timeStamp = event.obsel.props[TraceModel.TIMESTAMP];
+				this.dispatchEvent(addObselComment);
+			}
 			/**
 			 * Removing all streams and local devices
 			 */
