@@ -236,8 +236,9 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des session" + e);
 		}
 		// get list comments
-		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"';
-//		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"'+"%";
+//		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"';
+		String paramTraceId = "%:hasParentTrace "+'"'+traceId+'"'+"%";
+		log.warn("paramTraceId = {}",paramTraceId );
 		try {
 			comment = (List<Obsel>) app.getSqlMapClient().queryForList(
 					"obsels.getTraceComment", paramTraceId);
@@ -347,7 +348,7 @@ public class ObselInfo {
 		}
 		
 		List<Object> paramsObsel= new ArrayList<Object>();
-		paramsObsel.add("foruser");paramsObsel.add(forUserId.toString());
+		paramsObsel.add("commentforuserid");paramsObsel.add(forUserId.toString());
 		 // add timeStamp
 		paramsObsel.add("timestamp");paramsObsel.add(timeStamp.toString());
 		paramsObsel.add("session");paramsObsel.add(sessionId.toString());
