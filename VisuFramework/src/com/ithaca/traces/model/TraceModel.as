@@ -125,6 +125,9 @@ package com.ithaca.traces.model
         public static const ACTIVITY_START: String = "ActivityStart";
         public static const ACTIVITY_STOP: String = "ActivityStop";
         public static const RECORD_FILE_NAME: String = "RecordFilename";
+        public static const SET_TEXT_COMMENT: String = "SetTextComment";
+        public static const DELETE_TEXT_COMMENT: String = "DeleteTextComment";
+        public static const UPDATE_TEXT_COMMENT: String = "UpdateTextComment";
 		// get value like name obsel from PlayerSharedEvent
         public static const PLAY_VIDEO: String = PlayerSharedEvent.PLAY;
         public static const PAUSE_VIDEO: String = PlayerSharedEvent.PAUSE;
@@ -157,6 +160,7 @@ package com.ithaca.traces.model
         public static const CURRENT_TIME_PLAYER: String = "currenttime";
         public static const IMAGE: String = "image";
         public static const VIDEO: String = "video";
+        public static const COMMENT_FOR_USER_ID: String = "commentforuserid";
 		
     }
 
