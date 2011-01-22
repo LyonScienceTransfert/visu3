@@ -603,7 +603,8 @@
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
 						</s:layout>
-						<s:List  id="openSession"  borderVisible="false" dataProvider="{listSessionOpen}" width="100%" height="100%" itemRenderer="com.ithaca.visu.renderer.SessionRetroRenderer"  change="openSession_changeHandler(event)" >
+						<s:List  id="openSession"  borderVisible="false" dataProvider="{listSessionOpen}" width="100%" height="100%" 
+								 itemRenderer="com.ithaca.visu.renderer.SessionRetroRenderer"  change="openSession_changeHandler(event)" >
 							<s:layout>
 								<s:VerticalLayout gap="5" horizontalAlign="center"/>
 							</s:layout>
@@ -628,13 +629,10 @@
 		</mx:HDividedBox>
 		<s:Panel width="100%" height="40%" id="panelTimeLine">
 			<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-			<s:Group width="100%" height="100%">
-				<s:layout >
-					<s:VerticalLayout gap="0"/>
-				</s:layout>
-				<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false"/>
-				<s:Group width="100%" height="100%">
-					<s:Scroller left="1" right="1" top="1" bottom="1">
+			<s:Group width="100%" height="100%" id="groupTimeLine">
+				<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false" top="0"/>
+				<s:Group width="100%" height="100%" top="75">
+					<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1">
 						<s:Group width="100%" height="100%">
 							<s:layout>
 								<s:VerticalLayout gap="5"/>
