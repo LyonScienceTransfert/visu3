@@ -16,6 +16,7 @@
 		
 		import mx.events.FlexEvent;
 		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.TraceLineEvent;
 		
 	]]></fx:Script>
 	
@@ -59,7 +60,13 @@
 				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-		
+<!-- OBSEL COMMENT -->
+		<mate:EventHandlers type="{TraceLineEvent.ADD_COMMENT_OBSEL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.addObselComment"   arguments="{[event.traceComment, event.traceParent, event.typeObsel,
+							  event.textComment, event.beginTime, event.endTime, event.forUserId, event.sessionId, event.timeStamp]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
 	</fx:Declarations>
 	
 </mate:LocalEventMap>
