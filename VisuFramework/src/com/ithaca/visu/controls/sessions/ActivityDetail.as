@@ -2,7 +2,6 @@ package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.ExtendToolTip;
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
-	import com.ithaca.visu.events.TraceLineEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
@@ -13,8 +12,6 @@ package com.ithaca.visu.controls.sessions
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
-	import mx.controls.Image;
-	import mx.controls.ToolTip;
 	import mx.events.ToolTipEvent;
 	
 	import spark.components.Button;
