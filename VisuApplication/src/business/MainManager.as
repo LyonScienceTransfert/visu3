@@ -6,6 +6,7 @@ import com.ithaca.traces.view.ObselButton;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
+import com.ithaca.visu.events.TraceLineEvent;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
@@ -651,9 +652,7 @@ public class MainManager
 		{	
 			deleteObselMarker(listObsel, obselDM);		
 		}
-		// add if logged user hasn't timeline
-		var loggedUser:User = Model.getInstance().getLoggedUser();
-		Model.getInstance().addTraceLine(loggedUser.id_user, loggedUser.firstname, loggedUser.avatar, ColorEnum.getColorByCode("0"));
+		
 		// for salon tutorat on add last obsels "SessionIn" with begin == end
 		if(salonTutorat)
 		{
@@ -663,10 +662,18 @@ public class MainManager
 				var obselSI:Obsel = listObselSI[nObselSI];
 				listObsel.addItem(obselSI);
 			}
+		}else
+		{
+			if(listObsel != null && listObsel.length != 0)
+			{
+				// add if logged user hasn't timeline
+				var loggedUser:User = Model.getInstance().getLoggedUser();
+				Model.getInstance().addTraceLine(loggedUser.id_user, loggedUser.firstname, loggedUser.avatar, ColorEnum.getColorByCode("0"));
+			}
 		}
 		// get last obsel "SessionIn"
 		var lastObselSessionIn:Obsel;
-		if(listObsel != null)
+		if(listObsel != null && listObsel.length != 0)
 		{
 			lastObselSessionIn = this.addObselSessionOut(listObsel,startRecordingSession);
 		}
