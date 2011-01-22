@@ -68,13 +68,14 @@
 			</s:Rect>
 			<!-- IMAGE -->
 			<mx:Image id="avatarUser" left="10" top="2" width="70" height="70" visible.editable="false"/>
-			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" visible="false" right="5"  width="18" right.normal="7" height.editable="16" bottom.normal="0" height.normal="32" top.editable="10"/>
+			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" visible="true" right="5"  width="18" right.normal="7" height.editable="16" bottom.normal="0" height.normal="32" top.editable="10"/>
 			<!-- TEXT -->   		
 			<s:Label  id="prenomUser" text="Petipolis" visible.editable="false"
-					  fontWeight="bold" top="6" left="100" right="100" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0" verticalAlign="middle" top.normal="15" left.normal="100" right.normal="100"/>
+					  fontWeight="bold" top="6" left="100" right="100" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0" verticalAlign="middle" top.normal="15" left.normal="100" right.normal="10"/>
 			<s:Label text="Petipolis" left="100" right="10" top="30" paddingTop="0" paddingBottom="0" fontWeight="bold" id="nomUser" visible.editable="false"/>
 			<s:Label text="Label" left="100" right="10" top="55" id="roleUser" visible.editable="false"/>
-			<s:RichEditableText text="RichEditableText" editable.normal="false" left="10" right="10" bottom="3" top="75" maxChars="1000" verticalAlign="middle" textAlign="center" id="messageUser" top.editable="15" left.editable="10" bottom.editable="45" right.editable="10" top.normal="75" left.normal="10" bottom.normal="3" right.normal="25"/>
+			<s:RichEditableText text="RichEditableText"
+								editable.normal="false" left="10" right="10" bottom="3" top="120" maxChars="120" verticalAlign="middle" textAlign="center" id="messageUser" top.editable="15" left.editable="10" bottom.editable="45" right.editable="10" top.normal="75" left.normal="10" bottom.normal="3" right.normal="25"/>
 			<s:Button includeIn="editable"  id="buttonValider" right="10" bottom="10">
 				<s:label>{fxgt.gettext("Valider")}</s:label>	
 			</s:Button>

@@ -167,6 +167,7 @@ package com.ithaca.visu.view.user
 			{
 				messageUser.editable = this.normal;
 				messageUser.text = this.user.message;
+				messageUser.toolTip = this.user.message;
 			}
 			
 			if(instance == buttonValider)
@@ -251,6 +252,7 @@ package com.ithaca.visu.view.user
 			setEditabled(true);
 			normal = true;
 			messageUser.text = tempText;
+			messageUser.toolTip = tempText;
 			this.invalidateSkinState();
 		}
 		
