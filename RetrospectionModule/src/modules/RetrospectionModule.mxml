@@ -334,6 +334,29 @@
 							this.addTraceLineOnViewTraceLineGroup(traceLineObj,durationSession,startRecordingSession);
 						}
 					}
+					// add view Obsel comment 
+					this.commentTimeLine = new TraceLineComment();
+					this.commentTimeLine.percentWidth = 100; 
+					this.commentTimeLine.top = 40; 
+					this.commentTimeLine.left = 1; 
+					this.commentTimeLine.right = 1; 
+					this.commentTimeLine.addEventListener(ObselEvent.ADD_OBSEL, onAddObselComment);
+					this.commentTimeLine.addEventListener(ObselEvent.EDIT_OBSEL, onEditObselComment, true);
+					this.commentTimeLine.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselComment, true);
+					this.commentTimeLine.visible = true;
+					var nbrElement:int = groupTimeLine.numElements;
+					groupTimeLine.addElementAt(this.commentTimeLine,nbrElement);
+					commentTimeLine.durationSession = durationSession;
+					commentTimeLine.startTimeSession = startRecordingSession;
+					var obj:Object =  Model.getInstance().getTraceLineByUserId(Model.getInstance().getLoggedUser().id_user);
+					if(obj == null)
+					{
+						obj =  Model.getInstance().getTraceLineByUserId(0);
+					}
+					var backGroundColorObsel:uint = obj.userColor;
+					this.commentTimeLine.backGroundColor = backGroundColorObsel;
+					var listObselComment:ArrayCollection = Model.getInstance().getListViewObselComment();	
+					commentTimeLine.listTitleObsels = listObselComment;		
 				}
 			}
 			
@@ -590,17 +613,53 @@
 						Model.getInstance().addObsel(obsel);
 					}
 				}
+				// add obsels traceLineComment
+				var listObselComment:ArrayCollection = Model.getInstance().getListObselComment();
+				if (listObselComment != null)
+				{	
+					var nbrObselComment:int = listObselComment.length;
+					for(var nObselComment:int = 0 ; nObselComment < nbrObselComment; nObselComment++)
+					{
+						var obselComment:Obsel = listObselComment[nObselComment] as Obsel;
+						Model.getInstance().addObselComment(obselComment,false);
+					}
+				}
 			}
 			
-			protected function closeSession_changeHandler(event:IndexChangeEvent):void
+			private function hasElement():Boolean
+			{
+				var nbrElm:int = this.groupTimeLine.numElements;
+				for(var nElm:int = 0; nElm < nbrElm; nElm++)
+				{
+					var obj = this.groupTimeLine.getElementAt(nElm);
+					if(obj is TraceLineComment)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			private function clearTraceLines():void
 			{
 				// init list traceLines
 				Model.getInstance().initListTraceLine();
 				this.traceLineGroup.removeAllElements();
 				this.sessionTimeLine.sessionTimeLineLoggedUser.removeAllElements();
+				if(hasElement())
+				{
+					var obj = this.groupTimeLine.removeElement(commentTimeLine);
+					var t = 1;
+				}
 				this.deltaTime = 0;
 				// set checksum in zero
 				this.checkingSumFluxVideo = 0;
+			}
+			
+			protected function closeSession_changeHandler(event:IndexChangeEvent):void
+			{
+				
+				this.clearTraceLines();
 				
 				var obj:Object = (event.currentTarget as List).selectedItem;
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
@@ -611,17 +670,11 @@
 				this.openSession.selectedIndex = -1;
 			}
 
-
 			protected function openSession_changeHandler(event:IndexChangeEvent):void
 			{
-				// init list traceLines
-				Model.getInstance().initListTraceLine();
-				this.traceLineGroup.removeAllElements();
-				this.sessionTimeLine.sessionTimeLineLoggedUser.removeAllElements();
-				this.deltaTime = 0;
-				// set checksum in zero
-				this.checkingSumFluxVideo = 0;
 
+				this.clearTraceLines();
+				
 				var obj:Object = (event.currentTarget as List).selectedItem
 				var traceId:String = obj.traceId;
 				var sessionId:String = obj.sessionId;
