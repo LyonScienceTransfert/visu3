@@ -17,6 +17,7 @@
 		import com.ithaca.visu.events.MessageEvent;
 		import com.ithaca.visu.events.SessionUserEvent;
 		import com.ithaca.visu.events.SessionSharedEvent;
+		import com.ithaca.visu.events.TraceLineEvent;
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.model.Model;
 		
@@ -117,6 +118,7 @@
 			<rtmp:CallbackRegistrator action="checkLastSession" target="{MainManager}" method="onCheckLastSession"/>
 			<rtmp:CallbackRegistrator action="checkUpdatedMarker" target="{MainManager}" method="onCheckUpdatedMarker"/>
 			<rtmp:CallbackRegistrator action="checkSessionSalonRetro" target="{MainManager}" method="onCheckSessionSalonRetro"/>
+			<rtmp:CallbackRegistrator action="checkAddObselComment" target="{MainManager}" method="onCheckAddObselComment"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
@@ -177,6 +179,13 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="updateSessionUserApplication"
 							  arguments="{[event.oldSessionUser, event.newSessionUser]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{TraceLineEvent.UPDATE_COMMENT_OBSEL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.addObselComment"   arguments="{[event.traceComment, event.traceParent, event.typeObsel,
+							  event.textComment, event.beginTime, event.endTime, event.forUserId, event.sessionId, event.timeStamp]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
