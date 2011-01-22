@@ -95,6 +95,9 @@ package  com.ithaca.visu.model
 		public var port   : uint = 5080; 
 		public var appName: String = "visu2";
 		
+		private var NAME_VISU2: String = "VISU";
+		private var NAME_VISU_VCIEL: String = "VISUVCIEL";
+		
 		private var listConnectedUsers:ArrayCollection = new ArrayCollection();
 		private var listSwapUsers:ArrayCollection = new ArrayCollection();
 		private var listSessions:ArrayCollection = new ArrayCollection();
@@ -184,6 +187,24 @@ package  com.ithaca.visu.model
 			return false;
 		}
 		
+		public function getNamePlateforme():String
+		{
+			var name:String = "Visu";
+			switch (this.appName)
+			{
+				case "visu2" : 
+					name = NAME_VISU2;
+					break;
+				
+				case "visuvciel" : 
+					name = this.NAME_VISU_VCIEL;
+					break;
+				default:
+					break;
+			}
+				
+				return name;
+		}
 		public function setCurrentSessionId(value:int):void
 		{
 			_currentSessionId = value;
@@ -192,6 +213,25 @@ package  com.ithaca.visu.model
 		{
 			return _currentSessionId;
 		}
+		public function setCurrentCommentTraceId(value:String):void
+		{
+			_currentCommentTraceId = value;
+		}
+		public function getCurrentCommentTraceId():String
+		{
+			return _currentCommentTraceId;
+		}
+		
+		public function setCurrentTraceId(value:String):void
+		{
+			_currentTraceId = value;
+		}
+		public function getCurrentTraceId():String
+		{
+			return _currentTraceId;
+		}
+		
+		
 		
 		/**
 		 *  set time of the serveur red5
