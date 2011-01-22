@@ -121,7 +121,7 @@
 				<s:text>{"Plan de séance"}</s:text>
 			</s:Label>
 <!-- BUTTONS -->
-			<s:Button  id="buttonCreateSessionByTemplate"  top="5" right="225">
+			<s:Button  id="buttonCreateSessionByTemplate"  top="5" right="225" top.normalEditable="5" left.normalEditable="130" right.normalEditable="215" top.normal="5" left.normal="130" right.normal="215">
 				<!--<s:label>{fxgt.gettext("importer")}</s:label>-->
 				<s:label>{"Créer une nouvelle séance à partir de ce plan de séance"}</s:label>
 			</s:Button>
@@ -133,7 +133,7 @@
 	
 		<s:Group width="100%">
 			<s:Button id="buttonAddActivity" left="10"
-					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter un activité">
+					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter un activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter un activité">
 				<s:label>ajouter une activité</s:label>
 			</s:Button>
 	        <!--<s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="160" fontSize.normal="14" top.normal="5" fontSize.normalEditable="14" right.normalEditable="160" top.normalEditable="5">
