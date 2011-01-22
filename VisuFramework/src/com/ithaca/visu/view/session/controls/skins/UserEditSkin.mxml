@@ -56,8 +56,8 @@
 			<!-- IMAGE -->
 			<mx:Image id="avatarUser" left="10" top="2" width="26" height="26"/>
 			<!-- TEXT -->   		
-			<s:Label  id="textContent" text="Petipolis" top="3" left="42" right="10"
-					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" height="22" fontWeight="bold"/>
+			<s:Label  id="textContent" text="Petipolis" top="3" left="42" right="10" maxDisplayedLines="1"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" height="22" fontWeight="bold" top.normal="3" left.normal="42" right.normal="40" paddingLeft.normal="0" paddingRight.normal="0"/>
 			<!-- BOUTTONS -->
 			<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  visible.editable="false" width="16"
 					   right="20" top="10" height="32"/>

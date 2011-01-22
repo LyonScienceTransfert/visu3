@@ -157,6 +157,7 @@ package com.ithaca.visu.view.session.controls
 				{
 					textContent.setStyle("fontWeight","normal");
 				}
+				textContent.toolTip = _user.lastname + " "+_user.firstname;
 			}
 			
 		}
