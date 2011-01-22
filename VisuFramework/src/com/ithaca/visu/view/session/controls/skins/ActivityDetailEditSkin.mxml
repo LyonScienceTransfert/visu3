@@ -280,17 +280,18 @@
 		</mx:Button>
 		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="14"/>
 		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
-		<s:Label includeIn="normal,open" height="22" textAlign="justify" text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right.normal="100" top.open="10" left.open="120" right.open="100"/>
+		<s:Label includeIn="normal,open" height="22" textAlign="justify" maxDisplayedLines="1"
+				 text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right.normal="100" top.open="10" left.open="120" right.open="100"/>
 	</s:Group>
 	
-	<s:Group top="30" left="5" right="5" bottom="10" includeIn="open,openEditable" id="content">
+	<s:Group top="30" bottom="10" includeIn="open,openEditable" id="content" width.open="100%" top.open="30" bottom.open="10" left.openEditable="5" left.open="5" top.openEditable="30" bottom.openEditable="10" width.openEditable="100%">
 		<s:layout>
 			<s:VerticalLayout  gap="10"/>
 		</s:layout>
 <!-- STATEMENTS -->
 		<s:Group width="100%">
 			<s:Label paddingLeft="5" text="Consignes : "/>
-			<s:Group id="statementGroup" left="{LIFT_EDITABLED_COMPONENT}" width="100%">
+			<s:Group id="statementGroup" left="{LIFT_EDITABLED_COMPONENT}" width.openEditable="100%" left.open="{LIFT_EDITABLED_COMPONENT}" right.open="0">
 				<s:layout>
 					<s:VerticalLayout />
 				</s:layout>
