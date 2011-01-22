@@ -64,6 +64,7 @@ package  com.ithaca.visu.model
 {
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.view.ObselComment;
 	import com.ithaca.traces.view.ObselImage;
 	import com.ithaca.traces.view.ObselMarker;
 	import com.ithaca.traces.view.ObselSessionOut;
@@ -118,18 +119,22 @@ package  com.ithaca.visu.model
 		private var _selectedDateLoggedUser:Object = null;
 		
 		private var listObsels:ArrayCollection;
+		private var _listObselsComment:ArrayCollection;
 		private var _beginTimeSalonSynchrone:Number;
 	
 		private var listTraceLine:ArrayCollection;
 
 		private var _buttonSalonSynchrone:Button; 
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
+		private var _listViewObselComment:ArrayCollection = new ArrayCollection();
 		
 		// time of the serveur red5
 		private var _timeServeur:Number;
 		private var _timeJoinDECK:Number;
 		
 		private var _currentSessionId:int;
+		private var _currentCommentTraceId:String="void";
+		private var _currentTraceId:String="void";
 		
 		public function Model(access:Private)
 		{
@@ -434,6 +439,22 @@ package  com.ithaca.visu.model
 		}
 		
 		/**
+		 * Set list obsels comment
+		 */
+		public function setListObselComment(listObsels:ArrayCollection):void
+		{
+			this._listObselsComment = listObsels;
+		}
+		
+		/**
+		 * Get list obsels comment
+		 */
+		public function getListObselComment():ArrayCollection
+		{
+			return this._listObselsComment;
+		}
+		
+		/**
 		 * check if user enter in the session second time
 		 */
 		public function isFirstEnterSession(userId:int):Boolean
@@ -468,18 +489,21 @@ package  com.ithaca.visu.model
 		public function getObselSessionInByTimestamp(value:Number):ArrayCollection
 		{
 			var result:ArrayCollection = new ArrayCollection();
-			var nbrObsel:int = this.listObsels.length;
-			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			if(this.listObsels != null)
 			{
-				var obsel:Obsel = this.listObsels.getItemAt(nObsel) as Obsel;
-				var typeObsel:String = obsel.type;
-				if(typeObsel == TraceModel.SESSION_IN)
+				var nbrObsel:int = this.listObsels.length;
+				for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
 				{
-					var begin:Number = obsel.begin;
-					var end:Number = obsel.end;
-					if(begin < value && value < end)
+					var obsel:Obsel = this.listObsels.getItemAt(nObsel) as Obsel;
+					var typeObsel:String = obsel.type;
+					if(typeObsel == TraceModel.SESSION_IN)
 					{
-						result.addItem(obsel);	
+						var begin:Number = obsel.begin;
+						var end:Number = obsel.end;
+						if(begin < value && value < end)
+						{
+							result.addItem(obsel);	
+						}
 					}
 				}
 			}
@@ -529,7 +553,14 @@ package  com.ithaca.visu.model
 		public function initListTraceLine():void
 		{
 			this.listTraceLine = new ArrayCollection();
+			this._listObselsComment = new ArrayCollection();
+		    this._listViewObselComment = new ArrayCollection();
 		}
+		public function getListViewObselComment():ArrayCollection
+		{
+			return this._listViewObselComment;
+		}
+			
 		public function addTraceLine(userId:int, userName:String, userAvatar:String, userColor:String):void
 		{
 			// check if this user include in listTraceLines
@@ -544,6 +575,46 @@ package  com.ithaca.visu.model
 				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
 			}
 		}
+		
+		
+		public function updateTextObselComment( timeStampUpdatedObsel:Number , text:String, typeObsel:String):void
+		{
+			var listTitleObsels:ArrayCollection = this._listViewObselComment;
+			var obselView:ObselComment = updateTextObsel(listTitleObsels, timeStampUpdatedObsel);
+			if(obselView != null && typeObsel == TraceModel.UPDATE_TEXT_COMMENT)
+			{
+				var newObselView:ObselComment = obselView.cloneMe();
+				newObselView.text = text;
+				newObselView.toolTip = text;
+				var order:int = newObselView.order;
+				listTitleObsels.addItemAt(newObselView, order);
+			}
+			
+			function updateTextObsel(listObsels:ArrayCollection, timeStampUpdatedObsel:Number):ObselComment
+			{
+				var nbrObsel:int = listObsels.length;
+				for(var nObsel:int = 0 ; nObsel < nbrObsel ; nObsel++)
+				{
+					var obselView = listObsels.getItemAt(nObsel);
+					if(obselView is ObselComment){
+						var obsel:Obsel = obselView.parentObsel;
+						if(obsel != null && (obsel.type == TraceModel.SET_TEXT_COMMENT ))
+						{
+							var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
+							if(timeStamp == timeStampUpdatedObsel)
+							{
+								listObsels.removeItemAt(nObsel);
+								obselView.order = nObsel;
+								return obselView;
+							}
+						}
+					}
+				}
+				return null;
+			}	
+		}
+		
+		
 		/**
 		 * update new text and tooltips the obsel marker
 		 */
@@ -687,6 +758,41 @@ package  com.ithaca.visu.model
 				}
 			}
 			return null;
+		}
+		/**
+		 * create view obsel and add on traceLineComment
+		 */
+		public function addObselComment(obsel:Obsel, editabled:Boolean):void
+		{
+			var textObsel:String;
+			var commentForUser:int;
+			var viewObsel:ObselComment = new ObselComment()
+			viewObsel.parentObsel = obsel;
+			var typeObsel:String = obsel.type;
+			switch (typeObsel)	
+			{
+				case TraceModel.SET_TEXT_COMMENT :
+				viewObsel.setBegin(obsel.begin);
+				viewObsel.setEnd(obsel.end);
+/*				viewObsel.parentObsel = obsel;
+				ownerObsel = obsel.uid;*/
+				commentForUser = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
+				textObsel = obsel.props[TraceModel.TEXT];
+				viewObsel.text = textObsel;
+				viewObsel.setEditabled(editabled);
+				var obj:Object =  Model.getInstance().getTraceLineByUserId(commentForUser);
+				if(obj == null)
+				{
+					obj =  Model.getInstance().getTraceLineByUserId(0);
+				}
+				var backGroundColorObsel:uint = obj.userColor;
+				viewObsel.backGroundColor = backGroundColorObsel;
+				break;	
+			}
+			
+			//setObsel(viewObsel,ownerObsel,typeObsel)
+			_listViewObselComment.addItem(viewObsel);
+				
 		}
 		
 		/**
@@ -904,6 +1010,10 @@ package  com.ithaca.visu.model
 						tempTitleListObsel.addItem(obsel);
 						return;
 						break;
+/*					case TraceModel.SET_TEXT_COMMENT:
+						_listViewObselComment.addItem(obsel);
+						return;
+						break;*/
 					default:		
 				}
 				// add obsel on the traceLineElement
