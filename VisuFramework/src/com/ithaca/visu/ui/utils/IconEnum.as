@@ -95,6 +95,14 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/fichierVisu1.png")]
 		static private var fichierIconVisu1:Class;
+		
+		[Bindable]
+		[Embed("images/CommentVer2.png")]
+		static private var comment:Class;
+
+		[Bindable]
+		[Embed("images/CommentAddVer1.png")]
+		static private var commentAdd:Class;
 
 		[Bindable]
 		[Embed("images/SharedThisToOtherVer1.png")]
@@ -197,6 +205,9 @@ package com.ithaca.visu.ui.utils
 				case TraceModel.RELEASE_SLIDER_VIDEO: 
 					icon = releaseSlider;
 					break;
+				case TraceModel.SET_TEXT_COMMENT: 
+					icon = comment;
+					break;
 				default :
 					break;				
 			}
@@ -244,6 +255,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "edit" : 
 					icon = edit;
+					break;
+				case "commentAdd" : 
+					icon = commentAdd;
 					break;
 				default :
 					break;				
