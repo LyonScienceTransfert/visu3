@@ -417,8 +417,49 @@ public class MainManager
 	/**
 	 * Get list obsel for salon retro
 	 */
-	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, sharedSession:Boolean = false , salonTutorat:Boolean = false):void
+	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array = null, sharedSession:Boolean = false , salonTutorat:Boolean = false):void
 	{
+		if(listObselCommentVO != null && listObselCommentVO.length != 0)
+		{
+			var firstObselVO:ObselVO = listObselCommentVO[0];
+			Model.getInstance().setCurrentCommentTraceId(firstObselVO.trace);
+			var arr:ArrayCollection = new ArrayCollection();
+			var listObselUM:ArrayCollection = new ArrayCollection();
+			var listObselDM:ArrayCollection = new ArrayCollection();
+			var nbrObselCommentVO:int = listObselCommentVO.length;
+			for(var nObselCommentVO:int = 0 ; nObselCommentVO < nbrObselCommentVO; nObselCommentVO++)
+			{
+				var obselVO:ObselVO = listObselCommentVO[nObselCommentVO];
+				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+				var typeObsel:String = obsel.type;
+				switch (typeObsel){
+					case  TraceModel.SET_TEXT_COMMENT :
+					arr.addItem(obsel);
+						break;
+					case  TraceModel.UPDATE_TEXT_COMMENT :
+					listObselUM.addItem(obsel);
+						break;
+					case TraceModel.DELETE_TEXT_COMMENT :
+					listObselDM.addItem(obsel);
+						break;	
+				}
+			
+			}
+			var nbrObselUM:int = listObselUM.length;
+			for(var nObselUM:int = 0; nObselUM < nbrObselUM; nObselUM++)
+			{
+				var obselUm:Obsel = listObselUM.getItemAt(nObselUM) as Obsel;
+				// update text obsel marker with the same timestamp
+				updateObselComment(arr, obselUm);	
+			}
+			// remove obsel if user delete it
+			for each (var obselDM:Obsel in listObselDM)
+			{	
+				deleteObselComment(arr, obselDM);		
+			}
+			
+			Model.getInstance().setListObselComment(arr);
+		}
 		var startRecordingSession:Number = dateStartRecordingSession.time;
 		var listObsel:ArrayCollection = null;
 		var listObselRFN:ArrayCollection = new ArrayCollection();
