@@ -67,16 +67,16 @@
 
 	<s:Panel width="100%" height="100%" backgroundColor="#e4e4e4">
 		<s:title>Détails de la séance</s:title>
-		<s:VGroup gap="0" width="100%" height="100%" horizontalAlign="center">
+		<s:Group  width="100%" top.normal="0" height.normalEditable="100%" height.disabled="100%" bottom.normal="0">
 			<s:Group height="160" width="100%">
 				<s:HGroup width="100%" height="100%">
 					<!-- LABELS -->
 					<s:Group height="100%" width="20%">
 						<s:Label right="5" fontWeight="bold" fontSize="14" top.disabled="10" right.normalEditable="5" verticalCenter.normalEditable="-3" right.normal="5" verticalCenter.normal="-3">
-							<s:text>Théme :</s:text>
+							<s:text>Thème :</s:text>
 						</s:Label>
 						<s:Label right="5" fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" verticalCenter.disabled="-3" right.normal="5" top.normal="10">
-							<s:text>Date du passassion :</s:text>
+							<s:text>Date du passation :</s:text>
 						</s:Label>
 						<s:Label right="5" bottom="35" fontWeight="bold" fontSize="14">
 							<s:text>Description :</s:text>
@@ -111,7 +111,7 @@
 					<!-- USERS -->
 					<s:Group height="100%" width="40%">
 						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true">
-							<s:label>Ajouter une utilisateur</s:label>
+							<s:label>Ajouter un utilisateur</s:label>
 						</s:Button>
 						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">
 							<s:Group id="groupUser">
@@ -123,7 +123,9 @@
 					</s:Group>
 				</s:HGroup>
 			</s:Group>
-			<controls:SessionPlanEdit  id="sessionPlanEdit" width="96%" height="60%" horizontalCenter="0" backgroundColor.normal="#FFFFFF" backgroundColor.normalEditable="#FFFFFF"/>
-		</s:VGroup>
+			<controls:SessionPlanEdit  id="sessionPlanEdit" width="96%" horizontalCenter="0" backgroundColor="#FFFFFF"
+									   bottom="0" top="165"/>
+<!--			<s:Button id="buttonDeleteSession" label="Supprimer la séance" visible="false"/>-->
+		</s:Group>
 	</s:Panel>
 </s:Skin>
