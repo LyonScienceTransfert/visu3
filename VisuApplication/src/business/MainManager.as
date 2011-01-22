@@ -352,7 +352,7 @@ public class MainManager
 		var listObsel:ArrayCollection = null;
 		if(!(listObselVO == null || listObselVO.length == 0))
 		{
-			this.onCheckListUserObsel(listObselVO,dateStartRecording,false,true)
+			this.onCheckListUserObsel(listObselVO,dateStartRecording,null,false,true)
 			var activityStartId:int = 0;
 			var nbrObsels:int = listObselVO.length;
 			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
@@ -472,6 +472,12 @@ public class MainManager
 		var tempSharedSession:Boolean = false;
 		if(!(listObselVO == null || listObselVO.length == 0))
 		{
+			// set current sessionId for setting commentObsel
+			var obselVO:ObselVO = listObselVO[0];
+			var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+			var sessionId:int = obsel.props[TraceModel.SESSION_ID];
+			Model.getInstance().setCurrentSessionId(sessionId);
+			Model.getInstance().setCurrentTraceId(obselVO.trace);
 			// begin session
 			var timeSessionStart:Number = 0;
 			var timeSessionEnd:Number = 0;
@@ -776,6 +782,24 @@ public class MainManager
 				}
 			}
 		}
+		function updateObselComment(listObsel:ArrayCollection, obsel:Obsel):void
+		{
+			var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obselTemp:Obsel = listObsel.getItemAt(nObsel) as Obsel;
+				var obselTempType:String = obselTemp.type;
+				if(obselTempType == TraceModel.SET_TEXT_COMMENT)
+				{
+					var timeStampMarker:Number = obselTemp.props[TraceModel.TIMESTAMP];
+					if(timeStamp == timeStampMarker)
+					{
+						obselTemp.props[TraceModel.TEXT] = obsel.props[TraceModel.TEXT];
+					}
+				}
+			}
+		}
 		
 		function deleteObselMarker(listObsel:ArrayCollection, obsel:Obsel):void
 		{
@@ -787,6 +811,34 @@ public class MainManager
 				var obselTemp:Obsel = listObsel.getItemAt(nObsel) as Obsel;
 				var obselTempType:String = obselTemp.type;
 				if(obselTempType == TraceModel.SET_MARKER || obselTempType == TraceModel.RECEIVE_MARKER)
+				{
+					var timeStampMarker:Number = obselTemp.props[TraceModel.TIMESTAMP];
+					if(timeStamp == timeStampMarker)
+					{
+						listIndexDeletingObsel.push(nObsel);
+					}
+				}
+			}
+			if(listIndexDeletingObsel.length > 0)
+			{
+				listIndexDeletingObsel.reverse();
+				for each(var index:int in listIndexDeletingObsel)
+				{
+					listObsel.removeItemAt(index);
+				}
+			}
+		}
+		
+		function deleteObselComment(listObsel:ArrayCollection, obsel:Obsel):void
+		{
+			var listIndexDeletingObsel:Array = new Array()
+			var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obselTemp:Obsel = listObsel.getItemAt(nObsel) as Obsel;
+				var obselTempType:String = obselTemp.type;
+				if(obselTempType == TraceModel.SET_TEXT_COMMENT)
 				{
 					var timeStampMarker:Number = obselTemp.props[TraceModel.TIMESTAMP];
 					if(timeStamp == timeStampMarker)
@@ -1011,7 +1063,7 @@ public class MainManager
 		}
 		
 		// creation timeLine
-		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, true, false);
+		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, null, true, false);
 		
 		
 		function hasObselWithTimeStamp(obselVO:ObselVO):Boolean
@@ -1234,6 +1286,20 @@ public class MainManager
 		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
 		Model.getInstance().updateTextObselMarker(senderUserId, timeStampObsel, text, obsel.type);
 	}
+	
+	public function onCheckAddObselComment(obselVO:ObselVO, timeBegin:String, timeEnd:String):void
+	{
+		var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+		if(obsel.type == TraceModel.SET_TEXT_COMMENT){
+			Model.getInstance().addObselComment(obsel,true);
+		}else
+		{
+			var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
+			var text:String = obsel.props[TraceModel.TEXT];
+			Model.getInstance().updateTextObselComment( timeStampObsel, text, obsel.type); 
+		}
+	}
+	
 	public function onError(event : Object) : void
 	{
 		var closeConnetionEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CLOSE_CONNECTION);
