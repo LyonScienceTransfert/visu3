@@ -171,7 +171,11 @@ public class StreamRecorder
              * effort to avoid that. */
 			// sessionId of this client
 			Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
-			if(sessionIdClient == session_id)
+			
+log.warn("====sessionIdClient  {}",sessionIdClient.toString());
+			
+			Integer diff = session_id - sessionIdClient;
+			if(diff == 0)
 			{
 				IClient client = stream.getConnection().getClient();
 				Integer userId = (Integer)client.getAttribute("uid");
