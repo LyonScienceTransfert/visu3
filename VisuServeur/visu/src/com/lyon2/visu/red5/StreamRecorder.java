@@ -449,7 +449,8 @@ log.warn("refParam = {}",refParam);
 				
 				// sessionId of this client
 				Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
-				if(sessionIdClient == session_id)
+				Integer diff = session_id - sessionIdClient;
+				if(diff == 0)
 				{
 					// stop recording
 					stream.stopRecording();
