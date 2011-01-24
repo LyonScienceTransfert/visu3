@@ -97,7 +97,7 @@ package com.ithaca.visu.ui.utils
 		static private var fichierIconVisu1:Class;
 		
 		[Bindable]
-		[Embed("images/CommentVer2.png")]
+		[Embed("images/CommentVer4.png")]
 		static private var comment:Class;
 
 		[Bindable]
