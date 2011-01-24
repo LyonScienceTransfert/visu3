@@ -403,10 +403,6 @@ public class MainManager
 			var sessionTheme:String = obsel.props[TraceModel.SESSION_THEME];
 			var sessionId:String = obsel.props[TraceModel.SESSION_ID];
 			listSession.addItem({label:sessionTheme, traceId:traceId, sessionId:sessionId, dateRecording:"waiting....."});
-			// get detaile the session for salon retro
-			var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
-			sessionSalonRetroEvent.sessionId = int(sessionId);
-			this.dispatcher.dispatchEvent(sessionSalonRetroEvent);
 		}
 		
 		var eventLoadListSessionSalonRetrospection:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION_SALON_RETROSPECTION);
