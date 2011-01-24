@@ -808,8 +808,9 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			{
 				Integer sessionIdConnectedUser = (Integer)client.getAttribute("sessionId");
 				Integer statusConnectedUser = (Integer)client.getAttribute("status");
-				User user = (User)client.getAttribute("user");
-				if(sessionId == sessionIdConnectedUser && statusConnectedUser == 3)
+				User user = (User)client.getAttribute("user");		
+				Integer diff = sessionId - sessionIdConnectedUser;				
+				if(diff == 0 && statusConnectedUser == 3)
 				{
 					
 					listPresentsRecordingUsers.add(client);
