@@ -336,6 +336,7 @@ public class ObselInfo {
 		IClient client = conn.getClient();
 		User user = (User)client.getAttribute("user");
 		Integer userId = user.getId_user();
+		log.warn("traceComment =  {}",traceComment);
 		if(traceComment.equals("void"))
 		{
 			// generate traceId user

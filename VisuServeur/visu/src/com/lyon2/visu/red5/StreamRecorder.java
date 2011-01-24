@@ -198,6 +198,9 @@ log.warn("====sessionIdClient  {}",sessionIdClient.toString());
 				{
 					startRecording = session.getStart_recording();
 				}
+				
+log.warn("====startRecording  {}",startRecording.toString());	
+
 				// generate traceId
 				String trace="";
 				List<Obsel> listObselSessionStart = null;
@@ -209,6 +212,9 @@ log.warn("====sessionIdClient  {}",sessionIdClient.toString());
 		        	// get list obsel "SystemSessionStart"
 					String traceParam = "%-0%";
 					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
+					
+log.warn("refParam = {}",refParam);
+					
 					ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 					listObselSystemSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
 		            if(listObselSystemSessionStart != null)
@@ -232,6 +238,9 @@ log.warn("====sessionIdClient  {}",sessionIdClient.toString());
 		        }
 		        
 		        // try find obsel of the session 
+		        
+		        log.warn("traceSystem ={}",traceSystem);
+		        
 				try
 				{
 //					String traceParam = "%-"+userId.toString()+"%";
