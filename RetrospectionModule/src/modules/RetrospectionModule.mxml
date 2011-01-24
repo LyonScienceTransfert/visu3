@@ -31,6 +31,7 @@
 			import com.ithaca.visu.renderer.SessionRetroRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.ithaca.visu.view.session.SessionViewSalonRetro;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
@@ -50,7 +51,6 @@
 			[Bindable]
 			private var timer:Timer;
 			
-			[Bindable]
 			public var listSessionOpen : ArrayCollection;
 			
 			[Bindable]
@@ -63,6 +63,7 @@
 			
 			private var pickCheryClick:Number = 0;
 			private var commentTimeLine:TraceLineComment;
+			private var currentSessionDateRecording:Date = null;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
@@ -80,6 +81,8 @@
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
+				// add sessionView
+				this.addSessionView(this.groupOpenSession, this.listSessionOpen, onMouseClickSessionViewOpenSession);
 				// only for admin, can see all closed session
 				if(Model.getInstance().getLoggedUser().role >= RoleEnum.RESPONSABLE)
 				{
@@ -268,8 +271,9 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var listSession:ArrayCollection = event.listSession;
 					this.listSessionClose = event.listSession;
+					// add sessionView
+					this.addSessionView(this.groupCloseSession, this.listSessionClose,onMouseClickSessionViewCloseSession);
 				}
 			}
 						
@@ -277,37 +281,70 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var listSession:ArrayCollection = event.listSession;
-					this.listSessionOpen = event.listSession;
+					this.listSessionOpen = event.listSession;				
+				}
+			}
+			
+			private function addSessionView(group:Group,listSession:ArrayCollection, clickListener:Function):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					
+					var nbrSession:int = listSession.length;
+					for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
+					{
+						var session:Object = listSession.getItemAt(nSession) as Object;
+						//	label:sessionTheme, traceId:traceId, sessionId:sessionId, dateRecording:"waiting.....";
+						var sessionView:SessionViewSalonRetro = new SessionViewSalonRetro();
+						sessionView.percentWidth = 100;
+						sessionView.theme = session.label;
+						var sessionId:int = int(session.sessionId);
+						sessionView.sessionId = sessionId;
+						sessionView.traceId = session.traceId;
+						//sessionView.ownerSession = Model.getInstance().getLoggedUser();
+						sessionView.addEventListener(MouseEvent.CLICK, clickListener);
+						group.addElement(sessionView);
+						// get detaile the session for salon retro
+						var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
+						sessionSalonRetroEvent.sessionId = sessionId;
+						this.dispatchEvent(sessionSalonRetroEvent);
+					}
 				}
 			}
 			
 			/**
-			 * set date and time startRecording for the session 
+			 * set date, time and owner for the session 
 			 */
 			private function updateSessionDate(event:SessionEvent):void
 			{
-				var session:Session = event.session;
-				setDateRecording(this.listSessionOpen, session);
-				setDateRecording(this.listSessionClose, session);		
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var session:Session = event.session;
+					setDateRecording(this.groupOpenSession, session);
+					// only for admin and instence visuvciel
+					if(this.groupCloseSession != null)
+					{
+						setDateRecording(this.groupCloseSession, session);		
+					}
+				}
 			}
 			
-			private function setDateRecording(list:ArrayCollection , session:Session):void
+			private function setDateRecording(group:Group, session:Session):void
 			{
 				var value:int = session.id_session;
-				var obj:Object;
-				for each(obj in list)
+				var nbrSessionView:int = group.numElements;
+				for(var nSessionView:int = 0; nSessionView < nbrSessionView ; nSessionView++)
 				{
-					var sessionId:int = obj.sessionId;
-					if(sessionId == value)
+					var sessionView:SessionViewSalonRetro = group.getElementAt(nSessionView) as SessionViewSalonRetro;
+					if(value == sessionView.sessionId)
 					{
 						var dateStartRecording:Date = session.date_start_recording;
-						obj.dateRecording = dateStartRecording.getDate().toString()+"-"+
-							(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+
-							fxgt.gettext(" à ")+	 
-							dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
+						// set date session
+						sessionView.dateRecorded = session.date_start_recording;
+						// set owner session
+						sessionView.ownerSession = Model.getInstance().getUserPlateformeByUserId(session.id_user);
 						return;
-					}			
+					}
 				}
 			}
 			
@@ -315,6 +352,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
+					this.currentSessionDateRecording = event.dateStartRecording;
 					var durationSession:Number = event.durationSessionRetro;
 					var startRecordingSession:Number = event.dateStartRecording.time;
 					// update label start session recording
@@ -357,6 +395,26 @@
 					this.commentTimeLine.backGroundColor = backGroundColorObsel;
 					var listObselComment:ArrayCollection = Model.getInstance().getListViewObselComment();	
 					commentTimeLine.listTitleObsels = listObselComment;		
+					// update sliders
+					this.startTimeSessionSlider.minimum = startRecordingSession;
+					this.startTimeSessionSlider.maximum = startRecordingSession + durationSession;
+					this.startTimeSessionSlider.value = startRecordingSession;
+					//this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
+					//this.startTimeSessionSlider.toolTip = "Temps debut de la séance";			
+					// creation slider session duration
+					if(durationSession < 60000)
+					{
+						this.durationSessionSlider.enabled = false;
+					}else
+					{
+						this.durationSessionSlider.enabled = true;
+						this.durationSessionSlider.minimum = 60000;
+						this.durationSessionSlider.maximum = durationSession;
+						this.durationSessionSlider.value  = durationSession;		
+					}
+					//this.durationSessionSlider.dataTipFormatFunction = formatDurationSlider;
+					//this.durationSessionSlider.toolTip = "Durée de la séance"
+					
 				}
 			}
 			
@@ -597,11 +655,16 @@
 					this.pickCheryClick = 0;
 					this.startTimer();
 					// show buttons navigation
-					this.sessionTimeLine.setShowButtonNavigation(true)
+					this.sessionTimeLine.setShowButtonNavigation(true);
+					// set status play the buttos
+					this.sessionTimeLine.setStatusPlay(true);
+					durationSessionSlider.enabled = true;
+					startTimeSessionSlider.enabled = true;
 				} 
 				
 			}
 			private function setObsels():void{
+				// add obsels traceLine 
 				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
 				if (listObsels != null)
 				{	
@@ -656,41 +719,65 @@
 				this.checkingSumFluxVideo = 0;
 			}
 			
-			protected function closeSession_changeHandler(event:IndexChangeEvent):void
+			protected function onMouseClickSessionViewCloseSession(event:MouseEvent):void
 			{
 				
 				this.clearTraceLines();
 				
-				var obj:Object = (event.currentTarget as List).selectedItem;
+				var sessionView:SessionViewSalonRetro = event.currentTarget as SessionViewSalonRetro;
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
-				getListObselEvent.sessionId = obj.sessionId as int; 
+				getListObselEvent.sessionId = sessionView.sessionId;
 				this.dispatchEvent(getListObselEvent);
 				// update label panel
-				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance partagées: ")+obj.label;
-				this.openSession.selectedIndex = -1;
+				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance partagées: ")+sessionView.theme;
 			}
 
-			protected function openSession_changeHandler(event:IndexChangeEvent):void
+			protected function onMouseClickSessionViewOpenSession(event:MouseEvent):void
 			{
 
 				this.clearTraceLines();
 				
-				var obj:Object = (event.currentTarget as List).selectedItem
-				var traceId:String = obj.traceId;
-				var sessionId:String = obj.sessionId;
+				var sessionView:SessionViewSalonRetro = event.currentTarget as SessionViewSalonRetro;
+				var traceId:String = sessionView.traceId;
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL);
 				getListObselEvent.traceId = traceId;
-				getListObselEvent.sessionId = new int(sessionId);
+				getListObselEvent.sessionId = sessionView.sessionId;
 				this.dispatchEvent(getListObselEvent);
 				// update panel titre
-				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance : ")+obj.label;
-				// do it only if current state "visuvciel" or logged user is admin
-				if(this.closeSession != null)
-				{
-					this.closeSession.selectedIndex = -1;
-				}
+				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance : ")+sessionView.theme;
 			}
 
+			protected function durationSessionSlider_valueCommitHandler(event:FlexEvent):void
+			{
+				var hSlider:HSlider = event.currentTarget as HSlider;
+				var duration:int = hSlider.value;
+				// TODO gestion time the session
+				this.sessionTimeLine.sessionTimeLineLayout.durationSession = duration;
+				var nbrTraceLine:int = this.traceLineGroup.numElements;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
+				{
+					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
+					traceLine.durationSession = duration;
+				}	
+				this.commentTimeLine.durationSession = duration;
+			}
+			
+			
+			protected function startTimeSessionSlider_valueCommitHandler(event:FlexEvent):void
+			{
+				var hSlider:HSlider = event.currentTarget as HSlider;
+				var startTime:Number = hSlider.value;
+				// TODO gestion time the session`
+				var startTimeSessionTimeLayout:Number = startTime -  this.currentSessionDateRecording.time;
+				this.sessionTimeLine.sessionTimeLineLayout.startTime = startTimeSessionTimeLayout;
+				var nbrTraceLine:int = this.traceLineGroup.numElements;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
+				{
+					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
+					traceLine.startTimeSession = startTime;
+				}
+				this.commentTimeLine.startTimeSession = startTime;
+			}
 		]]>
 		
 	</fx:Script>
@@ -720,7 +807,7 @@
 					
 				</s:Group>
 			</s:Panel>
-			<mx:VDividedBox width="30%" height="100%">
+			<mx:VDividedBox width="30%" height="100%" maxWidth="330">
 				<s:Panel width="100%" height="50%">
 					<s:title>{fxgt.gettext("Mes séances(consernent uniquement vos activités dans les séances)")}</s:title>
 					<!--<s:toolTip>{fxgt.gettext("(consernent uniquement vos activités dans les séances)")}</s:toolTip>-->
@@ -728,12 +815,15 @@
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
 						</s:layout>
-						<s:List  id="openSession"  borderVisible="false" dataProvider="{listSessionOpen}" width="100%" height="100%" 
-								 itemRenderer="com.ithaca.visu.renderer.SessionRetroRenderer"  change="openSession_changeHandler(event)" >
-							<s:layout>
-								<s:VerticalLayout gap="5" horizontalAlign="center"/>
-							</s:layout>
-						</s:List>
+						<s:Group width="100%" height="100%">
+							<s:Scroller  left="1" right="1" top="1" bottom="1">
+								<s:Group  id="groupOpenSession"  width="100%" height="100%">
+									<s:layout>
+										<s:VerticalLayout gap="5"/>
+									</s:layout>
+								</s:Group>
+							</s:Scroller>
+						</s:Group>
 					</s:Group>
 				</s:Panel>
 				<s:Panel width="100%" height="50%" includeIn="vciel">
@@ -743,34 +833,46 @@
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
 						</s:layout>
-						<s:List id="closeSession" borderVisible="false" dataProvider="{listSessionClose}" width="100%"  height="100%" itemRenderer="com.ithaca.visu.renderer.SessionRetroRenderer"  change="closeSession_changeHandler(event)">
-							<s:layout>
-								<s:VerticalLayout gap="5" horizontalAlign="center"/>
-							</s:layout>
-						</s:List>
+						<s:Group width="100%" height="100%">
+							<s:Scroller  left="1" right="1" top="1" bottom="1">
+								<s:Group  id="groupCloseSession"  width="100%" height="100%">
+									<s:layout>
+										<s:VerticalLayout gap="5"/>
+									</s:layout>
+								</s:Group>
+							</s:Scroller>
+						</s:Group>
 					</s:Group>
 				</s:Panel>
 			</mx:VDividedBox>
 		</mx:HDividedBox>
 		<s:Panel width="100%" height="40%" id="panelTimeLine">
 			<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-			<s:Group width="100%" height="100%" id="groupTimeLine">
-				<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false" top="0"/>
-				<s:Group width="100%" height="100%" top="75">
-					<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1">
-						<s:Group width="100%" height="100%">
-							<s:layout>
-								<s:VerticalLayout gap="5"/>
-							</s:layout>
-							<s:Group id="traceLineGroup" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" gap="0">
+				<s:Group width="100%" height="100%" id="groupTimeLine">
+					<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false" top="0"/>
+					<s:Group width="100%" height="100%" top="75">
+						<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1">
+							<s:Group width="100%" height="100%">
 								<s:layout>
-									<s:VerticalLayout gap="4"/>
+									<s:VerticalLayout gap="5"/>
 								</s:layout>
+								<s:Group id="traceLineGroup" width="100%" height="100%">
+									<s:layout>
+										<s:VerticalLayout gap="4"/>
+									</s:layout>
+								</s:Group>
 							</s:Group>
-						</s:Group>
-					</s:Scroller>
+						</s:Scroller>
+					</s:Group>
 				</s:Group>
-			</s:Group>
+				<s:HGroup>
+					<s:HSlider id="startTimeSessionSlider" 
+							   liveDragging="true" width="300"  valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false"/>
+					<s:HSlider id="durationSessionSlider" 						   
+							   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false"/>
+				</s:HGroup>
+			</s:VGroup>
 		</s:Panel>
 	</mx:VDividedBox>
 </mx:HDividedBox>
