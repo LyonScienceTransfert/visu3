@@ -8,6 +8,7 @@ import com.ithaca.visu.model.User;
 import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
 
+import flash.events.ErrorEvent;
 import flash.events.IEventDispatcher;
 
 import mx.collections.ArrayCollection;
@@ -70,13 +71,13 @@ public class HomeManager
 
 	public function onLoadListUsers(value:Array):void
 	{
-		var ar:Array = []
+		var ar:Array = new Array();
 		for each (var vo:UserVO in value)
 		{
 			ar.push(new User(vo));
 		}		
-		var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS_SALON_HOME,true);
-		onLoadedAllUsers.listUser = ar;
+		var onLoadedAllUsers:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_USERS_PLATEFORME);
+		onLoadedAllUsers.listDate = ar;
 		this.dispatcher.dispatchEvent(onLoadedAllUsers);
 	}	
 		

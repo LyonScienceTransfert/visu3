@@ -18,7 +18,7 @@
 		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLanguageNavigateurDay"/>
 		<mate:Listener type="{SessionEvent.SHOW_LIST_DATE_SESSION}"  method="showDateSession"/>
 		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"  method="showSession"/>
-		<mate:Listener type="{UserEvent.LOADED_ALL_USERS_SALON_HOME}"  method="onLoadedAllUsers"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"  method="onLoadedAllUsers"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -571,25 +571,33 @@
 				}
 			}
 			
-			public function onLoadedAllUsers(event:UserEvent):void
+			public function onLoadedAllUsers(event:SessionEvent):void
 			{
-				var listUser:Array = event.listUser;
-				var nbrUser:int = listUser.length;
-				for(var nUser:int = 0; nUser < nbrUser; nUser++)
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
 				{
-					var userVO:UserVO = listUser[nUser];
-					var user:User = new User(userVO);
-					var messageUser:MessageUser = new MessageUser();
-					messageUser.user = user;
-					var editabled:Boolean = false;
-					if(user.id_user == Model.getInstance().getLoggedUser().id_user)
+					var listUsersPlateforme:ArrayCollection = new ArrayCollection()
+					var listUser:Array = event.listDate;
+					var nbrUser:int = listUser.length;
+					for(var nUser:int = 0; nUser < nbrUser; nUser++)
 					{
-						editabled = true;
+						var userVO:UserVO = listUser[nUser];
+						var user:User = new User(userVO);
+						// add user 
+						listUsersPlateforme.addItem(user);
+						var messageUser:MessageUser = new MessageUser();
+						messageUser.user = user;
+						var editabled:Boolean = false;
+						if(user.id_user == Model.getInstance().getLoggedUser().id_user)
+						{
+							editabled = true;
+						}
+						messageUser.setEditabled(editabled);
+						//messageUser.addEventListener(UserEvent.UPDATE_USER, onUpdateMessageUser);
+						messageUser.percentWidth = 100;
+						groupUser.addElement(messageUser)
 					}
-					messageUser.setEditabled(editabled);
-					//messageUser.addEventListener(UserEvent.UPDATE_USER, onUpdateMessageUser);
-					messageUser.percentWidth = 100;
-					groupUser.addElement(messageUser)
+					// set list users the plateforme
+					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
 				}
 			}
 		]]>
