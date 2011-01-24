@@ -542,11 +542,15 @@ public class MainManager
 								var obselSI:Obsel = listObselSI[nObselSI];
 								var ownerSI:String = obselSI.props[TraceModel.UID];
 								var obselRFN:Obsel = getObselByUserIdByType("RFN",ownerSI);
-								obselSI.begin = obselRFN.begin;
-								var path:String = obselRFN.props[TraceModel.PATH];
-								obselSI.props[TraceModel.PATH] = path;
-								obselSI.end = obsel.begin;
-								listObsel.addItem(obselSI);
+// BUG ICI
+								if (obselRFN != null)
+								{
+									obselSI.begin = obselRFN.begin;
+									var path:String = obselRFN.props[TraceModel.PATH];
+									obselSI.props[TraceModel.PATH] = path;
+									obselSI.end = obsel.begin;
+									listObsel.addItem(obselSI);
+								}
 							}
 						// remove all path of video	
 						listObselRFN.removeAll();	
