@@ -104,6 +104,7 @@ package  com.ithaca.visu.model
 		private var listSessions:ArrayCollection = new ArrayCollection();
 		private var listFluxActivity:ArrayCollection = new ArrayCollection();
 		private var listDateSession:ArrayCollection = new ArrayCollection();
+		private var _listUsersPlateforme:ArrayCollection;
 		
 		public var profiles:Array = [];
 		
@@ -234,6 +235,15 @@ package  com.ithaca.visu.model
 		public function getCurrentTraceId():String
 		{
 			return _currentTraceId;
+		}
+
+		public function setListUsersPlateforme(value:ArrayCollection):void
+		{
+			_listUsersPlateforme = value;
+		}
+		public function getListUserPlateforme():ArrayCollection
+		{
+			return _listUsersPlateforme;
 		}
 		
 		
@@ -1782,6 +1792,20 @@ package  com.ithaca.visu.model
 			for(var nUser:uint = 0; nUser < nbrUsers;nUser++)
 			{
 				var user:User = this.listConnectedUsers[nUser];
+				if(user.id_user == userId)
+				{
+					return user;
+				}
+			}
+			return null;
+		}
+		
+		public function getUserPlateformeByUserId(userId:int):User
+		{
+			var nbrUsers:uint = this._listUsersPlateforme.length;
+			for(var nUser:uint = 0; nUser < nbrUsers;nUser++)
+			{
+				var user:User = this._listUsersPlateforme[nUser];
 				if(user.id_user == userId)
 				{
 					return user;
