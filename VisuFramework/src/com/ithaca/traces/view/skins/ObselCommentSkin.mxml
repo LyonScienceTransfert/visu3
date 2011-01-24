@@ -58,7 +58,7 @@
 	name=textContent, type=spark.components.Label, required=false
 	-->
 	<!--- Defines the appearance of the SkinnableContainer class's background. -->
-	<s:Group width="80" height="20" minHeight="0" minWidth="0" includeIn="normal">
+	<s:Group width="60" height="20" minHeight="0" minWidth="0" includeIn="normal">
 		<s:Rect id="background" left="0" right="0" top="0" bottom="0" alpha="0.0">
 			<s:fill>
 				<!--- @private -->
@@ -66,8 +66,8 @@
 			</s:fill>
 		</s:Rect>
 		<s:Group left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
-			<mx:Image id="imageObsel" left="0" source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
-			<s:Label  id="textContent"  bottom="0"  left="20" text="" width="100%"  maxDisplayedLines="1" lineBreak="toFit" backgroundColor="0xFFFF99" left.normal="25" bottom.normal="0" bottom.editabled="0" left.editabled="25"/>
+			<mx:Image id="imageObsel" left="0" source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}" width="17" height="20"/>
+			<s:Label  id="textContent" text="" maxDisplayedLines="1" lineBreak="toFit" backgroundColor="0xFFFF99" bottom="0" left="18" right="0"/>
 		</s:Group>
 	</s:Group>
 
