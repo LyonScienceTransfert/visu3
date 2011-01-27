@@ -67,6 +67,25 @@
 							  event.textComment, event.beginTime, event.endTime, event.forUserId, event.sessionId, event.timeStamp]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
+<!-- OBSEL ACTIVITY RETRO -->
+		<mate:EventHandlers type="{VisuModuleEvent.WALK_OUT_MODULE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.walkOutSalonRetro"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{VisuModuleEvent.GO_IN_MODULE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.goInSalonRetro"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_VIDEO_PLAYER}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroRoom.retroRoomVideoEvent"   arguments="{[event.typeAction, event.timePlayer]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
 	</fx:Declarations>
 	
 </mate:LocalEventMap>
