@@ -17,6 +17,8 @@
 		import mx.events.FlexEvent;
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.events.TraceLineEvent;
+		import com.ithaca.visu.events.VisuModuleEvent;
+		import com.ithaca.visu.events.SalonRetroEvent;
 		
 	]]></fx:Script>
 	
@@ -26,15 +28,21 @@
 		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->
 		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
 			<mate:ObjectBuilder generator="{RetrospectionManager}" constructorArguments="{scope.dispatcher}"/>
-		</mate:EventHandlers>		
+		</mate:EventHandlers>	
+		<!-- FlexEvent.CREATIONCOMPLET -->
+		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getSessionsByUser"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>	
 		<!-- InitMapEvent.INIT_MAP_TUTORAT __________________________________________________________________ -->		
 		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_RETROSPECTION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="testApp"   arguments="{['Retrospection']}" />
 			</rtmp:RtmpServiceInvoker>
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+<!--			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.getSessionsByUser"   arguments="{[]}" />
-			</rtmp:RtmpServiceInvoker>
+			</rtmp:RtmpServiceInvoker>-->
 		</mate:EventHandlers>	
 		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION}" debug="true">
