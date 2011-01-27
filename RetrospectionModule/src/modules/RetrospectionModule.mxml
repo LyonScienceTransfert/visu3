@@ -81,23 +81,7 @@
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
-				// add sessionView
-				this.addSessionView(this.groupOpenSession, this.listSessionOpen, onMouseClickSessionViewOpenSession);
-				// only for admin, can see all closed session
-				if(Model.getInstance().getLoggedUser().role >= RoleEnum.RESPONSABLE)
-				{
-					this.currentState="vciel";
-					// get list all closed session
-					var getAllClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION_ALL);
-					this.dispatchEvent(getAllClosedSessionEvent);
-				}
-				else if(Model.getInstance().checkServeurVisuVciel())
-				{
-					this.currentState="vciel";
-					// get list closed session where was(have to been) logged user
-					var getClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION);
-					this.dispatchEvent(getClosedSessionEvent);
-				}
+
 				// check status logged user
 				var loggedUser:User =  Model.getInstance().getLoggedUser();
 				var statusLoggedUser:int =loggedUser.status; 
@@ -281,7 +265,30 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					this.listSessionOpen = event.listSession;				
+					this.listSessionOpen = event.listSession;
+					// add sessionView
+				//	var listOpenSession:ArrayCollection = Model.getInstance().getListOpenSession();
+					var listOpenSession:ArrayCollection = event.listSession;
+					if(listOpenSession.length < 1)
+					{
+						Alert.show("Vous n'avez pas de sénces enregistré.... ","Information"); 
+					}
+					this.addSessionView(this.groupOpenSession, listOpenSession, onMouseClickSessionViewOpenSession);
+					// only for admin, can see all closed session
+					if(Model.getInstance().getLoggedUser().role >= RoleEnum.RESPONSABLE)
+					{
+						this.currentState="vciel";
+						// get list all closed session
+						var getAllClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION_ALL);
+						this.dispatchEvent(getAllClosedSessionEvent);
+					}
+					else if(Model.getInstance().checkServeurVisuVciel())
+					{
+						this.currentState="vciel";
+						// get list closed session where was(have to been) logged user
+						var getClosedSessionEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_CLOSED_SESSION);
+						this.dispatchEvent(getClosedSessionEvent);
+					}
 				}
 			}
 			
@@ -291,6 +298,7 @@
 				{
 					
 					var nbrSession:int = listSession.length;
+					trace("nbrSession = "+nbrSession.toString())
 					for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
 					{
 						var session:Object = listSession.getItemAt(nSession) as Object;
