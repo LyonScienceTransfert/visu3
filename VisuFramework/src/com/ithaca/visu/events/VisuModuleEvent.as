@@ -17,6 +17,8 @@ package com.ithaca.visu.events
 		public static const CONFIGURE:String = "configure";
 		public static const LOAD:String = "load";
 		public static const LOAD_LIST_MODULES:String = "loadListModules";
+		public static const WALK_OUT_MODULE:String = "walkOutModule";
+		public static const GO_IN_MODULE:String = "goInModule";
 		
 		public var listModules:Array;
 		
