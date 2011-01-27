@@ -100,6 +100,9 @@
 				// removing module from the stage
 				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
 				this.sessionTimeLine.addEventListener(MessageEvent.CHECK_SEEK_STREAM, onCheckSeekStream);
+				// add obsel join retro room
+				var joinSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.GO_IN_MODULE);
+				this.dispatchEvent(joinSalonRetro);
 			}
 			
 			private function onAddObselComment(event:ObselEvent):void
@@ -181,6 +184,10 @@
 					{
 						this.timer.stop();			
 					}
+					// add obsel user walk out from retro room
+					var outFromSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
+					this.dispatchEvent(outFromSalonRetro);
+						
 				}
 			}
 			
