@@ -76,7 +76,7 @@
 	
 	<s:Label text="" left="135" top="15"  id="labelCurrentTimeSession" fontWeight="bold"/>
 
-	<s:Group top="3" right="0" height="35" id="sessionTimeLineLoggedUser" click="sessionTimeLineLoggedUser_clickHandler(event)">
+	<s:Group top="3" right="0" height="35" id="sessionTimeLineLoggedUser" click="sessionTimeLineLoggedUser_clickHandler(event)" useHandCursor="true" buttonMode="true">
 		<s:layout>
 			<timeline:TimeLayout id="sessionTimeLineLayout"/>
 		</s:layout>
