@@ -162,6 +162,12 @@ package com.ithaca.traces.model
         public static const VIDEO: String = "video";
         public static const COMMENT_FOR_USER_ID: String = "commentforuserid";
 		
+// RETROROOM ACTIVITY
+		
+        public static const RETRO_ROOM_PLAY_VIDEO_EVENT: String = "RetroRoomPlayVideoEvent";
+        public static const RETRO_ROOM_PAUSE_VIDEO_EVENT: String = "RetroRoomPauseVideoEvent";
+        public static const RETRO_ROOM_VIEDO_GO_TO_TIME_EVENT: String = "RetroRoomVideoGoToTimeEvent";
+		
     }
 
 }
