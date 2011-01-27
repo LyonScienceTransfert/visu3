@@ -3,7 +3,9 @@ package com.ithaca.traces.view
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.visu.events.ObselEvent;
 	
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.ui.Keyboard;
 	
 	import mx.controls.Image;
 	
@@ -88,7 +90,7 @@ package com.ithaca.traces.view
 			}
 			if(instance == buttonOk)
 			{
-				buttonOk.addEventListener(MouseEvent.CLICK, onMouseClickButtonOk);
+				buttonOk.addEventListener(MouseEvent.CLICK, returnResult);
 				buttonOk.toolTip = "valider";
 			}
 			if(instance == buttonCancel)
@@ -104,6 +106,7 @@ package com.ithaca.traces.view
 			if(instance == textEdit)
 			{
 				textEdit.text = text;
+				textEdit.addEventListener(KeyboardEvent.KEY_UP, returnResult);
 			}
 			
 		}
@@ -117,7 +120,7 @@ package com.ithaca.traces.view
 			}
 			if(instance == buttonOk)
 			{
-				buttonOk.removeEventListener(MouseEvent.CLICK, onMouseClickButtonOk);
+				buttonOk.removeEventListener(MouseEvent.CLICK, returnResult);
 				buttonOk.toolTip = "valider";
 			}
 			if(instance == buttonCancel)
@@ -147,23 +150,11 @@ package com.ithaca.traces.view
 			deleteObsel.textObsel = text;
 			this.dispatchEvent(deleteObsel);
 		}
-		private function onMouseClickButtonOk(event:MouseEvent):void
-		{
-			setEditabled(false);
-			text = this.textEdit.text;
-			textChange = true;
-			this.invalidateProperties();
-			var updateObsel:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
-			updateObsel.obsel = this.parentObsel;
-			updateObsel.textObsel = text;
-			this.dispatchEvent(updateObsel);
-		}
+
 		private function onMouseClickButtonCancel(event:MouseEvent):void
 		{
 			this.textEdit.text = text;
 			setEditabled(false);
-/*			this.textContent.text = text;
-			this.textContent.toolTip = text;*/
 			textChange = true;
 			this.invalidateProperties();
 		}
@@ -172,6 +163,31 @@ package com.ithaca.traces.view
 		{
 			// TODO check where you will edit comment
 			setEditabled(true);
+		}
+		
+		private function returnResult(event:*):void {
+			if(event is MouseEvent){
+				text = textEdit.text;
+				this.sendComment();
+			}else if (event is KeyboardEvent) 
+			{
+				if(event.keyCode == Keyboard.ENTER)
+				{
+					// remove last simbol "enter"
+					text =  textEdit.text.slice(0,textEdit.text.length-1);
+					this.sendComment();
+				}
+			}
+		}
+		
+		private function sendComment():void{
+			setEditabled(false);
+			textChange = true;
+			this.invalidateProperties();
+			var updateObsel:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
+			updateObsel.obsel = this.parentObsel;
+			updateObsel.textObsel = text;
+			this.dispatchEvent(updateObsel);					
 		}
 		
 		public function setBegin(value:Number):void
