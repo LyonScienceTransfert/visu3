@@ -503,10 +503,14 @@ public class MainManager
 							var obselSI:Obsel = listObselSI[nObselSI];
 							var ownerSI:String = obselSI.props[TraceModel.UID];
 							var obselRFN:Obsel = getObselByUserIdByType("RFN",ownerSI);
-							obselSI.begin = obselRFN.begin;
-							obselSI.props[TraceModel.PATH] = obselRFN.props[TraceModel.PATH];
-							obselSI.end = obsel.begin;
-							listObsel.addItem(obselSI);
+							// ICI LE BUG
+							if(obselRFN != null)
+							{
+								obselSI.begin = obselRFN.begin;
+								obselSI.props[TraceModel.PATH] = obselRFN.props[TraceModel.PATH];
+								obselSI.end = obsel.begin;
+								listObsel.addItem(obselSI);
+							}
 						}
 						// remove SI, RFN
 						listObselSI.removeAll();
