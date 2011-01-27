@@ -213,6 +213,8 @@
 			private function onCheckSeekStream(event:MessageEvent):void
 			{
 				var typeMessage:String = event.message;
+				var timeStartSession:Number = this.testTimeLine.startTimeSession;
+				var playTime:Number = 0;
 				switch (typeMessage)
 				{
 					case "play" :
@@ -224,6 +226,12 @@
 						this.timeStart = this.timeStart  + timePausedNumber;
 						this.timer.start();
 						this.timePause = 0;
+						// add obsel User Action
+						var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+						actionVideoPlayer.typeAction = TraceModel.RETRO_ROOM_PLAY_VIDEO_EVENT;
+						playTime = timeStartSession + timePausedNumber;
+						actionVideoPlayer.timePlayer = playTime;
+						this.dispatchEvent(actionVideoPlayer);
 						break;
 					case "pause" :
 						this.visio.pauseStreams();
@@ -232,6 +240,12 @@
 						this.timer.stop();
 						// set time pause
 						this.timePause = new Date().time;
+						// add obsel User Action
+						var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+						actionVideoPlayer.typeAction = TraceModel.RETRO_ROOM_PAUSE_VIDEO_EVENT;
+						playTime = new Date().time - this.timeStart + this.deltaTime + timeStartSession;
+						actionVideoPlayer.timePlayer = playTime;
+						this.dispatchEvent(actionVideoPlayer);
 						break;
 					default :
 						break;
@@ -319,7 +333,7 @@
 						//sessionView.ownerSession = Model.getInstance().getLoggedUser();
 						sessionView.addEventListener(MouseEvent.CLICK, clickListener);
 						group.addElement(sessionView);
-						// get detaile the session for salon retro
+						// get detail the session for salon retro
 						var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
 						sessionSalonRetroEvent.sessionId = sessionId;
 						this.dispatchEvent(sessionSalonRetroEvent);
@@ -505,9 +519,12 @@
 				}
 				// update buttons play/stop
 				this.sessionTimeLine.setStatusPlay(true);
-				/* panelTimeLine.title = begin.toString();
-				panelTimeLine.title += "  >>> "+listObselSessionIn.length.toString(); */
-				
+				// add obsel User Action
+				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+				actionVideoPlayer.typeAction = TraceModel.RETRO_ROOM_VIEDO_GO_TO_TIME_EVENT;
+				// choosing time by user
+				actionVideoPlayer.timePlayer = this.pickCheryClick;
+				this.dispatchEvent(actionVideoPlayer);			
 			}
 			
 			 private function addFluxVideo(listObselSessionIn:ArrayCollection):void
