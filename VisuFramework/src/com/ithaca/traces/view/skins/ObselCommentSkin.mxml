@@ -26,6 +26,9 @@
 						this.stage.focus = textEdit;
 						textEdit.selectAll();						
 					}
+				}else
+				{
+					this.textContent.setStyle("backgroundColor", this.hostComponent.backGroundColor );
 				}
 			} 
 
