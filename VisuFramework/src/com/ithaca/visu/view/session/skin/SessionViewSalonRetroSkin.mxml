@@ -63,7 +63,7 @@
 					<s:HGroup width="100%"  verticalAlign="middle">
 						<mx:Image id="ownerImage" width="40" height="40"/>
 						<s:Label id="ownerNameLabel" maxDisplayedLines="1" lineBreak="toFit" width="100%" >
-							<s:text>KokA Mokin</s:text>
+							<s:text>.....</s:text>
 						</s:Label>						
 					</s:HGroup>
 				</s:VGroup>
