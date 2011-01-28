@@ -812,7 +812,8 @@ package  com.ithaca.visu.model
 		{
 			var result:Array = new Array();
 			var typeObsel:String = obsel.type;
-			var viewObsel = new ObselImage()
+			var viewObsel = new ObselImage();
+			viewObsel.parentObsel = obsel;
 			viewObsel.setBegin(obsel.begin);
 			viewObsel.setEnd(obsel.end);
 			var textObsel:String;
