@@ -62,6 +62,7 @@
  */
 package com.lyon2.controls
 {
+	import com.ithaca.traces.Obsel;
 	import com.ithaca.visu.interfaces.IDocument;
 	
 	import mx.controls.Image;
@@ -70,6 +71,7 @@ package com.lyon2.controls
 	{
 		private var senderId:int;
 		private var _idDocument:Number;
+		private var _parentObsel:Obsel;
 		
 		public function ImageDocument()
 		{
@@ -95,5 +97,8 @@ package com.lyon2.controls
 		{
 			return this._idDocument;
 		}
+		
+		public function set parentObsel(value:Obsel):void{_parentObsel = value;}
+		public function get parentObsel():Obsel{return this._parentObsel}
 	}
 }
