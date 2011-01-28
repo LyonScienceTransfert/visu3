@@ -62,12 +62,15 @@
  */
 package com.ithaca.traces.view
 {
+	import com.ithaca.traces.Obsel;
+	
 	import mx.controls.Image;
 	
 	public class ObselImage extends Image implements IObselComponenet
 	{
 		private var _begin:Number;
 		private var _end:Number;
+		private var _parentObsel:Obsel;
 		public function ObselImage()
 		{
 			//TODO: implement function
@@ -97,6 +100,10 @@ package com.ithaca.traces.view
 		{
 			this.visible = value;
 		}
+		
+		public function set parentObsel(value:Obsel):void{_parentObsel = value;}
+		public function get parentObsel():Obsel{return this._parentObsel}
+		
 		public function cloneMe():ObselImage
 		{
 			var result:ObselImage = new ObselImage();
@@ -104,6 +111,7 @@ package com.ithaca.traces.view
 			result._end = this._end;
 			result.source = this.source;
 			result.toolTip = this.toolTip;
+			result._parentObsel = this.parentObsel;
 			return result;
 		}
 		
