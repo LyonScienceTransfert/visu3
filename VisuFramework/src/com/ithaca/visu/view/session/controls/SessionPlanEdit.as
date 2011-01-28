@@ -239,7 +239,7 @@ package com.ithaca.visu.view.session.controls
 		{
 			var keyObj:Object = new Object();
 			keyObj.id_element = 0;
-			keyObj.data = "SOS => koko";
+			keyObj.data = value;
 			keyObj.type_element =  ActivityElementType.KEYWORD;
 			var activityElement:ActivityElement = new ActivityElement(keyObj);
 			var activity:Activity= this._activities.getItemAt(0) as Activity;
@@ -252,7 +252,7 @@ package com.ithaca.visu.view.session.controls
 			}
 			var addActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
 			// keyword hasn't activity
-			addActivityElement.activity = null;
+			addActivityElement.activity = activity;
 			addActivityElement.activityElement = activityElement;
 			this.dispatchEvent(addActivityElement);
 			
@@ -376,16 +376,15 @@ package com.ithaca.visu.view.session.controls
 					if(deletingActivityElemen.id_element == activityElement.id_element)
 					{
 						indexAr = nActivityElement;
+						arrActivityElement.removeItemAt(nActivityElement);
+						return;
 					}
 				}
-				if(indexAr == -1)
-				{
-					Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
-				}else{
-					arrActivityElement.removeItemAt(indexAr);
-				}	
-				
 			}
+			if(indexAr == -1)
+			{
+				Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
+			}	
 		}		
 	}
 }
