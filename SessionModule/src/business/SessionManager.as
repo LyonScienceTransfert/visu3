@@ -136,7 +136,8 @@ package business
 		{
 			
 		}
-		public function onDeleteActivityElement(activityElementId:int, activityId:int):void
+//		public function onDeleteActivityElement(activityElementId:int, activityId:int):void
+		public function onDeleteActivityElement(value:*):void
 		{	
 
 		}
