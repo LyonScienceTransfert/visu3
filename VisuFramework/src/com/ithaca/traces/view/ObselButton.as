@@ -64,7 +64,7 @@ package com.ithaca.traces.view
 {
 	import mx.controls.Button;
 
-	public class ObselButton extends Button implements IObselComponenet
+	public class ObselButton extends Button 
 	{
 		private var _begin:Number;
 		private var _end:Number;
