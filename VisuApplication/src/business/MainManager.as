@@ -1307,6 +1307,7 @@ public class MainManager
 		{
 			var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
 			var text:String = obsel.props[TraceModel.TEXT];
+			// TODO correction in the function fromRDF, if in the string has \n => simbol "enter" will give NaN !!!
 			Model.getInstance().updateTextObselComment( timeStampObsel, text, obsel.type); 
 		}
 	}
