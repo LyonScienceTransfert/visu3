@@ -164,9 +164,11 @@ package com.ithaca.traces.model
 		
 // RETROROOM ACTIVITY
 		
-        public static const RETRO_ROOM_PLAY_VIDEO_EVENT: String = "RetroRoomPlayVideoEvent";
-        public static const RETRO_ROOM_PAUSE_VIDEO_EVENT: String = "RetroRoomPauseVideoEvent";
-        public static const RETRO_ROOM_VIEDO_GO_TO_TIME_EVENT: String = "RetroRoomVideoGoToTimeEvent";
+        public static const RETRO_ROOM_PLAY_VIDEO_EVENT: String = "RetroPlayVideo";
+        public static const RETRO_ROOM_PAUSE_VIDEO_EVENT: String = "RetroPauseVideoEvent";
+        public static const RETRO_ROOM_VIEDO_GO_TO_TIME_EVENT: String = "RetroVideoGoToTimeEvent";
+		
+        public static const RETRO_ROOM_EXPLORE_OBSEL_EVENT: String = "RetroExploreObselEvent";
 		
     }
 
