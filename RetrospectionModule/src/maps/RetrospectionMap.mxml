@@ -7,18 +7,18 @@
 	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 	
 	<fx:Script><![CDATA[
-		
-		import  business.RetrospectionManager;
+		import business.RetrospectionManager;
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.ithaca.visu.events.InitMapEvent;	
-		
-		import mx.events.FlexEvent;
+		import com.ithaca.traces.model.TraceModel;
+		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.events.SalonRetroEvent;
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.events.TraceLineEvent;
 		import com.ithaca.visu.events.VisuModuleEvent;
-		import com.ithaca.visu.events.SalonRetroEvent;
+		
+		import mx.events.FlexEvent;
 		
 	]]></fx:Script>
 	
@@ -94,6 +94,25 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
+		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_EXPLORE_OBSEL}" useCapture="true" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroRoom.retroExploreObselEvent"   arguments="{[TraceModel.RETRO_ROOM_EXPLORE_OBSEL_EVENT, event.timeStamp, event.text]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_EXPAND_TRACE_LINE}" useCapture="true" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroRoom.retroExpandTraceLineEvent"   arguments="{[event.userId, event.nameUserTraceLine, event.avatarUser, event.isOpen]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_TRACE_LINE}" useCapture="true" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroRoom.retroObselTypeLineEvent"   arguments="{[event.userId, event.nameUserTraceLine, event.avatarUser, event.isPlus,
+							  event.typeAddedObsel, event.typeWidget]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+
 	</fx:Declarations>
 	
 </mate:LocalEventMap>
