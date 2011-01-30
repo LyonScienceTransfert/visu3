@@ -71,7 +71,7 @@ package com.ithaca.traces.view
 				textChange = false;
 				if(normal){
 					textContent.text = text;		
-					textContent.toolTip = text;		
+					this.toolTip = text;		
 				}else
 				{
 					textEdit.text = text;
@@ -101,7 +101,7 @@ package com.ithaca.traces.view
 			if(instance == textContent)
 			{
 				textContent.text = text;
-				textContent.toolTip = text;
+				this.toolTip = text;
 			}
 			if(instance == textEdit)
 			{
