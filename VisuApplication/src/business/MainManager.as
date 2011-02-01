@@ -1301,15 +1301,10 @@ public class MainManager
 	public function onCheckAddObselComment(obselVO:ObselVO, timeBegin:String, timeEnd:String):void
 	{
 		var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-		if(obsel.type == TraceModel.SET_TEXT_COMMENT){
-			Model.getInstance().addObselComment(obsel,true);
-		}else
-		{
-			var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
-			var text:String = obsel.props[TraceModel.TEXT];
-			// TODO correction in the function fromRDF, if in the string has \n => simbol "enter" will give NaN !!!
-			Model.getInstance().updateTextObselComment( timeStampObsel, text, obsel.type); 
-		}
+		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
+		var text:String = obsel.props[TraceModel.TEXT];
+		// TODO correction in the function fromRDF, if in the string has \n => simbol "enter" will give NaN !!!
+		Model.getInstance().updateTextObselComment( timeStampObsel, text, obsel.type); 
 	}
 	
 	public function onError(event : Object) : void
