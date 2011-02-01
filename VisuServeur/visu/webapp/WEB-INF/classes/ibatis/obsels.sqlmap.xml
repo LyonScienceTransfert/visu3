@@ -76,6 +76,12 @@
 		WHERE rdf LIKE #value# 
 	</select>
 
+	<select id="getTraceRetro" parameterClass="obselStringParam" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		 FROM  obsels
+		 WHERE type_obsel LIKE #traceParam# and rdf LIKE #refParam# 
+	</select>
+
 	<select id="getSessionStartObselsForUserId" parameterClass="String" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
 		FROM obsels
