@@ -84,6 +84,10 @@
      <bean id="obselInfo.service" class="com.lyon2.visu.red5.ObselInfo">
         <property name="application" ref="web.handler"/>
     </bean>
+<!--  RetroRoomActiv -->
+     <bean id="retroRoom.service" class="com.lyon2.visu.red5.RetroRoomUserAction">
+        <property name="application" ref="web.handler"/>
+    </bean>
 <!-- BDD -->
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
