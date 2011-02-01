@@ -1,16 +1,22 @@
 package com.ithaca.visu.controls.timeline
 {
+	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.visu.events.SalonRetroEvent;
 	import com.ithaca.visu.events.TraceLineEvent;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Button;
 	import mx.controls.Image;
 	import mx.events.CollectionEvent;
+	import mx.events.ToolTipEvent;
 	
 	import spark.components.CheckBox;
 	import spark.components.Group;
@@ -414,6 +420,14 @@ package com.ithaca.visu.controls.timeline
 				var xLocal:Number = event.localX;
 				if(xLocal < deltaXPath)
 				{
+					// add obsel explane/minimize traceLine
+					var eventExpandeTraceLine:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_EXPAND_TRACE_LINE);
+					eventExpandeTraceLine.userId = this._userId; 
+					eventExpandeTraceLine.nameUserTraceLine = this._nameUserTraceLine;
+					eventExpandeTraceLine.avatarUser = this._sourceImageUserTraceLine;
+					eventExpandeTraceLine.isOpen = open;
+					this.dispatchEvent(eventExpandeTraceLine);
+					
 					open = !open;
 					invalidateSkinState();
 					elementsOpen = true;
@@ -421,6 +435,19 @@ package com.ithaca.visu.controls.timeline
 				}
 			}	
 		}
+		// checkinfg action  on trace line		
+		private function checkActionOnTraceLine(typeAddedObsel:int, typeWidget:int, addObselTitleTrace:Boolean):void
+		{
+			var addListObselConsigne:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_TRACE_LINE);			
+			addListObselConsigne.isPlus = addObselTitleTrace;
+			addListObselConsigne.typeAddedObsel = typeAddedObsel;
+			addListObselConsigne.typeWidget = typeWidget;
+			addListObselConsigne.userId = this._userId;
+			addListObselConsigne.nameUserTraceLine = this._nameUserTraceLine;
+			addListObselConsigne.avatarUser = this._sourceImageUserTraceLine;
+			this.dispatchEvent(addListObselConsigne);
+		}
+		
 // TraceLine  Consigne
 		private function onMouseOverTraceLineIcon(event:MouseEvent):void
 		{
@@ -432,7 +459,9 @@ package com.ithaca.visu.controls.timeline
 			buttonAddTypeObselTrace1.visible = false;
 			buttonAddTypeObselTrace1.removeEventListener(MouseEvent.CLICK, onClickPlusTrace1)
 		}
-		private function onClickPlusTrace1(event:MouseEvent):void{
+		private function onClickPlusTrace1(event:MouseEvent, typeWidget:int = 0):void{
+			// add obsel click plus
+			checkActionOnTraceLine(1, typeWidget, true);			
 			this.checkBoxConsigneObsel.selected = true;
 			imageConsigne.visible = true;
 			// set unvisible the button plus
@@ -456,10 +485,10 @@ package com.ithaca.visu.controls.timeline
 			var checkBox:CheckBox = event.currentTarget as CheckBox;
 			if(checkBox.selected)
 			{
-				onClickPlusTrace1(new MouseEvent(MouseEvent.CLICK));
+				onClickPlusTrace1(new MouseEvent(MouseEvent.CLICK),1);
 			}else
 			{
-				onClickMinusTrace1(new MouseEvent(MouseEvent.CLICK));
+				onClickMinusTrace1(new MouseEvent(MouseEvent.CLICK),1);
 				if(traceLineIconTrace1 != null)
 				{
 					traceLineIconTrace1.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIcon);
@@ -467,7 +496,9 @@ package com.ithaca.visu.controls.timeline
 			}
 		}
 		
-		private function onClickMinusTrace1(event:MouseEvent):void{
+		private function onClickMinusTrace1(event:MouseEvent, typeWidget:int = 0):void{
+			// remove obsel
+			checkActionOnTraceLine(1, typeWidget, false);
 			var elementTrace1:Object = this._listElementTraceline.getItemAt(0) as Object;	
 			// set traceLine1 added
 			elementTrace1.added = false;
@@ -489,7 +520,9 @@ package com.ithaca.visu.controls.timeline
 			buttonAddTypeObselTrace2.removeEventListener(MouseEvent.CLICK, onClickPlusTrace2)
 		}
 		
-		private function onClickPlusTrace2(event:MouseEvent):void{
+		private function onClickPlusTrace2(event:MouseEvent, typeWidget:int = 0):void{
+			// add obsel click plus
+			checkActionOnTraceLine(2, typeWidget, true);
 			this.checkBoxKeywordObsel.selected = true;
 			// set unvisible the button plus
 			if(traceLineIconTrace2 != null)
@@ -507,7 +540,9 @@ package com.ithaca.visu.controls.timeline
 			this.dispatchEvent(addListObselEvent);
 
 		}
-		private function onClickMinusTrace2(event:MouseEvent):void{
+		private function onClickMinusTrace2(event:MouseEvent, typeWidget:int = 0):void{
+			// remove obsel
+			checkActionOnTraceLine(2, typeWidget, false);
 			var elementTrace2:Object = this._listElementTraceline.getItemAt(1) as Object;	
 			// set traceLine1 added
 			elementTrace2.added = false;
@@ -522,10 +557,10 @@ package com.ithaca.visu.controls.timeline
 			var checkBox:CheckBox = event.currentTarget as CheckBox;
 			if(checkBox.selected)
 			{
-				onClickPlusTrace2(new MouseEvent(MouseEvent.CLICK));
+				onClickPlusTrace2(new MouseEvent(MouseEvent.CLICK),1);
 			}else
 			{
-				onClickMinusTrace2(new MouseEvent(MouseEvent.CLICK));
+				onClickMinusTrace2(new MouseEvent(MouseEvent.CLICK),1);
 				if(traceLineIconTrace2 != null)
 				{
 					traceLineIconTrace2.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace2);
@@ -544,7 +579,9 @@ package com.ithaca.visu.controls.timeline
 			buttonAddTypeObselTrace3.removeEventListener(MouseEvent.CLICK, onClickPlusTrace3)
 		}
 		
-		private function onClickPlusTrace3(event:MouseEvent):void{
+		private function onClickPlusTrace3(event:MouseEvent, typeWidget:int = 0):void{
+			// add obsel click plus
+			checkActionOnTraceLine(3, typeWidget, true);
 			this.checkBoxFichierObsel.selected = true;
 			// set unvisible the button plus
 			if(traceLineIconTrace3 != null)
@@ -562,7 +599,9 @@ package com.ithaca.visu.controls.timeline
 			this.dispatchEvent(addListObselEvent);
 			
 		}
-		private function onClickMinusTrace3(event:MouseEvent):void{
+		private function onClickMinusTrace3(event:MouseEvent, typeWidget:int = 0):void{
+			// remove obsel
+			checkActionOnTraceLine(3, typeWidget, false);
 			var elementTrace3:Object = this._listElementTraceline.getItemAt(2) as Object;	
 			// set traceLine1 added
 			elementTrace3.added = false;
@@ -577,10 +616,10 @@ package com.ithaca.visu.controls.timeline
 			var checkBox:CheckBox = event.currentTarget as CheckBox;
 			if(checkBox.selected)
 			{
-				onClickPlusTrace3(new MouseEvent(MouseEvent.CLICK));
+				onClickPlusTrace3(new MouseEvent(MouseEvent.CLICK),1);
 			}else
 			{
-				onClickMinusTrace3(new MouseEvent(MouseEvent.CLICK));
+				onClickMinusTrace3(new MouseEvent(MouseEvent.CLICK),1);
 				if(traceLineIconTrace3 != null)
 				{
 					traceLineIconTrace3.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace3);
@@ -599,7 +638,9 @@ package com.ithaca.visu.controls.timeline
 			buttonAddTypeObselTrace4.removeEventListener(MouseEvent.CLICK, onClickPlusTrace4)
 		}
 		
-		private function onClickPlusTrace4(event:MouseEvent):void{
+		private function onClickPlusTrace4(event:MouseEvent, typeWidget:int = 0):void{
+			// add obsel click plus
+			checkActionOnTraceLine(4, typeWidget, true);
 			this.checkBoxMessageObsel.selected = true;
 			// set unvisible the button plus
 			if(traceLineIconTrace4 != null)
@@ -617,7 +658,9 @@ package com.ithaca.visu.controls.timeline
 			this.dispatchEvent(addListObselEvent);
 			
 		}
-		private function onClickMinusTrace4(event:MouseEvent):void{
+		private function onClickMinusTrace4(event:MouseEvent, typeWidget:int = 0):void{
+			// remove obsel
+			checkActionOnTraceLine(4, typeWidget, false);
 			var elementTrace4:Object = this._listElementTraceline.getItemAt(3) as Object;	
 			// set traceLine4 added
 			elementTrace4.added = false;
@@ -632,10 +675,10 @@ package com.ithaca.visu.controls.timeline
 			var checkBox:CheckBox = event.currentTarget as CheckBox;
 			if(checkBox.selected)
 			{
-				onClickPlusTrace4(new MouseEvent(MouseEvent.CLICK));
+				onClickPlusTrace4(new MouseEvent(MouseEvent.CLICK),1);
 			}else
 			{
-				onClickMinusTrace4(new MouseEvent(MouseEvent.CLICK));
+				onClickMinusTrace4(new MouseEvent(MouseEvent.CLICK),1);
 				if(traceLineIconTrace4 != null)
 				{
 					traceLineIconTrace4.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace4);
@@ -654,7 +697,9 @@ package com.ithaca.visu.controls.timeline
 			buttonAddTypeObselTrace5.removeEventListener(MouseEvent.CLICK, onClickPlusTrace5)
 		}
 		
-		private function onClickPlusTrace5(event:MouseEvent):void{
+		private function onClickPlusTrace5(event:MouseEvent, typeWidget:int = 0):void{
+			// add obsel click plus
+			checkActionOnTraceLine(5, typeWidget, true);
 			this.checkBoxMarkerObsel.selected = true;
 			// set unvisible the button plus
 			if(traceLineIconTrace5 != null)
@@ -672,7 +717,9 @@ package com.ithaca.visu.controls.timeline
 			this.dispatchEvent(addListObselEvent);
 			
 		}
-		private function onClickMinusTrace5(event:MouseEvent):void{
+		private function onClickMinusTrace5(event:MouseEvent, typeWidget:int = 0):void{
+			// remove obsel
+			checkActionOnTraceLine(5, typeWidget, false);
 			var elementTrace5:Object = this._listElementTraceline.getItemAt(4) as Object;	
 			// set traceLine4 added
 			elementTrace5.added = false;
@@ -688,10 +735,10 @@ package com.ithaca.visu.controls.timeline
 			var checkBox:CheckBox = event.currentTarget as CheckBox;
 			if(checkBox.selected)
 			{
-				onClickPlusTrace5(new MouseEvent(MouseEvent.CLICK));
+				onClickPlusTrace5(new MouseEvent(MouseEvent.CLICK),1);
 			}else
 			{
-				onClickMinusTrace5(new MouseEvent(MouseEvent.CLICK));
+				onClickMinusTrace5(new MouseEvent(MouseEvent.CLICK),1);
 				if(traceLineIconTrace5 != null)
 				{
 					traceLineIconTrace5.addEventListener(MouseEvent.ROLL_OVER, onMouseOverTraceLineIconTrace5);
