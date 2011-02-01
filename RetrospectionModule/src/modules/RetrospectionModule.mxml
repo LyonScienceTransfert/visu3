@@ -22,13 +22,14 @@
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.visu.events.SalonRetroEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
-			import com.ithaca.visu.renderer.SessionRetroRenderer;
+			import com.ithaca.visu.model.vo.ObselVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.view.session.SessionViewSalonRetro;
@@ -40,7 +41,7 @@
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			
-			import spark.events.IndexChangeEvent;
+			import spark.events.TrackBaseEvent;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -107,15 +108,15 @@
 			
 			private function onAddObselComment(event:ObselEvent):void
 			{
-				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.ADD_COMMENT_OBSEL);
-				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-				addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
-				addObselComment.textComment = "...."; 
+				//  add obsel action user
+				var eventAddCommentObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_COMMENT_TRACE_LINE);
 				var beginTime:String = (commentTimeLine.startTimeSession + this.testCursor.getBegin()).toString();
 				var deltaXObselTime:Number = 0;
+				// type of creation comment
+				eventAddCommentObsel.typeAction = TraceModel.RETRO_CLICK_BUTTON_START_CREATE_COMMENT_EVENT;
 				if(!event.clickOnButtonAdd)
 				{
+					eventAddCommentObsel.typeAction = TraceModel.RETRO_DOUBLE_CLICK_TRACE_LINE_START_CREATE_COMMENT_EVENT;
 					var localX:Number = event.clickLocalX + deltaXObselTime;
 					var timeStartSession:Number = this.testTimeLine.startTimeSession;
 					var duration:Number = this.testTimeLine.durationSession;
@@ -123,13 +124,16 @@
 					var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
 					var begin :Number = delta + timeStartSession;
 					beginTime = begin.toString();
-				}
-				addObselComment.beginTime = beginTime;
-				addObselComment.endTime = beginTime;
-				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
-				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				addObselComment.timeStamp = 0;
-				this.dispatchEvent(addObselComment);
+				}				
+				var obsel:Obsel = new Obsel(TraceModel.SET_TEXT_COMMENT, 0, null, Number(beginTime));
+				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = Model.getInstance().getLoggedUser().id_user;
+				obsel.props[TraceModel.TIMESTAMP] = 0;
+				obsel.props[TraceModel.TEXT] = "....";
+				Model.getInstance().addObselComment(obsel,true, true);
+
+				eventAddCommentObsel.timeObselBegin = Number(beginTime);
+				eventAddCommentObsel.timeObselEnd = Number(beginTime);
+				this.dispatchEvent(eventAddCommentObsel);
 			}
 			
 			private function onEditObselComment(event:ObselEvent):void
@@ -149,8 +153,13 @@
 				addObselComment.endTime = event.obsel.end.toString();
 				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
 				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				addObselComment.timeStamp = event.obsel.props[TraceModel.TIMESTAMP];
-				this.dispatchEvent(addObselComment); 
+				var timeStamp:Number = event.obsel.props[TraceModel.TIMESTAMP];
+				if(timeStamp == 0)
+				{
+					addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
+				}
+				addObselComment.timeStamp = timeStamp
+				this.dispatchEvent(addObselComment);			
 			}
 			
 			private function onDeleteObselComment(event:ObselEvent):void
