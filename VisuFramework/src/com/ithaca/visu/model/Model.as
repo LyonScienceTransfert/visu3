@@ -71,7 +71,6 @@ package  com.ithaca.visu.model
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
-	import com.ithaca.visu.ui.utils.ActionObselEnum;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
@@ -603,7 +602,7 @@ package  com.ithaca.visu.model
 		{
 			var listTitleObsels:ArrayCollection = this._listViewObselComment;
 			var obselView:ObselComment = updateTextObsel(listTitleObsels, timeStampUpdatedObsel);
-			if(obselView != null && typeObsel == TraceModel.UPDATE_TEXT_COMMENT)
+			if(obselView != null && (typeObsel == TraceModel.UPDATE_TEXT_COMMENT || typeObsel == TraceModel.SET_TEXT_COMMENT))
 			{
 				var newObselView:ObselComment = obselView.cloneMe();
 				newObselView.text = text;
@@ -628,7 +627,14 @@ package  com.ithaca.visu.model
 								listObsels.removeItemAt(nObsel);
 								obselView.order = nObsel;
 								return obselView;
-							}
+							}else
+								if( timeStamp == 0)
+								{
+									obsel.props[TraceModel.TIMESTAMP] = timeStampUpdatedObsel;
+									listObsels.removeItemAt(nObsel);
+									obselView.order = nObsel;
+									return obselView;
+								}
 						}
 					}
 				}
@@ -784,7 +790,7 @@ package  com.ithaca.visu.model
 		/**
 		 * create view obsel and add on traceLineComment
 		 */
-		public function addObselComment(obsel:Obsel, editabled:Boolean):void
+		public function addObselComment(obsel:Obsel, editabled:Boolean, newObsel:Boolean):void
 		{
 			var textObsel:String;
 			var commentForUser:int;
@@ -811,8 +817,23 @@ package  com.ithaca.visu.model
 				viewObsel.backGroundColor = backGroundColorObsel;
 				break;	
 			}
+			// only for add new comment obsel
+			if(newObsel)
+			{
+				if(this._currentObselComment != null)
+				{
+					if(this._currentObselComment.parentObsel.props[TraceModel.TIMESTAMP] == 0)
+					{
+						var index:int = _listViewObselComment.getItemIndex(this._currentObselComment);
+						_listViewObselComment.removeItemAt(index);
+					}else
+					{
+						this._currentObselComment.setCancelEditObsel();
+					}
+				}
+				this._currentObselComment = viewObsel;
+			}
 			
-			//setObsel(viewObsel,ownerObsel,typeObsel)
 			_listViewObselComment.addItem(viewObsel);
 				
 		}
