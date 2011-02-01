@@ -1,7 +1,10 @@
 package com.ithaca.traces.view
 {
 	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.visu.events.MessageEvent;
 	import com.ithaca.visu.events.ObselEvent;
+	import com.ithaca.visu.events.SalonRetroEvent;
 	
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -42,7 +45,7 @@ package com.ithaca.traces.view
 		private var textChange:Boolean;
 		private var normal:Boolean;
 		
-		private var _parentObsel:Obsel;
+		private var _parentObsel:Obsel = null;
 		private var _order:int;
 		private var _backGroundColor:uint;
 		
@@ -75,7 +78,7 @@ package com.ithaca.traces.view
 				}else
 				{
 					textEdit.text = text;
-//					this.stage.focus = textEdit;
+					this.toolTip = null;
 					textEdit.selectAll();
 				}
 			}
@@ -87,6 +90,10 @@ package com.ithaca.traces.view
 			{
 				buttonDelete.addEventListener(MouseEvent.CLICK, onMouseClickButtonDelete);
 				buttonDelete.toolTip = "effacer";
+				if(parentObsel.props[TraceModel.TIMESTAMP] == 0)
+				{
+					buttonDelete.enabled = false;
+				}
 			}
 			if(instance == buttonOk)
 			{
@@ -151,12 +158,22 @@ package com.ithaca.traces.view
 			this.dispatchEvent(deleteObsel);
 		}
 
+		public function setCancelEditObsel():void
+		{
+			this.textEdit.text = text;
+			setEditabled(false);
+			textChange = true;
+			this.invalidateProperties();		
+		}
 		private function onMouseClickButtonCancel(event:MouseEvent):void
 		{
 			this.textEdit.text = text;
 			setEditabled(false);
 			textChange = true;
 			this.invalidateProperties();
+			var eventCancelEditObsel:ObselEvent = new ObselEvent(ObselEvent.CANCEL_EDIT_OBSEL);		
+			eventCancelEditObsel.obsel = this.parentObsel;
+			this.dispatchEvent(eventCancelEditObsel);
 		}
 		
 		private function onDobleClickObselComment(event:MouseEvent):void
@@ -187,7 +204,7 @@ package com.ithaca.traces.view
 			var updateObsel:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
 			updateObsel.obsel = this.parentObsel;
 			updateObsel.textObsel = text;
-			this.dispatchEvent(updateObsel);					
+			this.dispatchEvent(updateObsel);	
 		}
 		
 		public function setBegin(value:Number):void
