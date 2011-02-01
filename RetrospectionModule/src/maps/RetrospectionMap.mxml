@@ -96,7 +96,7 @@
 		
 		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_EXPLORE_OBSEL}" useCapture="true" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="retroRoom.retroExploreObselEvent"   arguments="{[TraceModel.RETRO_ROOM_EXPLORE_OBSEL_EVENT, event.timeStamp, event.text]}" />
+				<mate:Request action="retroRoom.retroExploreObselEvent"   arguments="{[TraceModel.RETRO_EXPLORE_OBSEL_EVENT, event.timeStamp, event.text]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
