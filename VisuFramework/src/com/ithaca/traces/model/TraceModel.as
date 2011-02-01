@@ -164,11 +164,18 @@ package com.ithaca.traces.model
 		
 // RETROROOM ACTIVITY
 		
-        public static const RETRO_ROOM_PLAY_VIDEO_EVENT: String = "RetroPlayVideo";
-        public static const RETRO_ROOM_PAUSE_VIDEO_EVENT: String = "RetroPauseVideoEvent";
-        public static const RETRO_ROOM_VIEDO_GO_TO_TIME_EVENT: String = "RetroVideoGoToTimeEvent";
+        public static const RETRO_PLAY_VIDEO_EVENT: String = "RetroPlayVideo";
+        public static const RETRO_PAUSE_VIDEO_EVENT: String = "RetroPauseVideoEvent";
+        public static const RETRO_VIEDO_GO_TO_TIME_EVENT: String = "RetroVideoGoToTimeEvent";
 		
-        public static const RETRO_ROOM_EXPLORE_OBSEL_EVENT: String = "RetroExploreObselEvent";
+        public static const RETRO_EXPLORE_OBSEL_EVENT: String = "RetroExploreObselEvent";
+        public static const RETRO_CLICK_BUTTON_START_CREATE_COMMENT_EVENT: String = "RetroClickButtonStartCreateCommentEvent";
+        public static const RETRO_DOUBLE_CLICK_TRACE_LINE_START_CREATE_COMMENT_EVENT: String = "RetroDoubleClickTraceLineStartCreateCommentEvent";
+        public static const RETRO_START_EDIT_EVENT: String = "RetroStartEditEvent";
+        public static const RETRO_CANCEL_EDIT_EVENT: String = "RetroCancelEditEvent";
+        public static const RETRO_EDIT_TYPE_CANCEL_CREATE: String = "CREATE";
+        public static const RETRO_EDIT_TYPE_CANCEL_EDIT: String = "EDIT";
+		
 		
     }
 
