@@ -1,13 +1,22 @@
 package com.ithaca.visu.controls.timeline
 {
+	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.view.ObselComment;
 	import com.ithaca.visu.events.ObselEvent;
+	import com.ithaca.visu.events.SalonRetroEvent;
+	import com.ithaca.visu.model.Model;
 	
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Button;
 	import mx.controls.Image;
+	import mx.core.IVisualElement;
 	import mx.events.CollectionEvent;
+	import mx.events.ToolTipEvent;
 	
 	import spark.components.Group;
 	import spark.components.Label;
@@ -37,6 +46,8 @@ package com.ithaca.visu.controls.timeline
 		private var durationChanged:Boolean;
 		private var startSessionChanged:Boolean;
 		private var _backGroundColor:uint;
+		
+		private var MIN_TIME_EXPLORE_OBSEL:Number = 1000;
 		
 		public function TraceLineComment()
 		{
@@ -118,8 +129,9 @@ package com.ithaca.visu.controls.timeline
 					for(var nObsel:int = 0 ; nObsel < nbrObsels ; nObsel++)
 					{
 						var obsel = this._listTitleObsels.getItemAt(nObsel);
-						obsel.addEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClickObsel);
-						//obsel.setStyle("verticalCenter","0");
+						obsel.addEventListener(MouseEvent.DOUBLE_CLICK, onStartEditCancelEditObsel);
+						obsel.addEventListener(ObselEvent.CANCEL_EDIT_OBSEL, onStartEditCancelEditObsel);
+						obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 						traceTitleLoggedUser.addElement(obsel);
 					}
 				}
@@ -164,10 +176,101 @@ package com.ithaca.visu.controls.timeline
 			this.dispatchEvent(obselEvent);
 		}
 		
-		private function onDoubleClickObsel(event:MouseEvent):void
+		private function onStartEditCancelEditObsel(event:*):void
 		{
-			var obselEvent:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
-			this.dispatchEvent(obselEvent);
+			var eventActionUserEditObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.PRE_ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT);
+			var obselView:ObselComment = Model.getInstance().getCurrentObselComment();
+			if(obselView != null)
+			{
+				var timeStamp:Number = obselView.parentObsel.props[TraceModel.TIMESTAMP];
+				if(timeStamp == 0)
+				{
+					var indexObsel:int = this._listTitleObsels.getItemIndex(obselView);
+					this._listTitleObsels.removeItemAt(indexObsel);
+				}else
+				{
+					obselView.setCancelEditObsel();
+				}
+			}
+			// set current obsel comment
+			var currentObsel:ObselComment = event.currentTarget;
+			Model.getInstance().setCurrentObselComment(currentObsel);
+            // TODO : Depth for editing obsel  			
+			// set on top deep
+			var nbrObsel:int = this.traceTitleLoggedUser.numElements;
+			for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
+			{
+				var element:IVisualElement;
+				element =  this.traceTitleLoggedUser.getElementAt(nObsel) as IVisualElement;
+				var depth:int = element.depth;
+			}
+			//////////////////////////////////////////
+			var parentObsel:Obsel = null;
+			var text:String ="";
+			var timestamp:String ="";
+			var editType:String = "void";
+			// the button cancel
+			if(event is ObselEvent)
+			{
+				eventActionUserEditObsel.typeAction = TraceModel.RETRO_CANCEL_EDIT_EVENT;
+				parentObsel = event.obsel;
+				if(parentObsel.props[TraceModel.TIMESTAMP] == 0)
+				{
+					editType = TraceModel.RETRO_EDIT_TYPE_CANCEL_CREATE;
+					// remove obsel from the stage
+					var obselComment:ObselComment = event.currentTarget;
+					var indexObsel:int = this._listTitleObsels.getItemIndex(obselComment);
+					this._listTitleObsels.removeItemAt(indexObsel);
+				}else
+				{
+					editType = TraceModel.RETRO_EDIT_TYPE_CANCEL_EDIT;
+					text = parentObsel.props[TraceModel.TEXT];
+					timestamp = parentObsel.props[TraceModel.TIMESTAMP];
+				}
+				
+				Model.getInstance().setCurrentObselComment(null);	
+			}else
+				// double click on the obsel
+			{
+				eventActionUserEditObsel.typeAction = TraceModel.RETRO_START_EDIT_EVENT;
+				parentObsel = event.currentTarget.parentObsel;
+				text = parentObsel.props[TraceModel.TEXT];
+				timestamp = parentObsel.props[TraceModel.TIMESTAMP];	
+			}			
+			eventActionUserEditObsel.editTypeCancel = editType;
+			eventActionUserEditObsel.text = text;
+			eventActionUserEditObsel.timeStamp = Number(timestamp);
+			eventActionUserEditObsel.obsel = parentObsel;		
+			this.dispatchEvent(eventActionUserEditObsel);		
+		}
+
+		private function onToolTipObselShow(event:ToolTipEvent):void
+		{
+			var target = event.target as Object;
+			var timer:Timer;
+			startTimer();
+			
+			function startTimer():void
+			{	
+				timer = new Timer(MIN_TIME_EXPLORE_OBSEL,0);
+				timer.addEventListener(TimerEvent.TIMER, onEndTimeMinExploreObsel);
+				timer.start();
+			}
+			
+			function onEndTimeMinExploreObsel(event:TimerEvent):void
+			{
+				timer.removeEventListener(TimerEvent.TIMER, onEndTimeMinExploreObsel);
+				var obsel:Obsel = target.parentObsel as Obsel;
+				var eventExploreObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_EXPLORE_OBSEL);
+				eventExploreObsel.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+				eventExploreObsel.text = target.toolTip;
+				onDispatcher(eventExploreObsel);
+			}
+		}
+		
+		private function onDispatcher(event:*):void
+		{
+			this.dispatchEvent(event);
 		}
 	}
 }
