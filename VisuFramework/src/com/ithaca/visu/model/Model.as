@@ -136,6 +136,7 @@ package  com.ithaca.visu.model
 		private var _currentSessionId:int;
 		private var _currentCommentTraceId:String="void";
 		private var _currentTraceId:String="void";
+		private var _currentObselComment:ObselComment=null;
 		
 		public function Model(access:Private)
 		{
@@ -227,6 +228,17 @@ package  com.ithaca.visu.model
 		{
 			return _currentCommentTraceId;
 		}
+		
+		public function setCurrentObselComment(value:ObselComment):void
+		{
+			_currentObselComment = value;
+		}
+		public function getCurrentObselComment():ObselComment
+		{
+			return _currentObselComment;
+		}
+		
+		
 		
 		public function setCurrentTraceId(value:String):void
 		{
