@@ -62,12 +62,15 @@
  */
 package com.ithaca.traces.view
 {
+	import com.ithaca.traces.Obsel;
+	
 	import spark.components.Label;
 	
 	public class ObselTime extends Label implements IObselComponenet
 	{
 		private var _begin:Number;
 		private var _end:Number;
+		private var _parentObsel:Obsel;
 		public function ObselTime()
 		{
 			super();
@@ -94,9 +97,13 @@ package com.ithaca.traces.view
 		{
 			return this._end;
 		}
+		
 		public function setObselViewVisible(value:Boolean):void
 		{
 			this.visible = value;
 		}
+		
+		public function set parentObsel(value:Obsel):void{_parentObsel = value;}
+		public function get parentObsel():Obsel{return this._parentObsel}
 	}
 }
