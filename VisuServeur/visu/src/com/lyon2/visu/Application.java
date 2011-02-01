@@ -124,6 +124,7 @@ import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
+import com.lyon2.utils.ObselType;
 
 
 /**
@@ -399,6 +400,24 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				log.error("Probleme lors du listing des utilisateurs" + e);
 			}
 		}
+		// add obsel retro room exit
+		if(client.hasAttribute("traceRetroId"))
+		{
+			String traceRetroIdOutSession = (String)client.getAttribute("traceRetroId");
+			String traceParentRetroId = (String)client.getAttribute("traceParentRetroId");
+			List<Object> paramsObselRetroRoom= new ArrayList<Object>();
+			paramsObselRetroRoom.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObselRetroRoom.add(traceParentRetroId);
+			paramsObselRetroRoom.add(ObselType.CAUSE);paramsObselRetroRoom.add(ObselType.UNKNOWN);
+			Obsel obsel = null;
+			try
+			{
+				obsel = setObsel(userId, traceRetroIdOutSession, ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION , paramsObselRetroRoom);					
+			}
+			catch (SQLException sqle)
+			{
+				log.error("=====Errors===== {}", sqle);
+			}
+		}
 		// list user how staying in the session
 		List<IClient> listStayingClient = new ArrayList<IClient>();
 		// get sessionId of disconnected user
@@ -435,7 +454,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			for (IClient connectedClient : this.getClients())
 			{
 				Integer sessionIdConnectedUser = (Integer)connectedClient.getAttribute("sessionId");
-				if(sessionId == sessionIdConnectedUser)
+				if(sessionId.equals(sessionIdConnectedUser))
 				{
 					List<Object> paramsObsel= new ArrayList<Object>();
     				paramsObsel.add("uid");paramsObsel.add(userId.toString());
@@ -458,8 +477,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 					if(diff != 0)
 					{
 						listStayingClient.add(connectedClient);
-					}
-					
+					}				
 				}
 			}
 		}
