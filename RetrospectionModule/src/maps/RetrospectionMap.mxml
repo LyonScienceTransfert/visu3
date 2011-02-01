@@ -112,6 +112,18 @@
 							  event.typeAddedObsel, event.typeWidget]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_COMMENT_TRACE_LINE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroRoom.retroStartCreateCommentEvent"   arguments="{[ event.typeAction, event.timeObselBegin, event.timeObselEnd]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroRoom.retroStartCancelEditCommentEvent"   arguments="{[ event.typeAction, event.timeObselBegin, event.timeObselEnd, event.timeStamp, event.text, event.editTypeCancel ]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
 
 	</fx:Declarations>
 	
