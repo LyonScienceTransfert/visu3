@@ -142,6 +142,8 @@ package com.ithaca.visu.controls.timeline
 		private var _sharedIconMarkerCode:String;
 		private var sharedIconMarkerCodeChange:Boolean;
 		
+		private var MIN_TIME_EXPLORE_OBSEL:Number = 1000;
+		
 		public function TraceLineB()
 		{
 			super();
@@ -710,7 +712,9 @@ package com.ithaca.visu.controls.timeline
 					for(var nObsel:int = 0 ; nObsel < nbrObsels ; nObsel++)
 					{
 						var obsel = this._listTitleObsels.getItemAt(nObsel);
+						obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow);
 						traceLoggedUser.addElement(obsel);
+
 					}
 				}
 			}
@@ -769,6 +773,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace1.addElement(obsel);	
 				}
 				// traceLine2
@@ -781,6 +786,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace2.addElement(obsel);	
 				}	
 				// traceLine3
@@ -793,6 +799,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace3.addElement(obsel);	
 				}	
 				// traceLine4
@@ -805,6 +812,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace4.addElement(obsel);	
 				}	
 				// traceLine5 : marker
@@ -817,6 +825,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace5.addElement(obsel);	
 				}	
 				// set source the shared icon  
@@ -833,6 +842,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace1.addElement(obsel);	
 				}
 			}
@@ -847,6 +857,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace2.addElement(obsel);	
 				}	
 			}
@@ -861,6 +872,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace3.addElement(obsel);	
 				}	
 			}
@@ -875,6 +887,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace4.addElement(obsel);	
 				}	
 			}
@@ -889,6 +902,7 @@ package com.ithaca.visu.controls.timeline
 				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
 				{
 					var obsel= listObsel.getItemAt(nObsel);
+					obsel.addEventListener(ToolTipEvent.TOOL_TIP_SHOWN, onToolTipObselShow)
 					trace5.addElement(obsel);	
 				}	
 			}
@@ -905,5 +919,37 @@ package com.ithaca.visu.controls.timeline
 			var result:String = !enabled? "disable" : open? "open" : "normal"
 			return result ;
 		}
+		
+		private function onToolTipObselShow(event:ToolTipEvent):void
+		{
+			var target = event.target as Object;
+			var timer:Timer;
+			startTimer();
+			
+			function startTimer():void
+			{	
+				timer = new Timer(MIN_TIME_EXPLORE_OBSEL,0);
+				timer.addEventListener(TimerEvent.TIMER, onEndTimeMinExploreObsel);
+				timer.start();
+			}
+
+			function onEndTimeMinExploreObsel(event:TimerEvent):void
+			{
+				timer.removeEventListener(TimerEvent.TIMER, onEndTimeMinExploreObsel);
+				var obsel:Obsel = target.parentObsel as Obsel;
+				var eventExploreObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_EXPLORE_OBSEL);
+				eventExploreObsel.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+				eventExploreObsel.text = target.toolTip;
+				// FIXME : can say where was explore action titreTriceLine or in traceLine detaile(state open)
+				onDispatcher(eventExploreObsel);
+			}
+		}
+		
+		private function onDispatcher(event:*):void
+		{
+			this.dispatchEvent(event);
+		}
+		
+		
 	}
 }
