@@ -519,6 +519,12 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 	public Obsel setObsel(Integer subject, String trace, String typeObsel, List<Object> paramsObsel, String... traceType) throws SQLException 
 	{
 	//	log.warn("===== setObsel ===== Name module est : {}",listParams);
+		// do not add obsel if hasn't traceId
+		if(trace == null)
+		{
+			log.warn("setObsel(),  TraceId = null");
+			return null;
+		}
 		// TODO : add function getHeadObsel
     	Calendar clnd = Calendar.getInstance();
     	
