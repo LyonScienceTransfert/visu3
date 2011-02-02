@@ -178,6 +178,8 @@ package com.ithaca.visu.controls.timeline
 		
 		private function onStartEditCancelEditObsel(event:*):void
 		{
+			// set current obsel comment
+			var currentObsel:ObselComment = event.currentTarget;
 			var eventActionUserEditObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.PRE_ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT);
 			var obselView:ObselComment = Model.getInstance().getCurrentObselComment();
 			if(obselView != null)
@@ -185,26 +187,16 @@ package com.ithaca.visu.controls.timeline
 				var timeStamp:Number = obselView.parentObsel.props[TraceModel.TIMESTAMP];
 				if(timeStamp == 0)
 				{
-					var indexObsel:int = this._listTitleObsels.getItemIndex(obselView);
-					this._listTitleObsels.removeItemAt(indexObsel);
+					var indexCurrentObsel:int = this._listTitleObsels.getItemIndex(obselView);
+					this._listTitleObsels.removeItemAt(indexCurrentObsel);
+					
 				}else
 				{
 					obselView.setCancelEditObsel();
 				}
+				Model.getInstance().setCurrentObselComment(null,this.traceTitleLoggedUser);
 			}
-			// set current obsel comment
-			var currentObsel:ObselComment = event.currentTarget;
-			Model.getInstance().setCurrentObselComment(currentObsel);
-            // TODO : Depth for editing obsel  			
-			// set on top deep
-			var nbrObsel:int = this.traceTitleLoggedUser.numElements;
-			for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
-			{
-				var element:IVisualElement;
-				element =  this.traceTitleLoggedUser.getElementAt(nObsel) as IVisualElement;
-				var depth:int = element.depth;
-			}
-			//////////////////////////////////////////
+
 			var parentObsel:Obsel = null;
 			var text:String ="";
 			var timestamp:String ="";
@@ -220,7 +212,10 @@ package com.ithaca.visu.controls.timeline
 					// remove obsel from the stage
 					var obselComment:ObselComment = event.currentTarget;
 					var indexObsel:int = this._listTitleObsels.getItemIndex(obselComment);
-					this._listTitleObsels.removeItemAt(indexObsel);
+					if(indexObsel != -1)
+					{
+						this._listTitleObsels.removeItemAt(indexObsel);
+					}
 				}else
 				{
 					editType = TraceModel.RETRO_EDIT_TYPE_CANCEL_EDIT;
@@ -228,7 +223,7 @@ package com.ithaca.visu.controls.timeline
 					timestamp = parentObsel.props[TraceModel.TIMESTAMP];
 				}
 				
-				Model.getInstance().setCurrentObselComment(null);	
+				Model.getInstance().setCurrentObselComment(null,this.traceTitleLoggedUser);	
 			}else
 				// double click on the obsel
 			{
@@ -236,6 +231,7 @@ package com.ithaca.visu.controls.timeline
 				parentObsel = event.currentTarget.parentObsel;
 				text = parentObsel.props[TraceModel.TEXT];
 				timestamp = parentObsel.props[TraceModel.TIMESTAMP];	
+				Model.getInstance().setCurrentObselComment(currentObsel,this.traceTitleLoggedUser);
 			}			
 			eventActionUserEditObsel.editTypeCancel = editType;
 			eventActionUserEditObsel.text = text;
@@ -244,6 +240,7 @@ package com.ithaca.visu.controls.timeline
 			this.dispatchEvent(eventActionUserEditObsel);		
 		}
 
+		
 		private function onToolTipObselShow(event:ToolTipEvent):void
 		{
 			var target = event.target as Object;
@@ -263,8 +260,12 @@ package com.ithaca.visu.controls.timeline
 				var obsel:Obsel = target.parentObsel as Obsel;
 				var eventExploreObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_EXPLORE_OBSEL);
 				eventExploreObsel.timeStamp = obsel.props[TraceModel.TIMESTAMP];
-				eventExploreObsel.text = target.toolTip;
-				onDispatcher(eventExploreObsel);
+				// toolTips will egal null when obsel is on the edit state
+				if(target.toolTip != null)
+				{
+					eventExploreObsel.text = target.toolTip;
+					onDispatcher(eventExploreObsel);
+				}
 			}
 		}
 		

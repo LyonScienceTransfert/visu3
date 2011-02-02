@@ -210,7 +210,7 @@
 							// set status record for add obsel sharedPlayerAction when session on Paused
 							sessionSharedEvent.status = VisuVisio.STATUS_RECORD;	
 							sessionSharedEvent.url = player.url;
-							sessionSharedEvent.idDocument = player.getIdDocument();;
+							sessionSharedEvent.idDocument = player.getIdDocument();
 							sessionSharedEvent.currentTimeVideoPlayer = player.getCurrentTime();
 							sessionSharedEvent.action = TraceModel.STOP_VIDEO;
 							dispatchEvent(sessionSharedEvent);	
