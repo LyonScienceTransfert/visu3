@@ -278,7 +278,7 @@
 					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="95">
 			<mx:toolTip>Supprimer l'acitivité</mx:toolTip>
 		</mx:Button>
-		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="14"/>
+		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="18"/>
 		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
 		<s:Label includeIn="normal,open" height="22" textAlign="justify" maxDisplayedLines="1"
 				 text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right.normal="100" top.open="10" left.open="120" right.open="100"/>
