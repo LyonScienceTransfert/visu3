@@ -284,7 +284,7 @@
 			</s:stroke>
 		</s:Line>
 		
-		<s:Label text="marker" left="45"  maxWidth="55" id="labelTrace5" top="10"/>
+		<s:Label text="marker" left="45"  maxWidth="70" id="labelTrace5" top="10"/>
 		<s:Group id="traceLineIconTrace5" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace5" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
 			<mx:Image source="{markerIcon}"  left="10" />
@@ -358,7 +358,7 @@
 			</s:stroke>
 		</s:Line>
 		
-		<s:Label text="instruction" left="45"  maxWidth="55" id="labelTrace1" top="10"/>
+		<s:Label text="instruction" left="45"  maxWidth="70" id="labelTrace1" top="10"/>
 		<s:Group id="traceLineIconTrace1" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<!--<s:BorderContainer  left="0" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}" backgroundColor="#D8EFC2" visible="true">-->
 				<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace1" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
@@ -433,7 +433,7 @@
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
 		</s:Line>
-		<s:Label text="mot clés" left="45" maxWidth="55" id="labelTrace2" top="10"/>
+		<s:Label text="mot clés" left="45" maxWidth="70" id="labelTrace2" top="10"/>
 		<s:Group  id="traceLineIconTrace2" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<!--<s:BorderContainer  left="0" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}" backgroundColor="#D8EFC2" visible="true">-->
 				<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace2" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
@@ -508,7 +508,7 @@
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
 		</s:Line>
-		<s:Label text="documents" left="45" maxWidth="55" id="labelTrace3" top="10"/>
+		<s:Label text="documents" left="45" maxWidth="70" id="labelTrace3" top="10"/>
 		<s:Group  id="traceLineIconTrace3" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace3" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
 			<mx:Image source="{fichierIconVisu1}"  left="10" />
@@ -567,7 +567,7 @@
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
 		</s:Line>
-		<s:Label text="documents" left="45" maxWidth="55" id="labelTrace4" top="10"/>
+		<s:Label text="documents" left="45" maxWidth="70" id="labelTrace4" top="10"/>
 		<s:Group  id="traceLineIconTrace4" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace4" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
 			<mx:Image source="{messageChatIconVisu1}"  left="10"/>
