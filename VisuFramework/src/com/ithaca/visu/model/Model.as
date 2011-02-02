@@ -228,8 +228,44 @@ package  com.ithaca.visu.model
 			return _currentCommentTraceId;
 		}
 		
-		public function setCurrentObselComment(value:ObselComment):void
+		public function setCurrentObselComment(value:ObselComment, groupCommentObsel:Group):void
 		{
+			var nbrObsel:int;
+			if(value == null)
+			{
+				if(_currentObselComment != null && groupCommentObsel != null)
+				{
+					nbrObsel = groupCommentObsel.numElements;
+					if(nbrObsel > 0)
+					{
+						// with last order obsel
+						groupCommentObsel.removeElementAt(nbrObsel-1);
+						groupCommentObsel.addElementAt(_currentObselComment, _currentObselComment.order);
+					}
+				}			
+			}else
+			{
+				// set on top deep
+				nbrObsel = groupCommentObsel.numElements;
+				var element:ObselComment;
+				var obsel:Obsel;
+				var indexObsel:int = 0;
+				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
+				{
+					element =  groupCommentObsel.getElementAt(nObsel) as ObselComment;
+					obsel = element.parentObsel;
+					if(obsel.props[TraceModel.TIMESTAMP] == value.parentObsel.props[TraceModel.TIMESTAMP])
+					{
+						indexObsel = nObsel;
+					}
+				}
+				if(indexObsel > 0)
+				{
+					value.order = indexObsel;
+					groupCommentObsel.removeElementAt(indexObsel);
+					groupCommentObsel.addElementAt(value, nbrObsel-1);				
+				}
+			}
 			_currentObselComment = value;
 		}
 		public function getCurrentObselComment():ObselComment
@@ -790,7 +826,7 @@ package  com.ithaca.visu.model
 		/**
 		 * create view obsel and add on traceLineComment
 		 */
-		public function addObselComment(obsel:Obsel, editabled:Boolean, newObsel:Boolean):void
+		public function addObselComment(obsel:Obsel, editabled:Boolean, group:Group = null):void
 		{
 			var textObsel:String;
 			var commentForUser:int;
@@ -818,20 +854,24 @@ package  com.ithaca.visu.model
 				break;	
 			}
 			// only for add new comment obsel
-			if(newObsel)
+			if(group != null)
 			{
 				if(this._currentObselComment != null)
 				{
 					if(this._currentObselComment.parentObsel.props[TraceModel.TIMESTAMP] == 0)
 					{
 						var index:int = _listViewObselComment.getItemIndex(this._currentObselComment);
-						_listViewObselComment.removeItemAt(index);
+						// if hasn't obsel 
+						if(index != -1)
+						{
+							_listViewObselComment.removeItemAt(index);
+						}
 					}else
 					{
 						this._currentObselComment.setCancelEditObsel();
 					}
 				}
-				this._currentObselComment = viewObsel;
+				this.setCurrentObselComment(viewObsel,group)
 			}
 			
 			_listViewObselComment.addItem(viewObsel);
