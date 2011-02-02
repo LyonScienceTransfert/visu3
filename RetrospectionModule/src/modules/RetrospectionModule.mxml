@@ -129,8 +129,8 @@
 				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = Model.getInstance().getLoggedUser().id_user;
 				obsel.props[TraceModel.TIMESTAMP] = 0;
 				obsel.props[TraceModel.TEXT] = "....";
-				Model.getInstance().addObselComment(obsel,true, true);
-
+				Model.getInstance().addObselComment(obsel,true, commentTimeLine.traceTitleLoggedUser);
+				
 				eventAddCommentObsel.timeObselBegin = Number(beginTime);
 				eventAddCommentObsel.timeObselEnd = Number(beginTime);
 				this.dispatchEvent(eventAddCommentObsel);
@@ -159,7 +159,8 @@
 					addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
 				}
 				addObselComment.timeStamp = timeStamp
-				this.dispatchEvent(addObselComment);			
+				this.dispatchEvent(addObselComment);	
+				Model.getInstance().setCurrentObselComment(null,commentTimeLine.traceTitleLoggedUser);	
 			}
 			
 			private function onDeleteObselComment(event:ObselEvent):void
@@ -181,6 +182,7 @@
 				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
 				addObselComment.timeStamp = event.obsel.props[TraceModel.TIMESTAMP];
 				this.dispatchEvent(addObselComment);
+				Model.getInstance().setCurrentObselComment(null, null);	
 			}
 			
 			private function onPreActionUserObselComment(event:SalonRetroEvent):void
@@ -412,11 +414,12 @@
 					}
 				}
 			}
-			
+			// creation the resume activity
 			private function updateTimeLine(event:SessionEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
+					Model.getInstance().setCurrentObselComment(null, null);
 					this.currentSessionDateRecording = event.dateStartRecording;
 					var durationSession:Number = event.durationSessionRetro;
 					var startRecordingSession:Number = event.dateStartRecording.time;
@@ -597,12 +600,14 @@
 						if(obsel == null)
 						{
 							Alert.show("Salon retrospection, hasn't obsel with path = "+streamId,"Message ....."); 
+						}else
+						{
+							var timeBeginRFN:Number = obsel.begin;
+							var deltaSecond:Number = (this.pickCheryClick - timeBeginRFN)/1000;
+							//panelTimeLine.title = deltaSecond.toString() + "cherry pick = "+ this.pickCheryClick.toString();
+							stream.seek(deltaSecond);		
 						}
-						// here error ???
-						var timeBeginRFN:Number = obsel.begin;
-						var deltaSecond:Number = (this.pickCheryClick - timeBeginRFN)/1000;
-						//panelTimeLine.title = deltaSecond.toString() + "cherry pick = "+ this.pickCheryClick.toString();
-						stream.seek(deltaSecond);		
+
 						break;
 				}
 				
@@ -756,7 +761,7 @@
 					for(var nObselComment:int = 0 ; nObselComment < nbrObselComment; nObselComment++)
 					{
 						var obselComment:Obsel = listObselComment[nObselComment] as Obsel;
-						Model.getInstance().addObselComment(obselComment,false, false);
+						Model.getInstance().addObselComment(obselComment,false);
 					}
 				}
 			}
