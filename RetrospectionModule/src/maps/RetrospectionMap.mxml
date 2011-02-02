@@ -40,9 +40,6 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="testApp"   arguments="{['Retrospection']}" />
 			</rtmp:RtmpServiceInvoker>
-<!--			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="sessionInfo.getSessionsByUser"   arguments="{[]}" />
-			</rtmp:RtmpServiceInvoker>-->
 		</mate:EventHandlers>	
 		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION}" debug="true">
