@@ -563,7 +563,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		
     	List<String> tempList = new ArrayList<String>();
     	tempList.add("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
-    	tempList.add("@prefix ktbs: <http://liris.cnrs.fr/silex/2009/ktbs/> .");
+    	tempList.add("@prefix ktbs: <http://liris.cnrs.fr/silex/2009/ktbs#> .");
     	tempList.add("@prefix : <../visu/> .");
     	tempList.add("");
 		tempList.add("[] a :"+typeObsel+";");
