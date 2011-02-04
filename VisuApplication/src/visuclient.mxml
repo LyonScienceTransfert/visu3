@@ -6,7 +6,7 @@
 	xmlns:core="com.ithaca.visu.core.*"
 	xmlns:map = "maps.*"
 	xmlns:mate="http://mate.asfusion.com/"
-	minWidth="1010" minHeight="600"
+	minWidth="1010" minHeight="500"
 	preinitialize="visuapplication1_preinitializeHandler(event)"
 	creationComplete="visuapplication1_creationCompleteHandler(event)"
 	updateComplete="visuapplication1_updateCompleteHandler(event)" xmlns:vo="com.ithaca.visu.model.vo.*"
