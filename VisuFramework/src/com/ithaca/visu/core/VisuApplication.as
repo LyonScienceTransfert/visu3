@@ -8,35 +8,19 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.controls.login.event.LoginFormEvent;
 	import com.ithaca.visu.events.AuthenticationEvent;
 	import com.ithaca.visu.events.SessionEvent;
-	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.events.VisuModuleEvent;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
 	
-	import com.ithaca.visu.model.Model;
-	
-	import com.ithaca.visu.model.Session;
-	import com.ithaca.visu.model.User;
-	import com.ithaca.visu.model.vo.UserVO;
-	
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.net.navigateToURL;
-	
-	import flashx.textLayout.elements.GlobalSettings;
-	import flashx.textLayout.events.ModelChange;
 	
 	import mx.controls.ProgressBar;
 	import mx.controls.ProgressBarLabelPlacement;
-	import mx.core.INavigatorContent;
 	import mx.events.FlexEvent;
 	import mx.events.ModuleEvent;
 	
 	import spark.components.Application;
-	import spark.components.Button;
-	import spark.components.Group;
-	import spark.components.Label;
-	import spark.events.IndexChangeEvent;
 	
 	[SkinState("authentified")]
 	
