@@ -1,4 +1,4 @@
-package sparks.layout
+package com.lyon2.controls.sparks.layout
 {
 import mx.core.ILayoutElement;
 

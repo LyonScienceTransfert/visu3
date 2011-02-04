@@ -97,6 +97,7 @@
 				<s:Group id="documentGroup" width="100%">
 					<s:layout>
 						<s:TileLayout rowHeight="50" columnWidth="50" />
+						<!--<s:TileLayout requestedColumnCount="1" horizontalGap="10" verticalGap="10"/>-->
 					</s:layout>
 				</s:Group>
 				

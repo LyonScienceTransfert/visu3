@@ -4,7 +4,7 @@
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:users="com.ithaca.visu.controls.users.*"
 		xmlns:controls="com.ithaca.controls.*"
-		creationComplete="skin1_creationCompleteHandler(event)" xmlns:controls1="com.ithaca.visu.view.session.controls.*">
+		creationComplete="skin1_creationCompleteHandler(event)" xmlns:controls1="com.ithaca.visu.view.session.controls.*" xmlns:controls2="com.ithaca.visu.controls.controls.*" xmlns:controls3="com.ithaca.visu.controls.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.SessionManagement")]
@@ -12,7 +12,7 @@
 
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.controls.skins.AdvancedTextInputSkin;
+			import com.ithaca.visu.controls.skins.AdvancedTextInputSkin;
 			import com.ithaca.visu.renderer.SessionRenderer;
 			import com.ithaca.visu.view.session.controls.skins.SessionDetailSkin;
 			import com.ithaca.visu.view.session.controls.skins.SessionFilterSkin;
@@ -66,11 +66,11 @@
 			<s:Panel top="40" width="100%" height="100%">
 				<s:title>{fxgt.gettext("Liste de séances...")}</s:title>
 				<!--<controls:FilteredList-->
-				<controls:AdvancedTextInput visible="false"
+				<controls3:AdvancedTextInput visible="false"
 					id="searchDisplay" prompt="Taper nom séance..."
 					top="0" left="0" right="0" height="25" 
-					skinClass="com.ithaca.controls.skins.AdvancedTextInputSkin">
-				</controls:AdvancedTextInput>
+					skinClass="com.ithaca.visu.controls.skins.AdvancedTextInputSkin">
+				</controls3:AdvancedTextInput>
 				
 				<s:List	
 					id="sessionsList"

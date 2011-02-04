@@ -270,7 +270,7 @@
 					sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
 					dispatchEvent(sessionSharedEvent);			
 				}
-			}
+			}			
 			
 			/**
 			 * shared info "delete obsel"

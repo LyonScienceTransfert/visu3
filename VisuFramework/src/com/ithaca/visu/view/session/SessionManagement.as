@@ -63,16 +63,17 @@
 
 package com.ithaca.visu.view.session
 {
-	import com.ithaca.controls.AdvancedTextInput;
+	import com.ithaca.visu.controls.AdvancedTextInput;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.SessionFilterEnum;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.view.session.controls.SessionDetail;
 	import com.ithaca.visu.view.session.controls.SessionFilters;
 	import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
-	import com.lyon2.utils.LemmeFormatter;
+	import com.lyon2.controls.utils.LemmeFormatter;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;

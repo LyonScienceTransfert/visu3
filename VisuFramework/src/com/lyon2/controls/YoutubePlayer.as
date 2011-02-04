@@ -102,7 +102,7 @@ package com.lyon2.controls
 	
 		private var senderId:int;	
 		private var _idDocument:Number;	
-	
+		
 		protected var video:YoutubeVideo
 		protected var controlBar:VideoControlBar;
 		

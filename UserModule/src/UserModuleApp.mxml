@@ -4,7 +4,7 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx" 
 			   minWidth="780" minHeight="550" 
 			   xmlns:layout="sparks.layout.*"			   
-			   xmlns:controls="com.ithaca.controls.*" 
+			   xmlns:controls="com.ithaca.visu.controls.controls.*" 
 			   xmlns:mate="http://mate.asfusion.com" 
 			   xmlns:bootstrap="com.ithaca.visu.bootstrap.*" 
 			   xmlns:modules="ws.tink.spark.modules.*" 

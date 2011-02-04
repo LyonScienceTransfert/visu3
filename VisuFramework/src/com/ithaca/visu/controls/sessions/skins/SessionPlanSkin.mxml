@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:layout="sparks.layout.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:layout="sparks.layout.*" xmlns:layout1="com.lyon2.controls.sparks.layout.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.sessions.SessionPlan")]
@@ -49,7 +49,7 @@
 			<s:Scroller top="5" left="5" right="5" bottom="5">
 				<s:Group id="keywordGroup">
 					<s:layout>
-						<layout:FlowLayout  horizontalGap="5"   />
+						<layout1:FlowLayout  horizontalGap="5"   />
 					</s:layout>
 				</s:Group>
 			</s:Scroller>

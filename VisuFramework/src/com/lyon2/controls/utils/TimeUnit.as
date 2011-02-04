@@ -1,4 +1,4 @@
-package com.lyon2.utils
+package com.lyon2.controls.utils
 {
 	public class TimeUnit
 	{

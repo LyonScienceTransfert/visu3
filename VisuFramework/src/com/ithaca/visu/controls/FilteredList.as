@@ -1,4 +1,4 @@
-package com.ithaca.controls
+package com.ithaca.visu.controls
 {
 	import spark.components.List;
 	import spark.components.TextInput;

@@ -1,4 +1,4 @@
-package com.lyon2.utils
+package com.lyon2.controls.utils
 {
 	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;

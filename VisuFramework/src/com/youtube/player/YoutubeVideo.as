@@ -124,8 +124,8 @@ package com.youtube.player
 			_loader.content.addEventListener(PlayerEvent.ERROR, _onPlayerError);
 			_loader.content.addEventListener(PlayerEvent.STATE_CHANGE, _onPlayerStateChange);
 			_loader.content.addEventListener(PlayerEvent.QUALITY_CHANGE, _onVideoPlaybackQualityChange);	
-
 		}
+	
 		public function getLoader():Loader
 		{
 			return this._loader;
@@ -145,8 +145,6 @@ package com.youtube.player
 			_loader.content.removeEventListener(PlayerEvent.READY, _onPlayerReady);
 			
 			_player = _loader.content;
-			
-			
 			_initialized = true;
 			
 			var e:PlayerStateEvent = new PlayerStateEvent(PlayerStateEvent.PLAYER_STATE_CHANGE);

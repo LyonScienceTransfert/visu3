@@ -1,10 +1,10 @@
 package com.ithaca.visu.view.user
 {
-	import com.ithaca.controls.AdvancedTextInput;
+	import com.ithaca.visu.controls.AdvancedTextInput;
 	import com.ithaca.visu.controls.users.UserDetail;
 	import com.ithaca.visu.controls.users.UserFilters;
 	import com.ithaca.visu.controls.users.event.UserFilterEvent;
-	import com.lyon2.utils.LemmeFormatter;
+	import com.lyon2.controls.utils.LemmeFormatter;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.UserVO;

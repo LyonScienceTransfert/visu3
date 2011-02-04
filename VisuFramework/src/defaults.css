@@ -11,6 +11,7 @@
 @namespace plan 	"com.ithaca.visu.view.session.controls.*";
 @namespace sessionView 	"com.ithaca.visu.view.session.*";
 @namespace user 	"com.ithaca.visu.view.user.*";
+@namespace ws 		"ws.tink.spark.containers.*";
 
 
 
@@ -27,6 +28,11 @@ ConnectedUser
 SessionHomeElement
 {
 	skin-class:ClassReference("com.ithaca.visu.skins.SessionHomeElementSkin");
+}
+
+AdvancedTextInput
+{
+	skin-class : ClassReference( "com.ithaca.visu.controls.skins.AdvancedTextInputSkin" );
 }
 
 nav|ApplicationMenu
@@ -141,4 +147,14 @@ user|MessageUser
 sessionView|SessionViewSalonRetro
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonRetroSkin");
+}
+
+ws|Form
+{
+	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormSkin" );
+}
+
+ws|FormItem
+{
+	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormItemSkin" );
 }

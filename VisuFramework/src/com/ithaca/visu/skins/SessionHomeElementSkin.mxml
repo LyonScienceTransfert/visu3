@@ -3,7 +3,7 @@
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:layout="sparks.layout.*"
 		currentStateChange="skin1_currentStateChangeHandler(event)"
-		creationComplete="skin1_creationCompleteHandler(event)" 
+		creationComplete="skin1_creationCompleteHandler(event)" xmlns:layout1="com.lyon2.controls.sparks.layout.*" 
 		>
 	<!-- host component -->
 	<fx:Metadata>
@@ -106,7 +106,7 @@
 	<s:Scroller includeIn="open" top="20" bottom="20" left="5" right="5" itemDestructionPolicy="auto">		
 		<s:DataGroup id="users" top="0" bottom="0" left="0" right="0" minHeight="300">
 			<s:layout>
-				<layout:FlowLayout />
+				<layout1:FlowLayout />
 			</s:layout>
 		</s:DataGroup>
 	</s:Scroller>

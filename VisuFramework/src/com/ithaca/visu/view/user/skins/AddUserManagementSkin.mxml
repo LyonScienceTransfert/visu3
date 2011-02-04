@@ -4,7 +4,7 @@
 		xmlns:mx="library://ns.adobe.com/flex/mx" 
 		xmlns:controls="com.ithaca.controls.*" 
 		xmlns:users="com.ithaca.visu.controls.users.*"
-		creationComplete="skin1_creationCompleteHandler(event)" xmlns:user="com.ithaca.visu.view.user.*">
+		creationComplete="skin1_creationCompleteHandler(event)" xmlns:user="com.ithaca.visu.view.user.*" xmlns:controls1="com.ithaca.visu.controls.controls.*" xmlns:controls2="com.ithaca.visu.controls.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.user.AddUserManagement")]
@@ -12,7 +12,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.controls.skins.AdvancedTextInputSkin;
+			import com.ithaca.visu.controls.skins.AdvancedTextInputSkin;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
@@ -67,11 +67,11 @@
 			<s:Panel top="40" width="100%" height="100%">
 				<s:title>{fxgt.gettext("Utilisateurs...")}</s:title>
 				<!--<controls:FilteredList-->
-				<controls:AdvancedTextInput
+				<controls2:AdvancedTextInput
 					id="searchDisplay" prompt="Filtre de recherche"
 					top="0" left="0" right="0" height="25" 
-					skinClass="com.ithaca.controls.skins.AdvancedTextInputSkin">
-				</controls:AdvancedTextInput>
+					skinClass="com.ithaca.visu.controls.skins.AdvancedTextInputSkin">
+				</controls2:AdvancedTextInput>
 				
 				<s:List	
 					id="usersList"
