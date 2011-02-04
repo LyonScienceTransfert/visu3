@@ -77,10 +77,14 @@ package  com.ithaca.visu.model
 	
 	import flash.net.NetConnection;
 	
+	import flashx.textLayout.tlf_internal;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.core.IVisualElement;
 	
 	import spark.components.Button;
+	import spark.components.Group;
 
 
 	public final class Model
