@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<flexLibProperties includeAllClasses="true" version="3">
-  <includeClasses/>
-  <includeResources>
-    <resourceEntry destPath="icons/webcam.png" sourcePath="icons/webcam.png"/>
-    <resourceEntry destPath="sounds/blubup.mp3" sourcePath="sounds/blubup.mp3"/>
-  </includeResources>
-  <namespaceManifests/>
-</flexLibProperties>
