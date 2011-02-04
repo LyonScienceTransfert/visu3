@@ -77,11 +77,8 @@ package  com.ithaca.visu.model
 	
 	import flash.net.NetConnection;
 	
-	import flashx.textLayout.tlf_internal;
-	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	import mx.core.IVisualElement;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -295,9 +292,7 @@ package  com.ithaca.visu.model
 		public function getListUserPlateforme():ArrayCollection
 		{
 			return _listUsersPlateforme;
-		}
-		
-		
+		}		
 		
 		/**
 		 *  set time of the serveur red5
