@@ -113,6 +113,8 @@ package com.ithaca.visu.view.user
 		private var currentMouseCursor:String;
 		private var tempText:String;
 		private var _user:User;
+		private var _numberUser:int;
+		private var numberUserChange:Boolean;
 		
 		public function MessageUser()
 		{
@@ -124,6 +126,14 @@ package com.ithaca.visu.view.user
 		public function set user(value:User):void
 		{
 			_user = value;
+		}
+		
+		public function get numberUser():int {return _numberUser; }
+		public function set numberUser(value:int):void
+		{
+			_numberUser = value;
+			numberUserChange = true;
+			this.invalidateProperties();
 		}
 		override protected function partAdded(partName:String, instance:Object):void
 		{
@@ -219,6 +229,16 @@ package com.ithaca.visu.view.user
 				showButtonEditChanged = false;
 				
 				buttonEdit.visible = this._buttonEditShow;
+				
+			}
+			
+			if (numberUserChange)
+			{
+				numberUserChange = false;
+				
+				var firstChar:String = roleUser.text.charAt(0);
+				var newText:String = firstChar.toLocaleUpperCase() + this._numberUser.toString() + " : " + roleUser.text;
+				roleUser.text = newText;
 				
 			}
 		}
