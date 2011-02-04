@@ -5,14 +5,10 @@ package com.ithaca.visu.controls.globalNavigation
 	
 	import flash.events.MouseEvent;
 	
-	import gnu.as3.gettext.FxGettext;
-	import gnu.as3.gettext._FxGettext;
-	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	
 	import spark.components.Button;
-	import spark.components.ComboBox;
 	import spark.components.DropDownList;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
@@ -224,7 +220,7 @@ package com.ithaca.visu.controls.globalNavigation
 					// FIXME : enabled module retrospection
 //					if(o.value == "retrospection"){bt.enabled = false;}
 					// FIXME : enabled module session
-					if(o.value == "session"){bt.enabled = false;}
+					if(o.value == "session"){bt.enabled = true;}
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
 					addElement( bt );
 					// list buttons for translate the labels
