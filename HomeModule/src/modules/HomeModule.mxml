@@ -9,7 +9,7 @@
 						configure="configureHandler(event)"
 						creationComplete="creationCompleteHandler(event)"
 						top="15" bottom="5" left="5" right="5" 
-						>
+						 height="100%">
 	<fx:Declarations>
 
 		<maps:HomeMap id="homeMap" dispatcher="{this}"/>
@@ -578,6 +578,10 @@
 					var listUsersPlateforme:ArrayCollection = new ArrayCollection()
 					var listUser:Array = event.listDate;
 					var nbrUser:int = listUser.length;
+					// get role the first user
+					var role:int = new User(listUser[0] as UserVO).role;
+					// set number user
+					var currentNumberUser:int = 1; 
 					for(var nUser:int = 0; nUser < nbrUser; nUser++)
 					{
 						var userVO:UserVO = listUser[nUser];
@@ -586,6 +590,17 @@
 						listUsersPlateforme.addItem(user);
 						var messageUser:MessageUser = new MessageUser();
 						messageUser.user = user;
+						// if the role same do ++ number 
+						if(user.role == role)
+						{
+							messageUser.numberUser = currentNumberUser;	
+							currentNumberUser++;
+						}else
+						{
+							role = user.role;
+							messageUser.numberUser = 1;	
+							currentNumberUser = 2;
+						}
 						var editabled:Boolean = false;
 						if(user.id_user == Model.getInstance().getLoggedUser().id_user)
 						{
