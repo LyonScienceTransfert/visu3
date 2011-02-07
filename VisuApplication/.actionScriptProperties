@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<actionScriptProperties mainApplicationPath="visuclient.mxml" projectUUID="76c789b1-5f1c-466d-9e30-80ab81b3ad5c" version="6">
-  <compiler additionalCompilerArguments="-locale fr_FR" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="/devtools/red5-0.8.0/webapps/visu2" outputFolderPath="bin-debug" rootURL="http://localhost:5080/visu2" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties analytics="false" mainApplicationPath="visuclient.mxml" projectUUID="76c789b1-5f1c-466d-9e30-80ab81b3ad5c" version="6">
+  <compiler additionalCompilerArguments="-locale fr_FR" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="/Applications/red5/webapps/visu2" outputFolderPath="bin-debug" rootURL="http://localhost/visu2" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath>
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/SessionModule/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/TutoratModule/src"/>
@@ -15,9 +15,6 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
-      <libraryPathEntry kind="3" linkType="1" path="/AssetsLib/bin/AssetsLib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/ComponentsLib/bin/ComponentsLib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/UtilsLib/bin/UtilsLib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/VisuFramework/bin/VisuFramework.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/swc"/>
     </libraryPath>
@@ -25,6 +22,7 @@
   </compiler>
   <applications>
     <application path="visuclient.mxml"/>
+    <application path="Test.mxml"/>
   </applications>
   <modules>
     <module application="src/visuclient.mxml" destPath="modules/UserModule.swf" optimize="true" sourcePath="[source path] UserModule-src/modules/UserModule.mxml"/>
