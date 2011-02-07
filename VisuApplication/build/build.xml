@@ -3,21 +3,21 @@
 
 <!-- As this builds all visu2 projects, the basedir points to the root of all visu2 directories -->
 
-<project name="Visu Client Builder" basedir="../.." default="build_all">
+<project name="Visu Client Builder" default="build_all">
    <!-- Dev path--> 
-   <property name="visu.dev.path" location="/Users/admin/visuTemp" />
+   <property name="visu.dev.path" location="/home/dcram/dev/ws-visu2/visu" />
    <property name="player.major.version" value="10.1" />
    <property name="locale" value="en_US" />
    <property name="debug" value="true" />
    <property name="app.name" value="visuclient" />
 
-   <property name="flex.sdk" location="/Applications/Adobe Flash Builder 4/sdks/4.1.0"/>
+   <property name="flex.sdk" location="/home/dcram/Applications/flexsdk4"/>
    <property name="FLEX_HOME" location="${flex.sdk}"/>
    
 	<!-- add flex ant task -->
    <taskdef resource="flexTasks.tasks" classpath="${flex.sdk}/ant/lib/flexTasks.jar"/>
 
-   <property name="build.dir" location="./VisuApplication/build"/>
+   <property name="build.dir" location="${visu.dev.path}/VisuApplication/build"/>
 	
    <!-- Application related path--> 
    <property name="app.src" location="${visu.dev.path}/VisuApplication/src" />
@@ -28,33 +28,14 @@
    <property name="framework.src" location="${framework.path}/src" />
    <property name="framework.images" location="${framework.src}/images" />
    <property name="framework.bin" location="${framework.path}/bin" />
-   <property name="framework.swc" value="visu_framework.ant.swc" />
+   <property name="framework.linkreport" location="${framework.bin}/link-report.xml" />
+   <property name="framework.locale" location="${framework.path}/locale" />
+	<!-- The temporary asset SWC that contains embedded ressources -->
+   <property name="framework.assets.swc" value="visu_framework.assets.swc" />
+   <property name="framework.swc" value="visu_framework.swc" />
 	
-	<!-- Component related path-->
-   <property name="components.path" location="${visu.dev.path}/ComponentsLib" />
-   <property name="components.src" location="${components.path}/src" />
-   <property name="components.bin" location="${components.path}/bin" />
-	<property name="components.css" location="${components.src}/defaults.css" />
-	<property name="components.swc" value="components.ant.swc" />
-	
-	<!-- Utils related path-->
-   <property name="utils.path" location="${visu.dev.path}/UtilsLib" />
-   <property name="utils.src" location="${utils.path}/src" />
-   <property name="utils.bin" location="${utils.path}/bin" />
-   <property name="utils.locale" location="${utils.path}/locale" />
-   <property name="utils.swc" value="utils.ant.swc" />
-	
-	<!-- Assets related path-->	
-   <property name="assets.path" location="${visu.dev.path}/AssetsLib" />
-   <property name="assets.dir" location="${assets.path}" />
-   <property name="assets.tmp" location="${assets.path}/tmp" />
-   <property name="assets.src" location="${assets.path}/src" />
-   <property name="assets.bin" location="${assets.path}/bin" />
-   <property name="assets.includes" value="assets-includes.xml" />
-   <property name="assets.swc" value="assets.ant.swc" />
-
 	<!--  Pathes to third party libraries-->	
-   <property name="thirdparty.dir" location="swc" />
+   <property name="thirdparty.dir" location="${visu.dev.path}/swc" />
    <property name="lib.swfaddress" value="SWFAddress.swc" />
    <property name="lib.mate" value="Mate_08_9.swc" />
    <property name="lib.rmtp" value="rtmp-service-1.0.swc" />
@@ -62,230 +43,27 @@
 
 	<!--  Pathes to User Module sources -->	
    <property name="usermodule.src" location="${visu.dev.path}/UserModule/src" />
-   <property name="usermodule.name" value="UserModuleApp" />
-   <property name="usermodule.name.swf" value="UserModule" />
+   <property name="usermodule.name" value="UserModule" />
 
 	<!--  Pathes to Session Module sources -->	
    <property name="sessionmodule.src" location="${visu.dev.path}/SessionModule/src" />
-   <property name="sessionmodule.name" value="SessionModuleApp" />
-   <property name="sessionmodule.name.swf" value="SessionModule" />
+   <property name="sessionmodule.name" value="SessionModule" />
 
 	<!--  Pathes to Tutorat Module sources -->	
    <property name="tutoratmodule.src" location="${visu.dev.path}/TutoratModule/src" />
-   <property name="tutoratmodule.name" value="TutoratModuleApp" />
-   <property name="tutoratmodule.name.swf" value="TutoratModule" />
+   <property name="tutoratmodule.name" value="TutoratModule" />
 
 	<!--  Pathes to Home Module sources -->	
    <property name="homemodule.src" location="${visu.dev.path}/HomeModule/src" />
-   <property name="homemodule.name" value="HomeModuleApp" />
-   <property name="homemodule.name.swf" value="HomeModule" />
+   <property name="homemodule.name" value="HomeModule" />
 
 	<!--  Pathes to Retrospection Module sources -->	
    <property name="retrospectionmodule.src" location="${visu.dev.path}/RetrospectionModule/src" />
-   <property name="retrospectionmodule.name" value="RetrospectionModuleApp" />
-   <property name="retrospectionmodule.name.swf" value="RetrospectionModule" />
+   <property name="retrospectionmodule.name" value="RetrospectionModule" />
 
 	
-	<!-- build assets swc (can contain css, image, font, skins) -->
-   <target name="build_assets_lib">
-      <echo>Compile Assets Library (theme)</echo>	
-	  
-      <!-- Perform xslt tranformation anies files up to date!! -->
-      <xslt
-         in="${assets.dir}/.flexLibProperties"
-         out="${assets.src}/${assets.includes}"
-         style="${build.dir}/config.xsl">
-      </xslt>
-
-     
-	 <!-- Gather actionscript files -->
-	      <fileset id="sources.dir" dir="${assets.src}">
-	         <include name="**/*.as"/>
-	      </fileset>
-	
-
-   	<pathconvert property="classes" pathsep=" " refid="sources.dir">
-         <chainedmapper>
-            <mapper type="glob" from="${assets.src}/*" to="*"/>
-            <mapper type="package" from="*.as" to="*"/>
-         </chainedmapper>
-      </pathconvert>
-   	
-    <!-- compile swc theme file -->
-   	
-   	<mkdir dir="${assets.tmp}/images"/>
-   	<copy todir="${assets.tmp}/images" flatten="true" >
-   		<fileset id="set.images" dir="${visu.dev.path}">
-   			<include name="**/*.png"/>
-   			<include name="**/*.bmp"/>
-   			<include name="**/*.jpg"/>
-   			<include name="**/*.jpeg"/>
-   		</fileset>
-   	</copy>	
-   	
-   	<compc 
-         output="${assets.bin}/${assets.swc}"
-         debug="${debug}" 
-         strict="true" 
-         optimize="true" 
-         warnings="true"
-         headless-server="true" 
-         include-classes="${classes}">
-   	  	
-   		
-
-   		<!-- add external swc-->
-   		      	<external-library-path dir="${flex.sdk}/frameworks" append="true">
-   		      	<include name="libs/player/${player.major.version}/playerglobal.swc" />
-   		      	       		<include name="libs/textLayout.swc" />
-   		      	       		<include name="libs/osmf.swc" />
-   		      	       		<include name="libs/framework.swc" />
-   		      	       		<include name="libs/spark.swc" />
-   		      	       		<include name="libs/sparkskins.swc" />
-   		      	       		<include name="libs/rpc.swc" />
-   		      	</external-library-path>
-   		   		
-   		      	<!-- add library swc-->
-   		      	<library-path dir="${flex.sdk}/frameworks" append="true">
-   		      		<include name="libs/datavisualization.swc" />
-   		      		<include name="flash-integration.swc" />
-   		      		<include name="utilities.swc" />
-   		      		<include name="locale\{locale}" />
-   		      	</library-path>
-
-   	  	<!-- add directory to the source path (load only *.as,*.mxml,*.css) -->
-   	  	<include-sources dir="${assets.src}" includes="*.as,*.mxml,*.css" />
-   	 	
-         <!-- load config files with assets (images, sounds, fonts)  -->
-   		<load-config filename="${assets.src}/${assets.includes}" />
-
-   		<!-- Find a way to include all images automatically  -->
-   		<include-file name="images/ArrowUp.png" path="${assets.tmp}/images/ArrowUp.png"/>
-   		<include-file name="images/motCleVisu1.png" path="${assets.tmp}/images/motCleVisu1.png"/>
-   		<include-file name="images/ReleaseSliderVer5.png" path="${assets.tmp}/images/ReleaseSliderVer5.png"/>
-   		<include-file name="images/video.jpg" path="${assets.tmp}/images/video.jpg"/>
-   		<include-file name="images/consigneVisu1.png" path="${assets.tmp}/images/consigneVisu1.png"/>
-   		<include-file name="images/fichierVisu1.png" path="${assets.tmp}/images/fichierVisu1.png"/>
-   		<include-file name="images/ArrowDown.png" path="${assets.tmp}/images/ArrowDown.png"/>
-   		<include-file name="images/messageChat.png" path="${assets.tmp}/images/messageChat.png"/>
-   		<include-file name="images/chatMessageVisu1.png" path="${assets.tmp}/images/chatMessageVisu1.png"/>
-   		<include-file name="images/Editer.png" path="${assets.tmp}/images/Editer.png"/>
-   		<include-file name="images/PressSliderVer5.png" path="${assets.tmp}/images/PressSliderVer5.png"/>
-   		<include-file name="images/marqueurBlanc-bas-20px.png" path="${assets.tmp}/images/marqueurBlanc-bas-20px.png"/>
-   		<include-file name="images/SharedOtherToThisVer1.png" path="${assets.tmp}/images/SharedOtherToThisVer1.png"/>
-   		<include-file name="images/SharedThisToOtherVer1.png" path="${assets.tmp}/images/SharedThisToOtherVer1.png"/>
-   		<include-file name="images/StopVer4.png" path="${assets.tmp}/images/StopVer4.png"/>
-   		<include-file name="images/PauseVer4.png" path="${assets.tmp}/images/PauseVer4.png"/>
-   		<include-file name="images/PlayVer4.png" path="${assets.tmp}/images/PlayVer4.png"/>
-   		<include-file name="images/SharedThisToOtherRedVer1.png" path="${assets.tmp}/images/SharedThisToOtherRedVer1.png"/>
-   		<include-file name="images/PlayWalkOutVer5.png" path="${assets.tmp}/images/PlayWalkOutVer5.png"/>
-   		<include-file name="images/SharedOtherToThisRedVer1.png" path="${assets.tmp}/images/SharedOtherToThisRedVer1.png"/>
-   		<include-file name="images/CommentVer4.png" path="${assets.tmp}/images/CommentVer4.png"/>
-   		<include-file name="images/Poubelle.png" path="${assets.tmp}/images/Poubelle.png"/>
-   		<include-file name="images/CommentAddVer1.png" path="${assets.tmp}/images/CommentAddVer1.png"/>
-      </compc>
-      
-      <!-- Remove the theme load-config file -->
-   	<delete file="${assets.src}/${assets.includes}" />
-   	<delete dir="${assets.tmp}/images"/>
-   </target>
-
    
-   <!-- Build component lib SWC -->
-   <target name="build_component_lib">
-      <echo>Compile components library</echo>
-      
-      <fileset id="sources.dir" dir="${components.src}">
-         <include name="**/*.as"/>
-         <include name="**/*.mxml"/>
-      </fileset>
-   	
-      <pathconvert property="components.classes" pathsep=" " refid="sources.dir">
-         <compositemapper>
-            <chainedmapper>
-               <globmapper from="${components.src}/*" to="*" handledirsep="yes" />
-               <mapper type="package" from="*.as" to="*"/>
-            </chainedmapper>
-            <chainedmapper>
-               <globmapper from="${components.src}/*" to="*" handledirsep="yes" />
-               <mapper type="package" from="*.mxml" to="*"/>
-            </chainedmapper>
-         </compositemapper>
-      </pathconvert>
 
-   	<compc 
-         output="${components.bin}/${components.swc}"
-         debug="${debug}" 
-         strict="true" 
-         optimize="true" 
-         warnings="true"
-         headless-server="true"
-         static-link-runtime-shared-libraries="false"
-         include-classes="${components.classes}"
-         > 
-         
-       	<!-- add external swc-->
-       	<external-library-path dir="${flex.sdk}/frameworks" append="true">
-       		<include name="libs/player/${player.major.version}/playerglobal.swc" />
-       		<include name="libs/textLayout.swc" />
-       		<include name="libs/osmf.swc" />
-       		<include name="libs/framework.swc" />
-       		<include name="libs/spark.swc" />
-       		<include name="libs/sparkskins.swc" />
-       		<include name="libs/rpc.swc" />
-       	</external-library-path>
-       	<!-- add library swc-->
-       	<library-path dir="${flex.sdk}/frameworks" append="true">
-       		<include name="libs/datavisualization.swc" />
-       		<include name="flash-integration.swc" />
-       		<include name="utilities.swc" />
-       		<include name="locale\{locale}" />
-       	</library-path>
-       	
-   		
-         <!-- add directory to the source path (load only *.as,*.mxml,*.css) --> 
-         <source-path path-element="${components.src}" />
-	   	<include-file name="defaults.css" path="${components.css}" />
-      </compc>
-   </target>
-
-
-   <!-- Build utils lib SWC -->
-   <target name="build_utils_lib">
-      <echo>Compile utils library</echo>
-      <compc 
-         output="${utils.bin}/${utils.swc}"
-         debug="${debug}" 
-         strict="true" 
-         optimize="true" 
-         warnings="true"
-         headless-server="true"
-         allow-source-path-overlap="true">
-      	 
-      	<!-- add external swc-->
-      	<external-library-path dir="${flex.sdk}/frameworks" append="true">
-      		<include name="libs/player/${player.major.version}/playerglobal.swc" />
-      		<include name="libs/textLayout.swc" />
-      		<include name="libs/osmf.swc" />
-      		<include name="libs/framework.swc" />
-      		<include name="libs/spark.swc" />
-      		<include name="libs/sparkskins.swc" />
-      		<include name="libs/rpc.swc" />
-      	</external-library-path>
-      	<!-- add library swc-->
-      	<library-path dir="${flex.sdk}/frameworks" append="true">
-      		<include name="libs/datavisualization.swc" />
-      		<include name="flash-integration.swc" />
-      		<include name="utilities.swc" />
-      		<include name="locale\{locale}" />
-      	</library-path>
-      	
-      	<source-path path-element="${utils.locale}" />
-      	<source-path path-element="${utils.locale}/{locale}" />
-     		<include-sources dir="${utils.src}" includes="*" />
-      	
-      </compc>
-   </target>
     
 
    <!-- Build Application -->
@@ -296,37 +74,26 @@
          output="${app.deploy}/${app.name}.swf"
          debug="${debug}"
          strict="true" 
+         link-report="${framework.linkreport}" 
          optimize="true" 
          warnings="true"
+		 incremental="true"
          headless-server="true">
          
          <!-- define a source path (will include all files with .css, .as, .mxml extensions) -->
          <source-path path-element="${app.src}"/>
-         <!--<source-path path-element="${usermodule.src}"/>
-         <source-path path-element="${tutoratmodule.src}"/>
-         <source-path path-element="${sessionmodule.src}"/>
-         <source-path path-element="${retrospectionmodule.src}"/>
-         <source-path path-element="${homemodule.src}"/>
-      	-->
-         <!-- define a library path -->
+      	
          <library-path dir="${framework.bin}" append="true">
             <include name="${framework.swc}" />
          </library-path>
-         <library-path dir="${utils.bin}" append="true">
-            <include name="${utils.swc}" />
-         </library-path>
-         <library-path dir="${components.bin}" append="true">
-            <include name="${components.swc}" />
-         </library-path>
-         <library-path dir="${assets.bin}" append="true">
-            <include name="${assets.swc}" />
-         </library-path>
+      	
       	 <library-path dir="${thirdparty.dir}" append="true">
       		            <include name="${lib.swfaddress}" />
       		            <include name="${lib.mate}" />
       		            <include name="${lib.rmtp}" />
       		            <include name="${lib.as3gettext}" />
       		         </library-path>
+      	
       </mxmlc>
    </target>
 
@@ -334,10 +101,53 @@
 	      <echo>Compile framework library</echo>
 	       
 	  	  <compc 
+	         output="${framework.bin}/${framework.assets.swc}"
+	         debug="${debug}" 
+	         strict="true" 
+		      	incremental="true"
+	         optimize="true" 
+	   	    warnings="true"
+	         headless-server="true">
+	  		  	<include-file name="images/ArrowDown.png" path="${framework.images}/ArrowDown.png"/>
+	  			<include-file name="images/ArrowUp.png" path="${framework.images}/ArrowUp.png"/>
+	  		  	<include-file name="images/chatMessageVisu1.png" path="${framework.images}/chatMessageVisu1.png"/>
+	  		  	<include-file name="images/CommentAddVer1.png" path="${framework.images}/CommentAddVer1.png"/>
+	  		  	<include-file name="images/CommentVer4.png" path="${framework.images}/CommentVer4.png"/>
+	  		  	<include-file name="images/consigneVisu1.png" path="${framework.images}/consigneVisu1.png"/>
+	  		  	<include-file name="images/Editer.png" path="${framework.images}/Editer.png"/>
+	  	  	    <include-file name="images/fichierVisu1.png" path="${framework.images}/fichierVisu1.png"/>
+	  	  	    <include-file name="images/iconPlus.png" path="${framework.images}/iconPlus.png"/>
+	  	  	    <include-file name="images/iconMinus.png" path="${framework.images}/iconMinus.png"/>
+	  		  	<include-file name="images/marqueurBlanc-bas-20px.png" path="${framework.images}/marqueurBlanc-bas-20px.png"/>
+	  		  	<include-file name="images/messageChat.png" path="${framework.images}/messageChat.png"/>
+	  		  	<include-file name="images/motCleVisu1.png" path="${framework.images}/motCleVisu1.png"/>
+
+	  		  	<include-file name="images/PauseVer4.png" path="${framework.images}/PauseVer4.png"/>
+	  		  	<include-file name="images/PlayVer4.png" path="${framework.images}/PlayVer4.png"/>
+	  		  	<include-file name="images/PlayWalkOutVer5.png" path="${framework.images}/PlayWalkOutVer5.png"/>
+	  		  	<include-file name="images/PressSliderVer5.png" path="${framework.images}/PressSliderVer5.png"/>
+	  		  	<include-file name="images/Poubelle.png" path="${framework.images}/Poubelle.png"/>
+	  		  	<include-file name="images/ReleaseSliderVer5.png" path="${framework.images}/ReleaseSliderVer5.png"/>
+		  	  	<include-file name="images/SharedOtherToThisRedVer1.png" path="${framework.images}/SharedOtherToThisRedVer1.png"/>
+	  		  	<include-file name="images/SharedOtherToThisVer1.png" path="${framework.images}/SharedOtherToThisVer1.png"/>
+	  		  	<include-file name="images/SharedThisToOtherRedVer1.png" path="${framework.images}/SharedThisToOtherRedVer1.png"/>
+	  		  	<include-file name="images/SharedThisToOtherVer1.png" path="${framework.images}/SharedThisToOtherVer1.png"/>
+	  		  	<include-file name="images/StopVer4.png" path="${framework.images}/StopVer4.png"/>
+	  		  	<include-file name="images/video.jpg" path="${framework.images}/video.jpg"/>
+
+	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
+	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
+	  	  	
+	  	  		<include-file name="defaults.css" path="${framework.src}/defaults.css"/>
+	  	  	
+	  	  	</compc>
+		
+	  	  <compc 
 	         output="${framework.bin}/${framework.swc}"
 	         debug="${debug}" 
 	         strict="true" 
 	         optimize="true" 
+		      	incremental="true"
 	   	    warnings="true"
 	         headless-server="true">
 
@@ -354,21 +164,14 @@
 	      	
 	   	  	<!-- add library swc-->
 	      	<library-path dir="${flex.sdk}/frameworks" append="true">
-	      		<include name="libs/datavisualization.swc" />
 	      		<include name="flash-integration.swc" />
-	      		<include name="utilities.swc" />
-	      		<include name="locale\{locale}" />
 	      	</library-path>
+	  	  	
+	  	      	<include-libraries dir="${framework.bin}" append="true">
+	  	      		            <include name="${framework.assets.swc}" />
+	  	      		         </include-libraries>
 	      	
-	      	<library-path dir="${utils.bin}" append="true">
-	            <include name="${utils.swc}" />
-	         </library-path>
-	         <library-path dir="${components.bin}" append="true">
-	            <include name="${components.swc}" />
-	         </library-path>
-	         <library-path dir="${assets.bin}" append="true">
-	            <include name="${assets.swc}" />
-	         </library-path>
+	  	  <!-- define a library path -->
 	         <library-path dir="${thirdparty.dir}" append="true">
 	            <include name="${lib.swfaddress}" />
 	            <include name="${lib.mate}" />
@@ -377,31 +180,30 @@
 	         </library-path>
 	         
 	         <!-- define the source path -->
-	         <include-sources dir="${framework.src}" includes="*" excludes="build.xml"/>
-	         <include-sources dir="${usermodule.src}" includes="*" excludes="build.xml"/>
-	         <include-sources dir="${sessionmodule.src}" includes="*" excludes="build.xml"/>
-	         <include-sources dir="${tutoratmodule.src}" includes="*" excludes="build.xml"/>
-	         <include-sources dir="${retrospectionmodule.src}" includes="*" excludes="build.xml"/>
-	         <include-sources dir="${homemodule.src}" includes="*" excludes="build.xml"/>
+	         <include-sources dir="${framework.src}" includes="*"/>
 	         <source-path path-element="${framework.src}" />
-	         <source-path path-element="${homemodule.src}" />
-	         <source-path path-element="${retrospectionmodule.src}" />
-	         <source-path path-element="${tutoratmodule.src}" />
-	         <source-path path-element="${sessionmodule.src}" />
-	         <source-path path-element="${usermodule.src}" />
+
+	  	  	<include-file name="defaults.css" path="${framework.src}/defaults.css"/>
+	  	  	
+	  	  	
+	         	
 	      </compc>
-	   </target>
+	
+	</target>
+	
 	
 	
 	<target name="build_session_module">
 	      <echo>Build Session Module</echo>
 	       
 		      <mxmlc 
-		         file="${sessionmodule.src}/${sessionmodule.name}.mxml"
-		         output="${app.deploy}/modules/${sessionmodule.name.swf}.swf"
+		         file="${sessionmodule.src}/modules/${sessionmodule.name}.mxml"
+		         output="${app.deploy}/modules/${sessionmodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         optimize="true" 
+		         load-externs="${framework.linkreport}" 
+		      	 incremental="true"
 		         warnings="true"
 		         headless-server="true">
 		         
@@ -410,22 +212,16 @@
 		         <!-- define a library path -->
 		         <library-path dir="${framework.bin}" append="true">
 		            <include name="${framework.swc}" />
+		            <include name="${framework.assets.swc}" />
 		         </library-path>
-		         <library-path dir="${utils.bin}" append="true">
-		            <include name="${utils.swc}" />
-		         </library-path>
-		         <library-path dir="${components.bin}" append="true">
-		            <include name="${components.swc}" />
-		         </library-path>
-		         <library-path dir="${assets.bin}" append="true">
-		            <include name="${assets.swc}" />
-		         </library-path>
-		      	 <library-path dir="${thirdparty.dir}" append="true">
-		      		            <include name="${lib.swfaddress}" />
-		      		            <include name="${lib.mate}" />
-		      		            <include name="${lib.rmtp}" />
-		      		            <include name="${lib.as3gettext}" />
-		      		         </library-path>
+		      	
+		        <library-path dir="${thirdparty.dir}" append="true">
+		     	            <include name="${lib.swfaddress}" />
+		     	            <include name="${lib.mate}" />
+		     	            <include name="${lib.rmtp}" />
+		     	            <include name="${lib.as3gettext}" />
+		     	</library-path>
+		     	         
 		      </mxmlc>
 		   </target>
 
@@ -433,35 +229,33 @@
 	      <echo>Build Tutorat Module</echo>
 	       
 		      <mxmlc 
-		         file="${tutoratmodule.src}/${tutoratmodule.name}.mxml"
-		         output="${app.deploy}/modules/${tutoratmodule.name.swf}.swf"
+		         file="${tutoratmodule.src}/modules/${tutoratmodule.name}.mxml"
+		         output="${app.deploy}/modules/${tutoratmodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         optimize="true" 
+		      	incremental="true"
+		        load-externs="${framework.linkreport}" 
 		         warnings="true"
 		         headless-server="true">
 		         
 		         <!-- define a source path (will include all files with .css, .as, .mxml extensions) -->
 		         <source-path path-element="${tutoratmodule.src}"/>
+		      	
 		         <!-- define a library path -->
 		         <library-path dir="${framework.bin}" append="true">
 		            <include name="${framework.swc}" />
+		            <include name="${framework.assets.swc}" />
 		         </library-path>
-		         <library-path dir="${utils.bin}" append="true">
-		            <include name="${utils.swc}" />
-		         </library-path>
-		         <library-path dir="${components.bin}" append="true">
-		            <include name="${components.swc}" />
-		         </library-path>
-		         <library-path dir="${assets.bin}" append="true">
-		            <include name="${assets.swc}" />
-		         </library-path>
-		      	 <library-path dir="${thirdparty.dir}" append="true">
-		      		            <include name="${lib.swfaddress}" />
-		      		            <include name="${lib.mate}" />
-		      		            <include name="${lib.rmtp}" />
-		      		            <include name="${lib.as3gettext}" />
-		      		         </library-path>
+
+		        <library-path dir="${thirdparty.dir}" append="true">
+		     	            <include name="${lib.swfaddress}" />
+		     	            <include name="${lib.mate}" />
+		     	            <include name="${lib.rmtp}" />
+		     	            <include name="${lib.as3gettext}" />
+		     	         </library-path>
+		     	         
+
 		      </mxmlc>
 		   </target>
 	
@@ -469,10 +263,12 @@
 	      <echo>Build Home Module</echo>
 	       
 		      <mxmlc 
-		         file="${homemodule.src}/${homemodule.name}.mxml"
-		         output="${app.deploy}/modules/${homemodule.name.swf}.swf"
+		         file="${homemodule.src}/modules/${homemodule.name}.mxml"
+		         output="${app.deploy}/modules/${homemodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
+		      	incremental="true"
+		        load-externs="${framework.linkreport}" 
 		         optimize="true" 
 		         warnings="true"
 		         headless-server="true">
@@ -482,22 +278,17 @@
 		         <!-- define a library path -->
 		         <library-path dir="${framework.bin}" append="true">
 		            <include name="${framework.swc}" />
+		            <include name="${framework.assets.swc}" />
 		         </library-path>
-		         <library-path dir="${utils.bin}" append="true">
-		            <include name="${utils.swc}" />
-		         </library-path>
-		         <library-path dir="${components.bin}" append="true">
-		            <include name="${components.swc}" />
-		         </library-path>
-		         <library-path dir="${assets.bin}" append="true">
-		            <include name="${assets.swc}" />
-		         </library-path>
-		      	 <library-path dir="${thirdparty.dir}" append="true">
-		      		            <include name="${lib.swfaddress}" />
-		      		            <include name="${lib.mate}" />
-		      		            <include name="${lib.rmtp}" />
-		      		            <include name="${lib.as3gettext}" />
-		      	 </library-path>
+		      	
+		        <library-path dir="${thirdparty.dir}" append="true">
+		     	            <include name="${lib.swfaddress}" />
+		     	            <include name="${lib.mate}" />
+		     	            <include name="${lib.rmtp}" />
+		     	            <include name="${lib.as3gettext}" />
+		     	         </library-path>
+		     	         
+		      	 
 		      </mxmlc>
 		   </target>
 	
@@ -505,10 +296,12 @@
 	      <echo>Build Retrospection Module</echo>
 	       
 		      <mxmlc 
-		         file="${retrospectionmodule.src}/${retrospectionmodule.name}.mxml"
-		         output="${app.deploy}/modules/${retrospectionmodule.name.swf}.swf"
+		         file="${retrospectionmodule.src}/modules/${retrospectionmodule.name}.mxml"
+		         output="${app.deploy}/modules/${retrospectionmodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
+		        load-externs="${framework.linkreport}" 
+		      	incremental="true"
 		         optimize="true" 
 		         warnings="true"
 		         headless-server="true">
@@ -518,22 +311,17 @@
 		         <!-- define a library path -->
 		         <library-path dir="${framework.bin}" append="true">
 		            <include name="${framework.swc}" />
+		            <include name="${framework.assets.swc}" />
 		         </library-path>
-		         <library-path dir="${utils.bin}" append="true">
-		            <include name="${utils.swc}" />
-		         </library-path>
-		         <library-path dir="${components.bin}" append="true">
-		            <include name="${components.swc}" />
-		         </library-path>
-		         <library-path dir="${assets.bin}" append="true">
-		            <include name="${assets.swc}" />
-		         </library-path>
-		      	 <library-path dir="${thirdparty.dir}" append="true">
-		      		            <include name="${lib.swfaddress}" />
-		      		            <include name="${lib.mate}" />
-		      		            <include name="${lib.rmtp}" />
-		      		            <include name="${lib.as3gettext}" />
-		      		         </library-path>
+		      	
+		        <library-path dir="${thirdparty.dir}" append="true">
+		     	            <include name="${lib.swfaddress}" />
+		     	            <include name="${lib.mate}" />
+		     	            <include name="${lib.rmtp}" />
+		     	            <include name="${lib.as3gettext}" />
+		     	         </library-path>
+		     	         
+		      
 		      </mxmlc>
 		   </target>
 	
@@ -541,66 +329,43 @@
 	      <echo>Build User Module</echo>
 	       
 		      <mxmlc 
-		         file="${usermodule.src}/${usermodule.name}.mxml"
-		         output="${app.deploy}/modules/${usermodule.name.swf}.swf"
+		         file="${usermodule.src}/modules/${usermodule.name}.mxml"
+		         output="${app.deploy}/modules/${usermodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         optimize="true" 
+		      	incremental="true"
 		         warnings="true"
+		        load-externs="${framework.linkreport}" 
 		         headless-server="true">
 		         
 		         <!-- define a source path (will include all files with .css, .as, .mxml extensions) -->
 		         <source-path path-element="${usermodule.src}"/>
 		         <!-- define a library path -->
-		         <library-path dir="${framework.bin}" append="true">
-		            <include name="${framework.swc}" />
-		         </library-path>
-		         <library-path dir="${utils.bin}" append="true">
-		            <include name="${utils.swc}" />
-		         </library-path>
-		         <library-path dir="${components.bin}" append="true">
-		            <include name="${components.swc}" />
-		         </library-path>
-		         <library-path dir="${assets.bin}" append="true">
-		            <include name="${assets.swc}" />
-		         </library-path>
-		      	 <library-path dir="${thirdparty.dir}" append="true">
-		      		            <include name="${lib.swfaddress}" />
-		      		            <include name="${lib.mate}" />
-		      		            <include name="${lib.rmtp}" />
-		      		            <include name="${lib.as3gettext}" />
-		      	</library-path>
+		      	
+		      	<library-path dir="${framework.bin}" append="true">
+		      			            <include name="${framework.swc}" />
+		            <include name="${framework.assets.swc}" />
+		      			         </library-path>
+		      	
+		        <library-path dir="${thirdparty.dir}" append="true">
+		     	            <include name="${lib.swfaddress}" />
+		     	            <include name="${lib.mate}" />
+		     	            <include name="${lib.rmtp}" />
+		     	            <include name="${lib.as3gettext}" />
+		     	</library-path>
+		     	         
+		     	
 		      </mxmlc>
 		   </target>
 
-   <target name="build_dependencies">
-      <antcall target="build_assets_lib" />
-      <antcall target="build_utils_lib" />
-      <antcall target="build_component_lib" />
-      <antcall target="build_framework_libs" />
-   </target>
-   	
-	<target name="wrapper"> 
-	        <html-wrapper 
-	            title="" 
-	            file="visuclient.html" 
-	            height="100%" 
-	            width="100%" 
-	            application="${app.name}" 
-	            swf="${app.name}" 
-	            history="true" 
-	            express-install="true" 
-	            version-detection="true" 
-	            output="${app.deploy}"/> 
-	 </target> 
-
    <target name="build_all">
-   <!--   <antcall target="build_dependencies" /> -->
+      <antcall target="build_framework_libs" />
+      <antcall target="build_application" />
       <antcall target="build_user_module" />
       <antcall target="build_home_module" />
       <antcall target="build_session_module" />
       <antcall target="build_retrospection_module" />
       <antcall target="build_tutorat_module" />
-      <antcall target="build_application" />
    </target>
 </project>
