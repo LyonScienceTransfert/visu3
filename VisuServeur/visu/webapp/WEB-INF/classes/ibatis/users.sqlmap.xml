@@ -38,7 +38,7 @@
 		resultMap="userResult" cacheModel="cache">
 		<include refid="selectBase" />
 		FROM users 
-        ORDER BY profil, firstname, lastname
+        ORDER BY profil, id_user, firstname, lastname
 	</select>
 
 	<select id="getUser" parameterClass="int"
