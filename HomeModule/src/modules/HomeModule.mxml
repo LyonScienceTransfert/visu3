@@ -578,18 +578,28 @@
 					var listUsersPlateforme:ArrayCollection = new ArrayCollection()
 					var listUser:Array = event.listDate;
 					var nbrUser:int = listUser.length;
+					var listVoidUser:ArrayCollection = new ArrayCollection();
 					// get role the first user
 					var role:int = new User(listUser[0] as UserVO).role;
 					// set number user
 					var currentNumberUser:int = 1; 
+					var isVoidUser:Boolean;
 					for(var nUser:int = 0; nUser < nbrUser; nUser++)
 					{
+						isVoidUser = false;
 						var userVO:UserVO = listUser[nUser];
 						var user:User = new User(userVO);
 						// add user 
 						listUsersPlateforme.addItem(user);
 						var messageUser:MessageUser = new MessageUser();
 						messageUser.user = user;
+						var lastChar:String = user.firstname.charAt(user.firstname.length-1);
+						if(lastChar == "0" || lastChar == "1" || lastChar == "2" || lastChar == "3" || lastChar == "4" || 
+							lastChar == "5" || lastChar == "6" || lastChar == "7" || lastChar == "8" || lastChar == "9")
+						{
+							listVoidUser.addItem(messageUser);
+							isVoidUser = true;
+						}
 						// if the role same do ++ number 
 						if(user.role == role)
 						{
@@ -609,7 +619,15 @@
 						messageUser.setEditabled(editabled);
 						//messageUser.addEventListener(UserEvent.UPDATE_USER, onUpdateMessageUser);
 						messageUser.percentWidth = 100;
-						groupUser.addElement(messageUser)
+						if(!isVoidUser)
+						{
+							groupUser.addElement(messageUser)
+						}
+					}
+					// add void users
+					for each(var messageVoidUser:MessageUser in listVoidUser)
+					{
+						groupUser.addElement(messageVoidUser);
 					}
 					// set list users the plateforme
 					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
