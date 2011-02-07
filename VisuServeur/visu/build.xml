@@ -1,18 +1,25 @@
 <project name="visu" basedir="." default="deploy">
 
-    <property name="APPNAME"     value="visu"/>
+    <property name="red5.dir" location="/home/dcram/Applications/red5-0.8.0-java5"/>
+    <property name="APPNAME"     value="visu2"/>
+	<property name="swf.deploy.dir" location="/home/dcram/dev/ws-visu2/visu/deploy"/>
+	<property name="visuclient.swf" value="visuclient"/>
+	<property name="home.swf" value="HomeModule"/>
+	<property name="retrospection.swf" value="RetrospectionModule"/>
+	<property name="tutorat.swf" value="TutoratModule"/>
+	<property name="session.swf" value="SessionModule"/>
+	<property name="user.swf" value="UserModule"/>
 
-    <property name="src.dir"     value="src"/>
+	
+	<property name="src.dir"     value="src"/>
+    <property name="webapp.dir"  value="${red5.dir}/webapps/${APPNAME}" />
 
-    <property name="red5.dir"     value="/home/red5"/>
-    <property name="webapp.dir"   value="${red5.dir}/webapps/${APPNAME}" />
-
-    <property name="build.dir"   value="build"/>
+    <property name="build.dir"   value="build/classes"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
 
     <property name="jar.file"    value="${jar.dir}/${ant.project.name}.jar" />
-
+	
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
@@ -23,7 +30,6 @@
           <compilerarg value="-Xlint:unchecked" />
           <classpath>
             <pathelement path="${classpath}"/>
-            <pathelement location="${red5.dir}/red5.jar"/>
             <pathelement location="${red5.dir}/red5.jar"/>
             <fileset dir="webapp/WEB-INF/lib" includes="*.jar"/>
           </classpath>
@@ -45,7 +51,14 @@
       
       <copy file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
 
-      <copy file="../VisuClient/src/VisuClient.swf" todir="${webapp.dir}" />
+      <copy file="${swf.deploy.dir}/${visuclient.swf}.swf" todir="${webapp.dir}" />
+      <copy file="${swf.deploy.dir}/modules/${home.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.deploy.dir}/modules/${retrospection.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.deploy.dir}/modules/${tutorat.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.deploy.dir}/modules/${session.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.deploy.dir}/modules/${user.swf}.swf" todir="${webapp.dir}/modules" />
+    	
+    	<antcall target="clean-build"/>
     </target>
 
     <target name="clean-build" depends="clean,jar"/>
