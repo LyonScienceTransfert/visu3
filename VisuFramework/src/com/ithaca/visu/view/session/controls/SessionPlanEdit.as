@@ -65,7 +65,6 @@ package com.ithaca.visu.view.session.controls
 {
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
-	import com.ithaca.visu.model.ActivityElementType;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.Event;
@@ -234,80 +233,7 @@ package com.ithaca.visu.view.session.controls
 			activitiesChanged = true;
 			invalidateProperties();
 		}
-// KEYWORD	
-/*		public function addKeyword(value:String):void
-		{
-			var keyObj:Object = new Object();
-			keyObj.id_element = 0;
-			keyObj.data = value;
-			keyObj.type_element =  ActivityElementType.KEYWORD;
-			var activityElement:ActivityElement = new ActivityElement(keyObj);
-			var activity:Activity= this._activities.getItemAt(0) as Activity;
-			if(activity == null)
-			{
-				Alert.show("You havn't activity","message error");
-			}else
-			{
-				activity.getListActivityElement().addItem(activityElement);
-			}
-			var addActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
-			// keyword hasn't activity
-			addActivityElement.activity = activity;
-			addActivityElement.activityElement = activityElement;
-			this.dispatchEvent(addActivityElement);
-			
-			var keywordEdit:KeywordEdit = new KeywordEdit();
-			keywordEdit.textKeyword = value;
-			keywordEdit.activityElement = activityElement;
-			keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
-			keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
-			keywordGroup.addElement(keywordEdit);
-		}
-		// delete keyword 
-		private function onDeleteKeywordActivElement(event:SessionEditEvent):void
-		{
-			var deletingKeyword:ActivityElement = event.activityElement;				
-			// delet activityElement from activity
-			this.deleteActivityElement(deletingKeyword);
-			// delete activityElement from keywordGroup
-			var nbrElement:int = keywordGroup.numElements;
-			
-			for(var nElement:int =0; nElement < nbrElement; nElement++)
-			{
-				var documentEdit:KeywordEdit = keywordGroup.getElementAt(nElement) as KeywordEdit;
-				if(documentEdit.activityElement.id_element == deletingKeyword.id_element)
-				{
-					keywordGroup.removeElementAt(nElement);
-					var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
-					// keyword hasn't activity
-					deletedActivityElement.activity = null;
-					deletedActivityElement.activityElement = deletingKeyword;
-					this.dispatchEvent(deletedActivityElement);
-						return;
-				}
-			}
-		}
-		// update keyword
-		private function onUpdateKeywordActivElement(event:SessionEditEvent):void
-		{
-			var updatedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
-			// keyword hasn't activity
-			updatedActivityElement.activity = null;
-			updatedActivityElement.activityElement = event.activityElement;
-			this.dispatchEvent(updatedActivityElement);
-			
-		}*/
-// COMBOBOX ACTIVITY
-/*		private function setLabelComboboxActivity(item:Object):String
-		{
-			var activity:Activity = item as Activity;
-			if(activity != null)
-			{
-				return activity.title;
-			}
-			return "";
-		}*/
-		
+
 		private function onDeleteActivity(event:SessionEditEvent):void
 		{
 			var activityDeleting:Activity = event.activity;
