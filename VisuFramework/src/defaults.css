@@ -51,9 +51,17 @@ sessions|ActivityDetail
 {
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin");	
 }
+sessions|ActivityDetailB
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.ActivityDetailBSkin");	
+}
 sessions|SessionPlan
 {
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionPlanSkin");	
+}
+sessions|SessionPlanB
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionPlanBSkin");	
 }
 sessions|ActivityElementDetail
 {

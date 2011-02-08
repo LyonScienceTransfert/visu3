@@ -97,6 +97,9 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var documentGroup:Group;
 
+		[SkinPart("true")] 
+		public var keywordGroup:Group;
+		
 		[SkinPart("true")]
 		public var memoDisplay:RichEditableText;
 		
@@ -118,12 +121,14 @@ package com.ithaca.visu.view.session.controls
 		private var memoActivityElement:ActivityElement;
 		private var statementList:IList;
 		private var documentList:IList; 
+		private var keywordList:IList; 
 		
 		public function ActivityDetailEdit()
 		{
 			super();
 			statementList = new ArrayCollection();
 			documentList = new ArrayCollection();
+			keywordList = new ArrayCollection();
 		}
 		
 		override protected function partAdded(partName:String, instance:Object):void
@@ -161,6 +166,13 @@ package com.ithaca.visu.view.session.controls
 				trace("add documentGroup");
 				if (documentList.length > 0) 
 					addDocuments(documentList);
+			}
+
+			if (instance == keywordGroup)
+			{
+				trace("add keywordGroup");
+				if (keywordList.length > 0) 
+					addKeywords(keywordList);
 			}
 
 			if (instance == memoDisplay)
@@ -221,6 +233,20 @@ package com.ithaca.visu.view.session.controls
 				documentGroup.addElement(document);
 			}
 		}
+
+		protected function addKeywords(list:IList):void
+		{
+			for each( var el:ActivityElement in list)
+			{
+				var keywordEdit:KeywordEdit = new KeywordEdit();
+				keywordEdit.activityElement = el;
+				keywordEdit.textKeyword = el.data;
+				keywordEdit.setEditabled(this.editabled);
+				keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
+				keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
+				keywordGroup.addElement(keywordEdit);			
+			}
+		}
 		
 		protected function parseActivityElements():void
 		{
@@ -240,6 +266,9 @@ package com.ithaca.visu.view.session.controls
 						break;
 					case ActivityElementType.VIDEO:
 						documentList.addItem(el);
+						break;
+					case ActivityElementType.KEYWORD:
+						keywordList.addItem(el);
 						break;
 				}
 			}
@@ -472,6 +501,62 @@ package com.ithaca.visu.view.session.controls
 					return;
 				}
 			}
+			
+		}
+// KEYWORD	
+		public function addKeyword(value:String):void
+		{
+			var keyObj:Object = new Object();
+			keyObj.id_element = 0;
+			keyObj.data = value;
+			keyObj.type_element =  ActivityElementType.KEYWORD;
+			var activityElement:ActivityElement = new ActivityElement(keyObj);
+			activity.getListActivityElement().addItem(activityElement);
+			var addActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY_ELEMENT);
+			// keyword hasn't activity
+			addActivityElement.activity = activity;
+			addActivityElement.activityElement = activityElement;
+			this.dispatchEvent(addActivityElement);
+			
+			var keywordEdit:KeywordEdit = new KeywordEdit();
+			keywordEdit.textKeyword = value;
+			keywordEdit.activityElement = activityElement;
+			keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
+			keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
+			keywordGroup.addElement(keywordEdit);
+		}
+		// delete keyword 
+		private function onDeleteKeywordActivElement(event:SessionEditEvent):void
+		{
+			var deletingKeyword:ActivityElement = event.activityElement;				
+			// delet activityElement from activity
+			this.deleteActivityElement(deletingKeyword);
+			// delete activityElement from keywordGroup
+			var nbrElement:int = keywordGroup.numElements;
+			
+			for(var nElement:int =0; nElement < nbrElement; nElement++)
+			{
+				var documentEdit:KeywordEdit = keywordGroup.getElementAt(nElement) as KeywordEdit;
+				if(documentEdit.activityElement.id_element == deletingKeyword.id_element)
+				{
+					keywordGroup.removeElementAt(nElement);
+					var deletedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.DELETE_ACTIVITY_ELEMENT);
+					// keyword hasn't activity
+					deletedActivityElement.activity = null;
+					deletedActivityElement.activityElement = deletingKeyword;
+					this.dispatchEvent(deletedActivityElement);
+					return;
+				}
+			}
+		}
+		// update keyword
+		private function onUpdateKeywordActivElement(event:SessionEditEvent):void
+		{
+			var updatedActivityElement:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			// keyword hasn't activity
+			updatedActivityElement.activity = null;
+			updatedActivityElement.activityElement = event.activityElement;
+			this.dispatchEvent(updatedActivityElement);
 			
 		}
 // TITRE ACTIVITY

@@ -87,8 +87,8 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var activityGroup:Group;
 		
-		[SkinPart("true")] 
-		public var keywordGroup:Group;
+/*		[SkinPart("true")] 
+		public var keywordGroup:Group;*/
 		
 		[SkinPart("true")] 
 		public var buttonCreateSessionByTemplate:Button;
@@ -158,7 +158,7 @@ package com.ithaca.visu.view.session.controls
 				{
 					activityGroup.removeAllElements();
 				}
-				keywordGroup.removeAllElements();
+			//	keywordGroup.removeAllElements();
 				
 				for each (var activity:Activity in _activities)
 				{
@@ -169,7 +169,7 @@ package com.ithaca.visu.view.session.controls
 					activityDetailEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity);
 					activityGroup.addElement( activityDetailEdit );
 					
-					for each( var el:ActivityElement in activity.getListActivityElement())
+					/*for each( var el:ActivityElement in activity.getListActivityElement())
 					{
 						if (el.type_element == ActivityElementType.KEYWORD)
 						{
@@ -181,7 +181,7 @@ package com.ithaca.visu.view.session.controls
 							keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
 							keywordGroup.addElement(keywordEdit);
 						}
-					}
+					}*/
 				}
 				// set dataprovider for combobox
 				/*if(_activities.length > 0)
@@ -235,7 +235,7 @@ package com.ithaca.visu.view.session.controls
 			invalidateProperties();
 		}
 // KEYWORD	
-		public function addKeyword(value:String):void
+/*		public function addKeyword(value:String):void
 		{
 			var keyObj:Object = new Object();
 			keyObj.id_element = 0;
@@ -283,7 +283,7 @@ package com.ithaca.visu.view.session.controls
 					deletedActivityElement.activity = null;
 					deletedActivityElement.activityElement = deletingKeyword;
 					this.dispatchEvent(deletedActivityElement);
-					return;
+						return;
 				}
 			}
 		}
@@ -296,7 +296,7 @@ package com.ithaca.visu.view.session.controls
 			updatedActivityElement.activityElement = event.activityElement;
 			this.dispatchEvent(updatedActivityElement);
 			
-		}
+		}*/
 // COMBOBOX ACTIVITY
 /*		private function setLabelComboboxActivity(item:Object):String
 		{

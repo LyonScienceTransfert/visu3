@@ -46,7 +46,7 @@
 			}
 
 // KEYWORD
-			protected function addKeyword_focusInHandler(event:FocusEvent):void
+			/* protected function addKeyword_focusInHandler(event:FocusEvent):void
 			{
 				if(addKeyword.text == "entrer nouveau mot-clé"){
 					addKeyword.text = "";
@@ -60,9 +60,9 @@
 				if(addKeyword.text == ""){
 					this.setMessageKeyword();
 				}
-			}
+			} */
 
-			protected function addKeyword_keyUpHandler(event:KeyboardEvent):void
+			/* protected function addKeyword_keyUpHandler(event:KeyboardEvent):void
 			{
 				if(event.keyCode == Keyboard.ENTER && addKeyword.text != "")
 				{
@@ -74,14 +74,14 @@
 						stage.focus = addKeyword;
 					}
 				}
-			}
+			} */
 
-			private function setMessageKeyword():void
+			/* private function setMessageKeyword():void
 			{
 				addKeyword.text = "entrer nouveau mot-clé";
 				addKeyword.setStyle("fontStyle","italic");
 				addKeyword.setStyle("color","#BBBBBB");
-			}
+			} */
 			
 			protected function buttonAddActivity_clickHandler(event:MouseEvent):void
 			{
@@ -157,9 +157,9 @@
 		</s:Scroller>
 		
 <!-- KEYWORD -->	
-		<s:Group  width="100%" height="100">
+		<!--<s:Group  width="100%" height="100">-->
 <!-- LINE -->	
-			<s:Line left="1" right="1" width="100%" top="1">
+			<!--<s:Line left="1" right="1" width="100%" top="1">
 				<s:stroke>
 					<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 				</s:stroke>
@@ -171,16 +171,16 @@
 						<layout1:FlowLayout/>
 					</s:layout>
 				</s:Group>	
-			</s:Scroller>
+			</s:Scroller>-->
 <!-- ADD KEYWORD -->
-			<s:TextArea  id="addKeyword" height="22" right="2" bottom="2"
+			<!--<s:TextArea  id="addKeyword" height="22" right="2" bottom="2"
 						 fontStyle="italic" color="#BBBBBB"
 						  focusIn="addKeyword_focusInHandler(event)"
 						   focusOut="addKeyword_focusOutHandler(event)"
 						    keyUp="addKeyword_keyUpHandler(event)" textAlign.normalEditable="center" includeIn="disabled,normalEditable">
 				<s:text>entrer nouveau mot-clé</s:text>
 			</s:TextArea>
-		</s:Group>
+		</s:Group>-->
 		
 		
     </s:Group>

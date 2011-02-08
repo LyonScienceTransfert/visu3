@@ -22,6 +22,7 @@
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetail;
+			import com.ithaca.visu.controls.sessions.ActivityDetailB;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
 			import com.ithaca.visu.controls.timeline.TraceLine;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
@@ -749,7 +750,7 @@
 					// check if activityElement from current activity or activityElement is Keyword
 					var activityIdOfChoosenActivityElement:int = event.element.id_activity;
 					var currentActivityId:int = this.sessionPlan.getCurrentActivityId();
-					if(activityIdOfChoosenActivityElement == currentActivityId  || event.element.type_element == ActivityElementType.KEYWORD )
+					if(activityIdOfChoosenActivityElement == currentActivityId)
 					{
 						// shared activityElement
 						this.doShareActivityElement(event.element)
@@ -768,7 +769,7 @@
 				if( event.detail == Alert.YES )
 				{
 					var newActivityId:int = this._currentActivityElement.id_activity;
-					var activityDetail:ActivityDetail = this.sessionPlan.getActivityDetailById(newActivityId);
+					var activityDetail:ActivityDetailB = this.sessionPlan.getActivityDetailById(newActivityId);
 					// for interdir click on the button start the new activity
 					activityDetail.startButton.enabled = false;
 					this.shareStartActivity(activityDetail.activity);	
@@ -785,7 +786,7 @@
 				trace("TODO : start activity "+event.activity.id_activity + ":"+ event.activity.title);
 				// set button start activity enabled = false , 
 				// for interdir click again before end all of action on server side
-				var activityDetail:ActivityDetail = event.target as ActivityDetail;
+				var activityDetail:ActivityDetailB = event.target as ActivityDetailB;
 				activityDetail.startButton.enabled = false;
 				// shared start activity
 				this.shareStartActivity(event.activity);
@@ -1460,7 +1461,7 @@
 						</s:Group>
 					</s:Scroller>
 				</s:Group>
-				<sessions:SessionPlan  id="sessionPlan" height="100%" width="100%" 
+				<sessions:SessionPlanB  id="sessionPlan" height="100%" width="100%" 
 									  shareElement="shareActivityElement(event)"
 									  startActivity="startActivity(event)"
 									   includeIn="MainState"/>
