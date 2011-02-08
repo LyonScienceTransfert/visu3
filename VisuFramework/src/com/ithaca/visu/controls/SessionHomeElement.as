@@ -189,6 +189,7 @@ package com.ithaca.visu.controls
 					hourDisplay.text = hourformater.format(session.date_session);
 					
 					titleDisplay.text = session.theme;
+					titleDisplay.toolTip = titleDisplay.text;
 				}
 			}
 /*			if(!open && !recording && !enabled )
