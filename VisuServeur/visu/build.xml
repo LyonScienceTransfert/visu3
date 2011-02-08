@@ -21,7 +21,7 @@
 <!--
 	TODO: a "html-wrapper" task must be written in this script to produce the HTML index wrapper for swf modules.
 -->
-<project name="visu" basedir="." default="deploy">
+<project name="visu" basedir="." default="compile">
 
 	<!-- !!! LOCAL PROPERTIES, TO BE SET !!!  -->
 	<!-- Path to the Red5 server -->
@@ -49,9 +49,6 @@
 
     <property name="jar.file"    value="${jar.dir}/${ant.project.name}.jar" />
 	
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
@@ -70,8 +67,21 @@
         <jar destfile="${jar.file}" basedir="${classes.dir}" />
     </target>
 
+	<target name="deploy-client">
+      <copy file="${swf.modules.dir}/${visuclient.swf}.swf" todir="${webapp.dir}" />
+      <copy file="${swf.modules.dir}/modules/${home.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.modules.dir}/modules/${retrospection.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.modules.dir}/modules/${tutorat.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.modules.dir}/modules/${session.swf}.swf" todir="${webapp.dir}/modules" />
+      <copy file="${swf.modules.dir}/modules/${user.swf}.swf" todir="${webapp.dir}/modules" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+	
 	<!-- Deploy the visu server jar and clien swf files to the Red5 server -->
-    <target name="deploy" depends="jar">
+    <target name="deploy-server" depends="jar">
 
       <mkdir dir="${webapp.dir}" />
 
@@ -80,19 +90,10 @@
       </copy>
       
       <copy file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
-
-      <copy file="${swf.modules.dir}/${visuclient.swf}.swf" todir="${webapp.dir}" />
-      <copy file="${swf.modules.dir}/modules/${home.swf}.swf" todir="${webapp.dir}/modules" />
-      <copy file="${swf.modules.dir}/modules/${retrospection.swf}.swf" todir="${webapp.dir}/modules" />
-      <copy file="${swf.modules.dir}/modules/${tutorat.swf}.swf" todir="${webapp.dir}/modules" />
-      <copy file="${swf.modules.dir}/modules/${session.swf}.swf" todir="${webapp.dir}/modules" />
-      <copy file="${swf.modules.dir}/modules/${user.swf}.swf" todir="${webapp.dir}/modules" />
     	
-    	<antcall target="clean-build"/>
+    	<antcall target="clean"/>
     </target>
-
-    <target name="clean-build" depends="clean,jar"/>
-
-    <target name="main" depends="compile"/>
+	
+    <target name="deploy-client-and-server" depends="deploy-server,deploy-client"/>
 
 </project>
