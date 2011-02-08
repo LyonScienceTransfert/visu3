@@ -94,15 +94,14 @@
 	name=titleDisplay, type=spark.components.supportClasses.TextBase, required=false
 	name=hourDisplay, type=spark.components.supportClasses.TextBase, required=false
 	-->
-	<s:Button id="openButton" top="0" left="0" right="0" bottom="0"/>
+	<s:Button id="openButton" top="0" right="2" bottom="0" left="0"/>
 	<s:Label id="hourDisplay" 
 		top="5" left="5" fontWeight="bold"
 		mouseChildren="false" mouseEnabled="false"
 		/>
 	<s:Label id="titleDisplay" 
-		top="5" left="45"
-		mouseChildren="false" mouseEnabled="false"
-		/>
+		top="5" left="45" right="3" maxDisplayedLines="1"
+		mouseChildren="false" mouseEnabled="false"/>
 	<s:Scroller includeIn="open" top="20" bottom="20" left="5" right="5" itemDestructionPolicy="auto">		
 		<s:DataGroup id="users" top="0" bottom="0" left="0" right="0" minHeight="300">
 			<s:layout>
@@ -112,7 +111,7 @@
 	</s:Scroller>
 	<s:Group includeIn="open"
 			 height="40" left="0" right="0" bottom="25">	
-		<s:Rect top="0" left="0" right="0" bottom="0" radiusX="5">
+		<s:Rect top="0" left="0" right="2" bottom="0" radiusX="5">
 			<s:fill>
 				<s:SolidColor color="#000" alpha=".5" />
 			</s:fill>
