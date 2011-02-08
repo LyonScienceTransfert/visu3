@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<componentPackages>
-   <component id="AdvancedTextInput" class="fr.kapit.flex.ui.spark.advancedTextInput.AdvancedTextInput"/>
-   <component id="AutoComplete" class="fr.kapit.flex.ui.spark.autoComplete.AutoComplete"/>
-   <component id="AutoCompleteEvent" class="fr.kapit.flex.ui.spark.autoComplete.event.AutoCompleteEvent"/>
-   <component id="DataFilteringTextInput" class="fr.kapit.flex.ui.spark.dataFilteringTextInput.DataFilteringTextInput"/>
-   <component id="DataFilteringEvent" class="fr.kapit.flex.ui.spark.dataFilteringTextInput.event.DataFilteringEvent"/>
-   <component id="StatusBar" class="fr.kapit.flex.ui.spark.statusBar.StatusBar"/>
-</componentPackages>
