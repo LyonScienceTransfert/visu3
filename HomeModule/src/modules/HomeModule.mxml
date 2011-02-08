@@ -203,7 +203,8 @@
 						var listSession:ArrayCollection = event.listSession;
 						this.listSessionView = new ArrayCollection();
 						this.sessionGroup.removeAllElements();
-						var vb:VGroup = new VGroup();		
+						var vb:VGroup = new VGroup();	
+						vb.percentWidth = 100;
 						var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
 						var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
 						if(listSession != null)
@@ -222,7 +223,8 @@
 								{
 									var session:Session = listSession[nSession];
 									var sessionView:SessionHomeElement = new SessionHomeElement();
-									sessionView.width = navigateurDay.width - navigateurDay.rightButton.width;
+									sessionView.percentWidth = 100;
+/* 									sessionView.width = navigateurDay.width - navigateurDay.rightButton.width; */
 									// check connected users
 									session.checkConnectedUsers(listConnectedUser);
 									sessionView.session = session;
