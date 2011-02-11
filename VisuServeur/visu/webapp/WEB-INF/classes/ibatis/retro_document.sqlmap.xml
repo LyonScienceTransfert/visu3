@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="rd">
+	
+	<typeAlias alias="retroDocument" type="com.lyon2.visu.domain.model.RetroDocument"/>	
+	
+	<cacheModel id="cache" type="LRU" readOnly="false">
+		<flushInterval hours="24"/>
+		<flushOnExecute statement="rd.delete"/>
+		<flushOnExecute statement="rd.insert"/>
+		<flushOnExecute statement="rd.update"/>
+		<property name="cache-size" value="1000"/>
+	</cacheModel>
+
+	<resultMap class="retroDocument" id="retroDocument-result-map">
+		<result column="id_retro_document" property="documentId"  />
+        <result column="id_owner" property="ownerId"  />
+        <result column="id_session" property="sessionId"  />
+        <result column="creation_date" property="creationDate"  />
+        <result column="last_modification_date" property="lastModified"  />
+		<result column="title" property="title" />
+		<result column="description" property="description" />
+		<result column="xml" property="xml" />
+	</resultMap>
+
+	<select id="getDocument" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document
+	</select>
+
+	<select id="getDocumentById" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document WHERE id_retro_document=#value#
+	</select>
+
+	<select id="getDocumentByOwnerIdAndSessionId" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document WHERE id_owner=#ownerId# AND id_session=#sessionId#
+	</select>
+
+	<select id="getDocumentByOwner" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document WHERE id_owner=#value#
+	</select>
+	
+	<delete id="delete" parameterClass="retroDocument">
+		DELETE from retro_document WHERE id_retro_document = #id:INTEGER#
+	</delete>
+	
+	<select id="getInviteesByDocumentId">
+		SELECT id_user FROM retro_document_access WHERE id_retro_document=#value#
+	</select>
+
+	<select id="getDocumentsByInviteeId">
+		SELECT id_retro_document 
+		FROM retro_document_access 
+		WHERE id_user=#value#
+	</select>
+	
+	<delete id="deleteDocument">
+		DELETE from retro_document WHERE id_retro_document = #id:INTEGER#;
+		DELETE from retro_document_access
+		WHERE id_retro_document = #id:INTEGER#;
+	</delete>
+
+	<delete id="deleteInvitation">
+		DELETE from retro_document_access 
+		WHERE id_retro_document = #documentId:INTEGER#
+		AND id_user = #userId:INTEGER#
+	</delete>
+
+	<insert id="insertInvitation">
+		INSERT INTO retro_document_access 
+		SET id_retro_document=#documentId:INTEGER#
+			id_user=#userId:INTEGER#
+	</insert>
+	
+
+		
+		
+		<insert id="insertDocument" parameterClass="retroDocument">
+		INSERT INTO retro_document
+		SET 
+		    id_owner = #ownerId#,
+		    id_session = #sessionId#,
+		    creation_date = #creationDate#,
+		    last_modification_date = #lastModified#,
+		    title = #title#,
+		    description = #description#,
+		    xml = #xml#
+
+		<selectKey keyProperty="id" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<update id="updateDocument" parameterClass="retroDocument">
+		UPDATE retro_document
+			SET 
+		    id_owner = #ownerId#,
+		    id_session = #sessionId#,
+		    creation_date = #creationDate#,
+		    last_modification_date = #lastModified#,
+		    title = #title#,
+		    description = #description#,
+		    xml = #xml#
+		where id_retro_document = #id:INTEGER#
+	</update>
+	
+</sqlMap>
