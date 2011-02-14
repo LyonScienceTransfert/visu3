@@ -94,6 +94,8 @@ import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.SessionUser;
+import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.Application;
  
@@ -173,11 +175,12 @@ public class SessionInfo
         IClient client = conn.getClient();
 		User user = (User)client.getAttribute("user");
 		Integer roleUser = app.getRoleUser(user.getProfil());
+		List<Session> listSession = null;
 		// logged user responsable or admin
 		if((roleUser == 2) || (roleUser == 1)){
 			try
 			{
-				return (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlans");
+				listSession = (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlans");
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des sessions" + e);
 			}			
@@ -187,13 +190,125 @@ public class SessionInfo
 			Integer idUser = user.getId_user();
 			try
 			{
-				return (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlansByIdUser",idUser);
+				listSession =  (List<Session>)app.getSqlMapClient().queryForList("sessions.getSessionsAndPlansByIdUser",idUser);
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des session and plans for idUser = {}" + e,idUser.toString());
 			}			
 		}  
-        return null;
+		for(Session session : listSession)
+		{
+			List<User> listUser = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",session.getId_session());
+			session.setListUser(listUser);
+			log.warn("Size of the users  = {}",listUser.size());	
+		}
+        return listSession;
     }
+	
+	@SuppressWarnings("unchecked")
+	public Session addSessionUser(IConnection conn, SessionUser sessionUser) throws SQLException
+	{
+		log.warn("======== addSessionUser ");
+		log.warn("addSessionUser {}", sessionUser.toString());
+		Session session = null;
+		app.getSqlMapClient().insert("session_users.insert",sessionUser);
+		Integer sessionId = sessionUser.getId_session();
+		session =  (Session)app.getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+		List<User> listUser = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",sessionId);
+		session.setListUser(listUser);
+		return session;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Session removeSessionUser(IConnection conn, SessionUser sessionUser) throws SQLException
+	{
+		log.warn("======== remoteSessionUser ");
+		log.warn("remoteSessionUser {}", sessionUser.toString());
+		Session session = null;
+		app.getSqlMapClient().delete("session_users.delete",sessionUser);
+		Integer sessionId = sessionUser.getId_session();
+		session =  (Session)app.getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+		List<User> listUser = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",sessionId);
+		session.setListUser(listUser);
+		return session;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Session updateSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser) throws SQLException
+	{
+		log.warn("======== updateSession ");
+		try
+		{
+			app.getSqlMapClient().update("sessions.update",sessionWithoutListUser);
+			log.warn("updated= {} ",sessionWithoutListUser.toString());
+		} catch (Exception e) {
+			log.error("Probleme lors du update des sessions" + e);
+		}
+		
+		Integer sessionId = sessionWithoutListUser.getId_session();
+		log.warn("sessionId = {}",sessionId.toString());
+		List<User> listUser = null;
+		Session session = null;
+		try
+		{
+			session =  (Session)app.getSqlMapClient().queryForObject("sessions.getSession",sessionId);
+			listUser = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des session " + e);
+		}	
+		session.setListUser(listUser);
+		return session;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Session addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, int userId) throws SQLException
+	{
+		log.warn("======== addSession ");
+		int sessionId = 0;
+		try
+		{
+			sessionId = (Integer)app.getSqlMapClient().insert("sessions.insert",sessionWithoutListUser);
+			log.warn("updated= {} ",sessionWithoutListUser.toString());
+		} catch (Exception e) {
+			log.error("Probleme lors du update des sessions" + e);
+		}
+		log.warn("sessionId = {}",sessionId);
+		if(userId != 0)
+		{
+			SessionUser sessionUser = new SessionUser();
+			sessionUser.setId_session(sessionId);
+			sessionUser.setMask(0);
+			sessionUser.setId_user(userId);
+			log.warn("sessionUser = {}",sessionUser.toString());
+			app.getSqlMapClient().insert("session_users.insert",sessionUser);			
+		}
+		
+		List<User> listUser = null;
+		sessionWithoutListUser.setId_session(sessionId);
+		try
+		{
+			listUser = (List<User>)app.getSqlMapClient().queryForList("users.getUsersFromSession",sessionId);			
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des session " + e);
+		}	
+			
+		// clone the session
+		Session session = new Session();
+		session.setDate_session(sessionWithoutListUser.getDate_session());
+		session.setDescription(sessionWithoutListUser.getDescription());
+		session.setDuration_session(sessionWithoutListUser.getDuration_session());
+		session.setId_currentActivity(0);
+		session.setId_session(sessionId);
+		session.setId_user(sessionWithoutListUser.getId_user());
+		session.setIsModel(sessionWithoutListUser.getIsModel());
+		session.setStart_recording(sessionWithoutListUser.getStart_recording());
+		session.setStatus_session(sessionWithoutListUser.getStatus_session());
+		session.setTheme(sessionWithoutListUser.getTheme());
+		
+		log.warn("Size of the users  = {}",listUser.size());	
+		session.setListUser(listUser);
+		return session;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
