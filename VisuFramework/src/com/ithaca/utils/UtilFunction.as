@@ -80,7 +80,7 @@ package com.ithaca.utils
 			return true;
 		}
 		
-		public static function getLabelDate(date:Date):String
+		public static function getLabelDate(date:Date,separateur:String):String
 		{
 			var day:int = date.getDate();
 			var dayString:String = day.toString();
@@ -88,8 +88,17 @@ package com.ithaca.utils
 			var mount:int = date.getMonth() +1;
 			var mountString:String = mount.toString();
 			if(mount < 10){	mountString = "0"+mountString;};
-			var result:String = date.getUTCFullYear().toString()+"/"+mountString+"/"+dayString;
+			var result:String = date.getUTCFullYear().toString()+separateur+mountString+separateur+dayString;
 			return result;
+		}
+		
+		public static function getHeurMinDate(date:Date):String
+		{
+			var heureString:String = date.getHours().toString();
+			var  heure:Number = date.getHours(); if(heure < 10 ){heureString = "0"+heureString;}
+			var minuteString:String = date.getMinutes().toString();
+			var  minute:Number = date.getMinutes(); if(minute < 10 ){minuteString = "0"+minuteString;}
+			return heureString+":"+minuteString;
 		}
 		
 		public static function checkVideoId(value:String):Boolean
