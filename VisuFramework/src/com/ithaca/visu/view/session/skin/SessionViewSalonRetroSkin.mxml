@@ -25,8 +25,8 @@
 					left="2" right="2" top="1" bottom="1">
 				<s:fill>
 					<s:LinearGradient rotation="90">
-						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
+						<s:GradientEntry color="0xFFFFFF" id="gradientEntryFrom"/>
+						<s:GradientEntry color="0xD8D8D8"  id="gradientEntryTo"/>
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
