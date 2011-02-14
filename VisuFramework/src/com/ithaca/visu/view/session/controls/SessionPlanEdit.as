@@ -73,6 +73,7 @@ package com.ithaca.visu.view.session.controls
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Alert;
+	import mx.events.CloseEvent;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	
@@ -275,17 +276,35 @@ package com.ithaca.visu.view.session.controls
 		
 		public function onMouseClickButtonCreateSessionByTemplate(event:MouseEvent):void
 		{
-			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
-			this.dispatchEvent(sessionAddEvent);
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous créer une nouvelle séance à partir de ce plan de séance ?",
+				"Confirmation", Alert.YES|Alert.NO, null, createSessionByTemplateConformed); 
 		}
-		
+		private function createSessionByTemplateConformed(event:CloseEvent):void{
+			if( event.detail == Alert.YES)
+			{
+				var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+				this.dispatchEvent(sessionAddEvent);
+			}
+		}
+
 		public function onMouseClickButtonExportSession(event:MouseEvent):void
 		{
-			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
-			sessionAddEvent.isModel = true;
-			this.dispatchEvent(sessionAddEvent);
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous rendre public ce plan de séance ?",
+				"Confirmation", Alert.YES|Alert.NO, null, exportSessionConformed); 
 		}
 		
+		private function exportSessionConformed(event:CloseEvent):void{
+			if( event.detail == Alert.YES)
+			{
+				var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+				sessionAddEvent.isModel = true;
+				this.dispatchEvent(sessionAddEvent);
+			}
+		}
 		
 
 // DELETE ACTIVITY ELEMENT FROM ACTIVITY
