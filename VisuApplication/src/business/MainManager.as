@@ -2,12 +2,9 @@ package business
 {
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
-import com.ithaca.traces.view.ObselButton;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
-import com.ithaca.visu.events.TraceLineEvent;
-import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.model.Model;
@@ -18,7 +15,6 @@ import com.ithaca.visu.model.vo.SessionUserVO;
 import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
 import com.ithaca.visu.ui.utils.ColorEnum;
-import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
 
