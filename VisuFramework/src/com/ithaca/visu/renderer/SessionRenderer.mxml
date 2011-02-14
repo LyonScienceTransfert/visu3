@@ -52,7 +52,7 @@
 								dateSession = data.getSessionDateStartRecording();
 							break;
 						}
-						messageDate.text = UtilFunction.getLabelDate(dateSession);
+						messageDate.text = UtilFunction.getLabelDate(dateSession,"/");
 					}
 				}
 			}
