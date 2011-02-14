@@ -315,6 +315,8 @@ package com.ithaca.visu.view.session.controls
 		{
 			if( _session == value) return;
 			_session = value;
+			// set users of the session
+			this.users = value.participants;
 			sessionChanged = true;
 			invalidateProperties();
 		}
