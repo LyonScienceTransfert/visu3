@@ -1,14 +1,17 @@
 package com.ithaca.visu.view.session
 {
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.model.User;
 	
 	import mx.controls.Image;
+	import mx.graphics.GradientEntry;
 	
 	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
 	
+
 	public class SessionViewSalonRetro extends SkinnableComponent
-	{
+	{	
 		[SkinPart("true")]
 		public var themeTitleLabel:Label;
 		
@@ -29,6 +32,12 @@ package com.ithaca.visu.view.session
 		
 		[SkinPart("true")]
 		public var ownerImage:Image;
+		
+		[SkinPart("true")]
+		public var gradientEntryFrom:GradientEntry;
+		
+		[SkinPart("true")]
+		public var gradientEntryTo:GradientEntry;
 		
 		private var _date:Date;
 		private var _theme:String;
@@ -125,10 +134,7 @@ package com.ithaca.visu.view.session
 			{
 				dateChange = false;
 				
-				dateLabel.text = dateRecorded.getDate().toString()+"-"+
-					(dateRecorded.getMonth() + 1).toString()+"-"+dateRecorded.getFullYear().toString()+
-					" à "+	 
-					dateRecorded.getHours().toString()+":"+dateRecorded.getMinutes().toString();
+				dateLabel.text = UtilFunction.getLabelDate(this.dateRecorded,"-")+" à "+ UtilFunction.getHeurMinDate(this.dateRecorded);
 			}
 			if (userChange)
 			{
@@ -139,5 +145,20 @@ package com.ithaca.visu.view.session
 				
 			}
 		}
+		
+		public function setSelected(value:Boolean):void
+		{
+			if(value)
+			{
+				gradientEntryFrom.color = new uint("0xcedbef");
+				gradientEntryTo.color = new uint("0x70b2ee");
+			}
+			else
+			{
+				gradientEntryFrom.color = new uint("0xFFFFFF");
+				gradientEntryTo.color = new uint("0xD8D8D8");
+			}
+		}
+
 	}
 }
