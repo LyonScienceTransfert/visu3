@@ -69,6 +69,7 @@ package  com.ithaca.visu.model
 	import com.ithaca.traces.view.ObselMarker;
 	import com.ithaca.traces.view.ObselSessionOut;
 	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
@@ -113,6 +114,7 @@ package  com.ithaca.visu.model
 		private var _userIdClient:String;
 		private var _currentSession:Session = null;
 		private var _tutoratModule:VisuModuleBase;
+		private var _sessionModule:VisuModuleBase;
 		private var _retroModule:VisuModuleBase;
 		private var _userModule:VisuModuleBase;
 		private var _homeModule:VisuModuleBase = null;
@@ -394,6 +396,19 @@ package  com.ithaca.visu.model
 		public function getCurrentTutoratModule():VisuModuleBase
 		{
 			return _tutoratModule;
+		}
+		
+		/**
+		 * current session module, only for debugging
+		 */
+		public function setCurrentSessionModule(value:VisuModuleBase):void
+		{
+			_sessionModule = value;
+		}
+		
+		public function getCurrentSessionModule():VisuModuleBase
+		{
+			return _sessionModule;
 		}
 		
 		/**
