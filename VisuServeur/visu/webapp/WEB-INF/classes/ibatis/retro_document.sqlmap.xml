@@ -3,7 +3,7 @@
 
 <sqlMap namespace="rd">
 	
-	<typeAlias alias="retroDocument" type="com.lyon2.visu.domain.model.RetroDocument"/>	
+	<typeAlias alias="retroDocument" type="com.ithaca.domain.model.RetroDocument"/>	
 	
 	<cacheModel id="cache" type="LRU" readOnly="false">
 		<flushInterval hours="24"/>
