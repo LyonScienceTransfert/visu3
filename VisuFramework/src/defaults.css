@@ -157,6 +157,11 @@ sessionView|SessionViewSalonRetro
 	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonRetroSkin");
 }
 
+sessionView|SessionViewSalonSession
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonSessionSkin");
+}
+
 ws|Form
 {
 	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormSkin" );
