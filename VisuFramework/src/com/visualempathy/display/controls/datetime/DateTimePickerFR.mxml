@@ -76,9 +76,9 @@
 		/>
 	<mx:Spacer width="20"/>
 	<mx:NumericStepper id="hours" minimum="1" maximum="24" stepSize="1" textAlign="center"
-		 focusIn="hours_focusInHandler(event)"
+		 focusIn="hours_focusInHandler(event)" change="handleFocusOut()"
 		 />
 	<mx:Label text=":" textAlign="center"/>
 	<mx:NumericStepper id="minutes" minimum="0"  maximum="55" stepSize="{minuteIncrement}" textAlign="center"
-					     focusIn="minutes_focusInHandler(event)"/>
+					     focusIn="minutes_focusInHandler(event)" change="handleFocusOut()"/>
 </mx:HBox>
