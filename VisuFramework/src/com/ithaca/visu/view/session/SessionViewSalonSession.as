@@ -207,7 +207,7 @@ package com.ithaca.visu.view.session
 				imageUser.height = IMAGE_USER_SESSION_HEIGHT;
 				imageUser.width = IMAGE_USER_SESSION_WIDTH;					
 				imageUser.source = avatarUserUrl;
-				imageUser.toolTip = user.firstname + user.lastname;
+				imageUser.toolTip = user.firstname +" "+ user.lastname;
 				groupUserSession.addElement(imageUser);
 			}		
 		}
