@@ -82,7 +82,7 @@
 							<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 						</s:stroke>
 					</s:Line>
-					<s:Label left="4" right="2"  text="Utilisateurs :"/>
+					<s:Label left="4" right="2"  text="Utilisateurs prévue:"/>
 					<s:Group left="4" right="2" top="15" bottom="2">
 						<s:Scroller left="1" right="1" top="1" bottom="1">
 							<s:Group id="groupUserSession" bottom.sessionWill="0" bottom.sessionWas="0" left.sessionWill="0" left.sessionWas="0" right.sessionWill="0" right.sessionWas="0" top.sessionWill="0" top.sessionWas="0" bottom.model="0" left.model="0" right.model="0" top.model="0">
