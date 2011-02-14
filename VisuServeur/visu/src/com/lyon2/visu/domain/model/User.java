@@ -374,7 +374,7 @@ public class User
         StringBuffer out = new StringBuffer("class User {");
         out.append("id_user = " + this.id_user + ", ");
         out.append("lastname = " + this.lastname + ", ");
-        out.append("firstname = " + this.firstname + "}");
+        out.append("firstname = " + this.firstname + ", ");
         out.append("message = " + this.message + "}");
         return out.toString();
     }    
