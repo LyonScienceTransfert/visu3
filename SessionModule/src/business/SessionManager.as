@@ -13,6 +13,7 @@ package business
 	import com.ithaca.visu.model.vo.ActivityVO;
 	import com.ithaca.visu.model.vo.SessionUserVO;
 	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
@@ -63,7 +64,19 @@ package business
 			var ar:Array = []
 			for each (var sessionVO:SessionVO in value)
 			{
+				if(sessionVO.listUser != null)
+				{
+					var t:int = 1;
+				}
 				var session:Session = new Session(sessionVO);
+				var listUserVO:Array = sessionVO.listUser;
+				var listUser:ArrayCollection = new ArrayCollection();
+				for each(var userVO:UserVO in listUserVO)
+				{
+					var user:User = new User(userVO);
+					listUser.addItem(user);
+				}
+				session.participants = listUser;
 				ar.push(session);   
 			}
 			sessions = ar;
@@ -116,10 +129,10 @@ package business
 			}
 		}
 		
-		public function onUpdateSession(sessionVO:SessionVO):void
+/*		public function onUpdateSession(sessionVO:SessionVO):void
 		{
 			model.clearDateSession();
-		}
+		}*/
 		public function onUpdateActivity(activityVO:ActivityVO):void
 		{
 			
@@ -185,13 +198,13 @@ package business
 			this.dispatcher.dispatchEvent(addSession);
 			if(!session.isModel){
 				// add logged user to the new session
-				var sessionUserVO:SessionUserVO = new SessionUserVO();
+/*				var sessionUserVO:SessionUserVO = new SessionUserVO();
 				sessionUserVO.id_session = sessionVO.id_session;
 				sessionUserVO.id_user = model.getLoggedUser().id_user;
 				sessionUserVO.mask = 0;
 				var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
 				sessionUserEvent.newSessionUser = sessionUserVO;
-				this.dispatcher.dispatchEvent(sessionUserEvent);
+				this.dispatcher.dispatchEvent(sessionUserEvent);*/
 				// clear liste date the session
 				model.clearDateSession();
 			}
@@ -230,15 +243,26 @@ package business
 			
 		}
 // USER
-		public function onAddSessionUser(sessionUserVO:SessionUserVO):void
+		public function onUpdateSession(sessionVO:SessionVO):void
 		{
 			model.clearDateSession();	
+			// update user fo the session 
+			var updateSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_UPDATED_SESSION);
+			var session:Session = new Session(sessionVO);
+			updateSession.session = session;
+			this.dispatcher.dispatchEvent(updateSession);
 		}
 
-		public function onRemoveSessionUser(value:int):void
+/*		public function onRemoveSessionUser(sessionVO:SessionVO):void
 		{
 			model.clearDateSession();	
-		}
+			// update user fo the session 
+			var updateSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_UPDATED_SESSION);
+			var session:Session = new Session(sessionVO);
+			updateSession.session = session;
+			this.dispatcher.dispatchEvent(updateSession);
+			
+		}*/
 		public function onLoadListUsers(value:Array):void
 		{
 			var ar:Array = []
