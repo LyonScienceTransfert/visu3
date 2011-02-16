@@ -1,4 +1,4 @@
-package com.lyon2.visu.service;
+package com.ithaca.service;
 
 import java.util.Collection;
 

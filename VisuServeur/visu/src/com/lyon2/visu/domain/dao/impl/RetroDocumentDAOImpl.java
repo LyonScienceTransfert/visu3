@@ -11,6 +11,7 @@ import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
+import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.RetroDocument;
 import com.lyon2.visu.domain.dao.RetroDocumentDAO;
 import com.lyon2.visu.domain.model.User;
@@ -23,7 +24,7 @@ public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroD
 	public Collection<RetroDocument> getRetroDocumentsByOwnerAndBySession (
 			Integer ownerId, Integer sessionId)  throws SQLException {
 		return (List<RetroDocument>) getSqlMapClient().queryForList(
-				"rd.getDocument", 
+				"rd.getDocumentsByOwnerIdAndSessionId", 
 				createParams("ownerId",ownerId, "sessionId",sessionId));
 	}
 
@@ -45,7 +46,7 @@ public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroD
 		doc.setOwnerId(ownerId);
 		
 		doc.setDocumentId((Integer)getSqlMapClient().insert(
-				"rd.createDocument", 
+				"rd.insertDocument", 
 				doc));
 		
 		return doc;
@@ -63,32 +64,37 @@ public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroD
 	}
 
 	public boolean deleteRetroDocument(Integer documentId)  throws SQLException{
-		return getSqlMapClient().delete("rd.delete", documentId) == 1;
+		SqlMapClient sqlMapClient = getSqlMapClient();
+		sqlMapClient.startTransaction();
+		boolean b = sqlMapClient.delete("rd.deleteDocument", documentId) == 1
+				&& sqlMapClient.delete("rd.deleteAllInvitations", documentId) == 1;
+		sqlMapClient.commitTransaction();
+		return b;
 	}
 
 	public Collection<RetroDocument> getRetroDocumentsByOwner(Integer ownerId)  throws SQLException {
 		return (Collection<RetroDocument>) getSqlMapClient().queryForList(
-				"rd.getDocumentByOwnerId", 
+				"rd.getDocumentsByOwner", 
 				ownerId);
 	}
 
-	public boolean createInvitee(Integer documentId, Integer inviteeId)
+	public void createInvitee(Integer documentId, Integer inviteeId)
 			throws SQLException {
-		throw new UnsupportedOperationException("Not yet implemented");
+		getSqlMapClient().insert("rd.insertInvitation", createParams("documentId", documentId, "userId", inviteeId));
 	}
 
 	public boolean removeInvitee(Integer documentId, Integer inviteeId)
 			throws SQLException {
-		throw new UnsupportedOperationException("Not yet implemented");
+		return getSqlMapClient().delete("rd.deleteInvitation", createParams("documentId", documentId, "userId", inviteeId)) == 1;
 	}
 
-	public Collection<User> getInviteeList(Integer documentId)
+	public Collection<String> getInviteeList(Integer documentId)
 			throws SQLException {
-		throw new UnsupportedOperationException("Not yet implemented");
+		return getSqlMapClient().queryForList("rd.getInviteesByDocumentId", documentId);
 	}
 
 	public Collection<RetroDocument> getRetroDocumentIdByInviteeId(
 			Integer inviteeId) throws SQLException {
-		throw new UnsupportedOperationException("Not yet implemented");
+		return getSqlMapClient().queryForList("rd.getDocumentsByInviteeId", inviteeId);
 	}
 }
