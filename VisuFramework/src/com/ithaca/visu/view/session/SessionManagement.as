@@ -79,11 +79,13 @@ package com.ithaca.visu.view.session
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.events.FlexEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	
 	import spark.components.Button;
+	import spark.components.Group;
 	import spark.components.List;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
@@ -97,7 +99,8 @@ package com.ithaca.visu.view.session
 		public var filter:SessionFilters;
 		
 		[SkinPart("true")]
-		public var sessionsList:List;
+		public var sessionsList:Group;
+/*		public var sessionsList:List;*/
 		
 		[SkinPart("true")]
 		public var addSessionButton:Button;
@@ -129,27 +132,73 @@ package com.ithaca.visu.view.session
 				_sessions = value;
 				sessionCollection = new ArrayCollection( _sessions);
 				//sessionCollection.filterFunction = userFilterFunction;
-				
-				sessionsList.dataProvider = sessionCollection;
+				var nbrSession:int = sessionCollection.length;
+				for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
+				{
+					var session:Session = sessionCollection.getItemAt(nSession) as Session;
+					var sessionView:SessionViewSalonSession = createSessionView(session);
+					sessionsList.addElement(sessionView);
+				}
+			//	sessionsList.dataProvider = sessionCollection;
 				dispatchEvent( new Event("update") );
 				
-				var showFirstSession:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE);
+/*				var showFirstSession:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE);
 				showFirstSession.newIndex = 0;
-				sessionList_indexChangeHandler(showFirstSession);
+				sessionList_indexChangeHandler(showFirstSession);*/
+				onSessionViewClick();
 			}
 		} 
+		
+		private function createSessionView(session:Session):SessionViewSalonSession
+		{
+			var sessionView:SessionViewSalonSession = new SessionViewSalonSession();
+			sessionView.session = session;
+			sessionView.theme = session.theme;
+			if(session.isModel){
+				sessionView.setStatusSession(SessionFilterEnum.SESSION_PLAN);
+				sessionView.dateRecorded = session.date_session;
+			}else
+			{
+				var statusSession:int= -1;
+				switch (session.statusSession)
+				{
+					case 0:
+						statusSession = SessionFilterEnum.SESSION_WILL;
+						sessionView.dateRecorded = session.date_session;
+						break;
+					case 1:
+						statusSession = SessionFilterEnum.SESSION_WAS;
+						sessionView.dateRecorded = session.date_start_recording;
+						break;
+				}
+				sessionView.setStatusSession(statusSession);	
+			}	
+			sessionView.ownerSession = Model.getInstance().getUserPlateformeByUserId(session.id_user);
+			sessionView.percentWidth = 100;
+			sessionView.addEventListener(MouseEvent.CLICK, onSessionViewClick);
+			sessionView.listUserSession = session.participants;
+			return sessionView;
+		}
 		
 		[Bindable("update")]
 		public function addSession(session:Session):void{
 			if(sessionCollection  != null)
 			{
 				sessionCollection.addItem(session);
-				sessionCollection.refresh();
+				var sessionView:SessionViewSalonSession = createSessionView(session);
+				sessionsList.addElement(sessionView);
+				var typeSession:String = "Votre nouvelle séance";
+				if(session.isModel)
+				{
+					typeSession = "Nouvelle plane de séance";
+				}
+				Alert.show(typeSession+" a été crée et ajouté dans la liste des séances...",
+					"Information"); 
 				dispatchEvent( new Event("update") );
 			}
 		}
 		// TODO update session item
-		public function updateSession(value:Session):void
+		/*public function updateSession(value:Session):void
 		{
 			var nbrSession:int = sessionsList.dataProvider.length;
 			for(var nSession:int = 0 ; nSession < nbrSession; nSession++)
@@ -160,6 +209,37 @@ package com.ithaca.visu.view.session
 					session.date_session = value.date_session;
 					session.theme = value.theme;
 					session.description = value.description;
+					return;
+				}
+			}
+		}*/
+		public function updateSession(value:Session):void
+		{
+			var sessionIndexUpdate:int = -1;
+			// update session
+			var nbrSession:int = sessionCollection.length;
+			for(var nSession:int = 0 ; nSession < nbrSession; nSession++)
+			{
+				var session:Session = sessionCollection.getItemAt(nSession) as Session;
+				if(session.id_session == value.id_session)
+				{
+					sessionIndexUpdate = nSession;	
+				}
+			}
+			sessionCollection.removeItemAt(sessionIndexUpdate);		
+			sessionCollection.addItemAt(value,sessionIndexUpdate);
+			// update view session
+			var nbrElm:int = sessionsList.numElements;
+			for(var nElm:int = 0; nElm < nbrElm ; nElm++ )
+			{
+				var viewSession:SessionViewSalonSession = sessionsList.getElementAt(nElm) as SessionViewSalonSession;
+				var session:Session = viewSession.session;
+				if(session.id_session == value.id_session)
+				{
+					viewSession.listUserSession = value.participants;
+					viewSession.theme = value.theme;
+					// update date only for session "will"
+					viewSession.dateRecorded = value.date_session;	
 					return;
 				}
 			}
@@ -175,7 +255,7 @@ package com.ithaca.visu.view.session
 			super.partAdded(partName,instance);
 			if (instance == sessionsList)
 			{
-				sessionsList.addEventListener(IndexChangeEvent.CHANGE, sessionList_indexChangeHandler);
+		//		sessionsList.addEventListener(IndexChangeEvent.CHANGE, sessionList_indexChangeHandler);
 			}
 			if (instance == filter)
 			{
@@ -196,7 +276,7 @@ package com.ithaca.visu.view.session
 			super.partRemoved(partName,instance);
 			if (instance == sessionsList)
 			{
-				sessionsList.removeEventListener(IndexChangeEvent.CHANGE, sessionList_indexChangeHandler);
+	//			sessionsList.removeEventListener(IndexChangeEvent.CHANGE, sessionList_indexChangeHandler);
 			}
 			if (instance == filter)
 			{
@@ -243,7 +323,31 @@ package com.ithaca.visu.view.session
 		 */
 		protected function sessionList_indexChangeHandler(event:IndexChangeEvent):void
 		{
-			var session:Session = Session(sessionsList.dataProvider.getItemAt(event.newIndex));
+			/*var session:Session = Session(sessionsList.dataProvider.getItemAt(event.newIndex));
+			sessionDetail.session = session;
+			var editable:Boolean = false;
+			if(session.statusSession == SessionStatusEnum.SESSION_OPEN){
+				editable = true;
+			}
+			sessionDetail.setEditabled(editable);
+			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
+			visuActivityEvent.sessionId = session.id_session;					
+			dispatchEvent(visuActivityEvent);*/
+		}
+		
+		protected function onSessionViewClick(event:MouseEvent=null):void
+		{
+			var sessionView:SessionViewSalonSession;
+			if(event == null)
+			{
+				sessionView = this.sessionsList.getElementAt(0) as SessionViewSalonSession;
+			}else
+			{
+				sessionView = event.currentTarget as SessionViewSalonSession;
+			}
+			// update selected session
+			updateSelectedSession(sessionView);
+			var session:Session = sessionView.session;	
 			sessionDetail.session = session;
 			var editable:Boolean = false;
 			if(session.statusSession == SessionStatusEnum.SESSION_OPEN){
@@ -253,6 +357,20 @@ package com.ithaca.visu.view.session
 			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
 			visuActivityEvent.sessionId = session.id_session;					
 			dispatchEvent(visuActivityEvent);
+		}
+		private function updateSelectedSession(value:SessionViewSalonSession):void
+		{
+			var nbrElm:int = sessionsList.numElements;
+			for(var nElm:int = 0; nElm < nbrElm ; nElm++ )
+			{
+				var viewSession:SessionViewSalonSession = sessionsList.getElementAt(nElm) as SessionViewSalonSession;
+				viewSession.setSelected(false); 
+				var session:Session = viewSession.session;
+				if(session.id_session == value.session.id_session)
+				{
+					viewSession.setSelected(true); 
+				}
+			}
 		}
 		
 		protected function onFilterViewHandler(event:SessionFilterEvent):void

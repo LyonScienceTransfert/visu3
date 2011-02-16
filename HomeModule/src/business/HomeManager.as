@@ -2,13 +2,10 @@ package business
 {
 
 import com.ithaca.visu.events.SessionEvent;
-import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.User;
-import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
 
-import flash.events.ErrorEvent;
 import flash.events.IEventDispatcher;
 
 import mx.collections.ArrayCollection;

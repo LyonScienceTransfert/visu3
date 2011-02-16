@@ -379,6 +379,8 @@
 				}
 			}
 			
+			
+			
 			/**
 			 * set date, time and owner for the session 
 			 */
@@ -797,11 +799,15 @@
 			}
 			
 			protected function onMouseClickSessionViewCloseSession(event:MouseEvent):void
-			{
-				
-				this.clearTraceLines();
-				
+			{			
+				this.clearTraceLines();			
 				var sessionView:SessionViewSalonRetro = event.currentTarget as SessionViewSalonRetro;
+				var hideGroup:Group = null;
+				if( this.groupOpenSession != null)
+				{
+					hideGroup = this.groupOpenSession;
+				}
+				updateSelectedSession(sessionView, this.groupCloseSession, hideGroup);
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
 				getListObselEvent.sessionId = sessionView.sessionId;
 				this.dispatchEvent(getListObselEvent);
@@ -811,10 +817,15 @@
 
 			protected function onMouseClickSessionViewOpenSession(event:MouseEvent):void
 			{
-
-				this.clearTraceLines();
-				
+				this.clearTraceLines();		
 				var sessionView:SessionViewSalonRetro = event.currentTarget as SessionViewSalonRetro;
+				// update selected session
+				var hideGroup:Group = null;
+				if( this.groupCloseSession != null)
+				{
+					hideGroup = this.groupCloseSession;
+				}
+				updateSelectedSession(sessionView, this.groupOpenSession, hideGroup);
 				var traceId:String = sessionView.traceId;
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL);
 				getListObselEvent.traceId = traceId;
@@ -824,6 +835,36 @@
 				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance : ")+sessionView.theme;
 			}
 
+			private function updateSelectedSession(value:SessionViewSalonRetro, groupSelected:Group, groupHide:Group ):void
+			{
+				var nbrElm:int = groupSelected.numElements;
+				for(var nElm:int = 0; nElm < nbrElm ; nElm++ )
+				{
+					var viewSession:SessionViewSalonRetro = groupSelected.getElementAt(nElm) as SessionViewSalonRetro;
+					viewSession.setSelected(false); 
+					var sessionId:int = viewSession.sessionId;
+					if(sessionId == value.sessionId)
+					{
+						viewSession.setSelected(true); 
+					}
+				}
+				if(groupHide != null)
+				{
+					deselectSelectedSession(groupHide);
+				}
+			}
+			
+			// set sessionViewSalonRetro in normal state
+			private function deselectSelectedSession(value:Group):void
+			{
+				var nbrElm:int = value.numElements;
+				for(var nElm:int = 0; nElm < nbrElm ; nElm++ )
+				{
+					var viewSession:SessionViewSalonRetro = value.getElementAt(nElm) as SessionViewSalonRetro;
+					viewSession.setSelected(false); 
+				}	
+			}
+			
 			protected function durationSessionSlider_valueCommitHandler(event:FlexEvent):void
 			{
 				var hSlider:HSlider = event.currentTarget as HSlider;

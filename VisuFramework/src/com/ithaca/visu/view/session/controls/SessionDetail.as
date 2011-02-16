@@ -239,7 +239,7 @@ package com.ithaca.visu.view.session.controls
 				if(themeSessionLabel) themeSessionLabel.text = themeSessionLabel.toolTip = theme;
 				if(dateLabel)
 				{
-					dateLabel.text =  UtilFunction.getLabelDate(dateSession);
+					dateLabel.text =  UtilFunction.getLabelDate(dateSession,"/");
 				}
 				if(heurLabel)
 				{ 
@@ -315,6 +315,8 @@ package com.ithaca.visu.view.session.controls
 		{
 			if( _session == value) return;
 			_session = value;
+			// set users of the session
+			this.users = value.participants;
 			sessionChanged = true;
 			invalidateProperties();
 		}

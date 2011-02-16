@@ -60,60 +60,23 @@
  * 
  * -- End of licenses
  */
-package com.ithaca.utils
+package com.ithaca.visu.model.vo
 {
-	import mx.utils.URLUtil;
+	import mx.collections.ArrayCollection;
 
-	public class UtilFunction
+	[RemoteClass(alias="com.lyon2.visu.domain.model.SessionWithoutListUser")]
+	[Bindable]	
+	public class SessionWithoutListUserVO
 	{
-		public static function isEmptyMessage(value:String):Boolean
-		{
-			var nbrChar:int = value.length;
-			for(var nChar:int = 0; nChar < nbrChar ; nChar++)
-			{
-				var char:String = value.charAt(nChar);
-				if(char != " ")
-				{
-					return false;
-				}
-			}
-			return true;
-		}
-		
-		public static function getLabelDate(date:Date,separateur:String):String
-		{
-			var day:int = date.getDate();
-			var dayString:String = day.toString();
-			if(day < 10){ dayString = "0"+dayString;};
-			var mount:int = date.getMonth() +1;
-			var mountString:String = mount.toString();
-			if(mount < 10){	mountString = "0"+mountString;};
-			var result:String = date.getUTCFullYear().toString()+separateur+mountString+separateur+dayString;
-			return result;
-		}
-		
-		public static function getHeurMinDate(date:Date):String
-		{
-			var heureString:String = date.getHours().toString();
-			var  heure:Number = date.getHours(); if(heure < 10 ){heureString = "0"+heureString;}
-			var minuteString:String = date.getMinutes().toString();
-			var  minute:Number = date.getMinutes(); if(minute < 10 ){minuteString = "0"+minuteString;}
-			return heureString+":"+minuteString;
-		}
-		
-		public static function checkVideoId(value:String):Boolean
-		{
-			var ar:Array=value.split('?');
-			if(ar.length==2)
-			{
-				var params:Object = URLUtil.stringToObject(ar[1],"&");	 		
-				if( params.hasOwnProperty("v"))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		
+			public var duration_session:int;
+			public var id_session:int;
+			public var id_user:int;
+			public var theme:String;
+			public var date_session:Date;
+			public var isModel:Boolean;
+			public var description:String;
+			public var start_recording:Date;
+			public var status_session:int;
+			public var id_currentActivity:int;
 	}
 }

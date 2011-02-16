@@ -12,6 +12,8 @@
 			
 			import mx.events.FlexEvent;
 			
+			import spark.events.TextOperationEvent;
+			
 			protected function themeSession_focusOutHandler(event:FocusEvent):void
 			{
 				if(themeSession.text == ""){
@@ -21,7 +23,17 @@
 					this.hostComponent.updateTheme(themeSession.text);
 				}
 			}
+			
+			protected function themeSession_changeHandler(event:Event):void
+			{
+				this.hostComponent.updateTheme(themeSession.text);
+			}
 
+			protected function descriptionSession_changeHandler(event:TextOperationEvent):void
+			{
+				this.hostComponent.updateDescription(descriptionSession.text);
+			}
+			
 			protected function themeSession_focusInHandler(event:FocusEvent):void
 			{
 				if(themeSession.text == "entrer un nouveau themè de la séance ici")
@@ -57,6 +69,7 @@
 				this.hostComponent.updateDateSession(this.picker.selectedDate);
 			}
 
+
 		]]>
 	</fx:Script>
 	<s:states>
@@ -84,7 +97,7 @@
 					</s:Group>
 <!-- THEME -->	
 					<s:Group height="100%" width="40%">
-						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" verticalCenter="0" backgroundColor="#FFFFFF"
+						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" verticalCenter="0" backgroundColor="#FFFFFF" change="themeSession_changeHandler(event)"
 											  focusOut="themeSession_focusOutHandler(event)"
 											   focusIn="themeSession_focusInHandler(event)" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" enabled.normalEditable="true" includeIn="disabled,normalEditable">
 							<s:text>Les identités nationales</s:text>
@@ -94,8 +107,9 @@
 						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" top="5" 
 												     updateDateTime="picker_updateDateTimeHandler(event)" includeIn="disabled,normalEditable"/>
 						<s:RichEditableText  id="descriptionSession" height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF"
+											  change="descriptionSession_changeHandler(event)" 
 											  focusOut="descriptionSession_focusOutHandler(event)"
-											   focusIn="descriptionSession_focusInHandler(event)" fontStyle.normalEditable="italic" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" includeIn="disabled,normalEditable">
+											  focusIn="descriptionSession_focusInHandler(event)" fontStyle.normalEditable="italic" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" includeIn="disabled,normalEditable">
 							<s:text>in this session you will learn how you can go to other country..</s:text>
 						</s:RichEditableText> 
 						<s:RichText includeIn="normal" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
