@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import com.ithaca.domain.model.RetroDocument;
-import com.lyon2.visu.domain.model.User;
 
 public interface RetroDocumentDAO {
 	
@@ -20,9 +19,12 @@ public interface RetroDocumentDAO {
 
 	public Collection<RetroDocument> getRetroDocumentsByOwner(Integer ownerId) throws SQLException;
 
-	public boolean createInvitee(Integer documentId, Integer inviteeId) throws SQLException;
+	public void createInvitee(Integer documentId, Integer inviteeId) throws SQLException;
+	
 	public boolean removeInvitee(Integer documentId, Integer inviteeId) throws SQLException;
-	public Collection<User> getInviteeList(Integer documentId) throws SQLException;
+	
+	public Collection<String> getInviteeList(Integer documentId) throws SQLException;
+	
 	public Collection<RetroDocument> getRetroDocumentIdByInviteeId(Integer inviteeId) throws SQLException;
 	
 }

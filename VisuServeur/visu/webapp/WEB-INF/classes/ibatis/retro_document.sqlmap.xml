@@ -3,16 +3,8 @@
 
 <sqlMap namespace="rd">
 	
-	<typeAlias alias="retroDocument" type="com.ithaca.domain.model.RetroDocument"/>	
+	<typeAlias alias="retroDocument" type="com.ithaca.model.RetroDocument"/>	
 	
-	<cacheModel id="cache" type="LRU" readOnly="false">
-		<flushInterval hours="24"/>
-		<flushOnExecute statement="rd.delete"/>
-		<flushOnExecute statement="rd.insert"/>
-		<flushOnExecute statement="rd.update"/>
-		<property name="cache-size" value="1000"/>
-	</cacheModel>
-
 	<resultMap class="retroDocument" id="retroDocument-result-map">
 		<result column="id_retro_document" property="documentId"  />
         <result column="id_owner" property="ownerId"  />
@@ -24,7 +16,7 @@
 		<result column="xml" property="xml" />
 	</resultMap>
 
-	<select id="getDocument" resultMap="retroDocument-result-map">
+	<select id="getDocuments" resultMap="retroDocument-result-map">
 		SELECT * FROM retro_document
 	</select>
 
@@ -32,32 +24,34 @@
 		SELECT * FROM retro_document WHERE id_retro_document=#value#
 	</select>
 
-	<select id="getDocumentByOwnerIdAndSessionId" resultMap="retroDocument-result-map">
+	<select id="countDocuments" resultClass="java.lang.Integer">
+		SELECT count(*) FROM retro_document
+	</select>
+
+	<select id="getDocumentsByOwnerIdAndSessionId" resultMap="retroDocument-result-map">
 		SELECT * FROM retro_document WHERE id_owner=#ownerId# AND id_session=#sessionId#
 	</select>
 
-	<select id="getDocumentByOwner" resultMap="retroDocument-result-map">
+	<select id="getDocumentsByOwner" resultMap="retroDocument-result-map">
 		SELECT * FROM retro_document WHERE id_owner=#value#
 	</select>
 	
-	<delete id="delete" parameterClass="retroDocument">
-		DELETE from retro_document WHERE id_retro_document = #id:INTEGER#
-	</delete>
-	
-	<select id="getInviteesByDocumentId">
+	<select id="getInviteesByDocumentId" resultClass="java.lang.Integer">
 		SELECT id_user FROM retro_document_access WHERE id_retro_document=#value#
 	</select>
 
-	<select id="getDocumentsByInviteeId">
+	<select id="getDocumentsByInviteeId" resultClass="java.lang.Integer">
 		SELECT id_retro_document 
 		FROM retro_document_access 
 		WHERE id_user=#value#
 	</select>
 	
 	<delete id="deleteDocument">
-		DELETE from retro_document WHERE id_retro_document = #id:INTEGER#;
-		DELETE from retro_document_access
-		WHERE id_retro_document = #id:INTEGER#;
+		DELETE from retro_document WHERE id_retro_document = #value#
+	</delete>
+	
+	<delete id="deleteAllInvitations">
+		DELETE from retro_document_access WHERE id_retro_document = #value#
 	</delete>
 
 	<delete id="deleteInvitation">
@@ -68,7 +62,7 @@
 
 	<insert id="insertInvitation">
 		INSERT INTO retro_document_access 
-		SET id_retro_document=#documentId:INTEGER#
+		SET id_retro_document=#documentId:INTEGER#,
 			id_user=#userId:INTEGER#
 	</insert>
 	
@@ -80,13 +74,13 @@
 		SET 
 		    id_owner = #ownerId#,
 		    id_session = #sessionId#,
-		    creation_date = #creationDate#,
-		    last_modification_date = #lastModified#,
+		    creation_date = now(),
+		    last_modification_date = now(),
 		    title = #title#,
 		    description = #description#,
 		    xml = #xml#
 
-		<selectKey keyProperty="id" resultClass="java.lang.Integer">
+		<selectKey keyProperty="documentId" resultClass="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
@@ -96,12 +90,11 @@
 			SET 
 		    id_owner = #ownerId#,
 		    id_session = #sessionId#,
-		    creation_date = #creationDate#,
-		    last_modification_date = #lastModified#,
+		    last_modification_date = now(),
 		    title = #title#,
 		    description = #description#,
 		    xml = #xml#
-		where id_retro_document = #id:INTEGER#
+		where id_retro_document = #documentId:INTEGER#
 	</update>
 	
 </sqlMap>
