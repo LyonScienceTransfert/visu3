@@ -119,6 +119,7 @@ import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Module;
 import com.lyon2.visu.domain.model.ProfileDescription;
 import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.red5.Red5Message;
@@ -1201,13 +1202,29 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		
 		try
 		{
-			getSqlMapClient().update("sessions.update",session);
+			getSqlMapClient().update("sessions.update",cloneSession(session));
 			log.warn("updated= {} ",session.toString());
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);
 		}
 	}
 	
+	private SessionWithoutListUser cloneSession(Session session)
+	{
+		// clone the session
+		SessionWithoutListUser sessionWithoutUser = new SessionWithoutListUser();
+		sessionWithoutUser.setDate_session(session.getDate_session());
+		sessionWithoutUser.setDescription(session.getDescription());
+		sessionWithoutUser.setDuration_session(session.getDuration_session());
+		sessionWithoutUser.setId_currentActivity(0);
+		sessionWithoutUser.setId_session(session.getId_session());
+		sessionWithoutUser.setId_user(session.getId_user());
+		sessionWithoutUser.setIsModel(session.getIsModel());
+		sessionWithoutUser.setStart_recording(session.getStart_recording());
+		sessionWithoutUser.setStatus_session(session.getStatus_session());
+		sessionWithoutUser.setTheme(session.getTheme());
+		return sessionWithoutUser;
+	}
 	/**
 	 * Set id of the current activity
 	 * @param sessionId
@@ -1229,7 +1246,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		session.setId_currentActivity(activityId);
 		try
 		{
-			getSqlMapClient().update("sessions.update",session);
+			getSqlMapClient().update("sessions.update",cloneSession(session));
 			log.warn("updated= {} ",session.toString());
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);
