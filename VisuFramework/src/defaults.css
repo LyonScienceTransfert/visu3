@@ -12,8 +12,24 @@
 @namespace sessionView 	"com.ithaca.visu.view.session.*";
 @namespace user 	"com.ithaca.visu.view.user.*";
 @namespace ws 		"ws.tink.spark.containers.*";
+@namespace documentarisation 		"com.ithaca.documentarisation.*";
 
 
+
+documentarisation|RetroDocumentView
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentViewSkin");
+}
+
+documentarisation|RetroDocumentSegment
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentSegmentSkin");
+}
+
+documentarisation|SegmentVideo
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoSkin");
+}
 
 ConnectionLight
 {

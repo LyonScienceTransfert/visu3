@@ -1,6 +1,6 @@
 package com.ithaca.documentarisation {
 	
-	public final class RetroDocument {
+	public final class RetroDocumentConst {
 		 public static const TAG_RETROSPECTION_DOCUMENT: String = "retro-document";
 		 public static const TAG_TITLE: String = "title";
 		 public static const TAG_DOCUMENT_DESCRIPTION: String = "description";
