@@ -119,6 +119,7 @@ import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Module;
 import com.lyon2.visu.domain.model.ProfileDescription;
 import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.red5.Red5Message;
@@ -311,16 +312,22 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		try
 		{
 			log.warn("date today is {}",userDate.toString());
+			log.warn("HERE somethink  ");
+			
 			listSessionToday = (List<Session>)sqlMapClient.queryForList("sessions.getSessionsByDateByUser",userDate);
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
 		}
 
-		for(Session session : listSessionToday)
-		{
-			log.warn("session = {}", session.toString());
-		}
+		log.warn("HERE somethink 2 ");
 		
+		
+	//	for(Session session : listSessionToday)
+	//	{
+	//		log.warn("session = {}", session.toString());
+	//	}
+		
+		log.warn("HERE somethink 3 ");
 
 		// get role of logged user
 		Integer roleUser = getRoleUser(user.getProfil());
@@ -328,6 +335,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		List<Module> listModules = null;
 		try
 		{
+			log.warn("HERE somethink 4 ");	
 			listModules = (List<Module>)sqlMapClient.queryForList("modules.getModules");
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des modules" + e);
@@ -343,7 +351,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 				listModulesUser.add(module);
 			}
 		}	
-		
+		log.warn("HERE somethink 5 ");
 		// Récupération des profiles utilisateurs
 		List<ProfileDescription> profiles = null;
 		try
@@ -355,28 +363,28 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 			log.error("Loading profileDescription failed {}",e);
 		}
 		
-		
+		log.warn("HERE somethink 6 ");
 		Object[] argsLoggedUser = {user , listModulesUser, listSessionToday, profiles};
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
 			sc.invoke("setLoggedUser", argsLoggedUser);
 		} 
 		
-
-		UserDate userDateTest = new UserDate(5,"2010-07-20");
-		//// TESTING
-		List<Session> ls = null;
-		try
-		{
-			ls = (List<Session>)sqlMapClient.queryForList("sessions.getSessionsByDateByUser",userDateTest);
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des sessions" + e);
-		}
-		
-		for(Session session : ls)
-		{
-		//	log.warn("session = {}", session.toString());
-		}
+//
+//		UserDate userDateTest = new UserDate(5,"2010-07-20");
+//		//// TESTING
+//		List<Session> ls = null;
+//		try
+//		{
+//			ls = (List<Session>)sqlMapClient.queryForList("sessions.getSessionsByDateByUser",userDateTest);
+//		} catch (Exception e) {
+//			log.error("Probleme lors du listing des sessions" + e);
+//		}
+//		
+//		for(Session session : ls)
+//		{
+//		//	log.warn("session = {}", session.toString());
+//		}
         return true;
     }	
 	
@@ -1194,13 +1202,29 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		
 		try
 		{
-			getSqlMapClient().update("sessions.update",session);
+			getSqlMapClient().update("sessions.update",cloneSession(session));
 			log.warn("updated= {} ",session.toString());
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);
 		}
 	}
 	
+	private SessionWithoutListUser cloneSession(Session session)
+	{
+		// clone the session
+		SessionWithoutListUser sessionWithoutUser = new SessionWithoutListUser();
+		sessionWithoutUser.setDate_session(session.getDate_session());
+		sessionWithoutUser.setDescription(session.getDescription());
+		sessionWithoutUser.setDuration_session(session.getDuration_session());
+		sessionWithoutUser.setId_currentActivity(0);
+		sessionWithoutUser.setId_session(session.getId_session());
+		sessionWithoutUser.setId_user(session.getId_user());
+		sessionWithoutUser.setIsModel(session.getIsModel());
+		sessionWithoutUser.setStart_recording(session.getStart_recording());
+		sessionWithoutUser.setStatus_session(session.getStatus_session());
+		sessionWithoutUser.setTheme(session.getTheme());
+		return sessionWithoutUser;
+	}
 	/**
 	 * Set id of the current activity
 	 * @param sessionId
@@ -1222,7 +1246,7 @@ public class Application extends MultiThreadedApplicationAdapter implements ISch
 		session.setId_currentActivity(activityId);
 		try
 		{
-			getSqlMapClient().update("sessions.update",session);
+			getSqlMapClient().update("sessions.update",cloneSession(session));
 			log.warn("updated= {} ",session.toString());
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);

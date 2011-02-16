@@ -4,6 +4,7 @@ import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.vo.ActivityElementVO;
 import com.ithaca.visu.model.vo.ActivityVO;
 import com.ithaca.visu.model.vo.SessionVO;
+import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
 
 import flash.events.Event;
 
@@ -18,6 +19,7 @@ public class SessionEvent extends Event
 	static public const LOAD_SESSION_SALON_RETROSPECTION : String = 'loadSessionSalonRetrospection';
 	static public const SHOW_LIST_DATE_SESSION : String = 'showListDateSession';
 	static public const SHOW_LIST_SESSION : String = 'showListSession';
+	static public const SHOW_UPDATED_SESSION : String = 'showUpdatedSession';
 	static public const ADDED_SESSION : String = 'addedSession';
 	static public const ADD_SESSION : String = 'addSession';
 	static public const ADD_CLONED_SESSION : String = 'addClonedSession';
@@ -62,6 +64,7 @@ public class SessionEvent extends Event
 	public var sessionDate : String;
 	public var session : Session;
 	public var sessionVO :SessionVO;
+	public var sessionWitOutListUserVO :SessionWithoutListUserVO;
 	public var activityVO :ActivityVO;
 	public var activityId :int;
 	public var activityElementVO :ActivityElementVO;

@@ -19,6 +19,8 @@
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
+			import spark.events.TextOperationEvent;
+			
 			[Bindable]
 			private var fxgt:_FxGettext;
 
@@ -241,6 +243,17 @@
 			
 			}
 
+
+			protected function titleActivity_changeHandler(event:TextOperationEvent):void
+			{
+				this.hostComponent.addTitreActivity(titleActivity.text);
+
+			}
+			protected function memoDisplay_changeHandler(event:TextOperationEvent):void
+			{
+				this.hostComponent.updateMemo(memoDisplay.text);
+			}
+
 		]]>
 	</fx:Script>
 	<!-- host component -->
@@ -300,7 +313,9 @@
 <!-- LABEL ACTIVITY-->
 		<s:TextInput id="titleActivity" left="200" top="5" right="150" color="#121212"
 				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
-				  focusOut="titleActivity_focusOutHandler(event)" includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="150" top.openEditable="5" left.openEditable="120" right.openEditable="150">
+				  focusOut="titleActivity_focusOutHandler(event)" 
+				  change="titleActivity_changeHandler(event)"
+				  includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="150" top.openEditable="5" left.openEditable="120" right.openEditable="150">
 			<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 			</s:filters>-->
@@ -425,7 +440,8 @@
 					id="memoDisplay" 
 						 top="8" bottom="7" maxHeight="40"
 						 focusIn="memoDisplay_focusInHandler(event)"
-						 focusOut="memoDisplay_focusOutHandler(event)" left="10" right="10" enabled.open="false">
+						 focusOut="memoDisplay_focusOutHandler(event)" 
+						 change="memoDisplay_changeHandler(event)" left="10" right="10" enabled.open="false">
 					<s:text>This ic memo</s:text>
 				</s:RichEditableText>
 			</s:Group>

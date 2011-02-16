@@ -20,6 +20,8 @@
 			import com.ithaca.visu.model.vo.ActivityElementVO;
 			import com.ithaca.visu.model.vo.ActivityVO;
 			import com.ithaca.visu.model.vo.SessionVO;
+			import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
+			import com.ithaca.visu.model.vo.UserVO;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.view.session.controls.SessionDetail;
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
@@ -36,6 +38,7 @@
 						testLabel.text = param.theme + " " + param.date_session.toString();				
 					}
 				}
+				Model.getInstance().setCurrentSessionModule(this);
 			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
@@ -45,7 +48,7 @@
 				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateActivity,true);
 				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY, onAddActivity,true);
 				sessionDetail.addEventListener(SessionEditEvent.DELETE_ACTIVITY_ELEMENT, onDeleteActivityElement,true);
-				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);
+				sessionDetail.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);	
 				sessionDetail.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
 				sessionDetail.addEventListener(SessionEditEvent.UPDATE_SESSION, onUpdateSession);
 				sessionDetail.addEventListener(SessionEditEvent.ADD_SESSION, onAddSession);
@@ -139,7 +142,7 @@
 			{
 				var updateSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_SESSION);
 				var session:Session = event.session;
-				var sessionVO:SessionVO = new SessionVO();
+				var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
 				sessionVO.duration_session = session.duration_session;
 				sessionVO.id_session = session.id_session;
 				sessionVO.id_user = session.id_user;
@@ -150,17 +153,17 @@
 				sessionVO.start_recording = session.date_start_recording;
 				sessionVO.status_session = session.statusSession;
 				sessionVO.id_currentActivity = 0;
-				updateSession.sessionVO = sessionVO;
+				updateSession.sessionWitOutListUserVO = sessionVO;
 				this.dispatchEvent(updateSession);
 				// update dataProvider the session
-				sessionManagement.updateSession(session);
+//??				sessionManagement.updateSession(session);
 			}
 			
 			private function onAddSession(event:SessionEditEvent):void
 			{
 				var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
 				var session:Session = event.session;
-				var sessionVO:SessionVO = new SessionVO();
+				var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
 				sessionVO.duration_session = session.duration_session;
 				sessionVO.id_session = session.id_session;
 				sessionVO.id_user = Model.getInstance().getLoggedUser().id_user
@@ -170,13 +173,18 @@
 				sessionVO.description = session.description;
 				sessionVO.start_recording = session.date_start_recording;
 				var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
+				var userId:int = 0;
 				if(event.isModel)
 				{
 					statusSession = SessionStatusEnum.SESSION_CLOSE; 
+				}else
+				{
+					userId  = Model.getInstance().getLoggedUser().id_user;
 				}
 				sessionVO.status_session = statusSession;
 				sessionVO.id_currentActivity = 0;
-				addSession.sessionVO = sessionVO;
+				addSession.sessionWitOutListUserVO = sessionVO;
+				addSession.userId = userId;
 				this.dispatchEvent(addSession);
 			}
 
@@ -198,6 +206,13 @@
 				}
 			}
 			
+			private function onShowUpdatedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					this.sessionManagement.updateSession(event.session);
+				}
+			}
 			
 		]]>
 	
@@ -211,6 +226,7 @@
 		<maps:SessionMap dispatcher="{this}"/>
 		<mate:Listener type="{SessionEvent.ADD_CLONED_SESSION}"  method="addClonedSession"/>
 		<mate:Listener type="{UserEvent.LOADED_ALL_USERS}"  method="onLoadedAllUsers"/>
+		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"  method="onShowUpdatedSession"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 

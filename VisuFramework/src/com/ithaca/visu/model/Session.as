@@ -63,6 +63,7 @@
 package  com.ithaca.visu.model
 {
 	import com.ithaca.visu.model.vo.SessionVO;
+	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	
 	import mx.collections.ArrayCollection;
@@ -93,7 +94,21 @@ package  com.ithaca.visu.model
 			// set duration in millisecunds
 			// FIXME debug mode
 			this.duration_session = session.duration_session*1000*60;
-			
+			if(session.listUser != null)
+			{
+				var t:uint = 1;	
+			}
+			var listUserVO:Array = session.listUser;
+			if(listUserVO != null && listUserVO.length > 0)
+			{
+				var listUser:ArrayCollection = new ArrayCollection();
+				for each(var userVO:UserVO in listUserVO)
+				{
+					var user:User = new User(userVO);
+					listUser.addItem(user);
+				}
+				this.participants = listUser;
+			}	
 		}
 		
 		public function getSessionId():int {return this.id_session};

@@ -72,11 +72,20 @@
 					skinClass="com.ithaca.visu.controls.skins.AdvancedTextInputSkin">
 				</controls3:AdvancedTextInput>
 				
-				<s:List	
+				<s:Group top="0" bottom="0" left="0" right="0">
+					<s:Scroller left="1" right="1" top="1" bottom="1">
+						<s:Group width="100%" height="100%" id="sessionsList">
+							<s:layout>
+								<s:VerticalLayout gap="2"/>
+							</s:layout>
+						</s:Group>
+					</s:Scroller>
+				</s:Group>
+<!--				<s:List	
 					id="sessionsList"
 					top="0" bottom="0" left="0" right="0"
 					itemRenderer="com.ithaca.visu.renderer.SessionRenderer"
-					/>
+					/>-->
 			</s:Panel>
 		</s:Group>
 		

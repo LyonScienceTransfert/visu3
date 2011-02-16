@@ -4,6 +4,8 @@
 
 	<typeAlias alias="session"
 		type="com.lyon2.visu.domain.model.Session" />
+	<typeAlias alias="sessionWithOutListSession"
+		type="com.lyon2.visu.domain.model.SessionWithoutListUser" />
  	<typeAlias alias="userDate"
 		type="com.lyon2.utils.UserDate" />       
         
@@ -55,7 +57,10 @@
 
 	<select id="getSessionsAndPlans" resultMap="sessionResult" cacheModel="cache">
 		<include refid="selectBase" />
-		FROM sessions s, activities a WHERE s.id_session = a.id_session GROUP BY s.id_session
+		FROM sessions s, activities a 
+		WHERE s.id_session = a.id_session 
+		GROUP BY s.id_session
+		ORDER BY s.isModel DESC
 	</select>
 	
 	<select id="getSessionsAndPlansByIdUser" resultMap="sessionResult" cacheModel="cache" parameterClass="int">
@@ -63,6 +68,7 @@
 		FROM sessions s, activities a WHERE isModel = 1 
 										OR (s.id_session = a.id_session AND s.id_user = #value#)
 										GROUP BY s.id_session
+										ORDER BY s.isModel DESC
 	</select>
 
     <select id="getSessionsByUser" parameterClass="int"
@@ -119,6 +125,7 @@
             AND CAST(s.date_session AS DATE) = #dateSession:LONGCHAR# 
             AND su.id_user = #userId:INTEGER#
             AND s.id_session = a.id_session 
+            AND s.isModel = false
             GROUP BY s.id_session
             ORDER BY s.date_session  
     ]]>
@@ -132,13 +139,14 @@
 		FROM sessions s, activities a 
         WHERE CAST(s.date_session AS DATE) = #value# 
         	AND s.id_session = a.id_session 
+        	AND s.isModel = false
             GROUP BY s.id_session
             ORDER BY s.date_session  
     ]]>
 	</select>    
     
 
-	<insert id="insert" parameterClass="session">
+	<insert id="insert" parameterClass="sessionWithOutListSession">
 		INSERT INTO sessions
 		SET 
 			theme = #theme:VARCHAR#, 
@@ -154,7 +162,7 @@
 		</selectKey>
 	</insert>
 
-	<update id="update" parameterClass="session">
+	<update id="update" parameterClass="sessionWithOutListSession">
 		UPDATE 
 			sessions 
 		SET 
@@ -174,3 +182,4 @@
 		DELETE FROM sessions WHERE id_session = #id_session:INTEGER#
 	</delete>
 </sqlMap>
+

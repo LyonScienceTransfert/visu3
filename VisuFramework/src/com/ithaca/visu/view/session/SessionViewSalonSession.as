@@ -1,17 +1,28 @@
 package com.ithaca.visu.view.session
 {
 	import com.ithaca.utils.UtilFunction;
+	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.ui.utils.SessionFilterEnum;
 	
+	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
 	import mx.controls.Image;
 	import mx.graphics.GradientEntry;
 	
+	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
 	
-
-	public class SessionViewSalonRetro extends SkinnableComponent
-	{	
+	[SkinState("sessionModel")]
+	[SkinState("sessionWas")]
+	[SkinState("sessionWill")]
+	
+	public class SessionViewSalonSession extends SkinnableComponent
+	{
+		[SkinPart("true")]
+		public var groupUserSession:Group;
+		
 		[SkinPart("true")]
 		public var themeTitleLabel:Label;
 		
@@ -32,43 +43,50 @@ package com.ithaca.visu.view.session
 		
 		[SkinPart("true")]
 		public var ownerImage:Image;
-		
+
 		[SkinPart("true")]
 		public var gradientEntryFrom:GradientEntry;
-		
+
 		[SkinPart("true")]
 		public var gradientEntryTo:GradientEntry;
 		
 		private var _date:Date;
 		private var _theme:String;
 		private var _user:User;
-		private var _sessionId:int;
-		private var _traceId:String;
+		private var _session:Session;
+		private var _listUserSession:IList;
+
 		
 		private var dateChange:Boolean = false;
+		private var themeChange:Boolean = false;
 		private var userChange:Boolean = false;
+		private var listUserSessionChange:Boolean = false;
 		
-		public function SessionViewSalonRetro()
+		private var IMAGE_USER_SESSION_HEIGHT:int = 24;
+		private var IMAGE_USER_SESSION_WIDTH :int = 24;
+		
+		private var model:Boolean = false;
+		private var was:Boolean = false;
+		
+		public function SessionViewSalonSession()
 		{
 			super();
 			this.buttonMode = true;
 			this.useHandCursor = true;
+			_listUserSession = new ArrayCollection();
 		}
-		
-		public function get traceId():String {return _traceId; }
-		public function set traceId(value:String):void
+
+		public function get session():Session {return _session; }
+		public function set session(value:Session):void
 		{
-			_traceId = value;
-		}
-		public function get sessionId():int {return _sessionId; }
-		public function set sessionId(value:int):void
-		{
-			_sessionId = value;
+			_session = value;
 		}
 		public function get theme():String {return _theme; }
 		public function set theme(value:String):void
 		{
 			_theme = value;
+			themeChange = true;
+			this.invalidateProperties();
 		}
 		public function get dateRecorded():Date {return _date; }
 		public function set dateRecorded(value:Date):void
@@ -86,6 +104,14 @@ package com.ithaca.visu.view.session
 			this.invalidateProperties();
 		}
 		
+		public function get listUserSession():IList {return _listUserSession }
+		public function set listUserSession(value:IList):void
+		{
+			_listUserSession = value;
+			listUserSessionChange = true;
+			this.invalidateProperties();
+		}
+		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
@@ -93,7 +119,7 @@ package com.ithaca.visu.view.session
 			{
 				themeLabel.text = _theme;
 				themeLabel.toolTip = _theme;
-
+				
 			}
 			if(instance == dateLabel)
 			{
@@ -119,7 +145,16 @@ package com.ithaca.visu.view.session
 				{
 					ownerImage.source = _user.avatar;
 				}
-			}			
+			}
+			
+			if(instance == groupUserSession)
+			{
+				if(this._listUserSession.length > 0)
+				{
+					setAvatarUser();
+				}
+			}
+			
 		}
 		
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -141,9 +176,72 @@ package com.ithaca.visu.view.session
 				userChange = false;
 				ownerImage.source = ownerSession.avatar;	
 				ownerNameLabel.text = ownerSession.lastname+" "+ownerSession.firstname;
-				ownerNameLabel.toolTip = ownerNameLabel.text;
-				
+				ownerNameLabel.toolTip = ownerNameLabel.text;	
 			}
+			
+			if (listUserSessionChange)
+			{
+				listUserSessionChange = false;
+				if(this.groupUserSession != null)
+				{
+					setAvatarUser();			
+				}
+			}
+			
+			if (themeChange)
+			{
+				themeChange = false;
+				themeLabel.text = _theme;
+				themeLabel.toolTip = _theme;
+			}
+			
+		}
+		
+		private function setAvatarUser():void
+		{
+			this.groupUserSession.removeAllElements();
+			for each(var user:User in this.listUserSession)
+			{
+				var avatarUserUrl:String = user.avatar;
+				var imageUser:Image = new Image();
+				imageUser.height = IMAGE_USER_SESSION_HEIGHT;
+				imageUser.width = IMAGE_USER_SESSION_WIDTH;					
+				imageUser.source = avatarUserUrl;
+				imageUser.toolTip = user.firstname +" "+ user.lastname;
+				groupUserSession.addElement(imageUser);
+			}		
+		}
+		public function setStatusSession(value:int):void
+		{
+			switch (value) {
+				case SessionFilterEnum.SESSION_PLAN:
+					model = true;
+				break;
+				case SessionFilterEnum.SESSION_WAS:
+					was = true;
+				break;
+				default:
+				break;
+			}
+			this.invalidateSkinState();		
+		}
+		
+		override protected function getCurrentSkinState():String
+		{
+			if (!enabled)
+			{
+				return "disable";
+			}else
+				if(model){
+					return "sessionModel"
+				}else
+				{
+					if(was){
+						return "sessionWas";
+					}else{
+						return "sessionWill";
+					}
+				} 
 		}
 		
 		public function setSelected(value:Boolean):void
@@ -152,6 +250,8 @@ package com.ithaca.visu.view.session
 			{
 				gradientEntryFrom.color = new uint("0xcedbef");
 				gradientEntryTo.color = new uint("0x70b2ee");
+/*				gradientEntryFrom.color = 13556719;
+				gradientEntryTo.color = 7385838;*/
 			}
 			else
 			{
@@ -159,6 +259,5 @@ package com.ithaca.visu.view.session
 				gradientEntryTo.color = new uint("0xD8D8D8");
 			}
 		}
-
 	}
 }
