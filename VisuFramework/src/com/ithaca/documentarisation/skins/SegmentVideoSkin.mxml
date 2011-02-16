@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.documentarisation.SegmentVideo")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="empty"/>
+		<s:State name="normal"/>
+	</s:states>
+	<!-- SkinParts
+	name=screenShotImage, type=mx.controls.Image, required=false
+	name=dropInfoLabel, type=mx.controls.Label, required=false
+	name=timeWindowLabel, type=mx.controls.Label, required=false
+	-->
+	<s:Group width="100%" height="32" >
+		<s:BorderContainer height="32" width="100%" includeIn="empty" backgroundColor="#E9B7B7">
+			<s:Label left="3" right="3" includeIn="empty" verticalCenter="0" verticalAlign="top" textAlign="center">
+				<s:text>Depose segment ici...</s:text>
+			</s:Label>
+		</s:BorderContainer>
+		<s:Label id="timeWindowLabel" text="AZERTREEA" left="3" right="38" includeIn="normal" verticalCenter="0"/>
+		<mx:Image  id="screenShotImage" right="3" width="32" height="32" includeIn="normal"/>
+	</s:Group>
+</s:Skin>
