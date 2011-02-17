@@ -70,6 +70,9 @@
     <bean id="obselDao" class="com.ithaca.domain.dao.impl.ObselDAOImpl">
         <property name="sqlMapClient" ref="sqlMap"/>
     </bean>
+    <bean id="retroDocumentDao" class="com.ithaca.domain.dao.impl.RetroDocumentDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
 <!--  Service Definitions  -->
 <!-- Stream -->
     <bean id="recorder.service" class="com.lyon2.visu.red5.StreamRecorder">
@@ -110,9 +113,9 @@
     <bean id="activityElement.service" class="com.lyon2.visu.service.impl.ActivityElementServiceImpl">
         <property name="activityElementDao" ref="activityElementDao"/>
     </bean>
-<!-- <bean id="retroDocumentService.service" class="com.lyon2.visu.service.impl.RetroDocumentServiceImpl">
+ <bean id="retroDocumentService.service" class="com.lyon2.visu.service.impl.RetroDocumentServiceImpl">
         <property name="retroDocumentDao" ref="retroDocumentDao"/>
-    </bean>     -->   
+    </bean>     
     <bean id="profileDescription.service" class="com.lyon2.visu.service.impl.ProfileDescriptionServiceImpl">
         <property name="profileDescriptionDao" ref="profileDescriptionDao"/>
     </bean>    
@@ -142,9 +145,9 @@
                 <entry key="ProfileDescriptionService">
                     <ref bean="profileDescription.service"/>
                 </entry>
-				<!-- <entry key="RetroDocumentServiceService">
+				 <entry key="RetroDocumentServiceService">
                     <ref bean="retroDocumentService.service"/>
-                </entry> -->
+                </entry> 
             </map>
         </property>
     </bean>
