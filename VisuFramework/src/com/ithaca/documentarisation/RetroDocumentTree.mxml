@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"  
+               xmlns:s="library://ns.adobe.com/flex/spark" 
+               xmlns:mx="library://ns.adobe.com/flex/mx">
+    
+    <fx:Script>
+        <![CDATA[
+
+			import mx.events.ListEvent;
+			import mx.controls.Alert;
+
+            // Event handler for the Tree control change event.
+            public function treeChanged(event:Event):void {
+              	var selectedNode:XML = Tree(event.target).selectedItem as XML;
+ 			 	if(selectedNode.hasOwnProperty("@documentId")) {
+ 			 		Alert.show("Loading the document " + selectedNode.@documentId);
+ 			 	}
+            }
+
+            // Diplay tooltip when rolling mouse over a tree item
+			public function onItemRollOver(event:ListEvent):void
+			{
+        	event.target.toolTip = null;
+  			var data:Object = event.itemRenderer.data;
+			// If the item has a tooltip attribute, display it
+  			
+  			var str:String = "";
+ 		 	
+ 		 	if(data.hasOwnProperty("@creator")) {
+  				str += data.@creator;
+ 		 	}
+ 		 	if(data.hasOwnProperty("@creator") && data.hasOwnProperty("@date")) {
+   				str += ", créé le ";
+			} 
+ 		 	if(data.hasOwnProperty("@date")) {
+ 		 		str += data.@date;
+ 		 	}
+ 		 		str += " [" + data.@title + "]";
+   				event.target.toolTip = str;
+            }
+        ]]>
+    </fx:Script>
+    
+    <fx:Declarations>
+        <fx:XMLList id="treeData">
+            <node title="Bilans">
+                <node title="Mes bilans">
+                    <node creator="Damien" title="Mon bilan perso" date="23/02/2011" documentId="1"/>
+                    <node creator="Damien" title="Toto à la montagne" date="24/02/2011" documentId="2"/>
+                    <node creator="Damien" title="Toto à la mer" date="27/02/2011" lastModified="30/02/2011" documentId="3"/>
+                </node>
+                <node title="Bilans des autres">
+                    <node creator="Serguei" title="Toto à la montagne" date="24/02/2011"  documentId="4"/>
+                    <node creator="Nicolas" title="Toto à la mer" date="27/02/2011"  documentId="5"/>
+                </node>
+            </node>    
+        </fx:XMLList>
+    </fx:Declarations>
+    
+    <s:layout>
+        <s:VerticalLayout horizontalAlign="center" />
+    </s:layout>
+    
+    <s:Panel title="Tree Control" color="0x000000" 
+             borderAlpha="0.15" 
+             width="600">
+        
+        <s:layout>
+            <s:VerticalLayout horizontalAlign="center" 
+                              paddingLeft="10" paddingRight="10" 
+                              paddingTop="10" paddingBottom="10"/>
+        </s:layout>
+         
+            <mx:Tree
+            	id="myTree"
+            	width="100%"
+            	height="100%"
+            	labelField="@title"
+                showRoot="false"
+                dataProvider="{treeData}"
+                change="treeChanged(event)"
+                itemRollOver="onItemRollOver(event)"
+                
+                />
+        
+    </s:Panel>
+</s:Application>
