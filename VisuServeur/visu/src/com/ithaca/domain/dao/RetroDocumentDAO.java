@@ -27,5 +27,7 @@ public interface RetroDocumentDAO {
 	public Collection<String> getInviteeList(Integer documentId) throws SQLException;
 	
 	public Collection<RetroDocument> getRetroDocumentIdByInviteeId(Integer inviteeId) throws SQLException;
+
+	public Collection<RetroDocument> getRetroDocumentWithoutXMLByInviteeIdAndSessionId(Integer inviteeId, Integer sessionId) throws SQLException;
 	
 }
