@@ -6,9 +6,9 @@ import java.util.Collection;
 import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
 
+import com.ithaca.domain.dao.RetroDocumentDAO;
 import com.ithaca.domain.model.RetroDocument;
 import com.ithaca.service.RetroDocumentService;
-import com.lyon2.visu.domain.dao.RetroDocumentDAO;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
 

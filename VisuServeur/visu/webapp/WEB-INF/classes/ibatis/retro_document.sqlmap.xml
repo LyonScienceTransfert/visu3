@@ -3,7 +3,7 @@
 
 <sqlMap namespace="rd">
 	
-	<typeAlias alias="retroDocument" type="com.ithaca.model.RetroDocument"/>	
+	<typeAlias alias="retroDocument" type="com.ithaca.domain.model.RetroDocument"/>	
 	
 	<resultMap class="retroDocument" id="retroDocument-result-map">
 		<result column="id_retro_document" property="documentId"  />
