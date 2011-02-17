@@ -1,4 +1,4 @@
-package com.lyon2.visu.domain.dao.impl;
+package com.ithaca.domain.dao.impl;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ithaca.domain.dao.RetroDocumentDAO;
 import com.ithaca.domain.model.RetroDocument;
-import com.lyon2.visu.domain.dao.RetroDocumentDAO;
 import com.lyon2.visu.domain.model.User;
 
 @SuppressWarnings("unchecked")
@@ -52,10 +52,10 @@ public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroD
 		return doc;
 	}
 
-	private Map<String, Object> createParams(Object... params) {
+	public static Map<String, Object> createParams(Object... params) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for(int k=0;k<params.length/2;k++) 
-			map.put((String) params[k],params[k+1]);
+			map.put((String) params[2*k],params[2*k+1]);
 		return map;
 	}
 

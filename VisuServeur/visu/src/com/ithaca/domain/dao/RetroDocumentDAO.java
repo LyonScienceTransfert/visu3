@@ -1,4 +1,4 @@
-package com.lyon2.visu.domain.dao;
+package com.ithaca.domain.dao;
 
 import java.sql.SQLException;
 import java.util.Collection;
