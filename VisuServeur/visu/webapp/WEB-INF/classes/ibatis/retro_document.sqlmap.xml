@@ -61,6 +61,12 @@
 		FROM retro_document_access 
 		WHERE id_user=#value#
 	</select>
+
+	<select id="getDocumentsByInviteeIdAndSessionIdWithoutXML" resultClass="retroDocument-result-map-without-xml">
+	SELECT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
+FROM visu2.retro_document_access as rda, visu2.retro_document as rd
+WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
+	</select>
 	
 	<delete id="deleteDocument">
 		DELETE from retro_document WHERE id_retro_document = #value#
