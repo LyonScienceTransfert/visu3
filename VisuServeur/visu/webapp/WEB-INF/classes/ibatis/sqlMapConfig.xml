@@ -36,5 +36,5 @@
         <sqlMap resource="ibatis/sessionUser.sqlmap.xml"/>
         <sqlMap resource="ibatis/modules.sqlmap.xml"/>
 		<sqlMap resource="ibatis/obsels.sqlmap.xml"/>
-		<!-- <sqlMap resource="ibatis/retro_document.sqlmap.xml"/>  -->
+		<sqlMap resource="ibatis/retro_document.sqlmap.xml"/> 
 	</sqlMapConfig>
