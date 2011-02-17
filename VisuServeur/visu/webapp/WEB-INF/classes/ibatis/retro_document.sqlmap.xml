@@ -5,6 +5,16 @@
 	
 	<typeAlias alias="retroDocument" type="com.ithaca.domain.model.RetroDocument"/>	
 	
+	<resultMap class="retroDocument" id="retroDocument-result-map-without-xml">
+		<result column="id_retro_document" property="documentId"  />
+        <result column="id_owner" property="ownerId"  />
+        <result column="id_session" property="sessionId"  />
+        <result column="creation_date" property="creationDate"  />
+        <result column="last_modification_date" property="lastModified"  />
+		<result column="title" property="title" />
+		<result column="description" property="description" />
+	</resultMap>
+	
 	<resultMap class="retroDocument" id="retroDocument-result-map">
 		<result column="id_retro_document" property="documentId"  />
         <result column="id_owner" property="ownerId"  />
@@ -18,6 +28,12 @@
 
 	<select id="getDocuments" resultMap="retroDocument-result-map">
 		SELECT * FROM retro_document
+	</select>
+	
+	<select id="getDocumentsByOwnerIdAndSessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description
+		FROM retro_document 
+		WHERE id_owner=#ownerId# AND id_session=#sessionId#
 	</select>
 
 	<select id="getDocumentById" resultMap="retroDocument-result-map">

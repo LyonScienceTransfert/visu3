@@ -8,6 +8,7 @@ import com.ithaca.domain.model.RetroDocument;
 public interface RetroDocumentDAO {
 	
 	public Collection<RetroDocument> getRetroDocumentsByOwnerAndBySession(Integer ownerId, Integer sessionId) throws SQLException;
+	public Collection<RetroDocument> getRetroDocumentsByOwnerAndBySessionWithoutXML(Integer ownerId, Integer sessionId) throws SQLException;
 	
 	public RetroDocument getRetroDocumentById(Integer id) throws SQLException;
 	
