@@ -73,7 +73,9 @@ import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
+import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
 import com.ithaca.domain.model.Obsel;
+import com.ithaca.domain.model.RetroDocument;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.Application;
@@ -301,6 +303,45 @@ public class ObselInfo {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListUserObsel", args);
 		}
+		
+		// get retroOdocuments of the owner
+		List<RetroDocument> listRetroDocumentOwner = null;
+		try {
+			listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+					"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des retroDocument " + e, e);
+		}
+		if(listRetroDocumentOwner != null)
+		{
+			log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());
+//			log.warn("xml the first retroDocument = {}",listRetroDocumentOwner.get(0).getCreationDate().toString());	
+		}else
+		{
+			log.warn("List empty !!!!!!");
+		}
+		// get retroOdocuments of the other users
+		List<RetroDocument> listRetroDocumentShared = null;
+		try {
+			listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
+		}
+		if(listRetroDocumentShared != null)
+		{
+			log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());
+//			log.warn("xml the first retroDocument = {}",listRetroDocumentShared.get(0).getCreationDate().toString());	
+		}else
+		{
+			log.warn("List empty !!!!!!");
+		}
+		
+		Object[] argsRetroDocument = { listRetroDocumentOwner, listRetroDocumentShared};
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListRetroDocument", argsRetroDocument);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -343,7 +384,7 @@ public class ObselInfo {
 
 	@SuppressWarnings("unchecked")
 	public void getObselByClosedSession(IConnection conn, Integer sessionId) {
-		log.warn("======== getObselByClosedSession ");
+		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
 
 		IClient client = conn.getClient();
 		List<Obsel> result = null;
@@ -352,6 +393,7 @@ public class ObselInfo {
 		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
 				+ "%";
 		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+		log.warn("OSP = {}",osp.toString());
 		try {
 			result = (List<Obsel>) app.getSqlMapClient().queryForList(
 					"obsels.getObselBySessionId", osp);
@@ -359,6 +401,7 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
 		// get session
+		log.warn("result = {}",result.size());
 		try {
 			session = (Session) app.getSqlMapClient().queryForObject(
 					"sessions.getSession", sessionId);
