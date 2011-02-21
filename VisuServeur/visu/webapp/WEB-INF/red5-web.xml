@@ -94,6 +94,10 @@
      <bean id="retroRoom.service" class="com.lyon2.visu.red5.RetroRoomUserAction">
         <property name="application" ref="web.handler"/>
     </bean>
+<!--  RetroDocument -->
+     <bean id="retroDocument.service" class="com.lyon2.visu.red5.RetroDocumentInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
 <!-- BDD -->
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
@@ -113,7 +117,7 @@
     <bean id="activityElement.service" class="com.lyon2.visu.service.impl.ActivityElementServiceImpl">
         <property name="activityElementDao" ref="activityElementDao"/>
     </bean>
- <bean id="retroDocumentService.service" class="com.lyon2.visu.service.impl.RetroDocumentServiceImpl">
+ 	<bean id="retroDocumentService.service" class="com.lyon2.visu.service.impl.RetroDocumentServiceImpl">
         <property name="retroDocumentDao" ref="retroDocumentDao"/>
     </bean>     
     <bean id="profileDescription.service" class="com.lyon2.visu.service.impl.ProfileDescriptionServiceImpl">
