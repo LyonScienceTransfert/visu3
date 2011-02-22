@@ -182,7 +182,7 @@ public class RetroDocumentInfo {
 		log.warn("======== updateRetroDocument ");
 		try
 		{
-			app.getSqlMapClient().update("rd.update",retroDocument);
+			app.getSqlMapClient().update("rd.updateDocument",retroDocument);
 			log.warn("updated= {} ",retroDocument.toString());
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);
