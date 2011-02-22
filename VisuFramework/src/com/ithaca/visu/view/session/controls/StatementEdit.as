@@ -112,27 +112,27 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonDelete.toolTip = "effacer";
+				buttonDelete.toolTip = "Effacer";
 			}
 			if(instance == buttonEdit)
 			{
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.toolTip = "editer";
+				buttonEdit.toolTip = "Editer";
 			}
 			
 			if(instance == buttonUp)
 			{
 				buttonUp.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonUp.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonUp.toolTip = "move up";
+				buttonUp.toolTip = "Remonter";
 			}
 			
 			if(instance == buttonDown)
 			{
 				buttonDown.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonDown.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonDown.toolTip = "move down";
+				buttonDown.toolTip = "Descendre";
 			}
 			
 			if(instance == textContent)

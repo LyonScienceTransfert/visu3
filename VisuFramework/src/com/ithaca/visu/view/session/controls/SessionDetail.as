@@ -434,7 +434,7 @@ package com.ithaca.visu.view.session.controls
 		}
 		public function setMessageTheme():void
 		{
-			themeSession.text = "entrer un nouveau themè de la séance ici";
+			themeSession.text = "Entrez un nouveau thème de séance ici";
 			themeSession.setStyle("fontStyle","italic");
 			themeSession.setStyle("color","#CCCCCC");
 		}	
@@ -450,7 +450,7 @@ package com.ithaca.visu.view.session.controls
 		
 		public function setMessageDescription():void
 		{
-			descriptionSession.text = "entrer un nouveau description de la séance ici";
+			descriptionSession.text = "Entrez une nouvelle description de séance ici";
 			descriptionSession.setStyle("fontStyle","italic");
 			descriptionSession.setStyle("color","#CCCCCC");
 		}

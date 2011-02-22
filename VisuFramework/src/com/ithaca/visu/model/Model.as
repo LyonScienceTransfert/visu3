@@ -638,11 +638,11 @@ package  com.ithaca.visu.model
 			if(!hasTraceLineByUserId(userId))
 			{
 				var listElementsTraceLine:ArrayList = new ArrayList();
-				listElementsTraceLine.addItem({id: 0, titleTraceLine: "instruction", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 1, titleTraceLine: "keyword", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 2, titleTraceLine: "document", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 3, titleTraceLine: "message", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 4, titleTraceLine: "marker", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : true});
+				listElementsTraceLine.addItem({id: 0, titleTraceLine: "Instructions", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 1, titleTraceLine: "Mots-Clés", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 2, titleTraceLine: "Documents", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 3, titleTraceLine: "Messages", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
+				listElementsTraceLine.addItem({id: 4, titleTraceLine: "Marqueurs", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : true});
 				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
 			}
 		}

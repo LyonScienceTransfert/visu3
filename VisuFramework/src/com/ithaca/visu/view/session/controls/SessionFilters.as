@@ -125,7 +125,7 @@ package com.ithaca.visu.view.session.controls
 			filterElements.addItem( {label:fxgt.gettext("Toutes les séances"), value:SessionFilterEnum.SESSION_ALL, style:"bold"} );
 			filterElements.addItem( {label:fxgt.gettext("Séances à venir"), value:SessionFilterEnum.SESSION_WILL, style:"bold"} );
 			filterElements.addItem( {label:fxgt.gettext("Séances passées"), value:SessionFilterEnum.SESSION_WAS, style:"bold"} );
-			filterElements.addItem( {label:fxgt.gettext("Plans des séances"), value:SessionFilterEnum.SESSION_PLAN, style:"bold"} );
+			filterElements.addItem( {label:fxgt.gettext("Plans de séance"), value:SessionFilterEnum.SESSION_PLAN, style:"bold"} );
 		}
 		
 		//_____________________________________________________________________

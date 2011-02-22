@@ -69,7 +69,7 @@
 			{
 				list.removeEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);
 				//show message
-				if(!doUpdate)Alert.show(fxgt.gettext("L'utilisateur ")+selectedUser.firstname+fxgt.gettext(" est deja en liste de séance."),fxgt.gettext("Information"));
+				if(!doUpdate)Alert.show(fxgt.gettext("L'utilisateur ")+selectedUser.firstname+fxgt.gettext(" est déjè en liste de séances."),fxgt.gettext("Information"));
 			}
 
 			protected function list_creationCompleteHandler(event:FlexEvent):void

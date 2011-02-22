@@ -106,7 +106,7 @@
 					this.currentSession = session;
 					// set current session in the model for checking if new use join this session  
 					Model.getInstance().setCurrentSession(session);
-					// update button "salone synchrone"
+					// update button "salon synchrone"
 					Model.getInstance().setEnabledButtonSalonSynchrone(true);
 					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentTutoratModule(this);
@@ -344,7 +344,7 @@
 				this.startTimeSessionSlider.maximum = startSession + durationSession - 60000;
 				this.startTimeSessionSlider.value = startSession;
 				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
-				this.startTimeSessionSlider.toolTip = "Temps debut de la séance";			
+				this.startTimeSessionSlider.toolTip = "Temps du début de la séance";			
 				// creation slider session duration
 				this.durationSessionSlider.minimum = 60000;
 				this.durationSessionSlider.maximum = durationSession*2;
@@ -406,7 +406,7 @@
 				var currentsession:Session = Model.getInstance().getCurrentSession();
 				if(currentsession == null)
 				{
-					Alert.show("Bug report", "You have problem with curent session");
+					Alert.show("Bug report", "You have a problem with the current session");
 				}else
 				{
 					// create SessionTimeLine
@@ -744,7 +744,7 @@
 				trace("shareActivityElement");
 				if( this.visio.status != VisuVisio.STATUS_RECORD)
 				{
-					Alert.show(fxgt.gettext("Poser le marqueur/consigne/mot clés autorisée uniquement après démarrer la séance.") , fxgt.gettext("Confirmation"));
+					Alert.show(fxgt.gettext("Poser un marqueur, une consigne, ou un mot-clé est autorisé uniquement après avoir démarré la séance.") , fxgt.gettext("Confirmation"));
 				}else
 				{
 					// check if activityElement from current activity or activityElement is Keyword
@@ -759,7 +759,7 @@
 						_currentActivityElement = event.element;
 						Alert.yesLabel = fxgt.gettext("Oui");
 						Alert.noLabel = fxgt.gettext("Non");
-						Alert.show(fxgt.gettext("Voulez-vous changer l'activity?"),
+						Alert.show(fxgt.gettext("Voulez-vous changer d'activité?"),
 							fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, changeActivityConfirmed); 
 					}
 				}
@@ -848,7 +848,7 @@
 							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 							sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.STOP_ACTIVITY);
 							// info == "void", we have title activity in obsel start activity
-							sessionSharedEvent.info = fxgt.gettext("a suspendre la séance.");	
+							sessionSharedEvent.info = fxgt.gettext("a suspendu la séance.");	
 							sessionSharedEvent.listUsers = listUsersId;
 							// use url variable for sending id activity
 							sessionSharedEvent.url = currentActivityId.toString();
@@ -1482,7 +1482,7 @@
 							<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 							</mx:TextArea>
 							<mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" click="onSetMyMarker(event)" right="1" height="25" top="2"  width="150">
-									<mx:label>{fxgt.gettext("Poser Marqueur")}</mx:label>
+									<mx:label>{fxgt.gettext("Poser un marqueur")}</mx:label>
 								</mx:Button>
 						</s:Group>	
 					</s:Group>
@@ -1545,7 +1545,7 @@
 			</s:Panel>
 		</mx:VDividedBox>	
 	</mx:HDividedBox>	
-	<s:Label includeIn="BlankState" text="Rejoindre séance simplement par Accueill" fontSize="22" left="50" top="50" width="474"/>
+	<s:Label includeIn="BlankState" text="Rejoindre la séance simplement par l'accueil" fontSize="22" left="50" top="50" width="474"/>
 	<s:Button includeIn="BlankState" x="73" y="142" label="Button"  id="debugButton" click="onClickDebugButton(event)" />
 	<s:Panel width="700" height="45%" y="200" x="20" includeIn="BlankState">
 		<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>

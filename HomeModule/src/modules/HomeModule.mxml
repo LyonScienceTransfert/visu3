@@ -103,7 +103,7 @@
 					{
 						var namePlateforme:String = Model.getInstance().getNamePlateforme();
 						// add message about connected users
-						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" Actuallement sur le ")+namePlateforme+" : "+strConnectedUser,new Date());
+						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" Actuellement sur le ")+namePlateforme+" : "+strConnectedUser,new Date());
 					}
 				}
 				
@@ -125,7 +125,7 @@
 				// image of the logged user
 				//imageLoggedUser.source = _loggedUser.avatar;
 				// promt in navigateurDay
-				navigateurDay.prompt = fxgt.gettext("Il faut choisir la date de la séance");				
+				navigateurDay.prompt = fxgt.gettext("Veuillez sélectionner une date de séance");				
 				// remove all views the session
 				this.listSessionView = new ArrayCollection();
 				this.sessionGroup.removeAllElements();
@@ -719,7 +719,7 @@
 				<s:BorderContainer width="100%" height="35" backgroundColor="#f5f496">
 					<s:HGroup width="100%" height="100%" verticalAlign="middle">
 						<s:Label width="100%"  fontSize="14" color="#000000"  paddingLeft="90">
-							<s:text>{fxgt.gettext("LES UTILISATEURS")}</s:text>
+							<s:text>{fxgt.gettext("UTILISATEURS")}</s:text>
 						</s:Label>
 					</s:HGroup>
 				</s:BorderContainer>

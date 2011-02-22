@@ -208,7 +208,7 @@
 			</s:BorderContainer>-->
 		</s:Group>
 <!-- panel add obsel -->		
-		<s:Group visible="false" id="test" left="110" top="0" width="170"  height="35" toolTip="Vous-pouvez ajouter type d'obsel.....ici">
+		<s:Group visible="false" id="test" left="110" top="0" width="170"  height="35" toolTip="Sélectionner un type d'obsel pour l'ajouter ici">
 			<s:BorderContainer  id="borderMarkerTitleTraceLine" color="#123456"  width="170"  height="35"   borderVisible="true" backgroundColor="#CCCCCC">
 				<mx:Image  left="0" source="{markerIcon}"  height="{SIZE_IMAGE_TITLE_TRACELINE}" width="{SIZE_IMAGE_TITLE_TRACELINE}"/>
 				<s:CheckBox left="15"  id="checkBoxMarkerObsel" height="3" width="3"   bottom="7"/>
@@ -358,7 +358,7 @@
 			</s:stroke>
 		</s:Line>
 		
-		<s:Label text="instruction" left="45"  maxWidth="70" id="labelTrace1" top="10"/>
+		<s:Label text="Instructions" left="45"  maxWidth="70" id="labelTrace1" top="10"/>
 		<s:Group id="traceLineIconTrace1" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<!--<s:BorderContainer  left="0" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}" backgroundColor="#D8EFC2" visible="true">-->
 				<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace1" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />
@@ -433,7 +433,7 @@
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
 		</s:Line>
-		<s:Label text="mot clés" left="45" maxWidth="70" id="labelTrace2" top="10"/>
+		<s:Label text="Mots-clés" left="45" maxWidth="70" id="labelTrace2" top="10"/>
 		<s:Group  id="traceLineIconTrace2" left="110" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}">
 			<!--<s:BorderContainer  left="0" width="{WIDTH_GROUP_ICON}" height="{contentGroupTraceLine.height}" backgroundColor="#D8EFC2" visible="true">-->
 				<mx:Button width="15" height="15"  right="0" bottom="0" id="buttonAddTypeObselTrace2" visible="false"  chromeColor="#000000" icon="@Embed(source='images/iconPlus.png')" />

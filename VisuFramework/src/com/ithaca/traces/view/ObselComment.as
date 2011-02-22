@@ -89,7 +89,7 @@ package com.ithaca.traces.view
 			if(instance == buttonDelete)
 			{
 				buttonDelete.addEventListener(MouseEvent.CLICK, onMouseClickButtonDelete);
-				buttonDelete.toolTip = "effacer";
+				buttonDelete.toolTip = "Effacer";
 				if(parentObsel.props[TraceModel.TIMESTAMP] == 0)
 				{
 					buttonDelete.enabled = false;
@@ -98,12 +98,12 @@ package com.ithaca.traces.view
 			if(instance == buttonOk)
 			{
 				buttonOk.addEventListener(MouseEvent.CLICK, returnResult);
-				buttonOk.toolTip = "valider";
+				buttonOk.toolTip = "Valider";
 			}
 			if(instance == buttonCancel)
 			{
 				buttonCancel.addEventListener(MouseEvent.CLICK, onMouseClickButtonCancel);
-				buttonCancel.toolTip = "cancel";
+				buttonCancel.toolTip = "Annuler";
 			}
 			if(instance == textContent)
 			{
@@ -123,17 +123,17 @@ package com.ithaca.traces.view
 			if(instance == buttonDelete)
 			{
 				buttonDelete.removeEventListener(MouseEvent.CLICK, onMouseClickButtonDelete);
-				buttonDelete.toolTip = "effacer";
+				buttonDelete.toolTip = "Effacer";
 			}
 			if(instance == buttonOk)
 			{
 				buttonOk.removeEventListener(MouseEvent.CLICK, returnResult);
-				buttonOk.toolTip = "valider";
+				buttonOk.toolTip = "Valider";
 			}
 			if(instance == buttonCancel)
 			{
 				buttonCancel.removeEventListener(MouseEvent.CLICK, onMouseClickButtonCancel);
-				buttonCancel.toolTip = "cancel";
+				buttonCancel.toolTip = "Annuler";
 			}
 		}
 		

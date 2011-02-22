@@ -56,11 +56,11 @@
 			<s:VerticalLayout gap="5"/>
 		</s:layout>
 		<s:Label id="labelSessionDate"  width="160">
-			<s:text>{fxgt.gettext("Thème de la séance est : ")}</s:text>
+			<s:text>{fxgt.gettext("Thème de la séance : ")}</s:text>
 		</s:Label>	
 		<s:RichText text="{data.label}"  paddingLeft="25" right="35" fontWeight="bold" />
 		<s:Label  width="200">
-			<s:text>{fxgt.gettext("La séance a été enregistrée le : ")}</s:text>
+			<s:text>{fxgt.gettext("Séance enregistrée le : ")}</s:text>
 		</s:Label>	
 		<s:RichText text="{data.dateRecording}" right="35" fontWeight="bold"  paddingLeft="25"/>
 	</s:Group>

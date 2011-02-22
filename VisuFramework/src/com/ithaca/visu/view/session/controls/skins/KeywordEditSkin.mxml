@@ -38,7 +38,7 @@
 			{
 				Alert.yesLabel = "Oui";
 				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer mot-clé?",
+				Alert.show("Voulez-vous supprimer le mot-clé?",
 					"Confirmation", Alert.YES|Alert.NO, null, deleteKeywordConfirmed); 
 				
 			}
