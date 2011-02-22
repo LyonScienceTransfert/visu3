@@ -112,7 +112,7 @@ public class MainManager
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
 		
 		// add flux activity
-		Model.getInstance().addFluxActivity(userVO.id_user,userVO.firstname,userVO.avatar,fxgt.gettext(" a rejoint le DECK "),new Date());
+		Model.getInstance().addFluxActivity(userVO.id_user,userVO.firstname,userVO.avatar,fxgt.gettext(" a rejoint Visu "),new Date());
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class MainManager
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
 		
 		// add flix activity
-		Model.getInstance().addFluxActivity(userVO.id_user, userVO.firstname, userVO.avatar, fxgt.gettext(" est parti du DECK "),new Date());
+		Model.getInstance().addFluxActivity(userVO.id_user, userVO.firstname, userVO.avatar, fxgt.gettext(" a quitté Visu "),new Date());
 		
 	}
 	
@@ -193,7 +193,7 @@ public class MainManager
 	 */
 	public function onSameUserId():void
 	{
-		Alert.show(fxgt.gettext("L'utilisateur avec le même identifiant deja connecté sur la platefirme...."),fxgt.gettext("Information"));
+		Alert.show(fxgt.gettext("Un utilisateur ayant le même identifiant est déjà connecté sur la plate-forme"),fxgt.gettext("Information"));
 	}
 	
 	/**
@@ -305,7 +305,7 @@ public class MainManager
 					}
 					if(!hasLoggedUserInSession)
 					{
-						Model.getInstance().addFluxActivity(loggedUserId,loggedUser.firstname, loggedUser.avatar,fxgt.gettext("A été désinscrit de la séance: ")+sessionVO.theme+promtDeLeString, new Date());		
+						Model.getInstance().addFluxActivity(loggedUserId,loggedUser.firstname, loggedUser.avatar,fxgt.gettext("A été désinscrit de la séance : ")+sessionVO.theme+promtDeLeString, new Date());		
 					}
 					// notification for removing session
 					var eventRemoveSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
@@ -325,7 +325,7 @@ public class MainManager
 					// add session , add swap users
 					var labelDate:String = Model.getInstance().addSession(sessionVO, ar);					
 					// add flux 
-					Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar,fxgt.gettext("A été inscrit à la séance: ")+sessionVO.theme+promtDeLeString, new Date());	
+					Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar,fxgt.gettext("A été inscrit à la séance : ")+sessionVO.theme+promtDeLeString, new Date());	
 					// notification for adding session
 					var event:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 					// get list sessionDate

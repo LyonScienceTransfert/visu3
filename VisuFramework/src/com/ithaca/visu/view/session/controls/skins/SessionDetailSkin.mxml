@@ -36,7 +36,7 @@
 			
 			protected function themeSession_focusInHandler(event:FocusEvent):void
 			{
-				if(themeSession.text == "entrer un nouveau themè de la séance ici")
+				if(themeSession.text == "Entrez un nouveau thème de séance ici")
 				{
 					themeSession.text = "";
 					themeSession.setStyle("fontStyle","normal");
@@ -56,7 +56,7 @@
 
 			protected function descriptionSession_focusInHandler(event:FocusEvent):void
 			{
-				if(descriptionSession.text == "entrer un nouveau description de la séance ici")
+				if(descriptionSession.text == "Entrez une nouvelle description de séance ici")
 				{
 					descriptionSession.text = "";
 					descriptionSession.setStyle("fontStyle","normal");
@@ -89,7 +89,7 @@
 							<s:text>Thème :</s:text>
 						</s:Label>
 						<s:Label right="5" fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" verticalCenter.disabled="-3" right.normal="5" top.normal="10">
-							<s:text>Date du passation :</s:text>
+							<s:text>Date prévue :</s:text>
 						</s:Label>
 						<s:Label right="5" bottom="35" fontWeight="bold" fontSize="14">
 							<s:text>Description :</s:text>
@@ -125,7 +125,7 @@
 					<!-- USERS -->
 					<s:Group height="100%" width="40%">
 						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true">
-							<s:label>Ajouter un utilisateur</s:label>
+							<s:label>Ajouter un nouvel utilisateur</s:label>
 						</s:Button>
 						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">
 							<s:Group id="groupUser">

@@ -80,7 +80,7 @@
 				<s:label>{fxgt.gettext("Valider")}</s:label>	
 			</s:Button>
 			<s:Button includeIn="editable"  id="buttonCancel" right="100" bottom="10">
-				<s:label>{fxgt.gettext("Cancel")}</s:label>	
+				<s:label>{fxgt.gettext("Annuler")}</s:label>	
 			</s:Button>
 			<!-- BOUTTONS -->
 		</s:Group>

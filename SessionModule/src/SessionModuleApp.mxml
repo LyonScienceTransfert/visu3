@@ -100,7 +100,7 @@
 				
 				activity.setListActivityElement(keyArr);
 				
-				obj.title = "Afice de l'anne";
+				obj.title = "Affiche de l'année";
 				obj.id_activity = 2;
 				obj.duration = 15;
 				activity = new Activity(obj);

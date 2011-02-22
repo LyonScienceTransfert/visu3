@@ -32,8 +32,8 @@
 		<s:Group left="125"  right="5" top="5"
 				  bottom="5" verticalCenter="0">
 			<s:Label text="Nom: " top="10" left="18"/> 	    <s:Label  id="nameUser" text="Sayfulin"  left="50" top="10"/> 
-			<s:Label text="Prenom:" verticalCenter="0"/>    <s:Label  id="prenomUser" text="Serguei" left="50"  verticalCenter="0"/>
-			<s:Label text="Role:" bottom="10" left="18"/>             <s:Label  id="roleUser" text="Adminisatrateur" left="50" bottom="10"/>      
+			<s:Label text="Prénom:" verticalCenter="0"/>    <s:Label  id="prenomUser" text="Serguei" left="50"  verticalCenter="0"/>
+			<s:Label text="Rôle:" bottom="10" left="18"/>             <s:Label  id="roleUser" text="Adminisatrateur" left="50" bottom="10"/>      
 		</s:Group>
 	</s:Group>
 </s:Skin>
