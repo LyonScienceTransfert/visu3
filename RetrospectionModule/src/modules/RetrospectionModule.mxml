@@ -943,7 +943,7 @@
 			</s:Panel>
 			<mx:VDividedBox width="30%" height="100%" maxWidth="330">
 				<s:Panel width="100%" height="50%">
-					<s:title>{fxgt.gettext("Mes séances(consernent uniquement vos activités dans les séances)")}</s:title>
+					<s:title>{fxgt.gettext("Mes séances (uniquement vos activités dans les séances)")}</s:title>
 					<!--<s:toolTip>{fxgt.gettext("(consernent uniquement vos activités dans les séances)")}</s:toolTip>-->
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
@@ -961,8 +961,8 @@
 					</s:Group>
 				</s:Panel>
 				<s:Panel width="100%" height="50%" includeIn="vciel">
-					<s:title>{fxgt.gettext("Les séances partagées(consernent les séances fermés uniquement)")}</s:title>
-					<!--<s:toolTip>{fxgt.gettext("(consernent les séances fermés uniquement)")}</s:toolTip>-->
+					<s:title>{fxgt.gettext("Les séances partagées (séances fermées uniquement)")}</s:title>
+					<!--<s:toolTip>{fxgt.gettext("(concernent les séances fermés uniquement)")}</s:toolTip>-->
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
