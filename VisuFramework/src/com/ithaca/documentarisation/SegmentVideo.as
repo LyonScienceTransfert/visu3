@@ -1,9 +1,13 @@
 package com.ithaca.documentarisation
 {
+	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.traces.view.ObselImage;
 	
+	import flash.events.MouseEvent;
+	
+	import mx.controls.Button;
 	import mx.controls.Image;
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
@@ -25,9 +29,17 @@ package com.ithaca.documentarisation
 		[SkinPart("true")]
 		public var screenShotImage:Image;
 		
+		[SkinPart("true")]
+		public var playButton:Button;
+		
 		private var empty:Boolean = true;
-		private var _timeBegin:String="";
+		private var _timeBegin:Number=0;
+		private var _timeEnd:Number=0;
 		private var _sourceIcon:Object;
+		private var timeWindowLabelChange:Boolean;
+		private var screenShotImageChange:Boolean;
+		private var _startDateSession:Number;
+		private var DELTA_TIME:Number = 5000;
 		
 		public function SegmentVideo()
 		{
@@ -36,27 +48,62 @@ package com.ithaca.documentarisation
 			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);*/
 		}
 		
-		public function get timeBigin():String {return _timeBegin;};
-		public function set timeBigin(value:String):void{_timeBegin = value;};
+		public function get timeBegin():Number {return _timeBegin;};
+		public function set timeBegin(value:Number):void
+		{
+			if(value - _startDateSession > DELTA_TIME)
+			{
+				_timeBegin = value - DELTA_TIME ;
+			}else
+			{
+				_timeBegin = _startDateSession;
+			}
+			// TODO timeEnd  by duration of the session 
+			_timeEnd = value + DELTA_TIME;
+			
+			timeWindowLabelChange = true;
+			invalidateProperties();
+		};
 		
 		public function get sourceIcon():Object {return _sourceIcon;};
 		public function set sourceIcon(value:Object):void
 		{
-			_sourceIcon = value; 
+			_sourceIcon = value;
+			screenShotImageChange = true;
+			invalidateProperties();
 		};
+		public function set startDateSession(value:Number):void{_startDateSession = value;};
+		public function get startDateSession():Number{return _startDateSession;};
 
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
 			if(instance == timeWindowLabel)
 			{
-				timeWindowLabel.text = _timeBegin;
-				timeWindowLabel.toolTip = _timeBegin;
+				timeWindowLabel.text = timeToString();
+				timeWindowLabel.toolTip = timeToString();
+				playButton.enabled = true;
+				playButton.toolTip = "Show the segment video";		
 			}	
 			
 			if(instance == screenShotImage)
 			{
-				screenShotImage.source = _sourceIcon
+				screenShotImage.source = _sourceIcon;
+			}	
+			
+			if(instance == playButton)
+			{
+				if(this._timeBegin == 0 )
+				{
+					playButton.enabled = false;
+					playButton.toolTip = "Hasn't video segment...";
+				}
+				else
+				{
+					playButton.toolTip = "Show the segment video";					
+				}
+				playButton.addEventListener(MouseEvent.CLICK, onPlayButtonClick);
+				
 			}	
 		}
 		
@@ -73,6 +120,63 @@ package com.ithaca.documentarisation
 		 public function isEmpty():Boolean
 		 {
 			 return empty;
+		 }
+		 override protected function commitProperties():void
+		 {
+			 super.commitProperties();
+			 if (timeWindowLabelChange)
+			 {
+				 timeWindowLabelChange = false;
+				 if(timeWindowLabel != null)
+				 {
+					 timeWindowLabel.text = timeToString();
+					 timeWindowLabel.toolTip = timeToString();
+				 }
+			 }
+			 if(screenShotImageChange)
+			 {
+				 screenShotImageChange = false;
+				 if(screenShotImage != null)
+				 {
+					 screenShotImage.source = _sourceIcon
+				 }
+			 }
+			 
+		 }
+		 
+		 private function onPlayButtonClick(event:MouseEvent):void
+		 {
+			 var playRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
+			 playRetroDocumentEvent.beginTime = this._timeBegin;
+			 // TODO END TIME
+			 this.dispatchEvent(playRetroDocumentEvent);
+		 }
+		 
+		 private function timeToString():String
+		 {
+			 var timeStart:Number = this._timeBegin - _startDateSession;
+			 var timeMin:int = timeStart/60000;
+			 var timeMinString:String = timeMin.toString();
+			 if(timeMin < 10){timeMinString = "0"+timeMinString;};
+			 
+			 var timeSec:int = (timeStart - timeMin*60000)/1000;
+			 var timeSecString:String = timeSec.toString();
+			 if(timeSec < 10){timeSecString= "0"+timeSecString;}
+			 
+			 var timeFrom:String = timeMinString+":"+timeSecString;
+			 
+			 var timeEnd:Number = this._timeEnd - _startDateSession;
+			 var timeMinEnd:int = timeEnd/60000;
+			 var timeMinEndString:String = timeMinEnd.toString();
+			 if(timeMinEnd < 10){timeMinEndString = "0"+timeMinEndString;};
+			 
+			 var timeSecEnd:int = (timeEnd - timeMinEnd*60000)/1000;
+			 var timeSecStringEnd:String = timeSecEnd.toString();
+			 if(timeSecEnd < 10){timeSecStringEnd= "0"+timeSecStringEnd;}
+			 
+			 var timeTo:String = timeMinEndString+":"+timeSecStringEnd;
+
+			 return "["+timeFrom+"-"+timeTo+"]";
 		 }
 /*		private function onDragDrop(event:DragEvent):void
 		{
