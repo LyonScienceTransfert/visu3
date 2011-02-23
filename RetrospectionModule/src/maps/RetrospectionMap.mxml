@@ -17,6 +17,7 @@
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.events.TraceLineEvent;
 		import com.ithaca.visu.events.VisuModuleEvent;
+		import com.ithaca.documentarisation.events.RetroDocumentEvent;
 		
 		import mx.events.FlexEvent;
 		
@@ -121,7 +122,29 @@
 				<mate:Request action="retroRoom.retroStartCancelEditCommentEvent"   arguments="{[ event.typeAction, event.timeObselBegin, event.timeObselEnd, event.timeStamp, event.text, event.editTypeCancel ]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-
+<!-- DOCUMENTARISATION -->
+		<mate:EventHandlers type="{RetroDocumentEvent.LOAD_RETRO_DOCUMENT}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[ event.idRetroDocument, event.editabled]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{RetroDocumentEvent.CREATE_RETRO_DOCUMENT}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.createRetroDocument"   arguments="{[ event.retroDocumentVO , event.sessionId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{RetroDocumentEvent.DELETE_RETRO_DOCUMENT}" debug="true" useCapture="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.deleteRetroDocument"   arguments="{[event.idRetroDocument , event.sessionId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		<mate:EventHandlers type="{RetroDocumentEvent.UPDATE_RETRO_DOCUMENT}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
 	</fx:Declarations>
 	
 </mate:LocalEventMap>
