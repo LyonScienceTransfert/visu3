@@ -22,6 +22,9 @@
 			</s:Label>
 		</s:BorderContainer>
 		<s:Label id="timeWindowLabel" text="AZERTREEA" left="3" right="38" includeIn="normal" verticalCenter="0"/>
-		<mx:Image  id="screenShotImage" right="3" width="32" height="32" includeIn="normal"/>
+		<mx:Image  id="screenShotImage" right="3" width="32" height="32" includeIn="normal" visible="false"/>
+		<mx:Button  id="playButton" right="3" width="48" height="22" top="3" includeIn="normal">
+			<mx:label>Play</mx:label>
+		</mx:Button>
 	</s:Group>
 </s:Skin>

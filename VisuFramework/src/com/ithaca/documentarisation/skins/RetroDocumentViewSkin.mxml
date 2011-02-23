@@ -13,6 +13,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
+			import com.ithaca.visu.ui.utils.SharedSatusEnum;
 		]]>
 	</fx:Script>
 	<!-- SkinParts
@@ -36,8 +37,9 @@
 			</s:VerticalLayout>
 		</s:layout>
 		<s:HGroup  height="35" width="100%" gap="3" verticalAlign="middle">
-			<s:Label text="balbla" id="titleDocument" minWidth="100" width="100%"/>
-			<mx:Button icon="{IconEnum.getIconByName('edit')}" id="shareButton" width="30" includeIn="edited"/>
+			<s:Label text="balbla" id="titleDocument" minWidth="100" width="100%" includeIn="normal"/>
+			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited" fontSize="12"/>
+			<mx:Button icon="{IconEnum.getIconByCodeShared(SharedSatusEnum.SHARED_OK_THIS_TO_OTHER)}" id="shareButton" enabled="false" width="30" includeIn="edited" visible="false"/>
 			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited"/>
 			<mx:Button icon="{IconEnum.getIconByName('commentAdd')}" id="addButton" width="30" includeIn="edited"/>
 		</s:HGroup>

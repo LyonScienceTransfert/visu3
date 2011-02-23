@@ -17,6 +17,10 @@ package com.ithaca.traces.view
 	import spark.components.TextArea;
 	import spark.components.supportClasses.SkinnableComponent;
 	
+	import flash.events.MouseEvent;
+	import mx.core.DragSource;
+	import mx.managers.DragManager;
+	
 	public class ObselComment extends SkinnableComponent implements IObselComponenet
 	{
 		
@@ -55,6 +59,7 @@ package com.ithaca.traces.view
 			this.buttonMode = true;
 			this.doubleClickEnabled = true;
 			this.addEventListener(MouseEvent.DOUBLE_CLICK, onDobleClickObselComment);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverObsel);
 		}
 		
 		public function set parentObsel(value:Obsel):void{_parentObsel = value;}
@@ -229,6 +234,17 @@ package com.ithaca.traces.view
 		public function setObselViewVisible(value:Boolean):void
 		{
 			this.visible = value;
+		}
+		private function onMouseMoveOverObsel(event:MouseEvent):void
+		{
+			var ds:DragSource = new DragSource();
+			ds.addData(_parentObsel,"obsel");
+			if(imageObsel != null)
+			{
+				ds.addData(imageObsel.source,"sourceIcon");
+			}
+			ds.addData(_text,"textObsel");	
+			DragManager.doDrag(this,ds,event);
 		}
 		public function cloneMe():ObselComment
 		{

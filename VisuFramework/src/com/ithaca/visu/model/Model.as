@@ -69,7 +69,6 @@ package  com.ithaca.visu.model
 	import com.ithaca.traces.view.ObselMarker;
 	import com.ithaca.traces.view.ObselSessionOut;
 	import com.ithaca.visu.model.vo.SessionVO;
-	import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
@@ -1057,10 +1056,9 @@ package  com.ithaca.visu.model
 			}
 			
 			Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel)
-				
 			return result;
 		}
-
+		
 		public function setObsel(obsel:*, userId:int, typeObsel:String):void
 		{
 			var traceLine:Object = getTraceLineByUserId(userId);

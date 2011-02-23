@@ -9,6 +9,8 @@ package com.ithaca.documentarisation
 	
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import mx.controls.Alert;
 	import mx.controls.Button;
@@ -59,10 +61,11 @@ package com.ithaca.documentarisation
 		private var TEXT_TITLE_EMPTY ="Entrez un titre ici";
 		
 		private var _title:String = "";
-		private var _timeBegin:String="";
+		private var _timeBegin:Number=0;
 		private var _sourceIcon:Object;
 		private var _textComment:String;
 		private var dragSource:DragSource = null;
+		private var _startDateSession:Number;
 		private var _segment:Segment;
 		
 		public function RetroDocumentSegment()
@@ -95,19 +98,24 @@ package com.ithaca.documentarisation
 			this._title = value;
 			titleChange = true;
 		}
+		public function set startDateSession(value:Number):void{_startDateSession = value;};
+		public function get startDateSession():Number{return _startDateSession;};
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
 			if(instance == segmentVideo)
 			{
 				segmentVideo.sourceIcon = this._sourceIcon;
-				segmentVideo.timeBigin = this._timeBegin;
+				segmentVideo.startDateSession = _startDateSession
+				segmentVideo.timeBegin = _timeBegin;
+				
 				this.segmentVideo.showDetail(emptySegmentVideo);
 			}
 			
 			if(instance == segmentComment)
 			{
 				segmentComment.text  = _textComment;
+				segmentComment.addEventListener(TextOperationEvent.CHANGE, segmentCommentTextInput_changeHandler);
 			}
 			
 			if(instance == buttonDeleteSegment)
@@ -129,11 +137,11 @@ package com.ithaca.documentarisation
 					titleSegmentTextInput.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, titleSegmentTextInput_focusOutHandler);	
 					titleSegmentTextInput.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, titleSegmentTextInput_focusOutHandler);	
 					titleSegmentTextInput.addEventListener(FocusEvent.FOCUS_IN, titleSegmentTextInput_focusInHandler);
-					titleSegmentTextInput.addEventListener(TextOperationEvent.CHANGE, titleSegmentTextInput_changeHandler);
 				}else
 				{
 					titleSegmentTextInput.text = this._title;
 				}
+				titleSegmentTextInput.addEventListener(TextOperationEvent.CHANGE, titleSegmentTextInput_changeHandler);
 				
 			}	
 		}
@@ -157,9 +165,11 @@ package com.ithaca.documentarisation
 			if(segmentChange)
 			{
 				segmentChange = false;
-				this.segmentVideo.timeBigin = this._timeBegin;
-				this.segmentVideo.sourceIcon = this._sourceIcon;
 				this.segmentVideo.showDetail(false);
+				this.segmentVideo.startDateSession = this._startDateSession;
+				this.segmentVideo.timeBegin = this._timeBegin
+				this.segmentVideo.sourceIcon = this._sourceIcon;
+				
 				this.segmentComment.text = this._textComment;
 				this.segmentComment.selectAll();
 				this.stage.focus = this.segmentComment;
@@ -173,7 +183,7 @@ package com.ithaca.documentarisation
 				//this.segmentVideo.timeBigin = this._segment.beginTimeVideo
 				this._sourceIcon = IconEnum.getIconByTypeObsel(this._segment.typeSource);
 				this._textComment = this._segment.comment;
-				this._timeBegin = this._segment.beginTimeVideo.toString();
+				this._timeBegin = this._segment.beginTimeVideo;
 				this._title = this._segment.title;
 				//this.segmentComment.selectAll();
 				//this.stage.focus = this.segmentComment;
@@ -226,7 +236,7 @@ package com.ithaca.documentarisation
 		{
 			editabled = value;
 			this.invalidateSkinState();
-		}
+		}	
 		
 		private function onDragEnter(event:DragEvent):void
 		{
@@ -244,6 +254,8 @@ package com.ithaca.documentarisation
 			if(!open){
 				open = true; 
 				invalidateSkinState();
+				var updateSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
+				this.dispatchEvent(updateSegmentEvent);
 			}else
 			{
 				checkingEmptySegmentVideo();
@@ -259,7 +271,7 @@ package com.ithaca.documentarisation
 				{
 					Alert.yesLabel = "Oui";
 					Alert.noLabel = "Non";
-					Alert.show("Voulez-vous ......... ?",
+					Alert.show("Voulez-vous remplacer ?",
 						"Confirmation", Alert.YES|Alert.NO, null, updateSegmentConformed); 
 				}else
 				{
@@ -278,12 +290,18 @@ package com.ithaca.documentarisation
 		private function updateSegment():void
 		{
 			var obsel:Obsel = dragSource.dataForFormat("obsel") as Obsel;
-			var timeBegin:String = obsel.begin.toString();
-			_timeBegin = timeBegin;
+			_timeBegin = obsel.begin;
 			_sourceIcon = dragSource.dataForFormat("sourceIcon") as Object;
-			_textComment = dragSource.dataForFormat("textObsel") as String;
+			_textComment = _textComment + dragSource.dataForFormat("textObsel") as String;
+			// update segment
+			_segment.beginTimeVideo = obsel.begin;
+			_segment.comment = _textComment;
+			_segment.link = "voidLink";
+			_segment.title = _title;
 			segmentChange = true;
 			this.invalidateProperties();
+			var updateSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
+			this.dispatchEvent(updateSegmentEvent);
 		}
 		
 		private function setMessageTitleSegmentTextInput():void
@@ -311,7 +329,20 @@ package com.ithaca.documentarisation
 		
 		protected function titleSegmentTextInput_changeHandler(event:TextOperationEvent):void
 		{
-			//this.hostComponent.updateMemo(memoDisplay.text);
+			this._title = titleSegmentTextInput.text;
+			_segment.title = this._title;
+			notifyUpdateTextField();
+		}
+		protected function segmentCommentTextInput_changeHandler(event:TextOperationEvent):void
+		{
+			this._textComment = this.segmentComment.text;
+			_segment.comment = this._textComment;
+			notifyUpdateTextField();
+		}
+		private function notifyUpdateTextField():void
+		{
+			var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
+			this.dispatchEvent(notifyUpdateEvent);
 		}
 	}
 }

@@ -12,9 +12,13 @@
 						xmlns:controls="com.lyon2.controls.*" > 
 	<fx:Script>
 		<![CDATA[ 
+			import com.ithaca.documentarisation.RetroDocumentView;
+			import com.ithaca.documentarisation.events.RetroDocumentEvent;
+			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
+			import com.ithaca.traces.view.ObselStich;
 			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
@@ -30,7 +34,9 @@
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
 			import com.ithaca.visu.model.vo.ObselVO;
+			import com.ithaca.visu.model.vo.RetroDocumentVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.view.session.SessionViewSalonRetro;
 			
@@ -40,6 +46,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
 			
 			import spark.events.TrackBaseEvent;
 			
@@ -65,6 +72,8 @@
 			private var pickCheryClick:Number = 0;
 			private var commentTimeLine:TraceLineComment;
 			private var currentSessionDateRecording:Date = null;
+			private var currentSessionId:int;
+			private var DELTA_STICH:int = 20;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
@@ -104,6 +113,9 @@
 				// add obsel join retro room
 				var joinSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.GO_IN_MODULE);
 				this.dispatchEvent(joinSalonRetro);
+				
+				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
+				this.durationSessionSlider.dataTipFormatFunction = formatDurationSlider;
 			}
 			
 			private function onAddObselComment(event:ObselEvent):void
@@ -294,19 +306,41 @@
 			{
 				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
 				this.sessionTimeLine.sessionTimeLineLayout.startTime = startSession;
-				// TODO calcul number of labels
-				var nbrLabelTime:int = 6;
+				
+				var widthGroup:Number = this.sessionTimeLine.sessionTimeLineLoggedUser.width;
+				var nbrLabelTime:int = widthGroup/DELTA_STICH;
+				nbrLabelTime = 50;
 				var deltaTime:int = durationSession/nbrLabelTime;
+				var every:int = 6;
+				var count:int = 1;
 				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
 				{
 					var beginTimeObsel:Number = nPart*deltaTime;
 					// in seconds
-					var labelTextSec:String = (beginTimeObsel/1000).toString();
-					var labelTextMin:String = Math.round((beginTimeObsel/1000)/60).toString();
-					var obselTime:ObselTime = new ObselTime()
+					
+					var obselTime:ObselStich = new ObselStich()
 					obselTime.setBegin(beginTimeObsel);
 					obselTime.setEnd(beginTimeObsel);
-					obselTime.text = labelTextMin+" min.";
+					obselTime.height = 10;
+					if(count == every)
+					{
+						obselTime.height = 20;
+						count = 1;
+						var minuts:int = (beginTimeObsel/1000)/60;
+						var minutsString:String = minuts.toString();
+						if(minuts<10){
+							minutsString = "0"+minutsString; 
+						}
+						var seconds:int = (beginTimeObsel/1000)-minuts*60;
+						var secondsString:String = seconds.toString();
+						if(seconds < 10)
+						{
+							secondsString = "0"+secondsString;
+						}
+						obselTime.setLabel(minutsString+":"+secondsString);
+					}
+					count++;
+					//obselTime.text = labelTextMin+" min.";
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
 				}
 			}
@@ -534,19 +568,24 @@
 				var target:Object = event.target as Object;
 				var deltaXObselTime:Number = 0;
 				// checing if user clicked on ObselTime
-				if (target is ObselTime)
+				// TODO deplacement correct...
+				if (target is ObselStich)
 				{
 					deltaXObselTime = target.x;
 				}
 				var localX:Number = event.localX + deltaXObselTime;
+				
 				var timeStartSession:Number = this.testTimeLine.startTimeSession;
 				var duration:Number = this.testTimeLine.durationSession;
 				var groupTimeLine:Group = event.currentTarget as Group;
 				var wightGroup:Number = groupTimeLine.width;
 				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
-				updateTimeCursor(delta);
-				var begin :Number = delta + timeStartSession;
-				this.pickCheryClick = begin;
+				/* updateTimeCursor(delta);
+				var begin :Number = delta + timeStartSession; */
+				// pre play video flux
+				prePlayVideoFlux(0,delta);
+				// TODO new function ?
+/* 				this.pickCheryClick = begin;
 				
 				// remove all streams and listeners
 				this.removeAllStreams();
@@ -569,7 +608,43 @@
 				actionVideoPlayer.typeAction = TraceModel.RETRO_VIEDO_GO_TO_TIME_EVENT;
 				// choosing time by user
 				actionVideoPlayer.timePlayer = this.pickCheryClick;
-				this.dispatchEvent(actionVideoPlayer);			
+				this.dispatchEvent(actionVideoPlayer); */			
+			}
+			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
+			{
+				if(delta != 0)
+				{
+					value = delta + this.testTimeLine.startTimeSession;
+				}else
+				{
+					delta = value - this.testTimeLine.startTimeSession;
+				}
+				updateTimeCursor(delta);
+				
+				this.pickCheryClick = value;
+				
+				// remove all streams and listeners
+				this.removeAllStreams();
+				var listObselSessionIn:ArrayCollection = Model.getInstance().getObselSessionInByTimestamp(value);
+				// update checking sum flux video
+				this.checkingSumFluxVideo = this.getSumBeginTimeObselSI(listObselSessionIn);
+				this.addFluxVideo(listObselSessionIn);
+				// running the flux video
+				if(!this.timer.running)
+				{
+					var timePausedNumber:Number = new Date().time -  this.timePause;
+					this.timeStart = this.timeStart  + timePausedNumber;
+					this.timer.start();
+					this.sessionTimeLine.setShowButtonNavigation(true);
+				}
+				// update buttons play/stop
+				this.sessionTimeLine.setStatusPlay(true);
+				// add obsel User Action
+				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+				actionVideoPlayer.typeAction = TraceModel.RETRO_VIEDO_GO_TO_TIME_EVENT;
+				// choosing time by user
+				actionVideoPlayer.timePlayer = this.pickCheryClick;
+				this.dispatchEvent(actionVideoPlayer);
 			}
 			
 			 private function addFluxVideo(listObselSessionIn:ArrayCollection):void
@@ -830,6 +905,10 @@
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL);
 				getListObselEvent.traceId = traceId;
 				getListObselEvent.sessionId = sessionView.sessionId;
+				// set current sessionId
+				this.currentSessionId = sessionView.sessionId;
+				// enable button add bilan
+				addRetroDocument.enabled = true;
 				this.dispatchEvent(getListObselEvent);
 				// update panel titre
 				panelTimeLine.title = fxgt.gettext("Résumé de la séance enregistrée: ")+sessionView.theme;
@@ -911,7 +990,132 @@
 				//actionVideoPlayer
 				this.dispatchEvent(actionVideoPlayer);
 			}
+			
+			private function updateTreeRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var xml:XML = event.xmlTreeRetroDocument;
+					this.retroDocumentTree.dataProvider = xml;
+					this.groupRetroDocumentView.removeAllElements();
+				}
+			}
+			private function showRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var retroDocumentView:RetroDocumentView = new RetroDocumentView();
+					retroDocumentView.percentWidth = 100;
+					retroDocumentView.setEditabled(event.editabled);
+					retroDocumentView.retroDocument = event.retroDocument;
+					retroDocumentView.startDateSession = this.currentSessionDateRecording.time;
+					retroDocumentView.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument)
+					groupRetroDocumentView.removeAllElements();
+					groupRetroDocumentView.addElement(retroDocumentView);
+				}
+			}
+			
+			private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
+			{
+				var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
+				var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
+				retroDocumentVO.lastModified = dateLastModify;
+				var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
+				updateRetrodocument.retroDocumentVO = retroDocumentVO;
+				// TODO list users
+				this.dispatchEvent(updateRetrodocument);		
+			}
+			
+			private function playRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var beginTime:Number = event.beginTime;
+					prePlayVideoFlux(beginTime);
+				}
+			}
+			// Diplay tooltip when rolling mouse over a tree item
+			private function onItemRollOver(event:ListEvent):void
+			{
+				event.target.toolTip = null;
+				var data:Object = event.itemRenderer.data;
+				// If the item has a tooltip attribute, display it
+				
+				var str:String = "";
+				
+				if(data.hasOwnProperty("@creator")) {
+					str += data.@creator;
+				}
+				if(data.hasOwnProperty("@creator") && data.hasOwnProperty("@date")) {
+					str += ", créé le ";
+				} 
+				if(data.hasOwnProperty("@date")) {
+					str += data.@date;
+				}
+				str += " [" + data.@title + "]";
+				event.target.toolTip = str;
+			}
 
+			// Event handler for the Tree control change event.
+			public function treeChanged(event:Event):void {
+				var selectedNode:XML = Tree(event.target).selectedItem as XML;
+				if(selectedNode.hasOwnProperty("@documentId")) {
+				//	Alert.show("Loading the document " + selectedNode.@documentId);
+ 					var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
+					var idDocument:String = selectedNode.@documentId;
+					var editabled:String = selectedNode.@editabled;
+					var editabledBoolean:Boolean = true;
+					if(editabled == "false")
+					{
+						editabledBoolean = false;
+					}
+					loadRetroDocument.idRetroDocument =  new int(idDocument);
+					loadRetroDocument.editabled = editabledBoolean;				
+					this.dispatchEvent(loadRetroDocument);
+				}
+			}
+
+
+			protected function addRetroDocument_clickHandler(event:MouseEvent):void
+			{
+				var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+				var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
+				retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+				retroDocumentVO.description = "new description here";
+				retroDocumentVO.documentId = 0;
+				retroDocumentVO.lastModified = retroDocumentVO.creationDate;
+				var createurUser:User = Model.getInstance().getLoggedUser();
+				retroDocumentVO.ownerId = createurUser.id_user;
+				retroDocumentVO.sessionId = this.currentSessionId;
+				retroDocumentVO.title = "new bilan here";
+
+				var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
+				var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
+				retroDocumentVO.xml = stringXML;
+				var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
+				createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
+				createRetroDocumentVOEvent.sessionId = this.currentSessionId;;
+				this.dispatchEvent(createRetroDocumentVOEvent);
+			}
+			
+			/**
+			 * format text slider duration of the session
+			 */
+			private function formatDurationSlider(value:Number):Object { 
+				var duration:int = value/60000;
+				var percent:int = (value*100/durationSessionSlider.maximum);
+				var result:String = percent.toString() + " %";
+				return result;
+			}
+			
+			/**
+			 * format text slider start session
+			 */
+			private function formatStartTimeSlider(value:Number):Object { 
+				var duration:int = (value - startTimeSessionSlider.minimum)/60000;
+				var result:String = duration.toString() + " min.";
+				return result;
+			}
 		]]>
 		
 	</fx:Script>
@@ -925,25 +1129,22 @@
 		<mate:Listener type="{SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION}"  method="updateListClosedSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_RETRO}"  method="updateTimeLine"/>
 		<mate:Listener type="{SessionEvent.LOAD_SESSION_SALON_RETROSPECTION}"  method="updateSessionDate"/>
+		<mate:Listener type="{RetroDocumentEvent.LOAD_TREE_RETRO_DOCUMENT}"  method="updateTreeRetroDocument"/>
+		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
+		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="playRetroDocument" />
 	</fx:Declarations>
 <mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
-			<s:Panel height="100%" width="70%">
-				<s:title>Video</s:title>
-				<s:Group height="100%" width="100%">
-					<s:layout>
-						<s:HorizontalLayout gap="0"/>
-					</s:layout>
-					<controls:VisuVisio id="visio" width="100%" top="0"
-										quality="80"
-										bandwidth="15000" autoPlay="True" height="100%" />
-					
-				</s:Group>
-			</s:Panel>
+<!-- SESSIONS -->
 			<mx:VDividedBox width="30%" height="100%" maxWidth="330">
 				<s:Panel width="100%" height="50%">
+<<<<<<< HEAD
 					<s:title>{fxgt.gettext("Mes séances")}</s:title>
+=======
+					<s:title>{fxgt.gettext("Mes séances(consernent uniquement vos activités dans les séances)")}</s:title>
+					<!--<s:toolTip>{fxgt.gettext("(consernent uniquement vos activités dans les séances)")}</s:toolTip>-->
+>>>>>>> 3d9168f80129abac5495a8a6d1dada9de9ddd33f
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
@@ -960,7 +1161,12 @@
 					</s:Group>
 				</s:Panel>
 				<s:Panel width="100%" height="50%" includeIn="vciel">
+<<<<<<< HEAD
 					<s:title>{fxgt.gettext("Séances partagées (séances fermées uniquement)")}</s:title>
+=======
+					<s:title>{fxgt.gettext("Les séances partagées(consernent les séances fermés uniquement)")}</s:title>
+					<!--<s:toolTip>{fxgt.gettext("(consernent les séances fermés uniquement)")}</s:toolTip>-->
+>>>>>>> 3d9168f80129abac5495a8a6d1dada9de9ddd33f
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
@@ -977,6 +1183,46 @@
 					</s:Group>
 				</s:Panel>
 			</mx:VDividedBox>
+<!-- VIDEO -->
+			<s:Panel height="100%" width="50%">
+				<s:title>Video</s:title>
+				<s:Group height="100%" width="100%">
+					<s:layout>
+						<s:HorizontalLayout gap="0"/>
+					</s:layout>
+					<controls:VisuVisio id="visio" width="100%" top="0"
+										quality="80"
+										bandwidth="15000" autoPlay="True" height="100%" />
+					
+				</s:Group>
+			</s:Panel>
+<!-- DOCUMEBTARISATION -->
+			<s:Group height="100%" width="20%" minWidth="200">
+				<s:layout>
+					<s:VerticalLayout gap="1"/>
+				</s:layout>
+				<s:Group width="100%"  height="30">
+					<s:Label maxDisplayedLines="1" left="5" top="10" fontWeight="bold">
+						<s:text>Documentarisation</s:text>
+					</s:Label>
+					<mx:Button id="addRetroDocument" enabled="false" top="5" right="3" icon="{IconEnum.getIconByName('add')}" toolTip="Créer un nouveau bilan pour cette séance" width="32" click="addRetroDocument_clickHandler(event)"/>
+				</s:Group>
+				<mx:VDividedBox width="100%" height="100%">
+					<mx:Tree width="100%" height="30%" id="retroDocumentTree" 
+							 showRoot="false" labelField="@title"
+							 itemRollOver="onItemRollOver(event)"  change="treeChanged(event)" dropShadowVisible="true"/>
+					<s:Group width="100%" height="70%">
+						<s:Scroller left="3" right="3" top="3" bottom="1" >
+							<s:Group width="100%" height="100%" id="groupRetroDocumentView">
+								<s:layout>
+									<s:VerticalLayout gap="0"/>
+								</s:layout>
+							</s:Group>
+						</s:Scroller>
+					</s:Group>
+				</mx:VDividedBox>
+			</s:Group>
+			
 		</mx:HDividedBox>
 		<s:Panel width="100%" height="40%" id="panelTimeLine">
 			<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
@@ -999,10 +1245,10 @@
 					</s:Group>
 				</s:Group>
 				<s:HGroup>
-                    <s:Label text="Position: " />
+					<s:Label text="Position: "/>
 					<s:HSlider id="startTimeSessionSlider" 
 							   liveDragging="true" width="300" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
-                    <s:Label text="Zoom: " />
+					<s:Label text="Zoom: " />
 					<s:HSlider id="durationSessionSlider" 						   
 							   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)"/>
 				</s:HGroup>
