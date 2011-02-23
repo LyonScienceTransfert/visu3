@@ -1,4 +1,4 @@
-/**
+ * /**
  * Copyright Université Lyon 1 / Université Lyon 2 (2009,2010)
  * 
  * <ithaca@liris.cnrs.fr>
@@ -161,6 +161,10 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/Editer.png")]
 		static private var edit:Class;
 		
+		[Bindable]
+		[Embed("images/add.png")]
+		static private var add:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -258,6 +262,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "commentAdd" : 
 					icon = commentAdd;
+					break;
+				case "add" : 
+					icon = add;
 					break;
 				default :
 					break;				
