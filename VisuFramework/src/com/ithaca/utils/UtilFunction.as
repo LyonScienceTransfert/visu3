@@ -62,6 +62,8 @@
  */
 package com.ithaca.utils
 {
+	import com.ithaca.documentarisation.RetroDocumentConst;
+	
 	import mx.utils.URLUtil;
 
 	public class UtilFunction
@@ -113,6 +115,29 @@ package com.ithaca.utils
 				}
 			}
 			return false;
+		}
+		
+		public static function createRetroDocumentXML(titreDoc:String, descriptionDoc:String, createurDoc:String, createDateDoc:Date, modifyDateDoc:Date):String
+		{
+			var root:XML = new XML("<"+RetroDocumentConst.TAG_RETROSPECTION_DOCUMENT+"/>");	
+			var stringTitre:String = "<title>"+titreDoc+"</title>";
+			var titre:XML = new XML(stringTitre);
+			root.appendChild(titre);
+			var stringDescription:String = "<description>"+descriptionDoc+"</description>";
+			var description:XML = new XML(stringDescription);
+			root.appendChild(description);
+			var stringCreateur:String = "<creator>"+createurDoc+"</creator>";
+			var createur:XML = new XML(stringCreateur);
+			root.appendChild(createur);
+			var stringCreateDate:String = "<creation-date>"+createDateDoc+"</creation-date>";
+			var createDate:XML = new XML(stringCreateDate);
+			root.appendChild(createDate);
+			var stringModifyDate:String = "<last-modified>"+modifyDateDoc+"</last-modified>";
+			var modifyDate:XML = new XML(stringModifyDate);
+			root.appendChild(modifyDate);
+			var result:String = root.toXMLString();
+			result = "<?xml version='1.0' encoding='UTF-8'?>" + result;
+			return result;
 		}
 		
 	}

@@ -65,6 +65,9 @@ package com.ithaca.traces.view
 	import com.ithaca.traces.Obsel;
 	
 	import spark.components.SkinnableContainer;
+	import flash.events.MouseEvent;
+	import mx.core.DragSource;
+	import mx.managers.DragManager;
 	
 	[SkinState("normal")]
 	[SkinState("disabled")]
@@ -87,6 +90,7 @@ package com.ithaca.traces.view
 		{
 			//TODO: implement function
 			super();
+			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverObsel);
 		}
 		
 		public function set source(value:Class):void{_source = value;}
@@ -132,6 +136,15 @@ package com.ithaca.traces.view
 		{
 			var result:String = !enabled? "disable" : open? "open" : "normal"
 			return result;
+		}
+		
+		private function onMouseMoveOverObsel(event:MouseEvent):void
+		{
+			var ds:DragSource = new DragSource();
+			ds.addData(_parentObsel,"obsel");
+			ds.addData(this.source,"sourceIcon");
+			ds.addData(_text,"textObsel");	
+			DragManager.doDrag(this,ds,event);
 		}
 		
 		public function cloneMe():ObselMarker

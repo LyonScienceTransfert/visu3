@@ -17,6 +17,7 @@
 			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.traces.view.ObselMarker;
 			import com.ithaca.traces.view.ObselSessionOut;
+			import com.ithaca.traces.view.ObselStich;
 			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.traces.view.skins.ObselMarkerSkin;
 			import com.ithaca.utils.UtilFunction;
@@ -71,6 +72,7 @@
 			
 			private var currentSession:Session = null;
 			private var _stopTimeRecording:Number = 0;
+			private var DELTA_STICH:int = 20;
 			
 			private var _currentActivityElement:ActivityElement = null;
 			
@@ -323,7 +325,7 @@
 				var durationSession:int = currentSession.duration_session;
 				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
 				this.sessionTimeLine.sessionTimeLineLayout.startTime = 0;
-				// TODO calcul number of labels
+/* 				// TODO calcul number of labels
 				var nbrLabelTime:int = 6;
 				var deltaTime:int = durationSession/nbrLabelTime;
 				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
@@ -336,6 +338,41 @@
 					obselTime.setBegin(beginTimeObsel);
 					obselTime.setEnd(beginTimeObsel);
 					obselTime.text = labelTextMin+" min.";
+					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
+				} */
+				var widthGroup:Number = this.sessionTimeLine.sessionTimeLineLoggedUser.width;
+				var nbrLabelTime:int = widthGroup/DELTA_STICH;
+				nbrLabelTime = 50;
+				var deltaTime:int = durationSession/nbrLabelTime;
+				var every:int = 6;
+				var count:int = 1;
+				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
+				{
+					var beginTimeObsel:Number = nPart*deltaTime;
+					// in seconds
+					
+					var obselTime:ObselStich = new ObselStich()
+					obselTime.setBegin(beginTimeObsel);
+					obselTime.setEnd(beginTimeObsel);
+					obselTime.height = 10;
+					if(count == every)
+					{
+						obselTime.height = 20;
+						count = 1;
+						var minuts:int = (beginTimeObsel/1000)/60;
+						var minutsString:String = minuts.toString();
+						if(minuts<10){
+							minutsString = "0"+minutsString; 
+						}
+						var seconds:int = (beginTimeObsel/1000)-minuts*60;
+						var secondsString:String = seconds.toString();
+						if(seconds < 10)
+						{
+							secondsString = "0"+secondsString;
+						}
+						obselTime.setLabel(minutsString+":"+secondsString);
+					}
+					count++;
 					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
 				}
 				// creation slider session startTime
@@ -353,12 +390,26 @@
 				this.durationSessionSlider.toolTip = "Durée de la séance"
 			}
 			
+
+			/* 			
+			private function formatDurationSlider(value:Number):Object { 
+				var duration:int = value/60000;
+				var result:String = duration.toString() + " min.";
+				return result;
+			}
+			
+			private function formatStartTimeSlider(value:Number):Object { 
+				var duration:int = (value - this.currentSession.date_start_recording.getTime())/60000;
+				var result:String = duration.toString() + " min.";
+				return result;
+			} */ 
 			/**
 			 * format text slider duration of the session
 			 */
 			private function formatDurationSlider(value:Number):Object { 
 				var duration:int = value/60000;
-				var result:String = duration.toString() + " min.";
+				var percent:int = (value*100/durationSessionSlider.maximum);
+				var result:String = percent.toString() + " %";
 				return result;
 			}
 			
@@ -366,7 +417,7 @@
 			 * format text slider start session
 			 */
 			private function formatStartTimeSlider(value:Number):Object { 
-				var duration:int = (value - this.currentSession.date_start_recording.getTime())/60000;
+				var duration:int = (value - startTimeSessionSlider.minimum)/60000;
 				var result:String = duration.toString() + " min.";
 				return result;
 			}
@@ -1536,8 +1587,10 @@
 						</s:Scroller>
 					</s:Group>
 					<s:HGroup>
+						<s:Label text="Position: "/>
 						<s:HSlider id="startTimeSessionSlider" 
 								   liveDragging="true" width="300"  valueCommit="startTimeSessionSlider_valueCommitHandler(event)" visible="true"/>
+						<s:Label text="Zoom: " />
 						<s:HSlider id="durationSessionSlider" 
 								   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)"/>
 					</s:HGroup>

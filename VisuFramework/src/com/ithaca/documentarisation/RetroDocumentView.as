@@ -3,22 +3,23 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.documentarisation.model.RetroDocument;
 	import com.ithaca.documentarisation.model.Segment;
+	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Alert;
 	import mx.controls.Button;
-	import mx.controls.Image;
-	import mx.core.INavigatorContent;
 	import mx.events.CloseEvent;
 	
 	import spark.components.Group;
 	import spark.components.Label;
-	import spark.components.TextArea;
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
+	import spark.events.TextOperationEvent;
 	
 	public class RetroDocumentView extends SkinnableComponent
 	{
@@ -50,6 +51,9 @@ package com.ithaca.documentarisation
 		private var titleChange:Boolean = false; 
 		private var listSegment:IList;
 		private var _retroDocument:RetroDocument;
+		private var _startDateSession:Number;
+		private var timer:Timer;
+		private var needUpdateRetroDocument:Boolean = false;
 		
 		private var removingSegment:Segment;
 		private var removingSegementView:RetroDocumentSegment;
@@ -63,14 +67,15 @@ package com.ithaca.documentarisation
 		{
 			return _retroDocument;
 		}
-		
 		public function set retroDocument(value:RetroDocument):void
 		{
-//			if( _retroDocument == value) return;
 			_retroDocument = value;
 			retroDocumentChange = true;
 			invalidateProperties();
 		}
+		public function set startDateSession(value:Number):void{_startDateSession = value;};
+		public function get startDateSession():Number{return _startDateSession;};
+		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
@@ -100,6 +105,7 @@ package com.ithaca.documentarisation
 			if(instance == titleDocumentTextInput)
 			{
 				titleDocumentTextInput.text = _labelRetroDocument;
+				titleDocumentTextInput.addEventListener(TextOperationEvent.CHANGE, titleDocumentTextInput_changeHandler);
 			}
 			
 			
@@ -109,8 +115,26 @@ package com.ithaca.documentarisation
 		{
 			normal = !value;
 			this.invalidateSkinState();
+			startTimer();
 		}
 		
+		private function startTimer():void
+		{
+			if(!timer)
+			{
+				timer = new Timer(1000,0);
+				timer.addEventListener(TimerEvent.TIMER, checkUpdateSegment);
+			}
+			timer.start();
+		}
+		private function checkUpdateSegment(event:TimerEvent):void
+		{
+			if(needUpdateRetroDocument)
+			{
+				needUpdateRetroDocument = false;
+				updateRetroDocument();
+			}
+		}
 		override protected function getCurrentSkinState():String
 		{
 			return !enabled? "disabled" : normal? "normal" : "edited";
@@ -164,13 +188,15 @@ package com.ithaca.documentarisation
 			{
 				var segmentView:RetroDocumentSegment = new RetroDocumentSegment();
 				segmentView.percentWidth = 100;
-			//	segmentView.title = segment.title;
+				segmentView.title = segment.title;
 				segmentView.setEmpty(false);
 				segmentView.setEditabled(!normal);
 				segmentView.segment = segment;
+				segmentView.startDateSession = _startDateSession;
 				segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
-/*				segmentView.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
-*/				groupSegment.addElement(segmentView);
+				segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
+				segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
+				groupSegment.addElement(segmentView);
 			}
 		}
 		private function onSharedDocument(event:MouseEvent):void
@@ -179,26 +205,47 @@ package com.ithaca.documentarisation
 		}
 		private function onRemoveDocument(event:MouseEvent):void
 		{
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous supprimer ..... ?",
+				"Confirmation", Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
+		}
+		private function removeRetroDocumentConformed(event:CloseEvent):void
+		{
+			if( event.detail == Alert.YES)
+			{
+				var removeRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.DELETE_RETRO_DOCUMENT);
+				removeRetroDocumentEvent.idRetroDocument = this._retroDocument.id;
+				removeRetroDocumentEvent.sessionId = this._retroDocument.sessionId;
+				this.dispatchEvent(removeRetroDocumentEvent);
+			}
 			
 		}
+			
 		private function onAddSegment(event:MouseEvent):void
 		{
 //			var order:int = (this._retroDocument.listSegment.getItemAt(this._retroDocument.listSegment.length -1) as Segment).order + 1;
 			var segment:Segment = new Segment();
 			segment.title = "";
 			this.listSegment.addItem(segment);
+			this._retroDocument.listSegment.addItem(segment);
 			var segmentView:RetroDocumentSegment = new RetroDocumentSegment();
 			segmentView.percentWidth = 100;
+			segmentView.startDateSession = _startDateSession;
 			segmentView.setEmpty(true);
 			segmentView.setEditabled(true);
 			segmentView.setOpen(true);
 			segmentView.segment = segment;
 			segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
+			segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
+			segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
 
 			/*segmentView.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
 			segmentView.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
 			*/				
 			groupSegment.addElement(segmentView);
+			// update retroDocument
+			this.updateRetroDocument();
 			
 		}
 		
@@ -233,10 +280,39 @@ package com.ithaca.documentarisation
 				}else
 				{
 					listSegment.removeItemAt(indexSegment);
+					this._retroDocument.listSegment.removeItemAt(indexSegment);
 					groupSegment.removeElementAt(indexSegment);
+					// update the retroDocument
+					this.updateRetroDocument();
 				}
 			}
-			//TODO update retroDocument
+		}
+		private function updateRetroDocument(event:*=null):void
+		{
+			var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+			retroDocumentVO.documentId = _retroDocument.id;
+			retroDocumentVO.title = _retroDocument.title;
+			retroDocumentVO.description = _retroDocument.description;
+			retroDocumentVO.ownerId = _retroDocument.ownerId;
+			var xml:String = _retroDocument.getRetroDocumentXMLtoSTRING();
+			retroDocumentVO.xml = xml;
+			retroDocumentVO.sessionId = _retroDocument.sessionId;
+			var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT);
+			updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
+			updateRetroDocumentEvent.listUser;
+			this.dispatchEvent(updateRetroDocumentEvent);
+		}
+		
+		protected function titleDocumentTextInput_changeHandler(event:TextOperationEvent):void
+		{
+			this._labelRetroDocument = titleDocumentTextInput.text;
+			_retroDocument.title = this._labelRetroDocument;
+			this.needUpdateRetroDocument = true;
+		}
+		
+		private function onChangeRetroSegment(event:RetroDocumentEvent):void
+		{
+			this.needUpdateRetroDocument = true;
 		}
 	}
 }

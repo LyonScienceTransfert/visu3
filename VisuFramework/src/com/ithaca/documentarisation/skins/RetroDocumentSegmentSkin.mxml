@@ -51,7 +51,7 @@
 		</s:fill>
 	</s:Rect>
 -->
-	<s:Rect id="fill" radiusX="10"
+	<s:Rect id="fill" radiusX="2"
 			left="2" right="2" top="1" bottom="1">
 		<s:fill>
 			<s:LinearGradient rotation="90">
@@ -60,7 +60,7 @@
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
-	<s:Rect id="border" radiusX="10"
+	<s:Rect id="border" radiusX="2"
 			left="2" right="2" top="0" bottom="0">
 		<s:stroke>
 			<s:LinearGradientStroke rotation="90" weight="1">
@@ -75,7 +75,7 @@
 	<s:Group width="100%" height="30" click="group1_clickHandler(event)">				
 		<s:Path data="M 0 0 L 7 5 L 0 10 L 0 0 Z" 
 				rotation.open="90"
-				verticalCenter="0" left="3"
+				verticalCenter="0" left="6"
 				rotation.openEditable="90">
 			<s:postLayoutTransformOffsets>
 				<s:TransformOffsets id="tOffsets" x.open="0" y.open="0" x.openEditable="0" y.openEditable="0"/>  
@@ -92,9 +92,9 @@
 <!-- LABEL SEGMENT-->
 		<s:TextInput id="titleSegmentTextInput" left="20" top="5" right="50" color="#121212"
 					 fontSize="14" maxHeight="22"
-					 includeIn="normalEditable,openEditable">
+					 includeIn="normalEditable,openEditable" fontSize.normalEditable="12">
 		</s:TextInput>
-		<s:Label id="titleSegmentLabel" left="20" right="5" maxDisplayedLines="1" includeIn="normal,open" left.normal="20" text="jhgj" left.open="20" right.open="5" verticalCenter="0" right.normal="5"/>
+		<s:Label id="titleSegmentLabel" left="20" right="5" maxDisplayedLines="1" includeIn="normal,open" left.normal="20" left.open="20" right.open="5" verticalCenter="0" right.normal="5"/>
 <!-- DELETE SEGMENT -->
 		<mx:Button  id="buttonDeleteSegment" top="5" right="5" 
 					icon="{IconEnum.getIconByName('delete')}"
