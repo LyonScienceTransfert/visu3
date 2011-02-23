@@ -15,6 +15,10 @@
 @namespace documentarisation 		"com.ithaca.documentarisation.*";
 
 
+obsel|ObselStich
+{
+	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselStichSkin");
+}
 
 documentarisation|RetroDocumentView
 {
