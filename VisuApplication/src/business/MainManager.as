@@ -1,7 +1,10 @@
 package business
 {
+import com.ithaca.documentarisation.events.RetroDocumentEvent;
+import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
+import com.ithaca.utils.UtilFunction;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
@@ -11,6 +14,7 @@ import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.User;
 import com.ithaca.visu.model.vo.ObselVO;
+import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.model.vo.SessionUserVO;
 import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
@@ -228,7 +232,62 @@ public class MainManager
 		var timeServeur:Number = new Number(timeServeurString);		
 		Model.getInstance().setTimeServeur(timeServeur);
 	}
+	/**
+	 * get list RetroDocuments 
+	 */
+	public function onCheckListRetroDocument(listRetroDocumentOwner:Array, listRetroDocumentShared:Array):void
+	{
+		var myRetroDocumentNodes:XML = new XML("<node title='Mes bilans'/>");
+		for each(var retroDocumentVO:RetroDocumentVO in listRetroDocumentOwner)
+		{
+			var createur:String = Model.getInstance().getLoggedUser().lastname;
+			var titre:String = retroDocumentVO.title; 
+			var date:String = UtilFunction.getLabelDate(retroDocumentVO.creationDate,"/");
+			var id:String = retroDocumentVO.documentId.toString();
+			var nodeString:String = "<node creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='true'/>";
+			var retroDocumentNode:XML = new XML(nodeString);
+			myRetroDocumentNodes.appendChild(retroDocumentNode);
+		}
+		var shareRetroDocumentNodes:XML = new XML("<node title='Bilans des autres'/>");
+		for each(var shareRetroDocumentVO:RetroDocumentVO in listRetroDocumentShared)
+		{
+			var createurUser:User = Model.getInstance().getUserPlateformeByUserId(shareRetroDocumentVO.ownerId);
+			var createur:String = createurUser.lastname;
+			var titre:String = shareRetroDocumentVO.title; 
+			var date:String = UtilFunction.getLabelDate(shareRetroDocumentVO.creationDate,"/");
+			var id:String = shareRetroDocumentVO.documentId.toString();
+			var nodeString:String = "<node creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='false'/>";
+			var shareRetroDocumentNode:XML = new XML(nodeString);
+			shareRetroDocumentNodes.appendChild(shareRetroDocumentNode);
+		}
+		var xmlNode:XML = new XML("<node title='Bilans'/>");
+		xmlNode.appendChild(myRetroDocumentNodes);
+		xmlNode.appendChild(shareRetroDocumentNodes);
+		var loadTreeRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_TREE_RETRO_DOCUMENT);
+		/*		var str:String = " <node title='Bilans'><node title='Mes bilans'><node creator='Damien' title='Mon bilan perso' date='23/02/2011' documentId='1'/>"+
+                    "<node creator='Damien' title='Toto à la montagne' date='24/02/2011' documentId='2'/>"+
+                "</node>"+
+                "<node title='Bilans des autres'>"+
+                   " <node creator='Serguei' title='Toto à la montagne' date='24/02/2011'  documentId='4'/>"+
+                    "<node creator='Nicolas' title='Toto à la mer' date='27/02/2011'  documentId='5'/>"+
+                "</node></node>";
+		var xml:XML = new XML(str);*/
+		loadTreeRetroDocumentEvent.xmlTreeRetroDocument = xmlNode;
+		this.dispatcher.dispatchEvent(loadTreeRetroDocumentEvent);
+	}
 	
+	public function onCheckRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array, editabled:Boolean):void
+	{
+		var retroDocument:RetroDocument = new RetroDocument();
+		retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
+		retroDocument.sessionId = retroDocumentVO.sessionId;
+		retroDocument.id = retroDocumentVO.documentId;
+		retroDocument.ownerId = retroDocumentVO.ownerId;		
+		var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.SHOW_RETRO_DOCUMENT);
+		retroDocumentEvent.retroDocument = retroDocument;
+		retroDocumentEvent.editabled = editabled;
+		this.dispatcher.dispatchEvent(retroDocumentEvent);
+	}
 	/**
 	 * get list obsels "SessionExit", "SessionPause" for updating button "Salon Tutorat"
 	 */
