@@ -1,4 +1,4 @@
- * /**
+/**
  * Copyright Université Lyon 1 / Université Lyon 2 (2009,2010)
  * 
  * <ithaca@liris.cnrs.fr>
