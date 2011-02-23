@@ -64,6 +64,10 @@ package com.ithaca.traces.view
 {
 	import com.ithaca.traces.Obsel;
 	
+	import flash.events.MouseEvent;
+	import mx.core.DragSource;
+	import mx.managers.DragManager;
+	
 	import mx.controls.Image;
 	
 	public class ObselImage extends Image implements IObselComponenet
@@ -75,6 +79,7 @@ package com.ithaca.traces.view
 		{
 			//TODO: implement function
 			super();
+			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverObsel);
 		}
 		
 		public function setBegin(value:Number):void
@@ -100,6 +105,16 @@ package com.ithaca.traces.view
 		{
 			this.visible = value;
 		}
+		
+		private function onMouseMoveOverObsel(event:MouseEvent):void
+		{
+			var ds:DragSource = new DragSource();
+			ds.addData(_parentObsel,"obsel");
+			ds.addData(this.source,"sourceIcon");
+			ds.addData(this.toolTip,"textObsel");	
+			DragManager.doDrag(this,ds,event);
+		}
+		
 		
 		public function set parentObsel(value:Obsel):void{_parentObsel = value;}
 		public function get parentObsel():Obsel{return this._parentObsel}
