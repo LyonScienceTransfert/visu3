@@ -52,7 +52,7 @@ package com.ithaca.documentarisation
 		private var emptySegmentVideo:Boolean = true;
 		private var isDroped:Boolean = false;
 		
-		private var TEXT_TITLE_EMPTY ="entrer un titre ici";
+		private var TEXT_TITLE_EMPTY ="Entrez un titre ici";
 		
 		private var _title:String = "";
 		private var _timeBegin:Number=0;

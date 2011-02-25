@@ -45,13 +45,8 @@
         <fx:XMLList id="treeData">
             <node title="Bilans">
                 <node title="Mes bilans">
-                    <node creator="Damien" title="Mon bilan perso" date="23/02/2011" documentId="1"/>
-                    <node creator="Damien" title="Toto à la montagne" date="24/02/2011" documentId="2"/>
-                    <node creator="Damien" title="Toto à la mer" date="27/02/2011" lastModified="30/02/2011" documentId="3"/>
                 </node>
                 <node title="Bilans des autres">
-                    <node creator="Serguei" title="Toto à la montagne" date="24/02/2011"  documentId="4"/>
-                    <node creator="Nicolas" title="Toto à la mer" date="27/02/2011"  documentId="5"/>
                 </node>
             </node>    
         </fx:XMLList>

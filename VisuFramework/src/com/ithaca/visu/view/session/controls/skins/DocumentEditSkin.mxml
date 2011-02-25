@@ -200,7 +200,7 @@
 			{
 				Alert.yesLabel = "Oui";
 				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer document?",
+				Alert.show("Voulez-vous supprimer le document?",
 					"Confirmation", Alert.YES|Alert.NO, null, deleteDocumentConfirmed); 
 				
 			}
@@ -278,11 +278,11 @@
 						<s:SolidColorStroke color="#6370D7"/>
 					</s:stroke>
 				</s:Line>
-				<!--<s:Label text=" editer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
+				<!--<s:Label text=" éditer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
 				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="onClickButtonEdit(event)"/>
 				
 			</s:HGroup>
-			<s:Panel includeIn="normal,close"  id="panelContent"  title="Video the yotube..."
+			<s:Panel includeIn="normal,close"  id="panelContent"  title="Video Youtube"
 					 minHeight="100"  minWidth="160"  maxWidth="200" top="10" left="10" right="10" bottom="10"
 					 >
 			</s:Panel>

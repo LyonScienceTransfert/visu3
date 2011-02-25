@@ -80,7 +80,7 @@
 			top="50" bottom="0" left="0" right="0" backgroundColor="#eeeeee">
 		 
 			<containers:FormItem id="LABEL_NOM" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("NOM")}</containers:label>
+				<containers:label>{fxgt.gettext("Nom")}</containers:label>
 				<s:Label id="firstnameDisplay" 
 						 includeIn="normal" height="100%" verticalAlign="middle" 
 						 fontWeight="bold"/> 
@@ -88,7 +88,7 @@
 			</containers:FormItem>
 			
 			<containers:FormItem id="LABEL_PRENOM" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("PRENOM")}</containers:label>
+				<containers:label>{fxgt.gettext("Prénom")}</containers:label>
 				<s:Label id="lastnameDisplay" fontWeight="bold" 
 						 height="100%" verticalAlign="middle"
 						 includeIn="normal" />
@@ -96,7 +96,7 @@
 			</containers:FormItem>
 			
 			<containers:FormItem id="LABEL_EMAIL" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("EMAIL")}</containers:label>
+				<containers:label>{fxgt.gettext("Email")}</containers:label>
 				<s:Label id="emailDisplay" 
 						 height="100%" verticalAlign="middle"
 						 includeIn="normal"/>
@@ -104,7 +104,7 @@
 			</containers:FormItem>
 			
 			<containers:FormItem id="LABEL_PASS"  width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("MOT DE PASSE")}</containers:label>
+				<containers:label>{fxgt.gettext("Mot de passe")}</containers:label>
 				<s:Label id="passwordDisplay" 
 						 includeIn="normal" 
 						 height="100%" verticalAlign="middle" />
@@ -113,7 +113,7 @@
 			</containers:FormItem>
 			
 			<containers:FormItem id="LABEL_ROLE" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("ROLE")}</containers:label>
+				<containers:label>{fxgt.gettext("Rôle")}</containers:label>
 				<s:Label id="profileDisplay"  includeIn="normal" 
 						 height="100%" verticalAlign="middle" />
 				<s:DropDownList id="profileList" labelField="short_description" 

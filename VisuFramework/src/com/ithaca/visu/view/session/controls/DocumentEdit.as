@@ -103,13 +103,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				 buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				 buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				 buttonDelete.toolTip = "effacer";
+				 buttonDelete.toolTip = "Effacer";
 			}
 			if(instance == buttonEdit)
 			{
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.toolTip = "editer";
+				buttonEdit.toolTip = "Editer";
 			}
 			
 		}

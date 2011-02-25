@@ -38,12 +38,12 @@
 						{
 							case SessionStatusEnum.SESSION_OPEN:
 								labelTheme.setStyle("fontWeight","bold");
-								labelMessageDate.text = fxgt.gettext("planifiée le :");
+								labelMessageDate.text = fxgt.gettext("Planifiée le :");
 								dateSession = data.getSessionDate();
 							break;
 							case SessionStatusEnum.SESSION_CLOSE:
 								labelTheme.setStyle("fontWeight","normal");
-								labelMessageDate.text = fxgt.gettext("effectuée le :");
+								labelMessageDate.text = fxgt.gettext("Effectuée le :");
 								dateSession = data.getSessionDateStartRecording();
 							break;
 							default:
