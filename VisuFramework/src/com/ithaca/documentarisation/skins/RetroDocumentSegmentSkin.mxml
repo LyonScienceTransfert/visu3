@@ -105,8 +105,8 @@
 	
 	<s:Group top="30" bottom="5" includeIn="open,openEditable" id="content" left="5"  right="5" >
 		<documentarisation:SegmentVideo  id="segmentVideo" left="3" right="3" height="32"/>
-		<s:TextArea  id="segmentComment" top="35" left="3" right="3"  bottom="5" text="----" enabled.open="false"
-					  maxHeight="65"/>
+		<s:TextArea  id="segmentComment" top="35" left="3" right="3"  bottom="5" text="----" enabled.open="true"
+					  maxHeight="65" editable.open="false"/>
 	</s:Group>
 	<s:transitions>
 		<s:Transition fromState="normal" toState="open">
