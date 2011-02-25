@@ -164,6 +164,24 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/add.png")]
 		static private var add:Class;
+
+		[Bindable]
+		[Embed("images/RetroDocumentAddVer1.png")]
+		static private var retroDocumentAdd:Class;
+		
+		[Bindable]
+		//[Embed("images/RetroDocumentPartageVer1.png")]
+		//[Embed("images/share_icon.png")]
+		[Embed("images/share_icon20x20.png")]
+		static private var retroDocumentShared:Class;
+
+		[Bindable]
+		[Embed("images/RetroDocumentSegmentAddVer1.png")]
+		static private var retroDocumentSegemntAdd:Class;
+		
+		[Bindable]
+		[Embed("images/save_edit.png")]
+		static private var save:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -265,6 +283,18 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "add" : 
 					icon = add;
+					break;
+				case "retroDocumentAdd" : 
+					icon = retroDocumentAdd;
+					break;
+				case "retroDocumentShared" : 
+					icon = retroDocumentShared;
+					break;
+				case "retroDocumentSegemntAdd" : 
+					icon = retroDocumentSegemntAdd;
+					break;
+				case "save" : 
+					icon = save;
 					break;
 				default :
 					break;				
