@@ -12,14 +12,13 @@
 						xmlns:controls="com.lyon2.controls.*" > 
 	<fx:Script>
 		<![CDATA[ 
+			import com.ithaca.documentarisation.RetroDocumentTreeToolTip;
 			import com.ithaca.documentarisation.RetroDocumentView;
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
-			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.traces.view.ObselStich;
-			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.controls.timeline.TraceLineComment;
@@ -33,7 +32,6 @@
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
-			import com.ithaca.visu.model.vo.ObselVO;
 			import com.ithaca.visu.model.vo.RetroDocumentVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.IconEnum;
@@ -45,8 +43,12 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.controls.Image;
+			import mx.core.DragSource;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
+			import mx.events.ToolTipEvent;
+			import mx.managers.DragManager;
 			
 			import spark.events.TrackBaseEvent;
 			
@@ -522,6 +524,8 @@
 					//this.durationSessionSlider.toolTip = "Durée de la séance"
 					
 				}
+				// add drag listener
+				setListenerDragVideo();
 			}
 			
 			private function addTraceLineOnViewTraceLineGroup(traceLineObj:Object, durationSession:Number,startRecordingSession:Number):void
@@ -885,6 +889,10 @@
 				updateSelectedSession(sessionView, this.groupCloseSession, hideGroup);
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
 				getListObselEvent.sessionId = sessionView.sessionId;
+				// set current sessionId
+				this.currentSessionId = sessionView.sessionId;
+				// enable button add bilan
+				addRetroDocument.enabled = true;
 				this.dispatchEvent(getListObselEvent);
 				// update label panel
 				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance partagées: ")+sessionView.theme;
@@ -998,18 +1006,56 @@
 					var xml:XML = event.xmlTreeRetroDocument;
 					this.retroDocumentTree.dataProvider = xml;
 					this.groupRetroDocumentView.removeAllElements();
+					var messageAboutRetroDocument:Label = new Label();
+					messageAboutRetroDocument.percentWidth = 100;
+					messageAboutRetroDocument.percentHeight = 100;
+					messageAboutRetroDocument.y = this.groupRetroDocumentView.height/2;					
+					messageAboutRetroDocument.text =  fxgt.gettext("Aucun bilan sélectionné");
+					this.groupRetroDocumentView.addElement(messageAboutRetroDocument);
+				}
+				
+			}
+			
+			/**
+			 * update title the document in tree xml
+			 */
+			private function updateTitleRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var idRetrodocument:int = event.idRetroDocument;
+					var title:String = event.titleRetrodocument;
+					var myDocument:XMLList = this.retroDocumentTree.dataProvider[0].myDocument;
+					var listDocument:XMLList = myDocument.children();
+					var nbrMyDocument:int = listDocument.length();
+					for(var nMyDocument:int = 0; nMyDocument < nbrMyDocument; nMyDocument++ )
+					{
+						var xml:XML = listDocument[nMyDocument] as XML;
+						var idDocument:String = xml.@documentId;
+						var id:int = int(idDocument);
+						if(idRetrodocument == id)
+						{
+							xml.@title = title;
+							return;
+						}			
+					}
 				}
 			}
+				
 			private function showRetroDocument(event:RetroDocumentEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					var retroDocumentView:RetroDocumentView = new RetroDocumentView();
 					retroDocumentView.percentWidth = 100;
+					retroDocumentView.percentHeight = 100;
 					retroDocumentView.setEditabled(event.editabled);
 					retroDocumentView.retroDocument = event.retroDocument;
 					retroDocumentView.startDateSession = this.currentSessionDateRecording.time;
-					retroDocumentView.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument)
+					retroDocumentView.profiles = Model.getInstance().profiles;
+					retroDocumentView.listShareUser = event.listUser;
+					retroDocumentView.listUsersPresentOnTimeLine = Model.getInstance().getListUserPresentOnTimeLine();	
+					retroDocumentView.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument);
 					groupRetroDocumentView.removeAllElements();
 					groupRetroDocumentView.addElement(retroDocumentView);
 				}
@@ -1022,7 +1068,7 @@
 				retroDocumentVO.lastModified = dateLastModify;
 				var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
 				updateRetrodocument.retroDocumentVO = retroDocumentVO;
-				// TODO list users
+				updateRetrodocument.listUser = event.listUser;
 				this.dispatchEvent(updateRetrodocument);		
 			}
 			
@@ -1037,6 +1083,9 @@
 			// Diplay tooltip when rolling mouse over a tree item
 			private function onItemRollOver(event:ListEvent):void
 			{
+				
+
+				//event.target.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, retroDocumentTree_toolTipCreateHandler);
 				event.target.toolTip = null;
 				var data:Object = event.itemRenderer.data;
 				// If the item has a tooltip attribute, display it
@@ -1054,8 +1103,16 @@
 				}
 				str += " [" + data.@title + "]";
 				event.target.toolTip = str;
+//				event.target.toolTip = createToolTipTreeRetroDocument();
 			}
-
+			private function createToolTipTreeRetroDocument():RetroDocumentTreeToolTip
+			{
+				var retroDocumentToolTip:RetroDocumentTreeToolTip = new RetroDocumentTreeToolTip();
+				
+				retroDocumentToolTip.retroDocument = this.groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
+				
+				return retroDocumentToolTip;
+			}
 			// Event handler for the Tree control change event.
 			public function treeChanged(event:Event):void {
 				var selectedNode:XML = Tree(event.target).selectedItem as XML;
@@ -1098,6 +1155,15 @@
 				this.dispatchEvent(createRetroDocumentVOEvent);
 			}
 			
+			private function loadedAllUsers(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var currentRetroDocumentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
+					currentRetroDocumentView.allUsers = event.listUser;
+				}
+			}
+			
 			/**
 			 * format text slider duration of the session
 			 */
@@ -1116,6 +1182,43 @@
 				var result:String = duration.toString() + " min.";
 				return result;
 			}
+			private function onMouseMoveOverVisuVideo(event:MouseEvent):void
+			{
+				var x:Number  = event.stageX-panelVideo.x;
+				var y:Number = event.stageY-panelVideo.y-45;
+				var point:Point = new Point(x,y)
+				var globalPoint:Point = this.localToGlobal(point);
+				var xGlobale:Number = globalPoint.x;
+				var yGlobale:Number = globalPoint.y;
+				var ds:DragSource = new DragSource();
+				var obsel:Obsel =  Obsel.fromRDF("");
+				obsel.begin = new Date().time - this.timeStart + this.deltaTime + this.currentSessionDateRecording.time;
+				ds.addData(obsel,"obsel");
+				ds.addData("video","textObsel");	
+				var imageProxy:Image = new Image();
+				imageProxy.source = IconEnum.getIconByName('retroDocumentSegemntAdd');
+				imageProxy.height=15;
+				imageProxy.width=15;     
+				
+				DragManager.doDrag(this.visio,ds,event,imageProxy, -x, -y, 1.00);
+			}
+			
+			private function setListenerDragVideo():void
+			{
+				// checking if has drag listener
+				var hasListener:Boolean = this.visio.hasEventListener(MouseEvent.MOUSE_MOVE);
+				if(!hasListener)
+				{
+					// add drag listener
+					this.visio.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverVisuVideo);
+				}
+			}
+
+			protected function retroDocumentTree_toolTipCreateHandler(event:ToolTipEvent):void
+			{
+				event.toolTip =  createToolTipTreeRetroDocument();
+			}
+
 		]]>
 		
 	</fx:Script>
@@ -1132,6 +1235,8 @@
 		<mate:Listener type="{RetroDocumentEvent.LOAD_TREE_RETRO_DOCUMENT}"  method="updateTreeRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="playRetroDocument" />
+		<mate:Listener type="{RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT}"  method="updateTitleRetroDocument" />
+		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 	</fx:Declarations>
 <mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
@@ -1176,7 +1281,7 @@
 				</s:Panel>
 			</mx:VDividedBox>
 <!-- VIDEO -->
-			<s:Panel height="100%" width="50%">
+			<s:Panel height="100%" width="50%" id="panelVideo">
 				<s:title>Video</s:title>
 				<s:Group height="100%" width="100%">
 					<s:layout>
@@ -1184,7 +1289,7 @@
 					</s:layout>
 					<controls:VisuVisio id="visio" width="100%" top="0"
 										quality="80"
-										bandwidth="15000" autoPlay="True" height="100%" />
+										bandwidth="15000" autoPlay="True" height="100%"/>
 					
 				</s:Group>
 			</s:Panel>
@@ -1197,21 +1302,17 @@
 					<s:Label maxDisplayedLines="1" left="5" top="10" fontWeight="bold">
 						<s:text>Documentarisation</s:text>
 					</s:Label>
-					<mx:Button id="addRetroDocument" enabled="false" top="5" right="3" icon="{IconEnum.getIconByName('add')}" toolTip="Créer un nouveau bilan pour cette séance" width="32" click="addRetroDocument_clickHandler(event)"/>
+					<mx:Button id="addRetroDocument" enabled="false" top="5" right="3" icon="{IconEnum.getIconByName('retroDocumentAdd')}" toolTip="Créer un nouveau bilan pour cette séance" width="32" click="addRetroDocument_clickHandler(event)"/>
 				</s:Group>
 				<mx:VDividedBox width="100%" height="100%">
 					<mx:Tree width="100%" height="30%" id="retroDocumentTree" 
 							 showRoot="false" labelField="@title"
-							 itemRollOver="onItemRollOver(event)"  change="treeChanged(event)" dropShadowVisible="true"/>
-					<s:Group width="100%" height="70%">
-						<s:Scroller left="3" right="3" top="3" bottom="1" >
+							 itemRollOver="onItemRollOver(event)"  change="treeChanged(event)" dropShadowVisible="false"/>
 							<s:Group width="100%" height="100%" id="groupRetroDocumentView">
 								<s:layout>
 									<s:VerticalLayout gap="0"/>
 								</s:layout>
 							</s:Group>
-						</s:Scroller>
-					</s:Group>
 				</mx:VDividedBox>
 			</s:Group>
 			
