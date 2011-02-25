@@ -398,7 +398,7 @@ package com.ithaca.visu.view.session.controls
 // MEMO		
 		public function setMessageMemo():void
 		{
-			memoDisplay.text = "entrer un nouveau memo ici";
+			memoDisplay.text = "Entrez un nouveau mémo ici";
 			memoDisplay.setStyle("fontStyle","italic");
 			memoDisplay.setStyle("color","#000000");
 			// add memo if havn't

@@ -99,7 +99,7 @@ package com.ithaca.visu.view.session
 			{
 				if(dateRecorded == null)
 				{
-					dateLabel.text = "Loading les donnes...";
+					dateLabel.text = "Chargement des données.";
 				}else
 				{
 					dateLabel.text = _date.toString();

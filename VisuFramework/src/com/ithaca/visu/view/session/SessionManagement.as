@@ -187,12 +187,12 @@ package com.ithaca.visu.view.session
 				sessionCollection.addItem(session);
 				var sessionView:SessionViewSalonSession = createSessionView(session);
 				sessionsList.addElement(sessionView);
-				var typeSession:String = "Votre nouvelle séance";
+				var typeSession:String = "Votre nouvelle séance a été créée et ajoutée à la liste des séances.";
 				if(session.isModel)
 				{
-					typeSession = "Nouvelle plane de séance";
+					typeSession = "Le nouveau plan de séance a été créé et ajouté à la liste des séances.";
 				}
-				Alert.show(typeSession+" a été crée et ajouté dans la liste des séances...",
+				Alert.show(typeSession,
 					"Information"); 
 				dispatchEvent( new Event("update") );
 			}

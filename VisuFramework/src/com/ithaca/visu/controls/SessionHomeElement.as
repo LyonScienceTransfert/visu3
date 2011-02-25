@@ -101,12 +101,12 @@ package com.ithaca.visu.controls
 				case SessionStatusEnum.SESSION_RECORDING:
 					open = true;
 					recording = true;
-					recordingMessage = fxgt.gettext("La séance a été démarré de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");
+					recordingMessage = fxgt.gettext("La séance est démarrée depuis ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");
 					break;
 				case SessionStatusEnum.SESSION_PAUSE:
 					open = true;
 					recording = true;
-					recordingMessage = fxgt.gettext("La séance a été démarré de ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
+					recordingMessage = fxgt.gettext("La séance est démarrée depuis ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
 					break;
 			}
 			
@@ -268,14 +268,14 @@ package com.ithaca.visu.controls
 				recording = true;
 				
 				if(dateRecording != null){
-					recordingMessage = fxgt.gettext("La séance a été démarré il y a ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");			
+					recordingMessage = fxgt.gettext("La séance a été démarrée il y a ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m");			
 				}else{
 					recordingMessage "date == NULL";
 				}
 			}else if(_session.statusSession == SessionStatusEnum.SESSION_PAUSE)
 			{
 				recording = true;
-				recordingMessage = fxgt.gettext("La séance a été démarré il y a ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
+				recordingMessage = fxgt.gettext("La séance a été démarrée il y a ")+dateRecording.getHours().toString()+fxgt.gettext("h ")+dateRecording.getMinutes().toString()+fxgt.gettext("m") + fxgt.gettext(" : Suspendue...");
 			}else if(_session.statusSession == SessionStatusEnum.SESSION_CLOSE)
 			{
 				open = false;

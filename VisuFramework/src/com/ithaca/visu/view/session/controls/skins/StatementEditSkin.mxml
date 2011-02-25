@@ -54,7 +54,7 @@
 			{
 				Alert.yesLabel = "Oui";
 				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer consigne?",
+				Alert.show("Voulez-vous supprimer la consigne?",
 					"Confirmation", Alert.YES|Alert.NO, null, deleteStatementConfirmed); 
 				
 			}

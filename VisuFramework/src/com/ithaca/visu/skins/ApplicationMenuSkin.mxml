@@ -68,7 +68,7 @@
 		</s:Group>		
 		<mx:Spacer width="100%" includeIn="authentified"/>
 		<s:Label id="language" includeIn="authentified">
-			<s:text>{fxgt.gettext("Langage")+" :"}</s:text>
+			<s:text>{fxgt.gettext("Langue")+" :"}</s:text>
 		</s:Label>	
 		<s:DropDownList id="dropListLang" includeIn="authentified"
 						 labelField="labelLang"/>

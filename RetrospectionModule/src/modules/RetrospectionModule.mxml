@@ -366,7 +366,7 @@
 					var listOpenSession:ArrayCollection = event.listSession;
 					if(listOpenSession.length < 1)
 					{
-						Alert.show("Vous n'avez pas de sénces enregistré.... ","Information"); 
+						Alert.show("Vous n'avez pas de séance enregistrée ","Information"); 
 					}
 					this.addSessionView(this.groupOpenSession, listOpenSession, onMouseClickSessionViewOpenSession);
 					// only for admin, can see all closed session
@@ -464,7 +464,7 @@
 					// update label start session recording
 					var dateStartRecording:Date = event.dateStartRecording;
 					this.panelTimeLine.title = this.panelTimeLine.title + ""+ 
-						fxgt.gettext("(la séance a été enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
+						fxgt.gettext(" (séance enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
 						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
 						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString()+")";
 					this.setObsels();
@@ -508,7 +508,7 @@
 					this.startTimeSessionSlider.maximum = startRecordingSession + durationSession;
 					this.startTimeSessionSlider.value = startRecordingSession;
 					//this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
-					//this.startTimeSessionSlider.toolTip = "Temps debut de la séance";			
+					//this.startTimeSessionSlider.toolTip = "Début de la trace affichée";			
 					// creation slider session duration
 					if(durationSession < 60000)
 					{
@@ -680,7 +680,7 @@
 						var obsel:Obsel = Model.getInstance().getObselSessionInByPathStream(streamId);
 						if(obsel == null)
 						{
-							Alert.show("Salon retrospection, hasn't obsel with path = "+streamId,"Message ....."); 
+							Alert.show("There is no obsel with path = "+streamId,"Message ....."); 
 						}else
 						{
 							var timeBeginRFN:Number = obsel.begin;
@@ -895,7 +895,7 @@
 				addRetroDocument.enabled = true;
 				this.dispatchEvent(getListObselEvent);
 				// update label panel
-				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance partagées: ")+sessionView.theme;
+				panelTimeLine.title = fxgt.gettext("Résumé de la séance enregistrée partagée: ")+sessionView.theme;
 			}
 
 			protected function onMouseClickSessionViewOpenSession(event:MouseEvent):void
@@ -919,7 +919,7 @@
 				addRetroDocument.enabled = true;
 				this.dispatchEvent(getListObselEvent);
 				// update panel titre
-				panelTimeLine.title = fxgt.gettext("Résumé de l'activité la séance : ")+sessionView.theme;
+				panelTimeLine.title = fxgt.gettext("Résumé de la séance enregistrée: ")+sessionView.theme;
 			}
 
 			private function updateSelectedSession(value:SessionViewSalonRetro, groupSelected:Group, groupHide:Group ):void
@@ -1244,8 +1244,7 @@
 <!-- SESSIONS -->
 			<mx:VDividedBox width="30%" height="100%" maxWidth="330">
 				<s:Panel width="100%" height="50%">
-					<s:title>{fxgt.gettext("Mes séances(consernent uniquement vos activités dans les séances)")}</s:title>
-					<!--<s:toolTip>{fxgt.gettext("(consernent uniquement vos activités dans les séances)")}</s:toolTip>-->
+					<s:title>{fxgt.gettext("Mes séances")}</s:title>
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
@@ -1262,8 +1261,7 @@
 					</s:Group>
 				</s:Panel>
 				<s:Panel width="100%" height="50%" includeIn="vciel">
-					<s:title>{fxgt.gettext("Les séances partagées(consernent les séances fermés uniquement)")}</s:title>
-					<!--<s:toolTip>{fxgt.gettext("(consernent les séances fermés uniquement)")}</s:toolTip>-->
+					<s:title>{fxgt.gettext("Séances partagées (séances fermées uniquement)")}</s:title>
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
 							<s:VerticalLayout gap="0"/>
