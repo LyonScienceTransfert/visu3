@@ -110,9 +110,12 @@ package com.ithaca.traces.view
 		{
 			var ds:DragSource = new DragSource();
 			ds.addData(_parentObsel,"obsel");
-			ds.addData(this.source,"sourceIcon");
 			ds.addData(this.toolTip,"textObsel");	
-			DragManager.doDrag(this,ds,event);
+			var imageProxy:Image = new Image();
+			imageProxy.source = this.source;
+			imageProxy.height=this.height*0.75;
+			imageProxy.width=this.width*0.75;                
+			DragManager.doDrag(this,ds,event,imageProxy, -15, -15, 1.00);
 		}
 		
 		
