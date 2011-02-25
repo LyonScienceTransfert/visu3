@@ -46,7 +46,8 @@ public class RetroDocumentInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des Invitees" + e);
 		}
-
+		log.warn("list shared by retroDocument id = {}",listInvitees.size());
+		
 		Object[] args = {retroDocument,listInvitees, editabled};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) 
@@ -91,7 +92,7 @@ public class RetroDocumentInfo {
 		List<RetroDocument> listRetroDocumentShared = null;
 		try {
 			listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
 		}
@@ -114,7 +115,7 @@ public class RetroDocumentInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void deleteRetroDocument(IConnection conn, int retroDocumentId, Integer sessionId)
+	public void deleteRetroDocument(IConnection conn, int retroDocumentId, int sessionId)
 	{
 		log.warn("======== deleteRetroDocument ");
 		log.warn("=====documentId = {}",retroDocumentId);
@@ -154,7 +155,7 @@ public class RetroDocumentInfo {
 		List<RetroDocument> listRetroDocumentShared = null;
 		try {
 			listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
 		}
@@ -177,7 +178,7 @@ public class RetroDocumentInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, Integer[] listUser) throws SQLException
+	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, int[] listUser) throws SQLException
 	{
 		log.warn("======== updateRetroDocument ");
 		try
@@ -187,8 +188,26 @@ public class RetroDocumentInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);
 		}
-		
-		// TODO update list user
+		// delete all invitations
+		int retroDocumentId = retroDocument.getDocumentId();
+		try
+		{
+			app.getSqlMapClient().delete("rd.deleteAllInvitations",retroDocumentId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des deleteAllInvitations" + e);
+		}
+		// add new invitations
+		for (int userId : listUser)
+		{		
+			try {
+				app.getSqlMapClient().insert(
+						"rd.insertInvitation", RetroDocumentDAOImpl.createParams("userId",userId, "documentId", retroDocumentId));
+			} catch (Exception e) {
+				log.error("Probleme lors du insert insertInvitation " + e, e);
+			}
+		}
+		log.warn("shared for : {}", listUser.toString());
+		// TODO notification for other users connected on the plateforme.
 	}
 	
 	
