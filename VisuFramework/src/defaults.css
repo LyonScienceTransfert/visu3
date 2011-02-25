@@ -15,9 +15,19 @@
 @namespace documentarisation 		"com.ithaca.documentarisation.*";
 
 
+user|SharedUser
+{
+	skin-class: ClassReference("com.ithaca.visu.view.user.skins.SharedUserSkin");
+}
+
 obsel|ObselStich
 {
 	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselStichSkin");
+}
+
+documentarisation|RetroDocumentTreeToolTip
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentTreeToolTipSkin");
 }
 
 documentarisation|RetroDocumentView
