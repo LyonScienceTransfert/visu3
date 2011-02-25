@@ -4,25 +4,19 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.documentarisation.model.Segment;
 	import com.ithaca.traces.Obsel;
-	import com.ithaca.traces.view.ObselImage;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
 	
 	import mx.controls.Alert;
 	import mx.controls.Button;
 	import mx.core.DragSource;
 	import mx.events.CloseEvent;
 	import mx.events.DragEvent;
-	import mx.events.FlexEvent;
-	import mx.events.StateChangeEvent;
 	import mx.managers.DragManager;
 	
 	import spark.components.Label;
-	import spark.components.RichEditableText;
 	import spark.components.TextArea;
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
@@ -63,10 +57,16 @@ package com.ithaca.documentarisation
 		private var _title:String = "";
 		private var _timeBegin:Number=0;
 		private var _sourceIcon:Object;
-		private var _textComment:String;
+		private var _textComment:String= "";
 		private var dragSource:DragSource = null;
 		private var _startDateSession:Number;
 		private var _segment:Segment;
+		
+		import gnu.as3.gettext.FxGettext;
+		import gnu.as3.gettext._FxGettext;
+		
+		[Bindable]
+		private var fxgt:_FxGettext;
 		
 		public function RetroDocumentSegment()
 
@@ -74,6 +74,7 @@ package com.ithaca.documentarisation
 			super();
 			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
+			fxgt = FxGettext;
 		}
 		
 		public function get segment():Segment
@@ -180,13 +181,10 @@ package com.ithaca.documentarisation
 			if(segmentSet)
 			{
 				segmentSet = false;
-				//this.segmentVideo.timeBigin = this._segment.beginTimeVideo
 				this._sourceIcon = IconEnum.getIconByTypeObsel(this._segment.typeSource);
 				this._textComment = this._segment.comment;
 				this._timeBegin = this._segment.beginTimeVideo;
 				this._title = this._segment.title;
-				//this.segmentComment.selectAll();
-				//this.stage.focus = this.segmentComment;
 			}
 		}
 		
@@ -269,10 +267,10 @@ package com.ithaca.documentarisation
 				isDroped = false;
 				if(!segmentVideo.isEmpty())
 				{
-					Alert.yesLabel = "Oui";
-					Alert.noLabel = "Non";
-					Alert.show("Voulez-vous remplacer ?",
-						"Confirmation", Alert.YES|Alert.NO, null, updateSegmentConformed); 
+					Alert.yesLabel = fxgt.gettext("Oui");
+					Alert.noLabel = fxgt.gettext("Non");
+					Alert.show(fxgt.gettext("Voulez-vous ajouter l'élément au segment ?     Cette opération remplace le titre du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo ?"),
+						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, updateSegmentConformed); 
 				}else
 				{
 					updateSegment();
@@ -291,7 +289,6 @@ package com.ithaca.documentarisation
 		{
 			var obsel:Obsel = dragSource.dataForFormat("obsel") as Obsel;
 			_timeBegin = obsel.begin;
-			_sourceIcon = dragSource.dataForFormat("sourceIcon") as Object;
 			_textComment = _textComment + dragSource.dataForFormat("textObsel") as String;
 			// update segment
 			_segment.beginTimeVideo = obsel.begin;
