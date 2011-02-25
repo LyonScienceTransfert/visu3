@@ -3,17 +3,25 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.documentarisation.model.RetroDocument;
 	import com.ithaca.documentarisation.model.Segment;
+	import com.ithaca.utils.ShareUserTitleWindow;
+	import com.ithaca.visu.events.UserEvent;
+	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Alert;
 	import mx.controls.Button;
 	import mx.events.CloseEvent;
+	import mx.managers.PopUpManager;
 	
 	import spark.components.Group;
 	import spark.components.Label;
@@ -43,6 +51,9 @@ package com.ithaca.documentarisation
 		public var addButton:Button;
 		
 		[SkinPart("true")]
+		public var saveButton:Button;
+		
+		[SkinPart("true")]
 		public var groupSegment:Group;
 		
 		private var _labelRetroDocument:String;
@@ -54,14 +65,22 @@ package com.ithaca.documentarisation
 		private var _startDateSession:Number;
 		private var timer:Timer;
 		private var needUpdateRetroDocument:Boolean = false;
+		private var _profiles:Array;
+		private var _listUser:Array;
+		private var _listUsersPresentOnTimeLine:Array;
 		
 		private var removingSegment:Segment;
 		private var removingSegementView:RetroDocumentSegment;
+		
+		[Bindable]
+		private var fxgt:_FxGettext;
 		
 		public function RetroDocumentView()
 		{
 			super();
 			listSegment = new ArrayCollection();
+			_listUser = new Array();
+			fxgt = FxGettext;
 		}
 		public function get retroDocument():RetroDocument
 		{
@@ -73,17 +92,39 @@ package com.ithaca.documentarisation
 			retroDocumentChange = true;
 			invalidateProperties();
 		}
+		public function get titleDocumentText():String
+		{
+			return _labelRetroDocument;
+		};
 		public function set startDateSession(value:Number):void{_startDateSession = value;};
 		public function get startDateSession():Number{return _startDateSession;};
+		public function set listShareUser(value:Array):void{_listUser = value;};
+		public function get listShareUser():Array{return _listUser;};
+		public function set profiles(value:Array):void
+		{
+			this._profiles = value;
+		}
+		public function get listUsersPresentOnTimeLine():Array{return _listUser;};
+		public function set listUsersPresentOnTimeLine(value:Array):void
+		{
+			this._listUsersPresentOnTimeLine = value;
+		}
+		public function set allUsers(value:Array):void
+		{
+			var listUserShow:Array = this.getListUserShow(value);
+			var shareUser:ShareUserTitleWindow = ShareUserTitleWindow(PopUpManager.createPopUp( 
+				this, ShareUserTitleWindow , true) as spark.components.TitleWindow);
+			shareUser.addEventListener(UserEvent.SELECTED_USER, onSelectUser);
+			shareUser.x = (this.parentApplication.width - shareUser.width)/2;
+			shareUser.y = (this.parentApplication.height - shareUser.height)/2;		
+			shareUser.shareUserManagement.listShareUser = listShareUser;
+			shareUser.shareUserManagement.users = listUserShow;
+			shareUser.shareUserManagement.profiles = _profiles;
+		}
 		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == groupSegment)
-			{
-/*				if (listSegment.length > 0) 
-					addSegment();*/
-			}
 			if(instance == shareButton)
 			{
 				shareButton.addEventListener(MouseEvent.CLICK, onSharedDocument);	
@@ -96,6 +137,10 @@ package com.ithaca.documentarisation
 			{
 				addButton.addEventListener(MouseEvent.CLICK, onAddSegment);	
 			}
+			if(instance == saveButton)
+			{
+				saveButton.addEventListener(MouseEvent.CLICK, updateRetroDocument);	
+			}
 			
 			if(instance == titleDocument)
 			{
@@ -106,9 +151,7 @@ package com.ithaca.documentarisation
 			{
 				titleDocumentTextInput.text = _labelRetroDocument;
 				titleDocumentTextInput.addEventListener(TextOperationEvent.CHANGE, titleDocumentTextInput_changeHandler);
-			}
-			
-			
+			}	
 		}
 		
 		public function setEditabled(value:Boolean):void
@@ -160,17 +203,8 @@ package com.ithaca.documentarisation
 					this.titleDocumentTextInput.text  = this._labelRetroDocument;
 				}
 			}
-/*			if(sergmentChange)
-			{
-				sergmentChange = false;
-				this.segmentVideo.timeBigin = this._timeBegin;
-				this.segmentVideo.sourceIcon = this._sourceIcon;
-				this.segmentVideo.showDetail();
-				this.segmentComment.text = this._textComment;
-				this.segmentComment.selectAll();
-				this.stage.focus = this.segmentComment;
-			}*/
 		}
+		
 		private function perseRetroDocument():void
 		{
 			_labelRetroDocument = this._retroDocument.title;
@@ -201,14 +235,15 @@ package com.ithaca.documentarisation
 		}
 		private function onSharedDocument(event:MouseEvent):void
 		{
-			
+			var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
+			this.dispatchEvent(loadListUsers);
 		}
 		private function onRemoveDocument(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer ..... ?",
-				"Confirmation", Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+this.retroDocument.title+'"'+" ?"),
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
 		}
 		private function removeRetroDocumentConformed(event:CloseEvent):void
 		{
@@ -224,7 +259,6 @@ package com.ithaca.documentarisation
 			
 		private function onAddSegment(event:MouseEvent):void
 		{
-//			var order:int = (this._retroDocument.listSegment.getItemAt(this._retroDocument.listSegment.length -1) as Segment).order + 1;
 			var segment:Segment = new Segment();
 			segment.title = "";
 			this.listSegment.addItem(segment);
@@ -239,14 +273,9 @@ package com.ithaca.documentarisation
 			segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
 			segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
 			segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
-
-			/*segmentView.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
-			segmentView.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
-			*/				
 			groupSegment.addElement(segmentView);
 			// update retroDocument
-			this.updateRetroDocument();
-			
+			this.updateRetroDocument();		
 		}
 		
 		private function onRmoveSegment(event:RetroDocumentEvent):void
@@ -254,10 +283,10 @@ package com.ithaca.documentarisation
 			removingSegment = event.segment;
 			removingSegementView =event.currentTarget as RetroDocumentSegment;
 			
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer ..... ?",
-				"Confirmation", Alert.YES|Alert.NO, null, removeSegmentConformed); 
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le segment intitulé "+'"'+removingSegment.title+'"'+"?"),
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeSegmentConformed); 
 		}
 		private function removeSegmentConformed(event:CloseEvent):void
 		{
@@ -299,7 +328,7 @@ package com.ithaca.documentarisation
 			retroDocumentVO.sessionId = _retroDocument.sessionId;
 			var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT);
 			updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
-			updateRetroDocumentEvent.listUser;
+			updateRetroDocumentEvent.listUser = this._listUser;
 			this.dispatchEvent(updateRetroDocumentEvent);
 		}
 		
@@ -308,11 +337,65 @@ package com.ithaca.documentarisation
 			this._labelRetroDocument = titleDocumentTextInput.text;
 			_retroDocument.title = this._labelRetroDocument;
 			this.needUpdateRetroDocument = true;
+			// update title retroRocument
+			var updateTitleRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT);
+			updateTitleRetroDocument.idRetroDocument = _retroDocument.id;
+			updateTitleRetroDocument.titleRetrodocument = _retroDocument.title;
+			this.dispatchEvent(updateTitleRetroDocument);
 		}
 		
 		private function onChangeRetroSegment(event:RetroDocumentEvent):void
 		{
 			this.needUpdateRetroDocument = true;
+		}
+		
+		private function getListUserShow(value:Array):Array
+		{
+			var result:Array = new Array();
+			var nbrUser:int = value.length;
+			for(var nUser:int= 0; nUser < nbrUser ; nUser++)
+			{
+				var user:User = value[nUser];
+				if(user.id_user != _retroDocument.ownerId)
+				{
+					// add all admins
+					if(user.role > RoleEnum.RESPONSABLE-1)
+					{
+						result.push(user);
+					}else
+					{
+						// add only users was recording
+						var hasUser:Boolean = hasUserInSession(user.id_user, this._listUsersPresentOnTimeLine)
+						if(hasUser)
+						{
+							result.push(user);
+						}		
+					}
+				}
+			}
+			return result;
+			
+			function hasUserInSession(id:int, list:Array):Boolean
+			{
+				var nbrUser:int = list.length;
+				for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+				{
+					var userId:int = list[nUser];
+					if (id == userId)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+
+		}
+		private function onSelectUser(event:UserEvent):void
+		{
+			
+			this._listUser = event.listUser;
+			// update retroDocument
+			updateRetroDocument();
 		}
 	}
 }
