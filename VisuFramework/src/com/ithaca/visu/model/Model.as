@@ -646,6 +646,18 @@ package  com.ithaca.visu.model
 			}
 		}
 		
+		public function getListUserPresentOnTimeLine():Array
+		{
+			var result:Array = new Array();
+			var nbrTraceLine:int = this.listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			{
+				var traceLine:Object = this.listTraceLine.getItemAt(nTraceLine) as Object;
+				var userId:int = traceLine.userId;
+				result.push(userId);
+			}
+			return result;
+		}
 		
 		public function updateTextObselComment( timeStampUpdatedObsel:Number , text:String, typeObsel:String):void
 		{
