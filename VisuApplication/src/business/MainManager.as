@@ -237,14 +237,14 @@ public class MainManager
 	 */
 	public function onCheckListRetroDocument(listRetroDocumentOwner:Array, listRetroDocumentShared:Array):void
 	{
-		var myRetroDocumentNodes:XML = new XML("<node title='Mes bilans'/>");
+		var myRetroDocumentNodes:XML = new XML("<myDocument title='Mes bilans'/>");
 		for each(var retroDocumentVO:RetroDocumentVO in listRetroDocumentOwner)
 		{
 			var createur:String = Model.getInstance().getLoggedUser().lastname;
 			var titre:String = retroDocumentVO.title; 
 			var date:String = UtilFunction.getLabelDate(retroDocumentVO.creationDate,"/");
 			var id:String = retroDocumentVO.documentId.toString();
-			var nodeString:String = "<node creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='true'/>";
+			var nodeString:String = "<retroDocument creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='true'/>";
 			var retroDocumentNode:XML = new XML(nodeString);
 			myRetroDocumentNodes.appendChild(retroDocumentNode);
 		}
@@ -285,6 +285,7 @@ public class MainManager
 		retroDocument.ownerId = retroDocumentVO.ownerId;		
 		var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.SHOW_RETRO_DOCUMENT);
 		retroDocumentEvent.retroDocument = retroDocument;
+		retroDocumentEvent.listUser = listInvitees;
 		retroDocumentEvent.editabled = editabled;
 		this.dispatcher.dispatchEvent(retroDocumentEvent);
 	}
