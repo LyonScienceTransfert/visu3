@@ -21,6 +21,9 @@ package  com.ithaca.documentarisation.events
 		static public const UPDATE_RETRO_DOCUMENT : String = 'updateRetroDocument';
 		static public const UPDATE_RETRO_SEGMENT : String = 'updateRetroSegment';
 		static public const CHANGE_RETRO_SEGMENT : String = 'changeRetroSegment';
+		static public const UPDATE_TITLE_RETRO_DOCUMENT : String = 'updateTitleRetroDocument';
+		static public const LOAD_LIST_USERS : String = 'loadListUsers';
+		static public const LOADED_ALL_USERS : String = 'loadedAllUsers';
 		
 		static public const PLAY_RETRO_SEGMENT : String = 'playRetroSegment';
 		
@@ -35,6 +38,8 @@ package  com.ithaca.documentarisation.events
 		public var listUser:Array;
 		public var beginTime:Number;
 		public var endTime:Number;
+		public var titleRetrodocument:String;
+		
 		
 		
 		
