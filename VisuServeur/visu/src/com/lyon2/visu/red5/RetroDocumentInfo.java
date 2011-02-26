@@ -6,6 +6,7 @@ import java.util.List;
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
+import org.red5.server.api.IScope;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
@@ -181,6 +182,8 @@ public class RetroDocumentInfo {
 	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, int[] listUser) throws SQLException
 	{
 		log.warn("======== updateRetroDocument ");
+		IClient client = conn.getClient();
+		IScope scope = conn.getScope();
 		try
 		{
 			app.getSqlMapClient().update("rd.updateDocument",retroDocument);
@@ -207,7 +210,29 @@ public class RetroDocumentInfo {
 			}
 		}
 		log.warn("shared for : {}", listUser.toString());
-		// TODO notification for other users connected on the plateforme.
+		// call function updated on the client side 
+		Object[] argsRetroDocument = {retroDocument};
+		IConnection connClient = (IConnection) client.getAttribute("connection");
+		IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+		sc.invoke("checkUpdateRetroDocument", argsRetroDocument);
+		
+		int sharedUserId=0;
+		int nbrSharedUsers = listUser.length;
+		for (IClient shareClient : scope.getClients())
+			{
+				for(int nUser=0; nUser < nbrSharedUsers; nUser++)
+				{
+					sharedUserId = listUser[nUser];
+					int userId = (Integer)shareClient.getAttribute("uid");
+					if(userId == sharedUserId)
+					{
+						// TODO 
+						log.warn(" == added client {}",(String)client.getAttribute("id"));
+					}	
+				}
+			}
+		
+		
 	}
 	
 	
