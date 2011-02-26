@@ -64,8 +64,8 @@
 
 	<select id="getDocumentsByInviteeIdAndSessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
 	SELECT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
-FROM visu2.retro_document_access as rda, visu2.retro_document as rd
-WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
+	FROM retro_document_access as rda, retro_document as rd
+	WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
 	</select>
 	
 	<delete id="deleteDocument">
@@ -87,11 +87,8 @@ WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_doc
 		SET id_retro_document=#documentId:INTEGER#,
 			id_user=#userId:INTEGER#
 	</insert>
-	
-
 		
-		
-		<insert id="insertDocument" parameterClass="retroDocument">
+	<insert id="insertDocument" parameterClass="retroDocument">
 		INSERT INTO retro_document
 		SET 
 		    id_owner = #ownerId#,
