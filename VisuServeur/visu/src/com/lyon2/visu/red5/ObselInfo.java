@@ -336,7 +336,7 @@ public class ObselInfo {
 		{
 			log.warn("List empty !!!!!!");
 		}
-		
+		log.warn("===== sessionId open session = {}",sessionId.toString());
 		Object[] argsRetroDocument = { listRetroDocumentOwner, listRetroDocumentShared};
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
@@ -449,7 +449,7 @@ public class ObselInfo {
 		{
 			log.warn("List empty !!!!!!");
 		}
-		
+		log.warn("===== sessionId closed session = {}",sessionId.toString());
 		Object[] argsRetroDocument = { listRetroDocumentOwner, listRetroDocumentShared};
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;

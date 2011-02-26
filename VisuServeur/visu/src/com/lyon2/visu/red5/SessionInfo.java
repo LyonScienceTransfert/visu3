@@ -414,7 +414,7 @@ public class SessionInfo
 	
 	public void getSessionByIdSalonRetro(IConnection conn, Integer sessionId)
 	{
-		log.warn("====== getSessionByIdSalonRetro =========");
+//		log.warn("====== getSessionByIdSalonRetro =========");
 		IClient client = conn.getClient();
 		Session session = null;
 		// get session
@@ -458,7 +458,7 @@ public class SessionInfo
 
 			for(Obsel obsel : listObselTraceId)
 			{
-				log.warn("obsel of the user = {}",obsel.toString());
+//				log.warn("obsel of the user = {}",obsel.toString());
 				addTraceId(listTraceId, obsel);
 			}
 			
