@@ -5,6 +5,7 @@ import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.UtilFunction;
+import com.ithaca.utils.XMLUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
@@ -241,7 +242,8 @@ public class MainManager
 		for each(var retroDocumentVO:RetroDocumentVO in listRetroDocumentOwner)
 		{
 			var createur:String = Model.getInstance().getLoggedUser().lastname;
-			var titre:String = retroDocumentVO.title; 
+			createur = XMLUtils.toXMLString(createur);
+			var titre:String = XMLUtils.toXMLString(retroDocumentVO.title);
 			var date:String = UtilFunction.getLabelDate(retroDocumentVO.creationDate,"/");
 			var id:String = retroDocumentVO.documentId.toString();
 			var nodeString:String = "<retroDocument creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='true'/>";
@@ -252,8 +254,8 @@ public class MainManager
 		for each(var shareRetroDocumentVO:RetroDocumentVO in listRetroDocumentShared)
 		{
 			var createurUser:User = Model.getInstance().getUserPlateformeByUserId(shareRetroDocumentVO.ownerId);
-			var createur:String = createurUser.lastname;
-			var titre:String = shareRetroDocumentVO.title; 
+			var createur:String = XMLUtils.toXMLString(createurUser.lastname);
+			var titre:String = createur = XMLUtils.toXMLString(shareRetroDocumentVO.title);
 			var date:String = UtilFunction.getLabelDate(shareRetroDocumentVO.creationDate,"/");
 			var id:String = shareRetroDocumentVO.documentId.toString();
 			var nodeString:String = "<node creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='false'/>";
