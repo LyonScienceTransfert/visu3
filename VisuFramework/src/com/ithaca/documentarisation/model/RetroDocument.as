@@ -42,17 +42,17 @@ package com.ithaca.documentarisation.model
 			modifyDate = xml.child(RetroDocumentConst.TAG_LAST_MODIFIED).toString(); 
 		}
 		
-		public function getRetroDocumentXMLtoSTRING():String
+		public function getRetroDocumentXMLtoSTRING():String 
 		{
 			var rootString:String = "<"+RetroDocumentConst.TAG_RETROSPECTION_DOCUMENT+"/>";
 			var root:XML = new XML(rootString); 
-			var stringTitre:String = "<"+RetroDocumentConst.TAG_TITLE+">"+title+"</"+RetroDocumentConst.TAG_TITLE+">";
+			var stringTitre:String = "<"+RetroDocumentConst.TAG_TITLE+"><![CDATA["+title+"]]></"+RetroDocumentConst.TAG_TITLE+">";
 			var titre:XML = new XML(stringTitre);
 			root.appendChild(titre);
-			var stringDescription:String = "<"+RetroDocumentConst.TAG_DOCUMENT_DESCRIPTION+">"+description+"</"+RetroDocumentConst.TAG_DOCUMENT_DESCRIPTION+">";
+			var stringDescription:String = "<"+RetroDocumentConst.TAG_DOCUMENT_DESCRIPTION+"><![CDATA["+description+"]]></"+RetroDocumentConst.TAG_DOCUMENT_DESCRIPTION+">";
 			var description:XML = new XML(stringDescription);
 			root.appendChild(description);
-			var stringCreateur:String = "<"+RetroDocumentConst.TAG_CREATOR+">"+createur+"</"+RetroDocumentConst.TAG_CREATOR+">";
+			var stringCreateur:String = "<"+RetroDocumentConst.TAG_CREATOR+"><![CDATA["+createur+"]]></"+RetroDocumentConst.TAG_CREATOR+">";
 			var createur:XML = new XML(stringCreateur);
 			root.appendChild(createur);
 			var stringCreateDate:String = "<"+RetroDocumentConst.TAG_CREATION_DATE+">"+creationDate+"</"+RetroDocumentConst.TAG_CREATION_DATE+">";
@@ -67,7 +67,7 @@ package com.ithaca.documentarisation.model
 			{
 				var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
 				var segmentXML:XML = new XML("<"+RetroDocumentConst.TAG_SEGMENT+"/>");
-				var stringTitleSegment:String = "<"+RetroDocumentConst.TAG_TITLE+">"+segment.title+"</"+RetroDocumentConst.TAG_TITLE+">";
+				var stringTitleSegment:String = "<"+RetroDocumentConst.TAG_TITLE+"><![CDATA["+segment.title+"]]></"+RetroDocumentConst.TAG_TITLE+">";
 				var titleSegment:XML = new XML(stringTitleSegment);
 				segmentXML.appendChild(titleSegment);
 				var stringBeginTimeVideo:String = "<"+RetroDocumentConst.TAG_FROM_TIME+">"+segment.beginTimeVideo.toString()+"</"+RetroDocumentConst.TAG_FROM_TIME+">";
@@ -76,10 +76,10 @@ package com.ithaca.documentarisation.model
 				var stringEndTimeVideo:String = "<"+RetroDocumentConst.TAG_TO_TIME+">"+segment.endTimeVideo.toString()+"</"+RetroDocumentConst.TAG_TO_TIME+">";
 				var endTimeVideo:XML = new XML(stringEndTimeVideo);
 				segmentXML.appendChild(endTimeVideo);
-				var stringComment:String = "<"+RetroDocumentConst.TAG_COMMENT+">"+segment.comment+"</"+RetroDocumentConst.TAG_COMMENT+">";
+				var stringComment:String = "<"+RetroDocumentConst.TAG_COMMENT+"><![CDATA["+segment.comment+"]]></"+RetroDocumentConst.TAG_COMMENT+">";
 				var comment:XML = new XML(stringComment);
 				segmentXML.appendChild(comment);
-				var stringLink:String = "<"+RetroDocumentConst.TAG_VIDEO_LINK+">"+segment.link+"</"+RetroDocumentConst.TAG_VIDEO_LINK+">";
+				var stringLink:String = "<"+RetroDocumentConst.TAG_VIDEO_LINK+"><![CDATA["+segment.link+"]]></"+RetroDocumentConst.TAG_VIDEO_LINK+">";
 				var link:XML = new XML(stringLink);
 				segmentXML.appendChild(link);
 				
