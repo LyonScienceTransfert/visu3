@@ -191,6 +191,12 @@ public class RetroDocumentInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du update des sessions" + e);
 		}
+		
+		// TODO 
+		// 1.get old list invited
+		// 2.if hasn't invited in the list the document call "deleteRetroDocument"
+		// 3. send all users in the new list retroDocument with new list users.
+		
 		// delete all invitations
 		int retroDocumentId = retroDocument.getDocumentId();
 		try
@@ -211,28 +217,30 @@ public class RetroDocumentInfo {
 		}
 		log.warn("shared for : {}", listUser.toString());
 		// call function updated on the client side 
-		Object[] argsRetroDocument = {retroDocument};
-		IConnection connClient = (IConnection) client.getAttribute("connection");
-		IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-		sc.invoke("checkUpdateRetroDocument", argsRetroDocument);
+		// FIXME : not need update retroDocument for owner of this document
+//		Object[] argsRetroDocument = {retroDocument};
+//		IConnection connClient = (IConnection) client.getAttribute("connection");
+//		IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+//		sc.invoke("checkUpdateRetroDocument", argsRetroDocument);
 		
-		int sharedUserId=0;
-		int nbrSharedUsers = listUser.length;
-		for (IClient shareClient : scope.getClients())
-			{
-				for(int nUser=0; nUser < nbrSharedUsers; nUser++)
-				{
-					sharedUserId = listUser[nUser];
-					int userId = (Integer)shareClient.getAttribute("uid");
-					if(userId == sharedUserId)
-					{
-						// TODO 
-						log.warn(" == added client {}",(String)client.getAttribute("id"));
-					}	
-				}
-			}
-		
-		
+//		int sharedUserId=0;
+//		int nbrSharedUsers = listUser.length;
+//		for (IClient shareClient : scope.getClients())
+//		{
+//			for(int nUser=0; nUser < nbrSharedUsers; nUser++)
+//			{
+//				sharedUserId = listUser[nUser];
+//				int userId = (Integer)shareClient.getAttribute("uid");
+//				if(userId == sharedUserId)
+//				{
+//					Object[] argsRetroDocumentShare = {retroDocument, listUser};
+//					IConnection connShareClient = (IConnection) shareClient.getAttribute("connection");
+//					IServiceCapableConnection scShareClient = (IServiceCapableConnection) connShareClient;
+//					scShareClient.invoke("checkUpdateRetroDocument", argsRetroDocumentShare);
+//					log.warn(" == added client {}",(String)client.getAttribute("id"));
+//				}	
+//			}			
+//		}	
 	}
 	
 	
