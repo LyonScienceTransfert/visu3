@@ -51,9 +51,6 @@ package com.ithaca.documentarisation
 		public var addButton:Button;
 		
 		[SkinPart("true")]
-		public var saveButton:Button;
-		
-		[SkinPart("true")]
 		public var groupSegment:Group;
 		
 		private var _labelRetroDocument:String;
@@ -137,11 +134,6 @@ package com.ithaca.documentarisation
 			{
 				addButton.addEventListener(MouseEvent.CLICK, onAddSegment);	
 			}
-			if(instance == saveButton)
-			{
-				saveButton.addEventListener(MouseEvent.CLICK, updateRetroDocument);	
-			}
-			
 			if(instance == titleDocument)
 			{
 				titleDocument.text = _labelRetroDocument;
