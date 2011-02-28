@@ -18,7 +18,7 @@
 	<s:Group width="100%" height="32" >
 		<s:BorderContainer height="32" width="100%" includeIn="empty" backgroundColor="#E9B7B7">
 			<s:Label left="3" right="3" includeIn="empty" verticalCenter="0" verticalAlign="top" textAlign="center">
-				<s:text>Depose segment ici...</s:text>
+				<s:text>Déposez un élément ici</s:text>
 			</s:Label>
 		</s:BorderContainer>
 		<s:Label id="timeWindowLabel" text="AZERTREEA" left="3" right="38" includeIn="normal" verticalCenter="0"/>
