@@ -290,6 +290,13 @@ public class MainManager
 		this.dispatcher.dispatchEvent(retroDocumentEvent);
 	}
 	/**
+	 * get notify updated retroDocument by owner, in this case logged user is shared for this document 
+	 */
+	public function onCheckUpdateRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array):void
+	{
+		// TODO check if logged user looking for this document
+	}
+	/**
 	 * get list obsels "SessionExit", "SessionPause" for updating button "Salon Tutorat"
 	 */
 	public function onCheckListObselSessionExitSessionPause(listObselVO:Array):void
