@@ -83,7 +83,7 @@ package com.ithaca.documentarisation
 				timeWindowLabel.text = timeToString();
 				timeWindowLabel.toolTip = timeToString();
 				playButton.enabled = true;
-				playButton.toolTip = "Show the segment video";		
+				playButton.toolTip = "Joue la vidéo correspondant à ce segment";		
 			}	
 			
 			if(instance == screenShotImage)
@@ -96,11 +96,11 @@ package com.ithaca.documentarisation
 				if(this._timeBegin == 0 )
 				{
 					playButton.enabled = false;
-					playButton.toolTip = "Hasn't video segment...";
+					playButton.toolTip = "Aucun segment vidéo associé actuellement";
 				}
 				else
 				{
-					playButton.toolTip = "Show the segment video";					
+					playButton.toolTip = "Joue la vidéo correspondant à ce segment";					
 				}
 				playButton.addEventListener(MouseEvent.CLICK, onPlayButtonClick);
 				
