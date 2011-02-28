@@ -83,9 +83,9 @@
 					// add mesage Welcome
 					var namePlateforme:String = Model.getInstance().getNamePlateforme();
 					var user:User = Model.getInstance().getLoggedUser();
-					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenue sur le ")+namePlateforme+"...",new Date());		
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenue sur ")+namePlateforme+"...",new Date());		
 					// add flux activity
-					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" a rejoint le ")+namePlateforme+".",new Date());
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" a rejoint ")+namePlateforme+".",new Date());
 					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
 					var strConnectedUser:String = ""
 					var nbrUser:int = listConnectedUser.length;
@@ -103,7 +103,7 @@
 					{
 						var namePlateforme:String = Model.getInstance().getNamePlateforme();
 						// add message about connected users
-						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" Actuellement sur le ")+namePlateforme+" : "+strConnectedUser,new Date());
+						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Actuellement connecté à ")+namePlateforme+" : "+strConnectedUser,new Date());
 					}
 				}
 				
@@ -481,6 +481,7 @@
 					return fxgt.gettext("<<-- AUJOURD'HUI -->");
 				}else
 				{
+                /* FIXME: use mx.formatters.DateFormatter ("EEEE D MMMM YYYY") */
 					var dayString:String = date.getDate().toString();
 					var yearString:String = date.getFullYear().toString();
 					var monthString:String = "";
@@ -490,7 +491,7 @@
 							monthString = fxgt.gettext("JANVIER");
 							break;
 						case 1:
-							monthString = fxgt.gettext("FEVRIER");
+							monthString = fxgt.gettext("FÉVRIER");
 							break;
 						case 2:
 							monthString = fxgt.gettext("MARS");
@@ -505,7 +506,7 @@
 							monthString = fxgt.gettext("JUIN");
 							break;
 						case 6:
-							monthString = fxgt.gettext("JUILLIET");
+							monthString = fxgt.gettext("JUILLET");
 							break;
 						case 7:
 							monthString = fxgt.gettext("AOÛT");
@@ -520,7 +521,7 @@
 							monthString = fxgt.gettext("NOVEMBRE");
 							break;
 						case 11:
-							monthString = fxgt.gettext("DECEMBRE");
+							monthString = fxgt.gettext("DÉCEMBRE");
 							break;
 					}
 					var dayWeek:Number = date.getDay();
@@ -548,7 +549,7 @@
 							dayWeekString = fxgt.gettext("SAMEDI");
 							break;		
 					}
-					return 	dayWeekString + " "+dayString + " "+monthString+ " "+ yearString ;		
+					return 	dayWeekString + " " + dayString + " " + monthString+ " " + yearString ;		
 				}
 			}
 			

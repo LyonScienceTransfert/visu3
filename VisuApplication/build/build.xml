@@ -150,6 +150,11 @@
 	  		  	<include-file name="images/video.jpg" path="${framework.images}/video.jpg"/>
 	  		  	<include-file name="images/add.png" path="${framework.images}/add.png"/>
 
+	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
+	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
+	  		  	<include-file name="images/save_edit.png" path="${framework.images}/save_edit.png"/>
+	  		  	<include-file name="images/RetroDocumentAddVer1.png" path="${framework.images}/RetroDocumentAddVer1.png"/>
+
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
 	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
 	  	  	
