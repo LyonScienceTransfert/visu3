@@ -120,19 +120,19 @@ package com.ithaca.utils
 		public static function createRetroDocumentXML(titreDoc:String, descriptionDoc:String, createurDoc:String, createDateDoc:Date, modifyDateDoc:Date):String
 		{
 			var root:XML = new XML("<"+RetroDocumentConst.TAG_RETROSPECTION_DOCUMENT+"/>");	
-			var stringTitre:String = "<title>"+titreDoc+"</title>";
+			var stringTitre:String = "<title><![CDATA["+titreDoc+"]]></title>";
 			var titre:XML = new XML(stringTitre);
 			root.appendChild(titre);
-			var stringDescription:String = "<description>"+descriptionDoc+"</description>";
+			var stringDescription:String = "<description><![CDATA["+descriptionDoc+"]]></description>";
 			var description:XML = new XML(stringDescription);
 			root.appendChild(description);
-			var stringCreateur:String = "<creator>"+createurDoc+"</creator>";
+			var stringCreateur:String = "<creator><![CDATA["+createurDoc+"]]></creator>";
 			var createur:XML = new XML(stringCreateur);
 			root.appendChild(createur);
-			var stringCreateDate:String = "<creation-date>"+createDateDoc+"</creation-date>";
+			var stringCreateDate:String = "<creation-date><![CDATA["+createDateDoc+"]]></creation-date>";
 			var createDate:XML = new XML(stringCreateDate);
 			root.appendChild(createDate);
-			var stringModifyDate:String = "<last-modified>"+modifyDateDoc+"</last-modified>";
+			var stringModifyDate:String = "<last-modified><![CDATA["+modifyDateDoc+"]]></last-modified>";
 			var modifyDate:XML = new XML(stringModifyDate);
 			root.appendChild(modifyDate);
 			var result:String = root.toXMLString();
