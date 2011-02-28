@@ -103,7 +103,7 @@
 					{
 						var namePlateforme:String = Model.getInstance().getNamePlateforme();
 						// add message about connected users
-						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" Actuellement sur le ")+namePlateforme+" : "+strConnectedUser,new Date());
+						Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Actuellement connecté à ")+namePlateforme+" : "+strConnectedUser,new Date());
 					}
 				}
 				
