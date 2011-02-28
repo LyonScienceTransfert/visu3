@@ -121,6 +121,7 @@
 			<rtmp:CallbackRegistrator action="checkAddObselComment" target="{MainManager}" method="onCheckAddObselComment"/>
 			<rtmp:CallbackRegistrator action="checkListRetroDocument" target="{MainManager}" method="onCheckListRetroDocument"/>
 			<rtmp:CallbackRegistrator action="checkRetroDocument" target="{MainManager}" method="onCheckRetroDocument"/>
+<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
