@@ -1336,12 +1336,13 @@
 					</s:Group>
 				</s:Group>
 				<s:HGroup>
-					<s:Label text="Position: "/>
-					<s:HSlider id="startTimeSessionSlider" 
-							   liveDragging="true" width="300" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
 					<s:Label text="Zoom: " />
 					<s:HSlider id="durationSessionSlider" 						   
-							   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)"/>
+							   liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)"/>
+
+					<s:Label text="Position: "/>
+					<s:HSlider id="startTimeSessionSlider" 
+							   liveDragging="true" width="70%" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
 				</s:HGroup>
 			</s:VGroup>
 		</s:Panel>
