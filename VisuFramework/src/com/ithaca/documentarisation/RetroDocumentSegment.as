@@ -43,7 +43,13 @@ package com.ithaca.documentarisation
 
 		[SkinPart("true")]
 		public var segmentComment:TextArea;
+
+		[SkinPart("true")]
+		public var labelStartDuration:Label;
 		
+		[SkinPart("true")]
+		public var buttonPlayStopVideo:Button;
+
 		private var open:Boolean;
 		private var editabled:Boolean;
 		private var titleChange:Boolean;
@@ -52,10 +58,12 @@ package com.ithaca.documentarisation
 		private var emptySegmentVideo:Boolean = true;
 		private var isDroped:Boolean = false;
 		
-		private var TEXT_TITLE_EMPTY ="Entrez un titre ici";
+		private var TEXT_TITLE_EMPTY:String ="Entrez un titre ici";
+		private var DELTA_TIME:Number = 5000;
 		
 		private var _title:String = "";
 		private var _timeBegin:Number=0;
+		private var _timeEnd:Number=0;
 		private var _sourceIcon:Object;
 		private var _textComment:String= "";
 		private var dragSource:DragSource = null;
@@ -101,15 +109,17 @@ package com.ithaca.documentarisation
 		}
 		public function set startDateSession(value:Number):void{_startDateSession = value;};
 		public function get startDateSession():Number{return _startDateSession;};
+
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
 			if(instance == segmentVideo)
 			{
 				segmentVideo.sourceIcon = this._sourceIcon;
-				segmentVideo.startDateSession = _startDateSession
+				segmentVideo.deltaTime = this.DELTA_TIME;
+				segmentVideo.startDateSession = _startDateSession;
 				segmentVideo.timeBegin = _timeBegin;
-				
+				segmentVideo.timeEnd = _timeEnd;			
 				this.segmentVideo.showDetail(emptySegmentVideo);
 			}
 			
@@ -122,6 +132,21 @@ package com.ithaca.documentarisation
 			if(instance == buttonDeleteSegment)
 			{
 				buttonDeleteSegment.addEventListener(MouseEvent.CLICK, onDeleteSegment);
+				buttonDeleteSegment.toolTip = fxgt.gettext("Supprimer ce segment");
+			}	
+
+			if(instance == buttonPlayStopVideo)
+			{
+				if(this._timeBegin == 0 )
+				{
+					buttonPlayStopVideo.enabled = false;
+					buttonPlayStopVideo.toolTip = "Aucun segment vidéo associé actuellement";
+				}
+				else
+				{
+					buttonPlayStopVideo.toolTip = "Joue la vidéo correspondant à ce segment";					
+				}
+				buttonPlayStopVideo.addEventListener(MouseEvent.CLICK, onPlayStopButtonClick);
 			}	
 			
 			if(instance == titleSegmentLabel)
@@ -144,6 +169,11 @@ package com.ithaca.documentarisation
 				}
 				titleSegmentTextInput.addEventListener(TextOperationEvent.CHANGE, titleSegmentTextInput_changeHandler);
 				
+			}
+			
+			if(instance == labelStartDuration)
+			{
+				labelStartDuration.text = getLabelStartDuration();
 			}	
 		}
 		
@@ -168,7 +198,9 @@ package com.ithaca.documentarisation
 				segmentChange = false;
 				this.segmentVideo.showDetail(false);
 				this.segmentVideo.startDateSession = this._startDateSession;
-				this.segmentVideo.timeBegin = this._timeBegin
+				this.segmentVideo.timeBegin = this._timeBegin;
+				this.segmentVideo.timeEnd = this._timeEnd;
+				
 				this.segmentVideo.sourceIcon = this._sourceIcon;
 				
 				this.segmentComment.text = this._textComment;
@@ -176,6 +208,8 @@ package com.ithaca.documentarisation
 				this.stage.focus = this.segmentComment;
 				emptySegmentVideo = false;
 				this.segmentVideo.showDetail(emptySegmentVideo);
+				setEnabledButtonPlayStop();
+				labelStartDuration.text = getLabelStartDuration();
 			}
 			
 			if(segmentSet)
@@ -184,7 +218,11 @@ package com.ithaca.documentarisation
 				this._sourceIcon = IconEnum.getIconByTypeObsel(this._segment.typeSource);
 				this._textComment = this._segment.comment;
 				this._timeBegin = this._segment.beginTimeVideo;
+				this._timeEnd = this._segment.endTimeVideo;
 				this._title = this._segment.title;
+				// enabled button playStop
+				setEnabledButtonPlayStop();
+				labelStartDuration.text = getLabelStartDuration();
 			}
 		}
 		
@@ -219,6 +257,14 @@ package com.ithaca.documentarisation
 			var removeSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_REMOVE_SEGMENT);
 			removeSegmentEvent.segment = this._segment;
 			this.dispatchEvent(removeSegmentEvent);
+		}
+		
+		private function onPlayStopButtonClick(even:MouseEvent):void
+		{
+			var playRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
+			playRetroDocumentEvent.beginTime = this._timeBegin;
+			// TODO END TIME
+			this.dispatchEvent(playRetroDocumentEvent);
 		}
 		
 		public function setEmpty(value:Boolean):void
@@ -277,6 +323,15 @@ package com.ithaca.documentarisation
 				}
 			}
 		}
+		public function setCommentAndDurationToolTips(value:Boolean):void
+		{
+			var toolTipString:String = "";
+			if(value)
+			{
+				toolTipString = this.timeToString() +" "+ this._textComment;
+			}
+			this.toolTip = toolTipString;
+		}
 		private function updateSegmentConformed(event:CloseEvent):void
 		{
 			if( event.detail == Alert.YES)
@@ -288,10 +343,20 @@ package com.ithaca.documentarisation
 		private function updateSegment():void
 		{
 			var obsel:Obsel = dragSource.dataForFormat("obsel") as Obsel;
-			_timeBegin = obsel.begin;
+			
+			if(obsel.begin - _startDateSession > DELTA_TIME)
+			{
+				_timeBegin = obsel.begin - DELTA_TIME ;
+			}else
+			{
+				_timeBegin = _startDateSession;
+			}
+			// TODO timeEnd  by duration of the session 
+			_timeEnd = obsel.begin + DELTA_TIME;
 			_textComment = _textComment + dragSource.dataForFormat("textObsel") as String;
 			// update segment
-			_segment.beginTimeVideo = obsel.begin;
+			_segment.beginTimeVideo = _timeBegin
+			_segment.endTimeVideo = _timeEnd;
 			_segment.comment = _textComment;
 			_segment.link = "voidLink";
 			_segment.title = _title;
@@ -340,6 +405,67 @@ package com.ithaca.documentarisation
 		{
 			var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
 			this.dispatchEvent(notifyUpdateEvent);
+		}
+		private function getLabelStartDuration():String
+		{
+			var timeStart:Number = this._timeBegin - _startDateSession;
+			var timeMin:int = timeStart/60000;
+			var timeMinString:String = timeMin.toString();
+			if(timeMin < 10){timeMinString = "0"+timeMinString;};
+			
+			var timeSec:int = (timeStart - timeMin*60000)/1000;
+			var timeSecString:String = timeSec.toString();
+			if(timeSec < 10){timeSecString= "0"+timeSecString;}
+			
+			var timeFrom:String = timeMinString+":"+timeSecString;
+			
+			var duration:int = (this._timeEnd - this._timeBegin)/1000;	
+			var durationString:String ="("+duration.toString() + " s)";
+			
+			return timeFrom + " "+durationString;
+		}
+		
+		private function timeToString():String
+		{
+			var timeStart:Number = this._timeBegin - _startDateSession;
+			var timeMin:int = timeStart/60000;
+			var timeMinString:String = timeMin.toString();
+			if(timeMin < 10){timeMinString = "0"+timeMinString;};
+			
+			var timeSec:int = (timeStart - timeMin*60000)/1000;
+			var timeSecString:String = timeSec.toString();
+			if(timeSec < 10){timeSecString= "0"+timeSecString;}
+			
+			var timeFrom:String = timeMinString+":"+timeSecString;
+			
+			var timeEnd:Number = this._timeEnd - _startDateSession;
+			var timeMinEnd:int = timeEnd/60000;
+			var timeMinEndString:String = timeMinEnd.toString();
+			if(timeMinEnd < 10){timeMinEndString = "0"+timeMinEndString;};
+			
+			var timeSecEnd:int = (timeEnd - timeMinEnd*60000)/1000;
+			var timeSecStringEnd:String = timeSecEnd.toString();
+			if(timeSecEnd < 10){timeSecStringEnd= "0"+timeSecStringEnd;}
+			
+			var timeTo:String = timeMinEndString+":"+timeSecStringEnd;
+			
+			return "["+timeFrom+"-"+timeTo+"]";
+		}
+		
+		private function setEnabledButtonPlayStop():void
+		{
+			buttonPlayStopVideo.enabled = true;
+			buttonPlayStopVideo.toolTip = "Joue la vidéo correspondant à ce segment";
+		}
+		public function setLabelPlay(value:Boolean):void
+		{
+			if(value)
+			{
+				this.buttonPlayStopVideo.label = "Pause";
+			}else
+			{
+				this.buttonPlayStopVideo.label = "Play";		
+			}
 		}
 	}
 }
