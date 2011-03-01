@@ -2,7 +2,8 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:documentarisation="com.ithaca.documentarisation.*"
-		currentStateChange="skin1_currentStateChangeHandler(event)">
+		currentStateChange="skin1_currentStateChangeHandler(event)"
+		creationComplete="skin1_creationCompleteHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.RetroDocumentSegment")]
@@ -11,7 +12,14 @@
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
 			import mx.events.StateChangeEvent;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
 			
 			protected function group1_clickHandler(event:MouseEvent):void
 			{
@@ -27,6 +35,19 @@
 				{
 					this.hostComponent.checkingEmptySegmentVideo();
 				}
+				
+				var commentDurationTooltips:Boolean = false;
+				if(this.currentState == "normal" || this.currentState == "normalEditable")
+				{
+					commentDurationTooltips = true;
+				}
+				this.hostComponent.setCommentAndDurationToolTips(commentDurationTooltips);
+			}
+
+
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
 			}
 
 		]]>
@@ -90,18 +111,25 @@
 		</s:Path>
 		
 <!-- LABEL SEGMENT-->
-		<s:TextInput id="titleSegmentTextInput" left="20" top="5" right="50" color="#121212"
-					 fontSize="14" maxHeight="22"
-					 includeIn="normalEditable,openEditable" fontSize.normalEditable="12">
+		<s:TextInput id="titleSegmentTextInput" left="20" top="5" right="220" color="#121212"
+					 fontSize="12" maxHeight="22"
+					 includeIn="normalEditable,openEditable" top.openEditable="5" top.normalEditable="5" left.normalEditable="20" right.normalEditable="170" left.openEditable="20" right.openEditable="170">
 		</s:TextInput>
-		<s:Label id="titleSegmentLabel" left="20" right="5" maxDisplayedLines="1" includeIn="normal,open" left.normal="20" left.open="20" right.open="5" verticalCenter="0" right.normal="5"/>
+		<s:Label id="titleSegmentLabel" left="20" right="5" maxDisplayedLines="1" includeIn="normal,open" verticalCenter="0" left.normal="20" right.normal="140" verticalCenter.normal="0" left.open="20" right.open="140" verticalCenter.open="0"/>
+<!-- LABEL START/DURATION -->
+		<s:Label id="labelStartDuration" right="80" right.normal="65" right.normalEditable="95" right.openEditable="95" right.open="65" verticalCenter="2" verticalCenter.open="2" verticalCenter.normal="2" verticalCenter.normalEditable="2" verticalCenter.openEditable="2">
+			<s:text>05:20 (135 s)</s:text>
+		</s:Label>
 <!-- DELETE SEGMENT -->
-		<mx:Button  id="buttonDeleteSegment" top="5" right="5" 
+		<mx:Button  id="buttonDeleteSegment" top="5" right="48" 
 					icon="{IconEnum.getIconByName('delete')}"
-					includeIn="normalEditable,openEditable" width="30">
-			<mx:toolTip>Supprimer segment</mx:toolTip>
+					includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="63" top.openEditable="5" right.openEditable="63">
 		</mx:Button>
 	</s:Group>
+<!-- PLAY/STOP VIDEO -->
+		<mx:Button id="buttonPlayStopVideo" top="5" right="5" width="40" label.open="{fxgt.gettext(&quot;Play&quot;)}" width.open="55" width.normal="55" width.normalEditable="55" width.openEditable="55">
+			<mx:label>{fxgt.gettext("Play")}</mx:label>
+		</mx:Button>
 	
 	<s:Group top="30" bottom="5" includeIn="open,openEditable" id="content" left="5"  right="5" >
 		<documentarisation:SegmentVideo  id="segmentVideo" left="3" right="3" height="32"/>
