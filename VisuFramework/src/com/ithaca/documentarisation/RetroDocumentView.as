@@ -125,14 +125,17 @@ package com.ithaca.documentarisation
 			if(instance == shareButton)
 			{
 				shareButton.addEventListener(MouseEvent.CLICK, onSharedDocument);	
+				shareButton.toolTip = fxgt.gettext("Partager ce bilan");
 			}
 			if(instance == removeButton)
 			{
 				removeButton.addEventListener(MouseEvent.CLICK, onRemoveDocument);	
+				removeButton.toolTip = fxgt.gettext("Supprimer ce bilan");
 			}
 			if(instance == addButton)
 			{
 				addButton.addEventListener(MouseEvent.CLICK, onAddSegment);	
+				addButton.toolTip = fxgt.gettext("Ajouter un nouveau segment");
 			}
 			if(instance == titleDocument)
 			{
@@ -384,10 +387,25 @@ package com.ithaca.documentarisation
 		}
 		private function onSelectUser(event:UserEvent):void
 		{
-			
 			this._listUser = event.listUser;
 			// update retroDocument
 			updateRetroDocument();
+		}
+		public function updateButtonPlayStop(value:RetroDocumentSegment):void
+		{
+			var nbrRetroDocumentSegment:int = groupSegment.numElements;
+			for(var nRetroDocumentSegment:int = 0; nRetroDocumentSegment < nbrRetroDocumentSegment; nRetroDocumentSegment++)
+			{
+				var retroDocumentSegment:RetroDocumentSegment = groupSegment.getElementAt(nRetroDocumentSegment) as RetroDocumentSegment;
+				var statusPlay:Boolean = false;
+				if(value != null && retroDocumentSegment == value)
+				{
+					// status "pause"
+					statusPlay = true;
+				}
+				// set label play/stop
+				retroDocumentSegment.setLabelPlay(statusPlay);
+			}
 		}
 	}
 }
