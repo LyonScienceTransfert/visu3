@@ -45,6 +45,7 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			
 			import spark.events.IndexChangeEvent;
@@ -574,6 +575,9 @@
 				}
 			}
 			
+			/**
+			 * set list users of the plateforme 
+			 */
 			public function onLoadedAllUsers(event:SessionEvent):void
 			{
 				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
@@ -581,19 +585,41 @@
 					var listUsersPlateforme:ArrayCollection = new ArrayCollection()
 					var listUser:Array = event.listDate;
 					var nbrUser:int = listUser.length;
+					for(var nUser:int = 0; nUser < nbrUser; nUser++)
+					{
+						var userVO:UserVO = listUser[nUser];
+						var user:User = new User(userVO);
+						// add user 
+						listUsersPlateforme.addItem(user);				
+					}
+					// set list users the plateforme
+					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
+					// show user the plateforme
+					showAllUser(listUsersPlateforme);
+				}
+			}
+			
+			/**
+			 * show users of the plateforme 
+			 */
+			public function showAllUser(listUsersPlateforme:ArrayCollection):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					// clear group users
+					groupUser.removeAllElements();
+					var nbrUser:int = listUsersPlateforme.length;
 					var listVoidUser:ArrayCollection = new ArrayCollection();
 					// get role the first user
-					var role:int = new User(listUser[0] as UserVO).role;
+					var role:int = (listUsersPlateforme.getItemAt(0) as User).role;
 					// set number user
 					var currentNumberUser:int = 1; 
 					var isVoidUser:Boolean;
 					for(var nUser:int = 0; nUser < nbrUser; nUser++)
 					{
 						isVoidUser = false;
-						var userVO:UserVO = listUser[nUser];
-						var user:User = new User(userVO);
-						// add user 
-						listUsersPlateforme.addItem(user);
+						var user:User = listUsersPlateforme.getItemAt(nUser) as User;
+
 						var messageUser:MessageUser = new MessageUser();
 						messageUser.user = user;
 						var lastChar:String = user.firstname.charAt(user.firstname.length-1);
@@ -620,7 +646,6 @@
 							editabled = true;
 						}
 						messageUser.setEditabled(editabled);
-						//messageUser.addEventListener(UserEvent.UPDATE_USER, onUpdateMessageUser);
 						messageUser.percentWidth = 100;
 						if(!isVoidUser)
 						{
@@ -632,10 +657,55 @@
 					{
 						groupUser.addElement(messageVoidUser);
 					}
-					// set list users the plateforme
-					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
 				}
 			}
+
+			protected function radioButtonAllUser_changeHandler(event:Event):void
+			{
+				var selected:Boolean = event.currentTarget.selected;
+				if(selected)
+				{
+					var listPlateformeUser:ArrayCollection = Model.getInstance().getListUserPlateforme();
+					setListenerOnListConnectedUser(false);
+					showAllUser(listPlateformeUser);
+				}
+			}
+
+			protected function radioButtonConnectedUser_changeHandler(event:Event):void
+			{
+				var selected:Boolean = event.currentTarget.selected;
+				if(selected)
+				{
+					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+					setListenerOnListConnectedUser(true);
+					showAllUser(listConnectedUser);
+				}
+			}
+			
+			private function setListenerOnListConnectedUser(value:Boolean):void
+			{
+				var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+				if(value)
+				{
+					listConnectedUser.addEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeListConnectedUser);				
+				}else
+				{
+					if(listConnectedUser.hasEventListener(CollectionEvent.COLLECTION_CHANGE))
+					{
+						listConnectedUser.removeEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeListConnectedUser);
+					}
+				}
+			}
+			
+			/**
+			* join/walk out user on/out the plateforme
+			*/ 
+			private function onChangeListConnectedUser(event:CollectionEvent):void
+			{
+				var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+				showAllUser(listConnectedUser);
+			}
+
 		]]>
 	</fx:Script>
 	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"  top="0" bottom="0" left="0" right="0" maxWidth="1024" >
@@ -724,7 +794,17 @@
 						</s:Label>
 					</s:HGroup>
 				</s:BorderContainer>
-				<s:Scroller left="5" right="5" top="40" bottom="0">
+				<s:HGroup width="100%" top="40" gap="2" height="{navigateurDay.height}" verticalAlign="middle" horizontalAlign="center">
+					<s:Label>
+						<s:text>{fxgt.gettext("Tous :  ")}</s:text>
+					</s:Label>
+					<s:RadioButton id="radioButtonAllUser" selected="true" change="radioButtonAllUser_changeHandler(event)" groupName="users"/>
+					<s:Label>
+						<s:text>{fxgt.gettext("Utilisateurs connectés seulement :  ")}</s:text>
+					</s:Label>
+					<s:RadioButton id="radioButtonConnectedUser"  change="radioButtonConnectedUser_changeHandler(event)" groupName="users"/>
+				</s:HGroup>
+				<s:Scroller left="5" right="5" top="65" bottom="0">
 					<s:Group id="groupUser" height="100%" width="100%">
 						<s:layout>
 							<s:VerticalLayout gap="5" />
