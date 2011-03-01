@@ -12,6 +12,7 @@
 						xmlns:controls="com.lyon2.controls.*" > 
 	<fx:Script>
 		<![CDATA[ 
+			import com.ithaca.documentarisation.RetroDocumentSegment;
 			import com.ithaca.documentarisation.RetroDocumentTreeToolTip;
 			import com.ithaca.documentarisation.RetroDocumentView;
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
@@ -298,6 +299,8 @@
 						playTime = new Date().time - this.timeStart + this.deltaTime + timeStartSession;
 						actionVideoPlayer.timePlayer = playTime;
 						this.dispatchEvent(actionVideoPlayer);
+						// update buttons play on the retroDocumentSegments
+						updateLabelButtonPlayStopRetroDocumentSegment();
 						break;
 					default :
 						break;
@@ -1078,8 +1081,18 @@
 				{
 					var beginTime:Number = event.beginTime;
 					prePlayVideoFlux(beginTime);
+					var playRetroDocumentSegment : RetroDocumentSegment = event.target as RetroDocumentSegment;
+					updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
 				}
 			}
+			
+			private function updateLabelButtonPlayStopRetroDocumentSegment(value:RetroDocumentSegment = null):void
+			{
+				// change labels on the buttons the retroDocumentSegment
+				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
+				retroDocmentView.updateButtonPlayStop(value);		
+			}
+			
 			// Diplay tooltip when rolling mouse over a tree item
 			private function onItemRollOver(event:ListEvent):void
 			{
@@ -1301,7 +1314,9 @@
 					<s:Label maxDisplayedLines="1" left="5" top="10" fontWeight="bold">
 						<s:text>Documentarisation</s:text>
 					</s:Label>
-					<mx:Button id="addRetroDocument" enabled="false" top="5" right="3" icon="{IconEnum.getIconByName('retroDocumentAdd')}" toolTip="Créer un nouveau bilan pour cette séance" width="32" click="addRetroDocument_clickHandler(event)"/>
+					<mx:Button id="addRetroDocument" enabled="false" top="5" right="3" icon="{IconEnum.getIconByName('retroDocumentAdd')}"  width="32" click="addRetroDocument_clickHandler(event)">
+						<mx:toolTip>{fxgt.gettext("Créer un nouveau bilan pour cette séance")}</mx:toolTip>
+					</mx:Button>
 				</s:Group>
 				<mx:VDividedBox width="100%" height="100%">
 					<mx:Tree width="100%" height="30%" id="retroDocumentTree" 
