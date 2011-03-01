@@ -39,7 +39,7 @@ package com.ithaca.documentarisation
 		private var timeWindowLabelChange:Boolean;
 		private var screenShotImageChange:Boolean;
 		private var _startDateSession:Number;
-		private var DELTA_TIME:Number = 5000;
+		private var _deltaTime:Number = 5000;
 		
 		public function SegmentVideo()
 		{
@@ -48,22 +48,33 @@ package com.ithaca.documentarisation
 			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);*/
 		}
 		
+		public function get deltaTime():Number {return _deltaTime;};
+		public function set deltaTime(value:Number):void{_deltaTime = value;};
 		public function get timeBegin():Number {return _timeBegin;};
 		public function set timeBegin(value:Number):void
 		{
-			if(value - _startDateSession > DELTA_TIME)
+/*			if(value - _startDateSession > _deltaTime)
 			{
-				_timeBegin = value - DELTA_TIME ;
+				_timeBegin = value - _deltaTime ;
 			}else
 			{
 				_timeBegin = _startDateSession;
 			}
 			// TODO timeEnd  by duration of the session 
-			_timeEnd = value + DELTA_TIME;
-			
+			_timeEnd = value + _deltaTime;*/
+			_timeBegin = value;
 			timeWindowLabelChange = true;
 			invalidateProperties();
 		};
+		public function get timeEnd():Number {return _timeEnd;};
+		public function set timeEnd(value:Number):void
+		{
+			_timeEnd = value;
+			timeWindowLabelChange = true;
+			invalidateProperties();
+		};
+		
+		
 		
 		public function get sourceIcon():Object {return _sourceIcon;};
 		public function set sourceIcon(value:Object):void
