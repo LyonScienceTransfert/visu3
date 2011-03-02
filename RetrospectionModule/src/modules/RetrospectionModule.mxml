@@ -574,48 +574,16 @@
 			{
 				var target:Object = event.target as Object;
 				var deltaXObselTime:Number = 0;
-				// checing if user clicked on ObselTime
-				// TODO deplacement correct...
-				if (target is ObselStich)
-				{
-					deltaXObselTime = target.x;
-				}
-				var localX:Number = event.localX + deltaXObselTime;
+				
+				var localX:Number = event.stageX - event.currentTarget.x;
 				
 				var timeStartSession:Number = this.testTimeLine.startTimeSession;
 				var duration:Number = this.testTimeLine.durationSession;
 				var groupTimeLine:Group = event.currentTarget as Group;
 				var wightGroup:Number = groupTimeLine.width;
 				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
-				/* updateTimeCursor(delta);
-				var begin :Number = delta + timeStartSession; */
 				// pre play video flux
-				prePlayVideoFlux(0,delta);
-				// TODO new function ?
-/* 				this.pickCheryClick = begin;
-				
-				// remove all streams and listeners
-				this.removeAllStreams();
-				var listObselSessionIn:ArrayCollection = Model.getInstance().getObselSessionInByTimestamp(begin);
-				// update checking sum flux video
-				this.checkingSumFluxVideo = this.getSumBeginTimeObselSI(listObselSessionIn);
-				this.addFluxVideo(listObselSessionIn);
-				// running the flux video
-				if(!this.timer.running)
-				{
-					var timePausedNumber:Number = new Date().time -  this.timePause;
-					this.timeStart = this.timeStart  + timePausedNumber;
-					this.timer.start();
-					this.sessionTimeLine.setShowButtonNavigation(true);
-				}
-				// update buttons play/stop
-				this.sessionTimeLine.setStatusPlay(true);
-				// add obsel User Action
-				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
-				actionVideoPlayer.typeAction = TraceModel.RETRO_VIEDO_GO_TO_TIME_EVENT;
-				// choosing time by user
-				actionVideoPlayer.timePlayer = this.pickCheryClick;
-				this.dispatchEvent(actionVideoPlayer); */			
+				prePlayVideoFlux(0,delta);		
 			}
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
 			{
