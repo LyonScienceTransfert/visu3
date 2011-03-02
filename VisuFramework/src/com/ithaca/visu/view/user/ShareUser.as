@@ -1,13 +1,13 @@
 package com.ithaca.visu.view.user
 {
 	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	
 	import flash.events.Event;
 	
 	import spark.components.CheckBox;
 	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
-	import com.ithaca.visu.ui.utils.RoleEnum;
 	
 	public class ShareUser extends SkinnableComponent
 	{
@@ -48,7 +48,24 @@ package com.ithaca.visu.view.user
 			}
 			if (instance == fistLastNameUser)
 			{
-				fistLastNameUser.text = _fistLastName;
+				var roleUser:String=""
+				if(user.role < RoleEnum.STUDENT)
+				{
+					roleUser = "Etudiant";
+				}else
+					if(user.role < RoleEnum.TUTEUR)
+					{
+						roleUser = "Tuteur";
+					}else 
+						if(user.role < RoleEnum.RESPONSABLE)
+						{
+							roleUser = "Responsable";
+						}else
+						{
+							roleUser = "Administrateur";							
+						}
+				
+				fistLastNameUser.text = _fistLastName + " ("+roleUser+")";
 				// set color red for admins
 				if(user.role > RoleEnum.RESPONSABLE-1)
 				{
