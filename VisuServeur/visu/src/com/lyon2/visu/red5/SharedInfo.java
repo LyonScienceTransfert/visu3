@@ -99,7 +99,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, Integer[] listUser, String urlElement, Integer codeSharedAction, Integer senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser)
+	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
@@ -265,7 +265,7 @@ public class SharedInfo
 			   			// here send obsel only if typeInfo ==7 ==8
 			   			if (!sendObselToSender)
 			   			{
-			   				paramsObselReceive.add("senderdocument");paramsObselReceive.add(senderDocumentUserId.toString());
+			   				paramsObselReceive.add("senderdocument");paramsObselReceive.add(String.valueOf(senderDocumentUserId));
 			   				paramsObselReceive.add("iddocument");paramsObselReceive.add(Long.toString(idDocument));
 			   			}else
 			   			{
