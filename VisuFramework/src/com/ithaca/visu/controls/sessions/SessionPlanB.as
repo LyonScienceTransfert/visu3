@@ -87,7 +87,7 @@ package com.ithaca.visu.controls.sessions
 				for(var nElement:int = 0 ; nElement < nbrElements ; nElement++)
 				{
 					var element = this.getElementAt(nElement);
-					if(element is ActivityDetail)
+					if(element is ActivityDetailB)
 					{
 						var activityDetail:ActivityDetailB = this.getElementAt(nElement) as ActivityDetailB;
 						checkCurrentActivity(activityDetail);
