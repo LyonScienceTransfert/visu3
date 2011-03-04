@@ -77,6 +77,9 @@
 			private var currentSessionDateRecording:Date = null;
 			private var currentSessionId:int;
 			private var DELTA_STICH:int = 20;
+			private var currentRetroDocumentSegmentPlaying:RetroDocumentSegment = null;
+			private var beginTimeCurrentSegment:Number= 0;
+			private var currentVolume:Number = 1;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
@@ -706,6 +709,8 @@
 					this.addFluxVideo(listObselSI);
 					this.checkingSumFluxVideo = sumBeginTimeStamp;
 				}	
+				// set volume
+				this.visio.setVolume(this.currentVolume);
 			}
 			
 			private function getSumBeginTimeObselSI(listObselSI:ArrayCollection):Number
@@ -1201,6 +1206,21 @@
 				event.toolTip =  createToolTipTreeRetroDocument();
 			}
 
+
+			protected function buttonMute_clickHandler(event:MouseEvent):void
+			{
+				if(buttonMute.label == "Couper le son")
+				{
+					buttonMute.label = "Activer le son";
+					this.currentVolume = 0;
+					this.visio.setVolume(0);
+				}else
+				{
+					buttonMute.label = "Couper le son";
+					this.currentVolume = 1;
+					this.visio.setVolume(this.currentVolume);
+				}
+			}
 		]]>
 		
 	</fx:Script>
@@ -1263,17 +1283,16 @@
 <!-- VIDEO -->
 			<s:Panel height="100%" width="50%" id="panelVideo">
 				<s:title>Video</s:title>
-				<s:Group height="100%" width="100%">
-					<s:layout>
-						<s:HorizontalLayout gap="0"/>
-					</s:layout>
+				<s:Group height="100%" width="100%" bottom="2">
 					<controls:VisuVisio id="visio" width="100%" top="0"
 										quality="80"
-										bandwidth="15000" autoPlay="True" height="100%"/>
-					
+										bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25"/>
+					<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0">
+						<s:label>Couper le son</s:label>
+					</s:Button>
 				</s:Group>
 			</s:Panel>
-<!-- DOCUMEBTARISATION -->
+<!-- DOCUMENTARISATION -->
 			<s:Group height="100%" width="20%" minWidth="200">
 				<s:layout>
 					<s:VerticalLayout gap="1"/>
