@@ -39,6 +39,7 @@ package  com.ithaca.documentarisation.events
 		public var beginTime:Number;
 		public var endTime:Number;
 		public var titleRetrodocument:String;
+		public var statusPlaySegment:Boolean;
 		
 		
 		
