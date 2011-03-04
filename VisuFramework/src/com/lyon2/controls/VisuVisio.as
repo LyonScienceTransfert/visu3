@@ -69,6 +69,7 @@ package com.lyon2.controls
 	import flash.events.StatusEvent;
 	import flash.media.Camera;
 	import flash.media.Microphone;
+	import flash.media.SoundTransform;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	
@@ -773,6 +774,17 @@ package com.lyon2.controls
         {
             return _status;
 		}
+		
+		public function setVolume(value:Number):void
+		{
+			for (var n: String in streams)
+			{
+				var tempStream:NetStream = streams[n];
+				var tempSoundTransforme:SoundTransform = tempStream.soundTransform;
+				tempSoundTransforme.volume = value;
+				tempStream.soundTransform = tempSoundTransforme;		
+			}
+		}	
 	}
 }
 
