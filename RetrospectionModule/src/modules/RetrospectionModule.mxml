@@ -61,6 +61,7 @@
 			
 			[Bindable]
 			private var timer:Timer;
+			private var timerRetroDocumentSegment:Timer;
 			
 			public var listSessionOpen : ArrayCollection;
 			
@@ -240,6 +241,10 @@
 					{
 						this.timer.stop();			
 					}
+					if(this.timerRetroDocumentSegment)
+					{
+						this.timerRetroDocumentSegment.stop();			
+					}
 					// add obsel user walk out from retro room
 					var outFromSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
 					this.dispatchEvent(outFromSalonRetro);
@@ -263,52 +268,17 @@
 				this.visio.removeAllStreams();
 			}
 			
-			/**
-			 * play/pause of the streams
-			 */
-			private function onCheckSeekStream(event:MessageEvent):void
+
+			
+			private function setCurrentRetroDocumentSegmentPlaying(value:RetroDocumentSegment):void
 			{
-				var typeMessage:String = event.message;
-				var timeStartSession:Number = this.testTimeLine.startTimeSession;
-				var playTime:Number = 0;
-				switch (typeMessage)
-				{
-					case "play" :
-						this.visio.resumeStreams();
-						// set status play
-						this.visio.status = VisuVisio.STATUS_REPLAY;
-						// decale the time start for time on paused
-						var timePausedNumber:Number = new Date().time -  this.timePause;
-						this.timeStart = this.timeStart  + timePausedNumber;
-						this.timer.start();
-						this.timePause = 0;
-						// add obsel User Action
-						var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
-						actionVideoPlayer.typeAction = TraceModel.RETRO_PLAY_VIDEO_EVENT;
-						playTime = timeStartSession + timePausedNumber;
-						actionVideoPlayer.timePlayer = playTime;
-						this.dispatchEvent(actionVideoPlayer);
-						break;
-					case "pause" :
-						this.visio.pauseStreams();
-						// set status pause
-						this.visio.status = VisuVisio.STATUS_PAUSE;
-						this.timer.stop();
-						// set time pause
-						this.timePause = new Date().time;
-						// add obsel User Action
-						var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
-						actionVideoPlayer.typeAction = TraceModel.RETRO_PAUSE_VIDEO_EVENT;
-						playTime = new Date().time - this.timeStart + this.deltaTime + timeStartSession;
-						actionVideoPlayer.timePlayer = playTime;
-						this.dispatchEvent(actionVideoPlayer);
-						// update buttons play on the retroDocumentSegments
-						updateLabelButtonPlayStopRetroDocumentSegment();
-						break;
-					default :
-						break;
-				}
+				this.currentRetroDocumentSegmentPlaying = value;
 			}
+			private function getCurrentRetroDocumentSegmentPlaying():RetroDocumentSegment
+			{
+				return this.currentRetroDocumentSegmentPlaying;
+			}
+			
 			
 			private function createSessionTimeLine(durationSession:Number,startSession:Number):void
 			{
@@ -588,42 +558,6 @@
 				// pre play video flux
 				prePlayVideoFlux(0,delta);		
 			}
-			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
-			{
-				if(delta != 0)
-				{
-					value = delta + this.testTimeLine.startTimeSession;
-				}else
-				{
-					delta = value - this.testTimeLine.startTimeSession;
-				}
-				updateTimeCursor(delta);
-				
-				this.pickCheryClick = value;
-				
-				// remove all streams and listeners
-				this.removeAllStreams();
-				var listObselSessionIn:ArrayCollection = Model.getInstance().getObselSessionInByTimestamp(value);
-				// update checking sum flux video
-				this.checkingSumFluxVideo = this.getSumBeginTimeObselSI(listObselSessionIn);
-				this.addFluxVideo(listObselSessionIn);
-				// running the flux video
-				if(!this.timer.running)
-				{
-					var timePausedNumber:Number = new Date().time -  this.timePause;
-					this.timeStart = this.timeStart  + timePausedNumber;
-					this.timer.start();
-					this.sessionTimeLine.setShowButtonNavigation(true);
-				}
-				// update buttons play/stop
-				this.sessionTimeLine.setStatusPlay(true);
-				// add obsel User Action
-				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
-				actionVideoPlayer.typeAction = TraceModel.RETRO_VIEDO_GO_TO_TIME_EVENT;
-				// choosing time by user
-				actionVideoPlayer.timePlayer = this.pickCheryClick;
-				this.dispatchEvent(actionVideoPlayer);
-			}
 			
 			 private function addFluxVideo(listObselSessionIn:ArrayCollection):void
 			 {
@@ -668,6 +602,49 @@
 				
 			}
 					
+			private function removeTimerRetroDocumentSegment():void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{	
+					if(timerRetroDocumentSegment != null)
+					{
+						timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+						timerRetroDocumentSegment = null;
+					}
+				}
+			}
+			
+			private function startTimerRetroDocumentSegment(value:Number):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{	
+					if(timerRetroDocumentSegment != null)
+					{
+						timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+						timerRetroDocumentSegment = null;
+					}
+					timerRetroDocumentSegment = new Timer(value,0);
+					timerRetroDocumentSegment.addEventListener(TimerEvent.TIMER, endVideoSegment);
+					timerRetroDocumentSegment.start();
+				}
+			}
+			
+			private function endVideoSegment(event:TimerEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// set curentRetroDocumentSegment to null
+					this.setCurrentRetroDocumentSegmentPlaying(null);
+					// pause video
+					this.pauseVideo();
+					// set buttons play/pause on the timeLine
+					sessionTimeLine.setStatusPlay(false);
+					timerRetroDocumentSegment.stop();
+					timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+					timerRetroDocumentSegment = null;
+				}
+			}
+				
 			private function startTimer():void
 			{
 				this.timeStart = new Date().time;
@@ -1048,22 +1025,15 @@
 				this.dispatchEvent(updateRetrodocument);		
 			}
 			
-			private function playRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var beginTime:Number = event.beginTime;
-					prePlayVideoFlux(beginTime);
-					var playRetroDocumentSegment : RetroDocumentSegment = event.target as RetroDocumentSegment;
-					updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
-				}
-			}
+		
 			
 			private function updateLabelButtonPlayStopRetroDocumentSegment(value:RetroDocumentSegment = null):void
 			{
 				// change labels on the buttons the retroDocumentSegment
 				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
-				retroDocmentView.updateButtonPlayStop(value);		
+				if(retroDocmentView != null){
+					retroDocmentView.updateButtonPlayStop(value);		
+				}
 			}
 			
 			// Diplay tooltip when rolling mouse over a tree item
@@ -1221,6 +1191,180 @@
 					this.visio.setVolume(this.currentVolume);
 				}
 			}
+			
+			private function playRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var playRetroDocumentSegment : RetroDocumentSegment = event.target as RetroDocumentSegment;
+					var statusPlaySegment:Boolean = event.statusPlaySegment;
+					var deltaTimePause:Number = 0;
+					var beginTime:Number = event.beginTime;
+					var endTime:Number   = event.endTime;
+					// pause on button play/pause in the segment
+					if(playRetroDocumentSegment == this.getCurrentRetroDocumentSegmentPlaying())
+					{
+						if(statusPlaySegment)
+						{
+							// pause timer
+/* 							this.timerRetroDocumentSegment.stop();
+							trace("================================= statusPlaySegment ... this.timePause "+statusPlaySegment+" "+this.timePause.toString());
+							if(this.timePause != 0)
+							{
+								deltaTimePause = new Date().time - this.timePause;
+							}
+							this.beginTimeCurrentSegment = new Date().time - this.timeStart + this.deltaTime + deltaTimePause;
+							trace("================================= TODO PAUSE : this.beginTimeCurrentSegment "+ this.beginTimeCurrentSegment.toString());
+							*/
+						
+							this.pauseVideo(); 
+							sessionTimeLine.setStatusPlay(false);
+							return;
+						}else
+						{
+/* 							var timeToRest:Number = endTime - this.beginTimeCurrentSegment;
+							startTimerRetroDocumentSegment(timeToRest);
+							trace("================================= statusPlaySegment ... this.timePause "+statusPlaySegment+" "+this.timePause.toString());
+							if(this.timePause != 0)
+							{
+								deltaTimePause = new Date().time - this.timePause;
+							}
+							this.beginTimeCurrentSegment = this.beginTimeCurrentSegment + deltaTimePause;
+							
+							trace("================================= deltaTimePause = "+ deltaTimePause.toString());
+							trace("================================= TODO PLAY : this.beginTimeCurrentSegment "+ this.beginTimeCurrentSegment.toString());
+							prePlayVideoFlux(this.beginTimeCurrentSegment); */
+							
+							updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
+							// set buttons play/pause on the timeLine
+							sessionTimeLine.setStatusPlay(true);
+							return;
+						}
+					}
+					
+					this.beginTimeCurrentSegment = beginTime;
+					var dt:Number = beginTime - this.testTimeLine.startTimeSession;
+					if(this.timePause != 0)
+					{
+						deltaTimePause = new Date().time - this.timePause;
+					}
+					prePlayVideoFlux(dt+deltaTimePause);
+					updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
+					// set buttons play/pause on the timeLine
+					sessionTimeLine.setStatusPlay(true);
+					// set current retroDocumentSegment playing
+					setCurrentRetroDocumentSegmentPlaying(playRetroDocumentSegment);
+					// set timer
+					var durationVideoSegment:Number = endTime - beginTime;
+					this.startTimerRetroDocumentSegment(durationVideoSegment);
+				}
+			}
+			
+			/**
+			 * play/pause of the streams
+			 */
+			private function onCheckSeekStream(event:MessageEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var timeStartSession:Number = this.testTimeLine.startTimeSession;
+					var playTime:Number = 0;
+					// set currentRetrocumentSegmentPlaying to null
+					setCurrentRetroDocumentSegmentPlaying(null);
+					// remove timer RetroDocumentSegment
+					removeTimerRetroDocumentSegment();
+					// decale the time start for time on paused
+					var timePausedNumber:Number = new Date().time -  this.timePause;
+					var typeMessage:String =""
+					typeMessage = event.message;
+					if (typeMessage == "play")
+					{
+						this.visio.resumeStreams();
+						// set status play
+						this.visio.status = VisuVisio.STATUS_REPLAY;
+						this.timeStart = this.timeStart  + timePausedNumber;
+						this.timer.start();
+						this.timePause = 0;
+						// add obsel User Action
+						var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+						actionVideoPlayer.typeAction = TraceModel.RETRO_PLAY_VIDEO_EVENT;
+						playTime = timeStartSession + timePausedNumber;
+						actionVideoPlayer.timePlayer = playTime;
+						this.dispatchEvent(actionVideoPlayer);
+					}else
+					{
+						pauseVideo();
+					}
+				}
+			}
+			
+			private function pauseVideo():void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var timeStartSession:Number = this.testTimeLine.startTimeSession;
+					var playTime:Number = 0;
+					this.visio.pauseStreams();
+					// set status pause
+					this.visio.status = VisuVisio.STATUS_PAUSE;
+					this.timer.stop();
+					// set time pause
+					this.timePause = new Date().time;
+					// add obsel User Action
+					var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+					actionVideoPlayer.typeAction = TraceModel.RETRO_PAUSE_VIDEO_EVENT;
+					playTime = new Date().time - this.timeStart + this.deltaTime + timeStartSession;
+					actionVideoPlayer.timePlayer = playTime;
+					this.dispatchEvent(actionVideoPlayer);
+					// update buttons play on the retroDocumentSegments
+					updateLabelButtonPlayStopRetroDocumentSegment();
+				}
+			}
+			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
+			{
+				if(delta != 0)
+				{
+					value = delta + this.testTimeLine.startTimeSession;
+				}else
+				{
+					delta = value;
+					value = value + this.testTimeLine.startTimeSession;
+				}
+				trace("prePlayVideoFlux value= "+value.toString());
+				trace("prePlayVideoFlux delta= "+delta.toString());
+				
+				updateTimeCursor(delta);
+				
+				
+				this.pickCheryClick = value;
+				
+				// remove all streams and listeners
+				this.removeAllStreams();
+				var listObselSessionIn:ArrayCollection = Model.getInstance().getObselSessionInByTimestamp(value);
+				// update checking sum flux video
+				this.checkingSumFluxVideo = this.getSumBeginTimeObselSI(listObselSessionIn);
+				this.addFluxVideo(listObselSessionIn);
+				// running the flux video
+				if(!this.timer.running)
+				{
+					var timePausedNumber:Number = new Date().time -  this.timePause;
+					this.timeStart = this.timeStart  + timePausedNumber;
+					this.timer.start();
+					this.sessionTimeLine.setShowButtonNavigation(true);
+				}
+				// update buttons play/stop
+				this.sessionTimeLine.setStatusPlay(true);
+				
+				this.timePause = 0; 
+				
+				// add obsel User Action
+				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+				actionVideoPlayer.typeAction = TraceModel.RETRO_VIEDO_GO_TO_TIME_EVENT;
+				// choosing time by user
+				actionVideoPlayer.timePlayer = this.pickCheryClick;
+				this.dispatchEvent(actionVideoPlayer);
+			}
+
 		]]>
 		
 	</fx:Script>
