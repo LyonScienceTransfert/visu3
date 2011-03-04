@@ -57,6 +57,7 @@ package com.ithaca.documentarisation
 		private var segmentSet:Boolean;
 		private var emptySegmentVideo:Boolean = true;
 		private var isDroped:Boolean = false;
+		private var statusPlaySegment:Boolean = false;
 		
 		private var TEXT_TITLE_EMPTY:String ="Entrez un titre ici";
 		private var DELTA_TIME:Number = 5000;
@@ -263,7 +264,8 @@ package com.ithaca.documentarisation
 		{
 			var playRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
 			playRetroDocumentEvent.beginTime = this._timeBegin;
-			// TODO END TIME
+			playRetroDocumentEvent.endTime = this._timeEnd;
+			playRetroDocumentEvent.statusPlaySegment = this.statusPlaySegment;
 			this.dispatchEvent(playRetroDocumentEvent);
 		}
 		
@@ -466,6 +468,8 @@ package com.ithaca.documentarisation
 			{
 				this.buttonPlayStopVideo.label = "Play";		
 			}
+			// set status segment
+			this.statusPlaySegment = value;
 		}
 	}
 }
