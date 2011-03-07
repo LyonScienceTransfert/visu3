@@ -633,6 +633,11 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
+					// set time to current video segment 
+					if(this.currentRetroDocumentSegmentPlaying.segmentVideo != null)
+					{
+						this.currentRetroDocumentSegmentPlaying.segmentVideo.setBeginEndTime();
+					}
 					// set curentRetroDocumentSegment to null
 					this.setCurrentRetroDocumentSegmentPlaying(null);
 					// pause video
@@ -661,7 +666,12 @@
 				var beginTime:Number = new Date().time - this.timeStart + this.deltaTime;
 				this.testCursor.setBegin(beginTime);
 				this.testCursor.setEnd(beginTime);
-				this.sessionTimeLine.labelCurrentTimeSession.text = updateLabelTimer(beginTime);
+				var currentTime:String = updateLabelTimer(beginTime);
+				this.sessionTimeLine.labelCurrentTimeSession.text = currentTime;
+				if( this.currentRetroDocumentSegmentPlaying != null && this.currentRetroDocumentSegmentPlaying.segmentVideoView != null)
+				{
+					this.currentRetroDocumentSegmentPlaying.segmentVideoView.currentTime = currentTime;
+				}
 				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
 				this.checkFluxVideo(beginTime + this.testTimeLine.startTimeSession);
 			}
@@ -1032,7 +1042,7 @@
 				// change labels on the buttons the retroDocumentSegment
 				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
 				if(retroDocmentView != null){
-					retroDocmentView.updateButtonPlayStop(value);		
+//					retroDocmentView.updateButtonPlayStop(value);		
 				}
 			}
 			
@@ -1202,7 +1212,8 @@
 					var beginTime:Number = event.beginTime;
 					var endTime:Number   = event.endTime;
 					// pause on button play/pause in the segment
-					if(playRetroDocumentSegment == this.getCurrentRetroDocumentSegmentPlaying())
+					if(false)
+//					if(playRetroDocumentSegment == this.getCurrentRetroDocumentSegmentPlaying())
 					{
 						if(statusPlaySegment)
 						{
@@ -1437,7 +1448,7 @@
 				</s:Group>
 			</s:Panel>
 <!-- DOCUMENTARISATION -->
-			<s:Group height="100%" width="20%" minWidth="200">
+			<s:Group height="100%" width="20%" minWidth="300">
 				<s:layout>
 					<s:VerticalLayout gap="1"/>
 				</s:layout>
