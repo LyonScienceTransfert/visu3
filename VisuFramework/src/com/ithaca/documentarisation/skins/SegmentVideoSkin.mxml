@@ -9,22 +9,40 @@
 	<s:states>
 		<s:State name="empty"/>
 		<s:State name="normal"/>
+		<s:State name="editable"/>
 	</s:states>
-	<!-- SkinParts
-	name=screenShotImage, type=mx.controls.Image, required=false
-	name=dropInfoLabel, type=mx.controls.Label, required=false
-	name=timeWindowLabel, type=mx.controls.Label, required=false
-	-->
-	<s:Group width="100%" height="32" >
+	<s:Group width="100%" height.empty="32" horizontalCenter.editable="0" verticalCenter.editable="0" left.normal="5">
 		<s:BorderContainer height="32" width="100%" includeIn="empty" backgroundColor="#E9B7B7">
-			<s:Label left="3" right="3" includeIn="empty" verticalCenter="0" verticalAlign="top" textAlign="center">
+			<s:Label left="3" right="3" verticalCenter="0" verticalAlign="top" textAlign="center">
 				<s:text>Déposez un élément ici</s:text>
 			</s:Label>
 		</s:BorderContainer>
-		<s:Label id="timeWindowLabel" text="AZERTREEA" left="3" right="38" includeIn="normal" verticalCenter="0"/>
-		<mx:Image  id="screenShotImage" right="3" width="32" height="32" includeIn="normal" visible="false"/>
-		<mx:Button  id="playButton" right="3" width="48" height="22" top="3" includeIn="normal" visible="false">
-			<mx:label>Play</mx:label>
-		</mx:Button>
+		<s:HGroup gap="1" verticalCenter.editable="0" includeIn="editable,normal" left.normal="5" horizontalCenter.editable="0">
+			<s:NumericStepper id="numStepplerMinutBegin" minimum="0" maximum="999" stepSize="1" width="42" includeIn="editable">
+				<s:value>54</s:value>
+			</s:NumericStepper>
+			<s:Label paddingTop="7" includeIn="editable">
+				<s:text>:</s:text>
+			</s:Label>
+			<s:NumericStepper id="numStepplerSecondBegin" minimum="0" maximum="60" stepSize="1" width="42" includeIn="editable">
+				<s:value>15</s:value>
+			</s:NumericStepper>
+<!--			<s:Label paddingTop="7" width="10">
+				<s:text> s</s:text>
+			</s:Label>-->
+			<s:Label id="timeWindowLabel" text="AZERTREEA" left="3" right="38"  verticalCenter="0" paddingTop="7" width="75" textAlign="center"/>
+			<s:NumericStepper id="numStepplerMinutEnd" minimum="0" maximum="999" width="42" stepSize="1" includeIn="editable">
+				<s:value>12</s:value>
+			</s:NumericStepper>
+			<s:Label paddingTop="7" includeIn="editable">
+				<s:text>:</s:text>
+			</s:Label>
+			<s:NumericStepper id="numStepplerSecondEnd" minimum="0" maximum="60" width="42" stepSize="1" includeIn="editable">
+				<s:value>34</s:value>
+			</s:NumericStepper>
+			<s:Label paddingTop="7" width="10" includeIn="editable">
+				<s:text> s</s:text>
+			</s:Label>
+		</s:HGroup>
 	</s:Group>
 </s:Skin>
