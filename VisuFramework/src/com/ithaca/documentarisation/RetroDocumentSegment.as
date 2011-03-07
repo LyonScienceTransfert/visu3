@@ -58,6 +58,7 @@ package com.ithaca.documentarisation
 		private var emptySegmentVideo:Boolean = true;
 		private var isDroped:Boolean = false;
 		private var statusPlaySegment:Boolean = false;
+		private var durationChange:Boolean;
 		
 		private var TEXT_TITLE_EMPTY:String ="Entrez un titre ici";
 		private var DELTA_TIME:Number = 5000;
@@ -65,7 +66,6 @@ package com.ithaca.documentarisation
 		private var _title:String = "";
 		private var _timeBegin:Number=0;
 		private var _timeEnd:Number=0;
-		private var _sourceIcon:Object;
 		private var _textComment:String= "";
 		private var dragSource:DragSource = null;
 		private var _startDateSession:Number;
@@ -98,6 +98,11 @@ package com.ithaca.documentarisation
 			this.invalidateProperties();
 		}
 		
+		public function get segmentVideoView():SegmentVideo
+		{
+			return this.segmentVideo;
+		}
+		
 		public function get title():String
 		{
 			return _title;
@@ -116,12 +121,13 @@ package com.ithaca.documentarisation
 			super.partAdded(partName,instance);
 			if(instance == segmentVideo)
 			{
-				segmentVideo.sourceIcon = this._sourceIcon;
 				segmentVideo.deltaTime = this.DELTA_TIME;
 				segmentVideo.startDateSession = _startDateSession;
 				segmentVideo.timeBegin = _timeBegin;
 				segmentVideo.timeEnd = _timeEnd;			
-				this.segmentVideo.showDetail(emptySegmentVideo);
+				segmentVideo.showDetail(emptySegmentVideo);
+				segmentVideo.setEditable(editabled);
+				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);	
 			}
 			
 			if(instance == segmentComment)
@@ -197,18 +203,18 @@ package com.ithaca.documentarisation
 			if(segmentChange)
 			{
 				segmentChange = false;
-				this.segmentVideo.showDetail(false);
 				this.segmentVideo.startDateSession = this._startDateSession;
 				this.segmentVideo.timeBegin = this._timeBegin;
 				this.segmentVideo.timeEnd = this._timeEnd;
-				
-				this.segmentVideo.sourceIcon = this._sourceIcon;
+				this.segmentVideo.updateNumStepplers();
 				
 				this.segmentComment.text = this._textComment;
 				this.segmentComment.selectAll();
 				this.stage.focus = this.segmentComment;
 				emptySegmentVideo = false;
-				this.segmentVideo.showDetail(emptySegmentVideo);
+				segmentVideo.showDetail(emptySegmentVideo);
+				segmentVideo.setEditable(editabled);
+				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);
 				setEnabledButtonPlayStop();
 				labelStartDuration.text = getLabelStartDuration();
 			}
@@ -216,13 +222,18 @@ package com.ithaca.documentarisation
 			if(segmentSet)
 			{
 				segmentSet = false;
-				this._sourceIcon = IconEnum.getIconByTypeObsel(this._segment.typeSource);
 				this._textComment = this._segment.comment;
 				this._timeBegin = this._segment.beginTimeVideo;
 				this._timeEnd = this._segment.endTimeVideo;
 				this._title = this._segment.title;
 				// enabled button playStop
 				setEnabledButtonPlayStop();
+				labelStartDuration.text = getLabelStartDuration();
+			}
+			
+			if(durationChange)
+			{
+				durationChange = false;
 				labelStartDuration.text = getLabelStartDuration();
 			}
 		}
@@ -395,18 +406,28 @@ package com.ithaca.documentarisation
 		{
 			this._title = titleSegmentTextInput.text;
 			_segment.title = this._title;
-			notifyUpdateTextField();
+			notifyUpdateSegment();
 		}
 		protected function segmentCommentTextInput_changeHandler(event:TextOperationEvent):void
 		{
 			this._textComment = this.segmentComment.text;
 			_segment.comment = this._textComment;
-			notifyUpdateTextField();
+			notifyUpdateSegment();
 		}
-		private function notifyUpdateTextField():void
+		private function notifyUpdateSegment():void
 		{
 			var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
 			this.dispatchEvent(notifyUpdateEvent);
+		}
+		
+		private function segmentVideo_changeHandler(event:RetroDocumentEvent):void
+		{
+			this._timeBegin = event.beginTime;
+			this._timeEnd = event.endTime;
+			durationChange = true;
+			this.invalidateProperties();
+			
+			notifyUpdateSegment();
 		}
 		private function getLabelStartDuration():String
 		{
