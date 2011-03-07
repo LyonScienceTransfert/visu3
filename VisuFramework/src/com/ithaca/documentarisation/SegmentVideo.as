@@ -5,6 +5,7 @@ package com.ithaca.documentarisation
 	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.traces.view.ObselImage;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import mx.controls.Button;
@@ -13,12 +14,14 @@ package com.ithaca.documentarisation
 	import mx.managers.DragManager;
 	
 	import spark.components.Label;
+	import spark.components.NumericStepper;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class SegmentVideo extends SkinnableComponent
 	{
 		[SkinState("empty")]
 		[SkinState("normal")]
+		[SkinState("editable")]
 		
 		[SkinPart("true")]
 		public var dropInfoLabel:Label;
@@ -27,25 +30,32 @@ package com.ithaca.documentarisation
 		public var timeWindowLabel:Label;
 
 		[SkinPart("true")]
-		public var screenShotImage:Image;
+		public var numStepplerMinutBegin:NumericStepper;
+
+		[SkinPart("true")]
+		public var numStepplerSecondBegin:NumericStepper;
 		
 		[SkinPart("true")]
-		public var playButton:Button;
+		public var numStepplerMinutEnd:NumericStepper;
+
+		[SkinPart("true")]
+		public var numStepplerSecondEnd:NumericStepper;
 		
 		private var empty:Boolean = true;
+		private var editable:Boolean = true;
+		private var currentTimeChange:Boolean;
+		private var valueStepplersChange:Boolean;
 		private var _timeBegin:Number=0;
 		private var _timeEnd:Number=0;
-		private var _sourceIcon:Object;
 		private var timeWindowLabelChange:Boolean;
-		private var screenShotImageChange:Boolean;
 		private var _startDateSession:Number;
 		private var _deltaTime:Number = 5000;
+		private var _currentTime:String = "";
+		
 		
 		public function SegmentVideo()
 		{
 			super();
-		/*	this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
-			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);*/
 		}
 		
 		public function get deltaTime():Number {return _deltaTime;};
@@ -53,15 +63,6 @@ package com.ithaca.documentarisation
 		public function get timeBegin():Number {return _timeBegin;};
 		public function set timeBegin(value:Number):void
 		{
-/*			if(value - _startDateSession > _deltaTime)
-			{
-				_timeBegin = value - _deltaTime ;
-			}else
-			{
-				_timeBegin = _startDateSession;
-			}
-			// TODO timeEnd  by duration of the session 
-			_timeEnd = value + _deltaTime;*/
 			_timeBegin = value;
 			timeWindowLabelChange = true;
 			invalidateProperties();
@@ -73,64 +74,92 @@ package com.ithaca.documentarisation
 			timeWindowLabelChange = true;
 			invalidateProperties();
 		};
-		
-		
-		
-		public function get sourceIcon():Object {return _sourceIcon;};
-		public function set sourceIcon(value:Object):void
-		{
-			_sourceIcon = value;
-			screenShotImageChange = true;
-			invalidateProperties();
-		};
 		public function set startDateSession(value:Number):void{_startDateSession = value;};
 		public function get startDateSession():Number{return _startDateSession;};
-
+		public function set currentTime(value:String):void{
+			_currentTime = value;
+			currentTimeChange = true;
+			this.invalidateProperties();
+		};
+		public function get currentTime():String{return _currentTime;};
+		public function setBeginEndTime():void
+		{
+			timeWindowLabelChange = true;
+			invalidateProperties();	
+		}
+		public function updateNumStepplers():void
+		{
+			valueStepplersChange = true;
+			invalidateProperties();				
+		}
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
 			if(instance == timeWindowLabel)
 			{
 				timeWindowLabel.text = timeToString();
-				timeWindowLabel.toolTip = timeToString();
-				playButton.enabled = true;
-				playButton.toolTip = "Joue la vidéo correspondant à ce segment";		
-			}	
-			
-			if(instance == screenShotImage)
+				timeWindowLabel.toolTip = timeToString();	
+			}		
+			if(instance == numStepplerMinutBegin)
 			{
-				screenShotImage.source = _sourceIcon;
-			}	
-			
-			if(instance == playButton)
+				numStepplerMinutBegin.value = this.timeToMinutes(this._timeBegin);
+				setMinMaxStepplers();
+				numStepplerMinutBegin.addEventListener(Event.CHANGE, onChangeStepplerMinuteBegin);
+			}		
+			if(instance == numStepplerSecondBegin)
 			{
-				if(this._timeBegin == 0 )
-				{
-					playButton.enabled = false;
-					playButton.toolTip = "Aucun segment vidéo associé actuellement";
-				}
-				else
-				{
-					playButton.toolTip = "Joue la vidéo correspondant à ce segment";					
-				}
-				playButton.addEventListener(MouseEvent.CLICK, onPlayButtonClick);
-				
-			}	
+				numStepplerSecondBegin.value = this.timeToSeconds(this._timeBegin);
+				setMinMaxStepplers();
+				numStepplerSecondBegin.addEventListener(Event.CHANGE, onChangeStepplerSeconBegin);
+			}		
+			if(instance == numStepplerMinutEnd)
+			{
+				numStepplerMinutEnd.value = this.timeToMinutes(this._timeEnd);
+				setMinMaxStepplers();
+				numStepplerMinutEnd.addEventListener(Event.CHANGE, onChangeStepplerMinuteEnd);
+			}		
+			if(instance == numStepplerSecondEnd)
+			{
+				numStepplerSecondEnd.value = this.timeToSeconds(this._timeEnd);
+				setMinMaxStepplers();
+				numStepplerSecondEnd.addEventListener(Event.CHANGE, onChangeStepplerSecondEnd);
+			}		
 		}
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled? "disabled" : empty? "empty" : "normal";
+			//return !enabled? "disabled" : empty? "empty" : "normal";
+			if (!enabled)
+			{
+				return "disable";
+			}else
+				if(empty)
+				{
+					return "empty";
+				}else
+					if(editable)
+					{
+						return "editable";
+					}else
+					{
+						return "normal";
+					}
 		}
 		
 		public function showDetail(value:Boolean):void
 		{
 			empty = value;
 			this.invalidateSkinState();
+			this.invalidateSkinState();
 		}
 		 public function isEmpty():Boolean
 		 {
 			 return empty;
+		 }
+		 public function setEditable(value:Boolean):void
+		 {
+			editable = value;
+			this.invalidateSkinState();
 		 }
 		 override protected function commitProperties():void
 		 {
@@ -144,13 +173,25 @@ package com.ithaca.documentarisation
 					 timeWindowLabel.toolTip = timeToString();
 				 }
 			 }
-			 if(screenShotImageChange)
+			 if(currentTimeChange)
 			 {
-				 screenShotImageChange = false;
-				 if(screenShotImage != null)
-				 {
-					 screenShotImage.source = _sourceIcon
-				 }
+				 currentTimeChange = false;
+				
+				 timeWindowLabel.text = this._currentTime; 
+				 timeWindowLabel.toolTip = this._currentTime; 
+			 }
+			 if(valueStepplersChange)
+			 {
+				 valueStepplersChange = false;
+				
+				 numStepplerMinutBegin.value = this.timeToMinutes(this._timeBegin);
+				 setMinMaxStepplers();
+				 numStepplerSecondBegin.value = this.timeToSeconds(this._timeBegin);
+				 setMinMaxStepplers();
+				 numStepplerMinutEnd.value = this.timeToMinutes(this._timeEnd);
+				 setMinMaxStepplers();
+				 numStepplerSecondEnd.value = this.timeToSeconds(this._timeEnd);
+				 setMinMaxStepplers();			 
 			 }
 			 
 		 }
@@ -161,6 +202,21 @@ package com.ithaca.documentarisation
 			 playRetroDocumentEvent.beginTime = this._timeBegin;
 			 // TODO END TIME
 			 this.dispatchEvent(playRetroDocumentEvent);
+		 }
+		 
+		 private function timeToMinutes(value:Number):int
+		 {
+			 value = value - _startDateSession;
+			 var result:int = value/60000;
+			 return result;
+		 }
+		 
+		 private function timeToSeconds(value:Number):int
+		 {
+			 value = value - _startDateSession;
+			 var minutes:int = value/60000;
+			 var result:int = (value - minutes*60000)/1000;
+			 return result;
 		 }
 		 
 		 private function timeToString():String
@@ -189,25 +245,96 @@ package com.ithaca.documentarisation
 
 			 return "["+timeFrom+"-"+timeTo+"]";
 		 }
-/*		private function onDragDrop(event:DragEvent):void
-		{
-			var viewObsel:ObselImage = event.dragInitiator as ObselImage;
-			var obsel:Obsel = viewObsel.parentObsel;
-			var timeBegin:String = obsel.begin.toString();
-			_timeBegin = timeBegin;
-			_sourceIcon = event.dragSource.dataForFormat("sourceIcon");
-			_text = event.dragSource.dataForFormat("textObsel") as String;
-			empty = false;
-			this.invalidateSkinState();
-			
-		}
-		private function onDragEnter(event:DragEvent):void
-		{
-			if(event.dragSource.hasFormat("obsel"))
-			{	
-				var vsl:SegmentVideo = event.currentTarget as SegmentVideo;
-				DragManager.acceptDragDrop(vsl);
-			}	
-		}*/
+		 
+		 private function onChangeStepplerMinuteBegin(event:Event):void
+		 {
+			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
+			 var value:Number = steppler.value;
+			 var oldValueMinutes:Number = timeToMinutes(this._timeBegin)*60000;
+			 var newValueMinutes:Number = value*60000;
+			 var diff:Number =  newValueMinutes - oldValueMinutes;
+			 
+			 this.numStepplerMinutEnd.minimum =  value;
+			 
+			 this._timeBegin =  this._timeBegin + diff;
+			 // update border the seconds
+			 updateBorderSeconds();
+			 updateTimeBeginTimeEnd();
+		 }
+		 private function onChangeStepplerSeconBegin(event:Event):void
+		 {
+			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
+			 var value:Number = steppler.value;
+			 var oldValueSeconds:Number = this.timeToSeconds(this._timeBegin)*1000;
+			 var newValueSecond:Number = value*1000;
+			 var diff:Number =  newValueSecond - oldValueSeconds;
+			 this.numStepplerSecondEnd.minimum = value;
+			 
+			 this._timeBegin =  this._timeBegin + diff;
+			 // update border the seconds
+			 updateBorderSeconds();
+			 updateTimeBeginTimeEnd();	 
+		 }
+		 
+		 private function onChangeStepplerMinuteEnd(event:Event):void
+		 {
+			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
+			 var value:Number = steppler.value;
+			 var oldValueMinutes:Number = timeToMinutes(this._timeEnd)*60000;
+			 var newValueMinutes:Number = value*60000;
+			 var diff:Number =  newValueMinutes - oldValueMinutes;
+
+			 this.numStepplerMinutBegin.maximum =  value;
+
+			 this._timeEnd =  this._timeEnd + diff;
+			 // update border the seconds
+			 updateBorderSeconds();
+			 updateTimeBeginTimeEnd();
+		 }
+		 
+		 private function onChangeStepplerSecondEnd(event:Event):void
+		 {
+			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
+			 var value:Number = steppler.value;
+			 var oldValueSeconds:Number = this.timeToSeconds(this._timeEnd)*1000;
+			 var newValueSecond:Number = value*1000;
+			 var diff:Number =  newValueSecond - oldValueSeconds;
+			 this.numStepplerSecondEnd.minimum = value;
+			 
+			 this._timeEnd =  this._timeEnd + diff;
+			 // update border the seconds
+			 updateBorderSeconds();
+			 updateTimeBeginTimeEnd();		 
+		 }
+		 
+		 private function updateTimeBeginTimeEnd():void
+		 {
+			 var updateTimeBeginTimeEndEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END);
+			 updateTimeBeginTimeEndEvent.beginTime = this._timeBegin;
+			 updateTimeBeginTimeEndEvent.endTime = this._timeEnd;
+			 this.dispatchEvent(updateTimeBeginTimeEndEvent);			 
+		 }
+		 // init minMaxStepplers
+		 private function setMinMaxStepplers():void
+		 {
+			 if(this.numStepplerMinutBegin != null && this.numStepplerMinutEnd != null && this.numStepplerSecondBegin != null && this.numStepplerSecondEnd != null)
+			 {
+				 this.numStepplerMinutBegin.maximum = this.numStepplerMinutEnd.value;
+				 this.numStepplerMinutEnd.minimum = this.numStepplerMinutBegin.value;
+				 // update border the seconds
+				 updateBorderSeconds();
+			 }
+		 }
+		 private function updateBorderSeconds():void
+		 {
+			 if(this.numStepplerMinutBegin.value == this.numStepplerMinutEnd.value)
+			 {
+				 this.numStepplerSecondBegin.maximum = this.numStepplerSecondEnd.value;
+				 this.numStepplerSecondEnd.minimum = this.numStepplerSecondBegin.value;
+			 }else{
+				 this.numStepplerSecondBegin.maximum = 60;
+				 this.numStepplerSecondEnd.minimum = 0;
+			 }
+		 }
 	}
 }
