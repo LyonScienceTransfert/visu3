@@ -139,7 +139,7 @@ package  com.ithaca.visu.model
 		private var _currentCommentTraceId:String="void";
 		private var _currentTraceId:String="void";
 		private var _currentObselComment:ObselComment=null;
-		private var _selectedRadioButtonHomeModule:RadioButton = null;
+		private var _selectedRadioButtonHomeModule:String = "";
 		
 		public function Model(access:Private)
 		{
@@ -277,11 +277,11 @@ package  com.ithaca.visu.model
 			return _currentObselComment;
 		}
 		
-		public function setSelectedRadioButton(value:RadioButton):void
+		public function setSelectedRadioButton(value:String):void
 		{
 			this._selectedRadioButtonHomeModule = value;
 		}
-		public function getSelectedRadioButton():RadioButton
+		public function getSelectedRadioButton():String
 		{
 			return this._selectedRadioButtonHomeModule;
 		}
