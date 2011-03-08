@@ -82,6 +82,7 @@ package  com.ithaca.visu.model
 	
 	import spark.components.Button;
 	import spark.components.Group;
+	import spark.components.RadioButton;
 
 
 	public final class Model
@@ -138,6 +139,7 @@ package  com.ithaca.visu.model
 		private var _currentCommentTraceId:String="void";
 		private var _currentTraceId:String="void";
 		private var _currentObselComment:ObselComment=null;
+		private var _selectedRadioButtonHomeModule:RadioButton = null;
 		
 		public function Model(access:Private)
 		{
@@ -275,6 +277,14 @@ package  com.ithaca.visu.model
 			return _currentObselComment;
 		}
 		
+		public function setSelectedRadioButton(value:RadioButton):void
+		{
+			this._selectedRadioButtonHomeModule = value;
+		}
+		public function getSelectedRadioButton():RadioButton
+		{
+			return this._selectedRadioButtonHomeModule;
+		}
 		
 		
 		public function setCurrentTraceId(value:String):void
