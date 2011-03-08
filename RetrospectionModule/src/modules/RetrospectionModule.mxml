@@ -76,6 +76,7 @@
 			private var pickCheryClick:Number = 0;
 			private var commentTimeLine:TraceLineComment;
 			private var currentSessionDateRecording:Date = null;
+			private var currentSessionDuration:Number;
 			private var currentSessionId:int;
 			private var DELTA_STICH:int = 20;
 			private var currentRetroDocumentSegmentPlaying:RetroDocumentSegment = null;
@@ -282,6 +283,8 @@
 			
 			private function createSessionTimeLine(durationSession:Number,startSession:Number):void
 			{
+				// set current session duration 
+				this.currentSessionDuration = durationSession;
 				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
 				this.sessionTimeLine.sessionTimeLineLayout.startTime = startSession;
 				
@@ -634,12 +637,13 @@
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					// set time to current video segment 
-					if(this.currentRetroDocumentSegmentPlaying.segmentVideo != null)
+					if(this.currentRetroDocumentSegmentPlaying != null)
 					{
-						this.currentRetroDocumentSegmentPlaying.segmentVideo.setBeginEndTime();
+						var tempCurrentRetroDocumentSegment:RetroDocumentSegment = this.currentRetroDocumentSegmentPlaying;
+						// set curentRetroDocumentSegment to null
+						this.setCurrentRetroDocumentSegmentPlaying(null);
+						tempCurrentRetroDocumentSegment.setBeginEndTime();
 					}
-					// set curentRetroDocumentSegment to null
-					this.setCurrentRetroDocumentSegmentPlaying(null);
 					// pause video
 					this.pauseVideo();
 					// set buttons play/pause on the timeLine
@@ -668,9 +672,9 @@
 				this.testCursor.setEnd(beginTime);
 				var currentTime:String = updateLabelTimer(beginTime);
 				this.sessionTimeLine.labelCurrentTimeSession.text = currentTime;
-				if( this.currentRetroDocumentSegmentPlaying != null && this.currentRetroDocumentSegmentPlaying.segmentVideoView != null)
+				if( this.currentRetroDocumentSegmentPlaying != null)
 				{
-					this.currentRetroDocumentSegmentPlaying.segmentVideoView.currentTime = currentTime;
+					this.currentRetroDocumentSegmentPlaying.currentTime = currentTime;
 				}
 				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
 				this.checkFluxVideo(beginTime + this.testTimeLine.startTimeSession);
@@ -1015,6 +1019,7 @@
 					retroDocumentView.setEditabled(event.editabled);
 					retroDocumentView.retroDocument = event.retroDocument;
 					retroDocumentView.startDateSession = this.currentSessionDateRecording.time;
+					retroDocumentView.durationSession = this.currentSessionDuration;
 					retroDocumentView.profiles = Model.getInstance().profiles;
 					retroDocumentView.listShareUser = event.listUser;
 					retroDocumentView.listUsersPresentOnTimeLine = Model.getInstance().getListUserPresentOnTimeLine();	
@@ -1042,7 +1047,7 @@
 				// change labels on the buttons the retroDocumentSegment
 				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
 				if(retroDocmentView != null){
-//					retroDocmentView.updateButtonPlayStop(value);		
+					retroDocmentView.updateButtonPlayStop(value);			
 				}
 			}
 			
@@ -1251,6 +1256,7 @@
 							sessionTimeLine.setStatusPlay(true);
 							return;
 						}
+						
 					}
 					
 					this.beginTimeCurrentSegment = beginTime;
@@ -1267,6 +1273,10 @@
 					setCurrentRetroDocumentSegmentPlaying(playRetroDocumentSegment);
 					// set timer
 					var durationVideoSegment:Number = endTime - beginTime;
+					if(durationVideoSegment < 0)
+					{
+						durationVideoSegment = 0;
+					}
 					this.startTimerRetroDocumentSegment(durationVideoSegment);
 				}
 			}
