@@ -19,7 +19,7 @@
 		</s:BorderContainer>
 		<s:HGroup gap="1"  includeIn="editable,normal" left="5" horizontalCenter.editable="0" verticalAlign="middle">
 			<s:Label>
-				<s:text>Debut</s:text>
+				<s:text>Début</s:text>
 			</s:Label>
 			<mx:Spacer width="10" width.editable="5"/>
 			<s:Label id="labelMinutBegin" maxDisplayedLines="1">
