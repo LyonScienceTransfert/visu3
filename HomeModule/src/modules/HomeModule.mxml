@@ -595,10 +595,10 @@
 					// set list users the plateforme
 					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
 					
-					var selectedRadioButton:RadioButton = Model.getInstance().getSelectedRadioButton();
-					if(selectedRadioButton != null)
+					var selectedRadioButton:String = Model.getInstance().getSelectedRadioButton();
+					if(selectedRadioButton != "")
 					{
-						if(selectedRadioButton.id == "radioButtonAllUser")
+						if(selectedRadioButton == radioButtonAllUser.id)
 						{
 							radioButtonAllUser.selected = true;
 							radioButtonAllUser_changeHandler();
@@ -683,7 +683,7 @@
 				{
 					var listPlateformeUser:ArrayCollection = Model.getInstance().getListUserPlateforme();
 					setListenerOnListConnectedUser(false);
-					Model.getInstance().setSelectedRadioButton(radioButtonAllUser);
+					Model.getInstance().setSelectedRadioButton(radioButtonAllUser.id);
 					showAllUser(listPlateformeUser);
 				}
 			}
@@ -695,7 +695,7 @@
 				{
 					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
 					setListenerOnListConnectedUser(true);
-					Model.getInstance().setSelectedRadioButton(radioButtonConnectedUser);
+					Model.getInstance().setSelectedRadioButton(radioButtonConnectedUser.id);
 					showAllUser(listConnectedUser);
 				}
 			}
