@@ -49,6 +49,7 @@ package com.ithaca.documentarisation
 		private var _timeEnd:Number=0;
 		private var timeWindowLabelChange:Boolean;
 		private var _startDateSession:Number;
+		private var _durationSession:Number;
 		private var _deltaTime:Number = 5000;
 		private var _currentTime:String = "";
 		
@@ -76,17 +77,9 @@ package com.ithaca.documentarisation
 		};
 		public function set startDateSession(value:Number):void{_startDateSession = value;};
 		public function get startDateSession():Number{return _startDateSession;};
-		public function set currentTime(value:String):void{
-			_currentTime = value;
-			currentTimeChange = true;
-			this.invalidateProperties();
-		};
-		public function get currentTime():String{return _currentTime;};
-		public function setBeginEndTime():void
-		{
-			timeWindowLabelChange = true;
-			invalidateProperties();	
-		}
+		public function set durationSession(value:Number):void{_durationSession = value;};
+		public function get durationSession():Number{return _durationSession;};
+
 		public function updateNumStepplers():void
 		{
 			valueStepplersChange = true;
