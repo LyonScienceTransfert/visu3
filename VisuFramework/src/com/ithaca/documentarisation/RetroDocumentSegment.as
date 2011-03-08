@@ -69,6 +69,7 @@ package com.ithaca.documentarisation
 		private var _textComment:String= "";
 		private var dragSource:DragSource = null;
 		private var _startDateSession:Number;
+		private var _durationSession:Number;
 		private var _segment:Segment;
 		
 		import gnu.as3.gettext.FxGettext;
@@ -115,6 +116,8 @@ package com.ithaca.documentarisation
 		}
 		public function set startDateSession(value:Number):void{_startDateSession = value;};
 		public function get startDateSession():Number{return _startDateSession;};
+		public function set durationSession(value:Number):void{_durationSession = value;};
+		public function get durationSession():Number{return _durationSession;};
 
 		override protected function partAdded(partName:String, instance:Object):void
 		{
