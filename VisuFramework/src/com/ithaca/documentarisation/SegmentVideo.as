@@ -28,22 +28,21 @@ package com.ithaca.documentarisation
 		
 		[SkinPart("true")]
 		public var timeWindowLabel:Label;
-
+		
 		[SkinPart("true")]
-		public var numStepplerMinutBegin:NumericStepper;
+		public var labelMinutBegin:Label;
 
 		[SkinPart("true")]
 		public var numStepplerSecondBegin:NumericStepper;
 		
 		[SkinPart("true")]
-		public var numStepplerMinutEnd:NumericStepper;
+		public var labelMinutEnd:Label;
 
 		[SkinPart("true")]
 		public var numStepplerSecondEnd:NumericStepper;
 		
 		private var empty:Boolean = true;
 		private var editable:Boolean = true;
-		private var currentTimeChange:Boolean;
 		private var valueStepplersChange:Boolean;
 		private var _timeBegin:Number=0;
 		private var _timeEnd:Number=0;
@@ -51,9 +50,7 @@ package com.ithaca.documentarisation
 		private var _startDateSession:Number;
 		private var _durationSession:Number;
 		private var _deltaTime:Number = 5000;
-		private var _currentTime:String = "";
-		
-		
+				
 		public function SegmentVideo()
 		{
 			super();
@@ -93,24 +90,23 @@ package com.ithaca.documentarisation
 				timeWindowLabel.text = timeToString();
 				timeWindowLabel.toolTip = timeToString();	
 			}		
-			if(instance == numStepplerMinutBegin)
+			if(instance == labelMinutBegin)
 			{
-				numStepplerMinutBegin.value = this.timeToMinutes(this._timeBegin);
-				setMinMaxStepplers();
-				numStepplerMinutBegin.addEventListener(Event.CHANGE, onChangeStepplerMinuteBegin);
+				labelMinutBegin.text = this.timeToMinutes(this._timeBegin).toString();
 			}		
+
 			if(instance == numStepplerSecondBegin)
 			{
 				numStepplerSecondBegin.value = this.timeToSeconds(this._timeBegin);
 				setMinMaxStepplers();
 				numStepplerSecondBegin.addEventListener(Event.CHANGE, onChangeStepplerSeconBegin);
 			}		
-			if(instance == numStepplerMinutEnd)
+			
+			if(instance == labelMinutEnd)
 			{
-				numStepplerMinutEnd.value = this.timeToMinutes(this._timeEnd);
-				setMinMaxStepplers();
-				numStepplerMinutEnd.addEventListener(Event.CHANGE, onChangeStepplerMinuteEnd);
+				labelMinutEnd.text = this.timeToMinutes(this._timeEnd).toString();
 			}		
+
 			if(instance == numStepplerSecondEnd)
 			{
 				numStepplerSecondEnd.value = this.timeToSeconds(this._timeEnd);
@@ -121,7 +117,6 @@ package com.ithaca.documentarisation
 		
 		override protected function getCurrentSkinState():String
 		{
-			//return !enabled? "disabled" : empty? "empty" : "normal";
 			if (!enabled)
 			{
 				return "disable";
@@ -166,23 +161,18 @@ package com.ithaca.documentarisation
 					 timeWindowLabel.toolTip = timeToString();
 				 }
 			 }
-			 if(currentTimeChange)
-			 {
-				 currentTimeChange = false;
-				
-				 timeWindowLabel.text = this._currentTime; 
-				 timeWindowLabel.toolTip = this._currentTime; 
-			 }
+
 			 if(valueStepplersChange)
 			 {
 				 valueStepplersChange = false;
 				
-				 numStepplerMinutBegin.value = this.timeToMinutes(this._timeBegin);
-				 setMinMaxStepplers();
+				 labelMinutBegin.text = this.timeToMinutes(this._timeBegin).toString();
+
 				 numStepplerSecondBegin.value = this.timeToSeconds(this._timeBegin);
 				 setMinMaxStepplers();
-				 numStepplerMinutEnd.value = this.timeToMinutes(this._timeEnd);
-				 setMinMaxStepplers();
+				 
+				 labelMinutEnd.text = this.timeToMinutes(this._timeEnd).toString();
+
 				 numStepplerSecondEnd.value = this.timeToSeconds(this._timeEnd);
 				 setMinMaxStepplers();			 
 			 }
@@ -238,66 +228,86 @@ package com.ithaca.documentarisation
 
 			 return "["+timeFrom+"-"+timeTo+"]";
 		 }
-		 
-		 private function onChangeStepplerMinuteBegin(event:Event):void
-		 {
-			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
-			 var value:Number = steppler.value;
-			 var oldValueMinutes:Number = timeToMinutes(this._timeBegin)*60000;
-			 var newValueMinutes:Number = value*60000;
-			 var diff:Number =  newValueMinutes - oldValueMinutes;
-			 
-			 this.numStepplerMinutEnd.minimum =  value;
-			 
-			 this._timeBegin =  this._timeBegin + diff;
-			 // update border the seconds
-			 updateBorderSeconds();
-			 updateTimeBeginTimeEnd();
-		 }
+
 		 private function onChangeStepplerSeconBegin(event:Event):void
 		 {
 			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
 			 var value:Number = steppler.value;
+			 
+			 switch (value)
+			 {
+				 case 60:
+				 	steppler.value = 0; 
+					this._timeBegin = this._timeBegin + 60000;
+					break;
+				 
+				 case -1:
+					if(int(this.labelMinutBegin.text) != 0 )
+					{
+					 	steppler.value = 59; 
+						this._timeBegin = this._timeBegin - 60000;
+					}else
+					{
+						steppler.value = 0; 
+						return;
+					}
+					break;
+			 }	
+			 	 
 			 var oldValueSeconds:Number = this.timeToSeconds(this._timeBegin)*1000;
-			 var newValueSecond:Number = value*1000;
+			 var newValueSecond:Number = steppler.value*1000;
 			 var diff:Number =  newValueSecond - oldValueSeconds;
-			 this.numStepplerSecondEnd.minimum = value;
 			 
 			 this._timeBegin =  this._timeBegin + diff;
+			 labelMinutBegin.text = this.timeToMinutes(this._timeBegin).toString();
+			 
 			 // update border the seconds
 			 updateBorderSeconds();
 			 updateTimeBeginTimeEnd();	 
-		 }
-		 
-		 private function onChangeStepplerMinuteEnd(event:Event):void
-		 {
-			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
-			 var value:Number = steppler.value;
-			 var oldValueMinutes:Number = timeToMinutes(this._timeEnd)*60000;
-			 var newValueMinutes:Number = value*60000;
-			 var diff:Number =  newValueMinutes - oldValueMinutes;
-
-			 this.numStepplerMinutBegin.maximum =  value;
-
-			 this._timeEnd =  this._timeEnd + diff;
-			 // update border the seconds
-			 updateBorderSeconds();
-			 updateTimeBeginTimeEnd();
+			 
 		 }
 		 
 		 private function onChangeStepplerSecondEnd(event:Event):void
 		 {
 			 var steppler:NumericStepper = event.currentTarget as NumericStepper;
 			 var value:Number = steppler.value;
-			 var oldValueSeconds:Number = this.timeToSeconds(this._timeEnd)*1000;
-			 var newValueSecond:Number = value*1000;
-			 var diff:Number =  newValueSecond - oldValueSeconds;
-			 this.numStepplerSecondEnd.minimum = value;
+			 var timeEndSession:Number = this._durationSession + this._startDateSession;
+
 			 
+			 switch (value)
+			 {
+				 case 60:
+					 steppler.value = 0; 
+					 this._timeEnd = this._timeEnd + 60000;
+					 break;
+				 
+				 case -1:
+					 steppler.value = 59; 
+					 if(int(this.labelMinutEnd.text) != 0 )
+					 {
+						 this._timeEnd = this._timeEnd - 60000;
+					 }
+					 break;
+			 }
+					 
+			 var oldValueSeconds:Number = this.timeToSeconds(this._timeEnd)*1000;
+			 var newValueSecond:Number = steppler.value*1000;
+			 var diff:Number =  newValueSecond - oldValueSeconds;
 			 this._timeEnd =  this._timeEnd + diff;
+			 labelMinutEnd.text = this.timeToMinutes(this._timeEnd).toString();
+			 
+			 var dif:Number = timeEndSession  - this._timeEnd;
+			 if (dif < 0  ||  this._timeEnd == timeEndSession )
+			 {
+				 this._timeEnd = timeEndSession;
+				 steppler.value = steppler.value - 1; 
+				 return;
+			 }
+			 
 			 // update border the seconds
 			 updateBorderSeconds();
-			 updateTimeBeginTimeEnd();		 
+			 updateTimeBeginTimeEnd();	
+			 
 		 }
 		 
 		 private function updateTimeBeginTimeEnd():void
@@ -310,23 +320,21 @@ package com.ithaca.documentarisation
 		 // init minMaxStepplers
 		 private function setMinMaxStepplers():void
 		 {
-			 if(this.numStepplerMinutBegin != null && this.numStepplerMinutEnd != null && this.numStepplerSecondBegin != null && this.numStepplerSecondEnd != null)
+			 if(this.numStepplerSecondBegin != null && this.numStepplerSecondEnd != null && this.labelMinutBegin != null && this.labelMinutEnd != null)
 			 {
-				 this.numStepplerMinutBegin.maximum = this.numStepplerMinutEnd.value;
-				 this.numStepplerMinutEnd.minimum = this.numStepplerMinutBegin.value;
 				 // update border the seconds
 				 updateBorderSeconds();
 			 }
 		 }
 		 private function updateBorderSeconds():void
 		 {
-			 if(this.numStepplerMinutBegin.value == this.numStepplerMinutEnd.value)
+			 if(this.labelMinutBegin.text == this.labelMinutEnd.text)
 			 {
 				 this.numStepplerSecondBegin.maximum = this.numStepplerSecondEnd.value;
 				 this.numStepplerSecondEnd.minimum = this.numStepplerSecondBegin.value;
 			 }else{
 				 this.numStepplerSecondBegin.maximum = 60;
-				 this.numStepplerSecondEnd.minimum = 0;
+				 this.numStepplerSecondEnd.minimum = -1;
 			 }
 		 }
 	}
