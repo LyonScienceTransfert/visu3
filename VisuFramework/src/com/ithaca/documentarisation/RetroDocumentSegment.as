@@ -60,6 +60,8 @@ package com.ithaca.documentarisation
 		private var statusPlaySegment:Boolean = false;
 		private var durationChange:Boolean;
 		
+		private var currentTimeChange:Boolean;
+		
 		private var TEXT_TITLE_EMPTY:String ="Entrez un titre ici";
 		private var DELTA_TIME:Number = 5000;
 		
@@ -71,6 +73,7 @@ package com.ithaca.documentarisation
 		private var _startDateSession:Number;
 		private var _durationSession:Number;
 		private var _segment:Segment;
+		private var _currentTime:String = "";
 		
 		import gnu.as3.gettext.FxGettext;
 		import gnu.as3.gettext._FxGettext;
@@ -119,6 +122,18 @@ package com.ithaca.documentarisation
 		public function set durationSession(value:Number):void{_durationSession = value;};
 		public function get durationSession():Number{return _durationSession;};
 
+		public function set currentTime(value:String):void{
+			_currentTime = value;
+			currentTimeChange = true;
+			this.invalidateProperties();
+		};
+		public function get currentTime():String{return _currentTime;};
+		public function setBeginEndTime():void
+		{
+			durationChange = true;
+			invalidateProperties();	
+		}
+		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
@@ -126,6 +141,7 @@ package com.ithaca.documentarisation
 			{
 				segmentVideo.deltaTime = this.DELTA_TIME;
 				segmentVideo.startDateSession = _startDateSession;
+				segmentVideo.durationSession = this._durationSession;
 				segmentVideo.timeBegin = _timeBegin;
 				segmentVideo.timeEnd = _timeEnd;			
 				segmentVideo.showDetail(emptySegmentVideo);
@@ -184,6 +200,7 @@ package com.ithaca.documentarisation
 			if(instance == labelStartDuration)
 			{
 				labelStartDuration.text = getLabelStartDuration();
+				labelStartDuration.setStyle("fontWeight","normal");
 			}	
 		}
 		
@@ -207,6 +224,7 @@ package com.ithaca.documentarisation
 			{
 				segmentChange = false;
 				this.segmentVideo.startDateSession = this._startDateSession;
+				this.segmentVideo.durationSession = this._durationSession;
 				this.segmentVideo.timeBegin = this._timeBegin;
 				this.segmentVideo.timeEnd = this._timeEnd;
 				this.segmentVideo.updateNumStepplers();
@@ -220,6 +238,7 @@ package com.ithaca.documentarisation
 				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);
 				setEnabledButtonPlayStop();
 				labelStartDuration.text = getLabelStartDuration();
+				labelStartDuration.setStyle("fontWeight","normal");
 			}
 			
 			if(segmentSet)
@@ -232,12 +251,23 @@ package com.ithaca.documentarisation
 				// enabled button playStop
 				setEnabledButtonPlayStop();
 				labelStartDuration.text = getLabelStartDuration();
+				labelStartDuration.setStyle("fontWeight","normal");
 			}
 			
 			if(durationChange)
 			{
 				durationChange = false;
 				labelStartDuration.text = getLabelStartDuration();
+				labelStartDuration.setStyle("fontWeight","normal");
+			}
+			
+			if(currentTimeChange)
+			{
+				currentTimeChange = false;
+				
+				labelStartDuration.text = this._currentTime; 
+				labelStartDuration.toolTip = this._currentTime; 
+				labelStartDuration.setStyle("fontWeight","bold");
 			}
 		}
 		
@@ -367,8 +397,13 @@ package com.ithaca.documentarisation
 			{
 				_timeBegin = _startDateSession;
 			}
-			// TODO timeEnd  by duration of the session 
+			// timeEnd  by duration of the session 
 			_timeEnd = obsel.begin + DELTA_TIME;
+			var timeEndSession:Number = this._startDateSession + this._durationSession;
+			if(_timeEnd > timeEndSession)
+			{
+				_timeEnd = timeEndSession ;
+			}
 			_textComment = _textComment + dragSource.dataForFormat("textObsel") as String;
 			// update segment
 			_segment.beginTimeVideo = _timeBegin
@@ -427,6 +462,8 @@ package com.ithaca.documentarisation
 		{
 			this._timeBegin = event.beginTime;
 			this._timeEnd = event.endTime;
+			_segment.beginTimeVideo = this._timeBegin;
+			_segment.endTimeVideo = this._timeEnd;
 			durationChange = true;
 			this.invalidateProperties();
 			
