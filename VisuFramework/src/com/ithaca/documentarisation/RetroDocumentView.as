@@ -60,6 +60,7 @@ package com.ithaca.documentarisation
 		private var listSegment:IList;
 		private var _retroDocument:RetroDocument;
 		private var _startDateSession:Number;
+		private var _durationSession:Number;
 		private var timer:Timer;
 		private var needUpdateRetroDocument:Boolean = false;
 		private var _profiles:Array;
@@ -96,6 +97,8 @@ package com.ithaca.documentarisation
 		};
 		public function set startDateSession(value:Number):void{_startDateSession = value;};
 		public function get startDateSession():Number{return _startDateSession;};
+		public function set durationSession(value:Number):void{_durationSession = value;};
+		public function get durationSession():Number{return _durationSession;};
 		public function set listShareUser(value:Array):void{_listUser = value;};
 		public function get listShareUser():Array{return _listUser;};
 		public function set profiles(value:Array):void
