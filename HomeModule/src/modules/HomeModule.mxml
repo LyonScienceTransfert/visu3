@@ -594,8 +594,24 @@
 					}
 					// set list users the plateforme
 					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
-					// show user the plateforme
-					showAllUser(listUsersPlateforme);
+					
+					var selectedRadioButton:RadioButton = Model.getInstance().getSelectedRadioButton();
+					if(selectedRadioButton != null)
+					{
+						if(selectedRadioButton.id == "radioButtonAllUser")
+						{
+							radioButtonAllUser.selected = true;
+							radioButtonAllUser_changeHandler();
+						}else
+						{
+							radioButtonConnectedUser.selected = true;
+							radioButtonConnectedUser_changeHandler();
+						}
+					}else
+					{
+						// show user the plateforme
+						showAllUser(listUsersPlateforme);
+					}
 				}
 			}
 			
@@ -660,24 +676,26 @@
 				}
 			}
 
-			protected function radioButtonAllUser_changeHandler(event:Event):void
+			protected function radioButtonAllUser_changeHandler(event:Event = null):void
 			{
-				var selected:Boolean = event.currentTarget.selected;
+				var selected:Boolean = radioButtonAllUser.selected;
 				if(selected)
 				{
 					var listPlateformeUser:ArrayCollection = Model.getInstance().getListUserPlateforme();
 					setListenerOnListConnectedUser(false);
+					Model.getInstance().setSelectedRadioButton(radioButtonAllUser);
 					showAllUser(listPlateformeUser);
 				}
 			}
 
-			protected function radioButtonConnectedUser_changeHandler(event:Event):void
+			protected function radioButtonConnectedUser_changeHandler(event:Event = null):void
 			{
-				var selected:Boolean = event.currentTarget.selected;
+				var selected:Boolean = radioButtonConnectedUser.selected;
 				if(selected)
 				{
 					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
 					setListenerOnListConnectedUser(true);
+					Model.getInstance().setSelectedRadioButton(radioButtonConnectedUser);
 					showAllUser(listConnectedUser);
 				}
 			}
