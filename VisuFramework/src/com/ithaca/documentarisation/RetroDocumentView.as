@@ -226,7 +226,8 @@ package com.ithaca.documentarisation
 				segmentView.setEditabled(!normal);
 				segmentView.segment = segment;
 				segmentView.startDateSession = _startDateSession;
-				segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRemoveSegment);
+				segmentView.durationSession = _durationSession;
+				segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
 				segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
 				segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
 				groupSegment.addElement(segmentView);
@@ -265,11 +266,12 @@ package com.ithaca.documentarisation
 			var segmentView:RetroDocumentSegment = new RetroDocumentSegment();
 			segmentView.percentWidth = 100;
 			segmentView.startDateSession = _startDateSession;
+			segmentView.durationSession = _durationSession;
 			segmentView.setEmpty(true);
 			segmentView.setEditabled(true);
 			segmentView.setOpen(true);
 			segmentView.segment = segment;
-			segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRemoveSegment);
+			segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
 			segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
 			segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
 			groupSegment.addElement(segmentView);
@@ -277,7 +279,7 @@ package com.ithaca.documentarisation
 			this.updateRetroDocument();		
 		}
 		
-		private function onRemoveSegment(event:RetroDocumentEvent):void
+		private function onRmoveSegment(event:RetroDocumentEvent):void
 		{
 			removingSegment = event.segment;
 			removingSegementView =event.currentTarget as RetroDocumentSegment;
@@ -408,12 +410,9 @@ package com.ithaca.documentarisation
 					statusPlay = true;
 				}
 				// set label play/stop
-				retroDocumentSegment.setLabelPlay(statusPlay);
+//				retroDocumentSegment.setLabelPlay(statusPlay);
 				// set label time 
-				if(retroDocumentSegment.segmentVideo != null)
-				{
-					retroDocumentSegment.segmentVideo.setBeginEndTime();
-				}
+				retroDocumentSegment.setBeginEndTime();
 			}
 		}
 	}
