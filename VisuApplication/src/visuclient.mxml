@@ -69,9 +69,28 @@
 				this.setListLang();
 				menu.listLang = listLang;
 				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onCnangeLanguage);
-				menu.addEventListener(ApplicationMenuEvent.DISCONNECT, onDisconnect);	
+				menu.addEventListener(ApplicationMenuEvent.DISCONNECT, onDisconnect);
+				// load info about local version 
+				var pathInfo:String = "/"+Model.getInstance().appName+"/infoApp/variables.txt";
+				var infoLoader:URLLoader = new URLLoader();				
+				infoLoader.addEventListener(Event.COMPLETE, onLoadedInfo);
+				infoLoader.addEventListener(IOErrorEvent.IO_ERROR, onErrorLoadingInfo);
+				infoLoader.dataFormat = URLLoaderDataFormat.VARIABLES;
+				infoLoader.load(new URLRequest(pathInfo));
 			}
 			
+			private function onLoadedInfo(e:Event):void {
+				trace(e.target.data);
+				var infoLocaleVersion:String = e.target.data.localVersionGit;
+				Model.getInstance().setLocalVersionGit(infoLocaleVersion);
+				var infoRemoteVersion:String = e.target.data.remoteVersionGit;
+				Model.getInstance().setRemoteVersionGit(infoRemoteVersion);	
+			}
+			private function onErrorLoadingInfo
+				(e:Event):void {
+				Model.getInstance().setLocalVersionGit("Error : incorrect path(local version)");
+				Model.getInstance().setRemoteVersionGit("Error : incorrect path(remote version)");
+			}
 			protected function onCnangeLanguage(event:ApplicationMenuEvent):void
 			{
 				var language:String = event.moduleName as String;
@@ -320,5 +339,6 @@
 	<fx:Script source="memory.as" />
 	
 	<fx:Style source="styles.css" />
-	<s:RichText id="markerEdited" width="100%" color="0x323232" text="Waiting..." visible="false"/>
+	
+	<s:RichText id="markerEdited" width="100%" color="0x323232" text="Waiting..." visible="false"/>	
 </core:VisuApplication>
