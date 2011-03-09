@@ -340,7 +340,10 @@ package com.ithaca.visu.view.session
 			var sessionView:SessionViewSalonSession;
 			if(event == null)
 			{
-				sessionView = this.sessionsList.getElementAt(0) as SessionViewSalonSession;
+				if(this.sessionsList.numElements > 0)
+				{
+					sessionView = this.sessionsList.getElementAt(0) as SessionViewSalonSession;
+				}
 			}else
 			{
 				sessionView = event.currentTarget as SessionViewSalonSession;
