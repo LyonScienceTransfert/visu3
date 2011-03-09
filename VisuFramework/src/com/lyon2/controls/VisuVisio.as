@@ -109,6 +109,8 @@ package com.lyon2.controls
 		protected var _microphone:Microphone;
         
         public var autoPlay:Boolean; 		
+		
+		private var _currentVolume:Number;
 		/* 
          * Status constants
          */
@@ -482,6 +484,11 @@ package com.lyon2.controls
             {
                 logger.debug('addVideoStream ' + streamId);
                 stream = new NetStream(connection);
+				// set current volume 
+				var tempSoundTransforme:SoundTransform = stream.soundTransform;
+				tempSoundTransforme.volume = _currentVolume;
+				stream.soundTransform = tempSoundTransforme;
+				
 	            stream.client = this;
                 stream.play(streamId);
                // pause immediately when mode autoPlay = false
@@ -777,11 +784,17 @@ package com.lyon2.controls
 		
 		public function setVolume(value:Number):void
 		{
+			_currentVolume = value;
+			updateVolume();
+		}
+		
+		private function updateVolume():void
+		{
 			for (var n: String in streams)
 			{
 				var tempStream:NetStream = streams[n];
 				var tempSoundTransforme:SoundTransform = tempStream.soundTransform;
-				tempSoundTransforme.volume = value;
+				tempSoundTransforme.volume = _currentVolume;
 				tempStream.soundTransform = tempSoundTransforme;		
 			}
 		}	
