@@ -558,6 +558,8 @@
 				var groupTimeLine:Group = event.currentTarget as Group;
 				var wightGroup:Number = groupTimeLine.width;
 				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
+				// add value start session slider
+				delta = delta + startTimeSessionSlider.value - this.currentSessionDateRecording.time;
 				// pre play video flux
 				prePlayVideoFlux(0,delta);		
 			}
