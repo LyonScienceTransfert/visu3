@@ -13,8 +13,13 @@
 @namespace user 	"com.ithaca.visu.view.user.*";
 @namespace ws 		"ws.tink.spark.containers.*";
 @namespace documentarisation 		"com.ithaca.documentarisation.*";
+@namespace utils 		"com.ithaca.utils.*";
 
 
+utils|VisuToolTip
+{
+	skin-class: ClassReference("com.ithaca.utils.skins.VisuToolTipSkin");
+}
 user|ShareUser
 {
 	skin-class: ClassReference("com.ithaca.visu.view.user.skins.ShareUserSkin");
