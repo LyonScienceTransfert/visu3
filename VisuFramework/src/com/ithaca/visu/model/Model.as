@@ -140,7 +140,9 @@ package  com.ithaca.visu.model
 		private var _currentTraceId:String="void";
 		private var _currentObselComment:ObselComment=null;
 		private var _selectedRadioButtonHomeModule:String = "";
-		
+		private var _localeVersionGit:String;
+		private var _remoteVersionGit:String;
+			
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -215,6 +217,12 @@ package  com.ithaca.visu.model
 				
 				return name;
 		}
+		public function setRemoteVersionGit(value:String):void{_remoteVersionGit = value;}
+		public function getRemoteVersionGit():String{return _remoteVersionGit;}
+		
+		public function setLocalVersionGit(value:String):void{_localeVersionGit = value;}
+		public function getLocalVersionGit():String{return _localeVersionGit;}
+			
 		public function setCurrentSessionId(value:int):void
 		{
 			_currentSessionId = value;
