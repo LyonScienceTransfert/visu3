@@ -183,6 +183,10 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/save_edit.png")]
 		static private var save:Class;
 		
+		[Bindable]
+		[Embed("images/Attention_yellow.png")]
+		static private var attentionYellow:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -295,6 +299,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "save" : 
 					icon = save;
+					break;
+				case "attention" : 
+					icon = attentionYellow;
 					break;
 				default :
 					break;				
