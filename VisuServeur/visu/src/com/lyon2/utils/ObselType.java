@@ -13,6 +13,8 @@ public class ObselType {
 	public static final String RETRO_DELETE_COMMENT_EVENT = "RetroDeleteCommentEvent";	
 	public static final String RETRO_SAVE_COMMENT_EVENT = "RetroSaveCommentEvent";	
 
+	public static final String SUBJECT = "subject";
+
 	// prefixes
 	public static final String PREFICS_RETRO_ROOM = "Retro";
 	public static final String PREFICS_PARAM_OBSEL = "has";
@@ -26,6 +28,7 @@ public class ObselType {
 	public static final String VIDEO_TIME = "videoTime";
 	public static final String OBSEL_ID = "obselId";
 	public static final String TOOL_TIP_VALUE = "tooltipValue";
+	public static final String SESSION = "session";
 	public static final String SESSION_ID = "sessionId";
 	public static final String SESSION_TITLE = "sessionTitle";
 	public static final String TRACE_SUBJECT_ID = "traceSubjectId";
