@@ -90,11 +90,18 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.liris.ktbs.client.KtbsRootClient;
+import org.liris.ktbs.domain.interfaces.IStoredTrace;
+import org.liris.ktbs.domain.interfaces.ITraceModel;
+import org.liris.ktbs.service.MultiUserRootProvider;
+import org.liris.ktbs.service.ResourceService;
+import org.liris.ktbs.service.StoredTraceService;
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IClient;
@@ -114,18 +121,19 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.MailerFacade;
 import com.lyon2.utils.ObselStringParams;
+import com.lyon2.utils.ObselType;
 import com.lyon2.utils.UserColor;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Module;
 import com.lyon2.visu.domain.model.ProfileDescription;
 import com.lyon2.visu.domain.model.Session;
-import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.SessionUser;
+import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.User;
+import com.lyon2.visu.ktbs.KtbsApplicationHelper;
 import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
-import com.lyon2.utils.ObselType;
 
 /**
  * Sample application that uses the client manager.
@@ -135,6 +143,7 @@ import com.lyon2.utils.ObselType;
 public class Application extends MultiThreadedApplicationAdapter implements
 		IScheduledJob {
 
+	private KtbsApplicationHelper ktbsHelper;
 	private SqlMapClient sqlMapClient;
 	private String smtpserver = "";
 	// sheduling interval is 5 min.
@@ -150,6 +159,10 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				.toString());
 	}
 
+	public void setKtbsHelper(KtbsApplicationHelper ktbsHelper) {
+		this.ktbsHelper = ktbsHelper;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void execute(ISchedulingService service) {
 		// get list recording/paused sessions
@@ -521,8 +534,8 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public Obsel setObsel(Integer subject, String trace, String typeObsel,
-			List<Object> paramsObsel, String... traceType) throws SQLException {
+	public Obsel setObsel(final Integer subject, final String trace, final String typeObsel,
+			final List<Object> paramsObsel, final String... traceType) throws SQLException {
 		// log.warn("===== setObsel ===== Name module est : {}",listParams);
 		// do not add obsel if hasn't traceId
 		if (trace == null) {
@@ -638,6 +651,19 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		log.warn("=== Adding Obsel to BD ===");
 		getSqlMapClient().insert("obsels.insert", obsel);
 
+		Thread sentToKtbsThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					Application.this.ktbsHelper.sendToKtbs(subject, trace, typeObsel, paramsObsel, traceType);
+				} catch (SQLException e) {
+					Application.log.error("A problem occurred when sending the obsel to the KTBS", e);
+				}
+			}
+		};
+		sentToKtbsThread.setPriority(Thread.MIN_PRIORITY);
+		sentToKtbsThread.start();
+		
 		return obsel;
 	}
 
@@ -645,6 +671,8 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	// {
 	// log.warn("===== testApp ===== Name module est : {}",name);
 	// }
+
+
 
 	/**
 	 * 
