@@ -7,9 +7,12 @@
     <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="/WEB-INF/red5-web.properties"/>
     </bean>
+    
+    <import resource="classpath:**/ktbs-client-context.xml"/>
 <!--
         Defines the web context
     -->
+    
     <bean id="web.context" class="org.red5.server.Context" autowire="byType"/>
 <!--
         
@@ -40,7 +43,20 @@
 <!--
         Defines the web handler which acts as an applications endpoint
     -->
+    
+    
+    <bean id="ktbsHelper" class="com.lyon2.visu.ktbs.KtbsApplicationHelper" init-method="init" destroy-method="destroy">
+        <property name="sqlMapClient" ref="sqlMap"/>
+        <property name="rootProvider" ref="multiUserRootProvider"/>
+    </bean>
+
+	<bean id="multiUserRootProvider" class="org.liris.ktbs.service.impl.MultiUserServiceImpl"
+		init-method="init" destroy-method="destroy">
+		<property name="rootUri" value="${ktbs.root.uri}" />
+	</bean>
+    
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
+        <property name="ktbsHelper" ref="ktbsHelper"/>
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="smtpServer" value="${visu.smtpServer}" />
     </bean>
