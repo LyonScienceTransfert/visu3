@@ -1089,7 +1089,7 @@ public class MainManager
 		this.dispatcher.dispatchEvent(eventLoadListClosedSessionSalonRetrospection);		
 	}
 	
-	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, dateStartRecordingSession:Date):void
+	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array):void
 	{
 		// creation trace for logged user
 		var listUserObselVO:Array = new Array();
@@ -1139,7 +1139,7 @@ public class MainManager
 		}
 		
 		// creation timeLine
-		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, null, true, false);
+		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, listObselCommentVO, true, false);
 		
 		
 		function hasObselWithTimeStamp(obselVO:ObselVO):Boolean

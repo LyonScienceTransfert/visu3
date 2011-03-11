@@ -410,8 +410,22 @@ public class ObselInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des session" + e);
 		}
+
+		traceParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SUBJECT)+" "+"\"" + userId.toString() + "\"" + "%";
+		refParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SESSION)+" "+"\"" + sessionId.toString() + "\"" + "%";
+		osp = new ObselStringParams(traceParam, refParam);
+		log.warn(osp.toString());
+		// get list comments
+		List<Obsel> comment = null;
+		try {
+			comment = (List<Obsel>) app.getSqlMapClient().queryForList(
+					"obsels.getTraceCommentBySujetAndSession", osp);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des obsels comment" + e);
+		}
+
 		Date sessionStartRecordingDate = session.getStart_recording();
-		Object[] args = { result, sessionStartRecordingDate };
+		Object[] args = { result, sessionStartRecordingDate , comment};
 		IConnection connClient = (IConnection) client
 				.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
