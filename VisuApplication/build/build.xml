@@ -18,7 +18,7 @@
 				- standalone: it does not require any external configuration file.				
  -->
 
-<project name="Visu Client Builder" default="build_all">
+<project name="Visu Client Builder" default="build_client">
 
 	<!-- 
 		Absolute paths to Flex SDK and to the root of the developpement space (i.e. to 
@@ -452,8 +452,20 @@
 	      </mxmlc>
 	   </target>
 	
+	<target name="html-wrapper"> 
+	   <html-wrapper 
+	       	title="Welcome to Visu 2" 
+			file="${app.name}.html" 
+	            application="app" 
+	            swf="${app.name}" 
+	            history="true" 
+	            express-install="true" 
+	            version-detection="true" 
+	            output="${app.deploy}"/> 
+	</target> 
 	
-   <target name="build_all">
+	
+   <target name="build_client">
       <antcall target="build_framework_libs" />
       <antcall target="build_visu_client_application" />
       <antcall target="build_user_module" />
