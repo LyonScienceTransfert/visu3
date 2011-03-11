@@ -154,6 +154,7 @@
 	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
 	  		  	<include-file name="images/save_edit.png" path="${framework.images}/save_edit.png"/>
 	  		  	<include-file name="images/RetroDocumentAddVer1.png" path="${framework.images}/RetroDocumentAddVer1.png"/>
+	  		  	<include-file name="images/Attention_yellow.png" path="${framework.images}/Attention_yellow.png"/>
 
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
 	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
