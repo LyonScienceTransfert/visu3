@@ -61,7 +61,8 @@
 	</bean>
     
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
-        <property name="ktbsHelper" ref="ktbsHelper"/>
+        <!--  Uncomment this line to reactivate the KTBS
+        <property name="ktbsHelper" ref="ktbsHelper"/>-->
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="smtpServer" value="${visu.smtpServer}" />
     </bean>

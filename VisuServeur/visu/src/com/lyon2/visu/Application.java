@@ -141,7 +141,7 @@ import com.lyon2.visu.red5.RemoteAppSecurityHandler;
  * @author The Red5 Project (red5@osflash.org)
  */
 public class Application extends MultiThreadedApplicationAdapter implements
-		IScheduledJob {
+IScheduledJob {
 
 	private KtbsApplicationHelper ktbsHelper;
 	private SqlMapClient sqlMapClient;
@@ -150,7 +150,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	private static Integer SHEDULING_INTERVAL_MSEC = 50 * 60 * 1000;
 
 	private static Logger log = Red5LoggerFactory.getLogger(Application.class,
-			"visu2");
+	"visu2");
 
 	public Application() {
 		super();
@@ -162,14 +162,14 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	public void setKtbsHelper(KtbsApplicationHelper ktbsHelper) {
 		this.ktbsHelper = ktbsHelper;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void execute(ISchedulingService service) {
 		// get list recording/paused sessions
 		List<Session> listSession = null;
 		try {
 			listSession = (List<Session>) getSqlMapClient().queryForList(
-					"sessions.getRecordingPausedSessions");
+			"sessions.getRecordingPausedSessions");
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
 		}
@@ -183,7 +183,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			Long durationReal = dateNow.getTime() - sessionStartTime.getTime();
 			log.warn("==== session = {} , duration =  {}", session.getTheme(),
 					Long.toString(durationReal / (1000 * 60)) + "...."
-							+ sessionDuration.toString());
+					+ sessionDuration.toString());
 			// check really duration of the session
 			if (durationReal > sessionDuration) {
 				// TODO static variables
@@ -207,7 +207,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		for (IClient clientConnected : this.getClients()) {
 			// get sessionId for connected user
 			Integer userSessionId = (Integer) clientConnected
-					.getAttribute("sessionId");
+			.getAttribute("sessionId");
 			Integer diff = sessionId - userSessionId;
 			if (diff == 0) {
 				log.warn("==== has user(s) in sessionId : {}", sessionId
@@ -283,10 +283,10 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		log.warn("====roomConnect userId = {}", userId);
 		for (IClient clientConnected : this.getClients()) {
 			Integer userConnectedId = (Integer) clientConnected
-					.getAttribute("uid");
+			.getAttribute("uid");
 			log
-					.warn("======roomConnect userConnectedId = {} ",
-							userConnectedId);
+			.warn("======roomConnect userConnectedId = {} ",
+					userConnectedId);
 			// FIXME : the condition ( userConnectedId == userId) didn't
 			// work....? WHY?
 			int diff = userConnectedId - userId;
@@ -346,7 +346,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		try {
 			log.warn("HERE somethink 4 ");
 			listModules = (List<Module>) sqlMapClient
-					.queryForList("modules.getModules");
+			.queryForList("modules.getModules");
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des modules" + e);
 		}
@@ -364,7 +364,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		List<ProfileDescription> profiles = null;
 		try {
 			profiles = (List<ProfileDescription>) sqlMapClient
-					.queryForList("profile_descriptions.getProfils");
+			.queryForList("profile_descriptions.getProfils");
 		} catch (SQLException e) {
 			// TODO: handle exception
 			log.error("Loading profileDescription failed {}", e);
@@ -418,9 +418,9 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		// add obsel retro room exit
 		if (client.hasAttribute("traceRetroId")) {
 			String traceRetroIdOutSession = (String) client
-					.getAttribute("traceRetroId");
+			.getAttribute("traceRetroId");
 			String traceParentRetroId = (String) client
-					.getAttribute("traceParentRetroId");
+			.getAttribute("traceParentRetroId");
 			List<Object> paramsObselRetroRoom = new ArrayList<Object>();
 			paramsObselRetroRoom.add(ObselType.SYNC_ROOM_TRACE_ID);
 			paramsObselRetroRoom.add(traceParentRetroId);
@@ -474,7 +474,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			// set Obsel "SessionExit" to all connected user of this session
 			for (IClient connectedClient : this.getClients()) {
 				Integer sessionIdConnectedUser = (Integer) connectedClient
-						.getAttribute("sessionId");
+				.getAttribute("sessionId");
 				if (sessionId.equals(sessionIdConnectedUser)) {
 					List<Object> paramsObsel = new ArrayList<Object>();
 					paramsObsel.add("uid");
@@ -496,7 +496,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 					}
 					// add staying client to list
 					Integer connectedClientId = (Integer) connectedClient
-							.getAttribute("uid");
+					.getAttribute("uid");
 					Integer diff = userId - connectedClientId;
 					if (diff != 0) {
 						listStayingClient.add(connectedClient);
@@ -619,14 +619,14 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				// name property
 				String nameProp = (String) paramsObsel.get(nPramObsel);
 				String firstLetter = Character.toString(nameProp.charAt(0))
-						.toUpperCase();
+				.toUpperCase();
 				String parName = ":has" + firstLetter + nameProp.substring(1);
 				valueProperty = "";
 				Object param = paramsObsel.get(nPramObsel + 1);
 				if (param.getClass().getName() == "java.util.ArrayList") {
 					for (String value : (List<String>) param) {
 						valueProperty = valueProperty + '"' + value.toString()
-								+ '"' + '\n' + '\t';
+						+ '"' + '\n' + '\t';
 					}
 					parValue = "(" + '\n' + '\t' + valueProperty + ")" + ";";
 					strRdf = strRdf + parName + " " + parValue + '\n';
@@ -651,19 +651,22 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		log.warn("=== Adding Obsel to BD ===");
 		getSqlMapClient().insert("obsels.insert", obsel);
 
-		Thread sentToKtbsThread = new Thread() {
-			@Override
-			public void run() {
-				try {
-					Application.this.ktbsHelper.sendToKtbs(subject, trace, typeObsel, paramsObsel, traceType);
-				} catch (SQLException e) {
-					Application.log.error("A problem occurred when sending the obsel to the KTBS", e);
+		// safety test in case the ktsb would be deactivated
+		if(Application.this.ktbsHelper != null)  {
+			Thread sentToKtbsThread = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Application.this.ktbsHelper.sendToKtbs(subject, trace, typeObsel, paramsObsel, traceType);
+					} catch (SQLException e) {
+						Application.log.error("A problem occurred when sending the obsel to the KTBS", e);
+					}
 				}
-			}
-		};
-		sentToKtbsThread.setPriority(Thread.MIN_PRIORITY);
-		sentToKtbsThread.start();
-		
+			};
+			sentToKtbsThread.setPriority(Thread.MIN_PRIORITY);
+			sentToKtbsThread.start();
+		}
+
 		return obsel;
 	}
 
@@ -706,7 +709,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	@SuppressWarnings("unchecked")
 	public void updateSessionUserApplication(IConnection conn,
 			SessionUser sessionUser, SessionUser newSessionUser)
-			throws SQLException {
+	throws SQLException {
 		log.warn("updateSessionUser {}", sessionUser);
 		getSqlMapClient().delete("session_users.delete", sessionUser);
 		getSqlMapClient().delete("session_users.delete", newSessionUser);
@@ -765,7 +768,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		if (status == 3) {
 			// Get the Client Scope
 			IConnection conn = (IConnection) clientRecording
-					.getAttribute("connection");
+			.getAttribute("connection");
 			IScope scope = conn.getScope();
 			// start recording
 			GregorianCalendar calendar = new GregorianCalendar();
@@ -783,7 +786,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 					.getTimeInMillis() };
 			// call client that start recording
 			IConnection connectionClient = (IConnection) clientRecording
-					.getAttribute("connection");
+			.getAttribute("connection");
 			if (connectionClient instanceof IServiceCapableConnection) {
 				IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
 				sc.invoke("startRecording", timeStartRecording);
@@ -803,22 +806,22 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				// get list obsel "SystemSessionStart"
 				String traceParam = "%-0%";
 				String refParam = "%:hasSession " + "\"" + sessionId.toString()
-						+ "\"" + "%";
+				+ "\"" + "%";
 				ObselStringParams osp = new ObselStringParams(traceParam,
 						refParam);
 				listObselSystemSessionStart = (List<Obsel>) getSqlMapClient()
-						.queryForList(
-								"obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter",
-								osp);
+				.queryForList(
+						"obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter",
+						osp);
 				if (listObselSystemSessionStart != null) {
 					// get traceId the system
 					Obsel obselSystemSessionStart = listObselSystemSessionStart
-							.get(0);
+					.get(0);
 					traceSystem = obselSystemSessionStart.getTrace();
 					typeObselSystem = "SystemSessionEnter";
 					// set userColor
 					listUserCodeColor = UserColor
-							.setMapUserColor(listObselSystemSessionStart);
+					.setMapUserColor(listObselSystemSessionStart);
 				} else {
 					// generate traceId the system, "0" => owner the trace ,
 					// here it's the system
@@ -840,15 +843,15 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				// String traceParam = "%-"+userId.toString()+"%";
 				String traceParam = "%-" + userId.toString();
 				String refParam = "%:hasSession " + "\"" + sessionId.toString()
-						+ "\"" + "%";
+				+ "\"" + "%";
 				log.warn("====refParam {}", refParam);
 				ObselStringParams osp = new ObselStringParams(traceParam,
 						refParam);
 				// log.warn("=====OSP : {}",osp.toString());
 				listObselSessionStart = (List<Obsel>) getSqlMapClient()
-						.queryForList(
-								"obsels.getTraceIdByObselSessionStartSessionEnter",
-								osp);
+				.queryForList(
+						"obsels.getTraceIdByObselSessionStartSessionEnter",
+						osp);
 				if (listObselSessionStart != null) {
 					Obsel obselSessionStart = listObselSessionStart.get(0);
 					String trace = obselSessionStart.getTrace();
@@ -876,9 +879,9 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 			for (IClient client : this.getClients()) {
 				Integer sessionIdConnectedUser = (Integer) client
-						.getAttribute("sessionId");
+				.getAttribute("sessionId");
 				Integer statusConnectedUser = (Integer) client
-						.getAttribute("status");
+				.getAttribute("status");
 				User user = (User) client.getAttribute("user");
 				Integer diff = sessionId - sessionIdConnectedUser;
 				if (diff == 0 && statusConnectedUser == 3) {
@@ -886,7 +889,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 					listPresentsRecordingUsers.add(client);
 					// set id recording users
 					Integer userIdRecordingUser = (Integer) client
-							.getAttribute("uid");
+					.getAttribute("uid");
 					// have to find all recording users
 					listPresentsIdUsers.add(userIdRecordingUser.toString());
 					listPresentsAvatarUsers.add(user.getAvatar());
@@ -896,10 +899,10 @@ public class Application extends MultiThreadedApplicationAdapter implements
 					if (listUserCodeColor.containsKey(userIdRecordingUser)) {
 						// get color code for this user
 						codeColorUser = listUserCodeColor
-								.get(userIdRecordingUser);
+						.get(userIdRecordingUser);
 					} else {
 						Integer colorCodeMax = UserColor
-								.getMaxCodeColor(listUserCodeColor);
+						.getMaxCodeColor(listUserCodeColor);
 						codeColorUser = colorCodeMax + 1;
 						listUserCodeColor.put(userIdRecordingUser,
 								codeColorUser);
@@ -1017,20 +1020,20 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			// user join session when session was stopped
 			Integer userId = (Integer) clientRecording.getAttribute("uid");
 			Integer session_id = (Integer) clientRecording
-					.getAttribute("sessionId");
+			.getAttribute("sessionId");
 			List<Obsel> listObselSessionStart = null;
 			try {
 				// String traceParam = "%-"+userId.toString()+"%";
 				String traceParam = "%-" + userId.toString();
 				String refParam = "%:hasSession " + "\""
-						+ session_id.toString() + "\"" + "%";
+				+ session_id.toString() + "\"" + "%";
 				// log.warn("====refParam {}",refParam);
 				ObselStringParams osp = new ObselStringParams(traceParam,
 						refParam);
 				listObselSessionStart = (List<Obsel>) getSqlMapClient()
-						.queryForList(
-								"obsels.getTraceIdByObselSessionStartSessionEnter",
-								osp);
+				.queryForList(
+						"obsels.getTraceIdByObselSessionStartSessionEnter",
+						osp);
 				if (listObselSessionStart != null) {
 					Obsel obselSessionStart = listObselSessionStart.get(0);
 					trace = obselSessionStart.getTrace();
@@ -1062,10 +1065,10 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			// get list obsel "SystemSessionStart"
 			String traceParam = "%-0%";
 			String refParam = "%:hasSession " + "\"" + sessionId.toString()
-					+ "\"" + "%";
+			+ "\"" + "%";
 			ObselStringParams osp = new ObselStringParams(traceParam, refParam);
 			listObselUpdatedMarker = (List<Obsel>) getSqlMapClient()
-					.queryForList("obsels.getObselSystemUpdateMarker", osp);
+			.queryForList("obsels.getObselSystemUpdateMarker", osp);
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
@@ -1077,7 +1080,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				nbrObselSystemUpdateMarker);
 		Object[] args = { result, startRecording };
 		IConnection connClient = (IConnection) clientRecording
-				.getAttribute("connection");
+		.getAttribute("connection");
 		IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 		sc.invoke("checkListActiveObsel", args);
 	}
@@ -1154,7 +1157,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				// IConnection conn = (IConnection)
 				// client.getConnections().toArray()[0];
 				IConnection conn = (IConnection) client
-						.getAttribute("connection");
+				.getAttribute("connection");
 				if (conn instanceof IServiceCapableConnection) {
 					IServiceCapableConnection sc = (IServiceCapableConnection) conn;
 					sc.invoke("checkPrivateMessage", args);
@@ -1372,7 +1375,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			// set Obsel "RoomExit" to all connected user of this session
 			for (IClient connectedClient : this.getClients()) {
 				Integer sessionIdConnectedUser = (Integer) connectedClient
-						.getAttribute("sessionId");
+				.getAttribute("sessionId");
 				if (sessionId == sessionIdConnectedUser) {
 					List<Object> paramsObsel = new ArrayList<Object>();
 					paramsObsel.add("uid");
@@ -1400,7 +1403,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 					}
 					// add staying client to list
 					Integer connectedClientId = (Integer) connectedClient
-							.getAttribute("uid");
+					.getAttribute("uid");
 					Integer diff = loggedUserId - connectedClientId;
 					if (diff != 0) {
 						listStayingClient.add(connectedClient);
@@ -1446,7 +1449,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			String clientId = (String) connectedClient.getAttribute("id");
 			Integer userId = (Integer) connectedClient.getAttribute("uid");
 			Integer sessionId = (Integer) connectedClient
-					.getAttribute("sessionId");
+			.getAttribute("sessionId");
 
 			ClientBroadcastStream streamByClientId = (ClientBroadcastStream) getBroadcastStream(
 					scope, clientId);
@@ -1454,7 +1457,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			streamByClientId.stopRecording();
 			// generate fileName
 			String recordFileName = "record-" + sDate + "-" + sessionId + "-"
-					+ userId;
+			+ userId;
 
 			try {
 				// save the stream to disk
@@ -1537,7 +1540,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		double rightUser = 0;
 		for (int i = 0; i < l; i++) {
 			rightUser = rightUser + (s.charAt(i) - charZero.charAt(0))
-					* Math.pow(2, (s.length() - i - 1));
+			* Math.pow(2, (s.length() - i - 1));
 		}
 		// log.warn("rightUser = {}"+rightUser);
 		Integer result = 0;
@@ -1562,7 +1565,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 						log.info("invoke {}->{}", client_cnx.getClient(),
 								method);
 						ServiceUtils
-								.invokeOnConnection(client_cnx, method, arg);
+						.invokeOnConnection(client_cnx, method, arg);
 					}
 
 				}
@@ -1601,7 +1604,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		}
 
 		String tarceStr = "trace-" + year.toString() + monthStr + dayStr
-				+ hourStr + minStr + secStr + "-" + userId.toString();
+		+ hourStr + minStr + secStr + "-" + userId.toString();
 		return tarceStr;
 	}
 
@@ -1632,9 +1635,9 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 			so.setAttribute("message", new Red5Message(
 					RemoteAppEventType.STREAM_BROADCAST_CLOSE, stream
-							.getPublishedName(), username, current.getClient()
-							.getId(), (Integer) current.getClient()
-							.getAttribute("uid")));
+					.getPublishedName(), username, current.getClient()
+					.getId(), (Integer) current.getClient()
+					.getAttribute("uid")));
 		} catch (NullPointerException ex) {
 			log.info("stream broadcast close error - no more visuserver: ");
 		}
@@ -1695,7 +1698,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 		so.setAttribute("message", new Red5Message(
 				RemoteAppEventType.CLIENT_JOIN, username
-						+ " a rejoint le salon.", username, client.getId(),
+				+ " a rejoint le salon.", username, client.getId(),
 				(Integer) client.getAttribute("uid")));
 
 	}
@@ -1713,7 +1716,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 		so.setAttribute("message", new Red5Message(
 				RemoteAppEventType.CLIENT_LEAVE, username
-						+ " a quitté le salon.", username, client.getId(),
+				+ " a quitté le salon.", username, client.getId(),
 				(Integer) client.getAttribute("uid")));
 
 	}
@@ -1729,8 +1732,8 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 			so.setAttribute("message", new Red5Message(
 					RemoteAppEventType.CLIENT_LOGOUT, username
-							+ " a quitté l'application", username, client
-							.getId(), (Integer) client.getAttribute("uid")));
+					+ " a quitté l'application", username, client
+					.getId(), (Integer) client.getAttribute("uid")));
 		} else {
 			log.debug("roomLeave: null so (scope, VisuServer)");
 		}
