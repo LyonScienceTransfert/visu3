@@ -40,6 +40,36 @@ public class KtbsApplicationHelper {
 		this.sqlMapClient = sqlMapClient;
 	}
 
+	// injected by Spring
+	private String username;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	// injected by Spring
+	private String passwd;
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	
+	// injected by Spring
+	private String retroRoomTraceModelName;
+	public void setRetroRoomTraceModelName(String retroRoomTraceModelName) {
+		this.retroRoomTraceModelName = retroRoomTraceModelName;
+	}
+	
+	// injected by Spring
+	private String visuTraceModelName;
+	public void setVisuTraceModelName(String visuTraceModelName) {
+		this.visuTraceModelName = visuTraceModelName;
+	}
+	
+	// injected by Spring
+	private String sharedBaseName;
+	public void setSharedBaseName(String sharedBaseName) {
+		this.sharedBaseName = sharedBaseName;
+	}
+	
 	// the root client for the user "visu"
 	private KtbsRootClient visuUserRootClient;
 
@@ -49,11 +79,11 @@ public class KtbsApplicationHelper {
 
 	private KtbsRootClient getVisuUserRootClient() {
 		if(visuUserRootClient == null) {
-			if(rootProvider.hasClient(SHARED_KTBS_USER_NAME))
-				visuUserRootClient = rootProvider.getClient(SHARED_KTBS_USER_NAME);
+			if(rootProvider.hasClient(username))
+				visuUserRootClient = rootProvider.getClient(username);
 			else {
-				if(rootProvider.openClient(SHARED_KTBS_USER_NAME, SHARED_KTBS_PASSWORD))
-					visuUserRootClient = rootProvider.getClient(SHARED_KTBS_USER_NAME);
+				if(rootProvider.openClient(username, passwd))
+					visuUserRootClient = rootProvider.getClient(username);
 				else
 					log.error("Could not start the Ktbs service. Impossible to create a root client for the user \"share\".");
 			}
@@ -86,16 +116,16 @@ public class KtbsApplicationHelper {
 		ResourceService resourceService = client.getResourceService();
 
 		// creates the java object for the ktbs:Base "visuBase"
-		IBase visuBase = resourceService.getBase(SHARED_KTBS_BASE);
+		IBase visuBase = resourceService.getBase(sharedBaseName);
 		if(visuBase == null) {
-			log.info("The base \""+SHARED_KTBS_BASE+"\" does not exist. Creating it.");
+			log.info("The base \""+sharedBaseName+"\" does not exist. Creating it.");
 			log.debug("Root URI is DefaultResourceManager is: " + ((RootAwareService)resourceService).getRootUri());
-			visuBase = resourceService.newBase(SHARED_KTBS_BASE, SHARED_KTBS_USER_NAME);
+			visuBase = resourceService.newBase(sharedBaseName, username);
 			if(visuBase == null) {
 				log.error("Could not create a base for the user \"visu\".");
 
 			} else
-				visuBase = resourceService.getBase(SHARED_KTBS_BASE);
+				visuBase = resourceService.getBase(sharedBaseName);
 		}
 
 		if(visuBase == null) {
@@ -104,8 +134,8 @@ public class KtbsApplicationHelper {
 		}
 
 		// creates the trace models
-		retroRoomTraceModel = initializeTraceModel(visuBase, RETRO_TRACE_MODEL_NAME, client);
-		visuTraceModel = initializeTraceModel(visuBase, VISU_TRACE_MODEL_NAME, client);
+		retroRoomTraceModel = initializeTraceModel(visuBase, retroRoomTraceModelName, client);
+		visuTraceModel = initializeTraceModel(visuBase, visuTraceModelName, client);
 
 		if(retroRoomTraceModel == null || visuTraceModel == null) {
 			log.warn(notInitializedMessage);
@@ -136,11 +166,6 @@ public class KtbsApplicationHelper {
 		return model;
 	}
 
-	private static final String SHARED_KTBS_USER_NAME = "visu";
-	private static final String SHARED_KTBS_PASSWORD = "visu";
-	private static final String SHARED_KTBS_BASE = "share";
-	private static final String RETRO_TRACE_MODEL_NAME = "retroModel";
-	private static final String VISU_TRACE_MODEL_NAME = "visuModel";
 
 	private ITraceModel retroRoomTraceModel;
 	private ITraceModel visuTraceModel;
