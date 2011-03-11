@@ -48,6 +48,11 @@
     <bean id="ktbsHelper" class="com.lyon2.visu.ktbs.KtbsApplicationHelper" init-method="init" destroy-method="destroy">
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="rootProvider" ref="multiUserRootProvider"/>
+        <property name="username" value="${ktbs.root.username}"/>
+        <property name="passwd" value="${ktbs.root.passwd}"/>
+        <property name="sharedBaseName" value="${ktbs.shared.base}"/>
+        <property name="visuTraceModelName" value="${ktbs.model.visu}"/>
+        <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
     </bean>
 
 	<bean id="multiUserRootProvider" class="org.liris.ktbs.service.impl.MultiUserServiceImpl"
