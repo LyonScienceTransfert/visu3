@@ -1,0 +1,8 @@
+.project
+.classpath
+VisuFramework/bin/
+VisuServeur/visu/build/
+VisuServeur/visu/bin/
+deploy/
+VisuServeur/visu/.settings/
+

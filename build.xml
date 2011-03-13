@@ -8,28 +8,24 @@
 -->
 
 <!-- Info: The size of memory available to the JVM may required to be extended for the
-           compile tasks. Do not hesitate to extend the JVM memory with the options "-Xms", "-Xmx" and "-XX:MaxPermSize".
+           compile tasks. You may need to extend the JVM memory space with the options "-Xms", "-Xmx" and "-XX:MaxPermSize":
            
 	       Ex: -Xms768m -Xmx1024m -XX:MaxPermSize=512m
+
+or by setting the following environment variable:
+
+		ANT_OPTS="-Xms768m -Xmx1024m -XX:MaxPermSize=512m"
+
 -->
 
-<!-- Info: This ant script is:
-				- absolute: it can be interpreted from any location in the file system,
-				- standalone: it does not require any external configuration file.				
- -->
 
-<project name="Visu Client Builder" default="build_client">
+<project name="Visu Client Builder" default="buil-and-deploy-all">
+ 
 
-	<!-- 
-		Absolute paths to Flex SDK and to the root of the developpement space (i.e. to 
-		the root folder "visu/" from the git repository), 
-		
-		!!! LOCAL PROPERTIES, TO BE SET !!!  
-	--> 
-   	<property name="visu.dev.path" location="/home/dcram/dev/ws-visu2/visu" />
-   	<property name="flex.sdk" location="/home/dcram/Applications/flexsdk4"/>
+<loadproperties srcFile="build.properties"/>
 
-	
+   
+	<property name="visu.dev.path" location="." />
 	
 	
 	<property name="player.major.version" value="10.1" />
@@ -37,9 +33,12 @@
 	
 	<!-- the value for the "debug" compiler option for compc and mxmlc -->
    	<property name="debug" value="true" />
+
+	<!-- the value for the "debug" compiler option for compc and mxmlc -->
+   	<property name="mxmlc.incremental" value="false" />
 	
 	<!-- the name for bot the final swf file and the mxml application source file -->
-   <property name="app.name" value="visuclient" />
+   	<property name="webapp.dir"  location="${red5.dir}/webapps/${webapp.name}" />
 
 	<!-- The FLEX_HOME variable (with this typo) must be set to the flex sdk repository
 		 for the compc and mxmlc compilers to run properly-->
@@ -52,7 +51,7 @@
    <property name="app.src" location="${visu.dev.path}/VisuApplication/src" />
 
 	<!-- The temporary output folder where to place the swf files before being deployed to the server --> 
-   <property name="app.deploy" location="${visu.dev.path}/deploy" />
+   <property name="app.deploy" location="${visu.dev.path}/${deploy.tmp}" />
 	
 	<!-- Visu framework related variables --> 
    <property name="framework.path" location="${visu.dev.path}/VisuFramework" />
@@ -97,13 +96,27 @@
    <property name="retrospectionmodule.name" value="RetrospectionModule" />
 
 
+	<!--  the name of the visu swf file -->	
+	 <property name="visuclient.swf" value="visuclient"/>
+
+	
+	<!--  server project path -->	
+	<property name="project.server.path"     location="${visu.dev.path}/VisuServeur/visu/"/>
+	<property name="project.server.src"     location="${project.server.path}/src"/>
+	<property name="server.tmp.classes"     location="${app.deploy}/tmp"/>
+	
+	<!--  jar properties -->	
+	<property name="jar.name"     value="${webapp.name}"/>
+	<property name="jar.dir"     location="${app.deploy}"/>
+	<property name="jar.file"    location="${jar.dir}/${jar.name}.jar" />
+		
   
 
 	<!-- Package the visu frameworks classes and resources, and put them 
 		 into a temporary library named "visu_framework.swc" (located in "./VisuFramework/bin/") 
 		 that will serve as a library when building visu modules.
 	-->
-	<target name="build_framework_libs">
+	<target name="build-framework" description="Builds the Framework project and put assets in a swc file">
 	      <echo>Compile framework library</echo>
 	       
 		<!-- 
@@ -117,7 +130,7 @@
 	        output="${framework.bin}/${framework.assets.swc}"
 	  	  	debug="${debug}" 
 	        strict="true" 
-		    incremental="true"
+		    incremental="${mxmlc.incremental}"
 	   	    warnings="true"
 	        headless-server="true">
 	  	  	
@@ -170,7 +183,7 @@
 	         debug="${debug}" 
 	         strict="true" 
 	         optimize="true" 
-		     incremental="true"
+		     incremental="${mxmlc.incremental}"
 	   	     warnings="true"
 	         headless-server="true">
 
@@ -220,7 +233,7 @@
 	</target>
 	
 	<!-- Build the session module and produce a SessionModule.swf file -->
-	<target name="build_session_module">
+	<target name="build-session-module">
 	      <echo>Build Session Module</echo>
 			
 		<!-- Create the SessionModule.swf from the sources
@@ -235,12 +248,12 @@
 	    -->
 		  <mxmlc 
 		         file="${sessionmodule.src}/modules/${sessionmodule.name}.mxml"
-		         output="${app.deploy}/modules/${sessionmodule.name}.swf"
+		         output="${app.deploy}/${sessionmodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         optimize="true" 
 		         load-externs="${framework.linkreport}" 
-		      	 incremental="true"
+		      	 incremental="${mxmlc.incremental}"
 		         warnings="true"
 		         headless-server="true">
 		         
@@ -266,16 +279,16 @@
 
 		This target works exactly as the "build_session_module" target, please refer to it for documentation. 
 	-->
-	<target name="build_tutorat_module">
+	<target name="build-tutorat-module">
 	      <echo>Build Tutorat Module</echo>
 	       
 		      <mxmlc 
 		         file="${tutoratmodule.src}/modules/${tutoratmodule.name}.mxml"
-		         output="${app.deploy}/modules/${tutoratmodule.name}.swf"
+		         output="${app.deploy}/${tutoratmodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         optimize="true" 
-		      	incremental="true"
+		      	incremental="${mxmlc.incremental}"
 		        load-externs="${framework.linkreport}" 
 		         warnings="true"
 		         headless-server="true">
@@ -303,15 +316,15 @@
 
 		This target works exactly as the "build_session_module" target, please refer to it for documentation. 
 	-->
-	<target name="build_home_module">
+	<target name="build-home-module">
 	      <echo>Build Home Module</echo>
 	       
 		      <mxmlc 
 		         file="${homemodule.src}/modules/${homemodule.name}.mxml"
-		         output="${app.deploy}/modules/${homemodule.name}.swf"
+		         output="${app.deploy}/${homemodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
-		      	incremental="true"
+		      	incremental="${mxmlc.incremental}"
 		        load-externs="${framework.linkreport}" 
 		         optimize="true" 
 		         warnings="true"
@@ -340,16 +353,16 @@
 
 		This target works exactly as the "build_retrospection_module" target, please refer to it for documentation. 
 	-->
-	<target name="build_retrospection_module">
+	<target name="build-retrospection-module">
 	      <echo>Build Retrospection Module</echo>
 	       
 		      <mxmlc 
 		         file="${retrospectionmodule.src}/modules/${retrospectionmodule.name}.mxml"
-		         output="${app.deploy}/modules/${retrospectionmodule.name}.swf"
+		         output="${app.deploy}/${retrospectionmodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         load-externs="${framework.linkreport}" 
-		      	 incremental="true"
+		      	 incremental="${mxmlc.incremental}"
 		         optimize="true" 
 		         warnings="true"
 		         headless-server="true">
@@ -377,16 +390,16 @@
 
 		This target works exactly as the "build_session_module" target, please refer to it for documentation. 
 	-->
-	<target name="build_user_module">
+	<target name="build-user-module">
 	      <echo>Build User Module</echo>
 	       
 		      <mxmlc 
 		         file="${usermodule.src}/modules/${usermodule.name}.mxml"
-		         output="${app.deploy}/modules/${usermodule.name}.swf"
+		         output="${app.deploy}/${usermodule.name}.swf"
 		         debug="${debug}"
 		         strict="true" 
 		         optimize="true" 
-		      	incremental="true"
+		      	incremental="${mxmlc.incremental}"
 		         warnings="true"
 		        load-externs="${framework.linkreport}" 
 		         headless-server="true">
@@ -411,7 +424,7 @@
 	 <!-- 
 	 	Build the visu client application, i.e. from "visuclient.mxml" to "visuclient.swf"
 	 -->
-	   <target name="build_visu_client_application"> 
+	   <target name="build-visuclient-swf" description="Builds the application swf file"> 
 	      <echo>Build Visu</echo>
 	      
 		<!-- 
@@ -426,13 +439,13 @@
 			
 		 -->	   	
 	   	  <mxmlc 
-	         file="${app.src}/${app.name}.mxml"
-	         output="${app.deploy}/${app.name}.swf"
+	         file="${app.src}/${clientapp.name}.mxml"
+	         output="${app.deploy}/${clientapp.name}.swf"
 	         debug="${debug}"
 	         strict="true" 
 	         link-report="${framework.linkreport}" 
 	         warnings="true"
-			 incremental="true"
+			 incremental="${mxmlc.incremental}"
 	         headless-server="true">
 	         
 	         <!-- will include all files with .css, .as, .mxml extensions -->
@@ -452,12 +465,12 @@
 	      </mxmlc>
 	   </target>
 	
-	<target name="html-wrapper"> 
+	<target name="html-wrapper" description="Creates a HTML wrapper and other js files required for the application to run in an HTML page"> 
 	   <html-wrapper 
 	       	title="Welcome to Visu 2" 
-			file="${app.name}.html" 
+			file="${clientapp.name}.html" 
 	            application="app" 
-	            swf="${app.name}" 
+	            swf="${clientapp.name}" 
 	            history="true" 
 	            express-install="true" 
 	            version-detection="true" 
@@ -465,13 +478,63 @@
 	</target> 
 	
 	
-   <target name="build_client">
-      <antcall target="build_framework_libs" />
-      <antcall target="build_visu_client_application" />
-      <antcall target="build_user_module" />
-      <antcall target="build_home_module" />
-      <antcall target="build_session_module" />
-      <antcall target="build_retrospection_module" />
-      <antcall target="build_tutorat_module" />
+   <target name="build-client-all" description="Builds the client app, all client modules, and dependencies">
+      <antcall target="build-framework" />
+      <antcall target="build-visuclient-swf" />
+      <antcall target="build-user-module" />
+      <antcall target="build-home-module" />
+      <antcall target="build-session-module" />
+      <antcall target="build-retrospection-module" />
+      <antcall target="build-tutorat-module" />
    </target>
+	
+
+	    <target name="build-server" description="Builds the java server classes and puts them in a jar">
+	        <delete dir="${server.tmp.classes}"/>
+	        <mkdir dir="${server.tmp.classes}"/>
+	        <javac encoding="utf-8" srcdir="${project.server.src}" destdir="${server.tmp.classes}">
+	          <compilerarg value="-Xlint:unchecked" />
+	          <classpath>
+	            <pathelement path="${classpath}"/>
+	            <pathelement location="${red5.dir}/red5.jar"/>
+	            <fileset dir="${project.server.path}/webapp/WEB-INF/lib" includes="*.jar"/>
+	          </classpath>
+	        </javac>
+	        <mkdir dir="${jar.dir}"/>
+	        <jar destfile="${jar.file}" basedir="${server.tmp.classes}" />
+	        <delete dir="${server.tmp.classes}"/>
+	    </target>
+
+		<target name="build-and-deploy-client" depends="build-client-all,deploy-client" description="Builds the client app and client modules, then copies the built files to the web app directory on the server"/>
+	
+		<target name="build-and-deploy-server" depends="build-server,deploy-server"/>
+	
+		<target name="deploy-client" description="Copies the client swf files to the web app directory on the server">
+	      <copy file="${app.deploy}/${visuclient.swf}.swf" todir="${webapp.dir}" />
+	      <copy file="${app.deploy}/${homemodule.name}.swf" todir="${webapp.dir}/modules" />
+	      <copy file="${app.deploy}/${retrospectionmodule.name}.swf" todir="${webapp.dir}/modules" />
+	      <copy file="${app.deploy}/${tutoratmodule.name}.swf" todir="${webapp.dir}/modules" />
+	      <copy file="${app.deploy}/${sessionmodule.name}.swf" todir="${webapp.dir}/modules" />
+	      <copy file="${app.deploy}/${usermodule.name}.swf" todir="${webapp.dir}/modules" />
+	    </target>
+
+		
+		<!-- Deploy the visu server jar and clien swf files to the Red5 server -->
+	    <target name="deploy-server" description="Copies the server jar, configuration files, and dependencies to the web app directory on the server">
+
+	      <mkdir dir="${webapp.dir}" />
+
+	      <copy todir="${webapp.dir}">
+	        <fileset dir="${project.server.path}/webapp" />
+	      </copy>
+	      
+	      <copy file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
+	    </target>
+		
+	    <target name="build-and-deploy-all" depends="build-and-deploy-client,build-and-deploy-server" description="Builds the client and the server, and deploy the built files to the web app directory on the server"/>
+
+ <target name="clean" description="Removes the temporary deploy directory where built files are created from the filesystem">
+	  <delete dir="${app.deploy}"/>
+</target>
+
 </project>
