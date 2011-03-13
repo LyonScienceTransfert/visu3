@@ -110,13 +110,27 @@ or by setting the following environment variable:
 	<property name="jar.dir"     location="${app.deploy}"/>
 	<property name="jar.file"    location="${jar.dir}/${jar.name}.jar" />
 		
-  
+	<!--  Property file -->	
+	<property name="file.props.versioninfo.filename"     value="comp-info.properties"/>
+	<property name="file.props.versioninfo"     location="${visu.dev.path}/${file.props.versioninfo.filename}"/>
+
+
+	<!-- Puts the current time in a property file -->
+	<target name="compile-info">
+		<delete file="${file.props.versioninfo}"/>
+		<tstamp>
+			<format property="COMPILE_TIME" pattern="yyyy-MM-dd'T'HH.mm.ssZ" timezone="UTC"/>
+		</tstamp>
+		<propertyfile file="${file.props.versioninfo}">
+			<entry key="system.build.date" value="${COMPILE_TIME}"/>
+      		</propertyfile>
+	</target>  
 
 	<!-- Package the visu frameworks classes and resources, and put them 
 		 into a temporary library named "visu_framework.swc" (located in "./VisuFramework/bin/") 
 		 that will serve as a library when building visu modules.
 	-->
-	<target name="build-framework" description="Builds the Framework project and put assets in a swc file">
+	<target name="build-framework" description="Builds the Framework project and put assets in a swc file" depends="compile-info">
 	      <echo>Compile framework library</echo>
 	       
 		<!-- 
@@ -126,6 +140,9 @@ or by setting the following environment variable:
 		
 		<!-- Create a SWC container for assets resources that are used by many components 
 			 in client modules and the framework-->
+		     
+
+
 	  	  <compc 
 	        output="${framework.bin}/${framework.assets.swc}"
 	  	  	debug="${debug}" 
@@ -133,6 +150,9 @@ or by setting the following environment variable:
 		    incremental="${mxmlc.incremental}"
 	   	    warnings="true"
 	        headless-server="true">
+
+	  	  		<include-file name="${file.props.versioninfo.filename}" path="${file.props.versioninfo}"/>
+
 	  	  	
 	  	  		<!--	Put the images that are referenced by [Embed('images/{imagename}.{ext}')] 
 	  	  				in actionscript file into the library -->
@@ -479,7 +499,9 @@ or by setting the following environment variable:
 	
 	
    <target name="build-client-all" description="Builds the client app, all client modules, and dependencies">
-      <antcall target="build-framework" />
+
+
+	<antcall target="build-framework" />
       <antcall target="build-visuclient-swf" />
       <antcall target="build-user-module" />
       <antcall target="build-home-module" />
