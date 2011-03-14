@@ -125,6 +125,7 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonUp.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonUp.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonUp.addEventListener(MouseEvent.CLICK, onMouseClickUpButton);	
 				buttonUp.toolTip = "Remonter";
 			}
 			
@@ -132,6 +133,7 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonDown.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonDown.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
+				buttonDown.addEventListener(MouseEvent.CLICK, onMouseClickDownButton);
 				buttonDown.toolTip = "Descendre";
 			}
 			
@@ -207,5 +209,19 @@ package com.ithaca.visu.view.session.controls
 			updateStatement.activityElement = _activityElement;
 			this.dispatchEvent(updateStatement);
 		}	
+		// up/down consigne
+		private function onMouseClickUpButton(event:MouseEvent):void
+		{	
+			var activityElementMoveUp:SessionEditEvent = new SessionEditEvent(SessionEditEvent.MOVE_UP_ACTIVITY_ELEMENT);
+			activityElementMoveUp.activityElement = activityElement;
+			this.dispatchEvent(activityElementMoveUp);
+		}
+		private function onMouseClickDownButton(event:MouseEvent):void
+		{
+			var activityElementMoveDown:SessionEditEvent = new SessionEditEvent(SessionEditEvent.MOVE_DOWN_ACTIVITY_ELEMENT);
+			activityElementMoveDown.activityElement = activityElement;
+			this.dispatchEvent(activityElementMoveDown);
+			
+		}
 	}
 }
