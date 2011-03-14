@@ -90,6 +90,9 @@ package com.ithaca.visu.view.session.controls.event
 		public static const PRE_LOAD_USERS:String="preLoadUsers";
 		public static const LOAD_LIST_USERS:String="loadListUsers";
 		
+		public static const MOVE_UP_ACTIVITY_ELEMENT:String="moveUpActivityElement";
+		public static const MOVE_DOWN_ACTIVITY_ELEMENT:String="moveDownActivityElement";
+		
 		public var activity:Activity;
 		public var activityElement:ActivityElement;
 		public var session:Session;
