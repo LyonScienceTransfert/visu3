@@ -21,6 +21,7 @@
 		<result column="url_element" jdbcType="VARCHAR" property="url_element" />
 		<result column="type_element" jdbcType="VARCHAR" property="type_element" />
         <result column="type_mime" jdbcType="VARCHAR" property="type_mime" />
+        <result column="order_activity_element" jdbcType="INTEGER" property="order_activity_element" />
 	</resultMap>
 
 	<sql id="selectBase">
@@ -30,7 +31,8 @@
 			data,
 			url_element,
 			type_element,
-            type_mime
+            type_mime,
+            order_activity_element
 		FROM 
             activities_elements
     </sql>
@@ -47,7 +49,8 @@
 			data,
 			url_element,
 			type_element,
-            type_mime
+            type_mime,
+           	order_activity_element
        FROM activities a, activities_elements ae 
        WHERE a.id_session = #value# AND a.id_activity = ae.id_activity 
        ORDER BY a.ind
@@ -60,7 +63,8 @@
 			url_element = #url_element:VARCHAR#,
 			type_element = #type_element:VARCHAR#,
             type_mime = #type_mime:VARCHAR#,
-			id_activity = #id_activity:LONGVARBINARY#
+			id_activity = #id_activity:LONGVARBINARY#,
+			order_activity_element = #order_activity_element:LONGVARBINARY#
 		<selectKey keyProperty="id_element" resultClass="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -81,7 +85,8 @@
 			url_element = #url_element:VARCHAR#,
 			type_element = #type_element:VARCHAR#,
             type_mime = #type_mime:VARCHAR#,
-			id_activity = #id_activity:LONGVARBINARY#
+			id_activity = #id_activity:LONGVARBINARY#,
+			order_activity_element = #order_activity_element:LONGVARBINARY#
 	   	WHERE id_element = #id_element#
    	</update>
 
