@@ -18,11 +18,11 @@
 			</s:Label>
 		</s:BorderContainer>
 		<s:HGroup gap="1"  includeIn="editable,normal" left="5" horizontalCenter.editable="0" verticalAlign="middle">
-			<s:Label>
+			<s:Label includeIn="editable" paddingTop="2">
 				<s:text>Début</s:text>
 			</s:Label>
-			<mx:Spacer width="10" width.editable="5"/>
-			<s:Label id="labelMinutBegin" maxDisplayedLines="1">
+			<mx:Spacer width="5" includeIn="editable"/>
+			<s:Label id="labelMinutBegin" maxDisplayedLines="1" includeIn="editable" paddingTop="2">
 				<s:text>08</s:text>
 			</s:Label>
 			<s:Label includeIn="editable">
@@ -31,13 +31,13 @@
 			<s:NumericStepper id="numStepplerSecondBegin" minimum="-1" maximum="60" stepSize="1" width="42" includeIn="editable">
 				<s:value>15</s:value>
 			</s:NumericStepper>
-			<s:Label id="timeWindowLabel" text="AZERTREEA" includeIn="normal" left="3" right="38"  verticalCenter="0" paddingTop="7" width="75" textAlign="center"/>
-			<mx:Spacer width="10"/>
-			<s:Label>
+			<s:Label id="timeWindowLabel" includeIn="normal" left="3" right="38"  verticalCenter="0" paddingTop="7" width="75" textAlign="center"/>
+			<mx:Spacer width="10" includeIn="editable"/>
+			<s:Label includeIn="editable" paddingTop="2">
 				<s:text>Fin </s:text>
 			</s:Label>
-			<mx:Spacer width="10" width.editable="5"/>
-			<s:Label id="labelMinutEnd" maxDisplayedLines="1">
+			<mx:Spacer width="5" includeIn="editable"/>
+			<s:Label id="labelMinutEnd" maxDisplayedLines="1" includeIn="editable" paddingTop="2">
 				<s:text>12</s:text>
 			</s:Label>
 			<s:Label includeIn="editable">
