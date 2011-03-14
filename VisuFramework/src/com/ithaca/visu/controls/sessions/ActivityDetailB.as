@@ -13,6 +13,8 @@ package com.ithaca.visu.controls.sessions
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.collections.Sort;
+	import mx.collections.SortField;
 	import mx.events.ToolTipEvent;
 	
 	import spark.components.Button;
@@ -58,7 +60,7 @@ package com.ithaca.visu.controls.sessions
 		private var _activity:Activity; 
 		private var activityChanged : Boolean;
 		
-		private var statementList:IList;
+		private var statementList:ArrayCollection;
 		private var documentList:IList; 
 		private var keywordList:IList; 
 		private var memo:String=""; 
@@ -98,6 +100,7 @@ package com.ithaca.visu.controls.sessions
 				trace("add statementGroup");
 				if (statementList.length > 0)
 				{
+					sortByOrder(statementList)
 					addStatements(statementList);					
 				}else
 				{
@@ -292,6 +295,16 @@ package com.ithaca.visu.controls.sessions
 				open = true;
 				invalidateSkinState();
 			}
+		}
+		
+		// SORT by order
+		private function sortByOrder(list:ArrayCollection):void
+		{
+			var sort:Sort = new Sort();
+			// There is only one sort field, so use a null first parameter.
+			sort.fields = [new SortField("order_activity_element", true)];
+			list.sort = sort;
+			list.refresh();
 		}
 	}
 }
