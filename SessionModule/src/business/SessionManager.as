@@ -316,6 +316,7 @@ package business
 			alm.url_element = activityElement.url_element;
 			alm.type_element = activityElement.type_element;
 			alm.type_mime = activityElement.type_mime;
+			alm.order_activity_element = activityElement.order_activity_element;
 			return alm;
 		}
 		
