@@ -71,6 +71,7 @@ package com.ithaca.visu.model
 		public var url_element:String;
 		public var type_element:String;
 		public var type_mime:String;
+		public var order_activity_element:int;	
 			
 		public function ActivityElement(value:Object)
 		{
@@ -80,6 +81,7 @@ package com.ithaca.visu.model
 			this.url_element = value.url_element;
 			this.type_element = value.type_element;
 			this.type_mime = value.type_mime;
+			this.order_activity_element = value.order_activity_element;	
 		}
 	}
 }
