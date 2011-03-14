@@ -120,6 +120,12 @@ public class ActivityElement {
      *
      * @abatorgenerated Tue May 26 16:38:12 CEST 2009
      */
+    private int order_activity_element;
+    
+    
+    
+    
+    
     public Integer getId_element() {
         return id_element;
     }
@@ -254,7 +260,13 @@ public class ActivityElement {
     public void setType_mime(String type_mime) {
         this.type_mime = type_mime;
     }
-	
+    
+    public int getOrder_activity_element() {
+        return this.order_activity_element;
+    }
+    public void setOrder_activity_element(int order_activity_element) {
+        this.order_activity_element = order_activity_element;
+    }
     /**
      * toString will return String object representing the state of this 
      * valueObject. This is useful during application development, and 
@@ -269,6 +281,7 @@ public class ActivityElement {
         out.append("url_element = " + this.url_element + ",");
         out.append("type_element = " + this.type_element + ", ");
 		out.append("type_mime = " + this.type_mime + ", ");
+		out.append("order_activity_element = " + this.order_activity_element + ", ");
         return out.toString();
     }
 
