@@ -76,7 +76,9 @@ package com.ithaca.visu.view.session.controls
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.controls.Alert;
+	import mx.controls.Image;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.NumericStepper;
@@ -113,6 +115,13 @@ package com.ithaca.visu.view.session.controls
 		
 		[SkinPart("true")]
 		public var titleActivityLable:Label;
+
+		[SkinPart("true")]
+		public var buttonUp:Image;
+
+		[SkinPart("true")]
+		public var buttonDown:Image;
+
 		
 		private var open:Boolean;
 		private var editabled:Boolean;
@@ -194,6 +203,19 @@ package com.ithaca.visu.view.session.controls
 					}
 				}
 			}
+			
+			if (instance == buttonUp)
+			{
+				buttonUp.addEventListener(MouseEvent.CLICK, onClickButtonMoveUp);
+				buttonUp.buttonMode = true;
+			}
+
+			if (instance == buttonDown)
+			{
+				buttonDown.addEventListener(MouseEvent.CLICK, onClickButtonMoveDown);
+				buttonDown.buttonMode = true;
+			}
+		
 			
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -649,7 +671,7 @@ package com.ithaca.visu.view.session.controls
 			changeOrderMovedDownActivityElementEvent.activityElement = movedDownActivityElement;
 			this.dispatchEvent(changeOrderMovedDownActivityElementEvent);	
 			
-			var movedUpActivityElement:ActivityElement = setOrder(statementList,activityElement, order-1);
+			var movedUpActivityElement:ActivityElement = setOrder(statementList, activityElement, order-1);
 			// update moved down activityElement
 			var changeOrderMovedUpActivityElementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
 			changeOrderMovedUpActivityElementEvent.activity = activity;
@@ -674,7 +696,7 @@ package com.ithaca.visu.view.session.controls
 			changeOrderMovedUpActivityElementEvent.activityElement = movedUpActivityElement;
 			this.dispatchEvent(changeOrderMovedUpActivityElementEvent);	
 			
-			var movedDownActivityElement:ActivityElement = setOrder(statementList,activityElement, order+1);
+			var movedDownActivityElement:ActivityElement = setOrder(statementList, activityElement, order+1);
 			// update moved down activityElement
 			var changeOrderMovedDownActivityElementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
 			changeOrderMovedDownActivityElementEvent.activity = activity;
@@ -724,6 +746,20 @@ package com.ithaca.visu.view.session.controls
 			sort.fields = [new SortField("order_activity_element", true)];
 			list.sort = sort;
 			list.refresh();
+		}
+		
+		private function onClickButtonMoveUp(event:MouseEvent):void
+		{
+			var activityMoveUp:SessionEditEvent = new SessionEditEvent(SessionEditEvent.MOVE_UP_ACTIVITY);
+			activityMoveUp.activity = activity;
+			this.dispatchEvent(activityMoveUp);	
+		}
+
+		private function onClickButtonMoveDown(event:MouseEvent):void
+		{
+			var activityMoveDown:SessionEditEvent = new SessionEditEvent(SessionEditEvent.MOVE_DOWN_ACTIVITY);
+			activityMoveDown.activity = activity;
+			this.dispatchEvent(activityMoveDown);				
 		}
 	}
 }
