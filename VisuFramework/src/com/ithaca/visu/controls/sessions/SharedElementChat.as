@@ -71,6 +71,7 @@ package com.ithaca.visu.controls.sessions
 				titleDisplay.text = _info;
 				imageInfo.source = _sourceImageInfo;
 				nameUser.text = _nameSender;
+				nameUser.toolTip = _nameSender;
 				this.percentWidth = 100; 
 			}
 		}
