@@ -129,7 +129,7 @@ package com.ithaca.visu.view.session.controls
 		public var description:String="";
 		public var dateSession:Date= null;
 		private var _session:Session;
-		private var _activities:IList;
+		private var _activities:ArrayCollection;
 		private var _listUser:IList;
 		private var _profiles:Array;
 		
@@ -144,7 +144,7 @@ package com.ithaca.visu.view.session.controls
 		public function SessionDetail()
 		{
 			super();
-			_activities = new ArrayList();
+			_activities = new ArrayCollection();
 			_listUser = new ArrayList();
 		}
 		
@@ -373,12 +373,12 @@ package com.ithaca.visu.view.session.controls
 			_activities.dispatchEvent(event);*/
 		}
 		
-		public function get activities():IList
+		public function get activities():ArrayCollection
 		{
 			return _activities;
 		}
 
-		public function set activities(value:IList):void
+		public function set activities(value:ArrayCollection):void
 		{
 			if (_activities == value) return;
 			
