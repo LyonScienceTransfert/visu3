@@ -19,7 +19,7 @@ or by setting the following environment variable:
 -->
 
 
-<project name="Visu Client Builder" default="buil-and-deploy-all">
+<project name="Visu Client Builder" default="build-and-deploy-all">
  
 
 <loadproperties srcFile="build.properties"/>
