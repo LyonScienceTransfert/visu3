@@ -321,8 +321,8 @@
 			</s:filters>-->
 		</s:TextInput>
 <!-- MOVE UP/DOWN -->
-		<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12" top="10" right="105"/>
-		<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12" top="10" right="90" />
+		<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12" top="10" right="105" includeIn="normalEditable,openEditable"/>
+		<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12" top="10" right="90"  includeIn="normalEditable,openEditable"/>
 <!-- DURATION -->
 		<s:NumericStepper id="durationActivity" top="3" width="44" right="2" 
 						  maximum="200" value="10"
@@ -337,7 +337,7 @@
 		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="18"/>
 		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
 		<s:Label includeIn="normal,open" height="22" textAlign="justify" maxDisplayedLines="1"
-				 text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right.normal="130" top.open="10" left.open="120" right.open="130"/>
+				 text="Label" id="titleActivityLable" top="10" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right="90" top.open="10" left.open="120"/>
 	</s:Group>
 	
 	<s:Group top="30" bottom="10" includeIn="open,openEditable" id="content" width.open="100%" top.open="30" bottom.open="10" left.openEditable="5" left.open="5" top.openEditable="30" bottom.openEditable="10" width.openEditable="100%">
