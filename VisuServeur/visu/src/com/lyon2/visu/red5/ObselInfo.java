@@ -382,8 +382,8 @@ public class ObselInfo {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public void getObselByClosedSession(IConnection conn, Integer sessionId) {
+	@SuppressWarnings({ "unchecked", "null" })
+	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
 		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
 
 		IClient client = conn.getClient();
@@ -402,6 +402,36 @@ public class ObselInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
+		/// 777 => ALL_INFO
+		List<String> listTraceId = null;
+		if (statusLoggedUser == 777)
+		{
+			traceParam = "%-" + "void" + "%";
+			refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
+					+ "%";
+			osp = new ObselStringParams(traceParam, refParam);
+			log.warn("OSP = {}",osp.toString());
+			try {
+				listTraceId = (List<String>) app.getSqlMapClient().queryForList(
+						"obsels.getTracesBySessionId", osp);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des traceId" + e);
+			}
+
+			List<Obsel> listObselUser = null;
+			List<Obsel> listObselSession = new ArrayList<Obsel>();
+			for (String traceId : listTraceId) {
+				try {
+					listObselUser = app.getSqlMapClient().queryForList("obsels.getTrace", traceId);
+				} catch (Exception e) {
+					log.error("Probleme lors du listing obsel" + e);
+				}
+				listObselSession.addAll(listObselUser);
+				log.warn("listObselSession size = {}", listObselSession.size());
+			}
+			result = listObselSession;
+		}
+
 		// get session
 		log.warn("result = {}",result.size());
 		try {

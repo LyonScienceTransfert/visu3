@@ -72,6 +72,6 @@ package com.ithaca.visu.model.vo
 		public var url_element:String;
 		public var type_element:String;
 		public var type_mime:String;
-		
+		public var order_activity_element:int;	
 	}
 }

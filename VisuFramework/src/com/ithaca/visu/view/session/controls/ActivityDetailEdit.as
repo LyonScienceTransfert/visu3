@@ -73,8 +73,12 @@ package com.ithaca.visu.view.session.controls
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.collections.Sort;
+	import mx.collections.SortField;
 	import mx.controls.Alert;
+	import mx.controls.Image;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.NumericStepper;
@@ -111,15 +115,23 @@ package com.ithaca.visu.view.session.controls
 		
 		[SkinPart("true")]
 		public var titleActivityLable:Label;
+
+		[SkinPart("true")]
+		public var buttonUp:Image;
+
+		[SkinPart("true")]
+		public var buttonDown:Image;
+
 		
 		private var open:Boolean;
 		private var editabled:Boolean;
 		
 		private var _activity:Activity; 
 		private var activityChanged : Boolean;
+		private var statementChange : Boolean;
 		public var memo:String=""; 
 		private var memoActivityElement:ActivityElement;
-		private var statementList:IList;
+		private var statementList:ArrayCollection;
 		private var documentList:IList; 
 		private var keywordList:IList; 
 		
@@ -158,7 +170,10 @@ package com.ithaca.visu.view.session.controls
 			{
 				trace("add statementGroup");
 				if (statementList.length > 0) 
-					addStatements(statementList);
+				{
+					sortByOrder(statementList)
+					addStatements(statementList);					
+				}
 			}
 			
 			if (instance == documentGroup)
@@ -189,6 +204,19 @@ package com.ithaca.visu.view.session.controls
 				}
 			}
 			
+			if (instance == buttonUp)
+			{
+				buttonUp.addEventListener(MouseEvent.CLICK, onClickButtonMoveUp);
+				buttonUp.buttonMode = true;
+			}
+
+			if (instance == buttonDown)
+			{
+				buttonDown.addEventListener(MouseEvent.CLICK, onClickButtonMoveDown);
+				buttonDown.buttonMode = true;
+			}
+		
+			
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
@@ -205,18 +233,36 @@ package com.ithaca.visu.view.session.controls
 				parseActivityElements();
 				
 			}
+			if (statementChange)
+			{
+				statementChange = false;
+				
+				if (statementList.length > 0) 
+				{
+					statementGroup.removeAllElements();
+					
+					sortByOrder(statementList)
+					addStatements(statementList);					
+				}
+				
+			}
 		}
 		
 		protected function addStatements(list:IList):void
 		{
-			for each( var activityElement:ActivityElement in list)
+			var nbrActivityElement:int = list.length;
+			for( var nActivityElement:int = 0; nActivityElement < nbrActivityElement ; nActivityElement++ )
 			{
+				var activityElement:ActivityElement = list.getItemAt(nActivityElement) as ActivityElement;
+				activityElement.order_activity_element = nActivityElement;
 				var statementEdit:StatementEdit = new StatementEdit();
 				statementEdit.percentWidth = 100;
 				statementEdit.activityElement = activityElement;
 				statementEdit.setEditabled(this.editabled);
 				statementEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
 				statementEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
+				statementEdit.addEventListener(SessionEditEvent.MOVE_UP_ACTIVITY_ELEMENT, onMoveUpActivityElement);
+				statementEdit.addEventListener(SessionEditEvent.MOVE_DOWN_ACTIVITY_ELEMENT, onMoveDownActivityElement);
 				statementGroup.addElement(statementEdit);
 			}
 		}
@@ -329,6 +375,7 @@ package com.ithaca.visu.view.session.controls
 			stObj.data = value;
 			stObj.id_element = 0;
 			stObj.type_element =  ActivityElementType.STATEMENT;
+			stObj.order_activity_element = this.statementGroup.numElements;
 			var activityElement:ActivityElement = new ActivityElement(stObj);
 			statementList.addItem(activityElement);
 			// add activityElement in activity
@@ -344,6 +391,8 @@ package com.ithaca.visu.view.session.controls
 			statementEdit.activityElement = activityElement;
 			statementEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteStatementActivityElement);
 			statementEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateStatementActivityElement);
+			statementEdit.addEventListener(SessionEditEvent.MOVE_UP_ACTIVITY_ELEMENT, onMoveUpActivityElement);
+			statementEdit.addEventListener(SessionEditEvent.MOVE_DOWN_ACTIVITY_ELEMENT, onMoveDownActivityElement);
 			statementGroup.addElement(statementEdit);
 		}
 		// update statement
@@ -605,6 +654,112 @@ package com.ithaca.visu.view.session.controls
 			}else{
 				arrActivityElement.removeItemAt(indexAr);
 			}	
+		}
+// MOVE ACTIVITY ELEMENT
+		private function onMoveUpActivityElement(event:SessionEditEvent):void
+		{
+			var activityElement:ActivityElement = event.activityElement;
+			var order:int = activityElement.order_activity_element;
+			
+			if(order == 0) return; // do nothing
+			// TODO : hide arrow "up" when consigne on the top
+			
+			var movedDownActivityElement:ActivityElement = updateOrder(statementList, order-1,order);
+			// update moved down activityElement
+			var changeOrderMovedDownActivityElementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			changeOrderMovedDownActivityElementEvent.activity = activity;
+			changeOrderMovedDownActivityElementEvent.activityElement = movedDownActivityElement;
+			this.dispatchEvent(changeOrderMovedDownActivityElementEvent);	
+			
+			var movedUpActivityElement:ActivityElement = setOrder(statementList, activityElement, order-1);
+			// update moved down activityElement
+			var changeOrderMovedUpActivityElementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			changeOrderMovedUpActivityElementEvent.activity = activity;
+			changeOrderMovedUpActivityElementEvent.activityElement = movedUpActivityElement;
+			this.dispatchEvent(changeOrderMovedUpActivityElementEvent);	
+			
+			statementChange = true;
+			this.invalidateProperties();	
+		}
+		private function onMoveDownActivityElement(event:SessionEditEvent):void
+		{
+			var activityElement:ActivityElement = event.activityElement;
+			var order:int = activityElement.order_activity_element;
+			
+			if(order == statementGroup.numElements - 1) return; // do nothing
+			// TODO : hide arrow "down" when consigne on the bottom
+			
+			var movedUpActivityElement:ActivityElement = updateOrder(statementList, order+1,order);
+			// update moved down activityElement
+			var changeOrderMovedUpActivityElementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			changeOrderMovedUpActivityElementEvent.activity = activity;
+			changeOrderMovedUpActivityElementEvent.activityElement = movedUpActivityElement;
+			this.dispatchEvent(changeOrderMovedUpActivityElementEvent);	
+			
+			var movedDownActivityElement:ActivityElement = setOrder(statementList, activityElement, order+1);
+			// update moved down activityElement
+			var changeOrderMovedDownActivityElementEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT);
+			changeOrderMovedDownActivityElementEvent.activity = activity;
+			changeOrderMovedDownActivityElementEvent.activityElement = movedDownActivityElement;
+			this.dispatchEvent(changeOrderMovedDownActivityElementEvent);	
+			
+			statementChange = true;
+			this.invalidateProperties();
+		}
+		
+		private function updateOrder(list:ArrayCollection, orderOld:int,orderNew:int):ActivityElement
+		{
+			var nbrActivityElement:int = list.length;
+			for( var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
+			{	
+				var activityElement:ActivityElement = list.getItemAt(nActivityElement) as ActivityElement;
+				var order:int = activityElement.order_activity_element;
+				if(order == orderOld)
+				{
+					activityElement.order_activity_element = orderNew;
+					return activityElement;
+				}
+			}
+			return null;
+		}
+		
+		private function setOrder(list:ArrayCollection,value:ActivityElement, orderNew:int):ActivityElement
+		{
+			var nbrActivityElement:int = list.length;
+			for( var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
+			{	
+				var activityElement:ActivityElement = list.getItemAt(nActivityElement) as ActivityElement;
+				
+				if(activityElement.id_element == value.id_element)
+				{
+					activityElement.order_activity_element = orderNew;
+					return activityElement;
+				}
+			}
+			return null;
+		}
+// SORT by order
+		private function sortByOrder(list:ArrayCollection):void
+		{
+			var sort:Sort = new Sort();
+			// There is only one sort field, so use a null first parameter.
+			sort.fields = [new SortField("order_activity_element", true)];
+			list.sort = sort;
+			list.refresh();
+		}
+		
+		private function onClickButtonMoveUp(event:MouseEvent):void
+		{
+			var activityMoveUp:SessionEditEvent = new SessionEditEvent(SessionEditEvent.MOVE_UP_ACTIVITY);
+			activityMoveUp.activity = activity;
+			this.dispatchEvent(activityMoveUp);	
+		}
+
+		private function onClickButtonMoveDown(event:MouseEvent):void
+		{
+			var activityMoveDown:SessionEditEvent = new SessionEditEvent(SessionEditEvent.MOVE_DOWN_ACTIVITY);
+			activityMoveDown.activity = activity;
+			this.dispatchEvent(activityMoveDown);				
 		}
 	}
 }

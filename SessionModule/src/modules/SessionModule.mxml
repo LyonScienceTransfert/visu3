@@ -120,21 +120,26 @@
 			}
 			private function setActivityElementVO(activityElement:ActivityElement, activity:Activity):ActivityElementVO
 			{
-				var alm:ActivityElementVO = new ActivityElementVO();
-				alm.id_element = activityElement.id_element;
-				var idActivity:int;
-				if(activity == null)
+				if(activityElement != null)
 				{
-					idActivity = 0;
-				}else{
-					idActivity = activity.id_activity
+					var alm:ActivityElementVO = new ActivityElementVO();
+					alm.id_element = activityElement.id_element;
+					var idActivity:int;
+					if(activity == null)
+					{
+						idActivity = 0;
+					}else{
+						idActivity = activity.id_activity
+					}
+					alm.id_activity = idActivity;
+					alm.data = activityElement.data;
+					alm.url_element = activityElement.url_element;
+					alm.type_element = activityElement.type_element;
+					alm.type_mime = activityElement.type_mime;
+					alm.order_activity_element = activityElement.order_activity_element;		
+					return alm;
 				}
-				alm.id_activity = idActivity;
-				alm.data = activityElement.data;
-				alm.url_element = activityElement.url_element;
-				alm.type_element = activityElement.type_element;
-				alm.type_mime = activityElement.type_mime;
-				return alm;
+				return null;
 			}
 			//private function setActivityVO(activityElement:ActivityElement, 
 // SESSION

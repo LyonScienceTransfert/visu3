@@ -110,7 +110,7 @@ package com.lyon2.controls
         
         public var autoPlay:Boolean; 		
 		
-		private var _currentVolume:Number;
+		private var _currentVolume:Number = 1;
 		/* 
          * Status constants
          */

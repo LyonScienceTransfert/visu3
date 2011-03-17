@@ -72,6 +72,8 @@ package com.ithaca.visu.view.session.controls
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.collections.Sort;
+	import mx.collections.SortField;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	import mx.events.CollectionEvent;
@@ -96,11 +98,8 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var buttonExportSession:Button;
 		
-	/*	[SkinPart("true")] 
-		public var comboBoxActivity:ComboBox;*/
-		
 		private var editabled:Boolean;
-		private var _activities:IList;
+		private var _activities:ArrayCollection;
 		protected var activitiesChanged:Boolean;
 		
 		public function SessionPlanEdit()
@@ -158,37 +157,26 @@ package com.ithaca.visu.view.session.controls
 				{
 					activityGroup.removeAllElements();
 				}
-			//	keywordGroup.removeAllElements();
+				// remove listener for sort the order activity
+				_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+				sortByOrder(activities);
+				_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
 				
-				for each (var activity:Activity in _activities)
+				var nbrActivity:int =  _activities.length;
+				for (var nActivity:int = 0; nActivity < nbrActivity; nActivity++  )
 				{
+					var activity:Activity= _activities.getItemAt(nActivity) as Activity;
+					activity.ind = activityGroup.numElements;
+					
 					var activityDetailEdit:ActivityDetailEdit =  new ActivityDetailEdit();
 					activityDetailEdit.activity = activity;
 					activityDetailEdit.setEditabled(this.editabled);
 					activityDetailEdit.percentWidth = 100;
 					activityDetailEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity);
+					activityDetailEdit.addEventListener(SessionEditEvent.MOVE_UP_ACTIVITY, onMoveUpActivity);
+					activityDetailEdit.addEventListener(SessionEditEvent.MOVE_DOWN_ACTIVITY, onMoveDownActivity);
 					activityGroup.addElement( activityDetailEdit );
-					
-					/*for each( var el:ActivityElement in activity.getListActivityElement())
-					{
-						if (el.type_element == ActivityElementType.KEYWORD)
-						{
-							var keywordEdit:KeywordEdit = new KeywordEdit();
-							keywordEdit.activityElement = el;
-							keywordEdit.textKeyword = el.data;
-							keywordEdit.setEditabled(this.editabled);
-							keywordEdit.addEventListener(SessionEditEvent.PRE_DELETE_ACTIVITY_ELEMENT, onDeleteKeywordActivElement);
-							keywordEdit.addEventListener(SessionEditEvent.PRE_UPDATE_ACTIVITY_ELEMENT, onUpdateKeywordActivElement);
-							keywordGroup.addElement(keywordEdit);
-						}
-					}*/
 				}
-				// set dataprovider for combobox
-				/*if(_activities.length > 0)
-				{
-					comboBoxActivity.dataProvider = _activities;
-					comboBoxActivity.selectedIndex = 0;
-				}*/
 			}
 		}
 		
@@ -204,8 +192,8 @@ package com.ithaca.visu.view.session.controls
 		}
 		
 		[Bindable("updateActivities")] 
-		public function get activities():IList { return _activities; }
-		public function set activities(value:IList):void 
+		public function get activities():ArrayCollection { return _activities; }
+		public function set activities(value:ArrayCollection):void 
 		{
 			if (_activities == value) return;
 			
@@ -264,8 +252,13 @@ package com.ithaca.visu.view.session.controls
 			obj.duration = 12;
 			obj.title = "New activity";
 			var activity:Activity = new Activity(obj);
-			activity.ind = 0;
-			_activities.addItemAt(activity,0);
+			var index:int = 0;
+			if(activityGroup != null)
+			{
+				index = activityGroup.numElements;
+			}
+			activity.ind = index;
+			_activities.addItem(activity);
 			activitiesChanged = true;
 			invalidateProperties();
 			
@@ -330,6 +323,95 @@ package com.ithaca.visu.view.session.controls
 			{
 				Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
 			}	
-		}		
+		}
+// MOVE UP/DOWN ACTIVITY
+		private function onMoveUpActivity(event:SessionEditEvent):void
+		{
+			var activityMoveUp:Activity = event.activity;
+			var order:int = activityMoveUp.ind;
+			if(order == 0) { return; } // do nothing
+			// TODO : hide arrow "up" when consigne on the top
+			
+			var movedDownActivity:Activity = updateOrder(_activities, order-1,order);
+			// update moved down activity
+			var changeOrderMovedDownActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+			changeOrderMovedDownActivityEvent.activity = movedDownActivity;
+			this.dispatchEvent(changeOrderMovedDownActivityEvent);	
+			
+			var movedUpActivity:Activity = setOrder(_activities, activityMoveUp, order-1);
+			// update moved down activity
+			var changeOrderMovedUpActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+			changeOrderMovedUpActivityEvent.activity = movedUpActivity;
+			this.dispatchEvent(changeOrderMovedUpActivityEvent);	
+			
+			activitiesChanged = true;
+			this.invalidateProperties();	
+			
+		}
+		private function onMoveDownActivity(event:SessionEditEvent):void
+		{
+			var activityMoveDown:Activity = event.activity;
+			var order:int = activityMoveDown.ind;
+			
+			if(order == activityGroup.numElements - 1) return; // do nothing
+			// TODO : hide arrow "down" when consigne on the bottom
+			
+			var movedUpActivity:Activity = updateOrder(_activities, order+1,order);
+			// update moved down activity
+			var changeOrderMovedUpActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+			changeOrderMovedUpActivityEvent.activity = movedUpActivity;
+			this.dispatchEvent(changeOrderMovedUpActivityEvent);	
+			
+			var movedDownActivity:Activity = setOrder(_activities, activityMoveDown, order+1);
+			// update moved down activity
+			var changeOrderMovedDownActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+			changeOrderMovedDownActivityEvent.activity = movedDownActivity;
+			this.dispatchEvent(changeOrderMovedDownActivityEvent);	
+			
+			activitiesChanged = true;
+			this.invalidateProperties();
+		}
+		
+		private function updateOrder(list:ArrayCollection, orderOld:int,orderNew:int):Activity
+		{
+			var nbrActivity:int = list.length;
+			for( var nActivity:int = 0; nActivity < nbrActivity; nActivity++ )
+			{	
+				var activity:Activity = list.getItemAt(nActivity) as Activity;
+				var order:int = activity.ind;
+				if(order == orderOld)
+				{
+					activity.ind = orderNew;
+					return activity;
+				}
+			}
+			return null;
+		}
+		
+		private function setOrder(list:ArrayCollection,value:Activity, orderNew:int):Activity
+		{
+			var nbrActivity:int = list.length;
+			for( var nActivity:int = 0; nActivity < nbrActivity; nActivity++ )
+			{	
+				var activity:Activity = list.getItemAt(nActivity) as Activity;
+				
+				if(activity.id_activity == value.id_activity)
+				{
+					activity.ind = orderNew;
+					return activity;
+				}
+			}
+			return null;
+		}
+		
+		private function sortByOrder(list:ArrayCollection):void
+		{
+			var sort:Sort = new Sort();
+			// There is only one sort field, so use a null first parameter.
+			sort.fields = [new SortField("ind", true)];
+			list.sort = sort;
+			list.refresh();
+		}
+	
 	}
 }

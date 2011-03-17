@@ -315,26 +315,29 @@
 				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
 				  focusOut="titleActivity_focusOutHandler(event)" 
 				  change="titleActivity_changeHandler(event)"
-				  includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="150" top.openEditable="5" left.openEditable="120" right.openEditable="150">
+				  includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="155" top.openEditable="5" left.openEditable="120" right.openEditable="155">
 			<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 			</s:filters>-->
 		</s:TextInput>
+<!-- MOVE UP/DOWN -->
+		<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12" top="10" right="105" includeIn="normalEditable,openEditable"/>
+		<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12" top="10" right="90"  includeIn="normalEditable,openEditable"/>
 <!-- DURATION -->
 		<s:NumericStepper id="durationActivity" top="3" width="44" right="2" 
 						  maximum="200" value="10"
-						   change="durationActivity_changeHandler(event)" includeIn="normalEditable,openEditable"/>
+						   change="durationActivity_changeHandler(event)" includeIn="normalEditable,openEditable" height.openEditable="22" top.openEditable="5" right.openEditable="2" height.normalEditable="22" top.normalEditable="5" right.normalEditable="2"/>
 		<s:Label id="durationDisplay" right="50" top="10" text="durée" text.normal="durée :" text.normalEditable="durée :" text.open="durée :" text.openEditable="durée :"/>
 <!-- DELETE ACTIVITY -->
-		<mx:Button  id="buttonDeleteActivity" top="5" right="90" 
+		<mx:Button  id="buttonDeleteActivity" top="5" right="130" 
 					icon="{IconEnum.getIconByName('delete')}"
-					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="95">
+					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="120" top.openEditable="5" right.openEditable="120">
 			<mx:toolTip>Supprimer l'acitivité</mx:toolTip>
 		</mx:Button>
 		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="18"/>
 		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
 		<s:Label includeIn="normal,open" height="22" textAlign="justify" maxDisplayedLines="1"
-				 text="Label" id="titleActivityLable" top="10" right="100" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right.normal="100" top.open="10" left.open="120" right.open="100"/>
+				 text="Label" id="titleActivityLable" top="10" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right="90" top.open="10" left.open="120"/>
 	</s:Group>
 	
 	<s:Group top="30" bottom="10" includeIn="open,openEditable" id="content" width.open="100%" top.open="30" bottom.open="10" left.openEditable="5" left.open="5" top.openEditable="30" bottom.openEditable="10" width.openEditable="100%">

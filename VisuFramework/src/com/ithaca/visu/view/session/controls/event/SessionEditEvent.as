@@ -71,9 +71,9 @@ package com.ithaca.visu.view.session.controls.event
 	
 	public class SessionEditEvent extends Event
 	{
-		public static const DELETE_ACTIVITY:String="deleteActivity";
-		public static const UPDATE_ACTIVITY:String="updateActivity";
-		public static const ADD_ACTIVITY:String="addActivity";
+		public static const DELETE_ACTIVITY:String="deleteActivitySessionEdit";
+		public static const UPDATE_ACTIVITY:String="updateActivitySessionEdit";
+		public static const ADD_ACTIVITY:String="addActivitySessionEdit";
 		
 		public static const DELETE_ACTIVITY_ELEMENT:String="deleteActivityElement";
 		public static const PRE_DELETE_ACTIVITY_ELEMENT:String="preDeleteActivityElement";
@@ -89,6 +89,11 @@ package com.ithaca.visu.view.session.controls.event
 		public static const PRE_DELETE_SESSION_USER:String="preDeleteSessionUser";
 		public static const PRE_LOAD_USERS:String="preLoadUsers";
 		public static const LOAD_LIST_USERS:String="loadListUsers";
+		
+		public static const MOVE_UP_ACTIVITY_ELEMENT:String="moveUpActivityElement";
+		public static const MOVE_DOWN_ACTIVITY_ELEMENT:String="moveDownActivityElement";
+		public static const MOVE_UP_ACTIVITY:String="moveUpActivity";
+		public static const MOVE_DOWN_ACTIVITY:String="moveDownActivity";
 		
 		public var activity:Activity;
 		public var activityElement:ActivityElement;
