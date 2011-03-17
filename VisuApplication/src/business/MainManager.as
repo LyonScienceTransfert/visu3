@@ -1096,8 +1096,8 @@ public class MainManager
 		var listTimeStampedObsel:ArrayCollection = new ArrayCollection();
 		var listPathStampedObsel:ArrayCollection = new ArrayCollection();
 		var reversedListUserObselVO:Array = new Array();
-		var isFilterTypeVisuvciel:Boolean = Model.getInstance().checkServeurVisuVciel();
-		if(isFilterTypeVisuvciel){	
+		var isFilterTypeVisuvciel:Boolean = Model.getInstance().checkServeurVisu();
+		if(!isFilterTypeVisuvciel){	
 			var nbrObsel:int = listObselClosedSessionVO.length;
 			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
 			{
