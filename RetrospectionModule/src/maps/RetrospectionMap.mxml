@@ -11,16 +11,18 @@
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.documentarisation.events.RetroDocumentEvent;
 		import com.ithaca.traces.model.TraceModel;
 		import com.ithaca.visu.events.InitMapEvent;
 		import com.ithaca.visu.events.SalonRetroEvent;
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.events.TraceLineEvent;
 		import com.ithaca.visu.events.VisuModuleEvent;
-		import com.ithaca.documentarisation.events.RetroDocumentEvent;
 		import com.ithaca.visu.model.Model;
 		
 		import mx.events.FlexEvent;
+		
+		private var ALL_INFO:int = 777;
 		
 	]]></fx:Script>
 	
@@ -72,7 +74,7 @@
 <!-- CLOSED SESSION -->		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId]}" />
+				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId, ALL_INFO]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 <!-- OBSEL COMMENT -->
