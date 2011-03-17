@@ -201,7 +201,7 @@ package  com.ithaca.visu.model
 		
 		public function checkServeurVisu():Boolean
 		{
-			if (this.appName == "visu"  || this.appName == "visudev")
+			if (this.appName == "visu2"  || this.appName == "visudev")
 			{
 				return true;
 			}
