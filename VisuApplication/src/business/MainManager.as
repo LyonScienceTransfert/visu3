@@ -1095,47 +1095,54 @@ public class MainManager
 		var listUserObselVO:Array = new Array();
 		var listTimeStampedObsel:ArrayCollection = new ArrayCollection();
 		var listPathStampedObsel:ArrayCollection = new ArrayCollection();
-		var nbrObsel:int = listObselClosedSessionVO.length;
-		for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
-		{
-			var obselVO:ObselVO = listObselClosedSessionVO[nObsel];	
-			var typeObsel:String = obselVO.type;
-			if(typeObsel == TraceModel.RECORD_FILE_NAME)
-			{
-				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-				var subject:String = obsel.uid.toString();
-				var owner:String = obsel.props[TraceModel.UID];
-				if(subject == owner)	
-				{
-					listUserObselVO.push(obselVO);
-				}
-				// FIXME : checking if have the obsel with same path
-				/*if(!hasObselWithSamePathFile(obselVO))
-				{
-					listUserObselVO.push(obselVO);
-				}*/
-			}
-			// only chat messages will show
-			else if( typeObsel == TraceModel.SESSION_EXIT || typeObsel == TraceModel.SESSION_PAUSE || typeObsel == TraceModel.SESSION_START || typeObsel == TraceModel.SESSION_ENTER)
-			{
-				if(!hasObselWithTimeStamp(obselVO))
-				{		
-					listUserObselVO.push(obselVO);
-				}
-			}
-			else if( typeObsel == TraceModel.RECEIVE_CHAT_MESSAGE)
-			{
-				listUserObselVO.push(obselVO);
-			}
-		}
-		// reverse the elements of the array
 		var reversedListUserObselVO:Array = new Array();
+		var isFilterTypeVisuvciel:Boolean = Model.getInstance().checkServeurVisuVciel();
+		if(isFilterTypeVisuvciel){	
+			var nbrObsel:int = listObselClosedSessionVO.length;
+			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
+			{
+				var obselVO:ObselVO = listObselClosedSessionVO[nObsel];	
+				var typeObsel:String = obselVO.type;
+				if(typeObsel == TraceModel.RECORD_FILE_NAME)
+				{
+					var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+					var subject:String = obsel.uid.toString();
+					var owner:String = obsel.props[TraceModel.UID];
+					if(subject == owner)	
+					{
+						listUserObselVO.push(obselVO);
+					}
+					// FIXME : checking if have the obsel with same path
+					/*if(!hasObselWithSamePathFile(obselVO))
+					{
+						listUserObselVO.push(obselVO);
+					}*/
+				}
+				// only chat messages will show
+				else if( typeObsel == TraceModel.SESSION_EXIT || typeObsel == TraceModel.SESSION_PAUSE || typeObsel == TraceModel.SESSION_START || typeObsel == TraceModel.SESSION_ENTER)
+				{
+					if(!hasObselWithTimeStamp(obselVO))
+					{		
+						listUserObselVO.push(obselVO);
+					}
+				}
+				else if( typeObsel == TraceModel.RECEIVE_CHAT_MESSAGE)
+				{
+					listUserObselVO.push(obselVO);
+				}
+			}
+		}else
+		{
+			// get all obsels without reversing
+			reversedListUserObselVO = listObselClosedSessionVO;	
+		}
+		
+		// reverse the elements of the array
 		var nbrObselUserVO:int = listUserObselVO.length;
 		for(var nObselUserVO:int = 0; nObselUserVO < nbrObselUserVO; nObselUserVO++ )
 		{
 			var obselVO:ObselVO = listUserObselVO[nObselUserVO];
-			reversedListUserObselVO.push(obselVO);
-			
+			reversedListUserObselVO.push(obselVO);		
 		}
 		
 		// creation timeLine
