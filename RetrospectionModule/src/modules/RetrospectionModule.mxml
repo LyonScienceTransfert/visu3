@@ -593,7 +593,8 @@
 						var obsel:Obsel = Model.getInstance().getObselSessionInByPathStream(streamId);
 						if(obsel == null)
 						{
-							Alert.show("There is no obsel with path = "+streamId,"Message ....."); 
+							// message 
+							// Alert.show("There is no obsel with path = "+streamId,"Message ....."); 
 						}else
 						{
 							var timeBeginRFN:Number = obsel.begin;

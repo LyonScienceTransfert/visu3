@@ -41,8 +41,15 @@
 		FROM obsels
         ORDER BY trace
 	</select>
-
-
+	
+	<select id="getTracesBySessionId" cacheModel="cache" parameterClass="obselStringParam" resultClass="String" >
+	  <![CDATA[  
+	  	SELECT DISTINCT trace
+	  	FROM obsels 
+	  	WHERE rdf LIKE #refParam#	
+	  	AND (type_obsel = 'SessionStart' OR type_obsel = 'SessionEnter')
+	  ]]>	
+	</select>
 	
 	<select id="getTracesByUserId" cacheModel="cache" resultMap="obselResult" parameterClass="obselStringParam" >
 	  <![CDATA[  
