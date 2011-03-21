@@ -351,6 +351,24 @@
 				</mate:faultHandlers>
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionUserEvent.GET_LIST_SESSION_USER}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getListPresentUserInSession" arguments="{[event.sessionId]}" />				
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="loadListPresentUserInSession" 
+										arguments="{[currentEvent.data]}" />
+				</rtmp:resultHandlers>
+				
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
 		<mate:Injectors target="{SessionManager}">
 			<mate:PropertyInjector targetKey="model" source="{Model.getInstance()}" />
 		</mate:Injectors>
