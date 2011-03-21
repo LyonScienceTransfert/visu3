@@ -24,7 +24,7 @@ package  com.ithaca.documentarisation.events
 		static public const CHANGE_TIME_BEGIN_TIME_END : String = 'changeTimeBeginTimeEnd';
 		static public const UPDATE_TITLE_RETRO_DOCUMENT : String = 'updateTitleRetroDocument';
 		static public const LOAD_LIST_USERS : String = 'loadListUsers';
-		static public const LOADED_ALL_USERS : String = 'loadedAllUsers';
+		static public const LOADED_ALL_USERS : String = 'loadedAllUsersRetroDocument';
 		
 		static public const PLAY_RETRO_SEGMENT : String = 'playRetroSegment';
 		
