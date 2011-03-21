@@ -142,6 +142,7 @@ package  com.ithaca.visu.model
 		private var _selectedRadioButtonHomeModule:String = "";
 		private var _localeVersionGit:String;
 		private var _remoteVersionGit:String;
+		private var _dateCompiled:String;
 			
 		public function Model(access:Private)
 		{
@@ -231,6 +232,9 @@ package  com.ithaca.visu.model
 		
 		public function setLocalVersionGit(value:String):void{_localeVersionGit = value;}
 		public function getLocalVersionGit():String{return _localeVersionGit;}
+		
+		public function setDateCompiled(value:String):void{_dateCompiled = value;}
+		public function getDateCompiled():String{return _dateCompiled;}
 			
 		public function setCurrentSessionId(value:int):void
 		{
