@@ -64,6 +64,7 @@
 package com.ithaca.visu.view.session
 {
 	import com.ithaca.visu.controls.AdvancedTextInput;
+	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
@@ -357,6 +358,19 @@ package com.ithaca.visu.view.session
 				editable = true;
 			}
 			sessionDetail.setEditabled(editable);
+			// add posibility add user to the closed session only fot "visuvciel"
+			var canAddUserToClosedSession:Boolean = false;
+			if(Model.getInstance().checkServeurVisuVciel() && !session.isModel)
+			{
+				canAddUserToClosedSession = true;			
+			}
+			sessionDetail.setCanAddUserToClosedSession(canAddUserToClosedSession);
+			
+			// get list user was recording in session
+			var presentUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.GET_LIST_SESSION_USER);
+			presentUserEvent.sessionId = sessionDetail.session.id_session;
+			this.dispatchEvent(presentUserEvent);
+			
 			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
 			visuActivityEvent.sessionId = session.id_session;					
 			dispatchEvent(visuActivityEvent);
