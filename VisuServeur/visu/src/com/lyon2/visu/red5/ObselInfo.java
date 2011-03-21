@@ -381,8 +381,8 @@ public class ObselInfo {
 			sc.invoke("checkListSession", args);
 		}
 	}
-
-	@SuppressWarnings({ "unchecked", "null" })
+	
+	@SuppressWarnings("unchecked")
 	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
 		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
 
@@ -573,6 +573,46 @@ public class ObselInfo {
 		}	
 	}
 
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<User> getListPresentUserInSession(IConnection conn, Integer sessionId) {
+		log.warn("======== getListPresentUserInSession = {}",sessionId);
+
+		IClient client = conn.getClient();
+		User user = (User) client.getAttribute("user");
+		Integer userId = user.getId_user();
+
+		List<String> listTraceId = null;
+		String traceParam = "%-" + "void" + "%";
+		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
+				+ "%";
+		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+		log.warn("OSP = {}",osp.toString());
+		try {
+			listTraceId = (List<String>) app.getSqlMapClient().queryForList(
+					"obsels.getTracesBySessionId", osp);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des traceId" + e);
+		}
+		log.warn("listTraceId size = {}", listTraceId.size());
+		List<User> listRecordingUser= new ArrayList<User>();
+		for (String traceId : listTraceId) 
+		{
+			String []splitUserId = traceId.split("-");
+			String id = splitUserId[2];
+			userId = Integer.valueOf(id);
+			log.warn("id the user == {}",id);
+			try {
+				user = (User) app.getSqlMapClient().queryForObject("users.getUser",userId);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing de User" + e);
+			}
+			listRecordingUser.add(user);
+		}
+		return listRecordingUser;
+	}
+	
 	public void addListObsel(List<Obsel> listObsel) {
 		Integer nbrObsel = listObsel.size();
 		log.warn("== nbrObsel = {}", nbrObsel.toString());
