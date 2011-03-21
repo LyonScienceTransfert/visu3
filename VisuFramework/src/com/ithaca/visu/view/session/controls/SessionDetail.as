@@ -321,7 +321,6 @@ package com.ithaca.visu.view.session.controls
 				canAddUserChange = false;
 				
 				buttonAddUser.enabled = canAddUserToClosedSession;
-				// TODO : remove user from closed session
 			}
 
 		}
