@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionUserEvent;
 			import com.ithaca.visu.events.UserEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.model.Activity;
@@ -26,6 +27,7 @@
 			import com.ithaca.visu.view.session.controls.SessionDetail;
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 			
+			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
@@ -219,6 +221,15 @@
 				}
 			}
 			
+			private function setListPresentUserInSession(event:SessionUserEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var listUser:ArrayCollection = event.listUser;
+					this.sessionManagement.sessionDetail.listPresentUser = listUser;
+				}
+			}
+			
 		]]>
 	
 	</fx:Script>
@@ -232,6 +243,7 @@
 		<mate:Listener type="{SessionEvent.ADD_CLONED_SESSION}"  method="addClonedSession"/>
 		<mate:Listener type="{UserEvent.LOADED_ALL_USERS}"  method="onLoadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"  method="onShowUpdatedSession"/>
+		<mate:Listener type="{SessionUserEvent.LOAD_LIST_SESSION_USER}"  method="setListPresentUserInSession"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 
