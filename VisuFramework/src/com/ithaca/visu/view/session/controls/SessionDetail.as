@@ -72,6 +72,7 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.SessionUserVO;
 	import com.ithaca.visu.model.vo.UserVO;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.visualempathy.display.controls.datetime.DateTimePickerFR;
 	
@@ -131,12 +132,16 @@ package com.ithaca.visu.view.session.controls
 		private var _session:Session;
 		private var _activities:ArrayCollection;
 		private var _listUser:IList;
+		private var _listPresentUser:ArrayCollection;
 		private var _profiles:Array;
 		
 		private var sessionChanged:Boolean;
 		private var activitiesChanged:Boolean;
 		private var usersChanged:Boolean;
+		private var listPresentUserChange:Boolean;
 		private var editabled:Boolean;
+		private var canAddUserToClosedSession:Boolean = false;
+		private var canAddUserChange:Boolean;
 		
 		[SkinPart("true")]
 		public var descriptionSession:RichEditableText;
@@ -145,6 +150,7 @@ package com.ithaca.visu.view.session.controls
 		{
 			super();
 			_activities = new ArrayCollection();
+			_listPresentUser = new ArrayCollection();
 			_listUser = new ArrayList();
 		}
 		
@@ -197,6 +203,7 @@ package com.ithaca.visu.view.session.controls
 			if (instance == buttonAddUser)
 			{
 				buttonAddUser.addEventListener(MouseEvent.CLICK , onClickButtonAddUser);
+				
 			}
 		}
 		
@@ -298,11 +305,44 @@ package com.ithaca.visu.view.session.controls
 					var userEdit:UserEdit = new UserEdit();
 					userEdit.addEventListener(SessionEditEvent.PRE_DELETE_SESSION_USER, onPreDeleteUser);
 					userEdit.user = user;
-					userEdit.setEditabled(this.editabled);
+					var editabled:Boolean = this.editabled;
+					// only for instance "Visuvciel" when session closed
+					if(canAddUserToClosedSession && session.statusSession == SessionStatusEnum.SESSION_CLOSE)
+					{
+						editabled = canRemoveUser(user);
+					}
+					userEdit.setEditabled(editabled);
 					userEdit.percentWidth = 100;
 					groupUser.addElement(userEdit);			
 				}
 			}
+			if(canAddUserChange)
+			{
+				canAddUserChange = false;
+				
+				buttonAddUser.enabled = canAddUserToClosedSession;
+				// TODO : remove user from closed session
+			}
+
+		}
+		
+		// check if can remove user from recorded session
+		private function canRemoveUser(value:User):Boolean
+		{
+			if(this._listPresentUser.length != 0)
+			{
+				var nbrUser:uint = this._listPresentUser.length;
+				for(var nUser:uint = 0 ; nUser < nbrUser ; nUser++)
+				{
+					var user:User = this._listPresentUser.getItemAt(nUser) as User;
+					if(user.id_user == value.id_user)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			return false;
 		}
 		
 // SETTER/GETTER
@@ -373,6 +413,19 @@ package com.ithaca.visu.view.session.controls
 			_activities.dispatchEvent(event);*/
 		}
 		
+		
+		public function get listPresentUser():ArrayCollection
+		{
+			return _listPresentUser;
+		}
+
+		public function set listPresentUser(value:ArrayCollection):void
+		{	
+			_listPresentUser = value;
+			usersChanged = true;
+			invalidateProperties();
+		}
+		
 		public function get activities():ArrayCollection
 		{
 			return _activities;
@@ -422,6 +475,13 @@ package com.ithaca.visu.view.session.controls
 		{
 			editabled = value;
 			this.invalidateSkinState();
+		}
+		
+		public function setCanAddUserToClosedSession(value:Boolean):void
+		{
+			canAddUserToClosedSession = value;
+			canAddUserChange = true;
+			invalidateProperties();
 		}
 // THEME 		
 		public function updateTheme(value:String):void
@@ -482,13 +542,15 @@ package com.ithaca.visu.view.session.controls
 		}
 		private function onSelectUser(event:UserEvent):void
 		{
-			this._listUser.addItemAt(event.user,0);
+			var user:User = event.user;
+			
+			this._listUser.addItemAt(user,0);
 			this.usersChanged = true;
 			this.invalidateProperties();
 			// add user in to session
 			var sessionUserVO:SessionUserVO = new SessionUserVO();
 			sessionUserVO.id_session = _session.id_session;
-			sessionUserVO.id_user = event.user.id_user;
+			sessionUserVO.id_user = user.id_user;
 			sessionUserVO.mask = 0;
 			var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
 			sessionUserEvent.newSessionUser = sessionUserVO;
