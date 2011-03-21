@@ -546,7 +546,7 @@ or by setting the following environment variable:
 
 	      <mkdir dir="${webapp.dir}" />
 
-	      <copy todir="${webapp.dir}">
+	      <copy todir="${webapp.dir}" overwrite="true">
 	        <fileset dir="${project.server.path}/webapp" />
 	      </copy>
 	      
