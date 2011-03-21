@@ -22,6 +22,7 @@ package com.ithaca.utils
 		
 		private var _localVersionGit:String;
 		private var _remoteVersionGit:String;
+		private var _dateCompiled:String;
 		
 		public function VisuToolTip()
 		{
@@ -39,6 +40,7 @@ package com.ithaca.utils
 		
 		public function set localVersionGit(value:String):void{ this._localVersionGit = value;}
 		public function set remoteVersionGit(value:String):void{ this._remoteVersionGit = value;}
+		public function set dateCompliled(value:String):void{ this._dateCompiled = value;}
 		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
@@ -50,6 +52,10 @@ package com.ithaca.utils
 			if (instance == labelVersionRemote)
 			{
 				labelVersionRemote.text =  this._remoteVersionGit;
+			}
+			if (instance == labelLastCompilationVisuServeur)
+			{
+				labelLastCompilationVisuServeur.text =  this._dateCompiled;
 			}
 		}			
 	}

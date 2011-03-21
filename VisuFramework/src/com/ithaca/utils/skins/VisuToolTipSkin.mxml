@@ -79,12 +79,12 @@
 			<s:Label id="labelLastCompilationVisuServeur" paddingLeft="20">
 				<s:text>20-11-2001</s:text>
 			</s:Label>
-			<s:Label paddingLeft="5">
+			<!--<s:Label paddingLeft="5">
 				<s:text>{fxgt.gettext("le client")}</s:text>
 			</s:Label>
 			<s:Label id="labelLastCompilationVisuClient" paddingLeft="20">
 				<s:text>20-11-1998</s:text>
-			</s:Label>
+			</s:Label>-->
 		</s:VGroup>
 	</s:Group>
 </s:Skin>
