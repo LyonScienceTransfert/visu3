@@ -358,13 +358,17 @@ package com.ithaca.visu.view.session
 				editable = true;
 			}
 			sessionDetail.setEditabled(editable);
-			// add posibility add user to the closed session only fot "visuvciel"
+			// posibility add user to the closed session only fot "visuvciel"
 			var canAddUserToClosedSession:Boolean = false;
-			if(Model.getInstance().checkServeurVisuVciel() && !session.isModel)
+			var isVisuvciel:Boolean = Model.getInstance().checkServeurVisuVciel();
+			if(isVisuvciel)
 			{
-				canAddUserToClosedSession = true;			
+				if( !session.isModel)
+				{
+					canAddUserToClosedSession = true;			
+				}
+				sessionDetail.setCanAddUserToClosedSession(canAddUserToClosedSession);
 			}
-			sessionDetail.setCanAddUserToClosedSession(canAddUserToClosedSession);
 			
 			// get list user was recording in session
 			var presentUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.GET_LIST_SESSION_USER);
