@@ -79,6 +79,8 @@
 				// set info about local/remote versions
 				Model.getInstance().setLocalVersionGit(localversion.substr(0, NBR_LETTERS_FOR_ID_COMMITS_GIT));
 				Model.getInstance().setRemoteVersionGit(remoteversion.substr(0, NBR_LETTERS_FOR_ID_COMMITS_GIT));	
+
+				Model.getInstance().setDateCompiled(datecompiled);
 			}
 
 			protected function onCnangeLanguage(event:ApplicationMenuEvent):void
@@ -335,6 +337,9 @@
 	</s:Label>
 	<s:Label visible="false">
 		<fx:String source="../../.git/refs/remotes/origin/master" id="remoteversion" />
+	</s:Label>	
+	<s:Label visible="false">
+		<fx:String source="../../comp-info.properties" id="datecompiled" />
 	</s:Label>	
 	<s:RichText id="markerEdited" width="100%" color="0x323232" text="Waiting..." visible="false"/>	
 </core:VisuApplication>

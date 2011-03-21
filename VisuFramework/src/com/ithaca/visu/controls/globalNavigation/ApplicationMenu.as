@@ -297,6 +297,8 @@ package com.ithaca.visu.controls.globalNavigation
 			var visuToolTip:VisuToolTip = new VisuToolTip();
 			visuToolTip.localVersionGit = Model.getInstance().getLocalVersionGit();
 			visuToolTip.remoteVersionGit = Model.getInstance().getRemoteVersionGit();
+			visuToolTip.dateCompliled = Model.getInstance().getDateCompiled();
+			
 			event.toolTip = visuToolTip;
 		}
 		
