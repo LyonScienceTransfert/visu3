@@ -290,7 +290,7 @@
 			<s:Label includeIn="open" top="10" left="10">
 				<s:text>Titre du document : </s:text>
 			</s:Label>
-			<s:TextArea id="editableContent"  includeIn="open" maxHeight="24" text="rtr" top="27" left="30" right="10" bottom="56"
+			<s:TextArea id="editableContent"  includeIn="open" maxHeight="24" top="27" left="30" right="10" bottom="56"
 						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 			<s:Label includeIn="open" top="60" left="9" right="6">
 				<s:text>Le lien est :</s:text>
@@ -304,7 +304,10 @@
 				<s:label>OK</s:label>
 			</s:Button>			
 		</s:Group>
-		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
+		<s:HGroup width="100%" includeIn="open" horizontalAlign="center">
+			<s:Button  click="buttonDelete_clickHandler(event)">
+				<s:label>Supprimer</s:label>
+			</s:Button>
 			<s:Button includeIn="open" click="onClickButtonValider(event)">
 				<s:label>Valider</s:label>
 			</s:Button>
