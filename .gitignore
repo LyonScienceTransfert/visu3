@@ -6,4 +6,10 @@ VisuServeur/visu/bin/
 deploy/
 VisuServeur/visu/.settings/
 comp-info.properties
+VisuFramework/.project
+VisuApplication/.project
+VisuApplication/.settings/
+
+
+
 
