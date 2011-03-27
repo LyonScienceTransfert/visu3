@@ -63,7 +63,10 @@
 
 package com.ithaca.visu.view.user
 {
+	import mx.utils.StringUtil;
+	import mx.controls.Alert;
 	import com.ithaca.visu.events.UserEvent;
+	import com.ithaca.utils.StringUtils;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.RoleEnum;
@@ -87,9 +90,6 @@ package com.ithaca.visu.view.user
 		public var avatarUser:Image;
 		
 		[SkinPart("true")]
-		public var buttonEdit:Image;
-
-		[SkinPart("true")]
 		public var nomUser:Label;
 
 		[SkinPart("true")]
@@ -102,17 +102,12 @@ package com.ithaca.visu.view.user
 		public var messageUser:RichEditableText;
 
 		[SkinPart("true")]
-		public var buttonValider:Button;
+		public var statusIcon:Image;
 		
-		[SkinPart("true")]
-		public var buttonCancel:Button;
+		private var selected:Boolean = false;
 		
-		private var normal:Boolean = true;
-		private var _buttonEditShow:Boolean = false;
-		private var showButtonEditChanged:Boolean;
 		private var currentMouseCursor:String;
-		private var tempText:String;
-		private var _user:User;
+		public var _user:User;
 		private var _numberUser:int;
 		private var numberUserChange:Boolean;
 		
@@ -120,7 +115,14 @@ package com.ithaca.visu.view.user
 		{
 			super();
 			currentMouseCursor  = Mouse.cursor; 
+			addEventListener(MouseEvent.CLICK,onMouseClickListener);
 		}
+		
+		private function onMouseClickListener(event:MouseEvent):void {
+			selected = !selected;
+			invalidateSkinState();
+		}
+		
 		
 		public function get user():User {return _user; }
 		public function set user(value:User):void
@@ -163,38 +165,21 @@ package com.ithaca.visu.view.user
 				avatarUser.source = _user.avatar;
 			}
 			
-			if(instance == nomUser)
-			{
-				nomUser.text = _user.firstname.toUpperCase();
-			}
-			
 			if(instance == prenomUser)
 			{
-				prenomUser.text = _user.lastname.toUpperCase();
+				prenomUser.text = StringUtils.cap(_user.firstname);
 			}
+			
+			if(instance == nomUser)
+			{
+				nomUser.text = StringUtils.cap(_user.lastname);
+			}
+			
 			
 			if(instance == messageUser)
 			{
-				messageUser.editable = this.normal;
 				messageUser.text = this.user.message;
 				messageUser.toolTip = this.user.message;
-			}
-			
-			if(instance == buttonValider)
-			{
-				buttonValider.addEventListener(MouseEvent.CLICK, onClickButtonValider);
-			}
-			
-			if(instance == buttonCancel)
-			{
-				buttonCancel.addEventListener(MouseEvent.CLICK, onClickButtonCancel);
-			}
-			
-			if(instance == buttonEdit)
-			{
-				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.addEventListener(MouseEvent.CLICK, onButtonEditClick);
 			}
 			
 		}
@@ -203,36 +188,13 @@ package com.ithaca.visu.view.user
 		{
 			super.partRemoved(partName,instance);
 			
-			if(instance == buttonValider)
-			{
-				buttonValider.removeEventListener(MouseEvent.CLICK, onClickButtonValider);
-			}
-
-			if(instance == buttonCancel)
-			{
-				buttonCancel.removeEventListener(MouseEvent.CLICK, onClickButtonCancel);
-			}
-			
-			if(instance == buttonEdit)
-			{
-				buttonEdit.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
-				buttonEdit.removeEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.removeEventListener(MouseEvent.CLICK, onButtonEditClick);
-			}
 		}
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
-			if (showButtonEditChanged)
-			{
-				showButtonEditChanged = false;
-				
-				buttonEdit.visible = this._buttonEditShow;
-				
-			}
 			
-			if (numberUserChange)
+			if (numberUserChange && roleUser)
 			{
 				numberUserChange = false;
 				
@@ -245,59 +207,10 @@ package com.ithaca.visu.view.user
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled? "disabled" : normal? "normal" : "editable" ;
+			return selected? "selected" : "normal";
 		}
 		
-		public function setEditabled(value:Boolean):void
-		{
-			_buttonEditShow = value;
-			showButtonEditChanged = true;
-			this.invalidateProperties();
-		}
-		
-		private function onClickButtonValider(event:MouseEvent):void
-		{
-			setEditabled(true);
-			normal = true;
-			this.invalidateSkinState();
-			this.user.message = messageUser.text;
-			var updateMessageUser:UserEvent = new UserEvent(UserEvent.UPDATE_USER);
-			var userVO:UserVO = this.setUserVO(this.user);
-			updateMessageUser.userVO = this.setUserVO(this.user);
-			this.dispatchEvent(updateMessageUser);
-		}
-		
-		private function onClickButtonCancel(event:MouseEvent):void
-		{
-			setEditabled(true);
-			normal = true;
-			messageUser.text = tempText;
-			messageUser.toolTip = tempText;
-			this.invalidateSkinState();
-		}
-		
-		protected function onMouseOverButton(event:MouseEvent):void
-		{
-			Mouse.cursor = MouseCursor.BUTTON;	
-		}
-		
-		// set cursor mouse AROOW  
-		protected function onMouseOutButton(event:MouseEvent):void
-		{
-			Mouse.cursor = this.currentMouseCursor;
-		}
-		
-		protected function onButtonEditClick(event:MouseEvent):void
-		{
-			normal = false;
-			this.buttonEdit.visible = false;
-			this.messageUser.editable = true;
-			this.stage.focus = messageUser;
-			messageUser.selectAll();
-			tempText = messageUser.text;
-			this.invalidateSkinState();
-		}
-		
+			
 		private function setUserVO(value:User):UserVO
 		{
 			var userVO:UserVO = new UserVO();

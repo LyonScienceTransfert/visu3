@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx">
+
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+	</s:states>
+
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.ui.utils.IconEnum;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			
+			import com.ithaca.utils.StringUtils;
+			import com.ithaca.utils.VisuUtils;
+			
+
+		]]>
+	</fx:Script>
+
+
+	<s:Group width="100%">
+		<s:Rect width="100%" height="100%" radiusX="8" includeIn="selected">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xFFFFFF" />
+					<s:GradientEntry color="0xD8D8D8" />
+				</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:LinearGradientStroke rotation="90" weight="1">
+					<s:GradientEntry color="0x000000" alpha="0.5625" />
+					<s:GradientEntry color="0x000000" alpha="0.75" />
+				</s:LinearGradientStroke>
+			</s:stroke>
+		</s:Rect>
+		
+		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5"
+			paddingRight="5" paddingTop="5">
+			<s:HGroup includeIn="normal,selected" width="100%">
+				 <mx:Image source="{VisuUtils.getStatusImageSource(data.getStatus())}"  id="statusIcon" /> 
+				<s:Label text.normal="{StringUtils.cap(data.lastname)} {StringUtils.cap(data.firstname)} ({VisuUtils.getRoleLabel(data.getRole())})" 
+						 text.selected="{StringUtils.cap(data.lastname)} {StringUtils.cap(data.firstname)}" />
+			</s:HGroup>
+			<s:HGroup includeIn="selected" width="100%">
+				<mx:Image source="{data.avatar}" includeIn="selected" width="70"
+					height="70" />
+				<s:VGroup width="100%">
+					<s:Label text="{VisuUtils.getRoleLabel(data.getRole())}" includeIn="selected" width="100%"/>
+					<s:RichEditableText text="{data.message}" width="100%" maxChars="120" includeIn="selected" />
+				</s:VGroup>
+			</s:HGroup>
+		</s:VGroup>
+	</s:Group>
+</s:ItemRenderer>

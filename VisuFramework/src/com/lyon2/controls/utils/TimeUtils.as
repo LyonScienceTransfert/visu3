@@ -39,6 +39,27 @@ package com.lyon2.controls.utils
 			]; 
 		
 		
+		 public static function formatTimeString(numberOfSeconds:Number):String
+         {
+			if(numberOfSeconds) {
+			var str:String='';
+			var hours:int = numberOfSeconds/3600;
+			if(hours>0) {
+				str+=hours+':';
+			}
+			var min:int = (numberOfSeconds%3600)/60;
+			if(min<10) 
+				str+='0';
+			str+=min+':';
+			var sec:int = (numberOfSeconds%3600)%60;
+			if(sec<10) 
+				str+='0';
+			str+=sec;
+			return str;	
+			} else
+				return '00:00';
+          }
+          
 		public static function relativeTime (to:Date, ref:Date=null, short:Boolean=false):String
 		{
 			ref ||= new Date();
