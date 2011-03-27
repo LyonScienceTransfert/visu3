@@ -1,89 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx"
-		creationComplete="skin1_creationCompleteHandler(event)">
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.user.MessageUser")]
 	</fx:Metadata>
 	<!-- states -->
 	<s:states>
-		<s:State name="normal" />
-		<s:State name="editable" />
-	</s:states>		
+		<s:State name="selected" />
+		<s:State name="line" />
+	</s:states>
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import com.ithaca.utils.StringUtils;
 			
 			import spark.events.IndexChangeEvent;
-			
-			[Bindable]
-			private var fxgt:_FxGettext;
-
-			protected function skin1_creationCompleteHandler(event:FlexEvent):void
-			{
-				fxgt = FxGettext;
-			}
+		
 
 		]]>
 	</fx:Script>
-	<!-- SkinParts
-	name=prenomUser, type=spark.components.Label, required=false
-	name=messageUser, type=spark.components.RichEditableText, required=false
-	name=roleUser, type=spark.components.Label, required=false
-	name=nomUser, type=spark.components.Label, required=false
-	name=avatarUser, type=mx.controls.Image, required=false
-	-->
+
+
 	<s:Group width="100%">
-		<s:layout>
-			<s:VerticalLayout gap="4"/>
-		</s:layout>
-		<s:Group width="100%" height="120">
-			<s:Rect id="fill" radiusX="10"
-					left="2" right="2" top="1" bottom="1">
-				<s:fill>
-					<s:LinearGradient rotation="90">
-						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
-					</s:LinearGradient>
-				</s:fill>
-			</s:Rect>
-			<s:Rect id="border" radiusX="10"
-					left="2" right="2" top="0" bottom="0">
-				<s:stroke>
-					<s:LinearGradientStroke rotation="90" weight="1">
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.5625"/>
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.75" />
-					</s:LinearGradientStroke>
-				</s:stroke>
-			</s:Rect>
-			<!-- IMAGE -->
-			<mx:Image id="avatarUser" left="10" top="2" width="70" height="70" visible.editable="false"/>
-			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" visible="true" right="5"  width="18" right.normal="7" height.editable="16" bottom.normal="0" height.normal="32" top.editable="10"/>
-			<!-- TEXT -->   		
-			<s:Label  id="prenomUser" text="Petipolis" visible.editable="false"
-					  fontWeight="bold" top="6" left="100" right="100" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0" verticalAlign="middle" top.normal="15" left.normal="100" right.normal="10"/>
-			<s:Label text="Petipolis" left="100" right="10" top="30" paddingTop="0" paddingBottom="0" fontWeight="bold" id="nomUser" visible.editable="false"/>
-			<s:Label text="Label" left="100" right="10" top="55" id="roleUser" visible.editable="false"/>
-			<s:RichEditableText text="RichEditableText"
-								editable.normal="false" left="10" right="10" bottom="3" top="120" maxChars="120" verticalAlign="middle" textAlign="center" id="messageUser" top.editable="15" left.editable="10" bottom.editable="45" right.editable="10" top.normal="75" left.normal="10" bottom.normal="3" right.normal="25"/>
-			<s:Button includeIn="editable"  id="buttonValider" right="10" bottom="10">
-				<s:label>{fxgt.gettext("Valider")}</s:label>	
-			</s:Button>
-			<s:Button includeIn="editable"  id="buttonCancel" right="100" bottom="10">
-				<s:label>{fxgt.gettext("Annuler")}</s:label>	
-			</s:Button>
-			<!-- BOUTTONS -->
-		</s:Group>
+		<s:Rect width="100%" height="100%"  radiusX="8" includeIn="selected">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xFFFFFF" />
+					<s:GradientEntry color="0xD8D8D8" />
+				</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:LinearGradientStroke rotation="90" weight="1">
+					<s:GradientEntry color="0x000000" alpha="0.5625" />
+					<s:GradientEntry color="0x000000" alpha="0.75" />
+				</s:LinearGradientStroke>
+			</s:stroke>
+		</s:Rect>
+		<!--
+		<s:Rect width="100%" height="100%" radiusX="8" includeIn="selected">
+			<s:stroke>
+				<s:SolidColorStroke color="#C0C0C0" />
+			</s:stroke>
+			<s:fill>
+				<s:SolidColor color="#DCDCDC" />
+			</s:fill>
+		</s:Rect>
+		-->
+		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5"
+	paddingRight="5" paddingTop="5">
+				<s:HGroup includeIn="line,selected" width="100%">
+					<mx:Image source="@Embed('images/ballGrey.png')" id="statusIcon" />
+					<!--<mx:Image source="{Alert.show('the image is ' + getStatusImage())}" 
+						id="statusIcon" /> -->
+					<s:Label id="nomUser" />
+					<s:Label id="prenomUser" />
+				</s:HGroup>
+				<s:HGroup includeIn="selected" width="100%">
+					<mx:Image id="avatarUser" includeIn="selected" width="70"
+						height="70" />
+					<s:VGroup width="100%">
+						<s:Label id="roleUser" includeIn="selected" width="100%"
+							text="" />
+						<s:RichEditableText id="messageUser" width="100%"
+							text="RichEditableText" maxChars="120" includeIn="selected" />
+					</s:VGroup>
+				</s:HGroup>
+</s:VGroup>
 	</s:Group>
+	<!-- <s:Group width="100%" height="120"> <s:Rect id="fill" radiusX="10" 
+		left="2" right="2" top="1" bottom="1" includeIn="normal"> <s:fill> <s:LinearGradient 
+		rotation="90"> <s:GradientEntry color="0xFFFFFF" /> <s:GradientEntry color="0xD8D8D8" 
+		/> </s:LinearGradient> </s:fill> </s:Rect> <s:Rect id="border" radiusX="10" 
+		left="2" right="2" top="0" bottom="0" includeIn="normal"> <s:stroke> <s:LinearGradientStroke 
+		rotation="90" weight="1"> <s:GradientEntry color="0x000000" alpha="0.5625" 
+		/> <s:GradientEntry color="0x000000" alpha="0.75" /> </s:LinearGradientStroke> 
+		</s:stroke> </s:Rect> <mx:Image id="avatarUser" includeIn="normal" left="10" 
+		top="2" width="70" height="70" visible.editable="false" /> <mx:Image id="buttonEdit" 
+		source="{IconEnum.getIconByName('edit')}" visible="true" includeIn="normal" 
+		right="5" width="18" right.normal="7" height.editable="16" bottom.normal="0" 
+		height.normal="32" top.editable="10" /> <s:Label id="prenomUser" text="Petipolis" 
+		visible.editable="false" fontWeight="bold" top="6" left="100" right="100" 
+		paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0" verticalAlign="middle" 
+		top.normal="15" left.normal="100" right.normal="10"/> <s:Label text="Petipolis" 
+		left="100" right="10" top="30" paddingTop="0" paddingBottom="0" fontWeight="bold" 
+		id="nomUser" visible.editable="false"/> <s:Label text="Label" left="100" 
+		right="10" top="55" id="roleUser" visible.editable="false" includeIn="normal"/> 
+		<s:RichEditableText text="RichEditableText" editable.normal="false" left="10" 
+		right="10" bottom="3" top="120" maxChars="120" verticalAlign="middle" textAlign="center" 
+		id="messageUser" top.editable="15" left.editable="10" bottom.editable="45" 
+		right.editable="10" top.normal="75" left.normal="10" bottom.normal="3" right.normal="25" 
+		/> <s:Button includeIn="editable" id="buttonValider" right="10" bottom="10"> 
+		<s:label>{fxgt.gettext("Valider")}</s:label> </s:Button> <s:Button includeIn="editable" 
+		id="buttonCancel" right="100" bottom="10"> <s:label>{fxgt.gettext("Annuler")}</s:label> 
+		</s:Button> </s:Group> -->
 </s:Skin>
 

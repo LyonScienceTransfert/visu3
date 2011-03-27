@@ -69,5 +69,7 @@ package com.ithaca.visu.ui.utils
 		static public var RESPONSABLE : uint = 70135;
 		static public var ADMINISTRATEUR : uint = 170135;
 	}
+	
+	
 }
 

@@ -69,7 +69,9 @@ package   com.ithaca.visu.model
 
 	public class User extends UserVO
 	{
+		[Bindable]
 		public var status:int;
+		
 		private var _role:int;
 		public var id_client:String = "";
 		public var currentSessionId:int;
@@ -88,6 +90,10 @@ package   com.ithaca.visu.model
 		public function getId():int
 		{
 			return this.id_user;
+		}
+		
+		public function getRole():int{
+			return RightStatus.binaryToNumber(this.profil);
 		}
 		
 		public function get role():int{

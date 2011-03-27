@@ -187,6 +187,22 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/Attention_yellow.png")]
 		static private var attentionYellow:Class;
 		
+		[Bindable]
+		[Embed("images/ballGrey.png")]
+		static private var ballGrey:Class;
+		
+		[Bindable]
+		[Embed("images/ballBlue.png")]
+		static private var ballBlue:Class;
+		
+		[Bindable]
+		[Embed("images/ballRed.png")]
+		static private var ballRed:Class;
+		
+		[Bindable]
+		[Embed("images/ballGreen.png")]
+		static private var ballGreen:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -268,6 +284,7 @@ package com.ithaca.visu.ui.utils
 		public static function getIconByName(code:String):Class
 		{
 			var icon:Class;
+			
 			switch (code)
 			{
 				case "up" : 
@@ -302,6 +319,18 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "attention" : 
 					icon = attentionYellow;
+					break;
+				case "ballGreen" : 
+					icon = ballGreen;
+					break;
+				case "ballRed" : 
+					icon = ballRed;
+					break;
+				case "ballGrey" : 
+					icon = ballGrey;
+					break;
+				case "ballBlue" : 
+					icon = ballBlue;
 					break;
 				default :
 					break;				
