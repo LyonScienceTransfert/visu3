@@ -34,6 +34,9 @@ or by setting the following environment variable:
 	<!-- the value for the "debug" compiler option for compc and mxmlc -->
    	<property name="debug" value="true" />
 
+	<!-- True if the compiler should display warnings to the console -->
+   	<property name="warnings" value="false" />
+	
 	<!-- the value for the "debug" compiler option for compc and mxmlc -->
    	<property name="mxmlc.incremental" value="false" />
 	
@@ -119,11 +122,9 @@ or by setting the following environment variable:
 	<target name="compile-info">
 		<delete file="${file.props.versioninfo}"/>
 		<tstamp>
-			<format property="COMPILE_TIME" pattern="yyyy-MM-dd'T'HH.mm.ssZ" timezone="UTC"/>
+			<format property="COMPILE_TIME" pattern="dd MMMMM yyyy - HH:mm:ss (Z)" timezone="UTC"/>
 		</tstamp>
-		<propertyfile file="${file.props.versioninfo}">
-			<entry key="system.build.date" value="${COMPILE_TIME}"/>
-      		</propertyfile>
+		<echo message="${COMPILE_TIME}" file="${file.props.versioninfo}"/>
 	</target>  
 
 	<!-- Package the visu frameworks classes and resources, and put them 
@@ -148,7 +149,7 @@ or by setting the following environment variable:
 	  	  	debug="${debug}" 
 	        strict="true" 
 		    incremental="${mxmlc.incremental}"
-	   	    warnings="true"
+	   	    warnings="${warnings}"
 	        headless-server="true">
 
 	  	  		<include-file name="${file.props.versioninfo.filename}" path="${file.props.versioninfo}"/>
@@ -182,6 +183,10 @@ or by setting the following environment variable:
 	  		  	<include-file name="images/StopVer4.png" path="${framework.images}/StopVer4.png"/>
 	  		  	<include-file name="images/video.jpg" path="${framework.images}/video.jpg"/>
 	  		  	<include-file name="images/add.png" path="${framework.images}/add.png"/>
+	  		  	<include-file name="images/ballRed.png" path="${framework.images}/ballRed.png"/>
+	  		  	<include-file name="images/ballBlue.png" path="${framework.images}/ballBlue.png"/>
+	  		  	<include-file name="images/ballGreen.png" path="${framework.images}/ballGreen.png"/>
+	  		  	<include-file name="images/ballGrey.png" path="${framework.images}/ballGrey.png"/>
 
 	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
 	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
@@ -204,7 +209,7 @@ or by setting the following environment variable:
 	         strict="true" 
 	         optimize="true" 
 		     incremental="${mxmlc.incremental}"
-	   	     warnings="true"
+	   	     warnings="${warnings}"
 	         headless-server="true">
 
 	         <!-- define the source path -->
@@ -274,7 +279,7 @@ or by setting the following environment variable:
 		         optimize="true" 
 		         load-externs="${framework.linkreport}" 
 		      	 incremental="${mxmlc.incremental}"
-		         warnings="true"
+		         warnings="${warnings}"
 		         headless-server="true">
 		         
 		         <!-- will include all files with .css, .as, .mxml extensions -->
@@ -310,7 +315,7 @@ or by setting the following environment variable:
 		         optimize="true" 
 		      	incremental="${mxmlc.incremental}"
 		        load-externs="${framework.linkreport}" 
-		         warnings="true"
+		         warnings="${warnings}"
 		         headless-server="true">
 		         
 		         <!-- will include all files with .css, .as, .mxml extensions -->
@@ -347,7 +352,7 @@ or by setting the following environment variable:
 		      	incremental="${mxmlc.incremental}"
 		        load-externs="${framework.linkreport}" 
 		         optimize="true" 
-		         warnings="true"
+		         warnings="${warnings}"
 		         headless-server="true">
 		         
 		         <!-- define a source path (will include all files with .css, .as, .mxml extensions) -->
@@ -384,7 +389,7 @@ or by setting the following environment variable:
 		         load-externs="${framework.linkreport}" 
 		      	 incremental="${mxmlc.incremental}"
 		         optimize="true" 
-		         warnings="true"
+		         warnings="${warnings}"
 		         headless-server="true">
 		         
 		         <!-- will include all files with .css, .as, .mxml extensions -->
@@ -420,7 +425,7 @@ or by setting the following environment variable:
 		         strict="true" 
 		         optimize="true" 
 		      	incremental="${mxmlc.incremental}"
-		         warnings="true"
+		         warnings="${warnings}"
 		        load-externs="${framework.linkreport}" 
 		         headless-server="true">
 		         
@@ -464,8 +469,8 @@ or by setting the following environment variable:
 	         debug="${debug}"
 	         strict="true" 
 	         link-report="${framework.linkreport}" 
-	         warnings="true"
-			 incremental="${mxmlc.incremental}"
+	         warnings="${warnings}"
+		 incremental="${mxmlc.incremental}"
 	         headless-server="true">
 	         
 	         <!-- will include all files with .css, .as, .mxml extensions -->
