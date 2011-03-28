@@ -117,9 +117,7 @@
 		</s:TextInput>
 		<s:Label id="titleSegmentLabel" left="20" right="5" maxDisplayedLines="1" includeIn="normal,open" verticalCenter="0" left.normal="20" right.normal="140" verticalCenter.normal="0" left.open="20" right.open="140" verticalCenter.open="0"/>
 <!-- LABEL START/DURATION -->
-		<s:Label id="labelStartDuration" right="80" right.normal="65" right.normalEditable="95" right.openEditable="95" right.open="65" verticalCenter="2" textAlign="center" width="75">
-			<s:text>05:20 (135 s)</s:text>
-		</s:Label>
+		<s:Label id="labelStartDuration" right="80" right.normal="65" right.normalEditable="95" right.openEditable="95" right.open="65" verticalCenter="2" textAlign="center"/>
 <!-- DELETE SEGMENT -->
 		<mx:Button  id="buttonDeleteSegment" top="5" right="48" 
 					icon="{IconEnum.getIconByName('delete')}"
