@@ -93,6 +93,7 @@ import org.slf4j.Logger;
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.UserDate;
+import com.lyon2.visu.domain.model.Activity;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.SessionWithoutListUser;
@@ -199,7 +200,7 @@ public class SessionInfo
 		{
 			List<User> listUser = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",session.getId_session());
 			session.setListUser(listUser);
-			log.warn("Size of the users  = {}",listUser.size());	
+//			log.warn("Size of the users  = {}",listUser.size());	
 		}
         return listSession;
     }
@@ -304,7 +305,7 @@ public class SessionInfo
 		session.setStatus_session(sessionWithoutListUser.getStatus_session());
 		session.setTheme(sessionWithoutListUser.getTheme());
 		
-		log.warn("Size of the users  = {}",listUser.size());	
+//		log.warn("Size of the users  = {}",listUser.size());	
 		session.setListUser(listUser);
 		return session;
 	}
@@ -502,6 +503,40 @@ public class SessionInfo
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListObselStartSession", args);
 		} 	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Session deleteSession(IConnection conn, int sessionId, int userId) throws SQLException
+	{
+		log.warn("======== deleteSession ");
+		log.warn("sessionId = {}",sessionId);
+		// delete Users from this session
+		app.getSqlMapClient().delete("session_users.deleteSessionUserByIdSession",sessionId);
+		// delete Activities
+		log.warn("deleting all activities of session id = {}",sessionId);
+		
+		List<Activity> activities = app.getSqlMapClient().queryForList("activities.getSessionActivities", sessionId);
+		
+		for(Activity activity : activities)
+		{
+			try {
+				app.getSqlMapClient().delete("activities_elements.deleteByIdActivity", activity.getId_activity());
+				app.getSqlMapClient().delete("activities.delete", activity);				
+			} catch (Exception e) {
+				log.error("-- activities_elements.delete {}",e.getMessage());
+			}
+		}
+		
+		app.getSqlMapClient().delete("sessions.delete",sessionId);		
+		
+		// notification all users removed from session
+		Object[] args = { sessionId, userId };
+		// Get the Client Scope
+		IScope scope = conn.getScope();
+		// send message to all users on "Deck"
+		app.invokeOnScopeClients(scope, "checkDeleteSession", args);
+		
+		return null;
 	}
 	
 	private void addTraceId(List <String> listTraceId, Obsel value)
