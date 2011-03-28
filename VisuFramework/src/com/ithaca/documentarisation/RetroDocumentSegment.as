@@ -5,6 +5,9 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.model.Segment;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.visu.ui.utils.IconEnum;
+	import com.lyon2.controls.utils.TimeUtils;
+	import mx.logging.Log;
+    import mx.logging.ILogger;
 	
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
@@ -28,6 +31,9 @@ package com.ithaca.documentarisation
 		[SkinState("open")]
 		[SkinState("normalEditable")]
 		[SkinState("openEditable")]
+		
+			
+		private static var logger:ILogger = Log.getLogger("com.ithaca.documentarisation.RetroDocumentSegment");
 		
 		[SkinPart("true")]
 		public var titleSegmentLabel:Label;
@@ -139,11 +145,13 @@ package com.ithaca.documentarisation
 			super.partAdded(partName,instance);
 			if(instance == segmentVideo)
 			{
-				segmentVideo.deltaTime = this.DELTA_TIME;
-				segmentVideo.startDateSession = _startDateSession;
-				segmentVideo.durationSession = this._durationSession;
-				segmentVideo.timeBegin = _timeBegin;
-				segmentVideo.timeEnd = _timeEnd;			
+//				segmentVideo.deltaTime = this.DELTA_TIME;
+//				segmentVideo.startDateSession = _startDateSession;
+//				segmentVideo.durationSession = this._durationSession;
+				segmentVideo.setNewBeginEnd(
+					_timeBegin - startDateSession,
+					_timeEnd - startDateSession
+					);
 				segmentVideo.showDetail(emptySegmentVideo);
 				segmentVideo.setEditable(editabled);
 				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);	
@@ -223,11 +231,14 @@ package com.ithaca.documentarisation
 			if(segmentChange)
 			{
 				segmentChange = false;
-				this.segmentVideo.startDateSession = this._startDateSession;
-				this.segmentVideo.durationSession = this._durationSession;
-				this.segmentVideo.timeBegin = this._timeBegin;
-				this.segmentVideo.timeEnd = this._timeEnd;
-				this.segmentVideo.updateNumStepplers();
+
+				this.segmentVideo.setNewBeginEnd(
+					this._timeBegin - this._startDateSession,
+					this._timeEnd - this._startDateSession
+					);
+
+				//this.segmentVideo.timeBegin = this._timeBegin - this._startDateSession;
+				//this.segmentVideo.timeEnd = this._timeEnd - this._startDateSession;
 				
 				this.segmentComment.text = this._textComment;
 				this.segmentComment.selectAll();
@@ -361,7 +372,7 @@ package com.ithaca.documentarisation
 				{
 					Alert.yesLabel = fxgt.gettext("Oui");
 					Alert.noLabel = fxgt.gettext("Non");
-					Alert.show(fxgt.gettext("Voulez-vous ajouter l'élément au segment ?     Cette opération remplace le titre du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo ?"),
+					Alert.show(fxgt.gettext("Voulez-vous ajouter l'élément au segment ? Cette opération remplace le titre du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo ?"),
 						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, updateSegmentConformed); 
 				}else
 				{
@@ -389,6 +400,7 @@ package com.ithaca.documentarisation
 		private function updateSegment():void
 		{
 			var obsel:Obsel = dragSource.dataForFormat("obsel") as Obsel;
+			logger.debug("Updating the retrodoc segment [begin:{0},_startDateSession:{1}]", obsel.begin,_startDateSession);
 			
 			if(obsel.begin - _startDateSession > DELTA_TIME)
 			{
@@ -406,12 +418,21 @@ package com.ithaca.documentarisation
 			}
 			_textComment = _textComment + dragSource.dataForFormat("textObsel") as String;
 			// update segment
+			logger.debug("_segment.beginTimeVideo = _timeBegin");
 			_segment.beginTimeVideo = _timeBegin
+			logger.debug("_segment.beginTimeVideo = _timeBegin");
 			_segment.endTimeVideo = _timeEnd;
+			logger.debug("_segment.endTimeVideo = _timeEnd");
 			_segment.comment = _textComment;
+			logger.debug("_segment.comment = _textComment;");
 			_segment.link = "voidLink";
+			logger.debug("_segment.link = \"voidLink\"");
 			_segment.title = _title;
+			logger.debug("_segment.title = _title");
 			segmentChange = true;
+			
+			
+			
 			this.invalidateProperties();
 			var updateSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
 			this.dispatchEvent(updateSegmentEvent);
@@ -460,6 +481,7 @@ package com.ithaca.documentarisation
 		
 		private function segmentVideo_changeHandler(event:RetroDocumentEvent):void
 		{
+			logger.debug("The segment video has been changed [event.beginTime: {0},event.endTime: {1}]. Updating the retro document...", event.beginTime,event.endTime);
 			this._timeBegin = event.beginTime;
 			this._timeEnd = event.endTime;
 			_segment.beginTimeVideo = this._timeBegin;
@@ -469,8 +491,13 @@ package com.ithaca.documentarisation
 			
 			notifyUpdateSegment();
 		}
+		
 		private function getLabelStartDuration():String
 		{
+			return TimeUtils.formatTimeString(Math.floor((this._timeBegin - _startDateSession)/1000));
+			
+			// Ne pas afficher la durée finalement, car la place manque
+			/*
 			var timeStart:Number = this._timeBegin - _startDateSession;
 			var timeMin:int = timeStart/60000;
 			var timeMinString:String = timeMin.toString();
@@ -486,6 +513,7 @@ package com.ithaca.documentarisation
 			var durationString:String ="("+duration.toString() + " s)";
 			
 			return timeFrom + " "+durationString;
+			*/
 		}
 		
 		private function timeToString():String
@@ -520,6 +548,7 @@ package com.ithaca.documentarisation
 			buttonPlayStopVideo.enabled = true;
 			buttonPlayStopVideo.toolTip = "Joue la vidéo correspondant à ce segment";
 		}
+		
 		public function setLabelPlay(value:Boolean):void
 		{
 			if(value)
