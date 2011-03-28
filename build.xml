@@ -534,7 +534,7 @@ or by setting the following environment variable:
 
 		<target name="build-and-deploy-client" depends="build-client-all,deploy-client" description="Builds the client app and client modules, then copies the built files to the web app directory on the server"/>
 	
-		<target name="build-and-deploy-server" depends="build-server,deploy-server"/>
+		<target name="build-and-deploy-server" depends="build-server,deploy-server" description="Builds the server classes, jar them, and deploy the server jar + config to the server"/>
 	
 		<target name="deploy-client" description="Copies the client swf files to the web app directory on the server">
 	      <copy file="${app.deploy}/${visuclient.swf}.swf" todir="${webapp.dir}" />
