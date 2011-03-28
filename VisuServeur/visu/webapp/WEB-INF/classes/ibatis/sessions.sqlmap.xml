@@ -178,8 +178,8 @@
 			id_session = #id_session:INTEGER#
 	</update>
 
-	<delete id="delete" parameterClass="session">
-		DELETE FROM sessions WHERE id_session = #id_session:INTEGER#
+	<delete id="delete" parameterClass="int">
+		DELETE FROM sessions WHERE id_session = #value#
 	</delete>
 </sqlMap>
 
