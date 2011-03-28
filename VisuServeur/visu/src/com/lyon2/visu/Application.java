@@ -1556,7 +1556,7 @@ IScheduledJob {
 		return result;
 	}
 
-	private void invokeOnScopeClients(IScope scope, String method, Object[] arg) {
+	public void invokeOnScopeClients(IScope scope, String method, Object[] arg) {
 		Collection<Set<IConnection>> conCollection = scope.getConnections();
 		for (Set<IConnection> cons : conCollection) {
 			for (IConnection client_cnx : cons) {
