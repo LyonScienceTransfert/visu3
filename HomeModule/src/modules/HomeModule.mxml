@@ -920,7 +920,6 @@
 			
 					<s:List id="userList" width="100%" height="100%"
 						dataProvider="{usersList}"
-						borderWeight="0"
 						itemRenderer="com.ithaca.visu.view.user.renderer.UserRenderer"
 						/>
    
