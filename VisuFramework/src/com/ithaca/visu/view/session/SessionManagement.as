@@ -64,15 +64,19 @@
 package com.ithaca.visu.view.session
 {
 	import com.ithaca.visu.controls.AdvancedTextInput;
+	import com.ithaca.visu.controls.SessionHomeElement;
+	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.SessionFilterEnum;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.view.session.controls.SessionDetail;
 	import com.ithaca.visu.view.session.controls.SessionFilters;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
 	import com.lyon2.controls.utils.LemmeFormatter;
 	
@@ -80,7 +84,10 @@ package com.ithaca.visu.view.session
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.Sort;
+	import mx.collections.SortField;
 	import mx.controls.Alert;
+	import mx.core.IVisualElement;
 	import mx.events.FlexEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -302,6 +309,11 @@ package com.ithaca.visu.view.session
 			{
 				addSessionButton.addEventListener(MouseEvent.CLICK, addButton_clickHandler);
 			}
+			if (instance == sessionDetail)
+			{
+				sessionDetail.addEventListener(SessionEditEvent.PRE_DELETE_SESSION, preDeleteSession);
+				sessionDetail.loggedUser = this.loggedUser;
+			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
@@ -321,12 +333,24 @@ package com.ithaca.visu.view.session
 			if (instance == addSessionButton)
 			{
 				addSessionButton.removeEventListener(MouseEvent.CLICK, addButton_clickHandler);
-			}		
+			}	
+			if (instance == sessionDetail)
+			{
+				sessionDetail.removeEventListener(SessionEditEvent.PRE_DELETE_SESSION, preDeleteSession);
+			}
 		}
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
+			
+			if (filterChange)
+			{
+				filterChange = false;
+				
+				doFilterSession();
+				
+			}
 			
 		}
 		
@@ -375,6 +399,10 @@ package com.ithaca.visu.view.session
 				if(this.sessionsList.numElements > 0)
 				{
 					sessionView = this.sessionsList.getElementAt(0) as SessionViewSalonSession;
+				}else
+				{
+					sessionDetail.setViewEmpty(); // set empty = false
+					return;					
 				}
 			}else
 			{
@@ -428,8 +456,14 @@ package com.ithaca.visu.view.session
 		protected function onFilterViewHandler(event:SessionFilterEvent):void
 		{
 			log.debug("filter session is :  " + event.filterSession );
-			this.filterSession = event.filterSession;
-			sessionCollection.refresh();
+			this._filterSession = event.filterSession;
+			// set new filter to model
+			var filterChangeEvent:SessionFilterEvent = new SessionFilterEvent(SessionFilterEvent.CHANGE_FILTER);
+			filterChangeEvent.filterSession = this._filterSession;
+			this.dispatchEvent(filterChangeEvent);
+			
+			filterChange = true;
+			this.invalidateProperties();
 		}
 
 		protected function searchDisplay_changeHandler(event:TextOperationEvent):void
@@ -443,6 +477,62 @@ package com.ithaca.visu.view.session
 			sessionCollection.refresh();
 		}
 
+		private function doFilterSession():void
+		{
+			if(sessionsList != null)
+			{
+				sessionsList.removeAllElements();
+			}
+			var addSession:Boolean;
+			var sortFieldString:String = "date_session";
+			var listFilteredSession:ArrayCollection = new ArrayCollection();
+			var nbrSession:int = sessionCollection.length;
+			for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
+			{
+				var session:Session = sessionCollection.getItemAt(nSession) as Session;
+				addSession = false;
+				switch (this._filterSession)
+				{
+					case SessionFilterEnum.SESSION_MY :
+						if(session.id_user == Model.getInstance().getLoggedUser().id_user && !session.isModel)
+						{addSession = true;	};
+						break;
+					case SessionFilterEnum.SESSION_ALL :
+						addSession = true;
+						break;
+					case SessionFilterEnum.SESSION_WILL :
+						if(session.statusSession == SessionStatusEnum.SESSION_OPEN && !session.isModel){ addSession = true;};
+						break;						
+					case SessionFilterEnum.SESSION_WAS :
+						if(session.statusSession == SessionStatusEnum.SESSION_CLOSE && !session.isModel){ addSession = true;};
+						sortFieldString = "date_start_recording";
+						break;
+					case SessionFilterEnum.SESSION_PLAN :
+						if(session.isModel){ addSession = true; };
+						break;
+				}
+				if(addSession)
+				{
+					listFilteredSession.addItem(session);
+				}
+			}
+			// sort by date 
+			var sort:Sort = new Sort();
+			sort.fields = [new SortField(sortFieldString, true)];
+			listFilteredSession.sort = sort;
+			listFilteredSession.refresh();
+			
+			var nbrFilteredSession:uint = listFilteredSession.length;
+			for(var nFilteredSession:int = 0 ; nFilteredSession < nbrFilteredSession ; nFilteredSession++)
+			{
+				var filteredSession:Session = listFilteredSession.getItemAt(nFilteredSession) as Session;
+				var sessionView:SessionViewSalonSession = createSessionView(filteredSession);
+				sessionsList.addElement(sessionView);
+			}
+			
+			onSessionViewClick();
+		}
+
 		protected function userFilterFunction(item:Object):Boolean
 		{
 			// FIXME : ? will be with session en recording
@@ -450,7 +540,7 @@ package com.ithaca.visu.view.session
 			var session :Session = item as Session;
 			return true;
 		//	this.filterSession = session.statusSession;
-				switch (this.filterSession)
+				switch (this._filterSession)
 				{
 					case SessionFilterEnum.SESSION_PLAN:
 						if(session.isModel){
@@ -495,6 +585,79 @@ package com.ithaca.visu.view.session
 			{
 				return true;
 			}	
+		}
+// DELETE SESSION
+		private function preDeleteSession(event:SessionEditEvent):void
+		{
+			var deletingSession:Session = event.session;
+			removeSession(deletingSession.id_session);
+			this.filterChange = true;
+			this.invalidateProperties();
+			var deleteSession:SessionEvent = new SessionEvent(SessionEvent.DELETE_SESSION);
+			deleteSession.sessionId = deletingSession.id_session;
+			this.dispatchEvent(deleteSession);
+		}
+		
+		private function removeSession(value:int):Boolean
+		{
+			var indexSession:int= -1;
+			var nbrSession:uint = this.sessionCollection.length;
+			for(var nSession:uint = 0; nSession < nbrSession ; nSession++)
+			{
+				var session:Session = this.sessionCollection.getItemAt(nSession) as Session;
+				if(session.id_session == value)
+				{
+					indexSession = nSession;
+				}
+			}
+			if(indexSession > 1)
+			{
+				this.sessionCollection.removeItemAt(indexSession);
+				return true;
+			}
+			return false;
+		}
+		
+		public function removeSessionView(value:int, nameUserDeleteSession:String):void
+		{
+			if(removeSession(value))
+			{
+				var session:Session = sessionDetail.session;
+				if(session.id_session == value)
+				{
+					Alert.show('La Séance "'+session.theme+'" a été supprimer par '+ nameUserDeleteSession, "Information");
+					this.filterChange = true;
+					this.invalidateProperties();
+				}else
+				{
+					if(removeSessionViewFromGroup(value))
+					{
+						// TODO : massage that user remove session
+					}
+				}
+
+			}
+		}
+		
+		private function removeSessionViewFromGroup(value:int):Boolean
+		{
+			var indexSessionView:int = -1;
+			var nbrSessionView:int = sessionsList.numElements;
+			for(var nSessinView:int = 0; nSessinView < nbrSessionView; nSessinView++)
+			{
+				var iVisualElement:IVisualElement = sessionsList.getElementAt(nSessinView) as IVisualElement;
+				var sessionView:SessionViewSalonSession = iVisualElement as SessionViewSalonSession;
+				if(sessionView.session.id_session == value)
+				{
+					indexSessionView = nSessinView;
+				}
+			}
+			if(indexSessionView > -1)
+			{
+				sessionsList.removeElementAt(indexSessionView);
+				return true;
+			}
+			return false;
 		}
 	}
 }
