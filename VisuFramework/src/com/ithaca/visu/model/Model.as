@@ -143,7 +143,7 @@ package  com.ithaca.visu.model
 		private var _currentObselComment:ObselComment=null;
 		private var _selectedRadioButtonHomeModule:String = "";
 		private var _localeVersionGit:String;
-		private var _remoteVersionGit:String;
+		private var _remoteVersionGit:String;  
 		private var _dateCompiled:String;
 		private var _currentFilterSession:int = SessionFilterEnum.SESSION_MY;
 			
@@ -1268,6 +1268,34 @@ package  com.ithaca.visu.model
 				}					
 			}
 			return "";	
+		}
+		
+		/**
+		 * Delete session by owner the session or responsable
+		 */
+		public function deleteSession(value:int):Session
+		{	
+			var nbrDateSessionObject:Object = this.listDateSession.length;
+			for(var nDateSessionObject:uint = 0; nDateSessionObject < nbrDateSessionObject; nDateSessionObject++){
+				var obj:Object = this.listDateSession[nDateSessionObject];
+				var dateSession:String = obj.labelDate;				
+				var listSessionDate:ArrayCollection = obj.listSessionDate;
+				var session:Session = this.getSessionById(value, listSessionDate);
+				if(session != null)
+				{
+					var indexRemoveSession:int = listSessionDate.getItemIndex(session);
+					listSessionDate.removeItemAt(indexRemoveSession);
+					//checking if no more session by this date
+					var nbrSession:uint = listSessionDate.length;
+					if(nbrSession == 0)
+					{
+						var indexRemovedSessionDate:int = this.listDateSession.getItemIndex(obj);
+						this.listDateSession.removeItemAt(indexRemovedSessionDate);
+					}
+					return session;
+				}			
+			}
+			return null;	
 		}
 		
 		/**
