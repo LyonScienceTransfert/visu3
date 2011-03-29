@@ -100,12 +100,15 @@ package com.ithaca.visu.model
 		
 		public function setListActivityElement(arrActivityElement:Array):void
 		{
-			var nbrActivityElement:uint = arrActivityElement.length;
-			for(var nActivityElement:uint = 0; nActivityElement < nbrActivityElement;nActivityElement++ )
+			if(arrActivityElement != null)
 			{
-				var value:Object = arrActivityElement[nActivityElement];
-				var activityElement:ActivityElement = new ActivityElement(value);
-				this._listActivityElement.addItem(activityElement);
+				var nbrActivityElement:uint = arrActivityElement.length;
+				for(var nActivityElement:uint = 0; nActivityElement < nbrActivityElement;nActivityElement++ )
+				{
+					var value:Object = arrActivityElement[nActivityElement];
+					var activityElement:ActivityElement = new ActivityElement(value);
+					this._listActivityElement.addItem(activityElement);
+				}
 			}
 		}
 		
