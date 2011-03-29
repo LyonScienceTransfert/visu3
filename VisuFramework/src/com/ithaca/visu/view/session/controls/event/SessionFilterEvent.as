@@ -68,6 +68,7 @@ package com.ithaca.visu.view.session.controls.event
 	{
 		
 		public static const VIEW_SESSION:String="viewSession";
+		public static const CHANGE_FILTER:String="changeFilter";
 		
 		public var filterSession:int;
 		
