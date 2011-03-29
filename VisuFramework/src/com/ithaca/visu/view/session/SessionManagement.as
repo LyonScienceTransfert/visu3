@@ -112,8 +112,10 @@ package com.ithaca.visu.view.session
 		[SkinPart("true")]
 		public var sessionDetail:SessionDetail;
 		
-		[Bindable] 
-		public var filterSession:int = -1;
+		private var _filterSession:int = -1;
+		
+		private var filterChange:Boolean;
+		private var _loggedUser:User;
 		
 		public function SessionManagement()
 		{
@@ -124,6 +126,16 @@ package com.ithaca.visu.view.session
 		private var _sessions:Array = [];
 		
 		[Bindable("update")]
+		public function get filterSession():int {return this._filterSession;}
+		public function set filterSession(value:int):void
+		{
+			this._filterSession = value; 
+			// init selected filter
+			this.filter.setSelectedFilter(this._filterSession);
+			this.filterChange = true;
+			this.invalidateProperties();
+		};
+				
 		public function get sessions():Array {return _sessions;}
 		public function set sessions(value:Array):void
 		{
@@ -132,23 +144,42 @@ package com.ithaca.visu.view.session
 			{
 				_sessions = value;
 				sessionCollection = new ArrayCollection( _sessions);
+				
+				this.filterChange = true;
+				this.invalidateProperties();
+				
+				// init filter show my session
+				
+/*				this._filterSession = SessionFilterEnum.SESSION_MY;
+				this.filterChange = true;
+				this.invalidateProperties();*/
 				//sessionCollection.filterFunction = userFilterFunction;
-				var nbrSession:int = sessionCollection.length;
+				/*var nbrSession:int = sessionCollection.length;
 				for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
 				{
 					var session:Session = sessionCollection.getItemAt(nSession) as Session;
 					var sessionView:SessionViewSalonSession = createSessionView(session);
 					sessionsList.addElement(sessionView);
-				}
+				}*/
 			//	sessionsList.dataProvider = sessionCollection;
-				dispatchEvent( new Event("update") );
+			//	dispatchEvent( new Event("update") );
 				
 /*				var showFirstSession:IndexChangeEvent = new IndexChangeEvent(IndexChangeEvent.CHANGE);
 				showFirstSession.newIndex = 0;
 				sessionList_indexChangeHandler(showFirstSession);*/
-				onSessionViewClick();
+				//onSessionViewClick();
 			}
 		} 
+		
+		public function get loggedUser():User
+		{
+			return this._loggedUser;
+		}
+		
+		public function set loggedUser(value:User):void
+		{
+			this._loggedUser = value;
+		}
 		
 		private function createSessionView(session:Session):SessionViewSalonSession
 		{
