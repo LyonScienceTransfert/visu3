@@ -199,18 +199,6 @@
 		</mate:EventHandlers>
 		
 <!-- SESSION -->		
-		<!--<mate:EventHandlers type="{SessionEvent.UPDATE_SESSION}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="updateSession" arguments="{event.sessionVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onUpdateSession" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>-->
-		
 		<mate:EventHandlers type="{SessionEvent.UPDATE_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.updateSession" arguments="{[event.sessionWitOutListUserVO]}"/>     				
@@ -243,17 +231,22 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
-<!--		<mate:EventHandlers type="{SessionEvent.ADD_SESSION}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteSession}" method="addSession" arguments="{event.sessionWitOutListUserVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onAddSession" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
+		<mate:EventHandlers type="{SessionEvent.DELETE_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.deleteSession" arguments="{[event.sessionId, Model.getInstance().getLoggedUser().id_user]}"/>     				
+				<rtmp:resultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>-->
+										method="onDeleteSession" 
+										arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>			
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
 <!-- ACTIVITY -->
 		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="updateActivity" arguments="{event.activityVO}">
@@ -383,10 +376,6 @@
 			<mate:PropertyInjector source="{SessionManager}"
 								   targetKey="activities" sourceKey="listActivities"/>
 		</mate:Injectors>
-	<!--	<mate:Injectors target="{SessionDetail}">
-			<mate:PropertyInjector source="{SessionManager}"
-								   targetKey="users" sourceKey="listUser"/>
-		</mate:Injectors>-->
 		
 		<mate:Injectors targets="{[SessionDetail]}">
 			<mate:PropertyInjector source="{Model.getInstance()}"
