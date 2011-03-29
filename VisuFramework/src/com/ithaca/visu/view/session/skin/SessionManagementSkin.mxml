@@ -48,7 +48,7 @@
 		</s:layout>
 		<s:Group top="0" width="20%" height="100%">
 			<s:Panel top="40"
-					 width="100%" enabled.normal="false">	
+					 width="100%" enabled.normal="true">	
 				<s:title>{fxgt.gettext("Afficher")}</s:title>
 				<controls1:SessionFilters 
 					width="100%"					  
