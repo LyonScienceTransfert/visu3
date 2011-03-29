@@ -109,6 +109,7 @@
 			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
 			<rtmp:CallbackRegistrator action="checkListDates" target="{MainManager}" method="onCheckListDates"/>
 			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
+			<rtmp:CallbackRegistrator action="checkDeleteSession" target="{MainManager}" method="onCheckDeleteSession"/>
 			<rtmp:CallbackRegistrator action="checkListActiveObsel" target="{MainManager}" method="onCheckListActiveObsel"/>
 			<rtmp:CallbackRegistrator action="checkListObselStartSession" target="{MainManager}" method="onCheckListObselStartSession"/>
 			<rtmp:CallbackRegistrator action="checkListUserObsel" target="{MainManager}" method="onCheckListUserObsel"/>
