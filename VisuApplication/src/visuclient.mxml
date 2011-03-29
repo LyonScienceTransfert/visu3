@@ -12,8 +12,7 @@
 	updateComplete="visuapplication1_updateCompleteHandler(event)" xmlns:vo="com.ithaca.visu.model.vo.*"
 	>
 	
-
-
+	
 	
 	
 	<fx:Declarations>
@@ -21,7 +20,8 @@
 		<mate:Listener type="{VisuModuleEvent.LOAD_LIST_MODULES}"  method="userLoggedIN"/>
 		<mate:Listener type="{SessionEvent.JOIN_SESSION}"  method="joinSession"/>
 		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
-		<mate:Listener type="{SessionEvent.CANCEL_SESSION}"  method="cancelSession"/>
+		<mate:Listener type="{SessionEvent.GO_HOME_MODULE}"  method="goHome"/>
+		<mate:Listener type="{SessionEvent.GO_RETROSPECTION_MODULE}"  method="goRetrospection"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
 	
