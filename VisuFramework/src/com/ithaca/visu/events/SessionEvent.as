@@ -27,11 +27,13 @@ public class SessionEvent extends Event
 	static public const ADD_CLONED_ACTIVITY : String = 'addClonedActivity';
 	static public const ADD_ACTIVITY_ELEMENT : String = 'addActivityElement';
 	static public const ADD_CLONED_ACTIVITY_ELEMENT : String = 'addClonedActivityElement';
+	static public const DELETE_SESSION : String = 'deleteSession';
 	static public const DELETE_ACTIVITY : String = 'deleteActivity';
 	static public const DELETE_ACTIVITY_ELEMENT : String = 'deleteActivityElement';
 	static public const UPDATE_LIST_SESSION : String = 'updateListSession';
 	static public const UPDATE_LIST_USER : String = 'updateListUser';
 	static public const UPDATE_LIST_VIEW_TRACELINE : String = 'updateListViewTraceline';
+	static public const UPDATE_DELETED_SESSION : String = 'updateDeletedSession';
 	static public const UPDATE_SESSION : String = 'updateSession';
 	static public const UPDATE_ACTIVITY : String = 'updateActivity';
 	static public const UPDATE_ACTIVITY_ELEMENT : String = 'updateActivityElement';
@@ -56,6 +58,8 @@ public class SessionEvent extends Event
 	static public const GET_LIST_CLOSED_SESSION_ALL : String = 'getListClosedSessionAll';
 	static public const GET_LIST_OBSEL_CLOSED_SESSION : String = 'getListObselClosedSession';
 	static public const LOAD_LIST_USERS_PLATEFORME : String = 'loadListUsersPlateforme';
+	static public const GO_RETROSPECTION_MODULE : String = 'goRetrospectionModule';
+	static public const GO_HOME_MODULE : String = 'goHomeModule';
 
 	// properties
 	public var userId : int;
