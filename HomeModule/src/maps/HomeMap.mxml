@@ -107,6 +107,19 @@
 				</mate:faultHandlers>
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
+		
+<!-- SESSIONS -->
+		<mate:EventHandlers type="{SessionEvent.CANCEL_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.deleteSession" arguments="{[event.sessionId, Model.getInstance().getLoggedUser().id_user]}"/>     						
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{HomeManager}" 
+										method="onError" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
     </fx:Declarations>
 
 </mate:LocalEventMap>
