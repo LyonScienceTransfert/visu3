@@ -74,6 +74,8 @@ package  com.ithaca.visu.model
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.visu.ui.utils.SessionFilterEnum;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	
 	import flash.net.NetConnection;
 	
@@ -143,6 +145,7 @@ package  com.ithaca.visu.model
 		private var _localeVersionGit:String;
 		private var _remoteVersionGit:String;
 		private var _dateCompiled:String;
+		private var _currentFilterSession:int = SessionFilterEnum.SESSION_MY;
 			
 		public function Model(access:Private)
 		{
@@ -235,6 +238,9 @@ package  com.ithaca.visu.model
 		
 		public function setDateCompiled(value:String):void{_dateCompiled = value;}
 		public function getDateCompiled():String{return _dateCompiled;}
+		
+		public function setCurrentFilterSession(value:int):void{_currentFilterSession = value;}
+		public function getCurrentFilterSession():int{return _currentFilterSession;}
 			
 		public function setCurrentSessionId(value:int):void
 		{
