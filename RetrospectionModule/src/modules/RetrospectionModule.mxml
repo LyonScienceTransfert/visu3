@@ -95,6 +95,18 @@
 				
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
 				this.dispatchEvent(initMapEvent); 
+				
+				
+				clearTraceLines();
+				
+				var session:Session = param as Session;
+				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
+				getListObselEvent.sessionId = session.id_session;
+				// set current sessionId
+				this.currentSessionId = session.id_session;
+				// enable button add bilan
+				addRetroDocument.enabled = true;
+				this.dispatchEvent(getListObselEvent);
 			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
@@ -1118,7 +1130,7 @@
 				var createurUser:User = Model.getInstance().getLoggedUser();
 				retroDocumentVO.ownerId = createurUser.id_user;
 				retroDocumentVO.sessionId = this.currentSessionId;
-				retroDocumentVO.title = "new bilan here";
+				retroDocumentVO.title = "le nouveau bilan ici";
 
 				var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
 				var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
@@ -1388,6 +1400,20 @@
 				actionVideoPlayer.timePlayer = this.pickCheryClick;
 				this.dispatchEvent(actionVideoPlayer);
 			}
+			
+			private function onUpdateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var sessionId:int = event.sessionId;
+					// enabled button "salon synchrone
+					if(Model.getInstance().getCurrentSession() != null && Model.getInstance().getCurrentSession().id_session == sessionId)
+					{
+						Model.getInstance().setCurrentSession(null);
+						Model.getInstance().setEnabledButtonSalonSynchrone(false);
+					}
+				}
+			}
 
 		]]>
 		
@@ -1407,12 +1433,13 @@
 		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="playRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT}"  method="updateTitleRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 	</fx:Declarations>
 <mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
 <!-- SESSIONS -->
-			<mx:VDividedBox width="30%" height="100%" maxWidth="330">
+			<mx:VDividedBox width="30%" height="100%" maxWidth="330" includeIn="vciel">
 				<s:Panel width="100%" height="50%">
 					<s:title>{fxgt.gettext("Mes séances")}</s:title>
 					<s:Group width="100%" height="100%" top="5">
@@ -1430,7 +1457,7 @@
 						</s:Group>
 					</s:Group>
 				</s:Panel>
-				<s:Panel width="100%" height="50%" includeIn="vciel">
+				<s:Panel width="100%" height="50%">
 					<s:title>{fxgt.gettext("Séances partagées (séances fermées uniquement)")}</s:title>
 					<s:Group width="100%" height="100%" top="5">
 						<s:layout >
