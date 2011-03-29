@@ -27,6 +27,19 @@
 	
 		<vo:ProfileDescriptionVO />
 		
+		 <mx:TraceTarget level="0" 
+            includeDate="true" 
+            includeTime="true" 
+            includeCategory="true" 
+            includeLevel="true">
+            <mx:filters>
+                <fx:Array>
+                    <fx:String>*</fx:String>
+                </fx:Array>
+            </mx:filters>
+        </mx:TraceTarget>
+		
+		
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[

@@ -22,6 +22,7 @@ import com.ithaca.visu.model.vo.UserVO;
 import com.ithaca.visu.ui.utils.ColorEnum;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
+import com.ithaca.visu.ui.utils.ConnectionStatus;
 
 import flash.events.Event;
 import flash.events.IEventDispatcher;
@@ -61,7 +62,7 @@ public class MainManager
 	[Bindable]
 	public var netConnection:NetConnection;
 
-	private var logger : ILogger = Log.getLogger('MainManager');
+	private var logger : ILogger = Log.getLogger('business.MainManager');
 
 	private var dispatcher:IEventDispatcher;
 	
@@ -85,7 +86,7 @@ public class MainManager
 	public function onSetLoggedUser(user:UserVO, listModules:Array, listSessionToday:Array, profiles:Array):void
 	{
 
-		logger.info('onLogin [' + user + ']');
+		
 		if (user == null)
 		{
 			// TODO MESSAGE 
@@ -93,6 +94,8 @@ public class MainManager
 		}
 		// set logged user to the model
 		Model.getInstance().setLoggedUser(user);
+		logger.info('Logged user: {0} {1} (id={2})]', user.lastname, user.firstname, user.id_user);
+		Model.getInstance().updateUserStatus(user.id_user, ConnectionStatus.CONNECTED);
 		
 		Model.getInstance().profiles = profiles;
 		
@@ -100,6 +103,8 @@ public class MainManager
 		event.listModules = listModules;
 		dispatcher.dispatchEvent(event);
 	}
+	
+	
 
 	/**
  	 * new user connected to the DECK
@@ -110,6 +115,8 @@ public class MainManager
 	{
 		// add connected user to the list connected users end to the list swap users
 		var userVO:UserVO = arg as UserVO;
+		logger.info("The user {0} {1} (id={2}) has connected.", userVO.lastname, userVO.firstname,userVO.id_user);
+		
 		Model.getInstance().addConnectedUsers(userVO);
 		
 		// update list user
@@ -128,6 +135,17 @@ public class MainManager
 	public function onOutDeck(arg : Object) : void
 	{
 		var userVO:UserVO = arg as UserVO;
+		
+		var connectedUser:User = Model.getInstance().getLoggedUser();
+		logger.debug("Logged user: {0} {1} (id={2})", userVO.lastname, userVO.firstname,userVO.id_user);
+				
+		if(userVO==null)
+			logger.warn("A user has left that is null");
+		else {
+			logger.info("The user {0} {1} (id={2}) has disconnected.", userVO.lastname, userVO.firstname,userVO.id_user);
+			Model.getInstance().updateUserStatus(userVO.id_user, ConnectionStatus.DISCONNECTED);
+		} 
+		
 		// remove stream from TutoratModule
 		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);	
 		oldUserOutSession.userId = userVO.id_user;
@@ -280,6 +298,7 @@ public class MainManager
 	
 	public function onCheckRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array, editabled:Boolean):void
 	{
+		logger.info("onCheckRetroDocument(retroDocumentVO:{0}, listInvitees:{1}, editabled:{2})", retroDocumentVO, listInvitees, editabled);
 		var retroDocument:RetroDocument = new RetroDocument();
 		retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
 		retroDocument.sessionId = retroDocumentVO.sessionId;

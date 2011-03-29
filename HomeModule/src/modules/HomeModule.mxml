@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
-						xmlns:s="library://ns.adobe.com/flex/spark" 
-						xmlns:mx="library://ns.adobe.com/flex/mx" 
-						xmlns:modules="com.ithaca.visu.modules.*" 
-						xmlns:maps="maps.*"
-						xmlns:mate="http://mate.asfusion.com/"
-						xmlns:controls="com.ithaca.visu.controls.*"
-						configure="configureHandler(event)"
-						creationComplete="creationCompleteHandler(event)"
-						top="15" bottom="5" left="5" right="5" 
-						 height="100%">
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:modules="com.ithaca.visu.modules.*" xmlns:maps="maps.*"
+	xmlns:mate="http://mate.asfusion.com/" xmlns:controls="com.ithaca.visu.controls.*"
+	configure="configureHandler(event)" creationComplete="creationCompleteHandler(event)"
+	top="15" bottom="5" left="5" right="5" height="100%">
 	<fx:Declarations>
 
-		<maps:HomeMap id="homeMap" dispatcher="{this}"/>
-		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"  method="updateSessionView"/>
-		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"  method="updateView"/>
-		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLanguageNavigateurDay"/>
-		<mate:Listener type="{SessionEvent.SHOW_LIST_DATE_SESSION}"  method="showDateSession"/>
-		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"  method="showSession"/>
-		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"  method="onLoadedAllUsers"/>
-		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		<maps:HomeMap id="homeMap" dispatcher="{this}" />
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"
+			method="updateSessionView" />
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"
+			method="updateView" />
+		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"
+			method="updateLanguageNavigateurDay" />
+		<mate:Listener type="{SessionEvent.SHOW_LIST_DATE_SESSION}"
+			method="showDateSession" />
+		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"
+			method="showSession" />
+			
+		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"
+			method="onLoadedAllUsers" />
+		<mx:ArrayCollection id="usersList" filterFunction="keepUser"/>
+
 	</fx:Declarations>
+
+
+	
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.controls.SessionHomeElement;
@@ -39,20 +45,28 @@
 			import com.ithaca.visu.model.vo.UserVO;
 			import com.ithaca.visu.renderer.FluxActivityRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.RightStatus;
 			import com.ithaca.visu.view.user.MessageUser;
+			import com.ithaca.utils.VisuUtils;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+
 			import mx.controls.Alert;
 			import mx.core.IVisualElement;
 			import mx.events.CloseEvent;
+
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+
 			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			
 			import spark.events.IndexChangeEvent;
+			
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -89,7 +103,7 @@
 					// add mesage Welcome
 					var namePlateforme:String = Model.getInstance().getNamePlateforme();
 					var user:User = Model.getInstance().getLoggedUser();
-					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenue sur ")+namePlateforme+"...",new Date());		
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenue sur ")+namePlateforme,new Date());		
 					// add flux activity
 					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext(" a rejoint ")+namePlateforme+".",new Date());
 					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
@@ -538,14 +552,12 @@
 				Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(selectedItem);
 				var listSessionDate:ArrayCollection = selectedItem.listSessionDate;			
 				if(listSessionDate == null){
-					tx.text = "calling";
 					// set list session from BD
 					var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
 					sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
 					sessionEventLoad.sessionDate = selectedItem.labelDate;
 					dispatchEvent(sessionEventLoad);				
 				}else{
-					tx.text = "local";
 					// update dataProvider SessionView 
 					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 					sessionEvent.sessionDate = selectedItem.labelDate;
@@ -562,7 +574,7 @@
 				var date:Date = item.fullDate as Date;
 				if(this.isDateToday(date))
 				{
-					return fxgt.gettext("<<-- AUJOURD'HUI -->");
+					return fxgt.gettext("<<-- AUJOURD'HUI ");
 				}else
 				{
                 /* FIXME: use mx.formatters.DateFormatter ("EEEE D MMMM YYYY") */
@@ -665,123 +677,49 @@
 			{
 				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
 				{
+					logger.info("Initialize the user list");
 					var listUsersPlateforme:ArrayCollection = new ArrayCollection()
 					var listUser:Array = event.listDate;
 					var nbrUser:int = listUser.length;
+					logger.info("Total number of users: {0}", nbrUser);
 					for(var nUser:int = 0; nUser < nbrUser; nUser++)
 					{
 						var userVO:UserVO = listUser[nUser];
+						logger.debug("Initialize the user {0}", userVO.id_user);
+						
 						var user:User = new User(userVO);
 						// add user 
-						listUsersPlateforme.addItem(user);				
+						listUsersPlateforme.addItem(user);
+
+						
+						if(Model.getInstance().isUserConnected(user.id_user)) {
+							logger.debug("The user {0} is already connected", userVO.id_user);
+							user.setStatus(ConnectionStatus.CONNECTED);
+						} else
+							logger.debug("The user {0} is not connected", userVO.id_user);
 					}
 					// set list users the plateforme
 					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
 					
-					var selectedRadioButton:String = Model.getInstance().getSelectedRadioButton();
-					if(selectedRadioButton != "")
-					{
-						if(selectedRadioButton == radioButtonAllUser.id)
-						{
-							radioButtonAllUser.selected = true;
-							radioButtonAllUser_changeHandler();
-						}else
-						{
-							radioButtonConnectedUser.selected = true;
-							radioButtonConnectedUser_changeHandler();
-						}
-					}else
-					{
-						// show user the plateforme
-						showAllUser(listUsersPlateforme);
+					// showAllUser(listUsersPlateforme);
+					initializeUsers(listUsersPlateforme);
+					
+				}
+			}
+			
+			
+			// new version with the list
+			public function initializeUsers(listUsersPlateforme:ArrayCollection):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					for each(var u in listUsersPlateforme) {
+						usersList.addItem(u);
 					}
 				}
 			}
 			
-			/**
-			 * show users of the plateforme 
-			 */
-			public function showAllUser(listUsersPlateforme:ArrayCollection):void
-			{
-				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
-				{
-					// clear group users
-					groupUser.removeAllElements();
-					var nbrUser:int = listUsersPlateforme.length;
-					var listVoidUser:ArrayCollection = new ArrayCollection();
-					// get role the first user
-					var role:int = (listUsersPlateforme.getItemAt(0) as User).role;
-					// set number user
-					var currentNumberUser:int = 1; 
-					var isVoidUser:Boolean;
-					for(var nUser:int = 0; nUser < nbrUser; nUser++)
-					{
-						isVoidUser = false;
-						var user:User = listUsersPlateforme.getItemAt(nUser) as User;
-
-						var messageUser:MessageUser = new MessageUser();
-						messageUser.user = user;
-						var lastChar:String = user.firstname.charAt(user.firstname.length-1);
-						if(lastChar == "0" || lastChar == "1" || lastChar == "2" || lastChar == "3" || lastChar == "4" || 
-							lastChar == "5" || lastChar == "6" || lastChar == "7" || lastChar == "8" || lastChar == "9")
-						{
-							listVoidUser.addItem(messageUser);
-							isVoidUser = true;
-						}
-						// if the role same do ++ number 
-						if(user.role == role)
-						{
-							messageUser.numberUser = currentNumberUser;	
-							currentNumberUser++;
-						}else
-						{
-							role = user.role;
-							messageUser.numberUser = 1;	
-							currentNumberUser = 2;
-						}
-						var editabled:Boolean = false;
-						if(user.id_user == Model.getInstance().getLoggedUser().id_user)
-						{
-							editabled = true;
-						}
-						messageUser.setEditabled(editabled);
-						messageUser.percentWidth = 100;
-						if(!isVoidUser)
-						{
-							groupUser.addElement(messageUser)
-						}
-					}
-					// add void users
-					for each(var messageVoidUser:MessageUser in listVoidUser)
-					{
-						groupUser.addElement(messageVoidUser);
-					}
-				}
-			}
-
-			protected function radioButtonAllUser_changeHandler(event:Event = null):void
-			{
-				var selected:Boolean = radioButtonAllUser.selected;
-				if(selected)
-				{
-					var listPlateformeUser:ArrayCollection = Model.getInstance().getListUserPlateforme();
-					setListenerOnListConnectedUser(false);
-					Model.getInstance().setSelectedRadioButton(radioButtonAllUser.id);
-					showAllUser(listPlateformeUser);
-				}
-			}
-
-			protected function radioButtonConnectedUser_changeHandler(event:Event = null):void
-			{
-				var selected:Boolean = radioButtonConnectedUser.selected;
-				if(selected)
-				{
-					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
-					setListenerOnListConnectedUser(true);
-					Model.getInstance().setSelectedRadioButton(radioButtonConnectedUser.id);
-					showAllUser(listConnectedUser);
-				}
-			}
+		
 			
 			private function setListenerOnListConnectedUser(value:Boolean):void
 			{
@@ -804,116 +742,273 @@
 			private function onChangeListConnectedUser(event:CollectionEvent):void
 			{
 				var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
-				showAllUser(listConnectedUser);
+				usersList.removeAll();
+				initializeUsers(listConnectedUser);
 			}
+			
+			
+            import mx.events.MenuEvent;
+            import mx.controls.Alert;
+            import mx.logging.Log;
+            import mx.logging.ILogger;
+		
+			private static var logger:ILogger = Log.getLogger("modules.HomeModule");
 
+        	private var filterConnected:Boolean;
+        	private var filterNotConnected:Boolean
+        	private var filterRecording:Boolean
+        	private var filterPending:Boolean
+         	private var keepTuteur:Boolean
+        	private var keepEtudiant:Boolean
+        	private var keepResponsable:Boolean
+        	private var keepAdmin:Boolean
+ 
+            private function refreshUserList():void {
+            	
+            	filterConnected = userMenu.dataProvider[0].menuitem.(@id =="filterConnected").@toggled == 'true';
+            	filterNotConnected = userMenu.dataProvider[0].menuitem.(@id =="filterNotConnected").@toggled == 'true';
+            	filterRecording = userMenu.dataProvider[0].menuitem.(@id =="filterRecording").@toggled == 'true';
+            	filterPending = userMenu.dataProvider[0].menuitem.(@id =="filterPending").@toggled == 'true';
+	         	keepTuteur = userMenu.dataProvider[0].menuitem.(@id =="filterRoleTuteur").@toggled == 'true';
+            	keepEtudiant = userMenu.dataProvider[0].menuitem.(@id =="filterRoleEtudiant").@toggled == 'true';
+            	keepResponsable = userMenu.dataProvider[0].menuitem.(@id =="filterRoleResponsable").@toggled == 'true';
+            	keepAdmin = userMenu.dataProvider[0].menuitem.(@id =="filterRoleAdministrateur").@toggled == 'true';
+  
+				logger.debug("Refreshing the user list (filterConnected={0},filterNotConnected={1},filterRecording={2},filterPending={3},keepTuteur={4},keepEtudiant={5},keepResponsable={6},keepAdmin={7})",
+	            	filterConnected,
+	            	filterNotConnected,
+	            	filterRecording,
+	            	filterPending,
+		         	keepTuteur,
+	            	keepEtudiant,
+	            	keepResponsable,
+	            	keepAdmin
+            	);
+            	
+           		var sort:Sort = new Sort(); 
+ 				sort.fields = [new SortField("firstname", false), new SortField("lastname", false)];
+				if( userMenu.dataProvider[0].menuitem.(@id =="sortMenu").menuitem.(@id =="sortByStatus").@toggled == 'true') {
+					logger.debug("Setting the sort function of the user list to {0}", "compareUserByStatus");
+					sort.compareFunction = compareUserByStatus;
+				} else if( userMenu.dataProvider[0].menuitem.(@id =="sortMenu").menuitem.(@id =="sortByRole").@toggled == 'true') {
+					logger.debug("Setting the sort function of the user list to {0}", "compareUserByRole");
+					sort.compareFunction = compareUserByRole;
+				} else {
+					logger.debug("No sort function will apply to the user list (lexocographical order)");
+					sort.compareFunction = null;
+				}
+				
+				usersList.sort = sort;
+               	usersList.refresh();
+            }
+            
+            private function menuHandler(evt:MenuEvent):void {
+				if (evt.item.@data != "top") {
+					logger.info("A menu item has been clicked on the user list: {0} ", evt.item.@label);
+					refreshUserList();
+                }
+            }
+            
+            function compareUserByRole(a:Object, b:Object, fields:Array = null):int {
+				logger.debug("Comparing roles of user {0} ({1}) and  user {2} ({3})", a.firstname, a.role, b.firstname, b.role);
+            	return a.role < b.role ? -1 :
+            			a.role > b.role ? 1 : 0;
+            }
+            
+            function compareUserByStatus(a:Object, b:Object, fields:Array = null):int {
+				logger.debug("Comparing status of user {0} ({1}) and  user {2} ({3})", a.firstname, a.getStatus(), b.firstname, b.getStatus());
+            	return a.getStatus() == b.getStatus() ?  0 :
+            				a.getStatus() > b.getStatus() ?  -1 : 1;
+            	
+            }
+            
+  
+            public function keepUser(item:Object):Boolean {
+            	var userItem:User = item as User;
+            	
+            	var keepStatus:Boolean = false;
+            	if(userItem.getStatus() == ConnectionStatus.CONNECTED)
+       				keepStatus = filterConnected;
+           		
+            	if(userItem.getStatus() == ConnectionStatus.DISCONNECTED) 
+       				keepStatus = filterNotConnected;
+            	
+            	if(userItem.getStatus() == ConnectionStatus.RECORDING) 
+       				keepStatus = filterRecording;
+
+            	if(userItem.getStatus() == ConnectionStatus.PENDING) 
+       				keepStatus = filterPending;
+
+            	var keepRole:Boolean = false;
+            	if(VisuUtils.isTuteur(userItem)) 
+            		keepRole = keepTuteur;
+            	
+            	if(VisuUtils.isStudent(userItem)) 
+            		keepRole = keepEtudiant;
+            	
+            	if(VisuUtils.isResponsable(userItem)) 
+            		keepRole = keepResponsable;
+            	
+            	if(VisuUtils.isAdmin(userItem))
+            		keepRole = keepAdmin;
+            	
+	            var keep:Boolean = keepStatus && keepRole;
+				logger.debug("User {0} {1} (id={2}, role={3}) is {4} in the user list [keepStatus:{5},keepRole:{6}]",
+								 userItem.lastname,
+								 userItem.firstname,
+								 userItem.id_user,
+								 VisuUtils.getRoleLabel(userItem.role),
+								 keep?"KEPT":"NOT KEPT",
+								 keepStatus,
+								 keepRole
+								 );
+	            
+		      	return keep;
+		   }
 		]]>
 	</fx:Script>
-	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"  top="0" bottom="0" left="0" right="0" maxWidth="1024" >
+	
 
-		<s:HGroup width="100%" height="50"  horizontalAlign="left" gap="30" verticalAlign="bottom">
-			<mx:Image source="{Model.getInstance().getLoggedUser().avatar}" width="50" height="50"/>
-			<s:Label text="{Model.getInstance().getLoggedUser().lastname + ' '+ Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>
+	
+	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"
+		top="0" bottom="0" left="0" right="0" maxWidth="1024">
+
+		<s:HGroup width="100%" height="50" horizontalAlign="left"
+			gap="30" verticalAlign="bottom">
+			<mx:Image source="{Model.getInstance().getLoggedUser().avatar}"
+				width="50" height="50" />
+			<s:Label
+				text="{Model.getInstance().getLoggedUser().lastname + ' '+ Model.getInstance().getLoggedUser().getFirstName()}"
+				fontSize="20" />
 		</s:HGroup>
 		<s:HGroup width="100%" height="100%">
-			<!--<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}"  fontSize="20"/>-->
-<!-- CALENDAIRE -->
-			<s:Group width="40%" height="100%" >
+			<!--<s:Label text="{Model.getInstance().getLoggedUser().getFirstName()}" 
+				fontSize="20"/> -->
+			<!-- CALENDAIRE -->
+			<s:Group width="40%" height="100%">
 				<s:layout>
-					<s:VerticalLayout gap="5"/>
+					<s:VerticalLayout gap="5" />
 				</s:layout>
-				<s:HGroup horizontalAlign="center" width="100%" verticalAlign="justify">
-					<s:BorderContainer width="100%" height="35" backgroundColor="#cedbef">
-						<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalCenter="0">
-							<s:Label width="100%" fontSize="14" color="#000000" paddingLeft="160">
+				<s:HGroup horizontalAlign="center" width="100%"
+					verticalAlign="justify">
+					<s:BorderContainer width="100%" height="35"
+						backgroundColor="#cedbef">
+						<s:HGroup width="100%" height="100%" verticalAlign="middle"
+							horizontalCenter="0">
+							<s:Label width="100%" fontSize="14" color="#000000"
+								paddingLeft="160">
 								<s:text>{fxgt.gettext("CALENDRIER")}</s:text>
 							</s:Label>
 						</s:HGroup>
 					</s:BorderContainer>
 				</s:HGroup>
-				<controls:NavigateurDay id="navigateurDay" dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"  visible="true"   change="navigateurDay_changeHandler(event)"  width="100%"/>
+				<controls:NavigateurDay id="navigateurDay"
+					dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"
+					visible="true" change="navigateurDay_changeHandler(event)" width="100%" />
 				<s:Group width="100%" height="100%">
-					<s:BorderContainer  width="100%" borderVisible="false" height="100%" y="0"/>
-						<s:Scroller top="1" bottom="1" id="scrollerSession" width="100%" x="1">    
-								<s:VGroup id="sessionGroup"   width="100%"  height="100%" gap="15" horizontalAlign="center"/>
-						</s:Scroller> 
+					<s:BorderContainer width="100%" borderVisible="false"
+						height="100%" y="0" />
+					<s:Scroller top="1" bottom="1" id="scrollerSession"
+						width="100%" x="1">
+						<s:VGroup id="sessionGroup" width="100%" height="100%"
+							gap="15" horizontalAlign="center" />
+					</s:Scroller>
 				</s:Group>
-				<!--<s:HGroup id="sessionGroup" x="0"/>-->
-			</s:Group>	
-<!-- FLUX ACTIVITY -->
-			<s:HGroup  id="fluxGroup"  width="30%" verticalAlign="top" x="{navigateurDay.x + navigateurDay.width+10}" visible="true" height="100%">
+				<!--<s:HGroup id="sessionGroup" x="0"/> -->
+			</s:Group>
+			<!-- FLUX ACTIVITY -->
+			<s:HGroup id="fluxGroup" width="30%" verticalAlign="top"
+				x="{navigateurDay.x + navigateurDay.width+10}" visible="true"
+				height="100%">
 				<s:VGroup gap="5" width="100%" paddingBottom="0" height="100%">
 					<s:HGroup horizontalAlign="center" width="100%" height="35">
-						<s:BorderContainer width="100%" height="35" backgroundColor="#CCDCC8">
+						<s:BorderContainer width="100%" height="35"
+							backgroundColor="#CCDCC8">
 							<s:HGroup width="100%" height="100%" verticalAlign="middle">
-								<s:Label width="100%"  fontSize="14" color="#000000"  paddingLeft="40">
-									<s:text>{fxgt.gettext("FLUX D'ACTIVITES DE L'ACCUEIL")}</s:text>
+								<s:Label width="100%" fontSize="14" color="#000000"
+									paddingLeft="40">
+									<s:text>{fxgt.gettext("FLUX D'ACTIVITES DE L'ACCUEIL")}
+									</s:text>
 								</s:Label>
 							</s:HGroup>
 						</s:BorderContainer>
-						<!--<s:List  id="listConUsers" change="sendMessageToUser()"  visible="false" labelField="firstname" width="200" height="35"/>-->
 					</s:HGroup>
-<!--					<s:HGroup>
-						<mx:Image source="images/exampleMessageServeur.png" height="35" width="450" y="3"/>
-					</s:HGroup>-->
-					<s:HGroup verticalAlign="middle" width="100%" horizontalAlign="center">
-					<!--	<mx:Image id="imageLoggedUser" width="40" height="40"/>-->
-						<s:TextInput id="textToSend" width="100%" height="{navigateurDay.height}" keyUp="onKeyUp(event)"/>
-						<s:Button  height="{navigateurDay.height}" width="63" click="sendAll_clickHandler()">
+					<s:HGroup verticalAlign="middle" width="100%"
+						horizontalAlign="center">
+						<!-- <mx:Image id="imageLoggedUser" width="40" height="40"/> -->
+						<s:TextInput id="textToSend" width="100%"
+							height="{navigateurDay.height}" keyUp="onKeyUp(event)" />
+						<s:Button height="{navigateurDay.height}" width="63"
+							click="sendAll_clickHandler()">
 							<s:label>{fxgt.gettext("Tous")}</s:label>
-						</s:Button>	
-						<s:Button  height="{navigateurDay.height}" width="80" click="sendOneUser_clickHandler(event)">
+						</s:Button>
+						<s:Button height="{navigateurDay.height}" width="80"
+							click="sendOneUser_clickHandler(event)">
 							<s:label>{fxgt.gettext("Personnel")}</s:label>
 						</s:Button>
 					</s:HGroup>
-					
-					<s:List selectionColor="#ffffff"  borderAlpha="0.0" dataProvider="{fluxActivity}" width="100%" itemRenderer="com.ithaca.visu.renderer.FluxActivityRenderer" height="100%">
+
+					<s:List selectionColor="#ffffff" borderAlpha="0.0"
+						dataProvider="{fluxActivity}" width="100%"
+						itemRenderer="com.ithaca.visu.renderer.FluxActivityRenderer"
+						height="100%"
+						creationComplete="refreshUserList();">
 						<s:layout>
-							<s:VerticalLayout gap="5" horizontalAlign="center" paddingBottom="0" paddingTop="0"/>
+							<s:VerticalLayout gap="5" horizontalAlign="center"
+								paddingBottom="0" paddingTop="0" />
 						</s:layout>
-						<!--<s:itemRenderer>
-							<fx:Component>
-								<s:ItemRenderer>
-									<s:BorderContainer  height="35"  borderVisible="true" width="430" >
-										<mx:Image source="{data.pathImage}" x="3" width="25" height="25"  y="3"/>
-										<s:Label id="labelFirstName" text="{data.firstname}" fontWeight="bold"  x="35" y="8"/>
-										<s:Label text="{data.message}"   x="{labelFirstName.x + labelFirstName.width + 5}" y="{labelFirstName.y}" color="#6ca6cf"/>
-										<s:Label text="{data.time}"  fontSize="10"  right="30" y="20" color="#CCCCCC"/>
-									</s:BorderContainer>
-								</s:ItemRenderer>
-							</fx:Component>							
-						</s:itemRenderer>-->
-					</s:List> 	
-				</s:VGroup>		
+					</s:List>
+				</s:VGroup>
 			</s:HGroup>
-<!-- MESSAGE USERS -->
-			<s:Group width="30%" height="100%">
-				<s:BorderContainer width="100%" height="35" backgroundColor="#f5f496">
-					<s:HGroup width="100%" height="100%" verticalAlign="middle">
-						<s:Label width="100%"  fontSize="14" color="#000000"  paddingLeft="90">
-							<s:text>{fxgt.gettext("UTILISATEURS")}</s:text>
-						</s:Label>
-					</s:HGroup>
-				</s:BorderContainer>
-				<s:HGroup width="100%" top="40" gap="2" height="{navigateurDay.height}" verticalAlign="middle" horizontalAlign="center">
-					<s:Label>
-						<s:text>{fxgt.gettext("Tous :  ")}</s:text>
-					</s:Label>
-					<s:RadioButton id="radioButtonAllUser" selected="true" change="radioButtonAllUser_changeHandler(event)" groupName="users"/>
-					<s:Label>
-						<s:text>{fxgt.gettext("Utilisateurs connectés seulement :  ")}</s:text>
-					</s:Label>
-					<s:RadioButton id="radioButtonConnectedUser"  change="radioButtonConnectedUser_changeHandler(event)" groupName="users"/>
-				</s:HGroup>
-				<s:Scroller left="5" right="5" top="65" bottom="0">
-					<s:Group id="groupUser" height="100%" width="100%">
-						<s:layout>
-							<s:VerticalLayout gap="5" />
-						</s:layout>
-					</s:Group>
-				</s:Scroller>
-			</s:Group>
+			
+			<s:Panel id="userPanel" width="300" height="400" title="Utilisateurs">
+				<s:VGroup width="100%" height="100%">
+			
+					<mx:MenuBar id="userMenu" width="100%" labelField="@label"
+						itemClick="menuHandler(event);">
+						<fx:XMLList>
+							<!-- 
+								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
+								http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS5b3ccc516d4fbf351e63e3d118a9b90204-7e6b.html   
+							-->
+							<menuitem id="root" label="Affichage" data="top">
+								<menuitem id="sortMenu" label="Tri" data="top">
+									<menuitem label="Par statut" type="radio" id="sortByStatus"
+										groupName="radioGroup" toggled="true" />
+									<menuitem label="Par rôle" type="radio" id="sortByRole"
+										groupName="radioGroup" />
+									<menuitem label="Par ordre alphabétique" id="sortByLexicoOrder"
+										type="radio" groupName="radioGroup" />
+								</menuitem>
+								<menuitem type="separator" id="separator"/>
+								<menuitem label="Attendu" id="filterPending"
+									type="check" toggled="true" />
+								<menuitem label="En cours d'enregistrement" id="filterRecording"
+									type="check" toggled="true" />
+								<menuitem label="Connecté" id="filterConnected" type="check"
+									toggled="true" />
+								<menuitem label="Non connecté" id="filterNotConnected"
+									type="check" toggled="false" />
+								<menuitem type="separator" id="separator"/>
+								<menuitem label="Étudiants" id="filterRoleEtudiant" type="check"
+									toggled="true" />
+								<menuitem label="Tuteurs" id="filterRoleTuteur" type="check"
+									toggled="true" />
+								<menuitem label="Responsables de formation" id="filterRoleResponsable"
+									type="check" toggled="true" />
+								<menuitem label="Administrateurs" id="filterRoleAdministrateur"
+									type="check" toggled="true" />
+							</menuitem>
+						</fx:XMLList>
+					</mx:MenuBar>
+			
+					<s:List id="userList" width="100%" height="100%"
+						dataProvider="{usersList}"
+						itemRenderer="com.ithaca.visu.view.user.renderer.UserRenderer"
+						/>
+   
+				</s:VGroup>
+			</s:Panel>
 		</s:HGroup>
 	</s:VGroup>
-	<s:Label fontSize="20" text="/////.."  y="500" id="tx"  visible="false"/>
 </modules:VisuModuleBase>
