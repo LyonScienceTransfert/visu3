@@ -145,6 +145,20 @@ package com.ithaca.visu.view.session.controls
 			
 		}
 		
+		public function setSelectedFilter(value:int):void
+		{
+			var selectedIndex:int=0;
+			var nbrFilter:int = filterElements.length;
+			for(var nFilter:int = 0; nFilter < nbrFilter ; nFilter++)
+			{
+				var filter:Object = filterElements.getItemAt(nFilter);
+				if(filter.value == value)
+				{
+					selectedIndex = nFilter;
+				}
+			}
+			list.selectedIndex = selectedIndex;
+		}
 		
 		//_____________________________________________________________________
 		//
