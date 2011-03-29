@@ -81,6 +81,9 @@ package  com.ithaca.visu.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	 import mx.logging.Log;
+            import mx.logging.ILogger;
+		
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -90,6 +93,8 @@ package  com.ithaca.visu.model
 	public final class Model
 	{
 
+		private static var logger:ILogger = Log.getLogger("com.ithaca.visu.model.Model");
+	
 		/**
 		 * Defines the Singleton instance of the Application Model
 		 */
@@ -1544,6 +1549,15 @@ package  com.ithaca.visu.model
 			}
 		}
 		
+		public function isUserConnected(id_user:int):Boolean {
+			logger.debug("Verifying if the user {0} is connected ", id_user);
+			for each (var user in this.listConnectedUsers) {
+				if(user.id_user == id_user)
+					return true;
+			}
+			return false;
+		}
+		
 		public function getConnectedUsers():ArrayCollection
 		{
 			return this.listConnectedUsers;
@@ -1587,10 +1601,28 @@ package  com.ithaca.visu.model
 			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,path,message,time);
 			this.listFluxActivity.addItemAt(fluxActivity,0);		
 		}
+
+		public function updateUserStatus(userId:int, status:int) : void {
+			logger.debug("Trying to update the status of user {0} to {1}", userId, status);
+			for each (var user in this._listUsersPlateforme)  {
+				if(user.id_user == userId) {
+					logger.debug("Setting the status of the user {0} {1} (id={2},role={3}) to {4}", 
+					user.lastname, 
+					user.id_user, 
+					user.firstname, 
+					user.role, 
+					status);			
+					user.setStatus(status);
+				}
+			}
+		}
 		
 		public function removeConnectedUser(userId:int):void
 		{
 			var nbrUser:uint = this.listConnectedUsers.length;
+			
+			this.updateUserStatus(user.id_user, ConnectionStatus.DISCONNECTED);
+			
 			if(nbrUser == 0) { return };
 			for(var nUser:uint = 0; nUser < nbrUser; nUser++)
 			{
@@ -1611,6 +1643,9 @@ package  com.ithaca.visu.model
 			var user:User = new User(userVO);
 			user.setStatus(ConnectionStatus.PENDING);
 			this.listConnectedUsers.addItem(user);
+			
+			this.updateUserStatus(user.id_user, ConnectionStatus.CONNECTED);
+			
 			// add swap user
 			this.addSwapUser(user, ConnectionStatus.PENDING);
 		}

@@ -2,8 +2,8 @@ package com.ithaca.visu.ui.utils
 {
 	public class ConnectionStatus
 	{
-		public static const CONNECTED:int = 0;
-		public static const DISCONNECTED:int = 1;
+		public static const DISCONNECTED:int = 0;
+		public static const CONNECTED:int = 1;
 		public static const PENDING:int = 2;
 		public static const RECORDING:int = 3;
 /*		public static const CONNECTED:ConnectionStatus = new ConnectionStatus(0);
@@ -22,12 +22,9 @@ package com.ithaca.visu.ui.utils
 		}
 		public function toString():String
 		{
-			
-			return value==0 
-				? "connected " 
-				: (value == 1)
-					? "disconnected"
-					: "pending" ;
+			return value==CONNECTED ? "connected " : 
+					value == DISCONNECTED ? "disconnected" : 
+					value == PENDING ? "pending" : "recording" ;
 		}
 	}
 }
