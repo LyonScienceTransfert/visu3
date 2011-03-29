@@ -1465,6 +1465,33 @@
 				}
 			}
 
+			private function onUpdateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+					var sessionId:int = event.sessionId;
+					var userId:int = event.userId;
+					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+					var nameUser:String = user.lastname + " " +user.firstname;
+					// check if user in the session that will deleting
+					var session:Session = Model.getInstance().getCurrentSession();
+					if(	session != null &&  session.id_session  == sessionId)
+					{
+						Alert.show("La séance va être supprimer par "+ nameUser + ", vous aller redirige ver Accueil.","Information", Alert.YES, null, goHomeModule);	
+					}	
+				}
+			}
+			
+			private function goHomeModule(evet:Event):void
+			{
+				Model.getInstance().setCurrentSession(null);
+				Model.getInstance().setEnabledButtonSalonSynchrone(false);	
+				
+				var goHomeModuleEvent:SessionEvent = new SessionEvent(SessionEvent.GO_HOME_MODULE);
+				this.dispatchEvent(goHomeModuleEvent);
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1485,6 +1512,7 @@
 		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL}"  method="onShowViewTimeLine"/>
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_VIEW_TRACELINE}"  method="onUpdateViewTimeLine"/>
 		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 		
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
