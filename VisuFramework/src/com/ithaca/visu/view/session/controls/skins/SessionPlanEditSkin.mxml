@@ -116,25 +116,24 @@
             <s:VerticalLayout gap="3"/>
         </s:layout>
 		<s:Group width="100%">
-			<s:Label left="5" top="3" fontWeight="bold">
+			<s:Label left="5" top="3" fontWeight="bold" includeIn="normal,normalEditable">
 				<!--<s:text>{fxgt.gettext("Plan de séance")}</s:text>-->
 				<s:text>{"Plan de séance"}</s:text>
 			</s:Label>
 <!-- BUTTONS -->
-			<s:Button  id="buttonCreateSessionByTemplate"  top="5" right="225" top.normalEditable="5" left.normalEditable="130" right.normalEditable="215" top.normal="5" left.normal="130" right.normal="215">
+			<s:Button  id="buttonCreateSessionByTemplate" top.normalEditable="5" left.normalEditable="130" right.normalEditable="215" top.normal="5" left.normal="130" right.normal="215" includeIn="normal,normalEditable">
 				<!--<s:label>{fxgt.gettext("Importer")}</s:label>-->
 				<s:label>{"Créer une nouvelle séance à partir de ce plan de séance"}</s:label>
 			</s:Button>
-			<s:Button  id="buttonExportSession" enabled="false" right="5" top.disabled="5" right.disabled="5" top.normal="5" right.normal="5" top.normalEditable="5" right.normalEditable="5" enabled.normalEditable="true">
+			<s:Button  id="buttonExportSession" enabled="false" top.normal="5" right.normal="5" top.normalEditable="5" right.normalEditable="5" enabled.normalEditable="true" includeIn="normal,normalEditable">
 				<!--<s:label>{fxgt.gettext("Exporter")}</s:label>-->
 				<s:label>{"Rendre public ce plan de séance"}</s:label>
 			</s:Button>
 		</s:Group>	
 	
 		<s:Group width="100%">
-			<s:Button id="buttonAddActivity" left="10"
-					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter une activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter une activité">
-				<s:label>ajouter une activité</s:label>
+			<s:Button id="buttonAddActivity"
+					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter une activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter une activité" includeIn="normal,normalEditable">
 			</s:Button>
 	        <!--<s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="160" fontSize.normal="14" top.normal="5" fontSize.normalEditable="14" right.normalEditable="160" top.normalEditable="5">
 				<s:text>{"Activité : "}</s:text>
@@ -142,7 +141,7 @@
 			<s:ComboBox   id="comboBoxActivity" width="45" right="5" width.normal="150" width.normalEditable="150"/>-->
 		</s:Group>
 <!-- LINE -->	
-		<s:Line left="50" right="2" top="10" width="100%">
+		<s:Line left="50" right="2" top="10" width="100%" includeIn="normal,normalEditable">
 			<s:stroke>
 				<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
 			</s:stroke>
@@ -150,9 +149,12 @@
 		
 		<s:Scroller top="0" left="0" right="0" bottom="0" height="100%" width="100%">
 			<s:Group id="activityGroup">
-				<s:layout>
+				<s:layout.normal>
 					<s:VerticalLayout gap="5" />
-				</s:layout>
+				</s:layout.normal>
+				<s:layout.normalEditable>
+					<s:VerticalLayout gap="5" />
+				</s:layout.normalEditable>
 			</s:Group>
 		</s:Scroller>
 		

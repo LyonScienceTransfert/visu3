@@ -76,19 +76,20 @@
 		<s:State name="normal" />
 		<s:State name="disabled" />
 		<s:State name="normalEditable"/>
+		<s:State name="accessRetrospection"/>
 	</s:states>
 
 	<s:Panel width="100%" height="100%" backgroundColor="#e4e4e4">
 		<s:title>Détails de la séance</s:title>
-		<s:Group  width="100%" top.normal="0" height.normalEditable="100%" height.disabled="100%" bottom.normal="0">
+		<s:Group  width="100%" top.normal="0" height.normalEditable="100%" height.disabled="100%" bottom.normal="0" bottom.accessRetrospection="0" top.accessRetrospection="0">
 			<s:Group height="160" width="100%">
 				<s:HGroup width="100%" height="100%">
 					<!-- LABELS -->
-					<s:Group height="100%" width="20%">
-						<s:Label right="5" fontWeight="bold" fontSize="14" top.disabled="10" right.normalEditable="5" verticalCenter.normalEditable="-3" right.normal="5" verticalCenter.normal="-3">
+					<s:Group height="100%" width="20%" includeIn="accessRetrospection,normal,normalEditable">
+						<s:Label fontWeight="bold" fontSize="14" right.normalEditable="5" verticalCenter.normalEditable="-3" right.normal="5" verticalCenter.normal="-3" right.accessRetrospection="5" verticalCenter.accessRetrospection="-3">
 							<s:text>Thème :</s:text>
 						</s:Label>
-						<s:Label right="5" fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" verticalCenter.disabled="-3" right.normal="5" top.normal="10">
+						<s:Label fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" right.normal="5" top.normal="10" right.accessRetrospection="5" top.accessRetrospection="10">
 							<s:text>Date prévue :</s:text>
 						</s:Label>
 						<s:Label right="5" bottom="35" fontWeight="bold" fontSize="14">
@@ -96,25 +97,25 @@
 						</s:Label>
 					</s:Group>
 <!-- THEME -->	
-					<s:Group height="100%" width="40%">
+					<s:Group height="100%" width="40%" includeIn="accessRetrospection,normal,normalEditable">
 						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" verticalCenter="0" backgroundColor="#FFFFFF" change="themeSession_changeHandler(event)"
 											  focusOut="themeSession_focusOutHandler(event)"
-											   focusIn="themeSession_focusInHandler(event)" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" enabled.normalEditable="true" includeIn="disabled,normalEditable">
+											   focusIn="themeSession_focusInHandler(event)" textAlign="center" verticalAlign="middle" enabled="true" includeIn="normalEditable">
 							<s:text>Les identités nationales</s:text>
 						</s:RichEditableText>
 
 <!-- DATE TIME -->	
 						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" top="5" 
-												     updateDateTime="picker_updateDateTimeHandler(event)" includeIn="disabled,normalEditable"/>
+												     updateDateTime="picker_updateDateTimeHandler(event)" includeIn="normalEditable"/>
 						<s:RichEditableText  id="descriptionSession" height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF"
 											  change="descriptionSession_changeHandler(event)" 
 											  focusOut="descriptionSession_focusOutHandler(event)"
-											  focusIn="descriptionSession_focusInHandler(event)" fontStyle.normalEditable="italic" textAlign.normalEditable="center" verticalAlign.normalEditable="middle" includeIn="disabled,normalEditable">
+											  focusIn="descriptionSession_focusInHandler(event)" fontStyle="italic" textAlign="center" verticalAlign="middle" includeIn="normalEditable">
 							<s:text>in this session you will learn how you can go to other country..</s:text>
 						</s:RichEditableText> 
-						<s:RichText includeIn="normal" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
-						<s:RichText includeIn="normal" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
-						<s:Group  includeIn="normal" left="0" top="5" height="22">
+						<s:RichText includeIn="normal,accessRetrospection" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
+						<s:RichText includeIn="normal,accessRetrospection" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
+						<s:Group  includeIn="normal,accessRetrospection" left="0" top="5" height="22">
 							<s:Label  id="dateLabel" verticalCenter="0" left="0" fontSize="14"/>
 							<s:Label text="à" verticalCenter="0" left="75" fontSize="14"/>
 							<s:Label  id="heurLabel" verticalCenter="0" left="90" fontSize="14"/>
@@ -123,23 +124,48 @@
 						</s:Group>
 					</s:Group>
 					<!-- USERS -->
-					<s:Group height="100%" width="40%">
-						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true">
+					<s:Group height="100%" width="40%" includeIn="accessRetrospection,normal,normalEditable">
+						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true" enabled.accessRetrospection="false">
 							<s:label>Ajouter un nouvel utilisateur</s:label>
 						</s:Button>
 						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">
 							<s:Group id="groupUser">
-								<s:layout>
+								<s:layout.normal>
 									<s:VerticalLayout gap="5" />
-								</s:layout>
+								</s:layout.normal>
+								<s:layout.accessRetrospection>
+									<s:VerticalLayout gap="5" />
+								</s:layout.accessRetrospection>
+								<s:layout.normalEditable>
+									<s:VerticalLayout gap="5" />
+								</s:layout.normalEditable>
 							</s:Group>
 						</s:Scroller>
 					</s:Group>
+					<s:Label includeIn="disabled" text="Have to choose the sesison" visible="false"/>
 				</s:HGroup>
 			</s:Group>
 			<controls:SessionPlanEdit  id="sessionPlanEdit" width="96%" horizontalCenter="0" backgroundColor="#FFFFFF"
-									   bottom="0" top="165"/>
-<!--			<s:Button id="buttonDeleteSession" label="Supprimer la séance" visible="false"/>-->
+									    bottom.accessRetrospection="100" top="165" bottom="30" top.accessRetrospection="165" horizontalCenter.accessRetrospection="0"/>
+			<s:Button id="buttonGoRetrospection"  includeIn="accessRetrospection" bottom="5" right="15">
+				<s:label>Entrer dans le salon de rétrospection pour cette séance</s:label>
+			</s:Button>
+			<s:Label includeIn="accessRetrospection" text="Durée de la séance :  45:55" fontWeight="bold" fontSize="14" left="382" bottom="40"/>
+			<s:Label includeIn="accessRetrospection" text="Date enregistré : 23-03-2011" fontWeight="bold" fontSize="14" left="382" bottom="66"/>
+			<s:Label includeIn="accessRetrospection" text="Les utilisateurs enregistré :" fontWeight="bold" fontSize="14" bottom="66" left="14"/>
+			<s:Scroller left="10" right="460" bottom="2" height="64" includeIn="accessRetrospection">
+				<s:Group width="100%" height="100%" id="groupRecordedUser">
+					<s:layout>
+						<s:VerticalLayout>
+							<s:gap>5</s:gap>
+						</s:VerticalLayout>
+					</s:layout>
+				</s:Group>
+			</s:Scroller>
+			<s:HGroup width="100%" horizontalAlign="right" bottom="5" right="5">
+				<s:Button id="buttonDeleteSession" label="Supprimer la séance" includeIn="normalEditable,normal" right="163"/>
+				<s:Button includeIn="normalEditable" label="Sauvegarder la séance" right="7" id="buttonSaveSession"/>
+			</s:HGroup>
 		</s:Group>
 	</s:Panel>
 </s:Skin>
