@@ -1621,7 +1621,7 @@ package  com.ithaca.visu.model
 		{
 			var nbrUser:uint = this.listConnectedUsers.length;
 			
-			this.updateUserStatus(user.id_user, ConnectionStatus.DISCONNECTED);
+			this.updateUserStatus(userId, ConnectionStatus.DISCONNECTED);
 			
 			if(nbrUser == 0) { return };
 			for(var nUser:uint = 0; nUser < nbrUser; nUser++)
