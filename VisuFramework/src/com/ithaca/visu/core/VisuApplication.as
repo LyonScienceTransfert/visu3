@@ -158,6 +158,10 @@ package com.ithaca.visu.core
 			
 		}
 	
+		protected function goHome(event:SessionEvent):void{
+			moduleNavigator.navigateToModule( "home", event.session);
+		}
+		
 		protected function joinSession(event:SessionEvent):void{
 			moduleNavigator.navigateToModule( "tutorat", event.session);
 		}
@@ -165,8 +169,8 @@ package com.ithaca.visu.core
 		protected function editSession(event:SessionEvent):void{
 			moduleNavigator.navigateToModule( "session", event.session);
 		}
-
-		protected function cancelSession(event:SessionEvent):void{
+		
+		protected function goRetrospection(event:SessionEvent):void{
 			moduleNavigator.navigateToModule( "retrospection", event.session);
 		}
 		 
