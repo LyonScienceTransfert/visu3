@@ -33,12 +33,6 @@
 		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
 			<mate:ObjectBuilder generator="{RetrospectionManager}" constructorArguments="{scope.dispatcher}"/>
 		</mate:EventHandlers>	
-		<!-- FlexEvent.CREATIONCOMPLET -->
-		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="sessionInfo.getSessionsByUser"   arguments="{[]}" />
-			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>	
 		<!-- InitMapEvent.INIT_MAP_TUTORAT __________________________________________________________________ -->		
 		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_RETROSPECTION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
