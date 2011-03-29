@@ -157,26 +157,34 @@ package com.ithaca.visu.view.session.controls
 				{
 					activityGroup.removeAllElements();
 				}
-				// remove listener for sort the order activity
-				_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
-				sortByOrder(activities);
-				_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
 				
-				var nbrActivity:int =  _activities.length;
-				for (var nActivity:int = 0; nActivity < nbrActivity; nActivity++  )
+				if(_activities == null)
 				{
-					var activity:Activity= _activities.getItemAt(nActivity) as Activity;
-					activity.ind = activityGroup.numElements;
+					// TODO : message "hasn't acitivties fro this session
+				}else
+				{
+					// remove listener for sort the order activity
+					_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+					sortByOrder(activities);
+					_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
 					
-					var activityDetailEdit:ActivityDetailEdit =  new ActivityDetailEdit();
-					activityDetailEdit.activity = activity;
-					activityDetailEdit.setEditabled(this.editabled);
-					activityDetailEdit.percentWidth = 100;
-					activityDetailEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity);
-					activityDetailEdit.addEventListener(SessionEditEvent.MOVE_UP_ACTIVITY, onMoveUpActivity);
-					activityDetailEdit.addEventListener(SessionEditEvent.MOVE_DOWN_ACTIVITY, onMoveDownActivity);
-					activityGroup.addElement( activityDetailEdit );
+					var nbrActivity:int =  _activities.length;
+					for (var nActivity:int = 0; nActivity < nbrActivity; nActivity++  )
+					{
+						var activity:Activity= _activities.getItemAt(nActivity) as Activity;
+						activity.ind = activityGroup.numElements;
+						
+						var activityDetailEdit:ActivityDetailEdit =  new ActivityDetailEdit();
+						activityDetailEdit.activity = activity;
+						activityDetailEdit.setEditabled(this.editabled);
+						activityDetailEdit.percentWidth = 100;
+						activityDetailEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity);
+						activityDetailEdit.addEventListener(SessionEditEvent.MOVE_UP_ACTIVITY, onMoveUpActivity);
+						activityDetailEdit.addEventListener(SessionEditEvent.MOVE_DOWN_ACTIVITY, onMoveDownActivity);
+						activityGroup.addElement( activityDetailEdit );
+					}
 				}
+					
 			}
 		}
 		
@@ -188,7 +196,17 @@ package com.ithaca.visu.view.session.controls
 		public function setEditabled(value:Boolean):void
 		{
 			editabled = value;
+			this.enabled = true;
 			this.invalidateSkinState();
+		}
+		
+		public function setViewEmpty():void
+		{
+			this.enabled = false;
+			this.invalidateSkinState();
+			this._activities = null;
+			activitiesChanged = true;
+			this.invalidateProperties();
 		}
 		
 		[Bindable("updateActivities")] 
