@@ -85,16 +85,19 @@ package business
 		
 		public function loadListPresentUserInSession(value:Array):void
 		{
-			// list recording users
-			var listUser:ArrayCollection = new ArrayCollection();
-			for each (var userVO:UserVO in value)
+			if(value != null && value.length > 0)
 			{
-				var user:User = new User(userVO);
-				listUser.addItem(user);
+				// list recording users
+				var listUser:ArrayCollection = new ArrayCollection();
+				for each (var userVO:UserVO in value)
+				{
+					var user:User = new User(userVO);
+					listUser.addItem(user);
+				}
+				var loadListRecordingUser:SessionUserEvent = new SessionUserEvent(SessionUserEvent.LOAD_LIST_SESSION_USER);
+				loadListRecordingUser.listUser = listUser;
+				this.dispatcher.dispatchEvent(loadListRecordingUser);	
 			}
-			var loadListRecordingUser:SessionUserEvent = new SessionUserEvent(SessionUserEvent.LOAD_LIST_SESSION_USER);
-			loadListRecordingUser.listUser = listUser;
-			this.dispatcher.dispatchEvent(loadListRecordingUser);
 		}
 		
 		/**
