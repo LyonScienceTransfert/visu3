@@ -1379,6 +1379,25 @@ public class MainManager
 		Model.getInstance().updateTextObselComment( timeStampObsel, text, obsel.type); 
 	}
 	
+	/**
+	 * Call when user on the plateforme delete session or plan the session
+	*/
+	public function onCheckDeleteSession(sessionId:int, userId:int):void
+	{
+		var session:Session = Model.getInstance().deleteSession(sessionId);
+		if(session != null)
+		{
+			// add flux 
+			var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+			Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar, 'La séance "'+ session.theme + '" a été supprimer', new Date()); 
+		}
+		// notification for deleting session
+		var eventRemoveSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_DELETED_SESSION);
+		eventRemoveSession.sessionId = sessionId;
+		eventRemoveSession.userId = userId;
+		dispatcher.dispatchEvent(eventRemoveSession);	
+	}
+	
 	public function onError(event : Object) : void
 	{
 		var closeConnetionEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CLOSE_CONNECTION);
