@@ -19,6 +19,7 @@
 		<mate:Listener type="{SessionEvent.SHOW_LIST_DATE_SESSION}"  method="showDateSession"/>
 		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"  method="showSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"  method="onLoadedAllUsers"/>
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -45,6 +46,9 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.IVisualElement;
+			import mx.events.CloseEvent;
 			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			
@@ -65,6 +69,7 @@
 			
 			private var _editableSession:Boolean;
 			private var _loggedUser:User;
+			private var cancelSessionId:int = -1;
 
 			protected function configureHandler(event:VisuModuleEvent):void
 			{				
@@ -187,11 +192,76 @@
 			}
 			
 			/**
+			 * Remove deleted session
+			 */
+			public function onUpdateDeletedSession(event:SessionEvent):void
+			{
+				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule;
+				if( homeModule == this)
+				{
+					var sessionId:int = event.sessionId;
+					var indexHomeSessionView:int = -1;
+					var nbrHomeSessionView:int = this.listSessionView.length;
+					for(var nHomeSessionView:int = 0; nHomeSessionView < nbrHomeSessionView; nHomeSessionView++)
+					{
+						var homeSession:SessionHomeElement = this.listSessionView.getItemAt(nHomeSessionView) as SessionHomeElement;
+						if(homeSession.session.id_session == sessionId)
+						{
+							indexHomeSessionView = nHomeSessionView;
+						}
+					}
+					if(indexHomeSessionView > -1 )
+					{
+						this.listSessionView.removeItemAt(indexHomeSessionView);
+					}
+					
+					// remove view
+					var indexElement:int = -1;
+					var groupHomeSessionView:Group = this.sessionGroup.getElementAt(0) as Group;
+					var nbrElement:int = groupHomeSessionView.numElements;
+					for(var nElement:int = 0 ; nElement < nbrElement; nElement++)
+					{
+						var iVisualElement:IVisualElement = groupHomeSessionView.getElementAt(nElement) as IVisualElement;
+						// iVisualElement can be label
+						var homeSessionView:SessionHomeElement = iVisualElement as SessionHomeElement;
+						if(homeSessionView != null && homeSessionView.session.id_session == sessionId)
+						{
+							indexElement = nElement;
+						}
+					}
+					if(indexElement > -1)
+					{
+						groupHomeSessionView.removeElementAt(indexElement);
+					}
+					// has only one session for this date
+					if(nbrElement == 1)
+					{
+						// TODO remove date 
+						groupHomeSessionView.addElement(getLabelHasNotSessionForThisDate());
+					}
+					// enabled button "salon synchrone
+					if(Model.getInstance().getCurrentSession() != null && Model.getInstance().getCurrentSession().id_session == sessionId)
+					{
+						Model.getInstance().setCurrentSession(null);
+						Model.getInstance().setEnabledButtonSalonSynchrone(false);
+					}
+				}
+			}
+			
+			private function getLabelHasNotSessionForThisDate():Label
+			{
+				var labelMessage:Label = new Label();
+				labelMessage.setStyle("fontSize", 14);
+				labelMessage.setStyle("fontWeight", "bold");
+				labelMessage.text = fxgt.gettext("  \n\n\n Vous n'avez pas de séance pour cette date...\n\n\n");
+				return labelMessage;
+			}
+			/**
 			 * Update session view
 			 */ 
 			public function updateSessionView(event:SessionEvent):void
 			{
-				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule
+				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule;
 				if( homeModule == this)
 				{
 					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
@@ -213,11 +283,7 @@
 							var nbrSession:uint = listSession.length;
 							if(nbrSession == 0)
 							{
-								var labelMessage:Label = new Label();
-								labelMessage.setStyle("fontSize", 14);
-								labelMessage.setStyle("fontWeight", "bold");
-								labelMessage.text = fxgt.gettext("  \n\n\n Vous n'avez pas de séance pour cette date...\n\n\n");
-								vb.addElement(labelMessage);
+								vb.addElement(getLabelHasNotSessionForThisDate());
 							}else
 							{
 								for(var nSession:uint = 0; nSession < nbrSession; nSession++)
@@ -392,7 +458,18 @@
 			private function onClickActionLoggedUser(event:SessionHomeElementEvent):void
 			{
 				var eventSession:SessionEvent;
-				switch(event.typeAction)
+				var typeAction:String = event.typeAction;
+				if(typeAction == SessionHomeElementEvent.ACTION_CANCEL_SESSION)
+				{
+					this.cancelSessionId = event.session.id_session;
+					Alert.yesLabel = "Oui";
+					Alert.noLabel = "Non";
+					Alert.show("Voulez-vous supprimer cet séance ?",
+						"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);	
+					return;
+				}
+				
+				switch(typeAction)
 				{
 					case SessionHomeElementEvent.ACTION_JOIN_SESSION:
 					{
@@ -403,16 +480,22 @@
 					{
 						eventSession = new SessionEvent(SessionEvent.EDIT_SESSION);
 						break;
-					}
-					case SessionHomeElementEvent.ACTION_CANCEL_SESSION:
-					{
-						eventSession = new SessionEvent(SessionEvent.CANCEL_SESSION);
-						break;
-					}				
+					}		
 				}
 				eventSession.session = event.session;
 				dispatchEvent(eventSession);
 			}
+			
+// DELETE SESSION
+			private function deleteSessionConformed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{
+					var cancelSessionEvent:SessionEvent = new SessionEvent(SessionEvent.CANCEL_SESSION);
+					cancelSessionEvent.sessionId = this.cancelSessionId;
+					this.dispatchEvent(cancelSessionEvent);
+				}
+			}
+			
 			
 			/**
 			 * Update dataProvider each sessionView
