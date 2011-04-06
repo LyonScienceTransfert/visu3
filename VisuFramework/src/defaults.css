@@ -60,10 +60,11 @@ ConnectedUser
 	skin-class:ClassReference("com.ithaca.visu.skins.ConnectedUserSkin");
 	corner-radius:10px;
 }
-SessionHomeElement
+
+/*SessionHomeElement
 {
 	skin-class:ClassReference("com.ithaca.visu.skins.SessionHomeElementSkin");
-}
+}*/
 
 AdvancedTextInput
 {

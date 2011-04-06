@@ -13,6 +13,9 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
 	
+	import mx.logging.Log;
+    import mx.logging.ILogger;
+	
 	import flash.events.Event;
 	
 	import mx.controls.ProgressBar;
@@ -26,6 +29,10 @@ package com.ithaca.visu.core
 	
 	public class VisuApplication extends Application
 	{
+		
+		private static var logger:ILogger = Log.getLogger("com.ithaca.visu.core.VisuApplication");
+		
+		
 		[SkinPart("false")]
 		public var loginForm:LoginForm;
 		
@@ -163,14 +170,24 @@ package com.ithaca.visu.core
 		}
 		
 		protected function joinSession(event:SessionEvent):void{
+			logger.debug("The application is requested to join the session {0}", event.session.id_session);
 			moduleNavigator.navigateToModule( "tutorat", event.session);
 		}
 		
 		protected function editSession(event:SessionEvent):void{
+			logger.debug("The application is requested to edit the session {0}", event.session.id_session);
 			moduleNavigator.navigateToModule( "session", event.session);
 		}
 		
+
+		protected function cancelSession(event:SessionEvent):void{
+			logger.debug("The application is requested to cancel the session {0}", event.session.id_session);
+			moduleNavigator.navigateToModule( "retrospection", event.session);
+		}
+		 
+
 		protected function goRetrospection(event:SessionEvent):void{
+			logger.debug("The application is requested to go to the retrospection room of the session {0}", event.session.id_session);
 			moduleNavigator.navigateToModule( "retrospection", event.session);
 		}
 		 
@@ -195,7 +212,6 @@ package com.ithaca.visu.core
 		{
 			trace("VISU APP unload module:  " + event)
 		} 	
-		
 		
 		
 		/**

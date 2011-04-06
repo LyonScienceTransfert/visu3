@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				xmlns:layout1="com.lyon2.controls.sparks.layout.*"
+				xmlns:myviews="com.ithaca.visu.view.user.*">
+
+
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import spark.events.IndexChangeEvent;
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.model.Session;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.logging.Log;
+    		import mx.logging.ILogger;
+	
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.utils.StringUtils;
+			import com.ithaca.utils.VisuUtils;
+			import com.lyon2.controls.utils.TimeUtils;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+
+			private static var logger:ILogger = Log.getLogger("com.ithaca.visu.view.session.renderer.HomeSessionRendered");
+				/*
+				logger.debug("==== Session {0} ({1})", data.id_session, data.theme);				
+				logger.debug("Session owner: {0} ", data.id_user);				
+				logger.debug("Logged user: {0} - {1} {2} ({3})", 
+							loggedUser.id_user,
+							loggedUser.lastname,
+							loggedUser.firstname,
+							VisuUtils.getRoleLabel(loggedUser.role)
+							);				
+				logger.debug("canWrite: {0}", canWrite());
+				logger.debug("canAccess: {0}", canAccess());
+				logger.debug("isClosed: {0}", isClosed());
+				logger.debug("canJoinSession: {0}", canJoinSession());
+				logger.debug("canJoinRetrospection: {0}", canJoinRetrospection());
+				logger.debug("canCancelSession: {0}", canCancelSession());
+				logger.debug("canModifySession: {0}", !isClosed() && canWrite());
+*/
+
+			private function canWrite():Boolean {
+				return RoleEnum.hasResponsableRight(Model.getInstance().getLoggedUser().role)
+						|| data.id_user == Model.getInstance().getLoggedUser().id_user;
+			}
+			
+			private function canAccess():Boolean {
+				return RoleEnum.hasResponsableRight(Model.getInstance().getLoggedUser().role)
+						|| data.id_user == Model.getInstance().getLoggedUser().id_user;
+			}
+			
+			private function isClosed():Boolean {
+				return data.statusSession==SessionStatusEnum.SESSION_CLOSE;
+			}
+			
+			private function canJoinSession():Boolean {
+				return !isClosed() && canAccess();
+			}
+
+			private function canJoinRetrospection():Boolean {
+				return isClosed() && canAccess();
+			}
+			
+			private function canModifySession():Boolean {
+				var loggedUser:User = Model.getInstance().getLoggedUser();
+				return !isClosed() && canWrite();
+			}
+			
+			 override public function set data(value:Object):void { 
+		    	super.data = value; 
+			    if (value== null) 
+			      return; 
+				
+				var session:Session = data as Session;
+				
+			
+				if(cancelButton) {
+					cancelButton.visible = canCancelSession();
+					cancelButton.includeInLayout = canCancelSession();
+				}
+
+				if(connectButton) {
+					connectButton.visible = canJoinSession();
+					connectButton.includeInLayout = canJoinSession();
+				}
+
+				if(retrospectionButton) {
+					retrospectionButton.visible = canJoinRetrospection();
+					retrospectionButton.includeInLayout = canJoinRetrospection();
+				}
+
+				if(editButton) {
+					editButton.visible = canModifySession();
+					editButton.includeInLayout = canModifySession();
+				}
+				
+				if(subDisplay) {
+					subDisplay.text = VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording);
+				}
+				
+				if(hourDisplay) {
+					hourDisplay.text = TimeUtils.formatHHMM(data.date_session);
+				}
+				
+				if(cancelButton) {
+					titleDisplay.text = data.theme;
+				}
+
+				if(usersPreviewList) {
+					usersPreviewList.text = VisuUtils.joinUserList(data.participants.toArray());
+				}
+		    } 
+
+			private function canCancelSession():Boolean {
+				return !isClosed() && canWrite();
+			}
+			
+			private function doJoinSession(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_JOIN_SESSION);
+			}
+			
+			private function doEdit(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_EDIT_SESSION);
+			}
+			
+			private function doRetrospection(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION);
+			}
+			
+			private function doCancel(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_CANCEL_SESSION);
+			}
+			
+			private function dispatch(eventName:String):void {
+				var sessionHomeElementEvent:SessionHomeElementEvent = new SessionHomeElementEvent(eventName); 
+				var session:Session = data as Session;
+				sessionHomeElementEvent.session = session;
+				sessionHomeElementEvent.typeAction = eventName;
+				logger.debug("Dispatching the event SessionHomeElementEvent.{2} for the session {0} ({1})", 
+							data.id_session, 
+							data.theme,
+							eventName);				
+				actionGroup.dispatchEvent(sessionHomeElementEvent);
+			}
+			
+		]]>
+	</fx:Script>
+
+
+	<s:Group width="100%">
+	
+		<s:Rect width="100%" height="100%" radiusX="8" includeIn="selected">
+			<s:fill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="0xFFFFFF" />
+							<s:GradientEntry color="0xD8D8D8" />
+						</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:LinearGradientStroke rotation="90" weight="1">
+					<s:GradientEntry color="0x000000" alpha="0.5625" />
+					<s:GradientEntry color="0x000000" alpha="0.75" />
+				</s:LinearGradientStroke>
+			</s:stroke>
+		</s:Rect>
+		
+		
+		<s:VGroup width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" horizontalAlign="center">
+			<s:HGroup width="100%" verticalAlign="top">	
+				<s:Label id="hourDisplay" fontWeight="bold" text="{TimeUtils.formatHHMM(data.date_session)}"/>
+				<s:VGroup width="100%">	
+						<s:Label id="titleDisplay"   width="100%" text="{data.theme}"/>
+						<s:Label id="usersPreviewList" includeIn="normal" width="100%" text="{VisuUtils.joinUserList(data.participants.toArray())}"/>
+				</s:VGroup>	
+			</s:HGroup>	
+			
+			<s:Scroller includeIn="selected" width="100%" itemDestructionPolicy="auto">		
+				<s:DataGroup id="users"  width="100%" height="50" 
+						dataProvider="{data.participants}">
+					<s:layout>
+						<layout1:FlowLayout />
+					</s:layout>
+					
+					<s:itemRenderer>
+                    <fx:Component>
+                        <s:ItemRenderer>
+                            <s:states>
+                                <s:State name="normal" />
+                            </s:states>
+                            <s:Rect id="fill" radiusX="10"
+								left="1" right="1" top="1" bottom="1">
+								<s:fill>
+									<s:LinearGradient rotation="90">
+										<s:GradientEntry color="0xFFFFFF" />
+										<s:GradientEntry color="0xD8D8D8" />
+									</s:LinearGradient>
+								</s:fill>
+							</s:Rect>
+							
+							<s:Rect id="border" radiusX="10"
+									left="0" right="0" top="0" bottom="0" height="20" >
+								<s:stroke>
+									<s:LinearGradientStroke rotation="90" weight="1">
+										<s:GradientEntry color="0x000000" 
+														 alpha="0.5625"/>
+										<s:GradientEntry color="0x000000" 
+														 alpha="0.75" />
+									</s:LinearGradientStroke>
+								</s:stroke>
+							</s:Rect>
+                            <myviews:UserElement left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
+                        </s:ItemRenderer>
+                    </fx:Component>
+                </s:itemRenderer>
+					
+				</s:DataGroup>
+			</s:Scroller>
+			
+			<s:HGroup id="actionGroup" includeIn="selected" width="100%">	
+				<s:HGroup width="100%" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+						
+					<mx:LinkButton 
+						id="cancelButton"
+						label="Annuler"
+						toolTip="Supprimer définitivement cette séance"
+						click="doCancel(event)"
+						visible="{canCancelSession()}"
+						includeInLayout="{canCancelSession()}"
+						/>
+					
+					<mx:LinkButton 
+						id="editButton"
+						label="Modifier"
+						click="doEdit(event)"
+						toolTip="Modifier la date, les participants ou le plan de séance"
+						visible="{canModifySession()}"
+						includeInLayout="{canModifySession()}"
+						/>	
+				</s:HGroup>
+					
+				<s:HGroup width="100%" horizontalAlign="right" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+					<mx:LinkButton 
+						id="connectButton"
+						label="Rejoindre"
+						click="doJoinSession(event)"
+						toolTip="Entrer dans le salon synchrone"
+						visible="{canJoinSession()}"
+						includeInLayout="{canJoinSession()}"
+						/>
+			
+					<mx:LinkButton 
+						id="retrospectionButton"
+						label="Rétrospection"
+						click="doRetrospection(event)"
+						toolTip="Entrer dans le salon de rétrospection"
+						visible="{canJoinRetrospection()}"
+						includeInLayout="{canJoinRetrospection()}"
+						/>
+			
+				</s:HGroup>
+			</s:HGroup>
+			
+			<s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
+			
+		</s:VGroup>
+	</s:Group>
+</s:ItemRenderer>
