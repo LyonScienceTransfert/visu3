@@ -15,5 +15,19 @@ package com.ithaca.utils
 			else
 				return value;
 		}
+		
+		public static function firstLetterCap(value:String):String
+		{
+			if(!value)
+				return value;
+				
+			var firstChar:String = value.charAt(0);
+		
+			if(firstChar) 
+				return firstChar.toUpperCase();
+			else
+				return value;
+		}
+		
 	}
 }
