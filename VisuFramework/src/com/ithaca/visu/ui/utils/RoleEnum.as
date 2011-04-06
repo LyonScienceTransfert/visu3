@@ -68,6 +68,22 @@ package com.ithaca.visu.ui.utils
 		static public var TUTEUR : uint = 511;
 		static public var RESPONSABLE : uint = 70135;
 		static public var ADMINISTRATEUR : uint = 170135;
+		
+		public static function hasAdminRight(role:uint):Boolean {
+			return role>RESPONSABLE;
+		}
+		
+		public static function hasResponsableRight(role:uint):Boolean {
+			return role>TUTEUR;
+		}
+		
+		public static function hasTuteurRight(role:uint):Boolean {
+			return role>STUDENT;
+		}
+		
+		public static function hasStudentRight(role:uint):Boolean {
+			return true;
+		}
 	}
 	
 	
