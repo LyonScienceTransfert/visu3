@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+	verticalAlign="middle">
+	<fx:Declarations>
+
+	</fx:Declarations>
+
+
+	
+	<fx:Script>
+		<![CDATA[
+				import com.ithaca.utils.StringUtils;
+				import com.ithaca.utils.VisuUtils;
+				import com.ithaca.visu.model.User;
+			
+				[Bindable]
+				public var user:User;
+				
+				[Bindable]
+				public var firstNameInitials:Boolean = false;
+
+				[Bindable]
+				public var showStatusIcon:Boolean = true;
+
+				[Bindable]
+				public var showRoleInParentheses:Boolean = false;
+				
+		]]>
+	</fx:Script>
+
+	<mx:Image id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.getStatus())}" /> 
+	<s:Label text="{firstNameInitials?StringUtils.firstLetterCap(user.lastname):StringUtils.cap(user.lastname)}{firstNameInitials?'.':''} {StringUtils.cap(user.firstname)}"/>
+	<s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"/>
+</s:HGroup>
