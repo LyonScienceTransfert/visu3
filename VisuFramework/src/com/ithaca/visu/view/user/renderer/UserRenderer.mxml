@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
-				xmlns:mx="library://ns.adobe.com/flex/mx">
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				xmlns:myviews="com.ithaca.visu.view.user.*">
 
 	<s:states>
 		<s:State name="normal" />
@@ -45,11 +46,9 @@
 		
 		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5"
 			paddingRight="5" paddingTop="5">
-			<s:HGroup includeIn="normal,selected" width="100%">
-				 <mx:Image source="{VisuUtils.getStatusImageSource(data.getStatus())}"  id="statusIcon" /> 
-				<s:Label text.normal="{StringUtils.cap(data.lastname)} {StringUtils.cap(data.firstname)} ({VisuUtils.getRoleLabel(data.getRole())})" 
-						 text.selected="{StringUtils.cap(data.lastname)} {StringUtils.cap(data.firstname)}" />
-			</s:HGroup>
+			
+			<myviews:UserElement width="100%" user="{data}" showRoleInParentheses.normal="true" showRoleInParentheses.selected="false"/>
+
 			<s:HGroup includeIn="selected" width="100%">
 				<mx:Image source="{data.avatar}" includeIn="selected" width="70"
 					height="70" />
