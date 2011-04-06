@@ -124,7 +124,7 @@ public class MainManager
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
 		
 		// add flux activity
-		Model.getInstance().addFluxActivity(userVO.id_user,userVO.firstname,userVO.avatar,fxgt.gettext(" a rejoint Visu "),new Date());
+		Model.getInstance().addFluxActivity(userVO.id_user,userVO.firstname,userVO.lastname,userVO.avatar,fxgt.gettext(" a rejoint Visu "),new Date());
 	}
 	
 	/**
@@ -160,18 +160,21 @@ public class MainManager
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
 		
 		// add flix activity
-		Model.getInstance().addFluxActivity(userVO.id_user, userVO.firstname, userVO.avatar, fxgt.gettext(" a quitté Visu "),new Date());
+		Model.getInstance().addFluxActivity(userVO.id_user, userVO.firstname, userVO.lastname, userVO.avatar, fxgt.gettext(" a quitté Visu "),new Date());
 		
 	}
 	
 	public function onResivePrivateMessage(message : String, sender: UserVO):void
 	{
-		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.avatar,fxgt.gettext("[personnel] ")+message,new Date());		
+		logger.debug("MainManager.onResivePrivateMessage: {0} {1} (id={2})", sender.lastname, sender.firstname,sender.id_user);
+		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,fxgt.gettext("[personnel] ")+message,new Date());		
 	} 
 	
 	public function onResivePublicMessage(message : String, sender: UserVO):void
 	{
-		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.avatar,fxgt.gettext("[public] ")+message ,new Date());	
+		logger.debug("MainManager.onResivePublicMessage: {0} {1} (id={2})", sender.lastname, sender.firstname,sender.id_user);
+//		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,fxgt.gettext("[public] ")+message ,new Date());	
+		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,message ,new Date());	
 	}	
 	
 	/**
@@ -393,7 +396,7 @@ public class MainManager
 					}
 					if(!hasLoggedUserInSession)
 					{
-						Model.getInstance().addFluxActivity(loggedUserId,loggedUser.firstname, loggedUser.avatar,fxgt.gettext("A été désinscrit de la séance : ")+sessionVO.theme+promtDeLeString, new Date());		
+						Model.getInstance().addFluxActivity(loggedUserId,loggedUser.firstname, loggedUser.lastname, loggedUser.avatar,fxgt.gettext("A été désinscrit de la séance : ")+sessionVO.theme+promtDeLeString, new Date());		
 					}
 					// notification for removing session
 					var eventRemoveSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
@@ -413,7 +416,7 @@ public class MainManager
 					// add session , add swap users
 					var labelDate:String = Model.getInstance().addSession(sessionVO, ar);					
 					// add flux 
-					Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar,fxgt.gettext("A été inscrit à la séance : ")+sessionVO.theme+promtDeLeString, new Date());	
+					Model.getInstance().addFluxActivity(userId,user.firstname, user.lastname, user.avatar,fxgt.gettext("A été inscrit à la séance : ")+sessionVO.theme+promtDeLeString, new Date());	
 					// notification for adding session
 					var event:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
 					// get list sessionDate

@@ -2,46 +2,28 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				autoDrawBackground="true"
-				added="itemrenderer1_addedHandler(event)">
+				autoDrawBackground="true">
+				<!--added="itemrenderer1_addedHandler(event)"-->
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
+//			import mx.events.FlexEvent;
+			import com.ithaca.utils.StringUtils;
 
-			protected function itemrenderer1_addedHandler(event:Event):void
+/*			protected function itemrenderer1_addedHandler(event:Event):void
 			{
 				this.width = this.owner.width - 18;
-			}
+			}*/
 		]]>
 	</fx:Script>
 	
-	
-	
-	<s:Rect id="fill" radiusX="5"
-			left="2" right="2" top="1" bottom="1" minHeight="31">
-		<s:fill>
-			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="0xFFFFFF" />
-				<s:GradientEntry color="0xD8D8D8" />
-			</s:LinearGradient>
-		</s:fill>
-	</s:Rect>
-	
-	<s:Rect id="border" radiusX="5"
-			left="2" right="2" top="0" bottom="0" >
-		<s:stroke>
-			<s:LinearGradientStroke rotation="90" weight="1">
-				<s:GradientEntry color="0x000000" 
-								 alpha="0.5625"/>
-				<s:GradientEntry color="0x000000" 
-								 alpha="0.75" />
-			</s:LinearGradientStroke>
-		</s:stroke>
-	</s:Rect>
-	
-	<mx:Image source="{data.pathImage}"  left="5" width="25" height="25" top="4"/>
-	<s:Label id="labelFirstName" text="{data.firstname}" fontWeight="bold"  left="35" top="12"/>
-	<s:RichText text="{data.message}" left="{labelFirstName.left + labelFirstName.width + 5}" right="35" color="#6ca6cf" top="12"/>
-	<s:Label  text="{data.time}"  fontSize="10"  right="10"  color="#000000" bottom="5"/>
-	
+	<s:HGroup width="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+		<s:HGroup verticalAlign="top" width="100%" height="100%">
+			<mx:Image includeInLayout="{data.pathImage}" visible="{data.pathImage}" source="{data.pathImage}"  width="25" height="25" />
+			<s:Label id="labelFirstName" text="{StringUtils.firstLetterCap(data.lastname) +'. ' + StringUtils.cap(data.firstname)}" fontWeight="bold"/>
+			<s:RichText text="{data.message}" width="200" color="#6ca6cf"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="bottom" horizontalAlign="right" height="100%">
+			<s:Label  text="{data.time}"   fontSize="10"  color="#000000" />
+		</s:HGroup>
+	</s:HGroup>
 </s:ItemRenderer>
