@@ -3,10 +3,13 @@ package com.ithaca.utils
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.model.User;
 	import mx.logging.Log;
     import mx.logging.ILogger;
 		
+	import com.ithaca.utils.StringUtils;
+			
 	
 	public class VisuUtils
 	{
@@ -45,6 +48,29 @@ package com.ithaca.utils
 			return label;
 		}
 
+		
+		public static function getSessionStatusInfoMessage(status:Number, dateRecording:Date):String
+		{
+			var recordingMessage:String = "";
+				switch (status) {
+					case SessionStatusEnum.SESSION_OPEN:
+						recordingMessage = "La séance est ouverte";
+						break;
+					case SessionStatusEnum.SESSION_CLOSE:
+						recordingMessage = "La séance est close";
+						break;
+					case SessionStatusEnum.SESSION_RECORDING:
+						recordingMessage = "La séance est démarrée depuis " + dateRecording.getHours().toString()+"h "+dateRecording.getMinutes().toString()+"m";
+						break;
+					case SessionStatusEnum.SESSION_PAUSE:
+						recordingMessage = "La séance est démarrée depuis " + dateRecording.getHours().toString()+ "h " + dateRecording.getMinutes().toString()+ "m" + " : Suspendue";
+						break;
+					default:
+						recordingMessage = "Status de séance inconnu";
+				}
+				return recordingMessage;
+		}
+
 		public static function getStatusLabel(status:Number):String
 		{
 			return status == ConnectionStatus.CONNECTED ? "connected" :
@@ -66,6 +92,20 @@ package com.ithaca.utils
 					return null;
 				}
 		}
+		
+		public static function joinUserList(userList:Array):String
+		{
+			
+			var label:String = "";
+			var first:Boolean = true;
+			for each (var user:User in userList) {
+				label+= first ? '': ', ';
+				label+= StringUtils.firstLetterCap(user.lastname) + ". " + StringUtils.cap(user.firstname);
+				first = false;
+			}
+			return label;
+		}
+		
 	}
 }
 						

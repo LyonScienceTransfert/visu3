@@ -85,6 +85,14 @@ package com.lyon2.controls.utils
 			}
 			return "";
 		}
+		
+		
+		public static function formatHHMM(date:Date):String {
+			var s:String = "";
+			s+=date.hours;
+			s+=":" + (date.minutes<10?"0":"")+date.minutes;
+			return s;
+		}
 	}
 }
 
