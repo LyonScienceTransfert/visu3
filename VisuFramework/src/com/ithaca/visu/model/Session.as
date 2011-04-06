@@ -72,12 +72,24 @@ package  com.ithaca.visu.model
 	{
 			public var id_session:int;
 			public var id_user:int;
+	
+			[Bindable]
 			public var theme:String;
+	
+			[Bindable]
 			public var date_session:Date;
 			private var _isModel:Boolean;
+	
+			[Bindable]
 			public var description:String;
+			
+			[Bindable]
 			public var participants:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
 			public var date_start_recording:Date;
+			
+			[Bindable]
 			public var statusSession:int = -1;
 			public var duration_session:int;
 
