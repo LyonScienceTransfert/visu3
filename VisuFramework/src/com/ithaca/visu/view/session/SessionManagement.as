@@ -64,7 +64,6 @@
 package com.ithaca.visu.view.session
 {
 	import com.ithaca.visu.controls.AdvancedTextInput;
-	import com.ithaca.visu.controls.SessionHomeElement;
 	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
