@@ -1550,7 +1550,7 @@ package  com.ithaca.visu.model
 		}
 		
 		public function isUserConnected(id_user:int):Boolean {
-			logger.debug("Verifying if the user {0} is connected ", id_user);
+			//logger.debug("Verifying if the user {0} is connected ", id_user);
 			for each (var user in this.listConnectedUsers) {
 				if(user.id_user == id_user)
 					return true;
@@ -1588,7 +1588,7 @@ package  com.ithaca.visu.model
 			return this.listFluxActivity;
 		}
 		
-		public function addFluxActivity(userId:int, firstname:String, path:String, message:String , date:Date):void
+		public function addFluxActivity(userId:int, firstname:String, lastname:String, path:String, message:String , date:Date):void
 		{
 			var h:String = date.getHours().toString();
 			var zeroMin:String = "";
@@ -1598,7 +1598,7 @@ package  com.ithaca.visu.model
 			}
 			var m:String = zeroMin+date.getMinutes().toString();
 			var time:String = h+":"+m;
-			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,path,message,time);
+			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,lastname,path,message,time);
 			this.listFluxActivity.addItemAt(fluxActivity,0);		
 		}
 

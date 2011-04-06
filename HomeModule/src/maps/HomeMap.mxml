@@ -24,11 +24,11 @@
         ]]></fx:Script>
 
     <fx:Declarations>
-        <mate:Debugger level="{Debugger.ALL}"/>
+        <mate:Debugger level="{Debugger.WARN}"/>
 
         <mate:Injectors target="{HomeModule}">
-			<mate:PropertyInjector source="{HomeManager}"
-								   targetKey="listSessionView" sourceKey="listSessionView"/>
+			<!--<mate:PropertyInjector source="{HomeManager}"
+								   targetKey="listSessionView" sourceKey="listSessionView"/>-->
 			<mate:PropertyInjector source="{HomeManager}"
 								   targetKey="fluxActivity" sourceKey="fluxActivity"/>
         </mate:Injectors>

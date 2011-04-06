@@ -26,9 +26,10 @@ public class HomeManager
 	[Bindable]
 	public var fluxActivity : ArrayCollection;
 	
+	/*
 	[Bindable]
 	public var listSessionView:ArrayCollection;
-
+	*/
 	
 	private var logger : ILogger = Log.getLogger('HomeManager');
 	
