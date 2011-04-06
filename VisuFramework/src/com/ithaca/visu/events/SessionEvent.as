@@ -13,6 +13,7 @@ import mx.collections.ArrayCollection;
 public class SessionEvent extends Event
 {
 	// constants
+	static public const GO_TO_RETROSPECTION : String = 'goToRetrospection';
 	static public const LOAD_LIST_SESSION : String = 'loadListSession';
 	static public const LOAD_LIST_DATE_SESSION : String = 'loadListDateSession';
 	static public const LOAD_SESSION : String = 'loadSession';

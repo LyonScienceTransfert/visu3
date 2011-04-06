@@ -12,6 +12,7 @@ package  com.ithaca.visu.events
 		static public const CLICK_ACTION_LOGGED_USER : String = 'clickActionLoggedUser';
 		static public const ACTION_CANCEL_SESSION : String = 'actionCancelSession';
 		static public const ACTION_EDIT_SESSION : String = 'actionEditSession';
+		static public const ACTION_GOTO_RETROSPECTION : String = 'actionGoToRetrospection';
 		static public const ACTION_JOIN_SESSION : String = 'actionJoinSession';
 		
 		// properties
@@ -30,6 +31,6 @@ package  com.ithaca.visu.events
 		
 		// methods
 		public override function toString() : String
-		{ return "events.SessionHomeElementEvent"; }
+		{ return "events.SessionHomeElementEvent" + typeAction; }
 	}
 }
