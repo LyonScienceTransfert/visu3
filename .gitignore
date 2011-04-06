@@ -10,6 +10,8 @@ VisuFramework/.project
 VisuApplication/.project
 VisuApplication/.settings/
 org.eclipse.core.resources.prefs
-
-
+SessionModule/.settings/org.eclipse.core.resources.prefs
+SessionModule/.project
+HomeModule/.settings/org.eclipse.core.resources.prefs
+HomeModule/.project
 
