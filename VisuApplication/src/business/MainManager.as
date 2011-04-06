@@ -1411,7 +1411,7 @@ public class MainManager
 		{
 			// add flux 
 			var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
-			Model.getInstance().addFluxActivity(userId,user.firstname, user.avatar, 'La séance "'+ session.theme + '" a été supprimer', new Date()); 
+			Model.getInstance().addFluxActivity(userId,user.lastname, user.firstname, user.avatar, 'La séance "'+ session.theme + '" a été supprimer', new Date()); 
 		}
 		// notification for deleting session
 		var eventRemoveSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_DELETED_SESSION);

@@ -219,6 +219,7 @@
 			/**
 			 * Remove deleted session
 			 */
+			 /*
 			public function onUpdateDeletedSession(event:SessionEvent):void
 			{
 				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule;
@@ -272,6 +273,7 @@
 					}
 				}
 			}
+			 */
 			
 			private function getLabelHasNotSessionForThisDate():Label
 			{
@@ -936,7 +938,7 @@
 					}				
 					case SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION:
 					{
-						eventSession = new SessionEvent(SessionEvent.CANCEL_SESSION);
+						eventSession = new SessionEvent(SessionEvent.GO_RETROSPECTION_MODULE);
 						break;
 					}				
 				}
