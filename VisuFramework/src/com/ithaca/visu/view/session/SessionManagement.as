@@ -90,6 +90,7 @@ package com.ithaca.visu.view.session
 	import mx.events.FlexEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.utils.ObjectUtil;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -483,7 +484,7 @@ package com.ithaca.visu.view.session
 				sessionsList.removeAllElements();
 			}
 			var addSession:Boolean;
-			var sortFieldString:String = "date_session";
+			var sortFieldFunction:Function = compareDateSession;
 			var listFilteredSession:ArrayCollection = new ArrayCollection();
 			var nbrSession:int = sessionCollection.length;
 			for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
@@ -504,7 +505,7 @@ package com.ithaca.visu.view.session
 						break;						
 					case SessionFilterEnum.SESSION_WAS :
 						if(session.statusSession == SessionStatusEnum.SESSION_CLOSE && !session.isModel){ addSession = true;};
-						sortFieldString = "date_start_recording";
+						sortFieldFunction = compareDateSessionRecording;
 						break;
 					case SessionFilterEnum.SESSION_PLAN :
 						if(session.isModel){ addSession = true; };
@@ -517,7 +518,7 @@ package com.ithaca.visu.view.session
 			}
 			// sort by date 
 			var sort:Sort = new Sort();
-			sort.fields = [new SortField(sortFieldString, true)];
+			sort.compareFunction = sortFieldFunction;
 			listFilteredSession.sort = sort;
 			listFilteredSession.refresh();
 			
@@ -531,7 +532,23 @@ package com.ithaca.visu.view.session
 			
 			onSessionViewClick();
 		}
-
+		// sort by date session planed
+		private function compareDateSession(ObjA:Object,ObjB:Object,fields:Array = null):int
+		{
+			var dateA:Date=ObjA.date_session;
+			var dateB:Date=ObjB.date_session;
+			return ObjectUtil.dateCompare(dateA, dateB);
+		}
+		// sort by date session recording
+		private function compareDateSessionRecording(ObjA:Object,ObjB:Object,fields:Array = null):int
+		{
+			var dateA:Date=ObjA.date_start_recording;
+			var dateB:Date=ObjB.date_start_recording;
+			return ObjectUtil.dateCompare(dateA, dateB);
+		}
+		
+		
+		
 		protected function userFilterFunction(item:Object):Boolean
 		{
 			// FIXME : ? will be with session en recording
