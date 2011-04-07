@@ -63,16 +63,23 @@
 package com.lyon2.controls
 {
 	 
+	import com.ithaca.visu.model.Model;
+	
 	import flash.display.Graphics;
 	import flash.events.Event;
 	import flash.events.NetStatusEvent;
 	import flash.events.StatusEvent;
+	import flash.events.TimerEvent;
 	import flash.media.Camera;
 	import flash.media.Microphone;
 	import flash.media.SoundTransform;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
+	import flash.utils.Timer;
 	
+	import gnu.as3.gettext._FxGettext;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Container;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -111,6 +118,7 @@ package com.lyon2.controls
         public var autoPlay:Boolean; 		
 		
 		private var _currentVolume:Number = 1;
+		private var _frameRateSplit:Number = 1000;
 		/* 
          * Status constants
          */
@@ -147,7 +155,10 @@ package com.lyon2.controls
 		 */
 		private var padding:int = 5;
 		private const DEFAULT_BACKGROUND_COLOR:uint = 0xDCDCDC;
-				
+		
+		private var timer:Timer;
+		private var _debugMode:Boolean;
+		
 		public function VisuVisio() 
 		{
 			streams = new Object();
@@ -164,6 +175,14 @@ package com.lyon2.controls
 				_microphone.addEventListener(StatusEvent.STATUS, localStreamStatusHandler);
 			}
 			
+		}
+		
+		public function setDebugMode():void
+		{
+				_debugMode = true;
+				timer = new Timer(_frameRateSplit);
+				timer.addEventListener(TimerEvent.TIMER,  onUpdateTimer);
+				timer.start();
 		}
 		
     	override protected function updateDisplayList(w:Number, h:Number): void
@@ -483,6 +502,7 @@ package com.lyon2.controls
             if (streamId != streamID && !hasStreamId(streamId))
             {
                 logger.debug('addVideoStream ' + streamId);
+				trace('addVideoStream ' + streamId);
                 stream = new NetStream(connection);
 				// set current volume 
 				var tempSoundTransforme:SoundTransform = stream.soundTransform;
@@ -501,7 +521,20 @@ package com.lyon2.controls
 				
                 var vd:VideoComponent = new VideoComponent();
                 vd.status = status;
-                vd.attachNetStream(stream);
+				if(_debugMode)
+				{
+					vd.modeDebug = true;
+				}
+				
+				var userInfo:String = "void";
+				var str:String = streamId.charAt(0);
+				if(str == 'r')
+				{
+					userInfo = streamId.split("-")[3];
+				}			
+				
+				
+                vd.attachNetStream(stream, userInfo );
 				
                 videos[streamId] = vd;
                /* 
@@ -510,9 +543,38 @@ package com.lyon2.controls
                 */
                addChildAt( vd , 0 );
 			}
+			
+			if (timer != null && !timer.running)
+			{
+				timer.start();
+			}
+			
 			return stream;
 		}
 
+		private function onUpdateTimer(event:Event):void
+		{
+			var frameSplit:ArrayCollection = new ArrayCollection();
+			var userId:String  = "";
+			var obj:Object = new Object();
+			for (var name:String in videos)
+			{
+				var time:Number = videos[name].onUpdateView();
+					
+				// pour salon retro
+				var str:String = name.charAt(0);
+				if(str == 'r')
+				{
+					userId = name.split("-")[3];
+				}			
+				obj[userId] = time;
+				
+			}
+			Model.getInstance().addFrameSplit(obj);
+		}
+		
+		
+		
         public function removeVideoStream(sID: String, videoOnly: Boolean = false): void
         {
             logger.debug('\tremoveVideoStream ' + sID + " from " + streams.toString());
@@ -536,6 +598,7 @@ package com.lyon2.controls
                 removeChild(videos[sID]);
                 delete videos[sID];
             }
+			
 		}
 		
 		private function forceResize(event:Event):void
@@ -566,6 +629,11 @@ package com.lyon2.controls
     			removeVideoStream(streamname);
     		}
     		logger.debug(debug());
+			
+			if (timer != null && timer.running)
+			{
+				timer.stop();
+			}
     	}
     	
 		private function localStreamStatusHandler(event:StatusEvent):void
@@ -645,6 +713,23 @@ package com.lyon2.controls
 			return out;
     	}
 
+		// synchronisation de streems
+		public function synchroStreams():void
+		{
+			var firstStream:Boolean = true;
+			var currentTime:Number= 0;
+			for (var n: String in streams)
+			{
+				var stream:NetStream = streams[n];
+				if (firstStream)
+				{
+					firstStream = false;
+					currentTime = stream.time;
+				}
+				stream.seek(int(currentTime));
+			}
+		}
+		
     	public function pauseStreams(): void
         {
             for (var n: String in streams)
@@ -780,6 +865,11 @@ package com.lyon2.controls
         public function get status(): int
         {
             return _status;
+		}
+		
+		public function set frameRateSplit(value:Number):void
+		{
+			this._frameRateSplit = value;
 		}
 		
 		public function setVolume(value:Number):void

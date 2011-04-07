@@ -9,7 +9,7 @@
 						configure="visumodulebase1_configureHandler(event)" 
 						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
 						xmlns:timeline="com.ithaca.visu.controls.timeline.*"
-						xmlns:controls="com.lyon2.controls.*" > 
+						xmlns:controls="com.lyon2.controls.*"  currentState="State1"> 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.documentarisation.RetroDocumentSegment;
@@ -43,8 +43,10 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.controls.Image;
+			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.core.DragSource;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
@@ -61,6 +63,8 @@
 			
 			[Bindable]
 			private var timer:Timer;
+			
+			private var timerSynchro:Timer;
 			private var timerRetroDocumentSegment:Timer;
 			
 			public var listSessionOpen : ArrayCollection;
@@ -82,6 +86,8 @@
 			private var currentRetroDocumentSegmentPlaying:RetroDocumentSegment = null;
 			private var beginTimeCurrentSegment:Number= 0;
 			private var currentVolume:Number = 1;
+			// time start session plus time in this session 
+			private var currentTime:Number;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{			
@@ -104,8 +110,6 @@
 				getListObselEvent.sessionId = session.id_session;
 				// set current sessionId
 				this.currentSessionId = session.id_session;
-				// enable button add bilan
-				addRetroDocument.enabled = true;
 				this.dispatchEvent(getListObselEvent);
 			}
 			
@@ -136,6 +140,26 @@
 				
 				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
 				this.durationSessionSlider.dataTipFormatFunction = formatDurationSlider;
+				// enable button add bilan
+				addRetroDocument.enabled = true;
+				
+				if( Model.getInstance().getModeDebug())
+				{
+					Model.getInstance().clearListFrameSplit();
+					buttomTraceFrame.visible = true;
+					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
+					this.visio.setDebugMode();
+					
+
+					timerSynchro = new Timer(10000,0);
+					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
+					timerSynchro.start();
+					
+				}
+			}
+			private function updateTimerSynchro(event:TimerEvent):void
+			{
+				this.visio.synchroStreams();
 			}
 			
 			private function onAddObselComment(event:ObselEvent):void
@@ -559,7 +583,7 @@
 			}
 			
 			private function onMouseClickOnTimeLine(event:MouseEvent):void
-			{
+			{	
 				var target:Object = event.target as Object;
 				var deltaXObselTime:Number = 0;
 				
@@ -574,6 +598,8 @@
 				delta = delta + startTimeSessionSlider.value - this.currentSessionDateRecording.time;
 				// pre play video flux
 				prePlayVideoFlux(0,delta);		
+				
+				
 			}
 			
 			 private function addFluxVideo(listObselSessionIn:ArrayCollection):void
@@ -590,6 +616,8 @@
 						 stream.addEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
 					 }
 				 }
+				 
+				 
 			 }
 			
 			private function remoteStreamStatusHandler(event:NetStatusEvent):void
@@ -607,11 +635,15 @@
 						{
 							// message 
 							// Alert.show("There is no obsel with path = "+streamId,"Message ....."); 
+							trace("==========================");
+							trace("OBSEL EMPTY");
 						}else
 						{
 							var timeBeginRFN:Number = obsel.begin;
-							var deltaSecond:Number = (this.pickCheryClick - timeBeginRFN)/1000;
+							var deltaSecond:int = (this.currentTime - timeBeginRFN)/1000;
 							//panelTimeLine.title = deltaSecond.toString() + "cherry pick = "+ this.pickCheryClick.toString();
+							trace("==========================");
+							trace(deltaSecond.toString());
 							stream.seek(deltaSecond);		
 						}
 
@@ -680,7 +712,7 @@
 				timer.start();
 			}
 			
-			private function updateTime(event:TimerEvent):void
+			private function updateTime(event:TimerEvent = null):void
 			{
 				var beginTime:Number = new Date().time - this.timeStart + this.deltaTime;
 				this.testCursor.setBegin(beginTime);
@@ -692,7 +724,10 @@
 					this.currentRetroDocumentSegmentPlaying.currentTime = currentTime;
 				}
 				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
-				this.checkFluxVideo(beginTime + this.testTimeLine.startTimeSession);
+				this.currentTime = beginTime + this.testTimeLine.startTimeSession
+				this.checkFluxVideo(this.currentTime);
+				
+				
 			}
 			
 			private function updateTimeCursor(value:Number):void
@@ -1371,6 +1406,7 @@
 				
 				updateTimeCursor(delta);
 				
+				updateTime();
 				
 				this.pickCheryClick = value;
 				
@@ -1415,12 +1451,109 @@
 				}
 			}
 
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				this.setCurrentState("debug");
+				var listUser:Array = Model.getInstance().getListUserPresentOnTimeLine();
+				var ar:Array = new Array();
+				var nbrUser:int = listUser.length;
+				for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
+				{
+					var name:String = listUser[nUser];
+					var info:String = "+/- (sec)";
+					if(nUser == 0)
+					{
+						info = "currentTime(sec)";
+					}
+					var dgc:DataGridColumn = new DataGridColumn(name);
+					
+					dgc.headerText = "UserId  = "+ name+", "+info;
+					dgc.dataField = "a"+ name;
+					ar.push(dgc);
+				}
+				
+				dataDebug.columns = ar;
+				
+				var html:XML = new XML("<html/>");
+				var body:XML = new XML("<body/>");
+				html.appendChild(body);
+				var table:XML = new XML("<table border='1' />");
+				body.appendChild(table);
+				
+				var list:ArrayCollection = Model.getInstance().getFrameSplit();
+				
+				var cloneList:ArrayCollection = new ArrayCollection();
+				cloneList.addAll(list);
+				var array:Array = new Array();
+				array = cloneList.source as Array;
+				array.reverse();
+				
+				var nbrFrame:int = array.length;
+				for(var nFrame:int = 0; nFrame < nbrFrame ; nFrame++)
+				{
+					var obj:Object = array[nFrame] as Object;
+					var trTag:XML = getTimeByUserId(obj, listUser);
+					table.appendChild(trTag);
+				}
+
+				var xmlList:XMLList = html.body.table.tr as XMLList;
+				dataDebug.dataProvider = xmlList;
+				
+				var t:uint =1
+				
+				function getTimeByUserId(value:Object, listUser:Array):XML
+				{
+					var result:XML = new XML("<tr/>");
+					var nbrUser:int = listUser.length;
+					var tempTime:Number = 0;
+					var frameSec:String = "";
+					for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
+					{
+						var userId:String = listUser[nUser].toString();
+						if(value.hasOwnProperty(userId))
+						{
+							var time:Number = value[userId];
+							if (nUser == 0)
+							{
+								tempTime = time;
+								frameSec = tempTime.toString();
+							}
+							else
+							{
+								time = time - tempTime;
+								var secMylt10in2:int = int(time * 100 );
+								var sec:int = secMylt10in2/100;
+								var secAfterPoint:int = secMylt10in2 - sec*100;
+								var plusMinus:String = "";
+								if(time < 0)
+								{
+									plusMinus = "-";
+									secAfterPoint = secAfterPoint * -1;
+								}
+								frameSec = plusMinus + sec.toString()+"."+secAfterPoint.toString();
+								
+							}
+							var td:XML = new XML("<a"+userId+">"+frameSec+"</a"+userId+">");
+							result.appendChild(td);
+						}else
+						{
+							var tdEmpty:XML = new XML("<td>-----------</td>");
+							result.appendChild(tdEmpty);
+						}
+						
+					}
+					return result;
+				}
+			}
+
 		]]>
 		
 	</fx:Script>
 	<modules:states>
 		<s:State name="State1"/>
 		<s:State name="vciel"/>
+		<s:State name="debug"/>
 	</modules:states>
 	<fx:Declarations>
 		<maps:RetrospectionMap id="retrospectionMap"  dispatcher="{this}"/>
@@ -1481,10 +1614,11 @@
 				<s:Group height="100%" width="100%" bottom="2">
 					<controls:VisuVisio id="visio" width="100%" top="0"
 										quality="80"
-										bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25"/>
-					<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0">
+										bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"/>
+					<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" horizontalCenter.debug="0">
 						<s:label>Couper le son</s:label>
 					</s:Button>
+					<s:Button id="buttomTraceFrame" includeIn="State1,debug" label="Update frame split" left="0" bottom="3" click="button1_clickHandler(event)" visible="false"/>
 				</s:Group>
 			</s:Panel>
 <!-- DOCUMENTARISATION -->
@@ -1492,7 +1626,9 @@
 				<s:layout>
 					<s:VerticalLayout gap="1"/>
 				</s:layout>
-				<s:Group width="100%"  height="30">
+				<mx:DataGrid width="100%"  height="100%" includeIn="debug" id="dataDebug">
+				</mx:DataGrid>
+				<s:Group width="100%"  height="30"  includeIn="State1,vciel">
 					<s:Label maxDisplayedLines="1" left="5" top="10" fontWeight="bold">
 						<s:text>Documentarisation</s:text>
 					</s:Label>
@@ -1500,7 +1636,7 @@
 						<mx:toolTip>{fxgt.gettext("Créer un nouveau bilan pour cette séance")}</mx:toolTip>
 					</mx:Button>
 				</s:Group>
-				<mx:VDividedBox width="100%" height="100%">
+				<mx:VDividedBox width="100%" height="100%"  includeIn="State1,vciel">
 					<mx:Tree width="100%" height="30%" id="retroDocumentTree" 
 							 showRoot="false" labelField="@title"
 							 itemRollOver="onItemRollOver(event)"  change="treeChanged(event)" dropShadowVisible="false"/>
@@ -1519,7 +1655,7 @@
 				<s:Group width="100%" height="100%" id="groupTimeLine">
 					<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false" top="0"/>
 					<s:Group width="100%" height="100%" top="75">
-						<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1">
+						<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1" bottom.debug="1" left.debug="0" right.debug="1" top.debug="1">
 							<s:Group width="100%" height="100%">
 								<s:layout>
 									<s:VerticalLayout gap="5"/>
@@ -1536,7 +1672,7 @@
 				<s:HGroup>
 					<s:Label text="Zoom: " />
 					<s:HSlider id="durationSessionSlider" 						   
-							   liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)"/>
+							   liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)" thumbRelease.debug="durationSessionSlider_thumbReleaseHandler(event)"/>
 
 					<s:Label text="Position: "/>
 					<s:HSlider id="startTimeSessionSlider" 

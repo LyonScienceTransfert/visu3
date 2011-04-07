@@ -81,9 +81,8 @@ package  com.ithaca.visu.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	 import mx.logging.Log;
-            import mx.logging.ILogger;
-		
+	import mx.logging.ILogger;
+	import mx.logging.Log;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -137,6 +136,7 @@ package  com.ithaca.visu.model
 		private var _buttonSalonSynchrone:Button; 
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
 		private var _listViewObselComment:ArrayCollection = new ArrayCollection();
+		private var _listFrameSplit:ArrayCollection = new ArrayCollection();
 		
 		// time of the serveur red5
 		private var _timeServeur:Number;
@@ -151,6 +151,8 @@ package  com.ithaca.visu.model
 		private var _remoteVersionGit:String;  
 		private var _dateCompiled:String;
 		private var _currentFilterSession:int = SessionFilterEnum.SESSION_MY;
+		private var _modeDebug:Boolean = false;
+		private var _frameRateSplit:Number = 2000;
 			
 		public function Model(access:Private)
 		{
@@ -246,6 +248,12 @@ package  com.ithaca.visu.model
 		
 		public function setCurrentFilterSession(value:int):void{_currentFilterSession = value;}
 		public function getCurrentFilterSession():int{return _currentFilterSession;}
+
+		public function setModeDebug(value:Boolean):void{_modeDebug = value;}
+		public function getModeDebug():Boolean{return _modeDebug;}
+		
+		public function setFrameRateSplit(value:Number):void{_frameRateSplit = value;}
+		public function getFrameRateSplit():Number{return _frameRateSplit;}
 			
 		public function setCurrentSessionId(value:int):void
 		{
@@ -2045,6 +2053,19 @@ package  com.ithaca.visu.model
 			}
 			return date.getFullYear().toString()+"-"+monthString+"-"+dayString;
 		}	
+		
+		public function clearListFrameSplit():void
+		{
+			this._listFrameSplit = new ArrayCollection();
+		}
+		public function addFrameSplit(value:Object):void
+		{
+			this._listFrameSplit.addItem(value);
+		}
+		public function getFrameSplit():ArrayCollection
+		{
+			return this._listFrameSplit;
+		}
 	}
 }
 
