@@ -64,11 +64,14 @@ package com.lyon2.controls
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.media.Camera;
 	import flash.media.Video;
 	import flash.net.NetStream;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.Timer;
 	
 	import mx.core.UIComponent;
 
@@ -95,6 +98,14 @@ package com.lyon2.controls
         public static var STATUS_PAUSE:  int = 3;
 
 		public static var NO_CAMERA:String = "Pas de caméra."
+		
+		private var _infoAudio:TextField; 
+		private var _infoVideo:TextField; 
+		private var _info:TextField; 
+		private var _infoUser:TextField; 
+		private var _infoUserString:String;
+		private var _modeDebug:Boolean = false;
+		
 		public function VideoComponent()
 		{
 			super();
@@ -125,6 +136,38 @@ package com.lyon2.controls
 			addChildAt(_hitArea,0);			
 			_overlay = new Sprite();
 			addChild(_overlay);
+			
+			_infoAudio= new TextField();
+			_infoAudio.background = true;
+			_infoAudio.backgroundColor = _fillColor;
+			_infoAudio.textColor = _strokeColor;
+			_infoAudio.autoSize=TextFieldAutoSize.CENTER;
+			_infoAudio.selectable = false;
+			_infoAudio.visible = true;
+			
+			_infoVideo= new TextField();
+			_infoVideo.background = true;
+			_infoVideo.backgroundColor = _fillColor;
+			_infoVideo.textColor = _strokeColor;
+			_infoVideo.autoSize=TextFieldAutoSize.CENTER;
+			_infoVideo.selectable = false;
+			_infoVideo.visible = true;
+			
+			_info= new TextField();
+			_info.background = true;
+			_info.backgroundColor = _fillColor;
+			_info.textColor = _strokeColor;
+			_info.autoSize=TextFieldAutoSize.CENTER;
+			_info.selectable = false;
+			_info.visible = true;
+
+			_infoUser= new TextField();
+			_infoUser.background = true;
+			_infoUser.backgroundColor = _fillColor;
+			_infoUser.textColor = _strokeColor;
+			_infoUser.autoSize=TextFieldAutoSize.CENTER;
+			_infoUser.selectable = false;
+			_infoUser.visible = true;
 		}
 		
 		override protected function measure():void
@@ -135,7 +178,7 @@ package com.lyon2.controls
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
-		{
+		{	
 			var g:Graphics = _hitArea.graphics;
 			g.clear();
 			g.beginFill(_fillColor);
@@ -155,8 +198,9 @@ package com.lyon2.controls
             {
                 _tf.visible = true;
 			    _tf.x = (unscaledWidth - _tf.width )/2 
-			    _tf.y = (unscaledHeight - _tf.height)/2 
+			    _tf.y = (unscaledHeight - _tf.height)/2 	
             }
+			
 			_video.width = unscaledWidth;
 			_video.height = unscaledHeight;
 
@@ -192,6 +236,29 @@ package com.lyon2.controls
                     g.drawRect(9, 3, 4, 14);
                     g.endFill();
                 }
+				
+				if(_netStream != null)
+				{	
+					if(_modeDebug)
+					{
+						_overlay.addChild(_infoAudio);
+						_infoAudio.y = 20;
+						_infoAudio.x = 0;
+						
+						_overlay.addChild(_infoVideo);
+						_infoVideo.y = 40;
+						_infoVideo.x = 0;
+						
+						_overlay.addChild(_info);
+						_info.y = 60;
+						_info.x = 0;
+	
+						_overlay.addChild(_infoUser);
+						_infoUser.text = "UserId  = "+ _infoUserString;
+						_infoUser.y = 80;
+						_infoUser.x = 0;
+					}
+				}
             }
 		}
 		
@@ -200,13 +267,33 @@ package com.lyon2.controls
 			return (_camera!=null);
 		}
 		
-		public function attachNetStream(p_netStream:NetStream):void
+		public function attachNetStream(p_netStream:NetStream, infoUser:String):void
 		{
 			if (_video) 
 			{
 				_video.attachNetStream(p_netStream);
 			}
 			_netStream = p_netStream;
+			_infoUserString = infoUser;
+		}
+		
+		public function onUpdateView():Number
+		{			
+			var audioBytePerSecond:String = int(_netStream.info.audioBytesPerSecond).toString();
+			var videoBytePerSecond:String = int(_netStream.info.videoBytesPerSecond).toString();
+			
+			var secMylt10in2:int = int(_netStream.time * 100 );
+			var sec:int = secMylt10in2/100;
+			var secAfterPoint:int = secMylt10in2 - sec*100;
+			
+			var frameSec:String = sec.toString()+"."+secAfterPoint.toString();
+			
+			var currentFPS:String = int(_netStream.currentFPS).toString();
+			
+			_infoAudio.text = "Audio : "+"BytePerSecond = "+ audioBytePerSecond;
+			_infoVideo.text = "Video : "+"BytePerSecond = "+ videoBytePerSecond;
+			_info.text = "Time(sec.) : " + frameSec + " CcccurrentFPS : "+currentFPS;
+			return _netStream.time;
 		}
 		
 		public function clear():void
@@ -236,5 +323,10 @@ package com.lyon2.controls
             _status = s;
             invalidateDisplayList();
         }
+		
+		public function set modeDebug(value:Boolean):void
+		{
+			_modeDebug = value;
+		}
 	}
 }
