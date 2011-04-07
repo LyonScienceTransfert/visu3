@@ -65,15 +65,15 @@
 				return data.statusSession==SessionStatusEnum.SESSION_CLOSE;
 			}
 			
-			private function canJoinSession():Boolean {
+			private function canJoinSession(bindableStatus:int):Boolean {
 				return !isClosed() && canAccess();
 			}
 
-			private function canJoinRetrospection():Boolean {
+			private function canJoinRetrospection(bindableStatus:int):Boolean {
 				return isClosed() && canAccess();
 			}
 			
-			private function canModifySession():Boolean {
+			private function canModifySession(bindableStatus:int):Boolean {
 				var loggedUser:User = Model.getInstance().getLoggedUser();
 				return !isClosed() && canWrite();
 			}
@@ -87,23 +87,23 @@
 				
 			
 				if(cancelButton) {
-					cancelButton.visible = canCancelSession();
-					cancelButton.includeInLayout = canCancelSession();
+					cancelButton.visible = canCancelSession(data.statusSession);
+					cancelButton.includeInLayout = canCancelSession(data.statusSession);
 				}
 
 				if(connectButton) {
-					connectButton.visible = canJoinSession();
-					connectButton.includeInLayout = canJoinSession();
+					connectButton.visible = canJoinSession(data.statusSession);
+					connectButton.includeInLayout = canJoinSession(data.statusSession);
 				}
 
 				if(retrospectionButton) {
-					retrospectionButton.visible = canJoinRetrospection();
-					retrospectionButton.includeInLayout = canJoinRetrospection();
+					retrospectionButton.visible = canJoinRetrospection(data.statusSession);
+					retrospectionButton.includeInLayout = canJoinRetrospection(data.statusSession);
 				}
 
 				if(editButton) {
-					editButton.visible = canModifySession();
-					editButton.includeInLayout = canModifySession();
+					editButton.visible = canModifySession(data.statusSession);
+					editButton.includeInLayout = canModifySession(data.statusSession);
 				}
 				
 				if(subDisplay) {
@@ -123,7 +123,7 @@
 				}
 		    } 
 
-			private function canCancelSession():Boolean {
+			private function canCancelSession(bindableStatus:int):Boolean {
 				return !isClosed() && canWrite();
 			}
 			
@@ -236,8 +236,8 @@
 						label="Annuler"
 						toolTip="Supprimer définitivement cette séance"
 						click="doCancel(event)"
-						visible="{canCancelSession()}"
-						includeInLayout="{canCancelSession()}"
+						visible="{canCancelSession(data.statusSession)}"
+						includeInLayout="{canCancelSession(data.statusSession)}"
 						/>
 					
 					<mx:LinkButton 
@@ -245,8 +245,8 @@
 						label="Modifier"
 						click="doEdit(event)"
 						toolTip="Modifier la date, les participants ou le plan de séance"
-						visible="{canModifySession()}"
-						includeInLayout="{canModifySession()}"
+						visible="{canModifySession(data.statusSession)}"
+						includeInLayout="{canModifySession(data.statusSession)}"
 						/>	
 				</s:HGroup>
 					
@@ -256,8 +256,8 @@
 						label="Rejoindre"
 						click="doJoinSession(event)"
 						toolTip="Entrer dans le salon synchrone"
-						visible="{canJoinSession()}"
-						includeInLayout="{canJoinSession()}"
+						visible="{canJoinSession(data.statusSession)}"
+						includeInLayout="{canJoinSession(data.statusSession)}"
 						/>
 			
 					<mx:LinkButton 
@@ -265,8 +265,8 @@
 						label="Rétrospection"
 						click="doRetrospection(event)"
 						toolTip="Entrer dans le salon de rétrospection"
-						visible="{canJoinRetrospection()}"
-						includeInLayout="{canJoinRetrospection()}"
+						visible="{canJoinRetrospection(data.statusSession)}"
+						includeInLayout="{canJoinRetrospection(data.statusSession)}"
 						/>
 			
 				</s:HGroup>
