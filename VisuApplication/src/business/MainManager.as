@@ -20,9 +20,9 @@ import com.ithaca.visu.model.vo.SessionUserVO;
 import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
 import com.ithaca.visu.ui.utils.ColorEnum;
+import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
-import com.ithaca.visu.ui.utils.ConnectionStatus;
 
 import flash.events.Event;
 import flash.events.IEventDispatcher;
@@ -95,7 +95,8 @@ public class MainManager
 		// set logged user to the model
 		Model.getInstance().setLoggedUser(user);
 		logger.info('Logged user: {0} {1} (id={2})]', user.lastname, user.firstname, user.id_user);
-		Model.getInstance().updateUserStatus(user.id_user, ConnectionStatus.CONNECTED);
+		
+//		Model.getInstance().updateUserStatus(user.id_user, ConnectionStatus.CONNECTED);
 		
 		Model.getInstance().profiles = profiles;
 		
@@ -202,9 +203,17 @@ public class MainManager
 	 * @param 
 	 * ar - list connected users:UserVO, list client id of the connected users, list status of the connected users
 	 */
-	public function getConnectedClients(ar:Array):void
+	public function getConnectedClients(ar:Array, listUserPlateformeVO:Array):void
 	{
+		var listUserPlateforme:ArrayCollection = new ArrayCollection();
+		for each (var vo:UserVO in listUserPlateformeVO)
+		{
+			listUserPlateforme.addItem(new User(vo));
+		}		
+		Model.getInstance().setListUsersPlateforme(listUserPlateforme);
+		
 		Model.getInstance().setConnectedUsers(ar);
+		
 		this.connectedUsers = Model.getInstance().getConnectedUsers();
 		// set netConnection
 		Model.getInstance().setNetConnection(this.netConnection);
@@ -246,7 +255,7 @@ public class MainManager
 	/**
 	 * set client id of logged user
 	 */
-	public function getClientInfo(ar:Array):void
+	public function onCheckClientInfo(ar:Array):void
 	{
 		var userIdClient:String = ar['id'];
 		Model.getInstance().setUserIdClient(userIdClient);
@@ -376,7 +385,7 @@ public class MainManager
 		if(session){
 			session.setUsers(ar);
 			// add swap Users
-			Model.getInstance().setSwapUsers(session.participants);
+//			Model.getInstance().setSwapUsers(session.participants);
 			// check if logged user sing out from session and logged user can right 
 			if((!session.hasUser(loggedUserId)) && (!RightStatus.hasRight(loggedUser.profil, RightStatus.CAN_MODIFY_OTHER_SESSION)) )
 			{
@@ -1238,22 +1247,28 @@ public class MainManager
 	 * @param
 	 * userVO
 	 * userIdClient 
+	 * status : status session 
 	 */
-	public function onJoinSession(userVO:UserVO, userIdClient:String, sessionId:int, status:int):void{
-			// update status user 
-			Model.getInstance().updateStatusUser(userVO, status, sessionId);
-			// update idClient
-			Model.getInstance().updateUserIdClient(userVO, userIdClient);
-			// update list user
-			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
-			this.dispatcher.dispatchEvent(eventUpdateSessionView);
-			
-			var newUserJoinSessionEvent:SessionEvent = new SessionEvent(SessionEvent.NEW_USER_JOIN_SESSION);			
-			newUserJoinSessionEvent.userId = userVO.id_user;
-			newUserJoinSessionEvent.userIdClient = userIdClient;
-			newUserJoinSessionEvent.sessionId = sessionId;
-			newUserJoinSessionEvent.status = status;
-			this.dispatcher.dispatchEvent(newUserJoinSessionEvent);		
+	public function onJoinSession(userVO:UserVO, userIdClient:String, sessionId:int, sessionStatus:int, userStatus:int):void
+	{
+		// user id
+		var userId:int = userVO.id_user;
+		// update status user 
+		Model.getInstance().updateUserStatus(userId, userStatus);
+		// update sessionId
+		Model.getInstance().updateSessionStatus(userId, sessionId);
+		// update idClient
+		Model.getInstance().updateUserIdClient(userVO, userIdClient);
+		// update list user
+		var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
+		this.dispatcher.dispatchEvent(eventUpdateSessionView);
+		
+		var newUserJoinSessionEvent:SessionEvent = new SessionEvent(SessionEvent.NEW_USER_JOIN_SESSION);			
+		newUserJoinSessionEvent.userId = userVO.id_user;
+		newUserJoinSessionEvent.userIdClient = userIdClient;
+		newUserJoinSessionEvent.sessionId = sessionId;
+		newUserJoinSessionEvent.status = sessionStatus;
+		this.dispatcher.dispatchEvent(newUserJoinSessionEvent);			
 	}
 	
 	/**
@@ -1262,18 +1277,17 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusRecording(userId:int, status:int, sessionId:int, startRecording:Date, obselVO:ObselVO):void{
+	public function onSetStatusRecording(userId:int, userStatus:int, sessionId:int, startRecording:Date, obselVO:ObselVO):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
 			// update status user 
-			Model.getInstance().updateStatusUser(userVO, status , sessionId);
+			Model.getInstance().updateUserStatus(userId, userStatus);
+			// update sessio id
+			// FIXME : sessionId is the same that before recording
+			Model.getInstance().updateSessionStatus(userId, sessionId);
 			// update status session, "recording"
 			var session:Session = Model.getInstance().getCurrentSession();
-/*			if(session == null)
-			{
-				Alert.show("You have a problem with setting the current session !!!","information")
-			}*/
 			if(session != null)
 			{
 				if(sessionId == session.id_session)
@@ -1311,12 +1325,14 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusStop(userId:int, status:int, sessionId:int, sessionStatus:int):void{
+	public function onSetStatusStop(userId:int, userStatus:int, sessionId:int, sessionStatus:int):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
 			// update status user 
-			Model.getInstance().updateStatusUser(userVO, status , sessionId);
+			Model.getInstance().updateUserStatus(userId, userStatus);
+			// update sessions tatus
+			Model.getInstance().updateSessionStatus(userId, sessionId);
 			// update status session "Pause"
 			var session:Session = Model.getInstance().hasSessionById(sessionId);
 			if(session != null)
@@ -1356,17 +1372,21 @@ public class MainManager
 	 * userVO
 	 * status
 	 */
-	public function onOutSession(userVO:UserVO, status:int):void
+	public function onOutSession(userVO:UserVO, userStatus:int):void
 	{
+		// id user 
+		var userId:int = userVO.id_user;
 		// update status user 
-		Model.getInstance().updateStatusUser(userVO, status , 0);
+ 		Model.getInstance().updateUserStatus(userId, userStatus);
+		// update status session
+		Model.getInstance().updateSessionStatus(userId, 0);
 		// update list user
 		var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 		this.dispatcher.dispatchEvent(eventUpdateSessionView);
 		
 		var oldUserOutSession:SessionEvent = new SessionEvent(SessionEvent.OLD_USER_OUT_SESSION);	
 		oldUserOutSession.userIdClient = Model.getInstance().getIdClient(userVO.id_user);
-		oldUserOutSession.userId = userVO.id_user;
+		oldUserOutSession.userId = userId;
 		this.dispatcher.dispatchEvent(oldUserOutSession);	
 	}
 	
