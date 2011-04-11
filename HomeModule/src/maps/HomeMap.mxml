@@ -84,7 +84,7 @@
 		</mate:EventHandlers>
 
 <!-- USERS -->
-		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
+<!--		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{HomeManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
@@ -94,7 +94,7 @@
 										method="onError" arguments="{[currentEvent]}"/>
 				</mate:faultHandlers>
 			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>
+		</mate:EventHandlers>-->
 		
 		<mate:EventHandlers type="{UserEvent.UPDATE_USER}" useCapture="true"  debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="updateUser" arguments="{event.userVO}">
