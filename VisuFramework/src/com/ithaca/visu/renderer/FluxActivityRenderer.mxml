@@ -2,28 +2,27 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				autoDrawBackground="true">
-				<!--added="itemrenderer1_addedHandler(event)"-->
+				autoDrawBackground="true"
+				maxWidth="{width}">
 	<fx:Script>
 		<![CDATA[
-//			import mx.events.FlexEvent;
 			import com.ithaca.utils.StringUtils;
-
-/*			protected function itemrenderer1_addedHandler(event:Event):void
-			{
-				this.width = this.owner.width - 18;
-			}*/
 		]]>
 	</fx:Script>
 	
-	<s:HGroup width="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-		<s:HGroup verticalAlign="top" width="100%" height="100%">
+	<s:Group top="2" bottom="2" left="2" right="2">
+		<s:layout>
+			<s:VerticalLayout gap="2"/>
+		</s:layout>
+		<s:Group  width="100%">
+			<s:layout>
+				<s:HorizontalLayout gap="3"/>
+			</s:layout>
 			<mx:Image includeInLayout="{data.pathImage}" visible="{data.pathImage}" source="{data.pathImage}"  width="25" height="25" />
-			<s:Label id="labelFirstName" text="{StringUtils.firstLetterCap(data.lastname) +'. ' + StringUtils.cap(data.firstname)}" fontWeight="bold"/>
-			<s:RichText text="{data.message}" width="200" color="#6ca6cf"/>
-		</s:HGroup>
-		<s:HGroup verticalAlign="bottom" horizontalAlign="right" height="100%">
-			<s:Label  text="{data.time}"   fontSize="10"  color="#000000" />
-		</s:HGroup>
-	</s:HGroup>
+			<s:Label left="35" id="labelFirstName" fontWeight="bold" paddingTop="5" width="100%" text="{StringUtils.firstLetterCap(data.lastname) +'. ' + StringUtils.cap(data.firstname)}"/>
+			<s:Label  text="{data.time}"   fontSize="10"  color="#000000"  paddingRight="0" paddingTop="7"/>
+		</s:Group>
+		
+		<s:RichText text="{data.message}" color="#6ca6cf" width="100%" paddingLeft="30" paddingRight="5"/>
+	</s:Group>
 </s:ItemRenderer>

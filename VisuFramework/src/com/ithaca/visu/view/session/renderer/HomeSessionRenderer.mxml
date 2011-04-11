@@ -3,7 +3,8 @@
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx"
 				xmlns:layout1="com.lyon2.controls.sparks.layout.*"
-				xmlns:myviews="com.ithaca.visu.view.user.*">
+				xmlns:myviews="com.ithaca.visu.view.user.*"
+				maxWidth="{width}">
 
 
 	<s:states>
@@ -26,6 +27,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.INavigatorContent;
 			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
@@ -160,7 +162,7 @@
 							eventName);				
 				actionGroup.dispatchEvent(sessionHomeElementEvent);
 			}
-			
+
 		]]>
 	</fx:Script>
 
