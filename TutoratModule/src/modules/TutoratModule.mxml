@@ -249,7 +249,7 @@
 							if(statusSession != SessionStatusEnum.SESSION_OPEN )
 							{								
 								// update sharedIconSource
-								var user:User = Model.getInstance().getUserByUserId(event.userId);
+								var user:User = Model.getInstance().getUserPlateformeByUserId(event.userId);
 								if(user != null)
 								{
 									var role:int = user.role;
@@ -582,7 +582,7 @@
 					var pathAvatar:String = "";
 					var name:String = "";
 					var sourceImageInfo:* = null;
-					var senderUser:User = Model.getInstance().getUserByUserId(event.senderUserId);
+					var senderUser:User = Model.getInstance().getUserPlateformeByUserId(event.senderUserId);
 					if(senderUser != null)
 					{
 						pathAvatar = senderUser.avatar;
@@ -1169,7 +1169,7 @@
 					this.traceLineGroup.addElement(traceLine);
 					// FIXMI : if user walk out from session will set shared icon NON_OTHER_TO_THIS
 					// TODO : update icon when use join session
-					var user:User = Model.getInstance().getUserByUserId(userId);
+					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
 					if(user != null && user.role < RoleEnum.TUTEUR)
 					{
 						// etudiant shared mark by default
