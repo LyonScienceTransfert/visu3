@@ -1613,7 +1613,7 @@ package  com.ithaca.visu.model
 			var m:String = zeroMin+date.getMinutes().toString();
 			var time:String = h+":"+m;
 			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,lastname,path,message,time);
-			this.listFluxActivity.addItemAt(fluxActivity,0);		
+			this.listFluxActivity.addItem(fluxActivity);		
 		}
 
 		
