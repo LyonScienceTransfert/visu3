@@ -106,8 +106,8 @@ package  com.ithaca.visu.model
 		private var NAME_VISU2: String = "VISU";
 		private var NAME_VISU_VCIEL: String = "VISUVCIEL";
 		
-		private var listConnectedUsers:ArrayCollection = new ArrayCollection();
-		private var listSwapUsers:ArrayCollection = new ArrayCollection();
+//		private var listConnectedUsers:ArrayCollection = new ArrayCollection();
+//		private var listSwapUsers:ArrayCollection = new ArrayCollection();
 		private var listSessions:ArrayCollection = new ArrayCollection();
 		private var listFluxActivity:ArrayCollection = new ArrayCollection();
 		private var listDateSession:ArrayCollection = new ArrayCollection();
@@ -1319,7 +1319,7 @@ package  com.ithaca.visu.model
 			var session:Session = new Session(sessionVO);
 			session.setUsers(listUsers);
 			// add swap users
-			this.setSwapUsers(session.participants);
+//			this.setSwapUsers(session.participants);
 			var nbrDateSessionObject:Object = this.listDateSession.length;
 			for(var nDateSessionObject:uint = 0; nDateSessionObject < nbrDateSessionObject; nDateSessionObject++){
 				var obj:Object = this.listDateSession[nDateSessionObject];
@@ -1377,7 +1377,7 @@ package  com.ithaca.visu.model
 				var session:Session = this.getSessionById(sessionId,listSessionDate);
 				if (session != null){
 					session.setUsers(arUser);
-					this.setSwapUsers(session.participants);
+//					this.setSwapUsers(session.participants);
 					return;
 				}					
 			}
@@ -1540,27 +1540,26 @@ package  com.ithaca.visu.model
 		 */
 		public function setConnectedUsers(ar:Array):void
 		{
+			var userPlateforme:User;
 			var nbrUser:uint = ar.length;
 			if(nbrUser == 0) { return };
 			for(var nUser:uint = 0; nUser < nbrUser; nUser++)
 			{
 				var infoUser:Array = ar[nUser];
-				var status:int = infoUser[0];
 				var userVO:UserVO = infoUser[1];
-				var user:User = new User(userVO);
-				user.setStatus(status);
-				user.id_client=infoUser[2];
-				user.currentSessionId = infoUser[3];
-				this.listConnectedUsers.addItem(user);
-				// add set swapUsers
-				this.listSwapUsers.addItem(user);
+				var userStatus:int = infoUser[4];
+				
+				userPlateforme = this.getUserPlateformeByUserId(userVO.id_user);
+				userPlateforme.setStatus(userStatus);
+				userPlateforme.id_client=infoUser[2];
+				userPlateforme.currentSessionId = infoUser[3];
 			}
 		}
 		
 		public function isUserConnected(id_user:int):Boolean {
 			//logger.debug("Verifying if the user {0} is connected ", id_user);
-			for each (var user in this.listConnectedUsers) {
-				if(user.id_user == id_user)
+			for each (var user:User in this._listUsersPlateforme) {
+				if(user.status != ConnectionStatus.DISCONNECTED)
 					return true;
 			}
 			return false;
@@ -1568,16 +1567,28 @@ package  com.ithaca.visu.model
 		
 		public function getConnectedUsers():ArrayCollection
 		{
-			return this.listConnectedUsers;
+			var list:ArrayCollection = new ArrayCollection();
+			var nbrUser:int = this._listUsersPlateforme.length;
+			for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
+			{
+				var user:User = this._listUsersPlateforme.getItemAt(nUser) as User;
+				if(user.status != ConnectionStatus.DISCONNECTED)
+				{
+					list.addItem(user);
+				}
+			}
+			return list;
 		}
 		
 		public function getConnectedUserExcludeLoggedUser():ArrayCollection
 		{
 			var listConnectedUserExcludeLoggedUser:ArrayCollection = new ArrayCollection();
-			var nbrConnectedUser:uint = this.listConnectedUsers.length;
+//			var nbrConnectedUser:uint = this.listConnectedUsers.length;
+			var nbrConnectedUser:uint = this._listUsersPlateforme.length;
 			for(var nConnectedUser:uint = 0; nConnectedUser < nbrConnectedUser ; nConnectedUser++)
 			{
-				var user:User = this.listConnectedUsers[nConnectedUser];
+//				var user:User = this.listConnectedUsers[nConnectedUser];
+				var user:User = this._listUsersPlateforme[nConnectedUser];
 				if(user != _loggedUser)
 				{
 					listConnectedUserExcludeLoggedUser.addItem(user);
@@ -1585,12 +1596,7 @@ package  com.ithaca.visu.model
 			}
 			return listConnectedUserExcludeLoggedUser;
 		}
-		
-		public function getSwapUsers():ArrayCollection
-		{
-			return this.listSwapUsers;
-		}
-		
+
 		public function getFluxActivity():ArrayCollection
 		{
 			return this.listFluxActivity;
@@ -1610,104 +1616,50 @@ package  com.ithaca.visu.model
 			this.listFluxActivity.addItemAt(fluxActivity,0);		
 		}
 
-		public function updateUserStatus(userId:int, status:int) : void {
-			logger.debug("Trying to update the status of user {0} to {1}", userId, status);
-			for each (var user in this._listUsersPlateforme)  {
-				if(user.id_user == userId) {
-					logger.debug("Setting the status of the user {0} {1} (id={2},role={3}) to {4}", 
-					user.lastname, 
-					user.id_user, 
-					user.firstname, 
-					user.role, 
-					status);			
-					user.setStatus(status);
-				}
-			}
-		}
 		
 		public function removeConnectedUser(userId:int):void
 		{
-			var nbrUser:uint = this.listConnectedUsers.length;
+//			var nbrUser:uint = this.listConnectedUsers.length;
+			var nbrUser:uint = this._listUsersPlateforme.length;
 			
-			this.updateUserStatus(userId, ConnectionStatus.DISCONNECTED);
-			
-			if(nbrUser == 0) { return };
-			for(var nUser:uint = 0; nUser < nbrUser; nUser++)
-			{
-				var user:User = this.listConnectedUsers[nUser];
-				var id:int = user.getId();
-				if(id == userId)
-				{
-					this.listConnectedUsers.removeItemAt(nUser);
-					//set swap user disconnected
-					this.addSwapUser(user, ConnectionStatus.DISCONNECTED);
-					return;
-				}			
-			}			
+			this.updateUserStatus(userId, ConnectionStatus.DISCONNECTED);	
 		}
 		
 		public function addConnectedUsers(userVO:UserVO):void
 		{
 			var user:User = new User(userVO);
 			user.setStatus(ConnectionStatus.PENDING);
-			this.listConnectedUsers.addItem(user);
+//			this.listConnectedUsers.addItem(user);
 			
 			this.updateUserStatus(user.id_user, ConnectionStatus.CONNECTED);
 			
 			// add swap user
-			this.addSwapUser(user, ConnectionStatus.PENDING);
+//			this.addSwapUser(user, ConnectionStatus.PENDING);
 		}
 		
 		
-		public function setSwapUsers(listSessionUsers:ArrayCollection):void{
-			var nbrSessionUsers:uint = listSessionUsers.length;
-			for(var nSessionUser:uint = 0; nSessionUser < nbrSessionUsers; nSessionUser++){
-				var sessionUser:User = listSessionUsers[nSessionUser] as User;
-				addSwapUser(sessionUser);				
-			}
+		public function updateUserStatus(userId:int, userStatus:int) : void {
+			var user:User = this.getUserPlateformeByUserId(userId);
+			updateUserStatusByUser(user,userStatus);
 		}
+
 		
-		private function addSwapUser(user:User, status:int = -1):void{
-			var nbrSwapUsers:uint = this.listSwapUsers.length;
-			for(var nSwapUser:uint = 0; nSwapUser < nbrSwapUsers; nSwapUser++){
-				var swapUser:User = this.listSwapUsers[nSwapUser] as User;
-				var swapUserId:uint = swapUser.getId();
-				var userId:uint = user.getId();
-				if(swapUserId == userId){
-					if(status != -1){
-						swapUser.setStatus(status);
-					}
-					return;
-				}
-			}
-			this.listSwapUsers.addItem(user);		
-		}	
-		
-		/**
-		 * update status connected user, when user walk out fro salon tutorat 
-		 */
-		public function updateStatusUser(userVO:UserVO, status:int, sessionId:int):void
+		public function updateSessionStatus(userId:int, sessionId:int):void
 		{
-			this.updateStatusUserFromList(userVO, this.listConnectedUsers, status, sessionId);
-			this.updateStatusUserFromList(userVO, this.listSwapUsers, status, sessionId);
+			var user:User = this.getUserPlateformeByUserId(userId);
+			updateSessionIdByUser(user,sessionId);		
 		}
 		
-		/**
-		 * update status user  
-		 */
-		private function updateStatusUserFromList(userVO:UserVO, listUsers:ArrayCollection, status:int, sessionId:int):void{
-			var nbrUsers:uint = listUsers.length;
-			for(var nUser:uint =0; nUser < nbrUsers; nUser++)
-			{ 
-				var user:User = listUsers[nUser] as User;
-				var userId:int = user.id_user;
-				if(userId == userVO.id_user)
-				{
-					user.status = status;
-					user.currentSessionId = sessionId;
-				}
-			}
+		
+		private function updateSessionIdByUser(user:User, sessionId:int):void
+		{
+			user.currentSessionId = sessionId;
 		}
+		private function updateUserStatusByUser(user:User , status:int):void
+		{
+			user.status = status;
+		}
+
 		
 		/**
 		 * get list client id of the connected users
@@ -1715,14 +1667,16 @@ package  com.ithaca.visu.model
 		public function getListIdClient(sessionId:int):Array
 		{
 			var result:Array = new Array();
-			var nbrUsers:uint = this.listConnectedUsers.length;
+//			var nbrUsers:uint = this.listConnectedUsers.length;
+			var nbrUsers:uint = this._listUsersPlateforme.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
-				var user:User = this.listConnectedUsers[nUser];
+//				var user:User = this.listConnectedUsers[nUser];
+				var user:User = this._listUsersPlateforme[nUser];
 				var idClient:String = this.getIdClient(user.id_user);
 				var status:int = user.status;
 				var currentSessionUser:int = user.currentSessionId;
-				if((idClient != "") && (status == ConnectionStatus.CONNECTED || status == ConnectionStatus.RECORDING) && (currentSessionUser == sessionId))
+				if((idClient != "") && (status == ConnectionStatus.PENDING || status == ConnectionStatus.RECORDING) && (currentSessionUser == sessionId))
 				{
 					//add idClient only if status Connected or Recording
 					result.push(idClient);				
@@ -1901,10 +1855,12 @@ package  com.ithaca.visu.model
 		public function getListUsersIdByConnectedSession(sessionId:int):Array
 		{
 			var result:Array = new Array();
-			var nbrUsers:uint = this.listConnectedUsers.length;
+//			var nbrUsers:uint = this.listConnectedUsers.length;
+			var nbrUsers:uint = this._listUsersPlateforme.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
-				var user:User = this.listConnectedUsers[nUser];
+//				var user:User = this.listConnectedUsers[nUser];
+				var user:User = this._listUsersPlateforme[nUser];
 				if(user.currentSessionId == sessionId)
 				{
 					//add userId only if user in this session(really, not planning)
@@ -1945,10 +1901,12 @@ package  com.ithaca.visu.model
 				status = ConnectionStatus.CONNECTED;
 			}
 			var result:Array = new Array();
-			var nbrUsers:uint = this.listConnectedUsers.length;
+//			var nbrUsers:uint = this.listConnectedUsers.length;
+			var nbrUsers:uint = this._listUsersPlateforme.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
-				var user:User = this.listConnectedUsers[nUser];
+//				var user:User = this.listConnectedUsers[nUser];
+				var user:User = this._listUsersPlateforme[nUser];
 				if((user.status == ConnectionStatus.RECORDING || user.status == status) && (user.currentSessionId == sessionId))
 				{
 					//add userId only if status Recording of this sessionId
@@ -1980,10 +1938,12 @@ package  com.ithaca.visu.model
 		
 		public function getIdClient(userId:int):String
 		{
-			var nbrUsers:uint = this.listConnectedUsers.length;
+//			var nbrUsers:uint = this.listConnectedUsers.length;
+			var nbrUsers:uint = this._listUsersPlateforme.length;
 			for(var nUser:uint = 0; nUser < nbrUsers;nUser++)
 			{
-				var user:User = this.listConnectedUsers[nUser];
+//				var user:User = this.listConnectedUsers[nUser];
+				var user:User = this._listUsersPlateforme[nUser];
 				if(user.id_user == userId)
 				{
 					return user.id_client;
@@ -1992,19 +1952,21 @@ package  com.ithaca.visu.model
 			return "";
 		}
 		
-		public function getUserByUserId(userId:int):User
+/*		public function getUserByUserId(userId:int):User
 		{
-			var nbrUsers:uint = this.listConnectedUsers.length;
+//			var nbrUsers:uint = this.listConnectedUsers.length;
+			var nbrUsers:uint = this._listUsersPlateforme.length;
 			for(var nUser:uint = 0; nUser < nbrUsers;nUser++)
 			{
-				var user:User = this.listConnectedUsers[nUser];
+//				var user:User = this.listConnectedUsers[nUser];
+				var user:User = this._listUsersPlateforme[nUser];
 				if(user.id_user == userId)
 				{
 					return user;
 				}
 			}
 			return null;
-		}
+		}*/
 		
 		public function getUserPlateformeByUserId(userId:int):User
 		{
@@ -2025,10 +1987,12 @@ package  com.ithaca.visu.model
 		 */
 		public function updateUserIdClient(userVO:UserVO, idClient:String):void
 		{
-			var nbrUsers:uint = this.listConnectedUsers.length;
+			var nbrUsers:uint = this._listUsersPlateforme.length;
+//			var nbrUsers:uint = this.listConnectedUsers.length;
 			for(var nUser:uint = 0; nUser < nbrUsers;nUser++)
 			{
-				var user:User = this.listConnectedUsers[nUser];
+//				var user:User = this.listConnectedUsers[nUser];
+				var user:User = this._listUsersPlateforme[nUser];
 				if(user.id_user == userVO.id_user)
 				{
 					user.id_client = idClient;
