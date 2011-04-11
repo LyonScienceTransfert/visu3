@@ -89,7 +89,9 @@ import org.slf4j.Logger;
 
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
+import com.lyon2.utils.SessionStatus;
 import com.lyon2.utils.UserColor;
+import com.lyon2.utils.UserStatus;
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
@@ -243,12 +245,10 @@ log.warn("refParam = {}",refParam);
 		        
 				try
 				{
-//					String traceParam = "%-"+userId.toString()+"%";
 					String traceParam = "%-"+userId.toString();
 					String refParam = "%:hasSession "+"\""+session_id.toString()+"\""+"%";
 					log.warn("====refParam {}",refParam);
-					ObselStringParams osp = new ObselStringParams(traceParam,refParam);
-				//	log.warn("=====OSP : {}",osp.toString());		
+					ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
 					listObselSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSessionStartSessionEnter", osp);
 					if (listObselSessionStart != null)
 					{
@@ -256,7 +256,7 @@ log.warn("refParam = {}",refParam);
 						trace = obselSessionStart.getTrace();
 						typeObsel = "SessionEnter";
 						client.setAttribute("trace", trace);
-						app.setStatusSession(session_id, 3, null);
+						app.setStatusSession(session_id, SessionStatus.RECORDING, null);
 					}else
 					{			
 						// generate traceId
@@ -265,9 +265,7 @@ log.warn("refParam = {}",refParam);
 					    client.setAttribute("trace", trace);
 						log.warn("empty BD, ListObsel = null");
 						// set "date_start_recording" and "status_session" of this session
-						// TODO static vars :
-						// SESSION_RECORDING = 3
-						app.setStatusSession(session_id, 3, startRecording);
+						app.setStatusSession(session_id, SessionStatus.RECORDING, startRecording);
 					}
 				} catch (Exception e) {
 					log.error("Probleme lors du listing des sessions" + e);
@@ -277,13 +275,13 @@ log.warn("refParam = {}",refParam);
 					client.setAttribute("trace", trace);
 					log.warn("empty BD, exception case");	
 					// set "date_start_recording" and "status_session" of this session
-					// TODO static vars :
-					// SESSION_RECORDING = 3
-					app.setStatusSession(session_id, 3, startRecording);
+					app.setStatusSession(session_id, SessionStatus.RECORDING, startRecording);
 				}
 								
 				// set status recording
-				client.setAttribute("status", 3);
+				client.setAttribute("status", SessionStatus.RECORDING);
+				// set status User
+				client.setAttribute("userStatus", UserStatus.RECORDING);
 				Object[] timeStartRecording = {startRecording.getTime()};
 				// call client that start recording
 				// send time for creation the obsel "SesionOut" on client side(Flex)
@@ -382,7 +380,7 @@ log.warn("refParam = {}",refParam);
 						// date start recording
 						Date startRecording = (Date)listUserStartRecording.get(key).get(3);
 						// notification for all users that user has status "recording" and sending obsel StartSession or EnterSession
-						Object[] args = {key, (Integer)clientStartRecording.getAttribute("status"), (Integer)clientStartRecording.getAttribute("sessionId"),startRecording, obsel};
+						Object[] args = {key, (Integer)clientStartRecording.getAttribute("userStatus"), (Integer)clientStartRecording.getAttribute("sessionId"),startRecording, obsel};
 						// last param of the list the "args" => obsel SessionEnter, here it is null
 						//send message to all users on "Deck"
 						log.warn("==============setStatusRecording");
@@ -435,7 +433,7 @@ log.warn("refParam = {}",refParam);
 	*/
 	}
 
-	public void stopRecordRoom(IConnection conn, Integer session_id, Integer sessionStatus)
+	public void stopRecordRoom(IConnection conn, int session_id, int sessionStatus)
 	{
 		// set timestamp
 		Date date = new Date();
@@ -448,9 +446,8 @@ log.warn("refParam = {}",refParam);
 				ClientBroadcastStream stream = (ClientBroadcastStream) app.getBroadcastStream(scope, name);
 				
 				// sessionId of this client
-				Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
-				Integer diff = session_id - sessionIdClient;
-				if(diff == 0)
+				int sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
+				if(session_id == sessionIdClient)
 				{
 					// stop recording
 					stream.stopRecording();
@@ -463,7 +460,10 @@ log.warn("refParam = {}",refParam);
 					IClient client = stream.getConnection().getClient();
 					Integer userId = (Integer)client.getAttribute("uid");
 					// set status join session
-					client.setAttribute("status", 0);
+					client.setAttribute("status", SessionStatus.OPEN);
+					// set status User
+					client.setAttribute("userStatus", UserStatus.PENDING);
+					
 					Object[] timeStopRecording = {Calendar.getInstance().getTimeInMillis()};
 					// call client that stop recording
 					IConnection connectionClient = (IConnection)client.getAttribute("connection");
@@ -474,7 +474,7 @@ log.warn("refParam = {}",refParam);
 					
 					// setObsel SessionPause
 					List<Object> paramsObselSessionPause= new ArrayList<Object>();
-					paramsObselSessionPause.add("session");paramsObselSessionPause.add(session_id.toString());
+					paramsObselSessionPause.add("session");paramsObselSessionPause.add(String.valueOf(session_id));
 					 // add timeStamp
 					paramsObselSessionPause.add("timestamp");paramsObselSessionPause.add(timeStamp.toString());
 					// id user paused the session
@@ -490,7 +490,7 @@ log.warn("refParam = {}",refParam);
 						}
 				
 					// notification for all users that user and session had changed status 
-					Object[] args = {userId, (Integer)client.getAttribute("status"), (Integer)client.getAttribute("sessionId"),sessionStatus};
+					Object[] args = {userId, (Integer)client.getAttribute("userStatus"), (Integer)client.getAttribute("sessionId"),sessionStatus};
 					//send message to all users on "Deck"
 					log.warn("==============setStatusStop");
 					log.warn("==++++ setStatusStop {} ",args);

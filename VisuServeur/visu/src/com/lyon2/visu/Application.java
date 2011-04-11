@@ -124,6 +124,8 @@ import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.ObselType;
 import com.lyon2.utils.UserColor;
 import com.lyon2.utils.UserDate;
+import com.lyon2.utils.SessionStatus;
+import com.lyon2.utils.UserStatus;
 import com.lyon2.visu.domain.model.Module;
 import com.lyon2.visu.domain.model.ProfileDescription;
 import com.lyon2.visu.domain.model.Session;
@@ -187,7 +189,7 @@ IScheduledJob {
 			// check really duration of the session
 			if (durationReal > sessionDuration) {
 				// TODO static variables
-				Integer sessionStatus = 1;
+				Integer sessionStatus = SessionStatus.CLOSE;
 				// checking if has user in session
 				if (!hasUserInSession(sessionId)) {
 					// close session
@@ -277,20 +279,17 @@ IScheduledJob {
 
 		IClient client = conn.getClient();
 		User user = (User) client.getAttribute("user");
-		Integer userId = user.getId_user();
+		int userId = user.getId_user();
 
 		// checking if have user with the same id
 		log.warn("====roomConnect userId = {}", userId);
 		for (IClient clientConnected : this.getClients()) {
-			Integer userConnectedId = (Integer) clientConnected
+			int userConnectedId = (Integer) clientConnected
 			.getAttribute("uid");
 			log
 			.warn("======roomConnect userConnectedId = {} ",
 					userConnectedId);
-			// FIXME : the condition ( userConnectedId == userId) didn't
-			// work....? WHY?
-			int diff = userConnectedId - userId;
-			if (diff == 0) {
+			if (userConnectedId == userId) {
 				log.warn("====roomConnect : same user");
 				if (conn instanceof IServiceCapableConnection) {
 					IServiceCapableConnection sc = (IServiceCapableConnection) conn;
@@ -314,37 +313,26 @@ IScheduledJob {
 		client.setAttribute("connection", conn);
 		client.setAttribute("id", client.getId());
 		client.setAttribute("sessionId", 0);
-		// TODO static var status
-		client.setAttribute("status", 2);
+		// set status Session
+		client.setAttribute("status", SessionStatus.PAUSE);
+		// set status User
+		client.setAttribute("userStatus", UserStatus.CONNECTED);
 
 		UserDate userDate = new UserDate(userId,
 				getDateStringFormat_YYYY_MM_DD(Calendar.getInstance()));
 		List<Session> listSessionToday = null;
 		try {
 			log.warn("date today is {}", userDate.toString());
-			log.warn("HERE somethink  ");
-
 			listSessionToday = (List<Session>) sqlMapClient.queryForList(
 					"sessions.getSessionsByDateByUser", userDate);
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
 		}
-
-		log.warn("HERE somethink 2 ");
-
-		// for(Session session : listSessionToday)
-		// {
-		// log.warn("session = {}", session.toString());
-		// }
-
-		log.warn("HERE somethink 3 ");
-
 		// get role of logged user
 		Integer roleUser = getRoleUser(user.getProfil());
 		// list all modules
 		List<Module> listModules = null;
 		try {
-			log.warn("HERE somethink 4 ");
 			listModules = (List<Module>) sqlMapClient
 			.queryForList("modules.getModules");
 		} catch (Exception e) {
@@ -359,41 +347,21 @@ IScheduledJob {
 				listModulesUser.add(module);
 			}
 		}
-		log.warn("HERE somethink 5 ");
 		// Récupération des profiles utilisateurs
 		List<ProfileDescription> profiles = null;
 		try {
 			profiles = (List<ProfileDescription>) sqlMapClient
 			.queryForList("profile_descriptions.getProfils");
 		} catch (SQLException e) {
-			// TODO: handle exception
 			log.error("Loading profileDescription failed {}", e);
 		}
 
-		log.warn("HERE somethink 6 ");
 		Object[] argsLoggedUser = { user, listModulesUser, listSessionToday,
 				profiles };
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
 			sc.invoke("setLoggedUser", argsLoggedUser);
 		}
-
-		//
-		// UserDate userDateTest = new UserDate(5,"2010-07-20");
-		// //// TESTING
-		// List<Session> ls = null;
-		// try
-		// {
-		// ls =
-		// (List<Session>)sqlMapClient.queryForList("sessions.getSessionsByDateByUser",userDateTest);
-		// } catch (Exception e) {
-		// log.error("Probleme lors du listing des sessions" + e);
-		// }
-		//		
-		// for(Session session : ls)
-		// {
-		// // log.warn("session = {}", session.toString());
-		// }
 		return true;
 	}
 
@@ -530,7 +498,10 @@ IScheduledJob {
 				log.error("=====Errors===== {}", sqle);
 			}
 		}
-		client.setAttribute("status", 1);
+		// set Session status 
+		client.setAttribute("status", SessionStatus.CLOSE);
+		// set status User
+		client.setAttribute("userStatus", UserStatus.DISCONNECTED);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -683,7 +654,7 @@ IScheduledJob {
 	 * 
 	 * @return clientInfo : map
 	 */
-	public Map<String, String> getClientInfo(IConnection conn) {
+	public void getClientInfo(IConnection conn) {
 		log.warn("getClientInfo client = {}", conn.getClient().getId());
 		IClient client = conn.getClient();
 
@@ -692,7 +663,12 @@ IScheduledJob {
 		// set time server to the client flex
 		Long timeNumber = new Date().getTime();
 		o.put("timeNumber", Long.toString(timeNumber));
-		return o;
+		Object[] obj = {o};
+		IConnection connectionClient = (IConnection)client.getAttribute("connection");
+		if (connectionClient instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
+			sc.invoke("checkClientInfo",obj);
+		} 		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1002,7 +978,7 @@ IScheduledJob {
 			// last param of the list the "args" => obsel SessionEnter of the
 			// recording client
 			Object[] args = { (Integer) clientRecording.getAttribute("uid"),
-					(Integer) clientRecording.getAttribute("status"),
+					(Integer) clientRecording.getAttribute("userStatus"),
 					(Integer) clientRecording.getAttribute("sessionId"),
 					startRecording, obselSessionEnterOfRecordingClient };
 			// send message to all users on "Deck"
@@ -1103,32 +1079,38 @@ IScheduledJob {
 	 * 
 	 * @return Clients : List<String>
 	 */
-	public List<List<Object>> getConnectedClients() {
+	@SuppressWarnings("unchecked")
+	public void getConnectedClients(IConnection conn) {
+		IClient clientLogged = conn.getClient();
+		
 		List<List<Object>> userlist = new Vector<List<Object>>();
 
 		for (IClient client : this.getClients()) {
 			List<Object> info = new Vector<Object>();
-			/*
-			 * Integer status = (Integer)client.getAttribute("status");
-			 * 
-			 * Integer userId = (Integer)client.getAttribute("uid"); User user =
-			 * null; try { user = (User)
-			 * getSqlMapClient().queryForObject("users.getUser",userId);
-			 * log.warn
-			 * (" getConnectedClients , getFirstname the user is = {}",user
-			 * .getFirstname()); } catch (Exception e) {
-			 * log.error("Probleme lors du listing des utilisateurs" + e); }
-			 * 
-			 * String userIdClient = client.getId();
-			 */
 			info.add((Integer) client.getAttribute("status"));
 			info.add((User) client.getAttribute("user"));
 			info.add((String) client.getAttribute("id"));
 			info.add((Integer) client.getAttribute("sessionId"));
+			info.add((Integer) client.getAttribute("userStatus"));
 
 			userlist.add(info);
 		}
-		return userlist;
+		
+		List<User> listUser = null;
+		try {
+			listUser = (List<User>) getSqlMapClient().queryForList("users.getUsers");
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des utilisateurs" + e);
+		}
+		
+		Object[] obj = {userlist, listUser};
+		IConnection connectionClient = (IConnection)clientLogged.getAttribute("connection");
+		if (connectionClient instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
+			sc.invoke("checkConnectedClients",obj);
+		} 	
+		
+		
 	}
 
 	public void sendPrivateMessage(Integer senderId, String message,
@@ -1196,8 +1178,10 @@ IScheduledJob {
 		log.warn("sessionId = {}", sessionId);
 		// change users status
 		IClient client = conn.getClient();
-		// TODO var static status
-		client.setAttribute("status", 0);
+		// set session status
+		client.setAttribute("status", SessionStatus.OPEN);
+		// set status User
+		client.setAttribute("userStatus", UserStatus.PENDING);
 		// client in the session id
 		client.setAttribute("sessionId", sessionId);
 		// get logged userVO
@@ -1221,19 +1205,16 @@ IScheduledJob {
 			log.error("Probleme lors du listing des sessions" + e);
 		}
 		// get status session
-		// TODO static vars :
-		// SESSION_RECORDING = 3
-		// SESSION_PAUSE = 2
-		// SESSION_CLOSE = 1
-		// SESSION_OPEN = 0
 		Integer statuSession = session.getStatus_session();
 		if (statuSession == 3) {
-			// set status recording
-			client.setAttribute("status", 3);
+			// set status session recording
+			client.setAttribute("status", SessionStatus.RECORDING);
+			// set status User
+			client.setAttribute("userStatus", UserStatus.RECORDING);
 		}
 
 		Object[] args = { loggedUser, userIdClient, sessionId,
-				(Integer) client.getAttribute("status") };
+				(Integer) client.getAttribute("status"), (Integer) client.getAttribute("userStatus") };
 		// Get the Client Scope
 		IScope scope = conn.getScope();
 		// send message to all users on "Deck"
@@ -1415,9 +1396,10 @@ IScheduledJob {
 		IScope scope = conn.getScope();
 		// start recording fila for users how staying in session
 		this.updateRecordingWhenUserWalkOutSession(scope, listStayingClient);
-		// TODO var static status
-		// set status client
-		client.setAttribute("status", 2);
+		// set status session
+		client.setAttribute("status", SessionStatus.PAUSE);
+		// set status User
+		client.setAttribute("userStatus", UserStatus.CONNECTED);
 		// clear sessionId
 		client.setAttribute("sessionId", 0);
 		// clear trace
@@ -1433,7 +1415,7 @@ IScheduledJob {
 			log.error("Probleme lors du listing des utilisateurs" + e);
 		}
 
-		Object[] args = { loggedUser, 2 };
+		Object[] args = { loggedUser, (Integer)client.getAttribute("userStatus") };
 		// send message to all users on "Deck"
 		invokeOnScopeClients(scope, "outSession", args);
 	}
