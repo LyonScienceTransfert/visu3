@@ -41,28 +41,28 @@
         <mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="getConnectedClients"   arguments="{[]}" />
-				<rtmp:resultHandlers>
+				<!--<rtmp:resultHandlers>
 					<mate:MethodInvoker generator="{MainManager}"
 										method="getConnectedClients" arguments="{[currentEvent.data]}"/>
 				</rtmp:resultHandlers>		
 				<rtmp:faultHandlers>
 					<mate:MethodInvoker generator="{MainManager}"
 										method="onError" arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
+				</rtmp:faultHandlers>-->
 			</rtmp:RtmpServiceInvoker>	
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{'clientInfo'}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true">
 				<mate:Request action="getClientInfo"   arguments="{[]}" />
-				<rtmp:resultHandlers>
+<!--				<rtmp:resultHandlers>
 					<mate:MethodInvoker generator="{MainManager}"
-										method="getClientInfo" arguments="{[currentEvent.data]}"/>
+										method="onGetClientInfo" arguments="{[currentEvent.data]}"/>
 				</rtmp:resultHandlers>		
 				<rtmp:faultHandlers>
 					<mate:MethodInvoker generator="{MainManager}"
 										method="onError" arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
+				</rtmp:faultHandlers>-->
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
 		
@@ -122,6 +122,8 @@
 			<rtmp:CallbackRegistrator action="checkAddObselComment" target="{MainManager}" method="onCheckAddObselComment"/>
 			<rtmp:CallbackRegistrator action="checkListRetroDocument" target="{MainManager}" method="onCheckListRetroDocument"/>
 			<rtmp:CallbackRegistrator action="checkRetroDocument" target="{MainManager}" method="onCheckRetroDocument"/>
+			<rtmp:CallbackRegistrator action="checkConnectedClients" target="{MainManager}" method="getConnectedClients"/>
+			<rtmp:CallbackRegistrator action="checkClientInfo" target="{MainManager}" method="onCheckClientInfo"/>
 <!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
         </mate:EventHandlers>
 
