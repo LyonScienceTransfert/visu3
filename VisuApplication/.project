@@ -44,7 +44,7 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>/devtools/red5-0.8.0/webapps/visu2</location>
+			<location>/Applications/red5/webapps/visu2</location>
 		</link>
 	</linkedResources>
 </projectDescription>
