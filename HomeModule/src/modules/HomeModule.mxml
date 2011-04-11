@@ -19,8 +19,8 @@
 		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"
 			method="showSession" />
 			
-		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"
-			method="onLoadedAllUsers" />
+<!--		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"
+			method="onLoadedAllUsers" />-->
 		<mx:ArrayCollection id="usersList" filterFunction="keepUser"/>
 		<mx:ArrayCollection id="sessionsList"/>
 	</fx:Declarations>
@@ -29,7 +29,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-	//		import com.ithaca.visu.controls.SessionHomeElement;
+			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
@@ -45,28 +45,24 @@
 			import com.ithaca.visu.model.vo.UserVO;
 			import com.ithaca.visu.renderer.FluxActivityRenderer;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
-			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.RightStatus;
+			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.view.user.MessageUser;
-			import com.ithaca.utils.VisuUtils;
 			
-			import mx.logging.Log;
-    		import mx.logging.ILogger;
-	
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
-
+			import mx.collections.Sort;
+			import mx.collections.SortField;
 			import mx.controls.Alert;
 			import mx.core.IVisualElement;
 			import mx.events.CloseEvent;
-
-			import mx.collections.Sort;
-			import mx.collections.SortField;
-
 			import mx.events.CollectionEvent;
+			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
+			import mx.logging.ILogger;
+			import mx.logging.Log;
 			
 			import spark.events.IndexChangeEvent;
 
@@ -182,6 +178,10 @@
 				}
 				
 				logger.info("The initialization has ended successfully");
+				
+				// initialisize list Users
+				var listUsersPlateforme:ArrayCollection = Model.getInstance().getListUserPlateforme();
+				initializeUsers(listUsersPlateforme);
 			}
 			
 			/**
@@ -306,7 +306,7 @@
 				//		var vb:VGroup = new VGroup();	
 				//		vb.percentWidth = 100;
 						var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
-						var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
+//						var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
 						if(listSession != null)
 						{
 							var nbrSession:uint = listSession.length;
@@ -711,7 +711,7 @@
 			/**
 			 * set list users of the plateforme 
 			 */
-			public function onLoadedAllUsers(event:SessionEvent):void
+/* 			public function onLoadedAllUsers(event:SessionEvent):void
 			{
 				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
 				{
@@ -744,7 +744,7 @@
 					initializeUsers(listUsersPlateforme);
 					
 				}
-			}
+			} */
 			
 			
 			// new version with the list
@@ -879,7 +879,7 @@
        				keepStatus = filterPending;
 
             	var keepRole:Boolean = false;
-            	if(VisuUtils.isTuteur(userItem)) 
+            	if(VisuUtils.isTuteur(userItem))
             		keepRole = keepTuteur;
             	
             	if(VisuUtils.isStudent(userItem)) 
