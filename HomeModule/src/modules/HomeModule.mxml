@@ -64,6 +64,7 @@
 			import mx.logging.ILogger;
 			import mx.logging.Log;
 			
+			import spark.components.supportClasses.GroupBase;
 			import spark.events.IndexChangeEvent;
 
 					
@@ -950,6 +951,16 @@
 					logger.warn("The event {0} cannot be handled", event.typeAction);
 				}
 			}
+
+			// Update scroller when new flux came 
+			protected function listFluxActivity_updateCompleteHandler(event:FlexEvent):void
+			{
+				if(fluxActivity != null && fluxActivity.length > 0)
+				{
+					listFluxActivity.ensureIndexIsVisible(fluxActivity.length-1);					
+				}
+			}
+
 		]]>
 	</fx:Script>
 	
@@ -967,9 +978,10 @@
 				fontSize="20" />
 		</s:HGroup>
 		
+		
 		<s:HGroup width="100%" height="100%">
 			<s:Panel id="calendarPanel" width="40%" height="100%" title="Calendrier">
-				<s:VGroup  width="100%" height="100%">
+				<s:VGroup  width="100%" height="100%" id="vGroupListSession">
 						<controls:NavigateurDay id="navigateurDay"
 							dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"
 							visible="true" change="navigateurDay_changeHandler(event)" width="100%" />
@@ -977,10 +989,11 @@
 								id="sessionList"
 								includeInLayout="{sessionsList.length!=0}"
 								visible="{sessionsList.length!=0}"
-								width="100%"
+								width="{vGroupListSession.width}"
 								height="100%"
+								borderVisible="false"
 								dataProvider="{sessionsList}"
-								creationComplete="initSessionList(event)"
+								creationComplete="initSessionList(event)"								
 								itemRenderer="com.ithaca.visu.view.session.renderer.HomeSessionRenderer"
 								/>
 					<s:HGroup verticalAlign="middle" horizontalAlign="center" visible="{sessionsList.length==0}" includeInLayout="{sessionsList.length==0}" width="100%" height="100%">
@@ -993,13 +1006,17 @@
 			<!-- FLUX ACTIVITY -->
 			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global">
 			
-					<s:VGroup width="100%" height="100%">
+					<s:VGroup width="100%" height="100%" id="vGroupFluxActivity">
 	
 						<s:List 
-							dataProvider="{fluxActivity}" width="100%"
+							dataProvider="{fluxActivity}" 
 							itemRenderer="com.ithaca.visu.renderer.FluxActivityRenderer"
+							width="{vGroupFluxActivity.width}"
 							height="100%"
-							creationComplete="refreshUserList();"/>
+							id="listFluxActivity"
+							borderVisible="false"
+							creationComplete="refreshUserList()"
+							updateComplete="listFluxActivity_updateCompleteHandler(event)"/>
 
 						<s:HGroup paddingTop="5" paddingRight="5" paddingLeft="5" paddingBottom="5" gap="5" verticalAlign="middle" width="100%"
 							horizontalAlign="center">
@@ -1017,7 +1034,7 @@
 			</s:Panel>
 			
 			<s:Panel id="userPanel" width="30%" height="100%" title="Utilisateurs">
-				<s:VGroup width="100%" height="100%">
+				<s:VGroup width="100%" height="100%" id="vGroupUserList">
 			
 					<mx:MenuBar id="userMenu" width="100%" labelField="@label"
 						itemClick="menuHandler(event);">
@@ -1057,11 +1074,13 @@
 						</fx:XMLList>
 					</mx:MenuBar>
 			
-					<s:List id="userList" width="100%" height="100%"
+					<s:List id="userList" width="{vGroupUserList.width}" height="100%"
 						dataProvider="{usersList}"
+						borderVisible="false"
 						itemRenderer="com.ithaca.visu.view.user.renderer.UserRenderer"
 						/>
    
+					
 				</s:VGroup>
 			</s:Panel>
 		</s:HGroup>
