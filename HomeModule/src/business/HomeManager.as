@@ -67,7 +67,7 @@ public class HomeManager
 	}
 
 
-	public function onLoadListUsers(value:Array):void
+/*	public function onLoadListUsers(value:Array):void
 	{
 		var ar:Array = new Array();
 		for each (var vo:UserVO in value)
@@ -77,7 +77,7 @@ public class HomeManager
 		var onLoadedAllUsers:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_USERS_PLATEFORME);
 		onLoadedAllUsers.listDate = ar;
 		this.dispatcher.dispatchEvent(onLoadedAllUsers);
-	}	
+	}	*/
 		
 	public function onUpdateUser(userVO:UserVO):void
 	{
