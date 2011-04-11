@@ -29,7 +29,7 @@
 		]]>
 	</fx:Script>
 
-	<mx:Image id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.getStatus())}" /> 
+	<mx:Image id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.status)}" /> 
 	<s:Label text="{firstNameInitials?StringUtils.firstLetterCap(user.lastname):StringUtils.cap(user.lastname)}{firstNameInitials?'.':''} {StringUtils.cap(user.firstname)}"/>
 	<s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"/>
 </s:HGroup>
