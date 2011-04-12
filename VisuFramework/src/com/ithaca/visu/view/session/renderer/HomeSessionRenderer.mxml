@@ -68,6 +68,13 @@
 				return data.statusSession==SessionStatusEnum.SESSION_CLOSE;
 			}
 			
+			
+			
+			private function isStarted():Boolean
+			{
+				return data.statusSession != SessionStatusEnum.SESSION_OPEN;
+			}
+			
 			private function canJoinSession(bindableStatus:int):Boolean {
 				return !isClosed() && canAccess();
 			}
@@ -76,13 +83,12 @@
 				return isClosed() && canAccess();
 			}
 			
-			private function isStarted():Boolean
-			{
-				return data.statusSession != SessionStatusEnum.SESSION_OPEN;
-			}
-			
 			private function canModifySession(bindableStatus:int):Boolean {
 				var loggedUser:User = Model.getInstance().getLoggedUser();
+				return !isStarted() && canWrite();
+			}
+			
+			private function canCancelSession(bindableStatus:int):Boolean {
 				return !isStarted() && canWrite();
 			}
 			
@@ -131,9 +137,7 @@
 				}
 		    } 
 
-			private function canCancelSession(bindableStatus:int):Boolean {
-				return !isClosed() && canWrite();
-			}
+		
 			
 			private function doJoinSession(event:MouseEvent):void {
 					dispatch(SessionHomeElementEvent.ACTION_JOIN_SESSION);
@@ -228,7 +232,7 @@
 									</s:LinearGradientStroke>
 								</s:stroke>
 							</s:Rect>
-                            <myviews:UserElement left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
+                            <myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
                         </s:ItemRenderer>
                     </fx:Component>
                 </s:itemRenderer>

@@ -48,7 +48,7 @@
 		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5"
 			paddingRight="5" paddingTop="5">
 			
-			<myviews:UserElement width="100%" user="{data}" showRoleInParentheses.normal="true" showRoleInParentheses.selected="false"/>
+			<myviews:UserElement width="100%"  user="{data}" showRoleInParentheses.normal="true" showRoleInParentheses.selected="false"/>
 
 			<s:HGroup includeIn="selected" width="100%">
 				<mx:Image source="{data.avatar}" includeIn="selected" width="70"
