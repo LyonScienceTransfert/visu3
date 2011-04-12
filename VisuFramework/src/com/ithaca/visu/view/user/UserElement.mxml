@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
-	xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:visu="com.ithaca.visu.controls.*"
 	verticalAlign="middle">
 	<fx:Declarations>
 
@@ -19,6 +21,9 @@
 				
 				[Bindable]
 				public var firstNameInitials:Boolean = false;
+				
+				[Bindable]
+				public var statusIconWidth:int = 16;
 
 				[Bindable]
 				public var showStatusIcon:Boolean = true;
@@ -29,7 +34,8 @@
 		]]>
 	</fx:Script>
 
-	<mx:Image id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.status)}" /> 
+	<mx:Image id="statusIcon" visible="{showStatusIcon}" width="{statusIconWidth}" height="{statusIconWidth}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.status)}" /> 
+	<!--<visu:ConnectionLight width="{statusIconWidth}" height="{statusIconWidth}"  id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" status="{user.status}" />-->
 	<s:Label text="{firstNameInitials?StringUtils.firstLetterCap(user.lastname):StringUtils.cap(user.lastname)}{firstNameInitials?'.':''} {StringUtils.cap(user.firstname)}"/>
 	<s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"/>
 </s:HGroup>

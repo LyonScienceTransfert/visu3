@@ -4,12 +4,16 @@ package com.ithaca.visu.controls
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	
+	import mx.logging.ILogger;
+	import mx.logging.Log;
+			
 	[SkinState("connected")]
 	[SkinState("disconnected")]
 	[SkinState("pending")]
 	[SkinState("recording")]
 	public class ConnectionLight extends SkinnableComponent
 	{
+		private static var logger:ILogger = Log.getLogger("com.ithaca.visu.controls.ConnectionLight");
 		
 		private var _status:int;
 		public function get status():int
@@ -18,6 +22,7 @@ package com.ithaca.visu.controls
 		}
 		public function set status(value:int):void
 		{
+			logger.debug("Setting the status to {0}", value);
 			_status = value;
 			invalidateSkinState();
 		}
@@ -29,14 +34,25 @@ package com.ithaca.visu.controls
 		
 		override protected function getCurrentSkinState():String
 		{
-			if( _status == ConnectionStatus.CONNECTED)
+			if( _status == ConnectionStatus.CONNECTED) {
+				
+			logger.debug("Connection light: {0}", "connected");
 				return "connected";
+			}
 			
-			if( _status == ConnectionStatus.PENDING)
+			if( _status == ConnectionStatus.PENDING) {
+				
+			logger.debug("Connection light: {0}", "pending");
 				return "pending";
+			}
 		
-			if( _status == ConnectionStatus.DISCONNECTED)
+			if( _status == ConnectionStatus.DISCONNECTED) {
+				
+			logger.debug("Connection light: {0}", "disconnected");
 				return "disconnected";
+			}
+			
+			logger.debug("Connection light: {0}", "recording");
 			
 			return "recording";
 		}
