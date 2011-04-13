@@ -90,6 +90,8 @@
 			private var maxIntervalDecalage:Number = 1.1;
 			// interval the contol of the decalage 
 			private var INTERVAL_CONTROL_DECALAGE:Number = 10000;
+			// interval the check the decalage
+			private var intervalCheckDecalage:Number = 5;
 			// time start session plus time in this session 
 			private var currentTime:Number;
 			
@@ -156,7 +158,7 @@
 					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
 					this.visio.setDebugMode();
 
-					timerSynchro = new Timer(INTERVAL_CONTROL_DECALAGE,0);
+					timerSynchro = new Timer(intervalCheckDecalage*1000,0);
 					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
 					timerSynchro.start();
 					
@@ -1463,7 +1465,6 @@
 
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
-				this.setCurrentState("debug");
 				var listUser:Array = Model.getInstance().getListUserPresentOnTimeLine();
 				var ar:Array = new Array();
 				var nbrUser:int = listUser.length;
@@ -1508,8 +1509,6 @@
 
 				var xmlList:XMLList = html.body.table.tr as XMLList;
 				dataDebug.dataProvider = xmlList;
-				
-				var t:uint =1
 				
 				function getTimeByUserId(value:Object, listUser:Array):XML
 				{
@@ -1561,6 +1560,13 @@
 			{
 				// update max interval the decalage
 				this.maxIntervalDecalage = (event.currentTarget as NumericStepper).value;	
+			}
+
+
+			protected function numStepplerIntervalCheckDecalageFlux_changeHandler(event:Event):void
+			{
+				this.intervalCheckDecalage = (event.currentTarget as NumericStepper).value;
+				timerSynchro.delay = this.intervalCheckDecalage*1000;
 			}
 
 		]]>
@@ -1631,13 +1637,15 @@
 					<controls:VisuVisio id="visio" width="100%" top="0"
 										quality="80"
 										bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"/>
-					<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" horizontalCenter.debug="0" bottom.vciel="2" horizontalCenter.vciel="0">
+					<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" bottom.vciel="2" horizontalCenter.vciel="0" right.debug="5">
 						<s:label>Couper le son</s:label>
 					</s:Button>
 					<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
 						<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
 						<s:Label text="Décalage max. autorisé est:" paddingTop="7"/>
 						<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
+						<s:Label text="Périod de verification" paddingTop="7"/>
+						<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 					</s:HGroup>
 				</s:Group>
 			</s:Panel>
