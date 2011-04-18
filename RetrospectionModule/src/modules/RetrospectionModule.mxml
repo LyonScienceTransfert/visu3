@@ -86,11 +86,13 @@
 			private var currentRetroDocumentSegmentPlaying:RetroDocumentSegment = null;
 			private var beginTimeCurrentSegment:Number= 0;
 			private var currentVolume:Number = 1;
-			// interval the decalage max
+			// interval the decalage max in seconds
+			[Bindable]
 			private var maxIntervalDecalage:Number = 1.1;
-			// interval the contol of the decalage 
+			// interval the contol of the decalage im microseconds 
 			private var INTERVAL_CONTROL_DECALAGE:Number = 10000;
-			// interval the check the decalage
+			// interval the check the decalage in seconds
+			[Bindable]
 			private var intervalCheckDecalage:Number = 5;
 			// time start session plus time in this session 
 			private var currentTime:Number;
@@ -1642,9 +1644,9 @@
 					</s:Button>
 					<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
 						<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
-						<s:Label text="Décalage max. autorisé est:" paddingTop="7"/>
+						<s:Label text="Décalage max. autorisé(s) est:" paddingTop="7"/>
 						<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
-						<s:Label text="Périod de verification" paddingTop="7"/>
+						<s:Label text="Périod de verification(s)" paddingTop="7"/>
 						<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 					</s:HGroup>
 				</s:Group>
