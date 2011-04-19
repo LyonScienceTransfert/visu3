@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    	xmlns:s="library://ns.adobe.com/flex/spark" 
+    	xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:ithaca="com.ithaca.components.*"
+		xmlns:controls="com.lyon2.controls.*"
+		xmlns:mate="http://mate.asfusion.com/"
+	>
+
+	<fx:Declarations> 
+	
+		<mate:Listener type="{BilanEvent.SESSION_OBSEL_LIST_RETRIEVED}"  method="processVideoStreamsFromSessionObsels"/>
+		
+	</fx:Declarations>
+ 
+    <fx:Script>
+        <![CDATA[
+		import com.ithaca.documentarisation.model.RetroDocument;
+		import spark.events.IndexChangeEvent;
+		import com.ithaca.utils.VisuUtils;
+		import com.ithaca.visu.model.Model;
+		import com.ithaca.visu.events.BilanEvent;
+		import com.ithaca.visu.events.PlaySegmentVideoEvent;
+		import flash.utils.Dictionary; 
+		import com.ithaca.documentarisation.model.Segment;
+	
+		import mx.logging.ILogger;
+		import mx.logging.Log;
+			
+		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer');
+		
+		/*
+		 * the dictionary of stream info (stream name + user ids + date)
+		 * organized by userId
+		 */
+		private var streamInfos : Dictionary;
+			
+		private function processVideoStreamsFromSessionObsels(event:BilanEvent):void {
+			if(event.sessionId == bilan.sessionId) {
+				logger.info("Receiving an obsel list of size {0} for session {1}", 
+					event.obselList.size, 
+					event.sessionId);
+					
+					var streamInfos:Dictionary = VisuUtils.getStreamInfoFromSessionObselList(event.obselList);
+					for (var key:Object in streamInfos) {
+						var entries:Dictionary = streamInfos[key];
+						for (var path:Object in entries) {
+							var rfn:Object = entries[path];
+							logger.debug("RFN {0} - {1} - {2}", rfn['path'], rfn['userId'], rfn['date']);
+						}
+					}
+					this.streamInfos = streamInfos;
+			} else
+				logger.warn("Receiving an obsel list for a different session. Expected: {0}, Actual: {1}", 
+					bilan.sessionId, 
+					event.sessionId);
+		}
+		
+		public function setNewBilan(bilan:RetroDocument):void {
+			this.bilan = bilan;
+			
+			if(bilan != null) {
+				var event = new BilanEvent(BilanEvent.BILAN_LOADED);
+				event.sessionId = bilan.sessionId;
+				logger.info("Sending the request for the obsel list of session {}", bilan.sessionId);
+				this.dispatchEvent(event);
+			}
+		}
+		
+		
+		[Bindable]
+		public var bilan:RetroDocument = null;
+
+		[Bindable]
+		public var showInfo:Boolean = false;
+		
+		private function  toogleShowInfo(event):void {
+			showInfo = !showInfo;
+		}
+		
+		private function initSegmentList(event):void {
+			segmentList.addEventListener(PlaySegmentVideoEvent.PLAY_SEGMENT_ASKED_EVENT, onPlayVideoSegmentAsked);
+		}
+		
+		private function onPlayVideoSegmentAsked(event:PlaySegmentVideoEvent):void {
+			logger.info("Ask for playing the video of segment {0} - {1}", event.segment.title, event.segment.comment)
+		}
+		
+        ]]>
+    </fx:Script>
+
+	<s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+			<s:Label text="Aucun bilan sélectionné" fontSize="14" fontStyle="italic"/>
+	</s:VGroup>
+ 
+	<s:VGroup includeInLayout="{bilan}" visible="{bilan}" width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+
+				<ithaca:BilanSummary includeInLayout="{showInfo}" visible="{showInfo}"
+					width="100%"
+					bilan="{bilan}"
+					horizontalAlign="left" 
+					/>
+
+				<s:HGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="100%">
+
+						<s:VGroup 
+							minWidth="150"
+							width="50%"
+							height="100%">
+								<s:HGroup width="100%"> 
+									<s:Label 
+										fontSize="20"
+										fontWeight="bold"
+										lineBreak="toFit"
+										width="100%"
+										text="{bilan.title}"/>
+									<mx:LinkButton label="{showInfo?'Cacher les informations':'Voir les informations'}" click="toogleShowInfo(event)"/>
+								</s:HGroup>
+								<s:Label 
+									fontSize="12"
+									lineBreak="toFit"
+									width="100%"
+									fontStyle="italic"
+									text="{bilan.description}"/>
+								
+								<s:List id="segmentList" width="100%" height="100%" dataProvider="{bilan.listSegment}" creationComplete="initSegmentList(event)">
+									<s:itemRenderer>
+										<fx:Component>
+											<s:ItemRenderer>
+												<s:states>
+													<s:State name="normal" />
+													<s:State name="selected" />
+													<s:State name="hovered" />
+												</s:states>
+												<fx:Script>
+													<![CDATA[
+														import flash.events.MouseEvent;
+														import com.ithaca.visu.events.PlaySegmentVideoEvent;
+														import com.ithaca.documentarisation.model.Segment;
+
+														private function playVideoClicked(event:MouseEvent) {
+															var playSegmentVideoEvent:PlaySegmentVideoEvent = new PlaySegmentVideoEvent(data as Segment);
+															dispatchEvent(playSegmentVideoEvent);
+														}
+													]]>
+												</fx:Script>
+												<s:VGroup paddingTop="5" gap="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
+														<s:HGroup width="100%">
+															<s:Label 
+																fontSize="15"
+																text="{data.order}. "/>
+															<s:Label 
+																fontSize="15"
+																width="100%"
+																text="{data.title}"/>
+															<mx:LinkButton includeIn="hovered,selected" label="Jouer" click="playVideoClicked(event)"/>
+														</s:HGroup>
+														<s:HGroup width="100%">
+															<s:Label 
+																width="20"/>
+															<s:Label 
+																width="100%"
+																lineBreak="toFit"
+																fontStyle="italic"
+																text="{data.comment}"/>
+														</s:HGroup>
+														
+												</s:VGroup>
+											</s:ItemRenderer>
+										</fx:Component>
+									</s:itemRenderer>
+								</s:List>
+						</s:VGroup>
+
+					
+						<s:VGroup 
+							width="50%"
+							height="100%"
+							paddingTop="5"
+							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
+							
+							<controls:VisuVisio id="visio" width="100%"
+										quality="80"
+										bandwidth="15000" autoPlay="True"/>
+										
+						</s:VGroup>
+				</s:HGroup>
+	</s:VGroup>
+</s:Group>

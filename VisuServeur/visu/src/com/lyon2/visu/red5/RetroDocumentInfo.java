@@ -1,6 +1,8 @@
 package com.lyon2.visu.red5;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.red5.logging.Red5LoggerFactory;
@@ -17,15 +19,69 @@ import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.User;
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
 import com.ithaca.domain.model.RetroDocument;
+import com.ithaca.service.RetroDocumentService;
 
 
 public class RetroDocumentInfo {
 	
 
 	private Application app;
-  	
-	protected static final Logger log = Red5LoggerFactory.getLogger(SessionInfo.class, "visu2" );
 
+	// Injected by Spring
+	private RetroDocumentService retroDocumentService;
+	public void setRetroDocumentService(
+			RetroDocumentService retroDocumentService) {
+		this.retroDocumentService = retroDocumentService;
+	}
+	
+	protected static final Logger log = Red5LoggerFactory.getLogger(RetroDocumentInfo.class, "visu2" );
+
+	public void getOwnedRetroDocuments(IConnection conn, int userId)  {
+		log.info("Requesting for the list of retro documents for the user {}", userId);
+		Collection<RetroDocument> docs = this.retroDocumentService.findDocumentsByOwner(userId, false);
+		
+		// DEBUG
+		for(RetroDocument doc:docs) {
+			log.debug("The bilan {} has been retrieved. It has {} invitees", doc.getDocumentId(), doc.getInviteeIds().size());
+			for(int inviteeId:doc.getInviteeIds()) {
+				log.debug("\t" + inviteeId);
+			}
+		}
+		
+		
+		Collection<Session> filterSessions = new HashSet<Session>();
+		for(RetroDocument doc:docs) 
+			filterSessions.add(doc.getSession());
+		
+		
+		Object[] args = new Object[]{docs, filterSessions};
+		IConnection connClient = (IConnection)conn.getClient().getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			log.debug("Returning {} retro documents and {} filter sessions", docs.size(), filterSessions.size());
+			sc.invoke("bilanListRetrieved", args);
+		} 	
+	}
+	
+	public void getSharedRetroDocuments(IConnection conn, int userId)  {
+		log.info("Requesting for the list of retro documents where the user {} is invited", userId);
+		Collection<RetroDocument> docs = this.retroDocumentService.findDocumentsWhereUserIsInvited(userId, false);
+		
+		Collection<Session> filterSessions = new HashSet<Session>();
+		for(RetroDocument doc:docs) 
+			filterSessions.add(doc.getSession());
+		
+		Object[] args = new Object[]{docs, filterSessions};
+		IConnection connClient = (IConnection)conn.getClient().getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) 
+		{
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			log.debug("Returning {} retro documents and {} filter sessions", docs.size(), filterSessions.size());
+			sc.invoke("bilanListRetrieved", args);
+		} 	
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void getRetroDocumentById(IConnection conn, int documentId, boolean editabled) 
 	{

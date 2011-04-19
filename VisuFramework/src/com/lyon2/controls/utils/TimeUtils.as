@@ -90,8 +90,22 @@ package com.lyon2.controls.utils
 		public static function formatHHMM(date:Date):String {
 			var s:String = "";
 			s+=date.hours;
-			s+=":" + (date.minutes<10?"0":"")+date.minutes;
+			s+=":" + asTwoDigitString(date.minutes);
 			return s;
+		}
+		
+		private static function asTwoDigitString(n:Number):String {
+			return (n<10?"0":"")+n;
+		}
+		
+		public static function formatDDMMYYYY(date:Date):String {
+			return asTwoDigitString(date.date) +"-"+asTwoDigitString(date.month +1)+"-"+date.fullYear;
+		}
+		
+		public static function formatVisuDateTime(date:Date):String {
+			var time:String = formatHHMM(date);
+			var dateOnly:String = formatDDMMYYYY(date);
+			return dateOnly + " " + time;
 		}
 	}
 }
