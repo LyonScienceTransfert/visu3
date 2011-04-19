@@ -65,8 +65,10 @@ package com.lyon2.visu.red5;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import org.liris.ktbs.domain.TraceModel;
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
@@ -97,7 +99,7 @@ public class ObselInfo {
 
 	@SuppressWarnings("unchecked")
 	public void getObselSessionExitSessionPause(IConnection conn)
-			throws SQLException {
+	throws SQLException {
 		log.warn("====== getObselSessionExitSessionPause ======");
 		IClient client = conn.getClient();
 		Integer userId = (Integer) client.getAttribute("uid");
@@ -108,9 +110,9 @@ public class ObselInfo {
 			// log.warn("====refParam {}",refParam);
 			ObselStringParams osp = new ObselStringParams(traceParam, refParam);
 			listObselSessionExitSessionPause = (List<Obsel>) app
-					.getSqlMapClient().queryForList(
-							"obsels.getSessionExitSessionPauseObselsForUserId",
-							osp);
+			.getSqlMapClient().queryForList(
+					"obsels.getSessionExitSessionPauseObselsForUserId",
+					osp);
 
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
@@ -121,7 +123,7 @@ public class ObselInfo {
 				.size());
 		Object[] args = { listObselSessionExitSessionPause };
 		IConnection connClient = (IConnection) client
-				.getAttribute("connection");
+		.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListObselSessionExitSessionPause", args);
@@ -134,7 +136,7 @@ public class ObselInfo {
 		List<Obsel> listObselSessionStart = null;
 		try {
 			listObselSessionStart = (List<Obsel>) app.getSqlMapClient()
-					.queryForList("obsels.getObselSetMark");
+			.queryForList("obsels.getObselSetMark");
 
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des sessions" + e);
@@ -144,7 +146,7 @@ public class ObselInfo {
 		log.warn("====== numbers obsel = {}", listObselSessionStart.size());
 		return listObselSessionStart;
 	}
-	
+
 	public void goInSalonRetro(IConnection conn)
 	{
 		IClient client = conn.getClient();
@@ -183,15 +185,15 @@ public class ObselInfo {
 			client.removeAttribute("traceParentRetroId");
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void getTraceUser(IConnection conn, String traceId, Integer sessionId)
-			throws SQLException {
+	throws SQLException {
 		log.warn("======== getTraceUser ");
 		IClient client = conn.getClient();
 		User user = (User) client.getAttribute("user");
 		Integer userId = user.getId_user();
-		
+
 		List<Obsel> result = null;
 		List<Obsel> comment = null;
 		List<Obsel> retro = null;
@@ -245,7 +247,7 @@ public class ObselInfo {
 		}
 		// set traceId parent
 		client.setAttribute("traceParentRetroId", traceId);
-		
+
 		String traceParam = "%"+ObselType.PREFICS_RETRO_ROOM +"%";
 		String refParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SYNC_ROOM_TRACE_ID)+" "+"\"" + traceId + "\"" + "%";
 		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
@@ -257,7 +259,7 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des obsels retro" + e);
 		}
 		String traceRetroId = "";
-//		log.warn("retro size ={}",retro.size());
+		//		log.warn("retro size ={}",retro.size());
 		if(retro.size() < 1)
 		{
 			// create new traceId
@@ -265,24 +267,24 @@ public class ObselInfo {
 		}else
 		{
 			for(Obsel obsel : retro)
-				{
-//					log.warn("== OBSEL  = {} == {}",obsel.getTrace(),obsel.getId());
-				}
+			{
+				//					log.warn("== OBSEL  = {} == {}",obsel.getTrace(),obsel.getId());
+			}
 			Obsel obsel = retro.get(0);
 			traceRetroId = obsel.getTrace();
 		}
 		log.warn("traceRetroId = {}",traceRetroId );
 		// set traceId retro
 		client.setAttribute("traceRetroId", traceRetroId);
-		
-		
+
+
 		// add obsel SalonRetroSessionHide		
 		List<Object> paramsObsel= new ArrayList<Object>();
 
 		paramsObsel.add(ObselType.SESSION_ID);paramsObsel.add(sessionId.toString());
 		paramsObsel.add(ObselType.SESSION_TITLE);paramsObsel.add(session.getTheme());
 		paramsObsel.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObsel.add(traceId);
-		
+
 		Obsel obsel = null;
 		try
 		{
@@ -295,7 +297,7 @@ public class ObselInfo {
 		log.debug("------------- OBSEL SalonRetroSESSIONin START---------------------");
 		log.warn(obsel.toString());
 		log.debug("------------- OBSEL SalonRetroSESSIONin END---------------------");
-		
+
 		Date sessionStartRecordingDate = session.getStart_recording();
 		Object[] args = { result, sessionStartRecordingDate, comment};
 		IConnection connClient = (IConnection) client.getAttribute("connection");
@@ -303,7 +305,7 @@ public class ObselInfo {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListUserObsel", args);
 		}
-		
+
 		// get retroDocuments of the owner
 		List<RetroDocument> listRetroDocumentOwner = null;
 		try {
@@ -315,7 +317,7 @@ public class ObselInfo {
 		if(listRetroDocumentOwner != null)
 		{
 			log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());
-//			log.warn("xml the first retroDocument = {}",listRetroDocumentOwner.get(0).getCreationDate().toString());	
+			//			log.warn("xml the first retroDocument = {}",listRetroDocumentOwner.get(0).getCreationDate().toString());	
 		}else
 		{
 			log.warn("List empty !!!!!!");
@@ -331,7 +333,7 @@ public class ObselInfo {
 		if(listRetroDocumentShared != null)
 		{
 			log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());
-//			log.warn("xml the first retroDocument = {}",listRetroDocumentShared.get(0).getCreationDate().toString());	
+			//			log.warn("xml the first retroDocument = {}",listRetroDocumentShared.get(0).getCreationDate().toString());	
 		}else
 		{
 			log.warn("List empty !!!!!!");
@@ -375,16 +377,56 @@ public class ObselInfo {
 		}
 		Object[] args = { result, date };
 		IConnection connClient = (IConnection) client
-				.getAttribute("connection");
+		.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListSession", args);
 		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public void getStreamObselsBySession(IConnection conn, Integer sessionId) {
+		log.warn("======== getStreamObselsBySession = {}",sessionId.toString());
+
+		String traceParam = "%-" + "void" + "%";
+		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\"" + "%";
+
+		try {
+			traceParam = "%-" + "void" + "%";
+			refParam = "%:hasSession " + "\"" + sessionId.toString() + "\"" + "%";
+			List<String> listTraceId = (List<String>) app.getSqlMapClient().queryForList(
+					"obsels.getTracesBySessionId", 
+					new ObselStringParams(traceParam, refParam)
+			);
+
+			List<Obsel> listObselSession = new ArrayList<Obsel>();
+			for (String traceId : listTraceId) {
+				List<Obsel> listObselUser = app.getSqlMapClient().queryForList("obsels.getTrace", traceId);
+
+				Iterator<Obsel> it = listObselUser.iterator();
+
+				// filter obsels that have nothing to do with the video stream events.
+				while (it.hasNext()) {
+					Obsel obsel = (Obsel) it.next();
+					if(!obsel.getType().equals("SessionStart") 
+							&& !obsel.getType().equals("RecordFilename")) 
+						it.remove();
+				}
+				listObselSession.addAll(listObselUser);
+			}
+
+			if (conn instanceof IServiceCapableConnection) {
+				IServiceCapableConnection sc = (IServiceCapableConnection) conn;
+				log.info("Sending back a list of {} obsels to the client for session {}", listObselSession.size(), sessionId);
+				sc.invoke("sessionObselListRetrieved", new Object[]{sessionId, listObselSession});
+			}
+		} catch (Exception e) {
+			log.error("Erreur lors du chargement de la liste des obsels pour la session", e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
-		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
 
 		IClient client = conn.getClient();
 		User user = (User) client.getAttribute("user");
@@ -393,7 +435,7 @@ public class ObselInfo {
 		Session session = null;
 		String traceParam = "%-" + "void" + "%";
 		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
-				+ "%";
+		+ "%";
 		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
 		log.warn("OSP = {}",osp.toString());
 		try {
@@ -408,7 +450,7 @@ public class ObselInfo {
 		{
 			traceParam = "%-" + "void" + "%";
 			refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
-					+ "%";
+			+ "%";
 			osp = new ObselStringParams(traceParam, refParam);
 			log.warn("OSP = {}",osp.toString());
 			try {
@@ -457,12 +499,12 @@ public class ObselInfo {
 		Date sessionStartRecordingDate = session.getStart_recording();
 		Object[] args = { result, sessionStartRecordingDate , comment};
 		IConnection connClient = (IConnection) client
-				.getAttribute("connection");
+		.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListObselClosedSession", args);
 		}
-		
+
 		// get retroDocuments of the owner
 		List<RetroDocument> listRetroDocumentOwner = null;
 		try {
@@ -500,7 +542,7 @@ public class ObselInfo {
 			sc.invoke("checkListRetroDocument", argsRetroDocument);
 		}
 	}
-	
+
 	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, Long timeStamp )
 	{
 		IClient client = conn.getClient();
@@ -517,10 +559,10 @@ public class ObselInfo {
 			Date date = new Date();
 			timeStamp = date.getTime();			
 		}
-		
+
 		List<Object> paramsObsel= new ArrayList<Object>();
 		paramsObsel.add("commentforuserid");paramsObsel.add(forUserId.toString());
-		 // add timeStamp
+		// add timeStamp
 		paramsObsel.add("timestamp");paramsObsel.add(timeStamp.toString());
 		paramsObsel.add("session");paramsObsel.add(sessionId.toString());
 		paramsObsel.add("parentTrace");paramsObsel.add(traceParent.toString());
@@ -536,22 +578,22 @@ public class ObselInfo {
 		{
 			log.error("=====Errors===== {}", sqle);
 		}
-		
+
 		Object[] args = { obsel, beginTime, endTime };
 		IConnection connClient = (IConnection) client
-				.getAttribute("connection");
+		.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkAddObselComment", args);
 		}
-		
+
 		// add obsel action user
 		String typeObselActionUser = ObselType.RETRO_SAVE_COMMENT_EVENT;
 		if(typeObsel.equals(ObselType.DELETE_TEXT_COMMENT))
 		{
 			typeObselActionUser = ObselType.RETRO_DELETE_COMMENT_EVENT;
 		}
-		
+
 		String traceRetroId = (String)client.getAttribute("traceRetroId");
 		String traceParentRetroId = (String)client.getAttribute("traceParentRetroId");
 
@@ -573,8 +615,8 @@ public class ObselInfo {
 		}	
 	}
 
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	public List<User> getListPresentUserInSession(IConnection conn, Integer sessionId) {
 		log.warn("======== getListPresentUserInSession = {}",sessionId);
@@ -586,7 +628,7 @@ public class ObselInfo {
 		List<String> listTraceId = null;
 		String traceParam = "%-" + "void" + "%";
 		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
-				+ "%";
+		+ "%";
 		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
 		log.warn("OSP = {}",osp.toString());
 		try {
@@ -612,7 +654,7 @@ public class ObselInfo {
 		}
 		return listRecordingUser;
 	}
-	
+
 	public void addListObsel(List<Obsel> listObsel) {
 		Integer nbrObsel = listObsel.size();
 		log.warn("== nbrObsel = {}", nbrObsel.toString());

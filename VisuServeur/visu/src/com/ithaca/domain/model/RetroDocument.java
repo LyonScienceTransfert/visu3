@@ -1,6 +1,10 @@
 package com.ithaca.domain.model;
 
 import java.util.Date;
+import java.util.Set;
+
+import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.User;
 
 /**
  * The document that is created by users in the retrospection room
@@ -27,6 +31,24 @@ public class RetroDocument {
 
 	private String xml;
 
+	
+	// Added By Damien   
+	private Set<Integer> inviteeIds;
+	public void setInviteeIds(Set<Integer> inviteeIds) {
+		this.inviteeIds = inviteeIds;
+	}
+	public Set<Integer> getInviteeIds() {
+		return inviteeIds;
+	}
+	
+	private Session session;
+	public void setSession(Session session) {
+		this.session = session;
+	}
+	public Session getSession() {
+		return session;
+	}
+	
 	public void setXml(String xml) {
 		this.xml = xml;
 	}

@@ -8,6 +8,7 @@ import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.XMLUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.SessionEvent;
+import com.ithaca.visu.events.BilanEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
@@ -105,6 +106,13 @@ public class MainManager
 		dispatcher.dispatchEvent(event);
 	}
 	
+	public function onSessionObselListRetrieved(sessionId:int, obselList: Array):void {
+		logger.info("Processing theobsel list callback. {0} obsels for session {1}", obselList.length, sessionId);
+		var bilanEvent:BilanEvent = new BilanEvent(BilanEvent.SESSION_OBSEL_LIST_RETRIEVED);
+		bilanEvent.sessionId = sessionId;
+		bilanEvent.obselList = obselList;
+		this.dispatcher.dispatchEvent(bilanEvent); 
+	}
 	
 
 	/**
@@ -889,6 +897,8 @@ public class MainManager
 				}
 			}
 		}
+		
+		
 		function updateObselComment(listObsel:ArrayCollection, obsel:Obsel):void
 		{
 			var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
@@ -1240,6 +1250,16 @@ public class MainManager
 			var userColorCode:String =  ColorEnum.getColorByCode(code);
 			Model.getInstance().addTraceLine(userId, userName, userAvatar, userColorCode);
 		}
+	}
+	
+	
+	public function onBilanListRetrieved(bilanList:Array, listFilterSessions:Array):void 
+	{
+		logger.info("Processing the bilanList callback. {0} retro documents and {1} filter sessions", bilanList.length, listFilterSessions.length);
+		var bilanEvent:BilanEvent = new BilanEvent(BilanEvent.SHOW_RETRIEVED_BILAN_LIST);
+		bilanEvent.retroDocuments = bilanList;
+		bilanEvent.filterSessionCollection = listFilterSessions;
+		this.dispatcher.dispatchEvent(bilanEvent);
 	}
 	
 	/**

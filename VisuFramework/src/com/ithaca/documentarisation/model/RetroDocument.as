@@ -2,24 +2,80 @@ package com.ithaca.documentarisation.model
 {
 	import com.ithaca.documentarisation.RetroDocumentConst;
 	
+	import com.ithaca.visu.model.vo.RetroDocumentVO;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
-
+import com.ithaca.visu.model.Session;
+			
 	public class RetroDocument
 	{
+		
 		public var id:int;
 		public var sessionId:int;	
-		public var title:String;
-		public var listSegment:IList;
-		public var description:String;
-		public var createur:String;
-		public var ownerId:int;
-		public var creationDate:String; 
-		public var modifyDate:String; 
 		
-		public function RetroDocument()
+		[Bindable]
+		public var title:String;
+
+		[Bindable]
+		public var listSegment:IList;
+
+		[Bindable]
+		public var description:String;
+
+		[Bindable]
+		public var createur:String;
+
+		[Bindable]
+		public var ownerId:int;
+
+		[Bindable]
+		public var creationDate:String; 
+
+		[Bindable]
+		public var creationDateAsDate:Date; 
+
+		[Bindable]
+		public var modifyDate:String;
+		
+		[Bindable]
+		public var modifyDateAsDate:Date;
+
+		[Bindable]
+		public var inviteeIds:IList;		
+		
+		[Bindable]
+		public var session:Session;		
+		
+		public function RetroDocument(vo:RetroDocumentVO = null)
 		{
 			listSegment = new ArrayCollection();
+			
+			if(vo) {
+				this.sessionId = vo.sessionId;
+				this.id = vo.documentId;
+				this.ownerId = vo.ownerId;	
+	
+				this.title = vo.title;
+				this.description = vo.description;
+				this.creationDateAsDate = vo.creationDate;
+				this.modifyDateAsDate = vo.lastModified;
+				this.inviteeIds = new ArrayCollection();	
+					
+				for each (var id:Number in vo.inviteeIds)
+						this.inviteeIds.addItem(id);
+				
+				if(vo.session)
+						this.session = new Session(vo.session);
+						
+				if(vo.xml)
+					setRetroDocumentXML(vo.xml);
+			}
+		}
+		
+		
+		public function isShared():Boolean {
+			return this.inviteeIds.length > 0;
 		}
 		
 		public function setRetroDocumentXML(value:String):void

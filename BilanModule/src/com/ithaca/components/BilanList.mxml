@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    	xmlns:s="library://ns.adobe.com/flex/spark" 
+    	xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:ithaca="com.ithaca.components.*"
+	>
+
+	<fx:Declarations> 
+	</fx:Declarations>
+ 
+    <fx:Script>
+        <![CDATA[
+		import flash.events.MouseEvent;
+		import mx.collections.ArrayList;
+		import mx.controls.TabBar;
+		import mx.controls.Alert;
+		import com.ithaca.events.SelectionEvent;
+		import com.ithaca.utils.VisuUtils;
+		import com.ithaca.visu.model.Model;
+		import spark.events.IndexChangeEvent;
+		
+		[Bindable]
+		public var bilanCollection:ArrayList = new ArrayList();
+
+		[Bindable]
+		public var filterSessionCollection:ArrayList = new ArrayList();
+
+		[Bindable]
+		public var showNewButton:Boolean = true;
+
+		[Bindable]
+		public var showFilterButtons:Boolean = true;
+
+		[Bindable]
+		public var showFilterText:Boolean = true;
+
+		private function filterAll(event:Event):void {
+    		}
+
+		private function filterPast(event:Event):void {
+    		}
+
+		private function filterComing(event:Event):void {
+    		}
+
+		private function onChangeListener(event:IndexChangeEvent):void {
+			if(event.currentTarget.selectedItems.length == 1) {
+				dispatchEvent(new SelectionEvent(bilanCollection.getItemAt(event.currentTarget.selectedIndices[0]).id, true, true));
+			} else if(event.currentTarget.selectedItems.length == 1) {
+				dispatchEvent(new SelectionEvent(null, true, true));
+			}
+
+    	}
+
+			private function  initSessionPane(event:Event):void {
+				sessionComp.addEventListener("SelectionEvent", onSessionSelected);
+			}
+
+
+			private function  onSessionSelected(event:SelectionEvent):void {
+				Alert.show("Affiche uniquement les bilans de la séance sélectionnée");
+			}
+        ]]>
+    </fx:Script>
+ 
+	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+
+		<s:Group width="100%">
+			<s:Rect width="100%" height="100%" radiusX="5">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" alpha="0.5625" />
+						<s:GradientEntry color="0x000000" alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+				<s:fill>
+					<s:SolidColor color="0x000000" alpha="0.20" />
+				</s:fill>
+			</s:Rect>
+			<s:VGroup width="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+				<s:VGroup width="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+					<s:CheckBox id="onSeanceFilterButton" width="100%" label="Filtrer par séance"/>
+					
+					<ithaca:SessionList 
+						id="sessionComp"
+						filterAlpha="0"
+						visible="{onSeanceFilterButton.selected}"
+						includeInLayout="{onSeanceFilterButton.selected}"
+						showNewButton="false"
+						showFilterButtons="false"
+						showFilterLabels="false"
+						showFilterAreaBorder="false"
+						showFilterText="true"
+						initSessionList="{filterSessionCollection}"
+						mode="session"
+						width="100%"
+						height="100%"
+						creationComplete="initSessionPane(event)"/>
+				</s:VGroup>
+				
+
+				<s:VGroup width="100%" verticalAlign="middle">
+						 <s:RadioButton groupName="sharingFilter" 
+							id="sharingAllButton"
+							label="Tous les bilans" 
+							click="filterAll(event);"
+						selected="true"
+						/>
+					<s:RadioButton groupName="sharingFilter" 
+							id="sharingMineButton"
+							label="Mes bilans (créés par moi)"
+						toolTip="Affiche uniquement les plans de séance que j'ai créés" 
+							click="filterPast(event);"/>
+						 <s:RadioButton groupName="sharingFilter" 
+							id="sharingOtherButton"
+							label="Autres bilans partagés pour moi (créés par d'autres)" 
+						toolTip="Affiche uniquement les bilans créés par d'autres et partagés pour moi" 
+							click="filterComing(event);"/>
+				</s:VGroup>
+			
+			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label includeInLayout="{showFilterText}" text="Filtre:"/>
+					<s:TextInput includeInLayout="{showFilterText}" width="100%" text=""/>
+				</s:HGroup>
+			</s:VGroup>
+		</s:Group>
+		
+			<s:Button visible="{showNewButton}" includeInLayout="{showNewButton}"
+				label="Nouveau Bilan" toolTip="Crée un nouveau bilan vide"/>
+
+			<s:List id="bilanListComponent" width="100%" height="100%" dataProvider="{bilanCollection}" change="onChangeListener(event)">
+				<s:itemRenderer>
+	   
+				    <fx:Component>
+				        <s:ItemRenderer>
+						 <fx:Script>
+								import com.ithaca.utils.VisuUtils;
+								import com.ithaca.visu.model.Model;
+								import com.lyon2.controls.utils.TimeUtils;
+
+						 </fx:Script>
+						<s:VGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
+							<s:HGroup  width="100%" verticalAlign="middle">
+							     <s:Label fontWeight="bold" fontSize="14" width="100%" text="{data.title}"/>
+							     <s:Label fontWeight="bold" fontSize="14"  text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.ownerId))}"/>
+							     <s:Label fontStyle="italic" fontSize="12" visible="{data.inviteeIds.length > 0}" text="partagé"/>
+							</s:HGroup>
+							<s:HGroup  includeInLayout="{data.inviteeIds.length > 0}" visible="{data.inviteeIds.length > 0}" width="100%" verticalAlign="middle">
+								<s:Label text="    Pour: "/>
+							     <s:Label width="100%" text="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}"/>
+							</s:HGroup>
+							<s:HGroup  width="100%" verticalAlign="middle">
+							     <s:Label text="   Séance: "/>
+							     <s:Label text="[{TimeUtils.formatVisuDateTime(data.session.date_session)}]"/>
+							     <s:Label text=" {data.session.theme}" width="100%"/>
+							     <s:Label text="({VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user))})"/>
+							</s:HGroup>
+						</s:VGroup>
+				        </s:ItemRenderer>
+				    </fx:Component>
+				</s:itemRenderer>
+			</s:List>
+
+	</s:VGroup>
+</s:Group>

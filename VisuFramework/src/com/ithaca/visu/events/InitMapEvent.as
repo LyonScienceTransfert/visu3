@@ -10,6 +10,7 @@ public class InitMapEvent extends Event
 	static public const INIT_MAP_SESSION : String = 'initMapSession';
 	static public const INIT_MAP_USER : String = 'initMapUser';
 	static public const INIT_MAP_RETROSPECTION : String = 'initMapRetrospection';
+	static public const INIT_MAP_BILAN : String = 'initMapBilan';
 
 	// properties
 	// constructor

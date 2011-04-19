@@ -4,7 +4,17 @@ package com.ithaca.utils
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
+	import mx.collections.IList;
+	import com.ithaca.traces.Obsel;
+	import flash.utils.Dictionary; 
+	import com.ithaca.traces.model.TraceModel; 
+	import com.ithaca.visu.model.vo.ObselVO;
+	
+	
+    import mx.collections.ArrayCollection;
+	
 	import mx.logging.Log;
     import mx.logging.ILogger;
 		
@@ -48,6 +58,11 @@ package com.ithaca.utils
 			return label;
 		}
 
+		public static function getUserLabel(user:User, firstnameAbbr:Boolean = false):String
+		{
+			var f = firstnameAbbr?(StringUtils.firstLetterCap(user.lastname) + "."):StringUtils.cap(user.lastname);
+			return f + " " + StringUtils.cap(user.firstname);
+		}
 		
 		public static function getSessionStatusInfoMessage(status:Number, dateRecording:Date):String
 		{
@@ -95,17 +110,71 @@ package com.ithaca.utils
 		
 		public static function joinUserList(userList:Array):String
 		{
-			
 			var label:String = "";
 			var first:Boolean = true;
 			for each (var user:User in userList) {
 				label+= first ? '': ', ';
+				
 				label+= StringUtils.firstLetterCap(user.lastname) + ". " + StringUtils.cap(user.firstname);
 				first = false;
 			}
 			return label;
 		}
 		
+		/*
+		 * Returns a hash where keys are user ids and values are hashes structured followings this example :
+		 * {userId: 'the user id', path: 'path to the stream', date:'date of the record file name event'}
+		 * 
+		 *  
+		 */
+		public static function getStreamInfoFromSessionObselList(obselList:Array):Dictionary
+		{
+			var sessionStart:Number;
+			
+			var entriesPerUser:Dictionary = new Dictionary();
+			
+			for each (var obselVO:ObselVO in obselList) {
+				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+				switch (obsel.type){
+					case TraceModel.SESSION_START:
+						sessionStart = obsel.begin;
+						logger.debug("SessionStart found for the user {0}, date: {1}", obsel.uid, obsel.begin);
+						break;
+					case TraceModel.RECORD_FILE_NAME:
+						var path:String = obsel.props[TraceModel.PATH];
+						var userId:String = obsel.props[TraceModel.UID];
+						var date:Number = obsel.begin;
+						var entry:Object = new Object();
+						entry['path']=path;
+						entry['userId']=userId;
+						entry['date']=date-sessionStart;
+						
+						if(!entriesPerUser[userId]) 
+							entriesPerUser[userId] = new Dictionary();
+						
+						logger.debug("RecordFileName found for the user {0}, date: {1}, path: {2}", obsel.uid, obsel.begin, obsel.props[TraceModel.PATH]);
+						
+						var userEntry:Dictionary = entriesPerUser[userId];
+						if(!userEntry[path]) {
+							userEntry[path] = entry;
+						}
+				}
+			}
+			
+			return entriesPerUser;
+		}
+		
+		public static function joinUserListFromUserIds(userIdList:ArrayCollection):String
+		{
+			var userList:Array = new Array();
+			
+			for each (var userId:Number in userIdList) {
+				
+				userList.push(Model.getInstance().getUserPlateformeByUserId(userId));
+			
+			}
+			return joinUserList(userList);
+		}
 	}
 }
 						

@@ -82,6 +82,11 @@ or by setting the following environment variable:
    <property name="usermodule.src" location="${visu.dev.path}/UserModule/src" />
    <property name="usermodule.name" value="UserModule" />
 
+	<!--  Pathes to Bilan Module sources -->	
+   <property name="bilanmodule.src" location="${visu.dev.path}/BilanModule/src" />
+   <property name="bilanmodule.name" value="BilanModule" />
+
+
 	<!--  Pathes to Session Module sources -->	
    <property name="sessionmodule.src" location="${visu.dev.path}/SessionModule/src" />
    <property name="sessionmodule.name" value="SessionModule" />
@@ -445,6 +450,41 @@ or by setting the following environment variable:
 		      </mxmlc>
 		   </target>
 
+
+<!-- 
+		Build the bilan module (interface de gestion des utilisateurs visu) and produce a BilanModule.swf file 
+
+		This target works exactly as the "build_bilan_module" target, please refer to it for documentation. 
+	-->
+	<target name="build-bilan-module">
+	      <echo>Build Bilan Module</echo>
+	       
+		      <mxmlc 
+		         file="${bilanmodule.src}/modules/${bilanmodule.name}.mxml"
+		         output="${app.deploy}/${bilanmodule.name}.swf"
+		         debug="${debug}"
+		         strict="true" 
+		         optimize="true" 
+		      	incremental="${mxmlc.incremental}"
+		         warnings="${warnings}"
+		        load-externs="${framework.linkreport}" 
+		         headless-server="true">
+		         
+		         <!-- will include all files with .css, .as, .mxml extensions -->
+		         <source-path path-element="${bilanmodule.src}"/>
+		      	
+		      	<library-path dir="${framework.bin}" append="true">
+					<include name="${framework.swc}" />
+				</library-path>
+		      	
+		        <library-path dir="${thirdparty.dir}" append="true">
+		     	            <include name="${lib.swfaddress}" />
+		     	            <include name="${lib.mate}" />
+		     	            <include name="${lib.rmtp}" />
+		     	            <include name="${lib.as3gettext}" />
+		     	</library-path>
+		      </mxmlc>
+		   </target>
 	
 	 <!-- 
 	 	Build the visu client application, i.e. from "visuclient.mxml" to "visuclient.swf"
@@ -513,6 +553,7 @@ or by setting the following environment variable:
       <antcall target="build-session-module" />
       <antcall target="build-retrospection-module" />
       <antcall target="build-tutorat-module" />
+       <antcall target="build-bilan-module" />
    </target>
 	
 
@@ -543,6 +584,7 @@ or by setting the following environment variable:
 	      <copy file="${app.deploy}/${tutoratmodule.name}.swf" todir="${webapp.dir}/modules" />
 	      <copy file="${app.deploy}/${sessionmodule.name}.swf" todir="${webapp.dir}/modules" />
 	      <copy file="${app.deploy}/${usermodule.name}.swf" todir="${webapp.dir}/modules" />
+	      <copy file="${app.deploy}/${bilanmodule.name}.swf" todir="${webapp.dir}/modules" />
 	    </target>
 
 		
@@ -560,8 +602,8 @@ or by setting the following environment variable:
 		
 	    <target name="build-and-deploy-all" depends="build-and-deploy-client,build-and-deploy-server" description="Builds the client and the server, and deploy the built files to the web app directory on the server"/>
 
- <target name="clean" description="Removes the temporary deploy directory where built files are created from the filesystem">
-	  <delete dir="${app.deploy}"/>
-</target>
+		 <target name="clean" description="Removes the temporary deploy directory where built files are created from the filesystem">
+			  <delete dir="${app.deploy}"/>
+		</target>
 
 </project>
