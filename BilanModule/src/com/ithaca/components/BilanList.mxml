@@ -7,21 +7,33 @@
 	>
 
 	<fx:Declarations> 
+			<s:RadioButtonGroup id="filterType" itemClick="handleFilterTypeChanged(event);"/>
 	</fx:Declarations>
  
     <fx:Script>
         <![CDATA[
 		import flash.events.MouseEvent;
 		import mx.collections.ArrayList;
+		import mx.collections.ArrayCollection;
 		import mx.controls.TabBar;
 		import mx.controls.Alert;
 		import com.ithaca.events.SelectionEvent;
 		import com.ithaca.utils.VisuUtils;
 		import com.ithaca.visu.model.Model;
 		import spark.events.IndexChangeEvent;
+		import mx.events.ItemClickEvent;
+        import com.ithaca.documentarisation.model.RetroDocument;
+		import com.ithaca.visu.model.User;
+			
+        import mx.logging.ILogger;
+		import mx.logging.Log;
+			
+		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
 		
-		[Bindable]
-		public var bilanCollection:ArrayList = new ArrayList();
+		private function handleFilterTypeChanged(event:ItemClickEvent):void {
+			logger.debug("The current filter selection has changed to " + event.currentTarget.selectedValue);
+			this.bilanCollection.refresh();
+		}
 
 		[Bindable]
 		public var filterSessionCollection:ArrayList = new ArrayList();
@@ -35,33 +47,95 @@
 		[Bindable]
 		public var showFilterText:Boolean = true;
 
-		private function filterAll(event:Event):void {
-    		}
-
-		private function filterPast(event:Event):void {
-    		}
-
-		private function filterComing(event:Event):void {
-    		}
-
 		private function onChangeListener(event:IndexChangeEvent):void {
 			if(event.currentTarget.selectedItems.length == 1) {
 				dispatchEvent(new SelectionEvent(bilanCollection.getItemAt(event.currentTarget.selectedIndices[0]).id, true, true));
 			} else if(event.currentTarget.selectedItems.length == 1) {
 				dispatchEvent(new SelectionEvent(null, true, true));
 			}
+    	}
+    	
+    	[Bindable]
+    	public var filterSessionList:ArrayList = new ArrayList();
 
+    	[Bindable]
+    	public  var bilanCollection:ArrayCollection = new ArrayCollection();
+    	
+    	public function setFilterSessionList(filterSessionList:ArrayList):void {
+			this.filterSessionList.removeAll();
+			this.filterSessionList.addAll(filterSessionList);
+			logger.debug("this.filterSessionList has been changed (new size: {0})", this.filterSessionList.length);
     	}
 
-			private function  initSessionPane(event:Event):void {
-				sessionComp.addEventListener("SelectionEvent", onSessionSelected);
-			}
+    	public function setBilanCollection(bilanCollection:ArrayCollection):void {
+			this.bilanCollection.filterFunction = keepRetroDocument;
+			this.bilanCollection.removeAll();
+			this.bilanCollection.addAll(bilanCollection);
+			this.bilanCollection.refresh();
+			logger.debug("this.bilanCollection has been changed (new size: {0})", this.bilanCollection.length);
+    	}
+   	
+    	private var selectedFilterSessionId:Number;
+    	
+		private function keepRetroDocument(item:Object):Boolean {
+			var d:RetroDocument = item as RetroDocument;
+			var me:User = Model.getInstance().getLoggedUser();
 
 
-			private function  onSessionSelected(event:SelectionEvent):void {
-				Alert.show("Affiche uniquement les bilans de la séance sélectionnée");
-			}
-        ]]>
+			var passSelectedSessionFilter:Boolean = true;
+			if(selectedFilterSessionId && selectedFilterSessionId!=d.sessionId)
+				passSelectedSessionFilter = false;
+
+			var passButtonFilter:Boolean = true;
+			if (filterType.selectedValue == "all")
+				passButtonFilter = true;
+			else if (filterType.selectedValue == "mine") 
+				passButtonFilter = d.inviteeIds.length==0;
+			else if (filterType.selectedValue == "shared") 
+				passButtonFilter = d.inviteeIds.length>0 && me.getId() != d.ownerId;
+
+			var passTextFilter:Boolean = false;
+			passTextFilter = d.title.match(filterText.text)
+								|| d.description.match(filterText.text)
+								|| d.session.theme.match(filterText.text)
+								|| d.session.description.match(filterText.text)
+								;
+			
+			logger.debug("Filtering the bilan {0}, nb invitees: {1}, ownerId: {2}", 
+					d.id,
+					d.inviteeIds.length,
+					d.ownerId
+					);
+			logger.debug("(passSelectedSessionFilter: {0}, passButtonFilter: {1}, passTextFilter: {2})",
+					passSelectedSessionFilter,
+					passButtonFilter,
+					passTextFilter
+					);
+					
+			var keep:Boolean = passSelectedSessionFilter && passButtonFilter && passTextFilter;
+			logger.debug("keep: {0}", keep);
+			return keep;
+	   }
+
+		private function filterTextChanged(event:*):void {
+			logger.debug("Filter text changed to: {0}", filterText.text);
+			this.bilanCollection.refresh();
+		}
+
+		private function clearTextFilter(event:*):void {
+			logger.debug("Filter text cleared");
+			filterText.text="";
+			this.bilanCollection.refresh();
+		}
+		
+		private function  initSessionPane(event:Event):void {
+			sessionComp.addEventListener("SelectionEvent", onSessionSelected);
+		}
+
+		private function  onSessionSelected(event:SelectionEvent):void {
+			Alert.show("Session sélectionné : " + event.selectedId);
+		}
+	]]>
     </fx:Script>
  
 	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
@@ -101,28 +175,47 @@
 				
 
 				<s:VGroup width="100%" verticalAlign="middle">
-						 <s:RadioButton groupName="sharingFilter" 
-							id="sharingAllButton"
+						 <s:RadioButton 
+							value="all"
+							groupName="filterType"
 							label="Tous les bilans" 
-							click="filterAll(event);"
-						selected="true"
-						/>
-					<s:RadioButton groupName="sharingFilter" 
-							id="sharingMineButton"
+							selected="true"/>
+					<s:RadioButton
+							value="mine"
+							groupName="filterType"
 							label="Mes bilans (créés par moi)"
 						toolTip="Affiche uniquement les plans de séance que j'ai créés" 
-							click="filterPast(event);"/>
-						 <s:RadioButton groupName="sharingFilter" 
-							id="sharingOtherButton"
+							/>
+						 <s:RadioButton 
+							value="shared"
+							groupName="filterType"
 							label="Autres bilans partagés pour moi (créés par d'autres)" 
-						toolTip="Affiche uniquement les bilans créés par d'autres et partagés pour moi" 
-							click="filterComing(event);"/>
+							toolTip="Affiche uniquement les bilans créés par d'autres et partagés pour moi" 
+							/>
 				</s:VGroup>
 			
 			
 				<s:HGroup width="100%" verticalAlign="middle">
 					<s:Label includeInLayout="{showFilterText}" text="Filtre:"/>
-					<s:TextInput includeInLayout="{showFilterText}" width="100%" text=""/>
+					<s:TextInput id="filterText" change="filterTextChanged(event)" includeInLayout="{showFilterText}" width="100%" text=""/>
+					<s:Group id="clearIcon" click="clearTextFilter(event)" right="3" verticalCenter="-1" visible="{filterText.text.length>0}" includeInLayout="{filterText.text.length>0}">
+							<s:Path 
+								winding="evenOdd" 
+								data="M 4 5 L 5 4 L 8 7 L 11 4 L 12 5 L 9 8 L 12 11 L 11 12 L 8 9 L 5 12 L 4 11 L 7 8 L 4 5 Z M 1 8 C 1 12 4 15 8 15 C 12 15 15 12 15 8 C 15 4 12 1 8 1 C 4 1 1 4 1 8 Z " 
+								blendMode="normal" 
+								alpha="0.7">
+								<s:fill>
+									<s:LinearGradient x = "7" y = "0" scaleX = "14" rotation = "90">
+										<s:GradientEntry color="#666666" ratio="0" alpha="1"/>
+										<s:GradientEntry color="#999999" ratio="1" alpha="1"/>
+									</s:LinearGradient>
+								</s:fill>
+								<s:filters>
+									<s:DropShadowFilter angle="90" color="#000000" distance="1" alpha="0.65" quality="0" inner="true"/>
+									<s:DropShadowFilter angle="90" color="#ffffff" distance="1" alpha="0.7" quality="0"/>
+								</s:filters>
+							</s:Path>
+						</s:Group>
 				</s:HGroup>
 			</s:VGroup>
 		</s:Group>
@@ -141,21 +234,24 @@
 								import com.lyon2.controls.utils.TimeUtils;
 
 						 </fx:Script>
-						<s:VGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
+						<s:VGroup paddingTop="10" paddingBottom="10" paddingRight="5" paddingLeft="5" width="100%">
 							<s:HGroup  width="100%" verticalAlign="middle">
-							     <s:Label fontWeight="bold" fontSize="14" width="100%" text="{data.title}"/>
-							     <s:Label fontWeight="bold" fontSize="14"  text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.ownerId))}"/>
-							     <s:Label fontStyle="italic" fontSize="12" visible="{data.inviteeIds.length > 0}" text="partagé"/>
+							     <s:Label fontStyle="italic" fontSize="12" visible="{data.inviteeIds.length > 0}" includeInLayout="{data.inviteeIds.length > 0}"  text="[partagé]"/>
+							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit" width="100%" text="{data.title}"/>
+							     <s:Label fontWeight="bold" fontSize="15"  text="- {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.ownerId), true)} -"/>
 							</s:HGroup>
 							<s:HGroup  includeInLayout="{data.inviteeIds.length > 0}" visible="{data.inviteeIds.length > 0}" width="100%" verticalAlign="middle">
-								<s:Label text="    Pour: "/>
-							     <s:Label width="100%" text="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}"/>
+									<s:Label width="30"/>
+									<s:Label text="Partagé avec: "/>
+									<s:Label width="100%" text="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}"/>
 							</s:HGroup>
-							<s:HGroup  width="100%" verticalAlign="middle">
-							     <s:Label text="   Séance: "/>
-							     <s:Label text="[{TimeUtils.formatVisuDateTime(data.session.date_session)}]"/>
-							     <s:Label text=" {data.session.theme}" width="100%"/>
-							     <s:Label text="({VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user))})"/>
+							<s:HGroup  width="100%" verticalAlign="top">
+									<s:Label width="30"/>
+							     <s:Label top="5" text="Sur la séance: "/>
+								<s:VGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
+									 <s:Label width="100%" lineBreak="toFit" text=" {data.session.theme}"/>
+									 <s:Label text="De {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
+								</s:VGroup>
 							</s:HGroup>
 						</s:VGroup>
 				        </s:ItemRenderer>

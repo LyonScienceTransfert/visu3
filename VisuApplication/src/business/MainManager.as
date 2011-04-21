@@ -319,11 +319,11 @@ public class MainManager
 	public function onCheckRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array, editabled:Boolean):void
 	{
 		logger.info("onCheckRetroDocument(retroDocumentVO:{0}, listInvitees:{1}, editabled:{2})", retroDocumentVO, listInvitees, editabled);
-		var retroDocument:RetroDocument = new RetroDocument();
+		var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
 		retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-		retroDocument.sessionId = retroDocumentVO.sessionId;
-		retroDocument.id = retroDocumentVO.documentId;
-		retroDocument.ownerId = retroDocumentVO.ownerId;		
+		//retroDocument.sessionId = retroDocumentVO.sessionId;
+		//retroDocument.id = retroDocumentVO.documentId;
+		//retroDocument.ownerId = retroDocumentVO.ownerId;		
 		var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.SHOW_RETRO_DOCUMENT);
 		retroDocumentEvent.retroDocument = retroDocument;
 		retroDocumentEvent.listUser = listInvitees;

@@ -8,8 +8,13 @@ package com.ithaca.documentarisation.model
 	import mx.collections.IList;
 import com.ithaca.visu.model.Session;
 			
+			import mx.logging.ILogger;
+		import mx.logging.Log;
+			
+		
 	public class RetroDocument
 	{
+		private var logger : ILogger = Log.getLogger('com.ithaca.documentarisation.model.RetroDocument');
 		
 		public var id:int;
 		public var sessionId:int;	
@@ -58,6 +63,9 @@ import com.ithaca.visu.model.Session;
 	
 				this.title = vo.title;
 				this.description = vo.description;
+				
+				logger.debug("creationDate in VO: {0}", vo.creationDate);
+				logger.debug("lastModified in VO: {0}", vo.lastModified);
 				this.creationDateAsDate = vo.creationDate;
 				this.modifyDateAsDate = vo.lastModified;
 				this.inviteeIds = new ArrayCollection();	
@@ -65,9 +73,13 @@ import com.ithaca.visu.model.Session;
 				for each (var id:Number in vo.inviteeIds)
 						this.inviteeIds.addItem(id);
 				
-				if(vo.session)
+				logger.debug("vo.session?");
+				if(vo.session) {
 						this.session = new Session(vo.session);
-						
+						logger.debug("YES: {0}" + session.id_user);
+				} else {
+						logger.debug("NO");
+				}
 				if(vo.xml)
 					setRetroDocumentXML(vo.xml);
 			}
@@ -80,15 +92,16 @@ import com.ithaca.visu.model.Session;
 		
 		public function setRetroDocumentXML(value:String):void
 		{
-
+			listSegment.removeAll();
 			var xml:XML = new XML(value);
 			var listSegmentXML:XMLList = xml.segment;
 			var nbrSegment:int = listSegmentXML.length();
 			for(var nSegment:int = 0 ; nSegment < nbrSegment; nSegment++)
 			{
 				var segmentXML:XML = listSegmentXML[nSegment] as XML;
-				var segment:Segment = new Segment();
+				var segment:Segment = new Segment(this);
 				segment.setSegmentXML(segmentXML);
+				segment.order = nSegment + 1;
 				listSegment.addItem(segment);				
 			}
 			title = xml.child(RetroDocumentConst.TAG_TITLE).toString(); 

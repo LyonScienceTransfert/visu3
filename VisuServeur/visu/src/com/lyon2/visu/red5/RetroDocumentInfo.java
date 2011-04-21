@@ -12,14 +12,12 @@ import org.red5.server.api.IScope;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
-import com.lyon2.utils.UserDate;
-import com.lyon2.visu.Application;
-import com.lyon2.visu.domain.model.Session;
-import com.lyon2.visu.domain.model.SessionWithoutListUser;
-import com.lyon2.visu.domain.model.User;
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
 import com.ithaca.domain.model.RetroDocument;
 import com.ithaca.service.RetroDocumentService;
+import com.lyon2.visu.Application;
+import com.lyon2.visu.domain.model.Session;
+import com.lyon2.visu.domain.model.User;
 
 
 public class RetroDocumentInfo {
@@ -36,48 +34,36 @@ public class RetroDocumentInfo {
 	
 	protected static final Logger log = Red5LoggerFactory.getLogger(RetroDocumentInfo.class, "visu2" );
 
-	public void getOwnedRetroDocuments(IConnection conn, int userId)  {
-		log.info("Requesting for the list of retro documents for the user {}", userId);
-		Collection<RetroDocument> docs = this.retroDocumentService.findDocumentsByOwner(userId, false);
+	public void getOwnedAndSharedRetroDocumentsByUserId(IConnection conn, int userId)  {
+		log.info("Requesting for the list of owned and shared retro documents for the user {}", userId);
+		Collection<RetroDocument> ownedRetroDocs = this.retroDocumentService.findDocumentsByOwner(userId, false);
+		Collection<RetroDocument> sharedRetroDocs = this.retroDocumentService.findDocumentsWhereUserIsInvited(userId, false);
+		
+		
+		Collection<RetroDocument> allDocs = new HashSet<RetroDocument>();
+		allDocs.addAll(ownedRetroDocs);
+		allDocs.addAll(sharedRetroDocs);
+		
 		
 		// DEBUG
-		for(RetroDocument doc:docs) {
+		for(RetroDocument doc:allDocs) {
 			log.debug("The bilan {} has been retrieved. It has {} invitees", doc.getDocumentId(), doc.getInviteeIds().size());
 			for(int inviteeId:doc.getInviteeIds()) {
 				log.debug("\t" + inviteeId);
 			}
 		}
 		
-		
 		Collection<Session> filterSessions = new HashSet<Session>();
-		for(RetroDocument doc:docs) 
+		for(RetroDocument doc:allDocs) 
 			filterSessions.add(doc.getSession());
 		
 		
-		Object[] args = new Object[]{docs, filterSessions};
+		Object[] args = new Object[]{allDocs, filterSessions};
 		IConnection connClient = (IConnection)conn.getClient().getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) 
 		{
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-			log.debug("Returning {} retro documents and {} filter sessions", docs.size(), filterSessions.size());
-			sc.invoke("bilanListRetrieved", args);
-		} 	
-	}
-	
-	public void getSharedRetroDocuments(IConnection conn, int userId)  {
-		log.info("Requesting for the list of retro documents where the user {} is invited", userId);
-		Collection<RetroDocument> docs = this.retroDocumentService.findDocumentsWhereUserIsInvited(userId, false);
-		
-		Collection<Session> filterSessions = new HashSet<Session>();
-		for(RetroDocument doc:docs) 
-			filterSessions.add(doc.getSession());
-		
-		Object[] args = new Object[]{docs, filterSessions};
-		IConnection connClient = (IConnection)conn.getClient().getAttribute("connection");
-		if (conn instanceof IServiceCapableConnection) 
-		{
-			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-			log.debug("Returning {} retro documents and {} filter sessions", docs.size(), filterSessions.size());
+			log.debug("Returning {} retro documents and {} filter sessions", allDocs.size(), filterSessions.size());
 			sc.invoke("bilanListRetrieved", args);
 		} 	
 	}
@@ -109,6 +95,14 @@ public class RetroDocumentInfo {
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) 
 		{
+			log.debug("Returning the retro document {} to the client [Creation date: {}, Modif: {}, Title: {}, Description: {}, Nb invitees: {}]", new Object[]{
+					retroDocument.getDocumentId(),
+					retroDocument.getCreationDate(),
+					retroDocument.getLastModified(),
+					retroDocument.getTitle(),
+					retroDocument.getDescription(),
+					retroDocument.getInviteeIds().size()}
+					);
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkRetroDocument", args);
 		} 	

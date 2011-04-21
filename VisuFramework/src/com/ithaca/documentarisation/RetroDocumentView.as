@@ -259,7 +259,7 @@ package com.ithaca.documentarisation
 			
 		private function onAddSegment(event:MouseEvent):void
 		{
-			var segment:Segment = new Segment();
+			var segment:Segment = new Segment(this._retroDocument);
 			segment.title = "";
 			this.listSegment.addItem(segment);
 			this._retroDocument.listSegment.addItem(segment);

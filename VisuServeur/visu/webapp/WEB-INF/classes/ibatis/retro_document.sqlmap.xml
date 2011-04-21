@@ -31,8 +31,8 @@
 		<result column="id_retro_document" property="documentId"  />
         <result column="id_owner" property="ownerId"  />
         <result column="id_session" property="sessionId"  />
-        <result column="creation_date" property="creationDate"  />
-        <result column="last_modification_date" property="lastModified"  />
+        <result column="creation_date" jdbcType="DATETIME" property="creationDate"  />
+        <result column="last_modification_date" jdbcType="DATETIME" property="lastModified"  />
 		<result column="title" property="title" />
 		<result column="description" property="description" />
 		<result column="xml" property="xml" />
@@ -49,6 +49,7 @@
 	<resultMap class="com.lyon2.visu.domain.model.Session"
 		id="sessionResult" groupBy="id_session">		
 		<result column="id_session" jdbcType="INTEGER" property="id_session" />
+		<result column="session_user_id" jdbcType="INTEGER" property="id_user" />
         <result column="theme" jdbcType="LONGVARCHAR" property="theme" />
 		<result column="isModel" property="isModel" />
 		<result column="description" jdbcType="LONGVARCHAR" property="description" />
@@ -152,7 +153,7 @@
 	
 	<select id="getDocumentsAndInviteeListAndSessionByOwnerIdWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
 		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
-		rda.id_user, s.description, s.date_session, s.theme, s.start_recording, s.isModel, su.id_user as id_attendee
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
 		FROM retro_document r
 		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
 		JOIN sessions s ON r.id_session = s.id_session
@@ -162,7 +163,7 @@
 
 	<select id="getDocumentsAndInviteeListAndSessionByInviteeIdWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
 		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
-		rda.id_user, s.description, s.date_session, s.theme, s.start_recording, s.isModel, su.id_user as id_attendee
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
 		FROM retro_document r
 		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
 		JOIN sessions s ON r.id_session = s.id_session
