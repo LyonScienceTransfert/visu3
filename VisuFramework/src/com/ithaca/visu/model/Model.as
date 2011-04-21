@@ -123,6 +123,7 @@ package  com.ithaca.visu.model
 		private var _sessionModule:VisuModuleBase;
 		private var _retroModule:VisuModuleBase;
 		private var _userModule:VisuModuleBase;
+		private var _bilanModule:VisuModuleBase;
 		private var _homeModule:VisuModuleBase = null;
 		
 		private var _selectedDateLoggedUser:Object = null;
@@ -498,7 +499,20 @@ package  com.ithaca.visu.model
 		{
 			return _homeModule;
 		}
+	
+		/**
+		 * current user module, only for debugging
+		 */
+		public function setCurrentBilanModule(value:VisuModuleBase):void
+		{
+			this._bilanModule = value;
+		}
 		
+		public function getCurrentBilanModule():VisuModuleBase
+		{
+			return _bilanModule;
+		}
+			
 		public function setSelectedItemNavigateurDayByLoggedUser(value:Object):void{
 			_selectedDateLoggedUser = value;
 		}

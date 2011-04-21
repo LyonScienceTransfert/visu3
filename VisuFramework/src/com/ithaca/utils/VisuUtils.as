@@ -129,39 +129,63 @@ package com.ithaca.utils
 		 */
 		public static function getStreamInfoFromSessionObselList(obselList:Array):Dictionary
 		{
-			var sessionStart:Number;
-			
 			var entriesPerUser:Dictionary = new Dictionary();
 			
 			for each (var obselVO:ObselVO in obselList) {
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-				switch (obsel.type){
-					case TraceModel.SESSION_START:
-						sessionStart = obsel.begin;
-						logger.debug("SessionStart found for the user {0}, date: {1}", obsel.uid, obsel.begin);
-						break;
-					case TraceModel.RECORD_FILE_NAME:
+				if (obsel.type == TraceModel.RECORD_FILE_NAME) {
+						
 						var path:String = obsel.props[TraceModel.PATH];
-						var userId:String = obsel.props[TraceModel.UID];
+						var uid:Number = parseInt(obsel.props[TraceModel.UID]);
 						var date:Number = obsel.begin;
+						
 						var entry:Object = new Object();
 						entry['path']=path;
-						entry['userId']=userId;
-						entry['date']=date-sessionStart;
+						entry['userId']=uid;
+						entry['date']=date;
 						
-						if(!entriesPerUser[userId]) 
-							entriesPerUser[userId] = new Dictionary();
+						if(!entriesPerUser[uid]) 
+							entriesPerUser[uid] = new Array();
 						
-						logger.debug("RecordFileName found for the user {0}, date: {1}, path: {2}", obsel.uid, obsel.begin, obsel.props[TraceModel.PATH]);
+						// logger.debug("RecordFileName found for the user {0} (string: {3}), date: {1}, path: {2}", uid, date, path, obsel.props[TraceModel.UID]);
 						
-						var userEntry:Dictionary = entriesPerUser[userId];
-						if(!userEntry[path]) {
-							userEntry[path] = entry;
+						var userEntries:Array = entriesPerUser[uid];
+						
+						var contains:Boolean = false;
+						for each (var e:Object in userEntries) {
+							if(e['path'] == path) {
+								contains = true;
+								break;
+							}
+						}
+						
+						if(!contains) {
+							userEntries.push(entry);
 						}
 				}
 			}
 			
+			for (var userId:Object in entriesPerUser) {
+				var entries:Array = entriesPerUser[userId];
+				entries.sortOn("date", Array.NUMERIC);
+			}
+			
 			return entriesPerUser;
+		}
+		
+		
+		public static function getSessionStartTimeFromObselList(obselList:Array):Number
+		{
+			var sessionStart:Number;
+			
+			for each (var obselVO:ObselVO in obselList) {
+				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+				if (obsel.type == TraceModel.SESSION_START) 
+						return obsel.begin;
+			}
+			
+			return -1;
+			
 		}
 		
 		public static function joinUserListFromUserIds(userIdList:ArrayCollection):String

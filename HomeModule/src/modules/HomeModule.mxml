@@ -1043,7 +1043,6 @@
 								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
 								http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS5b3ccc516d4fbf351e63e3d118a9b90204-7e6b.html   
 							-->
-							<menuitem id="root" label="Affichage" data="top">
 								<menuitem id="sortMenu" label="Tri" data="top">
 									<menuitem label="Par statut" type="radio" id="sortByStatus"
 										groupName="radioGroup" toggled="true" />
@@ -1052,6 +1051,7 @@
 									<menuitem label="Par ordre alphabétique" id="sortByLexicoOrder"
 										type="radio" groupName="radioGroup" />
 								</menuitem>
+								<menuitem id="filterMenu" label="Filtre" data="top">
 								<menuitem type="separator" id="separator"/>
 								<menuitem label="Attendu" id="filterPending"
 									type="check" toggled="true" />
@@ -1070,7 +1070,7 @@
 									type="check" toggled="true" />
 								<menuitem label="Administrateurs" id="filterRoleAdministrateur"
 									type="check" toggled="true" />
-							</menuitem>
+								</menuitem>
 						</fx:XMLList>
 					</mx:MenuBar>
 			

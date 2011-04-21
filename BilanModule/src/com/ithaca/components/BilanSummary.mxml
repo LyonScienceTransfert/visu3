@@ -23,11 +23,11 @@
 			paddingTop="5" paddingBottom="5">
 
 	    <mx:FormItem label="Titre:" width="100%">
-			<s:Label  width="100%" text="{bilan.title}"/>
+			<s:Label  width="100%" lineBreak="toFit" text="{bilan.title}"/>
 	    </mx:FormItem>
 		
 		<mx:FormItem label="Description:" width="100%">
-			<s:Label width="100%" text="{bilan.description}"/>
+			<s:Label width="100%" lineBreak="toFit" text="{bilan.description}"/>
 	    </mx:FormItem>
 
 	    <mx:FormItem label="Propriétaire:" width="100%">
@@ -43,12 +43,12 @@
 	    </mx:FormItem>
 
 		<mx:FormItem 
-			label="Séance" 
+			label="À propos de la séance:" 
 			width="100%">
 			<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
-				<s:Label text="{TimeUtils.formatVisuDateTime(bilan.session.date_session)}"/>
-				<s:Label width="100%" text="{bilan.session.theme}"/>
-				<s:Label text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user))}"/>
+				<s:Label text="{'['+TimeUtils.formatVisuDateTime(bilan.session.date_session)+']'}"/>
+				<s:Label width="100%" lineBreak="toFit" text="{bilan.session.theme}"/>
+				<s:Label text="{'(de ' + VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user),true) + ')'}"/>
 			</s:HGroup>
 	    </mx:FormItem>
 

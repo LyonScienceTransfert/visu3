@@ -1,6 +1,7 @@
 package com.ithaca.domain.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.lyon2.visu.domain.model.Session;
@@ -33,7 +34,8 @@ public class RetroDocument {
 
 	
 	// Added By Damien   
-	private Set<Integer> inviteeIds;
+	private Set<Integer> inviteeIds = new HashSet<Integer>();
+	
 	public void setInviteeIds(Set<Integer> inviteeIds) {
 		this.inviteeIds = inviteeIds;
 	}

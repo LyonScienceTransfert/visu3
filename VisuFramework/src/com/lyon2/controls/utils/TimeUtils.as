@@ -7,8 +7,6 @@ package com.lyon2.controls.utils
 	
 	public final class TimeUtils
 	{
-		
-		
 		private static const ressourceManager:IResourceManager = ResourceManager.getInstance();
 		
 		private static var time_table:Array = [
@@ -37,7 +35,6 @@ package com.lyon2.controls.utils
 				ressourceManager.getString('HumanDate', 'short_second'),
 				ressourceManager.getString('HumanDate', 'second'))
 			]; 
-		
 		
 		 public static function formatTimeString(numberOfSeconds:Number):String
          {
@@ -91,6 +88,20 @@ package com.lyon2.controls.utils
 			var s:String = "";
 			s+=date.hours;
 			s+=":" + asTwoDigitString(date.minutes);
+			return s;
+		}
+		
+		public static function formatHHMMSS(seconds:Number):String {
+			var s:String = "";
+			var hours:Number = int(seconds/3600);
+			var rest:Number = int(seconds%3600);
+			var minutes:Number = int(rest/60);
+			var seconds:Number = int(rest%60);
+			
+			if(hours > 0) {
+				s+=hours+":";
+			}
+			s+=asTwoDigitString(minutes)+":"+asTwoDigitString(seconds);
 			return s;
 		}
 		
