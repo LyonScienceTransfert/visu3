@@ -160,15 +160,15 @@
 			this.visio.addVideoStreams(newVideoStreams);
 			
 			if(lastEntry != null) {
-				// There is at least one stream entry tp play
-				logger.info("Seeking the streams to the right time (current segment time: {0}, streams start time: {1}, seeked time: {2})",
-						segmentTime,
-						lastEntry['date'],
-						segmentTime-lastEntry['date']);
-				this.visio.seekStreams(segmentTime-lastEntry['date']);
-				
 				logger.info("Playing {0} streams to the visuvisio",newVideoStreams.length);
 				this.visio.playVideoStreams(newVideoStreams);
+				
+				// There is at least one stream entry tp play
+				logger.info("Seeking the streams to the right time (current segment time: {0}, streams start time: {1}, seeked to time: {2}s)",
+						segmentTime,
+						lastEntry['date'],
+						int((segmentTime-lastEntry['date'])/1000));
+				this.visio.seekStreams(int((segmentTime-lastEntry['date'])/1000));
 			} 
 		}
 		
@@ -239,25 +239,18 @@
 														      return; 
 															
 															var segment:Segment = data as Segment;
-															logger.debug("SegmentRenderer set data. Title: {0}, Comment: {1}", data.title, data.comment);
+															//logger.debug("SegmentRenderer set data. Title: {0}, Comment: {1}", data.title, data.comment);
 
 															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
 														}
 				
-														private function initRenderer(event) {
+														private function initRenderer(event):void {
 															logger.debug("SegmentRenderer Initialized. Title: {0}, Comment: {1}", data.title, data.comment);
-															/*logger.debug("Segment {0}, begin: {1}, sessionStart: {2}", 
-																	data.order, 
-																	data.beginTimeVideo, 
-																	data.parentRetroDocument.session.date_start_recording.time);
-															logger.debug("TimeUtils.formatHHMMSS(int((data.beginTimeVideo - sessionStart)/1000))= {0}", 
-																	TimeUtils.formatHHMMSS(int((data.beginTimeVideo - sessionStart)/1000)));
-															logger.debug("(data.beginTimeVideo - sessionStart)/1000 = {0}", 
-																	(data.beginTimeVideo - sessionStart)/1000);*/
 															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
 														}
 														
-														private function playVideoClicked(event:MouseEvent) {
+														private function playVideoClicked(event:MouseEvent):void {
+															logger.debug("Ask for playing the video at session time {0}", int((data.beginTimeVideo - sessionStart)/1000));
 															var playSegmentVideoEvent:PlaySegmentVideoEvent = new PlaySegmentVideoEvent(data as Segment);
 															dispatchEvent(playSegmentVideoEvent);
 														}
