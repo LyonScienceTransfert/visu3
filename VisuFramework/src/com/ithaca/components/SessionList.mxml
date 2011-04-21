@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    	xmlns:s="library://ns.adobe.com/flex/spark" 
+    	xmlns:mx="library://ns.adobe.com/flex/mx"
+	creationComplete="init(event)">
+
+	<fx:Declarations> 
+		<s:ArrayList id="sessionCollection" />
+	</fx:Declarations>
+ 
+    <fx:Script>
+        <![CDATA[
+		import flash.events.MouseEvent;
+		import mx.controls.TabBar;
+		import mx.controls.Alert;
+		import mx.collections.ArrayList;
+
+		public var initSessionList:ArrayList = new ArrayList();
+
+		private function init(event):void {
+			sessionCollection.addAll(initSessionList);
+		}
+
+		[Bindable]
+		public var showNewButton:Boolean = true;
+
+		[Bindable]
+		public var mode:String = "session"; // or "plan"
+
+		[Bindable]
+		public var filterAlpha:Number = 0.2;
+		
+		[Bindable]
+		public var showFilterAreaBorder:Boolean = true;
+		
+		[Bindable]
+		public var showFilterButtons:Boolean = true;
+
+		[Bindable]
+		public var showFilterLabels:Boolean = true;
+
+		[Bindable]
+		public var showFilterText:Boolean = true;
+
+		private function filterAll(event:Event):void {
+    		}
+
+		private function filterPast(event:Event):void {
+    		}
+
+		private function filterComing(event:Event):void {
+    		}
+
+		private function onChangeListener(event:Event):void {
+			if(event.target.selectedItems.length == 1) {
+				sessionCollection.getItemAt(event.target.selectedIndices[0]).id;
+			}
+    	}
+    	
+        ]]>
+    </fx:Script>
+ 
+	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+			<s:Group width="100%">
+				<s:Rect visible="{showFilterAreaBorder}" width="100%" height="100%" radiusX="5">
+					<s:stroke >
+						<s:LinearGradientStroke rotation="90" weight="1">
+							<s:GradientEntry color="0x000000" alpha="0.5625" />
+							<s:GradientEntry color="0x000000" alpha="0.75" />
+						</s:LinearGradientStroke>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="0x000000" alpha="{filterAlpha}" />
+					</s:fill>
+				</s:Rect>
+				<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+					<s:Label visible="{showFilterLabels}" includeInLayout="{showFilterLabels}" text="Filtre:"/>
+					<s:VGroup visible="{mode=='session'}" includeInLayout="{mode=='session'}" width="100%" verticalAlign="middle">
+				       		 <s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+						       	id="allButton"
+						       	label="Toutes les scéances" 
+						       	click="filterAll(event);"
+							selected="true"
+							/>
+						<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+						       id="pastButton"
+						       label="Séances passées" 
+						       click="filterPast(event);"/>
+				       		 <s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+						       id="comingButton"
+						       label="Séances à venir" 
+						       click="filterComing(event);"/>
+
+					</s:VGroup>
+
+					<s:VGroup visible="{mode=='plan'}" includeInLayout="{mode=='plan'}" width="100%" verticalAlign="middle">
+				       		 <s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+						       	id="sharingAllButton"
+						       	label="Tous les plans de séance" 
+						       	click="filterAll(event);"
+							selected="true"
+							/>
+						<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+						       	id="sharingMineButton"
+						       	label="Mes plans de séance (créés par moi)"
+							toolTip="Affiche uniquement les plans de séance que j'ai créés" 
+						       	click="filterPast(event);"/>
+				       		 <s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+						       	id="sharingOtherButton"
+						       	label="Autres plans de séance partagés (créés par d'autres)" 
+							toolTip="Affiche uniquement les plans de séance créés et partagés par d'autres utilisateurs" 
+						       	click="filterComing(event);"/>
+
+					</s:VGroup>
+		
+		
+					<s:HGroup visible="{showFilterLabels}" includeInLayout="{showFilterLabels}" width="100%" verticalAlign="middle">
+						<s:Label includeInLayout="{showFilterText}" text="Contient le Texte:"/>
+						<s:TextInput includeInLayout="{showFilterText}" width="100%" text=""/>
+					</s:HGroup>
+				</s:VGroup>
+			</s:Group>
+			
+			<s:Group width="100%" height="100%">
+				<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+					<s:HGroup verticalAlign="bottom" width="100%">
+						<s:Label text="{mode=='plan'?'Liste des plans:':'Liste des séances:'}"/>
+						<s:Group width="100%"/>
+						<s:Group visible="{showNewButton}" includeInLayout="{showNewButton}">
+							<s:Button  visible="{mode=='plan'}" includeInLayout="{mode=='plan'}"
+								label="Nouveau plan" toolTip="Crée un nouveau plan de séance vide"/>
+							<s:Button visible="{mode=='session'}" includeInLayout="{mode=='session'}"
+								label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide"/>
+						</s:Group>
+					</s:HGroup>
+
+					<s:List allowMultipleSelection="false" visible="{mode=='plan'}" includeInLayout="{mode=='plan'}" id="planList" width="100%" height="100%" dataProvider="{sessionCollection}" change="onChangeListener(event)">
+						<s:itemRenderer>
+						    <fx:Component>
+							<s:ItemRenderer>
+								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
+								     <s:Label width="100%" text="{data.titre}"/>
+								     <s:Label text="{data.owner}"/>
+								     <s:Label visible="{data.share}" text="(partagé)"/>
+								</s:HGroup>
+							</s:ItemRenderer>
+						    </fx:Component>
+						</s:itemRenderer>
+					</s:List>
+
+					<s:List visible="{mode=='session'}" includeInLayout="{mode=='session'}" id="sessionList" width="100%" height="100%" dataProvider="{sessionCollection}" change="onChangeListener(event)">
+						<s:itemRenderer>
+						    <fx:Component>
+							<s:ItemRenderer>
+								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
+								     <s:Label text="{data.date}"/>
+								     <s:Label text="{data.time}"/>
+								     <s:Label width="100%" text="{data.titre}"/>
+								     <s:Label text="{data.owner}"/>
+								</s:HGroup>
+							</s:ItemRenderer>
+						    </fx:Component>
+						</s:itemRenderer>
+					</s:List>
+				</s:VGroup>
+
+			</s:Group>
+		
+	</s:VGroup>
+</s:Group>
