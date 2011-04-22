@@ -10,7 +10,7 @@
 		   top="0" bottom="0" left="0" right="0" 
 		   xmlns:vo="com.ithaca.visu.model.vo.*" 
 		   xmlns:ithaca="com.ithaca.components.*"
-		   creationComplete="initBilanPane(event)"
+		   creationComplete="initBilanModule(event)"
 		   >
 	
 	<fx:Declarations>
@@ -45,11 +45,13 @@
 			import mx.collections.ArrayList;
 			import mx.collections.ArrayCollection;
 		
+			import flash.utils.Timer;
 			
 			import mx.logging.ILogger;
 			import mx.logging.Log;
 			
 			private var logger : ILogger = Log.getLogger('modules.BilanModule');
+			
 			
 			private function showRetroDocument(event:RetroDocumentEvent):void {
 				if(bilanViewer == null) {
@@ -78,10 +80,23 @@
 				bilanViewer.setNewBilan(doc);
 			}
 			
+			private function onRemovedModuleFromStage(event:Event):void {
+				logger.info("Removing the BilanModule from stage");
+				
+					
+				if(this.bilanViewer) {
+					logger.debug("Stopping the bilan viewer");
+					this.bilanViewer.stop();			
+				}
+					
+				// add obsel user walk out from retro room
+				var outFromBilanModule:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
+				this.dispatchEvent(outFromBilanModule);
+			}
+			
 			private function showRetrievedBilanList(event:BilanEvent):void {
 				logger.debug("showRetrievedBilanList. {0} docs and {1} filter sessions", event.retroDocuments.length, event.filterSessionCollection.length);
 				
-				//if((Model.getInstance().getCurrentBilanModule() as BilanModule) == this) {
 				if(bilanComp) {
 					logger.debug("showRetrievedBilanList. bilanComp NOT NULL");
 					var filterSessionCollection:ArrayList = new ArrayList();
@@ -103,7 +118,6 @@
 					bilanComp.setBilanCollection(bilanCollection);
 				} else 
 					logger.warn("showRetrievedBilanList. bilanComp NULL");
-				//}
 			}
 
 			protected function configureHandler(event:VisuModuleEvent):void
@@ -119,8 +133,11 @@
 				this.dispatchEvent(initMapEvent); 
 			}
 			
-			private function  initBilanPane(event:*):void {
+			private function initBilanModule(event:*):void {
 				logger.debug("Dispatching BILAN_MODULE_LOADED");
+				
+				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+				
 				bilanComp.addEventListener("SelectionEvent", onBilanSelected);
 				var moduleLoadedEvent:BilanEvent = new BilanEvent(BilanEvent.BILAN_MODULE_LOADED);  
 				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;
