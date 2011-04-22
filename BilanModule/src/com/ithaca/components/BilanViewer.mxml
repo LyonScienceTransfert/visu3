@@ -24,7 +24,8 @@
 		import com.ithaca.visu.events.PlaySegmentVideoEvent;
 		import flash.utils.Dictionary; 
 		import com.ithaca.documentarisation.model.Segment;
-	
+		import flash.events.TimerEvent;
+    
 		import mx.logging.ILogger;
 		import mx.logging.Log;
 			
@@ -35,8 +36,24 @@
 		 * organized by userId
 		 */
 		private var streamInfos : Dictionary;
+		
+		[Bindable]
+		private var timer:Timer;
 			
 		private var sessionStart:Number;
+		
+		public function stop():void {
+			if(this.visio) {
+				logger.debug("Removing all streams from the video player in bilan module");
+				this.visio.removeAllStreams();
+			}
+				
+			if(this.timer) {
+				logger.debug("Stopping the timer in bilanViewer");
+				this.timer.stop();
+				this.timer = null;
+			} 
+		}
 		
 		private function processVideoStreamsFromSessionObsels(event:BilanEvent):void {
 			if(event.sessionId == bilan.sessionId) {
@@ -169,9 +186,25 @@
 						lastEntry['date'],
 						int((segmentTime-lastEntry['date'])/1000));
 				this.visio.seekStreams(int((segmentTime-lastEntry['date'])/1000));
+				
+				logger.info("Stopping the current timer of the video segment");
+				if(this.timer) {
+					logger.info("Stopping the current timer of the video segment");
+					this.timer.stop();
+				}
+				
+				var durationInMillis:Number = event.segment.endTimeVideo - event.segment.beginTimeVideo;
+				logger.debug("Setting up a new timer for the segment video playing. Duration in sec: {0}", int(durationInMillis/1000));
+				this.timer = new Timer(durationInMillis,1);
+				this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
+				this.timer.start();
 			} 
 		}
 		
+		private function timerCompleteHandler(e:TimerEvent):void {
+			logger.debug("Timer complete for the segment video playing. Removing all streams from the video component.");
+			this.visio.removeAllStreams();
+        }
         ]]>
     </fx:Script>
 
