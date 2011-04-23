@@ -1,14 +1,14 @@
 package com.ithaca.utils
 {
-	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.utils.StringUtils;
+	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
+	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
-	import com.ithaca.visu.model.User;
+	
+	import mx.logging.ILogger;
 	import mx.logging.Log;
-    import mx.logging.ILogger;
-		
-	import com.ithaca.utils.StringUtils;
 			
 	
 	public class VisuUtils
@@ -104,6 +104,11 @@ package com.ithaca.utils
 				first = false;
 			}
 			return label;
+		}
+		
+		public static function userPrenomPointNom(user:User):String
+		{
+			return StringUtils.firstLetterCap(user.lastname) + ". " + StringUtils.cap(user.firstname);
 		}
 		
 	}
