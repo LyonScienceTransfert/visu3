@@ -106,8 +106,6 @@ package  com.ithaca.visu.model
 		private var NAME_VISU2: String = "VISU";
 		private var NAME_VISU_VCIEL: String = "VISUVCIEL";
 		
-//		private var listConnectedUsers:ArrayCollection = new ArrayCollection();
-//		private var listSwapUsers:ArrayCollection = new ArrayCollection();
 		private var listSessions:ArrayCollection = new ArrayCollection();
 		private var listFluxActivity:ArrayCollection = new ArrayCollection();
 		private var listDateSession:ArrayCollection = new ArrayCollection();
@@ -153,6 +151,7 @@ package  com.ithaca.visu.model
 		private var _currentFilterSession:int = SessionFilterEnum.SESSION_MY;
 		private var _modeDebug:Boolean = false;
 		private var _frameRateSplit:Number = 2000;
+		private var _currentSessionSalonSession:Session;
 			
 		public function Model(access:Private)
 		{
@@ -262,6 +261,14 @@ package  com.ithaca.visu.model
 		public function getCurrentSessionId():int
 		{
 			return _currentSessionId;
+		}
+		public function setCurrentSessionSalonSession(value:Session):void
+		{
+			_currentSessionSalonSession = value;
+		}
+		public function getCurrentSessionSalonSession():Session
+		{
+			return _currentSessionSalonSession;
 		}
 		public function setCurrentCommentTraceId(value:String):void
 		{
