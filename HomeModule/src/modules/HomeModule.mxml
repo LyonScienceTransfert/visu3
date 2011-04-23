@@ -908,7 +908,7 @@
 		   }
 		   
 		   
-		   private function initSessionList(event:Event) {
+		   private function initSessionList(event:Event):void {
 				logger.debug("Adding listeners to the session list component");
 		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_EDIT_SESSION, dispatchSessionEvent);
 		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_JOIN_SESSION, dispatchSessionEvent);
