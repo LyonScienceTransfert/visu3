@@ -11,18 +11,14 @@ package business
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.ActivityElementVO;
 	import com.ithaca.visu.model.vo.ActivityVO;
-	import com.ithaca.visu.model.vo.SessionUserVO;
 	import com.ithaca.visu.model.vo.SessionVO;
-	import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
-	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.utils.ObjectUtil;
@@ -146,17 +142,11 @@ package business
 			}
 		}
 		
-/*		public function onUpdateSession(sessionVO:SessionVO):void
-		{
-			model.clearDateSession();
-		}*/
 		public function onUpdateActivity(activityVO:ActivityVO):void
 		{
-			
 		}
 		public function onDeleteActivity(activityId:int):void
 		{
-			
 		}
 		public function onAddActivity(activityVO:ActivityVO):void
 		{
@@ -164,12 +154,9 @@ package business
 		}
 		public function onUpdateActivityElement(activityElement:ActivityElementVO):void
 		{
-			
 		}
-//		public function onDeleteActivityElement(activityElementId:int, activityId:int):void
 		public function onDeleteActivityElement(value:*):void
 		{	
-
 		}
 		
 		public function onAddActivityElement(value:ActivityElementVO):void
@@ -214,15 +201,6 @@ package business
 			addSession.session = session;
 			this.dispatcher.dispatchEvent(addSession);
 			if(!session.isModel){
-				// add logged user to the new session
-/*				var sessionUserVO:SessionUserVO = new SessionUserVO();
-				sessionUserVO.id_session = sessionVO.id_session;
-				sessionUserVO.id_user = model.getLoggedUser().id_user;
-				sessionUserVO.mask = 0;
-				var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.ADD_SESSION_USER);
-				sessionUserEvent.newSessionUser = sessionUserVO;
-				this.dispatcher.dispatchEvent(sessionUserEvent);*/
-				// clear liste date the session
 				model.clearDateSession();
 			}
 			// ADD ACTIVITY
@@ -236,28 +214,45 @@ package business
 				addActivity.activityId = activity.id_activity;
 				this.dispatcher.dispatchEvent(addActivity);
 			}
+		}	
+// ADD EMPTY SESSION
+		public function onAddEmptySession(sessionVO:SessionVO):void
+		{
+			var session:Session = new Session(sessionVO);
+			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
+			addSession.session = session;
+			this.dispatcher.dispatchEvent(addSession);
+			if(!session.isModel)
+			{
+				model.clearDateSession();
+			}
+			// refresh plan the session
+			onAddClonedActivityElement(null , session.id_session);
 		}		
 // ADD ACTIVITY		
 		public function onAddClonedActivity(activityVO:ActivityVO, activityId:int):void
 		{
 			
 			var activity:Activity = this.getActivityById(activityId);
-				var arrActivityElement:ArrayCollection = activity.activityElements;
-				var nbrActivityElement:int = arrActivityElement.length;
-				for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
-				{
-					var activityElement:ActivityElement = arrActivityElement.getItemAt(nActivityElement) as ActivityElement;
-					var activityElementVO: ActivityElementVO = setActivityElementVO(activityElement, activityVO.id_activity);
-					var addActivityElement:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY_ELEMENT);
-					addActivityElement.activityElementVO = activityElementVO;
-					this.dispatcher.dispatchEvent(addActivityElement);
-				}
+			var arrActivityElement:ArrayCollection = activity.activityElements;
+			var nbrActivityElement:int = arrActivityElement.length;
+			for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
+			{
+				var activityElement:ActivityElement = arrActivityElement.getItemAt(nActivityElement) as ActivityElement;
+				var activityElementVO: ActivityElementVO = setActivityElementVO(activityElement, activityVO.id_activity);
+				var addActivityElement:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY_ELEMENT);
+				addActivityElement.sessionId = activityVO.id_session; 
+				addActivityElement.activityElementVO = activityElementVO;
+				this.dispatcher.dispatchEvent(addActivityElement);
+			}
 		}
 		
-		
-		public function onAddClonedActivityElement(value:ActivityElementVO):void
+		public function onAddClonedActivityElement(value:ActivityElementVO, sessionId:int):void
 		{
-			
+			// FIXME : here call every time when loaded activity, try call only one time
+			var showClonedPlanEvent:SessionEvent = new SessionEvent(SessionEvent.SHOW_CLONED_PLAN);
+			showClonedPlanEvent.sessionId = sessionId;
+			this.dispatcher.dispatchEvent(showClonedPlanEvent);
 		}
 // USER
 		public function onUpdateSession(sessionVO:SessionVO):void
@@ -270,16 +265,6 @@ package business
 			this.dispatcher.dispatchEvent(updateSession);
 		}
 
-/*		public function onRemoveSessionUser(sessionVO:SessionVO):void
-		{
-			model.clearDateSession();	
-			// update user fo the session 
-			var updateSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_UPDATED_SESSION);
-			var session:Session = new Session(sessionVO);
-			updateSession.session = session;
-			this.dispatcher.dispatchEvent(updateSession);
-			
-		}*/
 		public function onLoadListUsers(value:Array):void
 		{
 			var ar:Array = []
@@ -324,6 +309,7 @@ package business
 			activityVO.ind = activity.ind;
 			return activityVO;
 		}
+		
 		private function setActivityElementVO(activityElement:ActivityElement, idActivity:int):ActivityElementVO
 		{
 			var alm:ActivityElementVO = new ActivityElementVO();
@@ -336,7 +322,6 @@ package business
 			alm.order_activity_element = activityElement.order_activity_element;
 			return alm;
 		}
-		
 		
 		private function getActivityById(value:int):Activity
 		{
@@ -352,6 +337,5 @@ package business
 			}
 			return null;
 		}
-		
 	}
 }
