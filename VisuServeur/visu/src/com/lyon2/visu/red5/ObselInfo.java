@@ -381,6 +381,31 @@ public class ObselInfo {
 			sc.invoke("checkListSession", args);
 		}
 	}
+	@SuppressWarnings("unchecked")
+	public void getObselByTypeSessionExitSessionPause(IConnection conn, Integer sessionId) {
+		log.warn("======== getObselByTypeSessionExitSessionPause = {}",sessionId.toString());
+		IClient client = conn.getClient();
+		List<Obsel> result = null;
+		String traceParam = "%-" + "void" + "%";
+		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
+				+ "%";
+		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+		log.warn("OSP = {}",osp.toString());
+		try {
+			result = (List<Obsel>) app.getSqlMapClient().queryForList(
+					"obsels.getObselBySessionIdBySessionExitSessionPause", osp);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des obsels" + e);
+		}
+		// log.warn("Result is = {}",result.toString());	
+		Object[] args = { result};
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListObselSessioExitSessionPause", args);
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
