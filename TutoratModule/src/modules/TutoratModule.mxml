@@ -190,6 +190,7 @@
 					this.visio.removeLocalDevice();				
 				}
 				Model.getInstance().setCurrentTutoratModule(null);
+				Model.getInstance().setCurrentSessionSalonSession(currentSession);
 				this._listTempViewObselSessionOut = new ArrayCollection();
 				// remove all images from panelMediaSession
 				if(this.panelMediaSession != null)
