@@ -231,7 +231,7 @@
 				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
 					var listUser:ArrayCollection = event.listUser;
-					this.sessionManagement.sessionDetail.listPresentUser = listUser;
+					this.sessionManagement.sessionDetailView.listPresentUser = listUser;
 				}
 			}
 			
@@ -266,6 +266,7 @@
 		]]>
 	
 	</fx:Script>
+	<sessions:SessionManagerView id="sessionManagement" visible="true" includeInLayout="true" loggedUser="{Model.getInstance().getLoggedUser()}" top="0" left="0" right="0" bottom="0"/>
 	<s:VGroup  visible="false">
 		<s:Label   text="Gestion des séances" fontSize="20"  fontStyle="italic"/>
 		<s:Label  id="testLabel" fontSize="20" />
