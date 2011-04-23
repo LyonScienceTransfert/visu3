@@ -65,6 +65,7 @@
 			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.ui.utils.ActionObselEnum;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			
@@ -323,7 +324,12 @@
 				// update BD only if new text was edded
 				if(currentTextEdit != textObsel)
 				{
-					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+					var sessionId:int = 0;
+					var session:Session = Model.getInstance().getCurrentSession();
+					if(session != null)
+					{
+						sessionId = session.id_session;
+					}else return;
 					var listUsersId:Array;
 					if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
 					{
