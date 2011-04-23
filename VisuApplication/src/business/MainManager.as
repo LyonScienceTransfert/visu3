@@ -197,6 +197,30 @@ public class MainManager
 		dispatcher.dispatchEvent(eventListSession);	
 	}
 
+	public function onCheckListObselSessioExitSessionPause(listObselVO:Array):void
+	{
+		if(!(listObselVO == null || listObselVO.length == 0))
+		{
+			var timeSessionEnd:Number=0;
+			var nbrObsels:int = listObselVO.length;
+			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
+			{
+				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
+				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+				var typeObsel:String = obsel.type;
+				switch (typeObsel)
+				{
+					case TraceModel.SESSION_EXIT:	
+					case TraceModel.SESSION_PAUSE:
+						timeSessionEnd = obsel.begin;
+						break;
+				}
+			}
+			var durationSessionEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_DURATION_SESSION);
+			durationSessionEvent.durationSessionRetro = timeSessionEnd;
+			this.dispatcher.dispatchEvent(durationSessionEvent);
+		}
+	}
 	
 	/**
 	 * set connected users 
