@@ -17,11 +17,14 @@ public class SessionEvent extends Event
 	static public const LOAD_LIST_DATE_SESSION : String = 'loadListDateSession';
 	static public const LOAD_SESSION : String = 'loadSession';
 	static public const LOAD_SESSION_SALON_RETROSPECTION : String = 'loadSessionSalonRetrospection';
+	static public const LOAD_DURATION_SESSION: String = 'loadDurationSession';
 	static public const SHOW_LIST_DATE_SESSION : String = 'showListDateSession';
+	static public const SHOW_CLONED_PLAN : String = 'showClonedPlan';
 	static public const SHOW_LIST_SESSION : String = 'showListSession';
 	static public const SHOW_UPDATED_SESSION : String = 'showUpdatedSession';
 	static public const ADDED_SESSION : String = 'addedSession';
 	static public const ADD_SESSION : String = 'addSession';
+	static public const ADD_EMPTY_SESSION : String = 'addEmptySession';
 	static public const ADD_CLONED_SESSION : String = 'addClonedSession';
 	static public const ADD_ACTIVITY : String = 'addActivity';
 	static public const ADD_CLONED_ACTIVITY : String = 'addClonedActivity';
