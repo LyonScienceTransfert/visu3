@@ -805,8 +805,6 @@ package com.lyon2.controls
             return t;
         }
 
-
-
     	/**
     	 * 
     	 * Getter / setter

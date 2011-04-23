@@ -7,8 +7,6 @@ package com.lyon2.controls.utils
 	
 	public final class TimeUtils
 	{
-		
-		
 		private static const ressourceManager:IResourceManager = ResourceManager.getInstance();
 		
 		private static var time_table:Array = [
@@ -37,7 +35,6 @@ package com.lyon2.controls.utils
 				ressourceManager.getString('HumanDate', 'short_second'),
 				ressourceManager.getString('HumanDate', 'second'))
 			]; 
-		
 		
 		 public static function formatTimeString(numberOfSeconds:Number):String
          {
@@ -90,8 +87,36 @@ package com.lyon2.controls.utils
 		public static function formatHHMM(date:Date):String {
 			var s:String = "";
 			s+=date.hours;
-			s+=":" + (date.minutes<10?"0":"")+date.minutes;
+			s+=":" + asTwoDigitString(date.minutes);
 			return s;
+		}
+		
+		public static function formatHHMMSS(seconds:Number):String {
+			var s:String = "";
+			var hours:Number = int(seconds/3600);
+			var rest:Number = int(seconds%3600);
+			var minutes:Number = int(rest/60);
+			var seconds:Number = int(rest%60);
+			
+			if(hours > 0) {
+				s+=hours+":";
+			}
+			s+=asTwoDigitString(minutes)+":"+asTwoDigitString(seconds);
+			return s;
+		}
+		
+		private static function asTwoDigitString(n:Number):String {
+			return (n<10?"0":"")+n;
+		}
+		
+		public static function formatDDMMYYYY(date:Date):String {
+			return asTwoDigitString(date.date) +"-"+asTwoDigitString(date.month +1)+"-"+date.fullYear;
+		}
+		
+		public static function formatVisuDateTime(date:Date):String {
+			var time:String = formatHHMM(date);
+			var dateOnly:String = formatDDMMYYYY(date);
+			return dateOnly + " " + time;
 		}
 	}
 }

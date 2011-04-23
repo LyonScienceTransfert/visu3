@@ -12,5 +12,7 @@ package com.ithaca.visu.model.vo
 		public var creationDate:Date;
 		public var lastModified:Date;
 		public var xml:String;		
+		public var inviteeIds:Array;		
+		public var session:SessionVO;	
 	}
 }
