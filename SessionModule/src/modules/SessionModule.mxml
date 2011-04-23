@@ -278,6 +278,8 @@
 		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"  method="onShowUpdatedSession"/>
 		<mate:Listener type="{SessionUserEvent.LOAD_LIST_SESSION_USER}"  method="setListPresentUserInSession"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		<mate:Listener type="{SessionEvent.SHOW_CLONED_PLAN}"  method="onShowClonedPlan"/>
+		<mate:Listener type="{SessionEvent.LOAD_DURATION_SESSION}"  method="onLoadDurationSession"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 
