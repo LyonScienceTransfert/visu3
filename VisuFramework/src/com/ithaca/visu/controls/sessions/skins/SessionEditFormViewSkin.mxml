@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		>
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.sessions.SessionEditFormView")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent; 
+			
+			private function yesterday():Date {
+				var dt:Date = new Date() ; 
+				dt.setTime(dt.time - 1000*60*60*24);
+				return dt;
+			}
+		]]>
+	</fx:Script>	
+	<s:HGroup paddingLeft="5" paddingRight="5" 
+			paddingTop="5" paddingBottom="5" >		
+		<mx:Form>
+			<mx:FormItem label="Date de la séance:" width="100%">
+				<s:HGroup verticalAlign="middle">
+					<mx:DateField 
+						width="100%" 
+						id="dateField"
+						formatString="DD-MM-YYYY"
+						yearNavigationEnabled="true"
+						disabledRanges="{[ {rangeEnd: yesterday()} ]}"
+						selectedDate="{new Date()}"/>
+				</s:HGroup>
+			</mx:FormItem>
+			
+			<mx:FormItem  label="de:" width="100%">
+				<s:HGroup verticalAlign="middle" horizontalAlign="left">
+					<s:DropDownList id="startDDL" 
+									width="100"
+									labelField="string"/>
+				</s:HGroup>
+			</mx:FormItem>
+			
+		</mx:Form>
+		
+		<s:VGroup height="100%">  
+			<s:Label text="Participants" width="100%"/>
+			<s:List id="participantList" width="100%" height="150">
+				<s:itemRenderer>
+					<fx:Component>
+						<s:ItemRenderer>
+							<fx:Script>
+								<![CDATA[
+									import com.ithaca.utils.VisuUtils;
+									import com.ithaca.visu.model.User;
+									import com.ithaca.visu.ui.utils.RoleEnum;
+								]]>
+							</fx:Script>
+							<s:states>
+								<s:State name="normal" />
+							</s:states>
+							<s:HGroup verticalAlign="middle" horizontalAlign="left" paddingLeft="5" paddingBottom="5" paddingRight="5" paddingTop="5">
+								<s:Label id="nameLabel" text="{VisuUtils.userPrenomPointNom(data as User)} {' ('+ VisuUtils.getRoleLabel((data as User).role)+')'}" width="100%" />
+							</s:HGroup>	
+						</s:ItemRenderer>
+					</fx:Component>
+				</s:itemRenderer>
+			</s:List>
+			<s:HGroup width="100%">
+				<s:Button id="addUser">
+					<s:label>Ajouter</s:label>
+				</s:Button>
+				<s:Button id="deleteUser">
+					<s:label>Supprimer</s:label>
+				</s:Button>
+			</s:HGroup>
+			
+		</s:VGroup>  
+	</s:HGroup>
+</s:Skin>
