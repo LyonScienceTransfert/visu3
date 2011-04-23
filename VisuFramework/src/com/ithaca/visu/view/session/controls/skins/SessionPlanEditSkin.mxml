@@ -2,7 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5"
 	creationComplete="skin1_creationCompleteHandler(event)"
-	 addedToStage="skin1_addedToStageHandler(event)" xmlns:renderer="com.ithaca.visu.renderer.*" xmlns:layout="sparks.layout.*" xmlns:layout1="com.lyon2.controls.sparks.layout.*">
+	 addedToStage="skin1_addedToStageHandler(event)" xmlns:renderer="com.ithaca.visu.renderer.*" xmlns:layout="sparks.layout.*" xmlns:layout1="com.lyon2.controls.sparks.layout.*" xmlns:mx="library://ns.adobe.com/flex/mx">
     <fx:Metadata>[HostComponent("com.ithaca.visu.view.session.controls.SessionPlanEdit")]</fx:Metadata>
 
     <fx:Script fb:purpose="styling">
@@ -14,27 +14,7 @@
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
-            /**
-             *  @private
-             */
-            override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
-            {
-                // Push backgroundColor and backgroundAlpha directly.
-                // Handle undefined backgroundColor by hiding the background object.
-                if (isNaN(getStyle("backgroundColor")))
-                {
-                    background.visible = false;
-                }
-                else
-                {
-                    background.visible = true;
-                    bgFill.color = getStyle("backgroundColor");
-                    bgFill.alpha = getStyle("backgroundAlpha");
-                }
-                
-                super.updateDisplayList(unscaledWidth, unscaledHeight);
-            }
-
+			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
 				fxgt = FxGettext;
@@ -44,44 +24,7 @@
 			{
 				this.percentWidth = 100;
 			}
-
-// KEYWORD
-			/* protected function addKeyword_focusInHandler(event:FocusEvent):void
-			{
-				if(addKeyword.text == "Entrez un nouveau mot-clé"){
-					addKeyword.text = "";
-					addKeyword.setStyle("fontStyle","normal");
-					addKeyword.setStyle("color","#000000");
-				}
-			}
-
-			protected function addKeyword_focusOutHandler(event:FocusEvent):void
-			{
-				if(addKeyword.text == ""){
-					this.setMessageKeyword();
-				}
-			} */
-
-			/* protected function addKeyword_keyUpHandler(event:KeyboardEvent):void
-			{
-				if(event.keyCode == Keyboard.ENTER && addKeyword.text != "")
-				{
-					// add statement
-					if(addKeyword.text != "Entrez un nouveau mot-clé" && addKeyword.text != "")
-					{
-						this.hostComponent.addKeyword(addKeyword.text);
-						addKeyword.text = "";
-						stage.focus = addKeyword;
-					}
-				}
-			} */
-
-			/* private function setMessageKeyword():void
-			{
-				addKeyword.text = "Entrez un nouveau mot-clé";
-				addKeyword.setStyle("fontStyle","italic");
-				addKeyword.setStyle("color","#BBBBBB");
-			} */
+			
 			
 			protected function buttonAddActivity_clickHandler(event:MouseEvent):void
 			{
@@ -115,31 +58,24 @@
         <s:layout>
             <s:VerticalLayout gap="3"/>
         </s:layout>
-		<s:Group width="100%">
-			<s:Label left="5" top="3" fontWeight="bold" includeIn="normal,normalEditable">
-				<!--<s:text>{fxgt.gettext("Plan de séance")}</s:text>-->
-				<s:text>{"Plan de séance"}</s:text>
-			</s:Label>
-<!-- BUTTONS -->
-			<s:Button  id="buttonCreateSessionByTemplate" top.normalEditable="5" left.normalEditable="130" right.normalEditable="215" top.normal="5" left.normal="130" right.normal="215" includeIn="normal,normalEditable">
-				<!--<s:label>{fxgt.gettext("Importer")}</s:label>-->
-				<s:label>{"Créer une nouvelle séance à partir de ce plan de séance"}</s:label>
-			</s:Button>
-			<s:Button  id="buttonExportSession" enabled="false" top.normal="5" right.normal="5" top.normalEditable="5" right.normalEditable="5" enabled.normalEditable="true" includeIn="normal,normalEditable">
-				<!--<s:label>{fxgt.gettext("Exporter")}</s:label>-->
-				<s:label>{"Rendre public ce plan de séance"}</s:label>
-			</s:Button>
-		</s:Group>	
-	
-		<s:Group width="100%">
+		<s:HGroup width="100%">
+			<mx:Spacer width="2"/>
 			<s:Button id="buttonAddActivity"
 					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter une activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter une activité" includeIn="normal,normalEditable">
 			</s:Button>
-	        <!--<s:Label right="52" top="5" fontSize="18" fontStyle="normal" fontWeight="bold" right.normal="160" fontSize.normal="14" top.normal="5" fontSize.normalEditable="14" right.normalEditable="160" top.normalEditable="5">
-				<s:text>{"Activité : "}</s:text>
-			</s:Label>
-			<s:ComboBox   id="comboBoxActivity" width="45" right="5" width.normal="150" width.normalEditable="150"/>-->
-		</s:Group>
+			<mx:Spacer width="100%"/>
+			<s:HGroup right="5">
+				<s:Button id="sharePlanButton" >
+					<s:label>Partager ce plan</s:label>
+					<s:toolTip>Ajoute ce plan de séance à la liste des plans de séances</s:toolTip>
+				</s:Button>
+				<s:Button id="createSessionButton" >
+					<s:label>Nouvelle séance</s:label>
+					<s:toolTip>Crée une nouvelle séance à partir de ce plan</s:toolTip>
+				</s:Button>
+			<mx:Spacer width="2"/>
+			</s:HGroup>
+		</s:HGroup>
 <!-- LINE -->	
 		<s:Line left="50" right="2" top="10" width="100%" includeIn="normal,normalEditable">
 			<s:stroke>
@@ -155,35 +91,8 @@
 				<s:layout.normalEditable>
 					<s:VerticalLayout gap="5" />
 				</s:layout.normalEditable>
+				<s:Button includeIn="disabled" x="436" y="175" label="Button"/>
 			</s:Group>
 		</s:Scroller>
-		
-<!-- KEYWORD -->	
-		<!--<s:Group  width="100%" height="100">-->
-<!-- LINE -->	
-			<!--<s:Line left="1" right="1" width="100%" top="1">
-				<s:stroke>
-					<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
-				</s:stroke>
-			</s:Line>
-			<s:Label left="15" text="Mots-clés : " top="7"/>
-			<s:Scroller top="8" left="80" right="0" bottom="0" height.disabled="100%" width.disabled="100%" top.normal="8" left.normal="80" bottom.normal="5" right.normal="2" bottom.normalEditable="25" left.normalEditable="80" right.normalEditable="2" top.normalEditable="8">
-				<s:Group id="keywordGroup"  left="0" width="100%" height="100%"  top="0">
-					<s:layout>
-						<layout1:FlowLayout/>
-					</s:layout>
-				</s:Group>	
-			</s:Scroller>-->
-<!-- ADD KEYWORD -->
-			<!--<s:TextArea  id="addKeyword" height="22" right="2" bottom="2"
-						 fontStyle="italic" color="#BBBBBB"
-						  focusIn="addKeyword_focusInHandler(event)"
-						   focusOut="addKeyword_focusOutHandler(event)"
-						    keyUp="addKeyword_keyUpHandler(event)" textAlign.normalEditable="center" includeIn="disabled,normalEditable">
-				<s:text>Entrez un nouveau mot-clé</s:text>
-			</s:TextArea>
-		</s:Group>-->
-		
-		
     </s:Group>
 </s:Skin>
