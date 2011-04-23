@@ -64,6 +64,7 @@ package com.lyon2.visu.domain.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class Session {
     /**
@@ -146,6 +147,15 @@ public class Session {
      */
  
     private Integer id_currentActivity;
+    
+    private Set<Integer> attendeeIds;
+    public void setAttendeeIds(Set<Integer> attendeeIds) {
+		this.attendeeIds = attendeeIds;
+	}
+    public Set<Integer> getAttendeeIds() {
+		return attendeeIds;
+	}
+    
     
     private List<User> listUser;
 	/**
@@ -419,5 +429,13 @@ public class Session {
 		}
         return out.toString();
     }
-
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj instanceof Session) {
+			Session o = (Session) obj;
+			return id_session.equals(o.id_session);
+		}
+    	return false;
+    }
 }

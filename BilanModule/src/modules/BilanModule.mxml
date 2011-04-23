@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   xmlns:modules="com.ithaca.visu.modules.*" 
+		   xmlns:maps="maps.*"
+		   xmlns:mate="http://mate.asfusion.com/"
+		   xmlns:controls="com.ithaca.visu.controls.*"
+		   configure="configureHandler(event)"
+		   top="0" bottom="0" left="0" right="0" 
+		   xmlns:vo="com.ithaca.visu.model.vo.*" 
+		   xmlns:ithaca="com.ithaca.components.*"
+		   creationComplete="initBilanPane(event)"
+		   >
+	
+	<fx:Declarations>
+		<s:ArrayList id="segmentList"/>
+
+		<maps:BilanMap dispatcher="{this}"/>
+		
+		
+		<mate:Listener type="{BilanEvent.SHOW_RETRIEVED_BILAN_LIST}"  method="showRetrievedBilanList"/>
+		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
+		
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.BilanEvent;
+			import com.ithaca.documentarisation.events.RetroDocumentEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.vo.UserVO;
+			import com.ithaca.visu.model.vo.SessionVO;
+			import com.ithaca.visu.model.vo.RetroDocumentVO;
+			import com.ithaca.events.SelectionEvent;
+			import com.ithaca.documentarisation.model.RetroDocument;
+			import com.ithaca.visu.model.Session;
+			
+			import mx.events.FlexEvent;
+			import flash.events.Event;
+			import mx.controls.Alert;
+			import mx.collections.ArrayList;
+			import mx.collections.ArrayCollection;
+		
+			
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			
+			private var logger : ILogger = Log.getLogger('modules.BilanModule');
+			
+			private function showRetroDocument(event:RetroDocumentEvent):void {
+				if(bilanViewer == null) {
+					logger.warn("Undesired call to BilanModule.showRetroDocument");
+					return;
+				}
+			
+				logger.debug("Displaying the retro document {0} received", event.retroDocument.id);
+				
+				var doc:RetroDocument = event.retroDocument;
+
+				var i:int; 
+				for (i = 0; i < this.bilanComp.bilanCollection.length; i++) 
+				{ 
+					var retroDoc:RetroDocument = this.bilanComp.bilanCollection.getItemAt(i) as RetroDocument;
+					if(retroDoc.id == doc.id) {
+						logger.debug("Passing the session object to the retro document {0} to be displayed. Session: {1} (Session.ownerId: {2})", 
+							event.retroDocument.id, 
+							retroDoc.session,
+							retroDoc.session.id_user
+							);
+						doc.session = retroDoc.session;
+					}
+				}
+
+				bilanViewer.setNewBilan(doc);
+			}
+			
+			private function showRetrievedBilanList(event:BilanEvent):void {
+				logger.debug("showRetrievedBilanList. {0} docs and {1} filter sessions", event.retroDocuments.length, event.filterSessionCollection.length);
+				
+				//if((Model.getInstance().getCurrentBilanModule() as BilanModule) == this) {
+				if(bilanComp) {
+					logger.debug("showRetrievedBilanList. bilanComp NOT NULL");
+					var filterSessionCollection:ArrayList = new ArrayList();
+					for each (var session:SessionVO in event.filterSessionCollection) 
+					{
+						filterSessionCollection.addItem(new Session(session));
+					}
+					logger.debug("bilanComp {0}", bilanComp);
+					logger.debug("filterSessionCollection {0}", filterSessionCollection);
+					bilanComp.setFilterSessionList(filterSessionCollection);
+
+					var bilanCollection:ArrayCollection = new ArrayCollection();
+					for each(var vo:RetroDocumentVO in event.retroDocuments) {
+						var retroDocument:RetroDocument = new RetroDocument(vo);
+						bilanCollection.addItem(retroDocument);
+					}
+
+					logger.debug("bilanCollection {0}", bilanCollection);
+					bilanComp.setBilanCollection(bilanCollection);
+				} else 
+					logger.warn("showRetrievedBilanList. bilanComp NULL");
+				//}
+			}
+
+			protected function configureHandler(event:VisuModuleEvent):void
+			{				
+				if((event.currentTarget as BilanModule).parameters != null)
+				{
+					var param:Object = (event.currentTarget as BilanModule).parameters ;
+				}
+				
+				// set current module
+				Model.getInstance().setCurrentBilanModule(this);
+				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_BILAN);
+				this.dispatchEvent(initMapEvent); 
+			}
+			
+			private function  initBilanPane(event:*):void {
+				logger.debug("Dispatching BILAN_MODULE_LOADED");
+				bilanComp.addEventListener("SelectionEvent", onBilanSelected);
+				var moduleLoadedEvent:BilanEvent = new BilanEvent(BilanEvent.BILAN_MODULE_LOADED);  
+				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;
+				this.dispatchEvent(moduleLoadedEvent);
+			}
+
+
+			private function  onBilanSelected(event:SelectionEvent):void {
+				var bilanId = event.selectedId;
+				if(bilanId == -1) {
+					bilanViewer.bilan = null;
+				} else {
+					logger.debug("The bilan {0} is selected from the bilan list. Dispatching BilanEvent...", bilanId);
+					var bilanSelectedEvent:BilanEvent = new BilanEvent(BilanEvent.NEW_BILAN_SELECTED);  
+					bilanSelectedEvent.bilanId=bilanId;
+					this.dispatchEvent(bilanSelectedEvent);
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:HGroup width="100%" height="100%" gap="10">
+	  	<s:Panel title="Explorateur" width="30%" minWidth="300" height="100%">
+			<s:VGroup width="100%" height="100%">
+				<ithaca:BilanList 
+					id="bilanComp"
+					showNewButton="false"
+					showFilterButtons="true"
+					showFilterText="true"
+					width="100%"
+					height="100%"
+					/>
+			</s:VGroup>
+	    </s:Panel>   
+	
+		<s:Panel title="Bilan" width="70%" height="100%">
+			<ithaca:BilanViewer
+					id="bilanViewer"
+					width="100%"
+					height="100%"
+					/>
+	    	</s:Panel>
+	</s:HGroup>   
+</modules:VisuModuleBase>

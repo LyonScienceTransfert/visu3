@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<mate:LocalEventMap 
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo"
+        xmlns:mate="http://mate.asfusion.com/"
+        xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import com.ithaca.visu.events.BilanEvent;
+		]]>
+	</fx:Script>
+
+
+    <fx:Declarations>
+    
+		<!-- 
+			~~~~~~~~ DEBUGGER ~~~~~~~~
+		-->	
+		<mate:Debugger level="{Debugger.ALL}"/>
+
+		<!-- 
+			~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
+		-->	
+		<!--
+		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getSharedRetroDocuments"   arguments="{[event.userId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getOwnedRetroDocuments"   arguments="{[event.userId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		-->
+		
+		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getOwnedAndSharedRetroDocumentsByUserId"   arguments="{[event.userId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{BilanEvent.BILAN_LOADED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getStreamObselsBySession"   arguments="{[event.sessionId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{BilanEvent.NEW_BILAN_SELECTED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[event.bilanId, false]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+
+				
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
+			<!-- BilanManager creation -->
+			<mate:ObjectBuilder generator="{BilanManager}" constructorArguments="{[scope.dispatcher]}"/>
+		</mate:EventHandlers>
+		
+		
+		<!-- Application complete start-->
+		
+		
+		<!-- 
+			~~~~~~~~ INJECTORS ~~~~~~~~
+		-->
+		
+		<!--
+		  ~~~~~~~~ REMOTEOBJECTS ~~~~~~~~
+		-->
+		<s:RemoteObject
+			id="remoteBilan"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="BilanService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>	
+    </fx:Declarations>
+	
+	<fx:Script><![CDATA[
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.model.Model;
+		
+		import managers.BilanManager;	
+		
+	]]></fx:Script>
+</mate:LocalEventMap>

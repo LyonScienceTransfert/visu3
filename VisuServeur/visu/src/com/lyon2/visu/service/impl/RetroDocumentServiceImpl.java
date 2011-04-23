@@ -87,12 +87,32 @@ public class RetroDocumentServiceImpl implements RetroDocumentService {
 		}
 	}
 
-	public Collection<RetroDocument> findDocumentsWhereUserIsInvited(
-			RetroDocument document, User invitee) {
-		throw new UnsupportedOperationException("Not yet implemented");
+	public Collection<RetroDocument> findDocumentsWhereUserIsInvited(int userId, boolean withXmlContent) {
+		try {
+			if(withXmlContent) {
+				throw new UnsupportedOperationException("Not yet implemented");
+			} else {
+				Collection<RetroDocument> docs = retroDocumentDao.getRetroDocumentsByInviteeWithoutXML(userId);
+				return docs;
+			}
+		} catch (SQLException e) {
+			logger.error("SQL problem",e);
+			return null;
+		}
 	}
 
-	public Collection<RetroDocument> findInvitees(RetroDocument document) {
-		throw new UnsupportedOperationException("Not yet implemented");
+	public Collection<RetroDocument> findDocumentsByOwner(int ownerId,
+			boolean withXmlContent) {
+		try {
+			if(withXmlContent) {
+				throw new UnsupportedOperationException("Not yet implemented");
+			} else {
+				Collection<RetroDocument> docs = retroDocumentDao.getRetroDocumentsByOwnerWithoutXML(ownerId);
+				return docs;
+			}
+		} catch (SQLException e) {
+			logger.error("SQL problem",e);
+			return null;
+		}
 	}
 }

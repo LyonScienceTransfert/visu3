@@ -79,9 +79,6 @@
     <bean id="sessionUserDao" class="com.lyon2.visu.domain.dao.impl.SessionUserDAOImpl">
         <property name="sqlMapClient" ref="sqlMap"/>
     </bean>
- <!-- <bean id="retroDocumentDao" class="com.lyon2.visu.domain.dao.impl.RetroDocumentDAOImpl">
-        <property name="sqlMapClient" ref="sqlMap"/>
-    </bean> -->   
     <bean id="profileDescriptionDao" class="com.lyon2.visu.domain.dao.impl.ProfileDescriptionDAOImpl">
         <property name="sqlMapClient" ref="sqlMap"/>
     </bean>
@@ -118,9 +115,9 @@
      <bean id="retroRoom.service" class="com.lyon2.visu.red5.RetroRoomUserAction">
         <property name="application" ref="web.handler"/>
     </bean>
-<!--  RetroDocument -->
      <bean id="retroDocument.service" class="com.lyon2.visu.red5.RetroDocumentInfo">
         <property name="application" ref="web.handler"/>
+        <property name="retroDocumentService" ref="retroDocumentService.service"/>
     </bean>
 <!-- BDD -->
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">

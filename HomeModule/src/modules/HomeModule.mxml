@@ -66,8 +66,6 @@
 			
 			import spark.components.supportClasses.GroupBase;
 			import spark.events.IndexChangeEvent;
-
-					
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -217,64 +215,7 @@
 				listConUsers.visible = false; */
 			}
 			
-			/**
-			 * Remove deleted session
-			 */
-			 /*
-			public function onUpdateDeletedSession(event:SessionEvent):void
-			{
-				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule;
-				if( homeModule == this)
-				{
-					var sessionId:int = event.sessionId;
-					var indexHomeSessionView:int = -1;
-					var nbrHomeSessionView:int = this.listSessionView.length;
-					for(var nHomeSessionView:int = 0; nHomeSessionView < nbrHomeSessionView; nHomeSessionView++)
-					{
-						var homeSession:SessionHomeElement = this.listSessionView.getItemAt(nHomeSessionView) as SessionHomeElement;
-						if(homeSession.session.id_session == sessionId)
-						{
-							indexHomeSessionView = nHomeSessionView;
-						}
-					}
-					if(indexHomeSessionView > -1 )
-					{
-						this.listSessionView.removeItemAt(indexHomeSessionView);
-					}
-					
-					// remove view
-					var indexElement:int = -1;
-					var groupHomeSessionView:Group = this.sessionGroup.getElementAt(0) as Group;
-					var nbrElement:int = groupHomeSessionView.numElements;
-					for(var nElement:int = 0 ; nElement < nbrElement; nElement++)
-					{
-						var iVisualElement:IVisualElement = groupHomeSessionView.getElementAt(nElement) as IVisualElement;
-						// iVisualElement can be label
-						var homeSessionView:SessionHomeElement = iVisualElement as SessionHomeElement;
-						if(homeSessionView != null && homeSessionView.session.id_session == sessionId)
-						{
-							indexElement = nElement;
-						}
-					}
-					if(indexElement > -1)
-					{
-						groupHomeSessionView.removeElementAt(indexElement);
-					}
-					// has only one session for this date
-					if(nbrElement == 1)
-					{
-						// TODO remove date 
-						groupHomeSessionView.addElement(getLabelHasNotSessionForThisDate());
-					}
-					// enabled button "salon synchrone
-					if(Model.getInstance().getCurrentSession() != null && Model.getInstance().getCurrentSession().id_session == sessionId)
-					{
-						Model.getInstance().setCurrentSession(null);
-						Model.getInstance().setEnabledButtonSalonSynchrone(false);
-					}
-				}
-			}
-			 */
+		
 			
 			private function getLabelHasNotSessionForThisDate():Label
 			{
@@ -300,58 +241,25 @@
 					if(openDate.labelDate == event.sessionDate)
 					{					
 						var listSession:ArrayCollection = event.listSession;
-						//this.listSessionView = new ArrayCollection();
 						this.sessionsList.removeAll();
 				
-				//		this.sessionGroup.removeAllElements();
-				//		var vb:VGroup = new VGroup();	
-				//		vb.percentWidth = 100;
 						var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
-//						var listSwapUsers:ArrayCollection = Model.getInstance().getSwapUsers(); 
 						if(listSession != null)
 						{
 							var nbrSession:uint = listSession.length;
-				//			if(nbrSession == 0)
-				//			{
-				//				var labelMessage:Label = new Label();
-				//				labelMessage.setStyle("fontSize", 14);
-				//				labelMessage.setStyle("fontWeight", "bold");
-				//				labelMessage.text = fxgt.gettext("Vous n'avez pas de séance pour cette date");
-				//				vb.addElement(labelMessage);
-				//			}else
-				//			{
 								for(var nSession:uint = 0; nSession < nbrSession; nSession++)
 								{
 									var session:Session = listSession[nSession];
-				//					var sessionView:SessionHomeElement = new SessionHomeElement();
-				//					sessionView.percentWidth = 100;
-/* 									sessionView.width = navigateurDay.width - navigateurDay.rightButton.width; */
 									// check connected users
 									session.checkConnectedUsers(listConnectedUser);
-				//					sessionView.session = session;
-				//					sessionView.editable = _editableSession;
-				//					sessionView.swapItems = listSwapUsers;
-				//					sessionView.loggedUser = _loggedUser;
-									// listener for change user in the session 
-				//					sessionView.addEventListener(SessionHomeElementEvent.CHANGE_SESSION_USER, onChangeSessionUsers);
-									// listener for action the logged user
-				//					sessionView.addEventListener(SessionHomeElementEvent.CLICK_ACTION_LOGGED_USER, onClickActionLoggedUser);
-				//					vb.addElement(sessionView);
-									
 									this.sessionsList.addItem(session)
 									
-									//this.listSessionView.addItem(sessionView);	
 								}
-				//			} 	
 						}else
 							{	
 							// havn't session to show by this date 
 							navigateurDay.selectedIndex = -1;
 						}
-							// add updated vb groupe
-				//			this.sessionGroup.addElement(vb);
-				//			this.sessionsList.addItem(vb);
-				
 					}
 				}
 			}	
@@ -493,45 +401,7 @@
 				 */	
 			}
 			
-			/**
-			 * Check action of logged user  
-			 */ 
-			 /*
-			private function onClickActionLoggedUser(event:SessionHomeElementEvent):void
-			{
-				var eventSession:SessionEvent;
-				var typeAction:String = event.typeAction;
-				if(typeAction == SessionHomeElementEvent.ACTION_CANCEL_SESSION)
-				{
-					this.cancelSessionId = event.session.id_session;
-					Alert.yesLabel = "Oui";
-					Alert.noLabel = "Non";
-					Alert.show("Voulez-vous supprimer cet séance ?",
-						"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);	
-					return;
-				}
-				
-				switch(typeAction)
-				{
-					case SessionHomeElementEvent.ACTION_JOIN_SESSION:
-					{
-						eventSession = new SessionEvent(SessionEvent.JOIN_SESSION);
-						break;
-					}
-					case SessionHomeElementEvent.ACTION_EDIT_SESSION:
-					{
-						eventSession = new SessionEvent(SessionEvent.EDIT_SESSION);
-						break;
-					}		
-				}
-				if(eventSession.session) {
-					eventSession.session = event.session;
-					dispatchEvent(eventSession);
-				} else {
-					logger.warn("The event {0} cannot be handled", event.typeAction);
-				}
-			}
-			*/
+		
 			
 // DELETE SESSION
 			private function deleteSessionConformed(event:CloseEvent):void{
@@ -709,43 +579,7 @@
 				}
 			}
 			
-			/**
-			 * set list users of the plateforme 
-			 */
-/* 			public function onLoadedAllUsers(event:SessionEvent):void
-			{
-				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
-				{
-					logger.info("Initialize the user list");
-					var listUsersPlateforme:ArrayCollection = new ArrayCollection()
-					var listUser:Array = event.listDate;
-					var nbrUser:int = listUser.length;
-					logger.info("Total number of users: {0}", nbrUser);
-					for(var nUser:int = 0; nUser < nbrUser; nUser++)
-					{
-						var userVO:UserVO = listUser[nUser];
-						//logger.debug("Initialize the user {0}", userVO.id_user);
-						
-						var user:User = new User(userVO);
-						// add user 
-						listUsersPlateforme.addItem(user);
 
-						
-						if(Model.getInstance().isUserConnected(user.id_user)) {
-							//logger.debug("The user {0} is already connected", userVO.id_user);
-							user.setStatus(ConnectionStatus.CONNECTED);
-						} 
-						//else
-						//	logger.debug("The user {0} is not connected", userVO.id_user);
-					}
-					// set list users the plateforme
-					Model.getInstance().setListUsersPlateforme(listUsersPlateforme);
-					
-					// showAllUser(listUsersPlateforme);
-					initializeUsers(listUsersPlateforme);
-					
-				}
-			} */
 			
 			
 			// new version with the list
@@ -804,7 +638,7 @@
         	private var keepAdmin:Boolean
  
             private function refreshUserList():void {
-            	
+
             	filterConnected = userMenu.dataProvider[0].menuitem.(@id =="filterConnected").@toggled == 'true';
             	filterNotConnected = userMenu.dataProvider[0].menuitem.(@id =="filterNotConnected").@toggled == 'true';
             	filterRecording = userMenu.dataProvider[0].menuitem.(@id =="filterRecording").@toggled == 'true';
@@ -1043,7 +877,6 @@
 								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
 								http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS5b3ccc516d4fbf351e63e3d118a9b90204-7e6b.html   
 							-->
-							<menuitem id="root" label="Affichage" data="top">
 								<menuitem id="sortMenu" label="Tri" data="top">
 									<menuitem label="Par statut" type="radio" id="sortByStatus"
 										groupName="radioGroup" toggled="true" />
@@ -1052,25 +885,25 @@
 									<menuitem label="Par ordre alphabétique" id="sortByLexicoOrder"
 										type="radio" groupName="radioGroup" />
 								</menuitem>
-								<menuitem type="separator" id="separator"/>
-								<menuitem label="Attendu" id="filterPending"
-									type="check" toggled="true" />
-								<menuitem label="En cours d'enregistrement" id="filterRecording"
-									type="check" toggled="true" />
-								<menuitem label="Connecté" id="filterConnected" type="check"
-									toggled="true" />
-								<menuitem label="Non connecté" id="filterNotConnected"
-									type="check" toggled="false" />
-								<menuitem type="separator" id="separator"/>
-								<menuitem label="Étudiants" id="filterRoleEtudiant" type="check"
-									toggled="true" />
-								<menuitem label="Tuteurs" id="filterRoleTuteur" type="check"
-									toggled="true" />
-								<menuitem label="Responsables de formation" id="filterRoleResponsable"
-									type="check" toggled="true" />
-								<menuitem label="Administrateurs" id="filterRoleAdministrateur"
-									type="check" toggled="true" />
-							</menuitem>
+								<menuitem id="filterMenu" label="Filtre" data="top">
+									<menuitem label="En salon" id="filterPending"
+										type="check" toggled="true" />
+									<menuitem label="En cours d'enregistrement" id="filterRecording"
+										type="check" toggled="true" />
+									<menuitem label="Connecté" id="filterConnected" type="check"
+										toggled="true" />
+									<menuitem label="Non connecté" id="filterNotConnected"
+										type="check" toggled="false" />
+									<menuitem type="separator" id="separator"/>
+									<menuitem label="Étudiants" id="filterRoleEtudiant" type="check"
+										toggled="true" />
+									<menuitem label="Tuteurs" id="filterRoleTuteur" type="check"
+										toggled="true" />
+									<menuitem label="Responsables de formation" id="filterRoleResponsable"
+										type="check" toggled="true" />
+									<menuitem label="Administrateurs" id="filterRoleAdministrateur"
+										type="check" toggled="true" />
+								</menuitem>
 						</fx:XMLList>
 					</mx:MenuBar>
 			

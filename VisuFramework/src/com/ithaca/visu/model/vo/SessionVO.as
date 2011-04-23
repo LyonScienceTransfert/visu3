@@ -79,5 +79,6 @@ package com.ithaca.visu.model.vo
 			public var status_session:int;
 			public var id_currentActivity:int;
 			public var listUser:Array;
+			public var attendeeIds:Array;
 	}
 }

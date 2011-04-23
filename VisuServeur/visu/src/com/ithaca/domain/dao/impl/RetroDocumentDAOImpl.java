@@ -105,6 +105,16 @@ public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroD
 				createParams("ownerId",ownerId, "sessionId",sessionId));
 	}
 
+	public Collection<RetroDocument> getRetroDocumentsByOwnerWithoutXML(Integer ownerId) throws SQLException {
+		return (List<RetroDocument>) getSqlMapClient().queryForList(
+				"rd.getDocumentsAndInviteeListAndSessionByOwnerIdWithoutXML",  ownerId);
+	}
+
+	public Collection<RetroDocument> getRetroDocumentsByInviteeWithoutXML(Integer inviteeId) throws SQLException {
+		return (List<RetroDocument>) getSqlMapClient().queryForList(
+				"rd.getDocumentsAndInviteeListAndSessionByInviteeIdWithoutXML", inviteeId);
+	}
+	
 	public Collection<RetroDocument> getRetroDocumentWithoutXMLByInviteeIdAndSessionId(
 			Integer inviteeId, Integer sessionId) throws SQLException {
 		return (List<RetroDocument>) getSqlMapClient().queryForList(
