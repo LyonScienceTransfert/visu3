@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.sessions.SessionListView")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="plan" />
+		<s:State name="session" />
+	</s:states>
+	<!-- SkinParts
+	name=filterText, type=spark.components.TextInput, required=false
+	name=newSessionButton, type=spark.components.Button, required=false
+	name=newPlanButton, type=spark.components.Button, required=false
+	name=sharingMineButton, type=spark.components.RadioButton, required=false
+	name=planList, type=spark.components.List, required=false
+	name=comingButton, type=spark.components.RadioButton, required=false
+	name=allButton, type=spark.components.RadioButton, required=false
+	name=sessionList, type=spark.components.List, required=false
+	name=sharingAllButton, type=spark.components.RadioButton, required=false
+	name=sharingOtherButton, type=spark.components.RadioButton, required=false
+	name=pastButton, type=spark.components.RadioButton, required=false
+	-->
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			private var filterAlpha:Number = 0.2;
+			[Bindable]
+			private var showFilterAreaBorder:Boolean = true;
+			[Bindable]
+			private var showFilterLabels:Boolean = true;
+			[Bindable]
+			private var showFilterButtons:Boolean = true;
+			[Bindable]
+			private var showFilterText:Boolean = true;
+			[Bindable]
+			private var showNewButton:Boolean = true;
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+		<s:Group width="100%">
+			<s:Rect visible="{showFilterAreaBorder}" width="100%" height="100%" radiusX="5">
+				<s:stroke >
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" alpha="0.5625" />
+						<s:GradientEntry color="0x000000" alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+				<s:fill>
+					<s:SolidColor color="0x000000" alpha="{filterAlpha}" />
+				</s:fill>
+			</s:Rect>
+			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+				<s:Label visible="{showFilterLabels}" includeInLayout="{showFilterLabels}" text="Filtre:"/>
+				<s:VGroup width="100%" verticalAlign="middle" includeIn="session">
+					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+								   id="allButton"
+								   label="Toutes les scéances" 
+								   selected="true"
+								   />
+					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+								   id="pastButton"
+								   label="Séances passées" 
+								   />
+					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+								   id="comingButton"
+								   label="Séances à venir" 
+								   />
+					
+				</s:VGroup>
+				
+				<s:VGroup width="100%" verticalAlign="middle" includeIn="plan">
+					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+								   id="sharingAllButton"
+								   label="Tous les plans de séance" 
+								   selected="true"
+								   />
+					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+								   id="sharingMineButton"
+								   label="Mes plans de séance (créés par moi)"
+								   toolTip="Affiche uniquement les plans de séance que j'ai créés"/>
+					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+								   id="sharingOtherButton"
+								   label="Autres plans de séance partagés (créés par d'autres)" 
+								   toolTip="Affiche uniquement les plans de séance créés et partagés par d'autres utilisateurs"/>	
+				</s:VGroup>	
+				<s:HGroup visible="{showFilterLabels}" includeInLayout="{showFilterLabels}" width="100%" verticalAlign="middle">
+					<s:Label includeInLayout="{showFilterText}" text="Contient le Texte:"/>
+					<s:TextInput includeInLayout="{showFilterText}" width="100%" text="" id="filterText"/>
+				</s:HGroup>
+			</s:VGroup>
+		</s:Group>
+		
+		<s:Group width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+				<s:HGroup verticalAlign="bottom" width="100%">
+					<s:Label>
+						<s:text.plan>Liste des plans:</s:text.plan>
+						<s:text.session>Liste des séances:</s:text.session>
+					</s:Label>
+					<s:Group visible="{showNewButton}" includeInLayout="{showNewButton}">
+						<s:Button id="newPlanButton" label="Nouveau plan" toolTip="Crée un nouveau plan de séance vide" includeIn="plan"/>
+					</s:Group>
+					<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide" includeIn="session"/>
+				</s:HGroup>
+				
+				<s:List id="planList" width="100%" height="100%" includeIn="plan">
+					<s:itemRenderer>
+						<fx:Component>
+							<s:ItemRenderer width="100%">
+								<fx:Script>
+									<![CDATA[
+										import com.ithaca.utils.VisuUtils;
+										import com.ithaca.visu.model.Model;
+									]]>
+								</fx:Script>
+								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
+									<s:Label width="100%" maxDisplayedLines="1" text="{data.theme}" toolTip="{data.theme}"/>
+									<mx:Spacer width="2%"/>
+									<s:HGroup width="48%" right="1">
+										<!-- move Model from here -->
+										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}"/>
+										<s:Label  width="45%" visible="{data.share}" text="(partagé)" right="1"/>
+									</s:HGroup>
+								</s:HGroup>
+							</s:ItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+				</s:List>
+				
+				<s:List id="sessionList" width="100%" height="100%" includeIn="session">
+					<s:itemRenderer>
+						<fx:Component>
+							<s:ItemRenderer width="100%">
+								<fx:Script>
+									<![CDATA[
+										import com.ithaca.utils.UtilFunction;
+										import com.ithaca.utils.VisuUtils;
+										import com.ithaca.visu.model.Model;
+									]]>
+								</fx:Script>
+								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
+									<s:Label width="23%" text="{UtilFunction.getDateMountHourMin(data.date_session)}" maxDisplayedLines="1"/>
+									<mx:Spacer width="2%"/>
+									<s:HGroup  width="75%" right="1">
+										<s:Label  width="100%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
+										<s:Label width="45%" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" maxDisplayedLines="1"/>
+									</s:HGroup>
+								</s:HGroup>
+							</s:ItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+				</s:List>
+			</s:VGroup>		
+		</s:Group>
+	</s:VGroup>
+</s:Skin>

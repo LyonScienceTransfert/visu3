@@ -1,0 +1,459 @@
+package com.ithaca.visu.controls.sessions
+{
+	import com.ithaca.visu.model.Activity;
+	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
+	import com.ithaca.visu.view.session.controls.SessionPlanEdit;
+	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+	
+	import flash.events.MouseEvent;
+	
+	import mx.collections.ArrayCollection;
+	import mx.containers.TabNavigator;
+	import mx.controls.Alert;
+	import mx.controls.LinkButton;
+	import mx.events.CloseEvent;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
+	
+	import spark.components.Button;
+	import spark.components.NavigatorContent;
+	import spark.components.supportClasses.SkinnableComponent;
+	
+	[SkinState("empty")]
+	[SkinState("planMine")]
+	[SkinState("planOther")]
+	[SkinState("sessionPast")]
+	[SkinState("sessionComing")]
+	
+	public class SessionDetailView extends SkinnableComponent
+	{
+		[SkinPart("true")]
+		public var deleteButtonSession:Button;
+		[SkinPart("true")]
+		public var deleteButtonPlan:Button;
+
+		
+		[SkinPart("true")]
+		public var tabNav:TabNavigator;
+		
+		[SkinPart("true")]
+		public var planTab:NavigatorContent;
+		[SkinPart("true")]
+		public var dateTab:NavigatorContent;
+		[SkinPart("true")]
+		public var recordTab:NavigatorContent;
+		
+		
+		[SkinPart("true")]
+		public var sharePlanButton:Button;
+		[SkinPart("true")]
+		public var createSessionButton:Button;
+		
+		[SkinPart("true")]
+		public var goRetroButton:LinkButton;
+		
+		
+		[SkinPart("true")]
+		public var sessionFormView:SessionEditFormView;
+		
+		[SkinPart("true")]
+		public var sessionSummaryView:SessionSummaryView;
+		
+		[SkinPart("true")]
+		public var sessionPlanEdit:SessionPlanEdit;
+		
+		[SkinPart("true")]
+		public var sessionBilanFormView:SessionBilanFormView;
+
+		
+		private var _listUser:ArrayCollection;
+		private var _listPresentUser:ArrayCollection;
+		
+		private var _activities:ArrayCollection;
+		
+		private var _profiles:Array;
+		
+		private var _session:Session;
+		private var _loggedUser:User;
+		private var sessionChanged:Boolean;
+		private var planedUsersChanged:Boolean;
+		private var presentUsersChanged:Boolean;
+		private var activitiesChanged:Boolean;
+		private var _durationRecorded:Number;
+		private var durationRecordedChange:Boolean;
+		
+		private var planSkin:Boolean;
+		private var planMineSkin:Boolean;
+		private var sessionPastSkin:Boolean;
+		private var emptySkin:Boolean;
+		
+		private var planSessionEditabled:Boolean;
+		
+		public function SessionDetailView()
+		{
+			super();
+			_listUser = new ArrayCollection();
+			_activities = new ArrayCollection();
+			_listPresentUser = new ArrayCollection();
+		}
+		
+		//_____________________________________________________________________
+		//
+		// Setter/getter
+		//
+		//_____________________________________________________________________
+
+		public function get session():Session
+		{
+			return _session;
+		}
+		
+		public function set session(value:Session):void
+		{
+			_session = value;
+			emptySkin = false;
+			
+			if( value == null)
+			{
+				emptySkin = true;
+				this.invalidateSkinState();
+			} else
+			{
+				// set users of the session
+				this.users = value.participants;
+				
+				planSkin = false;	
+				planMineSkin  = false;
+				sessionPastSkin = false;
+				// set plan session editabled
+				planSessionEditabled = false;
+				if(session.isModel)
+				{
+					planSkin = true;
+					if(session.id_user == loggedUser.id_user)
+					{ 
+						planMineSkin = true;
+						planSessionEditabled = true;
+					}
+				}else{
+					if(session.statusSession == SessionStatusEnum.SESSION_CLOSE && !session.isModel)
+					{
+						sessionPastSkin = true;
+					}else
+					{
+						planSessionEditabled = true;
+					}
+				}
+				invalidateSkinState();
+				
+				sessionChanged = true;
+				invalidateProperties();
+			}
+		}
+
+		public function get users():ArrayCollection
+		{
+			return _listUser;
+		}
+		
+		public function set users(value:ArrayCollection):void
+		{
+			if (_listUser == value) return;
+			
+			_listUser = value;
+			planedUsersChanged = true;
+			invalidateProperties();
+			
+			if (_listUser)
+			{
+				_listUser.addEventListener(CollectionEvent.COLLECTION_CHANGE, users_ChangeHandler);
+			}
+		}
+		
+		public function get loggedUser():User
+		{
+			return this._loggedUser;
+		}
+		
+		public function set loggedUser(value:User):void
+		{
+			this._loggedUser = value;
+		}
+		
+		public function get activities():ArrayCollection
+		{
+			return _activities;
+		}
+		public function set activities(value:ArrayCollection):void
+		{
+			if (_activities == value) return;
+			
+			if (_activities != null)
+			{
+				_activities.removeEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+			}
+			
+			_activities = value;
+			activitiesChanged = true;
+			invalidateProperties();
+			
+			if (_activities)
+			{
+				_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+			}
+
+		}
+		public function set allUsers(value:Array):void
+		{
+			if(sessionFormView != null)
+			{
+				sessionFormView.allUsers = value;
+			}
+		}
+		public function get listPresentUser():ArrayCollection
+		{
+			return _listPresentUser;
+		}
+		
+		public function set listPresentUser(value:ArrayCollection):void
+		{	
+			_listPresentUser = value;
+			presentUsersChanged = true;
+			invalidateProperties();
+		}
+		// set duration recorded in miliseconds 
+		public function set durationRecorded(value:Number):void
+		{
+			this._durationRecorded = value;
+			this.durationRecordedChange = true;
+			this.invalidateProperties();
+		}
+
+		public function set profiles(value:Array):void
+		{
+			this._profiles = value;
+			this.sessionFormView.profiles = value;
+		}
+		//_____________________________________________________________________
+		//
+		// Overriden Methods
+		//
+		//_____________________________________________________________________
+		
+		override protected function partAdded(partName:String, instance:Object):void
+		{
+			super.partAdded(partName,instance);
+			if (instance == tabNav)
+			{	
+				// add plan the session
+				sessionPlanEdit = new SessionPlanEdit();
+				sessionPlanEdit.activities = null;
+				sessionPlanEdit.percentHeight = 100;
+				sessionPlanEdit.percentWidth = 100;
+				sessionPlanEdit.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
+				planTab = new NavigatorContent();
+				planTab.label = "Plan de séance";
+				planTab.addElement(sessionPlanEdit);
+				tabNav.addChild(planTab);
+				// add date and users
+				sessionFormView = new SessionEditFormView();
+				sessionFormView.percentHeight = 100;
+				sessionFormView.percentWidth = 100;
+				sessionFormView.addEventListener(SessionEditEvent.UPDATE_DATE_TIME, onUpdateDateTime);
+				dateTab = new NavigatorContent();
+				dateTab.label = "Dates et participants";
+				dateTab.addElement(sessionFormView);
+				tabNav.addChild(dateTab);
+				// add bilan
+				sessionBilanFormView = new SessionBilanFormView();
+				sessionBilanFormView.percentHeight = 100;
+				sessionBilanFormView.percentWidth = 100;
+				recordTab = new NavigatorContent();
+				recordTab.label = "Compte-rendu de séance";
+				recordTab.addElement(sessionBilanFormView);
+				tabNav.addChild(recordTab);
+			}
+			if (instance == deleteButtonSession)
+			{
+				deleteButtonSession.addEventListener(MouseEvent.CLICK, onDeleteSession);
+			}
+			if (instance == deleteButtonPlan)
+			{
+				deleteButtonPlan.addEventListener(MouseEvent.CLICK, onDeletePlan);
+			}
+			if (instance == sessionSummaryView)
+			{
+				sessionSummaryView.loggedUser = this.loggedUser;
+				sessionSummaryView.addEventListener(SessionEditEvent.UPDATE_THEME, onUpdateTheme);
+			}
+
+		}
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();	
+			if(sessionChanged)
+			{
+				sessionChanged = false;
+				sessionSummaryView.session = this.session;
+				sessionFormView.session = this.session;	
+				sessionBilanFormView.session = this.session;
+			}
+			
+			if(activitiesChanged)
+			{
+				activitiesChanged = false;
+				
+				sessionPlanEdit.setEditabled(planSessionEditabled);
+				sessionPlanEdit.activities = activities;
+				checkDurationPlaned()
+			}
+			
+			if(presentUsersChanged)
+			{
+				presentUsersChanged = false;
+				sessionSummaryView.listPresentUser = listPresentUser;
+				sessionBilanFormView.listPresentUser = listPresentUser;
+			}
+
+			if(durationRecordedChange)
+			{
+				durationRecordedChange = false;
+				sessionSummaryView.durationRecorded = this._durationRecorded;
+				sessionBilanFormView.durationRecorded = this._durationRecorded;
+			}
+		}
+		//_____________________________________________________________________
+		//
+		// Handlers
+		//
+		//_____________________________________________________________________
+		
+		protected function users_ChangeHandler(event:CollectionEvent):void
+		{
+			planedUsersChanged = true;
+			invalidateProperties();
+		}
+		protected function activities_ChangeHandler(event:CollectionEvent):void
+		{
+			activitiesChanged = true;
+			invalidateProperties();
+		}
+		
+		private function checkDurationPlaned():void
+		{
+			var duration:int = 0;
+			for each(var activity:Activity in this.activities)
+			{
+				duration += activity.duration;
+			}
+			sessionSummaryView.durationPlaned = duration;
+		}
+		
+		override protected function getCurrentSkinState():String
+		{
+			var skinName:String;
+			if(!enabled)
+			{
+				skinName = "disable";
+			}else if(emptySkin){skinName = "empty"}
+			else if(planSkin)
+			{
+				  if(planMineSkin){skinName = "planMine"}else{skinName = "planOther"}
+			}else if(sessionPastSkin){skinName = "sessionPast"} else{skinName = "sessionComing"};
+
+			return skinName;
+		}
+		
+		
+		public function updateSkin(value:String):void
+		{
+			var planEditabled:Boolean = false;
+			switch (value)
+			{
+				case "planMine" :
+				case "planOther" :
+					dateTab.enabled = false;
+					recordTab.enabled = false;
+					tabNav.selectedIndex = 0;
+					break;
+				case "sessionComing" :
+					recordTab.enabled = false;
+					dateTab.enabled = true;
+					planEditabled = true;
+					break;
+				case "sessionPast" :
+					recordTab.enabled = true;
+					dateTab.enabled = false;
+					break;
+			}
+			sessionPlanEdit.setEditabled(planEditabled);
+		}
+		//_____________________________________________________________________
+		//
+		// Listeners
+		//
+		//_____________________________________________________________________
+		
+// ADD SESSION
+		private function onPreAddSession(event:SessionEditEvent):void
+		{
+			var addSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_SESSION);
+			_session.date_session = new Date();
+			addSession.session = session;
+			addSession.isModel = event.isModel;
+			this.dispatchEvent(addSession);
+		}
+// DELETE SESSION
+		private function onDeleteSession(event:MouseEvent):void
+		{
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous supprimer cet séance ?",
+				"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);
+		}
+// DELETE PLAN
+		private function onDeletePlan(event:MouseEvent):void
+		{
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous supprimer cet plan de séance ?",
+				"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);
+		}
+		
+		private function deleteSessionConformed(event:CloseEvent):void{
+			if( event.detail == Alert.YES)
+			{
+				var sessionDeleteEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_SESSION);
+				sessionDeleteEvent.session = this.session;
+				this.dispatchEvent(sessionDeleteEvent);
+			}
+		}
+// UPDATE DATE TIME
+		private function onUpdateDateTime(event:SessionEditEvent):void
+		{
+			var date:Date = event.date;
+			// FIXME : for update the date on renderer have to change object(not just time in the objet)
+			session.date_session = null;
+			session.date_session = date;
+			sessionSummaryView.dateSession = date;
+			updateSession();
+		}
+// UPDAYE THEME
+		private function onUpdateTheme(event:SessionEditEvent):void
+		{
+			updateSession();
+		}
+// UPDATE SESSION
+		private function updateSession():void
+		{
+			var updateSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_SESSION);
+			updateSession.session = this.session;
+			this.dispatchEvent(updateSession);
+		}
+	}
+	
+	
+}

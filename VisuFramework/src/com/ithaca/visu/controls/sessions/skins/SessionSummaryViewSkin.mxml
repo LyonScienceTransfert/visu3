@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.sessions.SessionSummaryView")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="planMine" />
+		<s:State name="planOther" />
+		<s:State name="sessionPast" />
+		<s:State name="sessionComing" />
+	</s:states>
+
+	<s:HGroup width="100%" height="100%" horizontalAlign="left">
+
+		<mx:Form paddingLeft="5" paddingRight="5" 
+				 paddingTop="5" paddingBottom="5" width="50%">
+			
+			<mx:FormItem width="100%" label="Thème:" >
+				<s:TextInput id="themeLabel" borderVisible.planOther="false" borderVisible.sessionPast="false" width="100%" text="Le Brésil" editable.sessionPast="false"  editable.planOther="false" editable.planMine="true" editable.sessionComing="true"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Propriétaire:" width="100%">
+				<s:Label id="ownerLabel" width="100%" text="Damien Cram"/>
+			</mx:FormItem>
+			<mx:FormItem 
+				label="Date de séance:" 
+				width="100%" includeIn="sessionPast">
+				<s:Label  id="dateRecordingLabel" width="100%" 
+						 text="25 Fév. 2011, à 14h18"/>
+			</mx:FormItem>
+			
+			<mx:FormItem  label="Partagé:" width="100%" includeIn="planMine,planOther">
+				<s:Label id="partageLabel" width="100%" text="Oui"/>
+			</mx:FormItem>
+			
+		</mx:Form>
+		
+		<mx:Form paddingLeft="5" paddingRight="5" 
+				 paddingTop="5" paddingBottom="5" includeIn="sessionComing,sessionPast" width="50%">
+			
+			<mx:FormItem 
+				label="Date prévue:" 
+				width="100%" includeIn="sessionComing,sessionPast">
+				<s:Label  id="datePlanedLabel" width="100%" 
+						 text="25 Fév. 2011, à 14h00"/>
+			</mx:FormItem>
+			
+			<mx:FormItem 
+				label="Durée prévue:" 
+				width="100%" includeIn="sessionComing">
+				<s:Label id="durationPlanedLabel" width="100%" 
+						 text="1 h 30 min"/>
+			</mx:FormItem>
+			
+			<mx:FormItem 
+				label="Nombre de participants:" 
+				width="100%" includeIn="sessionComing">
+				<s:Label id="nbrUsersLanel" width="100%" 
+						 text="4"/>
+			</mx:FormItem>
+			
+			<mx:FormItem 
+				label="Durée réelle/prévue:" 
+				width="100%" includeIn="sessionPast">
+				<s:Label id="durationRecordPlanedLabel" width="100%" 
+						 text="1 h 27 min / 1 h 30 min"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Nombre de participants réels/prévus:" 
+						 width="100%" includeIn="sessionPast">
+				<s:Label id="nbrUsersRecordPlanedLabel" width="100%" text="3/4"/>
+			</mx:FormItem>
+			
+			<mx:FormItem 
+				label="Nombre de bilans pour cette séance:"
+				width="100%" includeIn="sessionPast">
+				<s:Label id="nbrBilansLabel" width="100%" text="2"/>
+			</mx:FormItem>
+		</mx:Form>
+	</s:HGroup>
+</s:Skin>
