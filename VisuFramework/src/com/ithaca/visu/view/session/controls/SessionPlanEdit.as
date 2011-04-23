@@ -93,10 +93,10 @@ package com.ithaca.visu.view.session.controls
 		public var keywordGroup:Group;*/
 		
 		[SkinPart("true")] 
-		public var buttonCreateSessionByTemplate:Button;
+		public var sharePlanButton:Button;
 
 		[SkinPart("true")] 
-		public var buttonExportSession:Button;
+		public var createSessionButton:Button;
 		
 		private var editabled:Boolean;
 		private var _activities:ArrayCollection;
@@ -116,31 +116,28 @@ package com.ithaca.visu.view.session.controls
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == buttonCreateSessionByTemplate)
+			if (instance == createSessionButton)
 			{
-				buttonCreateSessionByTemplate.addEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
+				createSessionButton.addEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
 			}
 
-			if (instance == buttonExportSession)
+			if (instance == sharePlanButton)
 			{
-				buttonExportSession.addEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
+				sharePlanButton.addEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
 			}
-			/*if (instance == comboBoxActivity)
-			{
-				comboBoxActivity.labelFunction = setLabelComboboxActivity;
-			}*/
+
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
 			super.partRemoved(partName,instance);
-			if (instance == buttonCreateSessionByTemplate)
+			if (instance == createSessionButton)
 			{
-				buttonCreateSessionByTemplate.removeEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
+				createSessionButton.removeEventListener(MouseEvent.CLICK, onMouseClickButtonCreateSessionByTemplate);
 			}
 			
-			if (instance == buttonExportSession)
+			if (instance == sharePlanButton)
 			{
-				buttonExportSession.removeEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
+				sharePlanButton.removeEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
 			}
 
 		}
