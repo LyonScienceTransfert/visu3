@@ -64,10 +64,16 @@ package com.ithaca.utils
 {
 	import com.ithaca.documentarisation.RetroDocumentConst;
 	
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.utils.URLUtil;
 
+	
 	public class UtilFunction
 	{
+		
+		private static var fxgt:_FxGettext;
+		
 		public static function isEmptyMessage(value:String):Boolean
 		{
 			var nbrChar:int = value.length;
@@ -103,6 +109,44 @@ package com.ithaca.utils
 			return heureString+":"+minuteString;
 		}
 		
+		// example return : 22 Fev 16:00
+		public static function getDateMountHourMin(date:Date):String
+		{
+			var day:int = date.getDate();
+			var dayString:String = day.toString();
+			if(day < 10){ dayString = "0"+dayString;};
+			var mounthStringBig:String = getMonthString(date).toLowerCase();
+			var mounthStringShot:String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
+			var result:String = dayString + " "+mounthStringShot+" "+ getHeurMinDate(date);
+			return result;
+		}
+		
+		// example return : 22 Fev. 2011, à 16:00
+		public static function getDateMountYearHourMin(date:Date):String
+		{
+			var day:int = date.getDate();
+			var dayString:String = day.toString();
+			if(day < 10){ dayString = "0"+dayString;};
+			var mounthStringBig:String = getMonthString(date).toLowerCase();
+			var mounthStringShot:String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
+			var year:String = date.getFullYear().toString();
+			var result:String = dayString + " "+mounthStringShot+". "+ year+", à "+ getHeurMinDate(date);
+			return result;
+		}
+		// param : minutes
+		// example return 22 h 15 min
+		//
+		public static function getHourMin(value:int):String
+		{
+			var hourString:String = "0";
+			var hour:int = value/60;
+			if(hour > 0){ hourString = hour.toString() };
+			var minute:int = value - hour*60; 	
+			var minuteString:String = minute.toString()
+			if(minute < 10 ){minuteString = "0"+minuteString;}
+			var result:String = hourString + " h " + minuteString+ " min";
+			return result;
+		}
 		public static function checkVideoId(value:String):Boolean
 		{
 			var ar:Array=value.split('?');
@@ -138,6 +182,50 @@ package com.ithaca.utils
 			var result:String = root.toXMLString();
 			result = "<?xml version='1.0' encoding='UTF-8'?>" + result;
 			return result;
+		}
+		public static function getMonthString(date:Date):String
+		{
+			var monthString:String = "";
+			var month:Number = date.getMonth();
+			switch (month){
+				case 0:
+					monthString = "JANVIER";
+					break;
+				case 1:
+					monthString = "FÉVRIER";
+					break;
+				case 2:
+					monthString = "MARS";
+					break;
+				case 3:
+					monthString = "AVRIL";
+					break;
+				case 4:
+					monthString = "MAI";
+					break;
+				case 5:
+					monthString = "JUIN";
+					break;
+				case 6:
+					monthString = "JUILLET";
+					break;
+				case 7:
+					monthString = "AOÛT";
+					break;
+				case 8:
+					monthString = "SEPTEMBRE";
+					break;
+				case 9:
+					monthString = "OCTOBRE";
+					break;
+				case 10:
+					monthString = "NOVEMBRE";
+					break;
+				case 11:
+					monthString = "DÉCEMBRE";
+					break;
+			}
+			return monthString;
 		}
 		
 	}
