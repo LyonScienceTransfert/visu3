@@ -10,18 +10,14 @@
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.controls.sessions.SessionDetailView;
+		import com.ithaca.visu.controls.sessions.SessionManagerView;
 		import com.ithaca.visu.events.SessionEvent;
 		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.UserEvent;
 		import com.ithaca.visu.events.VisuActivityElementEvent;
 		import com.ithaca.visu.events.VisuActivityEvent;
 		import com.ithaca.visu.model.Model;
-		import com.ithaca.visu.view.session.SessionManagement;
-		import com.ithaca.visu.view.session.controls.SessionDetail;
 		import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-		
-		import modules.SessionModule;
 		
 		import mx.events.FlexEvent;
 		
@@ -109,12 +105,6 @@
 										method="error" arguments="{[currentEvent]}"/>
 				</mate:faultHandlers>
 			</mate:RemoteObjectInvoker>
-			<!--<mate:RemoteObjectInvoker  instance="{remoteUser}" method="getUsersFromSession" arguments="{event.sessionId}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="onLoadListUsersSession" arguments="{[resultObject, event.sessionId]}"/>
-				</mate:resultHandlers>
-			</mate:RemoteObjectInvoker>-->
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS}">
@@ -129,19 +119,6 @@
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
 <!-- SESSION USERS -->
-<!--		<mate:EventHandlers type="{SessionUserEvent.ADD_SESSION_USER}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteSessionUser}" method="addSessionUser" arguments="{event.newSessionUser}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onAddSessionUser" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>-->
-		
-		
 		<mate:EventHandlers type="{SessionUserEvent.ADD_SESSION_USER}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.addSessionUser" arguments="{[event.newSessionUser]}"/>     				
@@ -173,18 +150,7 @@
 				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>	
-<!--
-		<mate:EventHandlers type="{SessionUserEvent.REMOVE_SESSION_USER}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteSessionUser}" method="removeSessionUser" arguments="{event.newSessionUser}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onRemoveSessionUser" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>-->
+
 <!-- USERS -->
 		<mate:EventHandlers type="{SessionEditEvent.LOAD_LIST_USERS}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
@@ -221,6 +187,22 @@
 				<rtmp:resultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}"
 										method="onAddSession" 
+										arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>			
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.ADD_EMPTY_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId]}"/>     				
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="onAddEmptySession" 
 										arguments="{[currentEvent.data]}"/>
 				</rtmp:resultHandlers>			
 				<rtmp:faultHandlers>
@@ -336,7 +318,7 @@
 		<mate:EventHandlers type="{SessionEvent.ADD_CLONED_ACTIVITY_ELEMENT}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="addActivityElement" arguments="{event.activityElementVO}">
 				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onAddClonedActivityElement" arguments="{[resultObject]}"/>
+					<mate:MethodInvoker generator="{SessionManager}" method="onAddClonedActivityElement" arguments="{[resultObject, event.sessionId]}"/>
 				</mate:resultHandlers>
 				<mate:faultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}"
@@ -352,32 +334,30 @@
 					<mate:MethodInvoker generator="{SessionManager}"
 										method="loadListPresentUserInSession" 
 										arguments="{[currentEvent.data]}" />
-				</rtmp:resultHandlers>
-				
+				</rtmp:resultHandlers>			
 				<rtmp:faultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}" 
 										method="error" 
 										arguments="{[currentEvent]}"/>
 				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
+			
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselByTypeSessionExitSessionPause"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
-		
-		<mate:Injectors target="{SessionManager}">
-			<mate:PropertyInjector targetKey="model" source="{Model.getInstance()}" />
-		</mate:Injectors>
-		
-		<mate:Injectors target="{SessionManagement}" >
+				
+		<mate:Injectors target="{SessionManagerView}" >
 			<mate:PropertyInjector source="{SessionManager}"
 								   sourceKey="sessions"
 								   targetKey="sessions"
 								   />
 		</mate:Injectors>
-		<mate:Injectors target="{SessionDetail}">
+		<mate:Injectors target="{SessionDetailView}">
 			<mate:PropertyInjector source="{SessionManager}"
 								   targetKey="activities" sourceKey="listActivities"/>
 		</mate:Injectors>
-		
-		<mate:Injectors targets="{[SessionDetail]}">
+		<mate:Injectors targets="{[SessionDetailView]}">
 			<mate:PropertyInjector source="{Model.getInstance()}"
 								   sourceKey="profiles"
 								   targetKey="profiles"
