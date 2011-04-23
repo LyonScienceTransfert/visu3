@@ -14,7 +14,45 @@
 @namespace ws 		"ws.tink.spark.containers.*";
 @namespace documentarisation 		"com.ithaca.documentarisation.*";
 @namespace utils 		"com.ithaca.utils.*";
+@namespace video 		"com.ithaca.visu.view.video.*";
 
+sessions|SessionBilanFormView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionBilanFormViewSkin");	
+}
+sessions|SessionEditFormView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionEditFormViewSkin");	
+}
+sessions|SessionSummaryView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionSummaryViewSkin");	
+}
+sessions|SessionDetailView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionDetailViewSkin");	
+}
+sessions|SessionListView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionListViewSkin");	
+}
+sessions|SessionManagerView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionManagerViewSkin");	
+}
+
+video|VideoScreen
+{
+	skin-class: ClassReference("com.ithaca.visu.view.video.skins.VideoScreenSkin");
+}
+video|VideoPanel
+{
+	skin-class: ClassReference("com.ithaca.visu.view.video.skins.VideoPanelSkin");
+}
+video|VideoItem
+{
+	skin-class: ClassReference("com.ithaca.visu.view.video.skins.VideoItemSkin");
+}
 
 utils|VisuToolTip
 {
@@ -188,6 +226,10 @@ user|MessageUser
 	skin-class: ClassReference("com.ithaca.visu.view.user.skins.MessageUserSkin");
 }
 
+sessionView|SessionManagement
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionManagementSkin");
+}
 sessionView|SessionViewSalonRetro
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonRetroSkin");
