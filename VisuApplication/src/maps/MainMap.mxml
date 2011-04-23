@@ -124,6 +124,7 @@
 			<rtmp:CallbackRegistrator action="checkRetroDocument" target="{MainManager}" method="onCheckRetroDocument"/>
 			<rtmp:CallbackRegistrator action="checkConnectedClients" target="{MainManager}" method="getConnectedClients"/>
 			<rtmp:CallbackRegistrator action="checkClientInfo" target="{MainManager}" method="onCheckClientInfo"/>
+			<rtmp:CallbackRegistrator action="checkListObselSessioExitSessionPause" target="{MainManager}" method="onCheckListObselSessioExitSessionPause"/>
 <!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
         </mate:EventHandlers>
 
