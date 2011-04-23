@@ -82,9 +82,11 @@ package com.ithaca.visu.view.session.controls.event
 		public static const ADD_ACTIVITY_ELEMENT:String="addActivityElement";
 		
 		public static const UPDATE_DATE_TIME:String="updateDateTime";
+		public static const UPDATE_THEME:String="updateTheme";
 		public static const UPDATE_SESSION:String="updateSession";
 		public static const PRE_ADD_SESSION:String="preAddSession";
 		public static const ADD_SESSION:String="addSession";
+		public static const ADD_EMPTY_SESSION:String="addEmptySession";
 		public static const PRE_DELETE_SESSION:String="preDeleteSession";
 		
 		public static const PRE_DELETE_SESSION_USER:String="preDeleteSessionUser";
@@ -102,6 +104,7 @@ package com.ithaca.visu.view.session.controls.event
 		public var user:User;
 		public var isModel:Boolean = false;
 		public var listUser:Array;
+		public var date:Date;
 		
 		public function SessionEditEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

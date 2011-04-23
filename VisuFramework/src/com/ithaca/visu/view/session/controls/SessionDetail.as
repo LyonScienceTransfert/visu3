@@ -625,7 +625,7 @@ package com.ithaca.visu.view.session.controls
 				this._listUser = null;
 				this.usersChanged = true;
 				this.invalidateProperties();
-				// TODO set state "empty"
+
 			}
 		}	
 // USER
