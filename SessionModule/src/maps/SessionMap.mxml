@@ -346,7 +346,11 @@
 				<mate:Request action="obselInfo.getObselByTypeSessionExitSessionPause"   arguments="{[event.sessionId]}" />	
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
-				
+		
+		<mate:Injectors target="{SessionManager}">
+			<mate:PropertyInjector targetKey="model" source="{Model.getInstance()}" />
+		</mate:Injectors>
+		
 		<mate:Injectors target="{SessionManagerView}" >
 			<mate:PropertyInjector source="{SessionManager}"
 								   sourceKey="sessions"
