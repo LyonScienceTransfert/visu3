@@ -117,11 +117,11 @@
 									]]>
 								</fx:Script>
 								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
-									<s:Label width="100%" maxDisplayedLines="1" text="{data.theme}" toolTip="{data.theme}"/>
+									<s:Label width="50%" maxDisplayedLines="1" text="{data.theme}" toolTip="{data.theme}"/>
 									<mx:Spacer width="2%"/>
 									<s:HGroup width="48%" right="1">
 										<!-- move Model from here -->
-										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}"/>
+										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" toolTip="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}"/>
 										<s:Label  width="45%" visible="{data.share}" text="(partagé)" right="1"/>
 									</s:HGroup>
 								</s:HGroup>
@@ -145,8 +145,8 @@
 									<s:Label width="23%" text="{UtilFunction.getDateMountHourMin(data.date_session)}" maxDisplayedLines="1"/>
 									<mx:Spacer width="2%"/>
 									<s:HGroup  width="75%" right="1">
-										<s:Label  width="100%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
-										<s:Label width="45%" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" maxDisplayedLines="1"/>
+										<s:Label  width="65%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
+										<s:Label width="35%" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" toolTip="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" maxDisplayedLines="1"/>
 									</s:HGroup>
 								</s:HGroup>
 							</s:ItemRenderer>
