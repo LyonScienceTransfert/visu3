@@ -213,10 +213,10 @@
 								var key:String = kvPair.substring(0,index);
 								var value:String = kvPair.substring(index+1);
 								params[key] = value;
-								if(params.hasOwnProperty('debug'))
+								if(params.hasOwnProperty('debugFlux'))
 								{
 						
-									if(params['debug']=='true')
+									if(params['debugFlux']=='true')
 										Model.getInstance().setModeDebug(true);
 								}
 								if(params.hasOwnProperty('frameratesplit'))
