@@ -1,0 +1,7 @@
+RetrospectionModule/.settings/
+VisuFramework/bin/
+VisuServeur/visu/.settings/org.eclipse.wst.ws.service.policy.prefs
+VisuServeur/visu/build/
+comp-info.properties
+deploy/
+
