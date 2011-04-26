@@ -175,7 +175,7 @@ package com.ithaca.visu.controls.sessions
 				themeLabel.text = session.theme;
 				themeLabel.toolTip = session.theme;
 				// FIXME : remove model
-				ownerLabel.text = VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(session.id_user));
+				ownerLabel.text = VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(session.id_user),true);
 				if(partageLabel != null){ partageLabel.text = "?"};
 				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMountYearHourMin(session.date_session)};
 				if(dateRecordingLabel != null){ dateRecordingLabel.text = UtilFunction.getDateMountYearHourMin(session.date_start_recording)};
