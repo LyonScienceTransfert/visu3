@@ -125,7 +125,9 @@
 			<rtmp:CallbackRegistrator action="checkConnectedClients" target="{MainManager}" method="getConnectedClients"/>
 			<rtmp:CallbackRegistrator action="checkClientInfo" target="{MainManager}" method="onCheckClientInfo"/>
 			<rtmp:CallbackRegistrator action="checkListObselSessioExitSessionPause" target="{MainManager}" method="onCheckListObselSessioExitSessionPause"/>
-<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
+			<rtmp:CallbackRegistrator action="bilanListRetrieved" target="{MainManager}" method="onBilanListRetrieved"/>
+			<rtmp:CallbackRegistrator action="sessionObselListRetrieved" target="{MainManager}" method="onSessionObselListRetrieved"/>
+			<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
