@@ -23,25 +23,9 @@
 	name=sharingOtherButton, type=spark.components.RadioButton, required=false
 	name=pastButton, type=spark.components.RadioButton, required=false
 	-->
-	<fx:Script>
-		<![CDATA[
-			[Bindable]
-			private var filterAlpha:Number = 0.2;
-			[Bindable]
-			private var showFilterAreaBorder:Boolean = true;
-			[Bindable]
-			private var showFilterLabels:Boolean = true;
-			[Bindable]
-			private var showFilterButtons:Boolean = true;
-			[Bindable]
-			private var showFilterText:Boolean = true;
-			[Bindable]
-			private var showNewButton:Boolean = true;
-		]]>
-	</fx:Script>
 	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 		<s:Group width="100%">
-			<s:Rect visible="{showFilterAreaBorder}" width="100%" height="100%" radiusX="5">
+			<s:Rect id="filterAreaBorder" width="100%" height="100%" radiusX="5">
 				<s:stroke >
 					<s:LinearGradientStroke rotation="90" weight="1">
 						<s:GradientEntry color="0x000000" alpha="0.5625" />
@@ -49,46 +33,44 @@
 					</s:LinearGradientStroke>
 				</s:stroke>
 				<s:fill>
-					<s:SolidColor color="0x000000" alpha="{filterAlpha}" />
+					<s:SolidColor id="solidColorFilter" color="0x000000"/>
 				</s:fill>
 			</s:Rect>
 			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-				<s:Label visible="{showFilterLabels}" includeInLayout="{showFilterLabels}" text="Filtre:"/>
-				<s:VGroup width="100%" verticalAlign="middle" includeIn="session">
-					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+				<s:Label  id="filterLabel" text="Filtre:"/>
+				<s:VGroup id="filterSessionButtonsGroup" width="100%" verticalAlign="middle" includeIn="session">
+					<s:RadioButton groupName="timeFilter" 
 								   id="allButton"
 								   label="Toutes les scéances" 
 								   selected="true"
 								   />
-					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+					<s:RadioButton groupName="timeFilter" 
 								   id="pastButton"
 								   label="Séances passées" 
 								   />
-					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="timeFilter" 
+					<s:RadioButton groupName="timeFilter" 
 								   id="comingButton"
 								   label="Séances à venir" 
 								   />
-					
 				</s:VGroup>
-				
-				<s:VGroup width="100%" verticalAlign="middle" includeIn="plan">
-					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+				<s:VGroup id="filterPlanButtonsGroup" width="100%" verticalAlign="middle" includeIn="plan">
+					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingAllButton"
 								   label="Tous les plans de séance" 
 								   selected="true"
 								   />
-					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingMineButton"
 								   label="Mes plans de séance (créés par moi)"
 								   toolTip="Affiche uniquement les plans de séance que j'ai créés"/>
-					<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
+					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingOtherButton"
 								   label="Autres plans de séance partagés (créés par d'autres)" 
 								   toolTip="Affiche uniquement les plans de séance créés et partagés par d'autres utilisateurs"/>	
 				</s:VGroup>	
-				<s:HGroup visible="{showFilterLabels}" includeInLayout="{showFilterLabels}" width="100%" verticalAlign="middle">
-					<s:Label includeInLayout="{showFilterText}" text="Contient le Texte:"/>
-					<s:TextInput includeInLayout="{showFilterText}" width="100%" text="" id="filterText"/>
+				<s:HGroup id="filterGroup" width="100%" verticalAlign="middle">
+					<s:Label  text="Contient le Texte:"/>
+					<s:TextInput width="100%" text="" id="filterText"/>
 				</s:HGroup>
 			</s:VGroup>
 		</s:Group>
@@ -100,10 +82,10 @@
 						<s:text.plan>Liste des plans:</s:text.plan>
 						<s:text.session>Liste des séances:</s:text.session>
 					</s:Label>
-					<s:Group visible="{showNewButton}" includeInLayout="{showNewButton}">
+					<s:Group id="newPlanSessionButtonsGroup">
 						<s:Button id="newPlanButton" label="Nouveau plan" toolTip="Crée un nouveau plan de séance vide" includeIn="plan"/>
+						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide" includeIn="session"/>
 					</s:Group>
-					<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide" includeIn="session"/>
 				</s:HGroup>
 				
 				<s:List id="planList" width="100%" height="100%" includeIn="plan">
@@ -121,7 +103,7 @@
 									<mx:Spacer width="2%"/>
 									<s:HGroup width="48%" right="1">
 										<!-- move Model from here -->
-										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" toolTip="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}"/>
+										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}"/>
 										<s:Label  width="45%" visible="{data.share}" text="(partagé)" right="1"/>
 									</s:HGroup>
 								</s:HGroup>
@@ -146,7 +128,7 @@
 									<mx:Spacer width="2%"/>
 									<s:HGroup  width="75%" right="1">
 										<s:Label  width="65%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
-										<s:Label width="35%" text="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" toolTip="{VisuUtils.userPrenomPointNom(Model.getInstance().getUserPlateformeByUserId(data.id_user))}" maxDisplayedLines="1"/>
+										<s:Label width="35%" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" maxDisplayedLines="1"/>
 									</s:HGroup>
 								</s:HGroup>
 							</s:ItemRenderer>
