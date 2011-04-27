@@ -41,19 +41,6 @@ sessions|SessionManagerView
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionManagerViewSkin");	
 }
 
-video|VideoScreen
-{
-	skin-class: ClassReference("com.ithaca.visu.view.video.skins.VideoScreenSkin");
-}
-video|VideoPanel
-{
-	skin-class: ClassReference("com.ithaca.visu.view.video.skins.VideoPanelSkin");
-}
-video|VideoItem
-{
-	skin-class: ClassReference("com.ithaca.visu.view.video.skins.VideoItemSkin");
-}
-
 utils|VisuToolTip
 {
 	skin-class: ClassReference("com.ithaca.utils.skins.VisuToolTipSkin");
