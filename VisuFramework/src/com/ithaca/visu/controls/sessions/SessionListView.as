@@ -3,7 +3,7 @@ package com.ithaca.visu.controls.sessions
 	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-	
+	import com.lyon2.controls.utils.TimeUtils;
 	import flash.events.MouseEvent;
 	
 	import mx.controls.Alert;
@@ -22,6 +22,8 @@ package com.ithaca.visu.controls.sessions
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
 	import spark.primitives.Rect;
+	import mx.collections.Sort;
+	
 	
 	[Event(name="selectSession",type="com.ithaca.visu.events.SessionListViewEvent")]
 	[Event(name="changeTextFilter",type="com.ithaca.visu.events.SessionListViewEvent")]
@@ -323,6 +325,10 @@ package com.ithaca.visu.controls.sessions
 			if(instance == sessionList)
 			{
 				sessionList.addEventListener(IndexChangeEvent.CHANGE, onChangeSession);
+				//var sort:Sort = new Sort(); 	
+				//sort.compareFunction = TimeUtils.compareDates;
+				//sessionList.dataProvider.sort = sort;
+	            
 			}
 			if(instance == filterText)
 			{
@@ -334,6 +340,8 @@ package com.ithaca.visu.controls.sessions
 		{
 			return !enabled? "disable" : plan? "plan" : "session";
 		}
+		
+		
 		//_____________________________________________________________________
 		//
 		// Listeners
