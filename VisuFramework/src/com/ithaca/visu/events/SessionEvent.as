@@ -54,6 +54,7 @@ public class SessionEvent extends Event
 	static public const GET_SESSION : String = 'getSession';
 	static public const GET_SESSION_SALON_RETRO : String = 'getSessionSalonRetro';
 	static public const LOAD_LIST_OBSEL_RETRO : String = 'loadListObselRetro';
+	static public const LOAD_LIST_RETRODOCUMENT_SESSION : String = 'loadListRetrodocumentSession';
 	static public const LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION : String = 'loadListClosedSessionSalonRetrospection';
 	static public const GET_LIST_OBSEL : String = 'getListObsel';
 	static public const GET_LIST_SESSION : String = 'getListSession';
@@ -82,7 +83,7 @@ public class SessionEvent extends Event
 	public var durationSessionRetro : Number;
 	public var traceId : String;
 	public var dateStartRecording : Date;
-	
+	public var nbrRetrodocument:int;
 
 	// constructor
 	public function SessionEvent(type : String,
