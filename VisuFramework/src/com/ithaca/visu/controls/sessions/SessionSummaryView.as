@@ -52,6 +52,8 @@ package com.ithaca.visu.controls.sessions
 		private var durationPlanedChange:Boolean;
 		private var _durationRecorded:int = 0;
 		private var durationRecordedChange:Boolean;
+		private var _nbrRetrodocument:int = 0;
+		private var nbrRetrodocumentChange:Boolean;
 		private var dateSessionChange:Boolean;
 		
 		private var _listPresentUser:ArrayCollection;
@@ -140,6 +142,13 @@ package com.ithaca.visu.controls.sessions
 			this.sessionChange = true;
 			this.invalidateProperties();
 		}
+		// set nbrRetrodocument 
+		public function set nbrRetrodocument(value:int):void
+		{
+			this._nbrRetrodocument = value;
+			this.nbrRetrodocumentChange = true;
+			this.invalidateProperties();
+		}
 		public function get listPresentUser():ArrayCollection
 		{
 			return _listPresentUser;
@@ -209,6 +218,12 @@ package com.ithaca.visu.controls.sessions
 				{
 					nbrUsersRecordPlanedLabel.text = _nbrUserPresent.toString()+ "/" + _nbrUserPlaned.toString();
 				};
+			}
+			
+			if(nbrRetrodocumentChange)
+			{
+				nbrRetrodocumentChange = false;
+				if(nbrBilansLabel != null){ nbrBilansLabel.text = this._nbrRetrodocument.toString();};
 			}
 
 		}

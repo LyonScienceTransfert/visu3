@@ -83,6 +83,8 @@ package com.ithaca.visu.controls.sessions
 		private var activitiesChanged:Boolean;
 		private var _durationRecorded:Number;
 		private var durationRecordedChange:Boolean;
+		private var _nbrRetrodocument:int;
+		private var nbrRetrodocumentChange:Boolean;
 		
 		private var planSkin:Boolean;
 		private var planMineSkin:Boolean;
@@ -230,6 +232,14 @@ package com.ithaca.visu.controls.sessions
 			this.durationRecordedChange = true;
 			this.invalidateProperties();
 		}
+		
+		// set nbrRetrodocument 
+		public function set nbrRetrodocument(value:int):void
+		{
+			this._nbrRetrodocument = value;
+			this.nbrRetrodocumentChange = true;
+			this.invalidateProperties();
+		}
 
 		public function set profiles(value:Array):void
 		{
@@ -323,6 +333,12 @@ package com.ithaca.visu.controls.sessions
 				durationRecordedChange = false;
 				sessionSummaryView.durationRecorded = this._durationRecorded;
 				sessionBilanFormView.durationRecorded = this._durationRecorded;
+			}
+			
+			if(nbrRetrodocumentChange)
+			{
+				nbrRetrodocumentChange = false;
+				this.sessionSummaryView.nbrRetrodocument = this._nbrRetrodocument
 			}
 		}
 		//_____________________________________________________________________
