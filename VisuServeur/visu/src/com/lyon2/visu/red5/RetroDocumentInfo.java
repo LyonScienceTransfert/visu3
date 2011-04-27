@@ -1,7 +1,9 @@
 package com.lyon2.visu.red5;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -13,8 +15,12 @@ import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
+import com.ithaca.domain.model.Obsel;
 import com.ithaca.domain.model.RetroDocument;
 import com.ithaca.service.RetroDocumentService;
+import com.lyon2.utils.ObselStringParams;
+import com.lyon2.utils.ObselType;
+import com.lyon2.utils.UtilFunction;
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
@@ -293,6 +299,52 @@ public class RetroDocumentInfo {
 //		}	
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void getRetrodocumentsBySessionIdForUser(IConnection conn, Integer sessionId) {
+		log.warn("======== getRetrodocumentsBySessionIdForUser = {}",sessionId.toString());
+		IClient client = conn.getClient();
+		User user = (User) client.getAttribute("user");
+		Integer userId = user.getId_user();
+		
+		// get retroDocuments of the owner
+		List<RetroDocument> listRetroDocumentOwner = null;
+		try {
+			listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+					"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des retroDocument " + e, e);
+		}
+		if(listRetroDocumentOwner != null)
+		{
+			log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());	
+		}else
+		{
+			log.warn("List empty !!!!!!");
+		}
+		// get retroDocuments of the other users
+		List<RetroDocument> listRetroDocumentShared = null;
+		try {
+			listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
+		}
+		if(listRetroDocumentShared != null)
+		{
+			log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());	
+		}else
+		{
+			log.warn("List empty !!!!!!");
+		}
+		log.warn("===== sessionId closed session = {}",sessionId.toString());
+		IConnection connClient = (IConnection) client
+		.getAttribute("connection");
+		Object[] argsRetroDocument = { listRetroDocumentOwner, listRetroDocumentShared};
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListRetroDocumentBySessionId", argsRetroDocument);
+		}
+	}
 	
 	public void setApplication(Application app) {
 		this.app = app;

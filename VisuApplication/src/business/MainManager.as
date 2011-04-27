@@ -7,8 +7,8 @@ import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.XMLUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
-import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.BilanEvent;
+import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
@@ -377,6 +377,26 @@ public class MainManager
 			sessionEvent.sessionId = sessionId;
 			this.dispatcher.dispatchEvent(sessionEvent);
 		}
+	}
+	/**
+	 * get list owner retrodocument and share retrodocument
+	 */
+	public function onCheckListRetroDocumentBySessionId(listRetroDocumentOwner:Array, listRetroDocumentShared:Array):void
+	{
+		var nbrRetroDocumentOwner:int = 0;
+		var nbrRetroDocumentShare:int = 0;
+		if (listRetroDocumentOwner != null)
+		{
+			nbrRetroDocumentOwner = listRetroDocumentOwner.length;
+		}
+		if(listRetroDocumentShared != null)
+		{
+			nbrRetroDocumentShare = listRetroDocumentShared.length;
+		}
+		var nbrRetrodocument:int = nbrRetroDocumentOwner + nbrRetroDocumentShare;
+		var nbrRetrodocumentEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION);
+		nbrRetrodocumentEvent.nbrRetrodocument = nbrRetrodocument;
+		this.dispatcher.dispatchEvent(nbrRetrodocumentEvent);
 	}
 	/**
 	 * get last visited session in the salon tutorat
