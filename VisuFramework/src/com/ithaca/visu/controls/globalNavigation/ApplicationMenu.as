@@ -231,7 +231,7 @@ package com.ithaca.visu.controls.globalNavigation
 						 Model.getInstance().setEnabledButtonSalonSynchrone(false);
 					 }
 					// FIXME : enabled module retrospection
-					if(o.value == "retrospection"){bt.enabled = false; bt.visible = false;}
+					if(o.value == "retrospection"){bt.enabled = false; bt.visible = false; bt.includeInLayout = false;}
 					// FIXME : enabled module session
 					if(o.value == "session"){bt.enabled = true;}
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
