@@ -639,14 +639,14 @@
  
             private function refreshUserList():void {
 
-            	filterConnected = userMenu.dataProvider[0].menuitem.(@id =="filterConnected").@toggled == 'true';
-            	filterNotConnected = userMenu.dataProvider[0].menuitem.(@id =="filterNotConnected").@toggled == 'true';
-            	filterRecording = userMenu.dataProvider[0].menuitem.(@id =="filterRecording").@toggled == 'true';
-            	filterPending = userMenu.dataProvider[0].menuitem.(@id =="filterPending").@toggled == 'true';
-	         	keepTuteur = userMenu.dataProvider[0].menuitem.(@id =="filterRoleTuteur").@toggled == 'true';
-            	keepEtudiant = userMenu.dataProvider[0].menuitem.(@id =="filterRoleEtudiant").@toggled == 'true';
-            	keepResponsable = userMenu.dataProvider[0].menuitem.(@id =="filterRoleResponsable").@toggled == 'true';
-            	keepAdmin = userMenu.dataProvider[0].menuitem.(@id =="filterRoleAdministrateur").@toggled == 'true';
+            	filterConnected = userMenu.dataProvider[1].menuitem.(@id =="filterConnected").@toggled == 'true';
+            	filterNotConnected = userMenu.dataProvider[1].menuitem.(@id =="filterNotConnected").@toggled == 'true';
+            	filterRecording = userMenu.dataProvider[1].menuitem.(@id =="filterRecording").@toggled == 'true';
+            	filterPending = userMenu.dataProvider[1].menuitem.(@id =="filterPending").@toggled == 'true';
+	         	keepTuteur = userMenu.dataProvider[1].menuitem.(@id =="filterRoleTuteur").@toggled == 'true';
+            	keepEtudiant = userMenu.dataProvider[1].menuitem.(@id =="filterRoleEtudiant").@toggled == 'true';
+            	keepResponsable = userMenu.dataProvider[1].menuitem.(@id =="filterRoleResponsable").@toggled == 'true';
+            	keepAdmin = userMenu.dataProvider[1].menuitem.(@id =="filterRoleAdministrateur").@toggled == 'true';
   
 				logger.debug("Refreshing the user list (filterConnected={0},filterNotConnected={1},filterRecording={2},filterPending={3},keepTuteur={4},keepEtudiant={5},keepResponsable={6},keepAdmin={7})",
 	            	filterConnected,
@@ -658,13 +658,13 @@
 	            	keepResponsable,
 	            	keepAdmin
             	);
-            	
+
            		var sort:Sort = new Sort(); 
  				sort.fields = [new SortField("firstname", false), new SortField("lastname", false)];
-				if( userMenu.dataProvider[0].menuitem.(@id =="sortMenu").menuitem.(@id =="sortByStatus").@toggled == 'true') {
+				if( userMenu.dataProvider[0].(@id =="sortMenu").menuitem.(@id =="sortByStatus").@toggled == 'true') {
 					//logger.debug("Setting the sort function of the user list to {0}", "compareUserByStatus");
 					sort.compareFunction = compareUserByStatus;
-				} else if( userMenu.dataProvider[0].menuitem.(@id =="sortMenu").menuitem.(@id =="sortByRole").@toggled == 'true') {
+				} else if( userMenu.dataProvider[0].(@id =="sortMenu").menuitem.(@id =="sortByRole").@toggled == 'true') {
 					//logger.debug("Setting the sort function of the user list to {0}", "compareUserByRole");
 					sort.compareFunction = compareUserByRole;
 				} else {
@@ -877,15 +877,15 @@
 								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
 								http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS5b3ccc516d4fbf351e63e3d118a9b90204-7e6b.html   
 							-->
-								<menuitem id="sortMenu" label="Tri" data="top">
+								<menuitems id="sortMenu" label="Tri" data="top">
 									<menuitem label="Par statut" type="radio" id="sortByStatus"
 										groupName="radioGroup" toggled="true" />
 									<menuitem label="Par rôle" type="radio" id="sortByRole"
 										groupName="radioGroup" />
 									<menuitem label="Par ordre alphabétique" id="sortByLexicoOrder"
 										type="radio" groupName="radioGroup" />
-								</menuitem>
-								<menuitem id="filterMenu" label="Filtre" data="top">
+								</menuitems>
+								<menuitems id="filterMenu" label="Filtre" data="top">
 									<menuitem label="En salon" id="filterPending"
 										type="check" toggled="true" />
 									<menuitem label="En cours d'enregistrement" id="filterRecording"
@@ -903,7 +903,7 @@
 										type="check" toggled="true" />
 									<menuitem label="Administrateurs" id="filterRoleAdministrateur"
 										type="check" toggled="true" />
-								</menuitem>
+								</menuitems>
 						</fx:XMLList>
 					</mx:MenuBar>
 			
