@@ -345,6 +345,10 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="obselInfo.getObselByTypeSessionExitSessionPause"   arguments="{[event.sessionId]}" />	
 			</rtmp:RtmpServiceInvoker>	
+			
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getRetrodocumentsBySessionIdForUser"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
 		
 		<mate:Injectors target="{SessionManager}">

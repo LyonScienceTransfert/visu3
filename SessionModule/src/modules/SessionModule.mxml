@@ -331,6 +331,15 @@
 					sessionManagement.sessionDetailView.durationRecorded = durationRecorded;
 				}
 			}
+			
+			private function onLoadListRetrodocumentSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var nbrRetrodocument:int = event.nbrRetrodocument;
+					sessionManagement.sessionDetailView.nbrRetrodocument = nbrRetrodocument;
+				}
+			}
 		]]>
 	
 	</fx:Script>
@@ -344,6 +353,7 @@
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 		<mate:Listener type="{SessionEvent.SHOW_CLONED_PLAN}"  method="onShowClonedPlan"/>
 		<mate:Listener type="{SessionEvent.LOAD_DURATION_SESSION}"  method="onLoadDurationSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION}"  method="onLoadListRetrodocumentSession"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 
