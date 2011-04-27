@@ -23,20 +23,6 @@
 		<!-- 
 			~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
 		-->	
-		<!--
-		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="retroDocument.getSharedRetroDocuments"   arguments="{[event.userId]}" />
-			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
-		
-		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="retroDocument.getOwnedRetroDocuments"   arguments="{[event.userId]}" />
-			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
-		-->
-		
 		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroDocument.getOwnedAndSharedRetroDocumentsByUserId"   arguments="{[event.userId]}" />

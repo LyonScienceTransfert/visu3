@@ -118,6 +118,32 @@ package com.lyon2.controls.utils
 			var dateOnly:String = formatDDMMYYYY(date);
 			return dateOnly + " " + time;
 		}
+		
+		public static function compareDates (date1 : Object, date2 : Object) : int
+		{
+			if(date1==null && date2==null)
+				return 0;
+			if(date1==null)
+				return 1;
+			if(date2 == null)
+				return -1;
+				
+		    var date1Timestamp : Number = (date1 as Date).getTime ();
+		    var date2Timestamp : Number = (date2 as Date).getTime ();
+
+		    var result : Number = -1;
+
+		    if (date1Timestamp == date2Timestamp)
+		    {
+		        result = 0;
+		    }
+		    else if (date1Timestamp > date2Timestamp)
+		    {
+		        result = 1;
+		    }
+
+		    return result;
+		} 
 	}
 }
 

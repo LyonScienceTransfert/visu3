@@ -152,13 +152,9 @@
 			this.visio.connection = Model.getInstance().getNetConnection();
 		}
 
-		private function initSegmentList(event):void {
-			segmentList.addEventListener(PlaySegmentVideoEvent.PLAY_SEGMENT_ASKED_EVENT, onPlayVideoSegmentAsked);
-		}
-		
-		private function onPlayVideoSegmentAsked(event:PlaySegmentVideoEvent):void {
-			var segmentTime:Number = event.segment.beginTimeVideo;
-			logger.info("Ask for playing the video of segment {0} - {1} (current time: {2})", event.segment.title, event.segment.comment, segmentTime);
+		private function playVideoSegment(segment:Segment):void {
+			var segmentTime:Number = segment.beginTimeVideo;
+			logger.info("Ask for playing the video of segment {0} - {1} (current time: {2})", segment.title, segment.comment, segmentTime);
 			visio.removeAllStreams();
 			var newVideoStreams:Array = new Array();
 			
@@ -193,7 +189,7 @@
 					this.timer.stop();
 				}
 				
-				var durationInMillis:Number = event.segment.endTimeVideo - event.segment.beginTimeVideo;
+				var durationInMillis:Number = segment.endTimeVideo - segment.beginTimeVideo;
 				logger.debug("Setting up a new timer for the segment video playing. Duration in sec: {0}", int(durationInMillis/1000));
 				this.timer = new Timer(durationInMillis,1);
 				this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
@@ -204,7 +200,19 @@
 		private function timerCompleteHandler(e:TimerEvent):void {
 			logger.debug("Timer complete for the segment video playing. Removing all streams from the video component.");
 			this.visio.removeAllStreams();
+			
+			// Clear the selection
+			this.segmentList.selectedItems = new Vector.<Object>();
         }
+        
+        private function onSegmentSelectionChanged(e:IndexChangeEvent):void {
+			if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1) {
+				var segment:Segment = segmentList.selectedItems[0] as Segment;
+				logger.debug("Ask for playing the video at session time {0}", int((segment.beginTimeVideo - sessionStart)/1000));
+				playVideoSegment(segment);
+			} else
+				logger.debug("Selection changed on segmentList but nothing is selected now");
+		}
         ]]>
     </fx:Script>
 
@@ -242,7 +250,7 @@
 									fontStyle="italic"
 									text="{bilan.description}"/>
 								
-								<s:List id="segmentList" width="100%" height="100%" dataProvider="{bilan.listSegment}" creationComplete="initSegmentList(event)">
+								<s:List id="segmentList" change="onSegmentSelectionChanged(event)" borderVisible="false" width="100%" height="100%" dataProvider="{bilan.listSegment}" >
 									<s:itemRenderer>
 										<fx:Component>
 											<s:ItemRenderer creationComplete="initRenderer(event)">
@@ -282,25 +290,15 @@
 															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
 														}
 														
-														private function playVideoClicked(event:MouseEvent):void {
-															logger.debug("Ask for playing the video at session time {0}", int((data.beginTimeVideo - sessionStart)/1000));
-															var playSegmentVideoEvent:PlaySegmentVideoEvent = new PlaySegmentVideoEvent(data as Segment);
-															dispatchEvent(playSegmentVideoEvent);
-														}
+														
 													]]>
 												</fx:Script>
 												<s:VGroup paddingTop="5" gap="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
 														<s:HGroup width="100%">
 															<s:Label 
-																fontSize="15"
-																text="{data.order}. "/>
-															<s:Label 
-																fontSize="15"
+																fontSize="16"
 																width="100%"
 																text="{data.title}"/>
-															<s:Label 
-																text="{TimeUtils.formatHHMMSS(int((data.beginTimeVideo - sessionStart)/1000))}"/>
-															<mx:LinkButton includeIn="hovered,selected" label="Jouer" click="playVideoClicked(event)"/>
 														</s:HGroup>
 														<s:HGroup width="100%">
 															<s:Label 

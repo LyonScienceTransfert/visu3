@@ -4,6 +4,8 @@
     	xmlns:s="library://ns.adobe.com/flex/spark" 
     	xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:ithaca="com.ithaca.components.*"
+		xmlns:sessions="com.ithaca.visu.controls.sessions.*"
+		
 	>
 
 	<fx:Declarations> 
@@ -17,6 +19,7 @@
 		import mx.collections.ArrayCollection;
 		import mx.controls.TabBar;
 		import mx.controls.Alert;
+		import com.ithaca.visu.model.Session;
 		import com.ithaca.events.SelectionEvent;
 		import com.ithaca.utils.VisuUtils;
 		import com.ithaca.visu.model.Model;
@@ -24,7 +27,10 @@
 		import mx.events.ItemClickEvent;
         import com.ithaca.documentarisation.model.RetroDocument;
 		import com.ithaca.visu.model.User;
-			
+		import com.ithaca.visu.events.SessionListViewEvent;
+		import mx.collections.Sort;
+		import com.lyon2.controls.utils.TimeUtils;
+	
         import mx.logging.ILogger;
 		import mx.logging.Log;
 			
@@ -34,9 +40,6 @@
 			logger.debug("The current filter selection has changed to " + event.currentTarget.selectedValue);
 			this.bilanCollection.refresh();
 		}
-
-		[Bindable]
-		public var filterSessionCollection:ArrayList = new ArrayList();
 
 		[Bindable]
 		public var showNewButton:Boolean = true;
@@ -83,7 +86,8 @@
 
 
 			var passSelectedSessionFilter:Boolean = true;
-			if(selectedFilterSessionId && selectedFilterSessionId!=d.sessionId)
+			
+			if(seanceFilterButton.selected && selectedFilterSessionId && selectedFilterSessionId!=d.sessionId)
 				passSelectedSessionFilter = false;
 
 			var passButtonFilter:Boolean = true;
@@ -129,12 +133,42 @@
 		}
 		
 		private function  initSessionPane(event:Event):void {
+			sessionComp.sessionList.dataProvider = filterSessionList;
 			sessionComp.addEventListener("SelectionEvent", onSessionSelected);
 		}
 
-		private function  onSessionSelected(event:SelectionEvent):void {
-			Alert.show("Session sélectionné : " + event.selectedId);
+		private function  onSessionSelected(event:SessionListViewEvent):void {
+			var session:Session = event.selectedSession;
+			
+			if(session) {
+				logger.debug("Setting the session filter to sessionId: {0}", session.id_session);
+				this.selectedFilterSessionId = session.id_session;
+			} else {
+				logger.debug("Setting the session filter to null");
+				this.selectedFilterSessionId = null;
+			}
+			this.bilanCollection.refresh();
 		}
+		
+		private function initBilanPane(event:*):void {
+			var sort:Sort = new Sort(); 	
+			sort.compareFunction = compareBilanByCreationDates;
+			bilanCollection.sort = sort;
+            bilanCollection.refresh();
+		}
+		
+		private function onSeanceFilterButtonChange(event:*):void {
+			   bilanCollection.refresh();
+		}
+		
+		         
+		function compareBilanByCreationDates(a:Object, b:Object, fields:Array = null):int {
+			return TimeUtils.compareDates(
+					(a as RetroDocument).creationDateAsDate,
+					(b as RetroDocument).creationDateAsDate
+					);
+		}
+		
 	]]>
     </fx:Script>
  
@@ -154,20 +188,19 @@
 			</s:Rect>
 			<s:VGroup width="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 				<s:VGroup width="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-					<s:CheckBox id="onSeanceFilterButton" width="100%" label="Filtrer par séance"/>
+					<s:CheckBox id="seanceFilterButton" change="onSeanceFilterButtonChange(event)" width="100%" label="Filtrer par séance"/>
 					
-					<ithaca:SessionList 
+					<sessions:SessionListView
 						id="sessionComp"
 						filterAlpha="0"
-						visible="{onSeanceFilterButton.selected}"
-						includeInLayout="{onSeanceFilterButton.selected}"
+						visible="{seanceFilterButton.selected}"
+						includeInLayout="{seanceFilterButton.selected}"
 						showNewButton="false"
 						showFilterButtons="false"
+						selectSession="onSessionSelected(event)"
 						showFilterLabels="false"
 						showFilterAreaBorder="false"
-						showFilterText="true"
-						initSessionList="{filterSessionCollection}"
-						mode="session"
+						showFilterText="false"
 						width="100%"
 						height="100%"
 						creationComplete="initSessionPane(event)"/>
@@ -223,7 +256,7 @@
 			<s:Button visible="{showNewButton}" includeInLayout="{showNewButton}"
 				label="Nouveau Bilan" toolTip="Crée un nouveau bilan vide"/>
 
-			<s:List id="bilanListComponent" width="100%" height="100%" dataProvider="{bilanCollection}" change="onChangeListener(event)">
+			<s:List id="bilanListComponent" creationComplete="initBilanPane(event)" width="100%" height="100%" dataProvider="{bilanCollection}" change="onChangeListener(event)">
 				<s:itemRenderer>
 	   
 				    <fx:Component>
@@ -236,28 +269,27 @@
 						 </fx:Script>
 						<s:VGroup paddingTop="10" paddingBottom="10" paddingRight="5" paddingLeft="5" width="100%">
 							<s:HGroup  width="100%" verticalAlign="middle">
-							     <s:Label fontStyle="italic" fontSize="12" visible="{data.inviteeIds.length > 0}" includeInLayout="{data.inviteeIds.length > 0}"  text="[partagé]"/>
+							     <s:Label fontStyle="italic" fontSize="12" color="0xFF0000" visible="{data.inviteeIds.length > 0}" includeInLayout="{data.inviteeIds.length > 0}"  text="[partagé]"/>
 							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit" width="100%" text="{data.title}"/>
 							     <s:Label fontWeight="bold" fontSize="15"  text="- {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.ownerId), true)} -"/>
 							</s:HGroup>
-							<s:HGroup  includeInLayout="{data.inviteeIds.length > 0}" visible="{data.inviteeIds.length > 0}" width="100%" verticalAlign="middle">
-									<s:Label width="30"/>
-									<s:Label text="Partagé avec: "/>
-									<s:Label width="100%" text="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}"/>
-							</s:HGroup>
-							<s:HGroup  width="100%" verticalAlign="top">
-									<s:Label width="30"/>
-							     <s:Label top="5" text="Sur la séance: "/>
-								<s:VGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
-									 <s:Label width="100%" lineBreak="toFit" text=" {data.session.theme}"/>
-									 <s:Label text="De {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
-								</s:VGroup>
-							</s:HGroup>
+							
+							<mx:Form width="100%" paddingLeft="5" paddingRight="5" >
+								<mx:FormItem includeInLayout="{data.inviteeIds.length > 0}" visible="{data.inviteeIds.length > 0}" label="Partagé avec:" width="100%">
+									<s:Label  width="100%" lineBreak="toFit" text="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}"/>
+								</mx:FormItem>
+								
+								<mx:FormItem label="À propos de la séance:" width="100%">
+									<s:VGroup width="100%">
+										 <s:Label width="100%" lineBreak="toFit" text=" {data.session.theme}"/>
+										 <s:Label text="De {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
+									</s:VGroup>
+								</mx:FormItem>
+							</mx:Form>
 						</s:VGroup>
 				        </s:ItemRenderer>
 				    </fx:Component>
 				</s:itemRenderer>
 			</s:List>
-
 	</s:VGroup>
 </s:Group>
