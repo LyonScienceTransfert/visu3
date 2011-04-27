@@ -1,5 +1,6 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
@@ -18,7 +19,12 @@ package com.ithaca.visu.controls.sessions
 	import spark.components.TextInput;
 	import spark.components.VGroup;
 	import spark.components.supportClasses.SkinnableComponent;
+	import spark.events.IndexChangeEvent;
+	import spark.events.TextOperationEvent;
 	import spark.primitives.Rect;
+	
+	[Event(name="selectSession",type="com.ithaca.visu.events.SessionListViewEvent")]
+	[Event(name="changeTextFilter",type="com.ithaca.visu.events.SessionListViewEvent")]
 	
 	[SkinState("plan")]
 	[SkinState("session")]
@@ -309,6 +315,20 @@ package com.ithaca.visu.controls.sessions
 				solidColorFilter.alpha = _filterAlpha;
 			}
 			
+			if(instance == planList)
+			{
+				planList.addEventListener(IndexChangeEvent.CHANGE, onChangeSession);
+			}
+			
+			if(instance == sessionList)
+			{
+				sessionList.addEventListener(IndexChangeEvent.CHANGE, onChangeSession);
+			}
+			if(instance == filterText)
+			{
+				filterText.addEventListener(TextOperationEvent.CHANGE, onChangeTextFilter);
+			}
+			
 		}
 		override protected function getCurrentSkinState():String
 		{
@@ -320,6 +340,22 @@ package com.ithaca.visu.controls.sessions
 		//
 		//_____________________________________________________________________
 
+		private function onChangeSession(event:IndexChangeEvent):void
+		{
+			var list:List = event.currentTarget as List;
+			var session:Session = list.selectedItem as Session;
+			var selectSessionEvent:SessionListViewEvent = new SessionListViewEvent(SessionListViewEvent.SELECT_SESSION);
+			selectSessionEvent.selectedSession = session;
+			dispatchEvent(selectSessionEvent);	
+		}
+		
+		private function onChangeTextFilter(event:TextOperationEvent):void
+		{
+			var textInput:TextInput = event.currentTarget as TextInput;
+			var changeTextFilter:SessionListViewEvent = new SessionListViewEvent(SessionListViewEvent.CHANGE_TEXT_FILTER);
+			changeTextFilter.textFilter = textInput.text;
+			dispatchEvent(changeTextFilter);
+		}
 		public function onAddNewSession(event:MouseEvent):void
 		{
 			Alert.yesLabel = "Oui";
