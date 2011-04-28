@@ -2,13 +2,22 @@ package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.model.Session;
+	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.lyon2.controls.utils.TimeUtils;
 	import flash.events.MouseEvent;
 	
+	import mx.collections.ArrayCollection;
+	import mx.collections.Sort;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
 	import mx.graphics.SolidColor;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
+	import mx.utils.ObjectUtil;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -21,6 +30,8 @@ package com.ithaca.visu.controls.sessions
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
+	import spark.layouts.VerticalLayout;
+	import spark.layouts.supportClasses.LayoutBase;
 	import spark.primitives.Rect;
 	import mx.collections.Sort;
 	
@@ -76,6 +87,9 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var sessionList:List;
 		
+		[SkinPart("true")]
+		public var clearIcon:Group;
+		
 		private var plan:Boolean;
 		
 		private var _filterAlpha:Number = 0.2 ;
@@ -96,6 +110,15 @@ package com.ithaca.visu.controls.sessions
 		private var _showNewButton:Boolean = true;
 		private var showNewButtonChange:Boolean
 		
+		private var _listPlanCollection:ArrayCollection;
+		private var listPlanCollectionChange:Boolean; 
+		private var _listSessionCollection:ArrayCollection;
+		private var listSessionCollectionChange:Boolean;
+		
+		private var _loggedUser:User;
+		
+		private var logger : ILogger = Log.getLogger('com.ithaca.visu.controls.sessions.SessionListView');
+
 		public function SessionListView()
 		{
 			super();
@@ -187,6 +210,38 @@ package com.ithaca.visu.controls.sessions
 			this.invalidateSkinState();
 		}
 
+		public function set listPlanCollection(value:ArrayCollection):void
+		{
+			_listPlanCollection = value;
+			listPlanCollectionChange = true;
+			this.invalidateSkinState();
+		}
+		public function get listPlanCollection():ArrayCollection
+		{
+			return _listPlanCollection;
+		}
+		
+		public function set listSessionCollection(value:ArrayCollection):void
+		{
+			_listSessionCollection = value;
+			listSessionCollectionChange = true;
+			this.invalidateSkinState();
+		}
+		
+		public function get listSessionCollection():ArrayCollection
+		{
+			return _listSessionCollection;
+		}
+
+		public function get loggedUser():User
+		{
+			return this._loggedUser;
+		}
+		
+		public function set loggedUser(value:User):void
+		{
+			this._loggedUser = value;
+		}
 		
 		//_____________________________________________________________________
 		//
@@ -250,6 +305,21 @@ package com.ithaca.visu.controls.sessions
 					newPlanSessionButtonsGroup.visible = _showNewButton;
 					newPlanSessionButtonsGroup.includeInLayout = _showNewButton;
 				}
+			}
+			
+			if(listPlanCollectionChange)
+			{
+				listPlanCollectionChange = false;
+				planList.dataProvider = listPlanCollection;
+				listPlanCollection.filterFunction = filterPlan;
+				
+			}
+			
+			if(listSessionCollectionChange)
+			{
+				listSessionCollectionChange = false;
+				sessionList.dataProvider = listSessionCollection;
+				listSessionCollection.filterFunction = filterSession;
 			}
 		}
 		override protected function partAdded(partName:String, instance:Object):void
@@ -330,9 +400,41 @@ package com.ithaca.visu.controls.sessions
 				//sessionList.dataProvider.sort = sort;
 	            
 			}
+			
 			if(instance == filterText)
 			{
 				filterText.addEventListener(TextOperationEvent.CHANGE, onChangeTextFilter);
+			}
+			
+			if(instance == allButton)
+			{
+				allButton.addEventListener(MouseEvent.CLICK , onRadioSessionFilter);
+			}
+			if(instance == pastButton)
+			{
+				pastButton.addEventListener(MouseEvent.CLICK , onRadioSessionFilter);
+			}
+			if(instance == comingButton)
+			{
+				comingButton.addEventListener(MouseEvent.CLICK , onRadioSessionFilter);
+			}
+			
+			if(instance == sharingAllButton)
+			{
+				sharingAllButton.addEventListener(MouseEvent.CLICK , onRadioPlanFilter);
+			}
+			if(instance == sharingMineButton)
+			{
+				sharingMineButton.addEventListener(MouseEvent.CLICK , onRadioPlanFilter);
+			}
+			if(instance == sharingOtherButton)
+			{
+				sharingOtherButton.addEventListener(MouseEvent.CLICK , onRadioPlanFilter);
+			}
+			
+			if(instance == clearIcon)
+			{
+				clearIcon.addEventListener(MouseEvent.CLICK , onClearIcon);
 			}
 			
 		}
@@ -363,7 +465,111 @@ package com.ithaca.visu.controls.sessions
 			var changeTextFilter:SessionListViewEvent = new SessionListViewEvent(SessionListViewEvent.CHANGE_TEXT_FILTER);
 			changeTextFilter.textFilter = textInput.text;
 			dispatchEvent(changeTextFilter);
+			// refresh collection for calling filterFunction 
+			refreshCollection();
 		}
+		
+		private function onRadioSessionFilter(event:MouseEvent):void
+		{		
+			var radioButton:RadioButton = event.currentTarget as RadioButton;
+			var sortDateFunction:Function;
+			switch (radioButton.id)
+			{
+				case "pastButton" :
+					sortDateFunction = compareDateSessionRecording;
+					break;
+				case "allButton" :
+				case "comingButton" : 
+					sortDateFunction = compareDateSession;
+					break;
+			}
+			// sort by date 
+			var sort:Sort = new Sort();
+			sort.compareFunction = sortDateFunction;
+			listSessionCollection.sort = sort;
+			// refresh collection for calling filterFunction 
+			listSessionCollection.refresh();
+			// TODO : move verticalScroller for show selected item
+			
+		}
+		
+		private function onRadioPlanFilter(event:MouseEvent):void
+		{		
+			// refresh collection for calling filterFunction 
+			this.listPlanCollection.refresh();
+		}
+		private function onClearIcon(event:MouseEvent):void
+		{
+			// set empty text
+			filterText.text = "";
+			refreshCollection();
+		}
+		
+		// refreshe "active" collection 
+		private function refreshCollection():void
+		{
+			if(plan)
+			{
+				this.listPlanCollection.refresh();
+			}else
+			{
+				this.listSessionCollection.refresh();
+			}
+		}
+		
+		private function filterPlan(item:Object):Boolean
+		{
+			var session:Session = item as Session;
+			var result:Boolean = false;
+			if(sharingMineButton.selected)
+			{
+				if(session.isModel && session.id_user == loggedUser.id_user)
+				{
+					result = true;
+				}
+			}else if(sharingOtherButton.selected)
+			{
+				if(session.isModel && session.id_user != loggedUser.id_user)
+				{
+					result = true;
+				}
+			}else
+			{
+				result = true;
+			}
+			return result && checkFilterText(session);
+		}
+		private function filterSession(item:Object):Boolean
+		{
+			var session:Session = item as Session;
+			var result:Boolean = false;
+			if (pastButton.selected)
+			{
+				if(session.statusSession == SessionStatusEnum.SESSION_CLOSE)
+				{
+					result = true;
+				}	
+			}else if (comingButton.selected)
+				{	
+					if(session.statusSession == SessionStatusEnum.SESSION_OPEN)
+					{
+						result = true;
+					}
+				}
+			else
+			{
+				result = true;
+			}
+			return result && checkFilterText(session);
+		}
+		
+		private function checkFilterText(session:Session):Boolean
+		{
+			var passTextFilter:Boolean = false;
+			passTextFilter = session.theme.match(filterText.text) || session.description.match(filterText.text);
+			return passTextFilter;
+		}
+		
 		public function onAddNewSession(event:MouseEvent):void
 		{
 			Alert.yesLabel = "Oui";
@@ -381,5 +587,40 @@ package com.ithaca.visu.controls.sessions
 				this.dispatchEvent(sessionAddEvent);
 			}
 		}
+		//_____________________________________________________________________
+		//
+		// Utils
+		//
+		//_____________________________________________________________________
+		
+		// sort by date session planed
+		private function compareDateSession(ObjA:Object,ObjB:Object,fields:Array = null):int
+		{
+			if(ObjA==null && ObjB==null)
+				return 0;
+			if(ObjA==null)
+				return 1;
+			if(ObjB == null)
+				return -1;
+			
+			var dateA:Date=ObjA.date_session;
+			var dateB:Date=ObjB.date_session;
+			return ObjectUtil.dateCompare(dateA, dateB);
+		}
+		// sort by date session recording
+		private function compareDateSessionRecording(ObjA:Object,ObjB:Object,fields:Array = null):int
+		{
+			if(ObjA==null && ObjB==null)
+		        return 0;
+	    	if(ObjA==null)
+				return 1;
+			if(ObjB == null)
+				return -1;
+			
+			var dateA:Date=ObjA.date_start_recording;
+			var dateB:Date=ObjB.date_start_recording;
+			return ObjectUtil.dateCompare(dateA, dateB);
+		}
+		
 	}
 }
