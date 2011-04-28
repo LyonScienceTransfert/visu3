@@ -124,6 +124,9 @@ package com.ithaca.visu.controls.sessions
 				sessionListView.percentHeight = 100;
 				// set session skin
 				sessionListView.setSessionView();
+				// set logged user
+				sessionListView.loggedUser = loggedUser;
+				sessionListView.addEventListener(SessionListViewEvent.SELECT_SESSION, onSelectSession);
 				sessionListView.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletListSession);
 				sessionBox.addElement(sessionListView);
 				explorerSession.addChild(sessionBox);
@@ -134,11 +137,15 @@ package com.ithaca.visu.controls.sessions
 				planListView.id = "planListView";
 				planListView.percentWidth = 100;
 				planListView.percentHeight = 100;
+				planListView.addEventListener(SessionListViewEvent.SELECT_SESSION, onSelectSession);
 				planListView.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletListPlan);
 				// set plan skin
 				planListView.setPlanView();
+				// set logged user
+				planListView.loggedUser = loggedUser;
 				planBox.addElement(planListView);
-				explorerSession.addChild(planBox);				
+				explorerSession.addChild(planBox);	
+				
 				explorerSession.addEventListener(IndexChangedEvent.CHANGE, onChangeViewExplorer);
 				
 			}
@@ -156,8 +163,11 @@ package com.ithaca.visu.controls.sessions
 			{
 				filterChange = false;
 				
-				sessionListView.sessionList.dataProvider = this.sessionList;
-				planListView.planList.dataProvider = this.planList;
+				sessionListView.listSessionCollection = this.sessionList;
+				this.sessionList.addEventListener(CollectionEvent.COLLECTION_CHANGE , onChangeSessionCollection);
+				
+				planListView.listPlanCollection = this.planList;
+				this.planList.addEventListener(CollectionEvent.COLLECTION_CHANGE , onChangePlanCollection);
 				
 				if(sessionChange)
 				{
@@ -165,6 +175,11 @@ package com.ithaca.visu.controls.sessions
 					selectSession();
 				}
 			}
+			/*if(sessionChange)
+			{
+				sessionChange = false;
+				selectSession();
+			}*/
 		}
 		
 		//_____________________________________________________________________
@@ -175,55 +190,19 @@ package com.ithaca.visu.controls.sessions
 		
 		private function onCreationCompletListSession(event:*):void
 		{
-			// add listeners on radioButton
-			sessionListView.allButton.addEventListener(MouseEvent.CLICK, onClickAllSession);
-			sessionListView.pastButton.addEventListener(MouseEvent.CLICK, onClickPastSession);
-			sessionListView.comingButton.addEventListener(MouseEvent.CLICK, onClickComingSession);
 			// add listeners on filter
 			sessionListView.filterText.addEventListener(TextOperationEvent.CHANGE, onChangeTextFilterSession);
 			// add listener 
 			sessionListView.newSessionButton.addEventListener(MouseEvent.CLICK, onClickNewSession);
-			sessionListView.sessionList.addEventListener(IndexChangeEvent.CHANGE, onChangeSession);
 		}
 		
 		private function onCreationCompletListPlan(event:*):void
 		{
-			// add listeners on radioButton
-			planListView.sharingAllButton.addEventListener(MouseEvent.CLICK, onClickAllPlan);
-			planListView.sharingMineButton.addEventListener(MouseEvent.CLICK, onClickMinePlan);
-			planListView.sharingOtherButton.addEventListener(MouseEvent.CLICK, onClickOtherPlan);
 			// add listeners on filter
 			planListView.filterText.addEventListener(TextOperationEvent.CHANGE, onChangeTextFilterPlan);
-			// add listener 
-			planListView.newPlanButton.addEventListener(MouseEvent.CLICK, onClickNewPlan);
-			planListView.planList.addEventListener(IndexChangeEvent.CHANGE, onChangePlan);
+//			planListView.newPlanButton.addEventListener(MouseEvent.CLICK, onClickNewPlan);
+
 		}
-		
-		private function onClickAllSession(event:*):void
-		{
-//			filterSession();
-		}
-		private function onClickPastSession(event:*):void
-		{
-			
-		}
-		private function onClickComingSession(event:*):void
-		{
-			
-		}
-		private function onClickAllPlan(event:*):void
-		{
-	
-		}
-		private function onClickMinePlan(event:*):void
-		{
-			
-		}
-		private function onClickOtherPlan(event:*):void
-		{
-			
-		}
-		
 		private function onChangeTextFilterSession(event:TextOperationEvent):void
 		{
 			
@@ -241,9 +220,14 @@ package com.ithaca.visu.controls.sessions
 		{
 			
 		}
-		private function onChangeSession(event:* = null):void
+		private function onSelectSession(event:SessionListViewEvent = null):void
 		{
-			var session:Session = sessionListView.sessionList.selectedItem as Session;
+			var session:Session = event.selectedSession;
+			updateSeletedSession(session);
+		}
+		
+		private function updateSeletedSession(session:Session):void
+		{
 			this.session = session;
 			sessionDetailView.session = session;
 			if(session != null)
@@ -252,16 +236,23 @@ package com.ithaca.visu.controls.sessions
 				loadListActivity(sessionId);
 			}
 		}
-		private function onChangePlan(event:IndexChangeEvent):void
+		// listener if filter was call in SessionListView
+		private function onChangeSessionCollection(event:CollectionEvent):void
 		{
-			var session:Session = this.planList.getItemAt(event.newIndex) as Session;
-			this.session = session;
-			sessionDetailView.session = session;
-			var sessionId:int = session.id_session;
-			loadListActivity(sessionId);
+			var session:Session = this.getIndexSession(this.sessionListView.sessionList.dataProvider as ArrayCollection);
+			this.sessionListView.sessionList.selectedItem = null;
+			this.sessionListView.sessionList.selectedItem = session;
+			updateSeletedSession(session);
 		}
-		
-		
+		// listener if filter was call in SessionListView
+		private function onChangePlanCollection(event:CollectionEvent):void
+		{
+			var session:Session = this.getIndexSession(this.planListView.planList.dataProvider as ArrayCollection);
+			this.planListView.planList.selectedItem = null;
+			this.planListView.planList.selectedItem = session;
+			updateSeletedSession(session);
+		}
+				
 		private function onChangeViewExplorer(event:IndexChangedEvent):void
 		{
 			// TODO : if list is empty
