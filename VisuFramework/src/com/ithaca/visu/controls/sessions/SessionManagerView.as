@@ -276,6 +276,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			// set session
 			sessionDetailView.session = session;
+			sessionDetailView.initTabNav();
 			if(session != null)
 			{
 				loadListActivity(session.id_session);
