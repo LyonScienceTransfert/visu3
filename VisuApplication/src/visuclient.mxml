@@ -347,11 +347,14 @@
 					{
 						message = fxgt.gettext("(vide)");
 					}
-					sessionSharedEvent.info = message;
-					sessionSharedEvent.timeStamp = this.currentObselEdit.props[TraceModel.TIMESTAMP];
-					sessionSharedEvent.listUsers = listUsersId;
-					sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
-					dispatchEvent(sessionSharedEvent);			
+					if(this.currentObselEdit != null)
+					{
+						sessionSharedEvent.info = message;
+						sessionSharedEvent.timeStamp = this.currentObselEdit.props[TraceModel.TIMESTAMP];
+						sessionSharedEvent.listUsers = listUsersId;
+						sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
+						dispatchEvent(sessionSharedEvent);			
+					}
 				}
 			}			
 			
