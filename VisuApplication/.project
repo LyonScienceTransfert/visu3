@@ -17,6 +17,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>[source path] BilanModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/BilanModule/src</locationURI>
+		</link>
+		<link>
 			<name>[source path] HomeModule-src</name>
 			<type>2</type>
 			<locationURI>DOCUMENTS/HomeModule/src</locationURI>

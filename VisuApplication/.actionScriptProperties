@@ -7,6 +7,7 @@
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/HomeModule/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/UserModule/src"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/RetrospectionModule/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/BilanModule/src"/>
     </compilerSourcePath>
     <libraryPath defaultLinkType="3">
       <libraryPathEntry kind="4" path="">
@@ -15,8 +16,8 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
-      <libraryPathEntry kind="3" linkType="1" path="/VisuFramework/bin/VisuFramework.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/swc"/>
+      <libraryPathEntry kind="3" linkType="1" path="${DOCUMENTS}/VisuFramework/bin/VisuFramework.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
@@ -25,11 +26,11 @@
     <application path="Test.mxml"/>
   </applications>
   <modules>
-    <module application="src/visuclient.mxml" destPath="modules/UserModule.swf" optimize="true" sourcePath="[source path] UserModule-src/modules/UserModule.mxml"/>
-    <module application="src/visuclient.mxml" destPath="modules/SessionModule.swf" optimize="true" sourcePath="[source path] SessionModule-src/modules/SessionModule.mxml"/>
-    <module application="src/visuclient.mxml" destPath="modules/HomeModule.swf" optimize="true" sourcePath="[source path] HomeModule-src/modules/HomeModule.mxml"/>
-    <module application="src/visuclient.mxml" destPath="modules/TutoratModule.swf" optimize="true" sourcePath="[source path] TutoratModule-src/modules/TutoratModule.mxml"/>
     <module application="src/visuclient.mxml" destPath="modules/RetrospectionModule.swf" optimize="true" sourcePath="[source path] RetrospectionModule-src/modules/RetrospectionModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/TutoratModule.swf" optimize="true" sourcePath="[source path] TutoratModule-src/modules/TutoratModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/SessionModule.swf" optimize="true" sourcePath="[source path] SessionModule-src/modules/SessionModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/UserModule.swf" optimize="true" sourcePath="[source path] UserModule-src/modules/UserModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/HomeModule.swf" optimize="true" sourcePath="[source path] HomeModule-src/modules/HomeModule.mxml"/>
   </modules>
   <buildCSSFiles/>
 </actionScriptProperties>
