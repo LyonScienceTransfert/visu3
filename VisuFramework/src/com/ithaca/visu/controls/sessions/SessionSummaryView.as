@@ -84,7 +84,7 @@ package com.ithaca.visu.controls.sessions
 		
 		public function set session(value:Session):void
 		{
-			if( _session == value) return;
+			if( _session == value || value == null) return;
 			_session = value;
 			
 			planSkin = false;	
