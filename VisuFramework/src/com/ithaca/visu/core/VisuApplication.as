@@ -110,6 +110,10 @@ package com.ithaca.visu.core
 			if (instance == loginForm)
 			{
 				loginForm.addEventListener(LoginFormEvent.LOGIN,authUser);
+				if(Model.getInstance().checkServeurVisuDev())
+				{
+					loginForm.setSkinVisuDev();
+				}
 			}
 			if (instance == menu)
 			{
