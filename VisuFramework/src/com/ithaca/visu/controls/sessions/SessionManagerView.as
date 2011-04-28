@@ -1,6 +1,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.visu.events.SessionEvent;
+	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Session;
@@ -15,6 +16,7 @@ package com.ithaca.visu.controls.sessions
 	import mx.containers.TabNavigator;
 	import mx.containers.VBox;
 	import mx.controls.Alert;
+	import mx.events.CollectionEvent;
 	import mx.events.FlexEvent;
 	import mx.events.IndexChangedEvent;
 	
@@ -63,6 +65,7 @@ package com.ithaca.visu.controls.sessions
 			if(value != null)
 			{
 				sessionChange = true;
+				/*this.invalidateProperties();*/
 			}
 		}
 		public function get session():Session
@@ -350,11 +353,11 @@ package com.ithaca.visu.controls.sessions
 					this.sessionList.addItem(session);
 					// change onglet to "session"
 					this.explorerSession.selectedIndex = 0;
-					var lastAddedItemSession:int = this.sessionList.length-1;
-					this.sessionListView.sessionList.selectedIndex = lastAddedItemSession;
+
+					this.session = session;
 					// update session
 					sessionDetailView.session = session;
-					this.sessionListView.sessionList.ensureIndexIsVisible(lastAddedItemSession);
+					this.sessionListView.sessionList.ensureIndexIsVisible(this.sessionList.length-1);
 				}
 
 				Alert.show(typeSession,
@@ -383,8 +386,9 @@ package com.ithaca.visu.controls.sessions
 		private function selectSession():void
 		{
 			var session:Session = getIndexSession(this.sessionList);
+			// FIXME : if session exclus from the list session ?
 			sessionListView.sessionList.selectedItem = session;
-			onChangeSession();
+			updateSeletedSession(session);
 		}
 		
 		private function getIndexSession(list:ArrayCollection):Session
@@ -393,7 +397,7 @@ package com.ithaca.visu.controls.sessions
 			for(var nSession : int = 0; nSession < nbrSession ; nSession++)
 			{
 				var session:Session = list.getItemAt(nSession) as Session;
-				if(session.id_session == this._session.id_session)
+				if(this._session != null && session.id_session == this._session.id_session)
 				{
 					return session;
 				}
