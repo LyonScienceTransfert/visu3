@@ -407,6 +407,11 @@ package com.ithaca.visu.controls.sessions
 			}
 			sessionPlanEdit.setEditabled(planEditabled);
 		}
+		
+		public function initTabNav():void
+		{
+			tabNav.selectedIndex = 0;
+		}
 		//_____________________________________________________________________
 		//
 		// Listeners
@@ -469,6 +474,7 @@ package com.ithaca.visu.controls.sessions
 			updateSession.session = this.session;
 			this.dispatchEvent(updateSession);
 		}
+		
 	}
 	
 	
