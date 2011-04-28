@@ -219,6 +219,15 @@ package  com.ithaca.visu.model
 			return false;
 		}
 		
+		public function checkServeurVisuDev():Boolean
+		{
+			if (this.appName == "visudev")
+			{
+				return true;
+			}
+			return false;
+		}
+		
 		public function getNamePlateforme():String
 		{
 			var name:String = "Visu";

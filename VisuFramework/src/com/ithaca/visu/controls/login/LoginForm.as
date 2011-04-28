@@ -24,6 +24,7 @@ package com.ithaca.visu.controls.login
 	[SkinState("pending")]
 	[SkinState("normal")]
 	[SkinState("disabled")]
+	[SkinState("visudev")]
 	
 	[Event(name="onLogin", type="com.ithaca.visu.controls.login.event.LoginFormEvent")]
 	[Event(name="getPassword", type="com.ithaca.visu.controls.login.event.LoginFormEvent")]
@@ -54,6 +55,7 @@ package com.ithaca.visu.controls.login
 		protected var loginValidator:StringValidator;
 		protected var passValidator:StringValidator;
 		
+		private var visudev:Boolean;
 		
 		public function LoginForm()
 		{
@@ -123,6 +125,11 @@ package com.ithaca.visu.controls.login
 				
 			}
 		}
+		
+		override protected function getCurrentSkinState():String
+		{
+			return !enabled? "disable" : visudev? "visudev" : "normal";
+		}
 		/**
 		 * 
 		 * Validate user inputs  
@@ -161,5 +168,11 @@ package com.ithaca.visu.controls.login
 			e.username = loginField.text;
 			dispatchEvent( new LoginFormEvent( LoginFormEvent.GET_PASSWORD ) );
 		}	
+		
+		public function setSkinVisuDev():void
+		{
+			visudev = true;
+			invalidateSkinState();
+		}
 	}
 }
