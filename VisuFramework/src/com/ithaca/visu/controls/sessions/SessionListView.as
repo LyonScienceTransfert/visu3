@@ -312,7 +312,6 @@ package com.ithaca.visu.controls.sessions
 				listPlanCollectionChange = false;
 				planList.dataProvider = listPlanCollection;
 				listPlanCollection.filterFunction = filterPlan;
-				
 			}
 			
 			if(listSessionCollectionChange)
@@ -320,6 +319,8 @@ package com.ithaca.visu.controls.sessions
 				listSessionCollectionChange = false;
 				sessionList.dataProvider = listSessionCollection;
 				listSessionCollection.filterFunction = filterSession;
+				// update list session by filter and sort by date
+				onRadioSessionFilter();
 			}
 		}
 		override protected function partAdded(partName:String, instance:Object):void
@@ -469,19 +470,13 @@ package com.ithaca.visu.controls.sessions
 			refreshCollection();
 		}
 		
-		private function onRadioSessionFilter(event:MouseEvent):void
+		private function onRadioSessionFilter(event:MouseEvent = null):void
 		{		
-			var radioButton:RadioButton = event.currentTarget as RadioButton;
-			var sortDateFunction:Function;
-			switch (radioButton.id)
+			var sortDateFunction:Function = compareDateSession;
+			// set function "compareDateSessionRecording" for past session
+			if(pastButton.selected)
 			{
-				case "pastButton" :
-					sortDateFunction = compareDateSessionRecording;
-					break;
-				case "allButton" :
-				case "comingButton" : 
-					sortDateFunction = compareDateSession;
-					break;
+				sortDateFunction = compareDateSessionRecording;
 			}
 			// sort by date 
 			var sort:Sort = new Sort();
