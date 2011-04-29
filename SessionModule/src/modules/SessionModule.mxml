@@ -336,8 +336,10 @@
 			{
 				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
-					var nbrRetrodocument:int = event.nbrRetrodocument;
-					sessionManagement.sessionDetailView.nbrRetrodocument = nbrRetrodocument;
+					var nbrRetroDocumentOwner:int = event.nbrRetroDocumentOwner;
+					var nbrRetroDocumentShare:int = event.nbrRetroDocumentShare;
+					sessionManagement.sessionDetailView.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
+					sessionManagement.sessionDetailView.nbrRetroDocumentShare = nbrRetroDocumentShare;
 				}
 			}
 		]]>

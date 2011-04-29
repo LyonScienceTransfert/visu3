@@ -393,9 +393,9 @@ public class MainManager
 		{
 			nbrRetroDocumentShare = listRetroDocumentShared.length;
 		}
-		var nbrRetrodocument:int = nbrRetroDocumentOwner + nbrRetroDocumentShare;
 		var nbrRetrodocumentEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION);
-		nbrRetrodocumentEvent.nbrRetrodocument = nbrRetrodocument;
+		nbrRetrodocumentEvent.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
+		nbrRetrodocumentEvent.nbrRetroDocumentShare = nbrRetroDocumentShare;
 		this.dispatcher.dispatchEvent(nbrRetrodocumentEvent);
 	}
 	/**
