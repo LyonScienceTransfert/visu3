@@ -355,6 +355,7 @@ package com.ithaca.visu.controls.sessions
 					this.explorerSession.selectedIndex = 0;
 
 					this.session = session;
+					this.sessionListView.sessionList.selectedItem = session;
 					// update session
 					sessionDetailView.session = session;
 					this.sessionListView.sessionList.ensureIndexIsVisible(this.sessionList.length-1);
