@@ -141,10 +141,10 @@
 										import com.ithaca.visu.model.Model;
 									]]>
 								</fx:Script>
-								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
+								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" left="0" right="0" verticalAlign="middle" height="20">
 									<s:Label width="23%" text="{UtilFunction.getDateMountHourMin(data.date_session)}" maxDisplayedLines="1"/>
 									<mx:Spacer width="2%"/>
-									<s:HGroup  width="75%" right="1">
+									<s:HGroup  width="75%">
 										<s:Label  width="65%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
 										<s:Label width="35%" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" maxDisplayedLines="1"/>
 									</s:HGroup>
