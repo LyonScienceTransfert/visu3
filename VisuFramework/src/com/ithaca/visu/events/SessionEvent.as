@@ -63,6 +63,7 @@ public class SessionEvent extends Event
 	static public const GET_LIST_OBSEL_CLOSED_SESSION : String = 'getListObselClosedSession';
 	static public const LOAD_LIST_USERS_PLATEFORME : String = 'loadListUsersPlateforme';
 	static public const GO_RETROSPECTION_MODULE : String = 'goRetrospectionModule';
+	static public const GO_BILAN_MODULE : String = 'goBilanModule';
 	static public const GO_HOME_MODULE : String = 'goHomeModule';
 
 	// properties
@@ -83,7 +84,8 @@ public class SessionEvent extends Event
 	public var durationSessionRetro : Number;
 	public var traceId : String;
 	public var dateStartRecording : Date;
-	public var nbrRetrodocument:int;
+	public var nbrRetroDocumentOwner:int;
+	public var nbrRetroDocumentShare:int;
 
 	// constructor
 	public function SessionEvent(type : String,
