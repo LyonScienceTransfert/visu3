@@ -91,6 +91,10 @@ package com.ithaca.visu.controls.sessions
 			{
 				linkButtonGoSalonRetrospection.addEventListener(MouseEvent.CLICK, onGoSalonRetrospection)
 			}
+			if (instance == linkButtonGoSalonBilan)
+			{
+				linkButtonGoSalonBilan.addEventListener(MouseEvent.CLICK, onGoBilanRetrospection)
+			}
 		}
 		override protected function commitProperties():void
 		{
@@ -130,6 +134,13 @@ package com.ithaca.visu.controls.sessions
 			var goRetrospectionEvent:SessionEvent = new SessionEvent(SessionEvent.GO_RETROSPECTION_MODULE);
 			goRetrospectionEvent.session = this.session;
 			this.dispatchEvent(goRetrospectionEvent);
+		}
+		
+		private function onGoBilanRetrospection(event:MouseEvent):void
+		{
+			var goBilanEvent:SessionEvent = new SessionEvent(SessionEvent.GO_BILAN_MODULE);
+			goBilanEvent.sessionId = this.session.id_session;
+			this.dispatchEvent(goBilanEvent);
 		}
 		
 		private function getListAbsentUser():ArrayCollection
