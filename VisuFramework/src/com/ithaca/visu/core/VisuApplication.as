@@ -195,6 +195,10 @@ package com.ithaca.visu.core
 			moduleNavigator.navigateToModule( "retrospection", event.session);
 		}
 		 
+		protected function goBilan(event:SessionEvent):void{
+			logger.debug("The application is requested to go to the bilan room of the session {0}", event.sessionId);
+			moduleNavigator.navigateToModule( "bilan", event.sessionId);
+		}
 		
 		/**
 		 * 

@@ -34,6 +34,7 @@
 		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
 		<mate:Listener type="{SessionEvent.GO_HOME_MODULE}"  method="goHome"/>
 		<mate:Listener type="{SessionEvent.GO_RETROSPECTION_MODULE}"  method="goRetrospection"/>
+		<mate:Listener type="{SessionEvent.GO_BILAN_MODULE}"  method="goBilan"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
 	
