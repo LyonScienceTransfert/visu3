@@ -13,6 +13,7 @@ package  com.ithaca.visu.events
 		static public const ACTION_CANCEL_SESSION : String = 'actionCancelSession';
 		static public const ACTION_EDIT_SESSION : String = 'actionEditSession';
 		static public const ACTION_GOTO_RETROSPECTION : String = 'actionGoToRetrospection';
+		static public const ACTION_GOTO_BILANMODULE : String = 'actionGoToBilanmodule';
 		static public const ACTION_JOIN_SESSION : String = 'actionJoinSession';
 		
 		// properties
