@@ -58,7 +58,7 @@
 			<mx:FormItem 
 				label="Nombre de participants:" 
 				width="100%" includeIn="sessionComing">
-				<s:Label id="nbrUsersLanel" width="100%" 
+				<s:Label id="nbrUsersLabel" width="100%" 
 						 text="4"/>
 			</mx:FormItem>
 			
