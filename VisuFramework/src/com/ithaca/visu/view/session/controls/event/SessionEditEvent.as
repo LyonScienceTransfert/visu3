@@ -69,6 +69,8 @@ package com.ithaca.visu.view.session.controls.event
 	
 	import flash.events.Event;
 	
+	import mx.collections.ArrayCollection;
+	
 	public class SessionEditEvent extends Event
 	{
 		public static const DELETE_ACTIVITY:String="deleteActivitySessionEdit";
@@ -84,6 +86,7 @@ package com.ithaca.visu.view.session.controls.event
 		public static const UPDATE_DATE_TIME:String="updateDateTime";
 		public static const UPDATE_THEME:String="updateTheme";
 		public static const UPDATE_SESSION:String="updateSession";
+		public static const UPDATE_LIST_PLANED_USER:String="updateListPlanedUser";
 		public static const PRE_ADD_SESSION:String="preAddSession";
 		public static const ADD_SESSION:String="addSession";
 		public static const ADD_EMPTY_SESSION:String="addEmptySession";
@@ -105,6 +108,7 @@ package com.ithaca.visu.view.session.controls.event
 		public var isModel:Boolean = false;
 		public var listUser:Array;
 		public var date:Date;
+		public var listPlanedUser:ArrayCollection;
 		
 		public function SessionEditEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
