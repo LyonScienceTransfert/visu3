@@ -65,7 +65,6 @@ package com.ithaca.visu.controls.sessions
 			if(value != null)
 			{
 				sessionChange = true;
-				/*this.invalidateProperties();*/
 			}
 		}
 		public function get session():Session
@@ -178,11 +177,6 @@ package com.ithaca.visu.controls.sessions
 					selectSession();
 				}
 			}
-			/*if(sessionChange)
-			{
-				sessionChange = false;
-				selectSession();
-			}*/
 		}
 		
 		//_____________________________________________________________________
