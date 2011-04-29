@@ -305,8 +305,10 @@ public class SessionInfo
 		session.setStatus_session(sessionWithoutListUser.getStatus_session());
 		session.setTheme(sessionWithoutListUser.getTheme());
 		
-//		log.warn("Size of the users  = {}",listUser.size());	
 		session.setListUser(listUser);
+		
+		log.warn("Session = {}",session.toString());	
+		
 		return session;
 	}
 	
