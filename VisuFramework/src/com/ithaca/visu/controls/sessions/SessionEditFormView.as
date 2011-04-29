@@ -191,6 +191,11 @@ package com.ithaca.visu.controls.sessions
 			var user:User = event.user;
 			
 			this._listUser.addItemAt(user,0);
+			// update list planed user
+			var updateListPlanedUser:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_LIST_PLANED_USER);
+			updateListPlanedUser.listPlanedUser = this._listUser;
+			this.dispatchEvent(updateListPlanedUser);
+			
 			var sessionUserVO:SessionUserVO = new SessionUserVO();
 			sessionUserVO.id_session = _session.id_session;
 			sessionUserVO.id_user = user.id_user;

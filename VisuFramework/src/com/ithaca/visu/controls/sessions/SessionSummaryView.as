@@ -217,7 +217,12 @@ package com.ithaca.visu.controls.sessions
 				if(nbrUsersRecordPlanedLabel != null)
 				{
 					nbrUsersRecordPlanedLabel.text = _nbrUserPresent.toString()+ "/" + _nbrUserPlaned.toString();
-				};
+				}
+				if(nbrUsersLabel != null)
+				{ 
+					nbrUsersLabel.text = _nbrUserPresent.toString();
+				}
+				
 			}
 			
 			if(nbrRetrodocumentChange)
