@@ -65,6 +65,7 @@ public class SessionEvent extends Event
 	static public const GO_RETROSPECTION_MODULE : String = 'goRetrospectionModule';
 	static public const GO_BILAN_MODULE : String = 'goBilanModule';
 	static public const GO_HOME_MODULE : String = 'goHomeModule';
+	static public const GO_BILAN_MODULE : String = 'goBilanModule';
 
 	// properties
 	public var userId : int;

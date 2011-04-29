@@ -194,6 +194,11 @@ package com.ithaca.visu.core
 			logger.debug("The application is requested to go to the retrospection room of the session {0}", event.session.id_session);
 			moduleNavigator.navigateToModule( "retrospection", event.session);
 		}
+		
+		protected function goBilan(event:SessionEvent):void{
+			logger.debug("The application is requested to go to the bilan of the session {0}", event.session.id_session);
+			moduleNavigator.navigateToModule( "bilan", event.session);
+		}
 		 
 		protected function goBilan(event:SessionEvent):void{
 			logger.debug("The application is requested to go to the bilan room of the session {0}", event.sessionId);
