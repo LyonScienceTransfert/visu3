@@ -748,6 +748,7 @@
 		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_JOIN_SESSION, dispatchSessionEvent);
 		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_CANCEL_SESSION, dispatchSessionEvent);
 		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION, dispatchSessionEvent);
+		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_GOTO_BILANMODULE, dispatchSessionEvent);
 		   }
 		   
 		   private function dispatchSessionEvent(event:SessionHomeElementEvent):void
@@ -775,7 +776,14 @@
 					{
 						eventSession = new SessionEvent(SessionEvent.GO_RETROSPECTION_MODULE);
 						break;
-					}				
+					}
+					case SessionHomeElementEvent.ACTION_GOTO_BILANMODULE:
+					{
+						eventSession = new SessionEvent(SessionEvent.GO_BILAN_MODULE);
+						eventSession.sessionId = event.session.id_session;
+						eventSession.session = event.session;
+						break;
+					}					
 				}
 				if(event.session) {
 					eventSession.session = event.session;
