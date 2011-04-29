@@ -68,8 +68,6 @@
 				return data.statusSession==SessionStatusEnum.SESSION_CLOSE;
 			}
 			
-			
-			
 			private function isStarted():Boolean
 			{
 				return data.statusSession != SessionStatusEnum.SESSION_OPEN;
@@ -80,6 +78,10 @@
 			}
 
 			private function canJoinRetrospection(bindableStatus:int):Boolean {
+				return isClosed() && canAccess();
+			}
+			
+			private function canJoinBilan(bindableStatus:int):Boolean {
 				return isClosed() && canAccess();
 			}
 			
@@ -136,8 +138,6 @@
 					usersPreviewList.text = VisuUtils.joinUserList(data.participants.toArray());
 				}
 		    } 
-
-		
 			
 			private function doJoinSession(event:MouseEvent):void {
 					dispatch(SessionHomeElementEvent.ACTION_JOIN_SESSION);
@@ -149,6 +149,10 @@
 			
 			private function doRetrospection(event:MouseEvent):void {
 					dispatch(SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION);
+			}
+			
+			private function doBilan(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_GOTO_BILANMODULE);
 			}
 			
 			private function doCancel(event:MouseEvent):void {
@@ -281,6 +285,15 @@
 						includeInLayout="{canJoinRetrospection(data.statusSession)}"
 						/>
 			
+			
+					<mx:LinkButton 
+						id="bilanButton"
+						label="Bilans"
+						click="doBilan(event)"
+						toolTip="Voir les bilans existants pour cette session"
+						visible="{canJoinBilan(data.statusSession)}"
+						includeInLayout="{canJoinBilan(data.statusSession)}"
+						/>
 				</s:HGroup>
 			</s:HGroup>
 			

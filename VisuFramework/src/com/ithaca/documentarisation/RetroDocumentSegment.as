@@ -248,6 +248,9 @@ package com.ithaca.documentarisation
 				segmentVideo.setEditable(editabled);
 				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);
 				setEnabledButtonPlayStop();
+				
+				logger.debug("RetroDocumentSegment.commitProperties: duration has changed");
+				
 				labelStartDuration.text = getLabelStartDuration();
 				labelStartDuration.setStyle("fontWeight","normal");
 			}
@@ -267,6 +270,7 @@ package com.ithaca.documentarisation
 			
 			if(durationChange)
 			{
+				logger.debug("RetroDocumentSegment.commitProperties: duration has changed");
 				durationChange = false;
 				labelStartDuration.text = getLabelStartDuration();
 				labelStartDuration.setStyle("fontWeight","normal");
@@ -482,8 +486,8 @@ package com.ithaca.documentarisation
 		private function segmentVideo_changeHandler(event:RetroDocumentEvent):void
 		{
 			logger.debug("The segment video has been changed [event.beginTime: {0},event.endTime: {1}]. Updating the retro document...", event.beginTime,event.endTime);
-			this._timeBegin = event.beginTime;
-			this._timeEnd = event.endTime;
+			this._timeBegin = event.beginTime + _startDateSession;
+			this._timeEnd = event.endTime + _startDateSession;
 			_segment.beginTimeVideo = this._timeBegin;
 			_segment.endTimeVideo = this._timeEnd;
 			durationChange = true;
@@ -494,7 +498,13 @@ package com.ithaca.documentarisation
 		
 		private function getLabelStartDuration():String
 		{
-			return TimeUtils.formatTimeString(Math.floor((this._timeBegin - _startDateSession)/1000));
+			logger.debug("TimeUtils.formatTimeString(timeBegin: {0}, _startDateSession: {1}, (this._timeBegin - _startDateSession)/1000: {3})",
+					this._timeBegin,
+					_startDateSession,
+					Math.floor((this._timeBegin - _startDateSession)/1000));
+			var s:String = TimeUtils.formatTimeString(Math.floor((this._timeBegin - _startDateSession)/1000));
+			logger.debug("Label start duration: {0}", s);
+			return s;
 			
 			// Ne pas afficher la durée finalement, car la place manque
 			/*

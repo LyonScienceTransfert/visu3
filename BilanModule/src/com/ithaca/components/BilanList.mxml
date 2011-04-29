@@ -161,6 +161,34 @@
 			   bilanCollection.refresh();
 		}
 		
+		public function selectSession(sessionId:Number):void {
+			logger.debug("Select the session {0} in the session filter list", sessionId);
+			if(sessionId) {
+				var sessionSelection:Vector.<Object> = new Vector.<Object>();
+			
+				logger.debug("Session list's size: {0}", sessionComp.sessionList.dataProvider.length);
+				for (var i:int = 0; i<sessionComp.sessionList.dataProvider.length; i = i+1) {
+					var session:Session = sessionComp.sessionList.dataProvider.getItemAt(i) as Session;
+					logger.debug("{0} equals {1}", session.id_session, sessionId);
+					if(session.id_session == sessionId) {
+						logger.debug("YES");
+						sessionSelection.push(session);
+					} else
+						logger.debug("NO");
+				}
+
+				logger.debug("Show the session list filter");
+				seanceFilterButton.selected = true;
+
+				logger.debug("The new selection is {0}", sessionSelection);
+				sessionComp.sessionList.selectedItems = sessionSelection;
+				
+				this.selectedFilterSessionId = sessionId;
+
+				logger.debug("Refresh the bilan list");
+				bilanCollection.refresh();
+			}
+		}
 		         
 		function compareBilanByCreationDates(a:Object, b:Object, fields:Array = null):int {
 			return TimeUtils.compareDates(

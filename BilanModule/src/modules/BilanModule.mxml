@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		   xmlns:s="library://ns.adobe.com/flex/spark" 
-		   xmlns:mx="library://ns.adobe.com/flex/mx" 
-		   xmlns:modules="com.ithaca.visu.modules.*" 
-		   xmlns:maps="maps.*"
-		   xmlns:mate="http://mate.asfusion.com/"
-		   xmlns:controls="com.ithaca.visu.controls.*"
-		   configure="configureHandler(event)"
-		   top="0" bottom="0" left="0" right="0" 
-		   xmlns:vo="com.ithaca.visu.model.vo.*" 
-		   xmlns:ithaca="com.ithaca.components.*"
-		   creationComplete="initBilanModule(event)"
-		   >
+	   xmlns:s="library://ns.adobe.com/flex/spark" 
+	   xmlns:mx="library://ns.adobe.com/flex/mx" 
+	   xmlns:modules="com.ithaca.visu.modules.*" 
+	   xmlns:maps="maps.*"
+	   xmlns:mate="http://mate.asfusion.com/"
+	   xmlns:controls="com.ithaca.visu.controls.*"
+	   configure="configureHandler(event)"
+	   top="0" bottom="0" left="0" right="0" 
+	   xmlns:vo="com.ithaca.visu.model.vo.*" 
+	   xmlns:ithaca="com.ithaca.components.*"
+	   creationComplete="initBilanModule(event)"
+	   >
 	
 	<fx:Declarations>
 		<s:ArrayList id="segmentList"/>
@@ -108,18 +108,32 @@
 
 					logger.debug("bilanCollection {0}", bilanCollection);
 					bilanComp.setBilanCollection(bilanCollection);
+					
+					logger.debug("Select the right session in the session list if any");
+					if(selectedSessionIdWhenInit != -1) {
+						logger.debug("Ask for the selection of session {0} in the bilan component", selectedSessionIdWhenInit);
+						bilanComp.selectSession(selectedSessionIdWhenInit);
+					}
+					
 				} else 
 					logger.warn("showRetrievedBilanList. bilanComp NULL");
 			}
 
+			private var selectedSessionIdWhenInit:Number = -1;
+
 			protected function configureHandler(event:VisuModuleEvent):void
-			{				
+			{	
+				logger.debug("BilanModule.configureHandler");
 				if((event.currentTarget as BilanModule).parameters != null)
 				{
+					logger.debug("There are parameters passed to BilanModule");
 					var param:Object = (event.currentTarget as BilanModule).parameters ;
-					// FIXME : from other module was call to bilanModule with this sessionId 
-					var sessionId:int = param as int;
-				}
+					logger.debug("param: {0}", param);
+					this.selectedSessionIdWhenInit = (param as Session).id_session;
+					logger.debug("selectedSessionIdWhenInit: {0}", this.selectedSessionIdWhenInit);
+				} else
+					logger.debug("No parameter passed to the module");
+					
 				// set current module
 				Model.getInstance().setCurrentBilanModule(this);
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_BILAN);
@@ -134,7 +148,10 @@
 				bilanComp.addEventListener("SelectionEvent", onBilanSelected);
 				var moduleLoadedEvent:BilanEvent = new BilanEvent(BilanEvent.BILAN_MODULE_LOADED);  
 				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;
+				
 				this.dispatchEvent(moduleLoadedEvent);
+				
+				
 			}
 
 
