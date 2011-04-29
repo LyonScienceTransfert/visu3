@@ -65,6 +65,7 @@ package com.lyon2.visu.domain.model;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
 public class Session {
     /**
@@ -148,7 +149,7 @@ public class Session {
  
     private Integer id_currentActivity;
     
-    private Set<Integer> attendeeIds;
+    private Set<Integer> attendeeIds = new HashSet<Integer>();
     public void setAttendeeIds(Set<Integer> attendeeIds) {
 		this.attendeeIds = attendeeIds;
 	}
@@ -423,6 +424,13 @@ public class Session {
 		if(this.listUser != null)
 		{
 			out.append("listUsers size = " + this.listUser.size() +  " | ");			
+		}else
+		{
+			out.append("listUsers is empty" +  " | ");		
+		}
+		if(this.attendeeIds != null)
+		{
+			out.append("attendeeIds size = " + this.attendeeIds.size() +  " | ");			
 		}else
 		{
 			out.append("listUsers is empty" +  " | ");		
