@@ -272,6 +272,7 @@ package com.ithaca.visu.controls.sessions
 				sessionPlanEdit.percentHeight = 100;
 				sessionPlanEdit.percentWidth = 100;
 				sessionPlanEdit.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
+				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateDurationPlaned,true);
 				planTab = new NavigatorContent();
 				planTab.label = "Plan de séance";
 				planTab.addElement(sessionPlanEdit);
@@ -281,6 +282,7 @@ package com.ithaca.visu.controls.sessions
 				sessionFormView.percentHeight = 100;
 				sessionFormView.percentWidth = 100;
 				sessionFormView.addEventListener(SessionEditEvent.UPDATE_DATE_TIME, onUpdateDateTime);
+				sessionFormView.addEventListener(SessionEditEvent.UPDATE_LIST_PLANED_USER, onUpdateListPlanedUser);
 				dateTab = new NavigatorContent();
 				dateTab.label = "Dates et participants";
 				dateTab.addElement(sessionFormView);
@@ -472,6 +474,17 @@ package com.ithaca.visu.controls.sessions
 			session.date_session = date;
 			sessionSummaryView.dateSession = date;
 			updateSession();
+		}
+// UPDATE LIST PLANED USER 
+		private function onUpdateListPlanedUser(event:SessionEditEvent):void
+		{
+			var listPlanedUser:ArrayCollection = event.listPlanedUser;
+			sessionSummaryView.listPresentUser = listPlanedUser;
+		}
+// UPDATE DURATION PLANED 
+		private function onUpdateDurationPlaned(event:SessionEditEvent):void
+		{
+			checkDurationPlaned();
 		}
 // UPDAYE THEME
 		private function onUpdateTheme(event:SessionEditEvent):void
