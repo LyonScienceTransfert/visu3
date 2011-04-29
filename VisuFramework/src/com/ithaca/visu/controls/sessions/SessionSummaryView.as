@@ -36,7 +36,7 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var durationPlanedLabel:Label;
 		[SkinPart("true")]
-		public var nbrUsersLanel:Label;
+		public var nbrUsersLabel:Label;
 		[SkinPart("true")]
 		public var durationRecordPlanedLabel:Label;
 		[SkinPart("true")]
@@ -189,7 +189,7 @@ package com.ithaca.visu.controls.sessions
 				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMountYearHourMin(session.date_session)};
 				if(dateRecordingLabel != null){ dateRecordingLabel.text = UtilFunction.getDateMountYearHourMin(session.date_start_recording)};
 				if(durationPlanedLabel != null){ durationPlanedLabel.text = "?";};
-				if(nbrUsersLanel != null){ nbrUsersLanel.text = session.participants.length.toString();};
+				if(nbrUsersLabel != null){ nbrUsersLabel.text = session.participants.length.toString();};
 				if(durationRecordPlanedLabel != null){ durationRecordPlanedLabel.text = "?/?";};
 				if(nbrUsersRecordPlanedLabel != null){ nbrUsersRecordPlanedLabel.text = _nbrUserPresent.toString()+ "/" + _nbrUserPlaned.toString();};
 				if(nbrBilansLabel != null){ nbrBilansLabel.text = "?";};
