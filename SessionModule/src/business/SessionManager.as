@@ -273,7 +273,7 @@ package business
 				ar.push(new User(vo)) ; 
 			}
 			
-			var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS,true);
+			var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS);
 			onLoadedAllUsers.listUser = ar;
 			this.dispatcher.dispatchEvent(onLoadedAllUsers);
 		}
