@@ -83,7 +83,8 @@ package com.ithaca.visu.controls.sessions
 		private var activitiesChanged:Boolean;
 		private var _durationRecorded:Number;
 		private var durationRecordedChange:Boolean;
-		private var _nbrRetrodocument:int;
+		private var _nbrRetroDocumentOwner:int = 0;
+		private var _nbrRetroDocumentShare:int = 0;
 		private var nbrRetrodocumentChange:Boolean;
 		
 		private var planSkin:Boolean;
@@ -233,12 +234,20 @@ package com.ithaca.visu.controls.sessions
 			this.invalidateProperties();
 		}
 		
-		// set nbrRetrodocument 
-		public function set nbrRetrodocument(value:int):void
+		// set nbrRetroDocumentOwner 
+		public function set nbrRetroDocumentOwner(value:int):void
 		{
-			this._nbrRetrodocument = value;
+			this._nbrRetroDocumentOwner = value;
 			this.nbrRetrodocumentChange = true;
-			this.invalidateProperties();
+			invalidateProperties();
+		}
+		
+		// set nbrRetroDocumentOwner 
+		public function set nbrRetroDocumentShare(value:int):void
+		{
+			this._nbrRetroDocumentShare = value;
+			this.nbrRetrodocumentChange = true;
+			invalidateProperties();
 		}
 
 		public function set profiles(value:Array):void
@@ -338,7 +347,9 @@ package com.ithaca.visu.controls.sessions
 			if(nbrRetrodocumentChange)
 			{
 				nbrRetrodocumentChange = false;
-				this.sessionSummaryView.nbrRetrodocument = this._nbrRetrodocument
+				this.sessionSummaryView.nbrRetrodocument = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
+				sessionBilanFormView.nbrRetroDocumentOwner = this._nbrRetroDocumentOwner;
+				sessionBilanFormView.nbrRetroDocumentShare = this._nbrRetroDocumentShare;
 			}
 		}
 		//_____________________________________________________________________
