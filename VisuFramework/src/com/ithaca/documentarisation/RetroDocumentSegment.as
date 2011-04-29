@@ -494,7 +494,13 @@ package com.ithaca.documentarisation
 		
 		private function getLabelStartDuration():String
 		{
-			return TimeUtils.formatTimeString(Math.floor((this._timeBegin - _startDateSession)/1000));
+			logger.debug("TimeUtils.formatTimeString(timeBegin: {0}, _startDateSession: {1}, (this._timeBegin - _startDateSession)/1000: {3})",
+					this._timeBegin,
+					_startDateSession,
+					Math.floor((this._timeBegin - _startDateSession)/1000));
+			var s:String = TimeUtils.formatTimeString(Math.floor((this._timeBegin - _startDateSession)/1000));
+			logger.debug("Label start duration: {0}", s);
+			return s;
 			
 			// Ne pas afficher la durée finalement, car la place manque
 			/*
