@@ -26,7 +26,11 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var labelDuration:Label;
 		[SkinPart("true")]
+		public var labelBilan:Label;
+		[SkinPart("true")]
 		public var linkButtonGoSalonRetrospection:LinkButton;
+		[SkinPart("true")]
+		public var linkButtonGoSalonBilan:LinkButton;
 		
 		private var sessionChange:Boolean;
 		
@@ -36,6 +40,10 @@ package com.ithaca.visu.controls.sessions
 		private var presentUsersChanged:Boolean;
 		private var _durationRecorded:int = 0;
 		private var durationRecordedChange:Boolean;
+		
+		private var _nbrRetroDocumentOwner:int = 0;
+		private var _nbrRetroDocumentShare:int = 0;
+		private var nbrRetrodocumentChange:Boolean;
 		
 		public function SessionBilanFormView()
 		{
@@ -79,6 +87,21 @@ package com.ithaca.visu.controls.sessions
 			this.sessionChange = true;
 			this.invalidateProperties();
 		}
+		// set nbrRetroDocumentOwner 
+		public function set nbrRetroDocumentOwner(value:int):void
+		{
+			this._nbrRetroDocumentOwner = value;
+			this.nbrRetrodocumentChange = true;
+			invalidateProperties();
+		}
+		
+		// set nbrRetroDocumentOwner 
+		public function set nbrRetroDocumentShare(value:int):void
+		{
+			this._nbrRetroDocumentShare = value;
+			this.nbrRetrodocumentChange = true;
+			invalidateProperties();
+		}
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -121,6 +144,18 @@ package com.ithaca.visu.controls.sessions
 			{
 				durationRecordedChange = false;
 				if(labelDuration != null){ labelDuration.text = UtilFunction.getHourMin(_durationRecorded)};
+			}
+			if(nbrRetrodocumentChange)
+			{
+				var nbrBilan:int = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
+				if(nbrBilan == 0)
+				{
+					labelBilan.text = "Pour cet séance n'existe pas les bilans";
+				}else
+				{
+					labelBilan.text = "Pour cet séance il y a "+nbrBilan.toString() + " bilan(s) ("+this._nbrRetroDocumentShare.toString()+" bilan(s) partagé)";
+					
+				}
 			}
 		}
 		//_____________________________________________________________________
