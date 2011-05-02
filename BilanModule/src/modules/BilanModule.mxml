@@ -46,30 +46,34 @@
 			
 			
 			private function showRetroDocument(event:RetroDocumentEvent):void {
-				if(bilanViewer == null) {
-					logger.warn("Undesired call to BilanModule.showRetroDocument");
-					return;
-				}
-			
-				logger.debug("Displaying the retro document {0} received", event.retroDocument.id);
-				
-				var doc:RetroDocument = event.retroDocument;
-
-				var i:int; 
-				for (i = 0; i < this.bilanComp.bilanCollection.length; i++) 
-				{ 
-					var retroDoc:RetroDocument = this.bilanComp.bilanCollection.getItemAt(i) as RetroDocument;
-					if(retroDoc.id == doc.id) {
-						logger.debug("Passing the session object to the retro document {0} to be displayed. Session: {1} (Session.ownerId: {2})", 
-							event.retroDocument.id, 
-							retroDoc.session,
-							retroDoc.session.id_user
-							);
-						doc.session = retroDoc.session;
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					if(bilanViewer == null) {
+						logger.warn("Undesired call to BilanModule.showRetroDocument");
+						return;
 					}
+				
+					logger.debug("Displaying the retro document {0} received", event.retroDocument.id);
+					
+					var doc:RetroDocument = event.retroDocument;
+	
+					var i:int; 
+					for (i = 0; i < this.bilanComp.bilanCollection.length; i++) 
+					{ 
+						var retroDoc:RetroDocument = this.bilanComp.bilanCollection.getItemAt(i) as RetroDocument;
+						if(retroDoc.id == doc.id) {
+							logger.debug("Passing the session object to the retro document {0} to be displayed. Session: {1} (Session.ownerId: {2})", 
+								event.retroDocument.id, 
+								retroDoc.session,
+								retroDoc.session.id_user
+								);
+							doc.session = retroDoc.session;
+						}
+					}
+	
+					bilanViewer.setNewBilan(doc);
+					
 				}
-
-				bilanViewer.setNewBilan(doc);
 			}
 			
 			private function onRemovedModuleFromStage(event:Event):void {
@@ -84,39 +88,48 @@
 				// add obsel user walk out from retro room
 				var outFromBilanModule:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
 				this.dispatchEvent(outFromBilanModule);
+				
+				// set current module null
+				Model.getInstance().setCurrentBilanModule(null);
 			}
 			
 			private function showRetrievedBilanList(event:BilanEvent):void {
-				logger.debug("showRetrievedBilanList. {0} docs and {1} filter sessions", event.retroDocuments.length, event.filterSessionCollection.length);
 				
-				if(bilanComp) {
-					logger.debug("showRetrievedBilanList. bilanComp NOT NULL");
-					var filterSessionCollection:ArrayList = new ArrayList();
-					for each (var session:SessionVO in event.filterSessionCollection) 
-					{
-						filterSessionCollection.addItem(new Session(session));
-					}
-					logger.debug("bilanComp {0}", bilanComp);
-					logger.debug("filterSessionCollection {0}", filterSessionCollection);
-					bilanComp.setFilterSessionList(filterSessionCollection);
-
-					var bilanCollection:ArrayCollection = new ArrayCollection();
-					for each(var vo:RetroDocumentVO in event.retroDocuments) {
-						var retroDocument:RetroDocument = new RetroDocument(vo);
-						bilanCollection.addItem(retroDocument);
-					}
-
-					logger.debug("bilanCollection {0}", bilanCollection);
-					bilanComp.setBilanCollection(bilanCollection);
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					logger.debug("showRetrievedBilanList. {0} docs and {1} filter sessions", event.retroDocuments.length, event.filterSessionCollection.length);
 					
-					logger.debug("Select the right session in the session list if any");
-					if(selectedSessionIdWhenInit != -1) {
-						logger.debug("Ask for the selection of session {0} in the bilan component", selectedSessionIdWhenInit);
-						bilanComp.selectSession(selectedSessionIdWhenInit);
-					}
+					if(bilanComp) {
+						logger.debug("showRetrievedBilanList. bilanComp NOT NULL");
+						var filterSessionCollection:ArrayList = new ArrayList();
+						for each (var session:SessionVO in event.filterSessionCollection) 
+						{
+							filterSessionCollection.addItem(new Session(session));
+						}
+						logger.debug("bilanComp {0}", bilanComp);
+						logger.debug("filterSessionCollection {0}", filterSessionCollection);
+						bilanComp.setFilterSessionList(filterSessionCollection);
+	
+						var bilanCollection:ArrayCollection = new ArrayCollection();
+						for each(var vo:RetroDocumentVO in event.retroDocuments) {
+							var retroDocument:RetroDocument = new RetroDocument(vo);
+							bilanCollection.addItem(retroDocument);
+						}
+	
+						logger.debug("bilanCollection {0}", bilanCollection);
+						bilanComp.setBilanCollection(bilanCollection);
+						
+						logger.debug("Select the right session in the session list if any");
+						if(selectedSessionIdWhenInit != -1) {
+							logger.debug("Ask for the selection of session {0} in the bilan component", selectedSessionIdWhenInit);
+							bilanComp.selectSession(selectedSessionIdWhenInit);
+						}
+						
+					} else 
+						logger.warn("showRetrievedBilanList. bilanComp NULL");
 					
-				} else 
-					logger.warn("showRetrievedBilanList. bilanComp NULL");
+				}
+				
 			}
 
 			private var selectedSessionIdWhenInit:Number = -1;
