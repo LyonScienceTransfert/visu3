@@ -176,7 +176,7 @@ package com.ithaca.visu.controls.sessions
 		private function onGoBilanRetrospection(event:MouseEvent):void
 		{
 			var goBilanEvent:SessionEvent = new SessionEvent(SessionEvent.GO_BILAN_MODULE);
-			goBilanEvent.sessionId = this.session.id_session;
+			goBilanEvent.session = this.session;
 			this.dispatchEvent(goBilanEvent);
 		}
 		
