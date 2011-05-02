@@ -45,7 +45,6 @@
     -->
     
         <!--  Uncomment these lines to reactivate the KTBS-->
-    <!-- 
     <bean id="ktbsHelper" class="com.lyon2.visu.ktbs.KtbsApplicationHelper" init-method="init" destroy-method="destroy">
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="rootProvider" ref="multiUserRootProvider"/>
@@ -61,12 +60,11 @@
 		<property name="rootUri" value="${ktbs.root.uri}" />
 	</bean>
     
-     -->
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
-        <!--  Uncomment this line to reactivate the KTBS
-        <property name="ktbsHelper" ref="ktbsHelper"/>-->
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="smtpServer" value="${visu.smtpServer}" />
+        <!--  Uncomment this line to reactivate the KTBS -->
+        <property name="ktbsHelper" ref="ktbsHelper"/>
     </bean>
 
 <!--  DAO Definitions  -->
