@@ -308,7 +308,7 @@
 		
 		<s:Label left="25" top="10">
 			<!--<s:text>{fxgt.gettext("titre : ")}</s:text>-->
-			<s:text>Titre d'acitivité: </s:text>
+			<s:text>Titre d'activité: </s:text>
 		</s:Label>
 <!-- LABEL ACTIVITY-->
 		<s:TextInput id="titleActivity" left="200" top="5" right="150" color="#121212"
