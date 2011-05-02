@@ -49,69 +49,7 @@
 			width="100%" 
 			/>
 		
-		<mx:TabNavigator id="tabNav" width="100%" height="100%" includeIn="planMine,planOther,sessionComing,sessionPast" >
-
-		<!--	<s:NavigatorContent id="recordTab" label="Compte-rendu de séance" enabled.sessionComing="false" includeIn="sessionPast,sessionComing" label.sessionPast="Compte-rendu de séance......."/>-->
-		<!-- PLAN SESSION -->
-<!--			<s:NavigatorContent id="planTab" label="Plan de séance">-->
-<!--				<s:HGroup width="100%" horizontalAlign="right">
-					<s:Button width="150"  
-							  id="sharePlanButton" toolTip="Ajoute ce plan de séance à la liste des plans de séances" label="Partager ce plan"/>
-					<s:Button width="150" 
-							  id="createSessionButton" 
-							  toolTip="Crée une nouvelle séance à partir de ce plan" label="Nouvelle séance"/>
-				</s:HGroup>-->
-<!--				<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
-					<controls:SessionPlanEdit  id="sessionPlanEdit" width="100%" height="100%"/>
-					<s:Label text="Édition du plan de séance (reprise du composant de Serguei)"/> 
-				</s:HGroup>-->
-<!--			</s:NavigatorContent>-->
-		<!-- SESSION EDIT FORM -->			
-<!--			<mx:VBox id="dateTab" label="Dates et participants" includeIn="sessionComing,sessionPast">
-			</mx:VBox>-->
-<!--			<s:NavigatorContent id="dateTab" label="Dates et participants" includeIn="sessionComing,sessionPast">
-			</s:NavigatorContent>-->
-		<!-- COMPTE RENDU  SESSION -->
-<!--			<s:NavigatorContent id="recordTab" label="Compte-rendu de séance" enabled.sessionComing="false" includeIn="sessionPast,sessionComing" label.sessionPast="Compte-rendu de séance.......">
-				<mx:Form width="100%" paddingLeft="5" paddingRight="5" 
-						 paddingTop="5" paddingBottom="5">
-					
-					<mx:FormItem label="Participants:" width="100%">
-						<s:Label width="100%" text="Tom Smith (tuteur), John Black (étudiant), Jane White (étudiant)"/>
-					</mx:FormItem>
-					
-					<mx:FormItem label="Manquants:" width="100%">
-						<s:Label width="100%" text="Bill Jones (étudiant)"/>
-					</mx:FormItem>
-					
-					<mx:FormItem label="Date de début:" width="100%">
-						<s:Label width="100%" text="25 Fév. 2011, à 15:03"/>
-					</mx:FormItem>
-					
-					<mx:FormItem label="Date de fin:" width="100%">
-						<s:Label width="100%" text="25 Fév. 2011, à 16:30"/>
-					</mx:FormItem>
-					
-					<mx:FormItem label="Durée:" width="100%">
-						<s:Label width="100%" text="1 h 27"/>
-					</mx:FormItem>
-					
-					<mx:FormItem label="Bilans existants:" width="100%">
-						<s:Label width="100%" text="(Liste interactive des bilans, à maquetter avec le composant 'Liste des bilans')"/>
-					</mx:FormItem>
-					
-					<mx:FormItem label="Actions:" width="100%">
-						
-						<s:HGroup width="100%" horizontalAlign="left">
-							<mx:LinkButton id="goRetroButton" color="#0000FF" fontWeight="bold" toolTip="Rejoindre le salon de rétrospection pour cette séance" label="Aller vers rétrospection"/>
-						</s:HGroup>
-						
-					</mx:FormItem>
-				</mx:Form>
-				
-			</s:NavigatorContent>-->
-
-		</mx:TabNavigator>
+		<mx:TabNavigator id="tabNav" width="100%" height="100%" includeIn="planMine,planOther,sessionComing,sessionPast" />
 		<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center"  includeIn="empty">
 			<s:Label fontStyle="normal" fontWeight="bold" fontSize="14">
 				<s:text>Aucun plan de séance/aucune séance sélectionné(e)</s:text>
