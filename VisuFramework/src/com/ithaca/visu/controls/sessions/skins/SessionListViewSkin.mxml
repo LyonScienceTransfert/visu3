@@ -94,15 +94,11 @@
 		</s:Group>
 		
 		<s:Group width="100%" height="100%">
-			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-				<s:HGroup verticalAlign="bottom" width="100%">
-					<s:Label>
-						<s:text.plan>Liste des plans:</s:text.plan>
-						<s:text.session>Liste des séances:</s:text.session>
-					</s:Label>
+			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" x.session="0">
+				<s:HGroup verticalAlign="bottom" width="100%" horizontalAlign="center">
 					<s:Group id="newPlanSessionButtonsGroup">
 						<s:Button id="newPlanButton" label="Nouveau plan" toolTip="Crée un nouveau plan de séance vide" includeIn="plan"/>
-						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide" includeIn="session"/>
+						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide" includeIn="session" x="0"/>
 					</s:Group>
 				</s:HGroup>
 				
