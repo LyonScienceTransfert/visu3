@@ -150,10 +150,12 @@ package com.ithaca.visu.controls.sessions
 				var nbrBilan:int = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
 				if(nbrBilan == 0)
 				{
-					labelBilan.text = "Pour cet séance n'existe pas les bilans";
+					labelBilan.text = "Pour cette séance il n'existe pas le bilan";
 				}else
 				{
-					labelBilan.text = "Pour cet séance il y a "+nbrBilan.toString() + " bilan(s) ("+this._nbrRetroDocumentShare.toString()+" bilan(s) partagé)";
+					var endSBilansAll:String = "";   if(nbrBilan > 1){endSBilansAll = "s";};
+					var endSBilanShared:String = ""; if(this._nbrRetroDocumentShare > 1){endSBilanShared ="s"};
+					labelBilan.text = "Pour cette séance il y a "+nbrBilan.toString() + " bilan"+endSBilansAll+" ("+this._nbrRetroDocumentShare.toString()+" bilan"+endSBilanShared+" partagé)";
 					
 				}
 			}
