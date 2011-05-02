@@ -1,11 +1,11 @@
 package com.lyon2.visu.red5;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IClient;
@@ -15,12 +15,8 @@ import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
-import com.ithaca.domain.model.Obsel;
 import com.ithaca.domain.model.RetroDocument;
 import com.ithaca.service.RetroDocumentService;
-import com.lyon2.utils.ObselStringParams;
-import com.lyon2.utils.ObselType;
-import com.lyon2.utils.UtilFunction;
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
@@ -59,17 +55,17 @@ public class RetroDocumentInfo {
 			}
 		}
 		
-		Collection<Session> filterSessions = new HashSet<Session>();
-		for(RetroDocument doc:allDocs) 
-			filterSessions.add(doc.getSession());
+		Map<Integer, Session> filterSessionMap = new TreeMap<Integer, Session>();
+		for(RetroDocument doc:allDocs)
+			filterSessionMap.put(doc.getSessionId(), doc.getSession());
 		
 		
-		Object[] args = new Object[]{allDocs, filterSessions};
+		Object[] args = new Object[]{allDocs, filterSessionMap.values()};
 		IConnection connClient = (IConnection)conn.getClient().getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) 
 		{
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-			log.debug("Returning {} retro documents and {} filter sessions", allDocs.size(), filterSessions.size());
+			log.debug("Returning {} retro documents and {} filter sessions", allDocs.size(), filterSessionMap.values().size());
 			sc.invoke("bilanListRetrieved", args);
 		} 	
 	}
