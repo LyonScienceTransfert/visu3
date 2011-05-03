@@ -404,19 +404,23 @@ package com.ithaca.visu.controls.sessions
 			{
 				case "planMine" :
 				case "planOther" :
-					dateTab.enabled = false;
-					recordTab.enabled = false;
-					tabNav.selectedIndex = 0;
+					tabNav.removeAllChildren();
+					tabNav.addChild(planTab);
+					initTabNav();
 					break;
 				case "sessionComing" :
-					recordTab.enabled = false;
-					dateTab.enabled = true;
-					planEditabled = true;
+					tabNav.removeAllChildren();
+					tabNav.addChild(planTab);
+					tabNav.addChild(dateTab);
+					planEditabled = true;      
 					break;
 				case "sessionPast" :
-					recordTab.enabled = true;
-					dateTab.enabled = false;
+					tabNav.removeAllChildren();
+					tabNav.addChild(planTab);
+					tabNav.addChild(recordTab);
 					break;
+			// FIXME : when in "sessionComing" view dateTab is selected, 
+			//	than replace the view to "sessionPast" => index tabNav=0, but label of index = 1 is active. 
 			}
 			sessionPlanEdit.setEditabled(planEditabled);
 		}
