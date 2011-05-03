@@ -116,6 +116,7 @@ import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.stream.IBroadcastStream;
 import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.Obsel;
@@ -146,6 +147,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 IScheduledJob {
 
 	private KtbsApplicationHelper ktbsHelper;
+	private boolean pluggedToKtbs;
 	private SqlMapClient sqlMapClient;
 	private String smtpserver = "";
 	// sheduling interval is 5 min.
@@ -163,6 +165,10 @@ IScheduledJob {
 
 	public void setKtbsHelper(KtbsApplicationHelper ktbsHelper) {
 		this.ktbsHelper = ktbsHelper;
+	}
+	
+	public void setPluggedToKtbs(boolean pluggedToKtbs) {
+		this.pluggedToKtbs = pluggedToKtbs;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -623,7 +629,10 @@ IScheduledJob {
 		getSqlMapClient().insert("obsels.insert", obsel);
 
 		// safety test in case the ktsb would be deactivated
-		if(Application.this.ktbsHelper != null)  {
+		if(pluggedToKtbs)  {
+			if(!Application.this.ktbsHelper.isStarted()) {
+				Application.this.ktbsHelper.init();
+			}
 			Thread sentToKtbsThread = new Thread() {
 				@Override
 				public void run() {
