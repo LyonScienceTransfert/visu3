@@ -1,19 +1,18 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.visu.events.SessionListViewEvent;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-	import com.lyon2.controls.utils.TimeUtils;
+	
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
-	import mx.events.CollectionEvent;
-	import mx.events.CollectionEventKind;
 	import mx.graphics.SolidColor;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -30,10 +29,7 @@ package com.ithaca.visu.controls.sessions
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
-	import spark.layouts.VerticalLayout;
-	import spark.layouts.supportClasses.LayoutBase;
 	import spark.primitives.Rect;
-	import mx.collections.Sort;
 	
 	
 	[Event(name="selectSession",type="com.ithaca.visu.events.SessionListViewEvent")]
@@ -396,10 +392,6 @@ package com.ithaca.visu.controls.sessions
 			if(instance == sessionList)
 			{
 				sessionList.addEventListener(IndexChangeEvent.CHANGE, onChangeSession);
-				//var sort:Sort = new Sort(); 	
-				//sort.compareFunction = TimeUtils.compareDates;
-				//sessionList.dataProvider.sort = sort;
-	            
 			}
 			
 			if(instance == filterText)
@@ -561,7 +553,10 @@ package com.ithaca.visu.controls.sessions
 		private function checkFilterText(session:Session):Boolean
 		{
 			var passTextFilter:Boolean = false;
-			passTextFilter = session.theme.match(filterText.text) || session.description.match(filterText.text);
+			// FIXME : remove Model from here
+			var ownerSession:User = Model.getInstance().getUserPlateformeByUserId(session.id_user);
+			passTextFilter = session.theme.match(filterText.text) || session.description.match(filterText.text) 
+				|| ownerSession.firstname.match(filterText.text) || ownerSession.lastname.match(filterText.text);
 			return passTextFilter;
 		}
 		
