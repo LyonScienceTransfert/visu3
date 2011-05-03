@@ -76,6 +76,10 @@ public class KtbsApplicationHelper {
 	// a flag, true if all KTBS resources have been created on / downloaded from the KTBS
 	// false otherwise
 	private boolean started = false;
+	
+	public boolean isStarted() {
+		return started;
+	}
 
 	private KtbsRootClient getVisuUserRootClient() {
 		if(visuUserRootClient == null) {
@@ -347,5 +351,4 @@ public class KtbsApplicationHelper {
 		message+="]";
 		return message;
 	}
-
 }
