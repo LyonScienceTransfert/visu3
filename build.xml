@@ -600,6 +600,13 @@ or by setting the following environment variable:
 	      <copy file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
 	    </target>
 		
+		<target name="clean-webinf-libs">
+			<echo message="Removing ktbs-client jars from the server WEB-INF/lib directory"/>
+			<delete>
+				<fileset dir="${webapp.dir}/WEB-INF/lib" includes="ktbs*.jar"/>
+			</delete>
+		</target>
+
 	    <target name="build-and-deploy-all" depends="build-and-deploy-client,build-and-deploy-server" description="Builds the client and the server, and deploy the built files to the web app directory on the server"/>
 
 		 <target name="clean" description="Removes the temporary deploy directory where built files are created from the filesystem">
