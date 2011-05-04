@@ -12,7 +12,11 @@ package com.ithaca.visu.controls.sessions
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.controls.Alert;
+	import mx.controls.DataGrid;
+	import mx.controls.dataGridClasses.DataGridColumn;
 	import mx.events.CloseEvent;
+	import mx.events.FlexEvent;
+	import mx.events.ListEvent;
 	import mx.graphics.SolidColor;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -37,7 +41,9 @@ package com.ithaca.visu.controls.sessions
 	
 	[SkinState("plan")]
 	[SkinState("session")]
-	
+	/**
+	 * TODO : switch  List to DataGrid by property in MXML.
+	 */
 	public class SessionListView extends SkinnableComponent
 	{
 		
@@ -82,6 +88,14 @@ package com.ithaca.visu.controls.sessions
 		public var planList:List;
 		[SkinPart("true")]
 		public var sessionList:List;
+		
+		[SkinPart("true")]
+		public var sessionDataGrid:DataGrid;
+		[SkinPart("true")]
+		public var dateSessionDataGrid:DataGridColumn;
+		[SkinPart("true")]
+		public var planDataGrid:DataGrid;
+				
 		
 		[SkinPart("true")]
 		public var clearIcon:Group;
@@ -306,15 +320,32 @@ package com.ithaca.visu.controls.sessions
 			if(listPlanCollectionChange)
 			{
 				listPlanCollectionChange = false;
-				planList.dataProvider = listPlanCollection;
+				if(planList != null)
+				{
+					planList.dataProvider = listPlanCollection;
+				}
+				if(planDataGrid != null)
+				{
+					planDataGrid.dataProvider = listPlanCollection;
+				}
 				listPlanCollection.filterFunction = filterPlan;
 			}
 			
 			if(listSessionCollectionChange)
 			{
 				listSessionCollectionChange = false;
-				sessionList.dataProvider = listSessionCollection;
-				listSessionCollection.filterFunction = filterSession;
+				if(sessionList != null)
+				{
+					sessionList.dataProvider = listSessionCollection;
+				}
+				if(sessionDataGrid != null)
+				{
+					sessionDataGrid.dataProvider = listSessionCollection;
+				}
+				if(listSessionCollection != null)
+				{
+					listSessionCollection.filterFunction = filterSession;
+				}
 				// update list session by filter and sort by date
 				onRadioSessionFilter();
 			}
@@ -429,6 +460,16 @@ package com.ithaca.visu.controls.sessions
 			{
 				clearIcon.addEventListener(MouseEvent.CLICK , onClearIcon);
 			}
+			if(instance == sessionDataGrid)
+			{
+				sessionDataGrid.addEventListener(ListEvent.ITEM_CLICK, onDataGridChangeSession);
+				sessionDataGrid.addEventListener(ListEvent.CHANGE,  onDataGridChangeSession);
+			}
+			if(instance == planDataGrid)
+			{
+				planDataGrid.addEventListener(ListEvent.ITEM_CLICK, onDataGridChangeSession);
+				planDataGrid.addEventListener(ListEvent.CHANGE,  onDataGridChangeSession);
+			}
 			
 		}
 		override protected function getCurrentSkinState():String
@@ -442,7 +483,15 @@ package com.ithaca.visu.controls.sessions
 		// Listeners
 		//
 		//_____________________________________________________________________
-
+		// dataGrid listener
+		private function onDataGridChangeSession(event:ListEvent):void
+		{
+			var selectedSession:Session = event.itemRenderer.data as Session;
+			var selectSessionEvent:SessionListViewEvent = new SessionListViewEvent(SessionListViewEvent.SELECT_SESSION);
+			selectSessionEvent.selectedSession = selectedSession;
+			dispatchEvent(selectSessionEvent);	
+		}
+		// list listener
 		private function onChangeSession(event:IndexChangeEvent):void
 		{
 			var list:List = event.currentTarget as List;
@@ -464,20 +513,26 @@ package com.ithaca.visu.controls.sessions
 		
 		private function onRadioSessionFilter(event:MouseEvent = null):void
 		{		
+			// set text the columne "Date session" by condition the session past/will
+			var textColumnDateSession:String = "Date prévue";
 			var sortDateFunction:Function = compareDateSession;
 			// set function "compareDateSessionRecording" for past session
 			if(pastButton.selected)
 			{
+				textColumnDateSession = "Date de séance";
 				sortDateFunction = compareDateSessionRecording;
 			}
 			// sort by date 
 			var sort:Sort = new Sort();
 			sort.compareFunction = sortDateFunction;
-			listSessionCollection.sort = sort;
-			// refresh collection for calling filterFunction 
-			listSessionCollection.refresh();
-			// TODO : move verticalScroller for show selected item
-			
+			if(listSessionCollection != null)
+			{
+				listSessionCollection.sort = sort;
+				// refresh collection for calling filterFunction 
+				listSessionCollection.refresh();
+				// TODO : move verticalScroller for show selected item
+			}
+			dateSessionDataGrid.headerText = textColumnDateSession;
 		}
 		
 		private function onRadioPlanFilter(event:MouseEvent):void
