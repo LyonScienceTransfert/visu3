@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,7 +84,7 @@ public class VisuToKtbsUtils {
 		replacements.put("\" \"Introduction' à l'Art\"", "\" 'Introduction' à l'Art\"");
 		replacements.put("\" \"ce' problème\"", "\"'ce' problème\"");
 		replacements.put("\" \"un' problème", "\" 'un' problème");
-		replacements.put("\" \"la vie est belle' avec roberto benigni ?\"", "\" 'la vie est belle' avec roberto benigni ?\"");
+		replacements.put("\" \"la vie", "\" 'la vie");
 
 		return replacements;
 	}
