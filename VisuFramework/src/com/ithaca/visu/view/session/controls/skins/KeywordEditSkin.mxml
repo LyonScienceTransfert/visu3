@@ -107,9 +107,11 @@
 				</s:stroke>
 			</s:Rect>
 <!-- TEXT -->   		
-			<s:Label includeIn="normal,close"  id="textContent" text="ghgkkkhhkhkhkhkjhkjhkhgjgjgj  jgjg jj j gjgjhg jgjgjghjgj   j jg j jkhkGgh" top="1" left.close="10" left="42" right="10"
+			<s:Label includeIn="normal,close"  id="textContent" text="." 
+					 maxDisplayedLines="1"
+					 top="1" left.close="10" left="42" right="10"
 								   paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" bottom="2"/>
-			<s:TextArea id="editableContent"  includeIn="open" text="jkhgljhglgkjghkjgkjhgkljf" top="1" left="10" right="10" bottom="1"
+			<s:TextInput id="editableContent"  includeIn="open" text="..." top="1" left="10" right="10" bottom="1"
 						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
 						focusIn="editableContent_focusInHandler(event)"/>
 <!-- BOUTTONS -->
