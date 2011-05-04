@@ -109,6 +109,7 @@ package com.ithaca.visu.view.session.controls.event
 		public var listUser:Array;
 		public var date:Date;
 		public var listPlanedUser:ArrayCollection;
+		public var theme:String;
 		
 		public function SessionEditEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
