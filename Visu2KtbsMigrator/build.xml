@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+
+	<property name="ktbs.project.path" location="/home/dcram/dev/ws-visu2/ktbs-2-0"/>
+	<property name="ktbs.lib" location="${ktbs.project.path}/lib"/>
+	<property name="migrator.lib" location="lib"/>
+		
+	<property name="user.name" value="Damien Cram"/>
+	<property name="organisation" value="LIRIS UMR 5205 CNRS"/>
+	<property name="version" value="0.1"/>
+	<property name="title" value="Visu to KTBS Migrator"/>
+	
+	<property name="migrator.propfilename" value="visu2ktbs.properties"/>
+	<property name="ktbs.properties.filename" value="ktbs-client.properties"/>
+	<property name="log4j.properties.filename" value="log4j.properties"/>
+	
+	<target name="main">
+	 	<delete dir="dist"/>
+	 	<mkdir dir="dist"/>
+		<copy file="${migrator.propfilename}" todir="dist"/>
+		<copy file="src/${ktbs.properties.filename}" todir="dist"/>
+		<copy file="src/${log4j.properties.filename}" todir="dist"/>
+	 	<antcall target="package-3rd-party-libs"/>
+	 	<antcall target="jar-classes"/>
+	 </target>
+	
+	<target name="jar-classes" >
+	<jar destfile="dist/visu-to-ktbs.jar">
+	 	  <fileset dir="bin"/>
+	 	  <manifest>
+	 		   <attribute name="Built-By" value="${user.name}"/>
+		 	   <attribute name="Main-Class" value="org.liris.ktbs.visu.VisuToKtbs"/>
+	 		   <section name="common">
+	 		     <attribute name="Specification-Title" value="${title}"/>
+	 		     <attribute name="Specification-Version" value="${version}"/>
+	 		     <attribute name="Specification-Vendor" value="${organisation}"/>
+	 		     <attribute name="Implementation-Title" value="${title}"/>
+	 		     <attribute name="Implementation-Version" value="${version} ${TODAY}"/> 
+	 		     <attribute name="Implementation-Vendor" value="${organisation}"/>
+	 		   </section>
+	 		</manifest>
+	 	 </jar>
+	</target>
+		
+	<target name="package-3rd-party-libs" >
+		<copy file="${ktbs.lib}/commons-io-2.0.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/commons-logging-1.1.1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/httpclient-4.1-beta1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/httpclient-cache-4.1-beta1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/httpcore-4.1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/jena-2.6.3.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/icu4j-3.4.4.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/iri-0.8.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/jena-2.6.3.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/lucene-core-2.3.1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/stax-api-1.0.1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/wstx-asl-3.2.9.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/arq-2.8.4.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/log4j-1.2.13.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/slf4j-api-1.5.8.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/slf4j-log4j12-1.5.8.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/xercesImpl-2.7.1.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/guava-r07.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/org.springframework.asm-3.0.5.RELEASE.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/org.springframework.beans-3.0.5.RELEASE.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/org.springframework.context-3.0.5.RELEASE.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/org.springframework.core-3.0.5.RELEASE.jar" todir="dist/lib"/>
+		<copy file="${ktbs.lib}/org.springframework.expression-3.0.5.RELEASE.jar" todir="dist/lib"/>
+		<copy file="${migrator.lib}/ibatis-2.3.4.726.jar" todir="dist/lib"/>
+		<copy file="${migrator.lib}/mysql-connector-java-5.1.5.jar" todir="dist/lib"/>
+		<copy  todir="dist/lib">
+			<fileset dir="${ktbs.project.path}/dist">
+			    <include name="ktbs-client-*.jar"/>
+			</fileset>
+
+		</copy>
+	</target>
+	
+</project>
