@@ -19,7 +19,7 @@
 				 paddingTop="5" paddingBottom="5" width="50%">
 			
 			<mx:FormItem width="100%" label="Thème:" >
-				<s:TextInput id="themeLabel" borderVisible.planOther="false" borderVisible.sessionPast="false" width="100%" text="Le Brésil" editable.sessionPast="false"  editable.planOther="false" editable.planMine="true" editable.sessionComing="true"/>
+				<s:Label id="themeLabel" width="100%" text="Le Brésil"/>
 			</mx:FormItem>
 			
 			<mx:FormItem label="Propriétaire:" width="100%">
