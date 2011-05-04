@@ -14,25 +14,23 @@
  
     <fx:Script>
         <![CDATA[
-		import flash.events.MouseEvent;
-		import mx.collections.ArrayList;
-		import mx.collections.ArrayCollection;
-		import mx.controls.TabBar;
-		import mx.controls.Alert;
-		import com.ithaca.visu.model.Session;
+		import com.ithaca.documentarisation.model.RetroDocument;
 		import com.ithaca.events.SelectionEvent;
 		import com.ithaca.utils.VisuUtils;
-		import com.ithaca.visu.model.Model;
-		import spark.events.IndexChangeEvent;
-		import mx.events.ItemClickEvent;
-        import com.ithaca.documentarisation.model.RetroDocument;
-		import com.ithaca.visu.model.User;
 		import com.ithaca.visu.events.SessionListViewEvent;
-		import mx.collections.Sort;
+		import com.ithaca.visu.model.Model;
+		import com.ithaca.visu.model.Session;
+		import com.ithaca.visu.model.User;
 		import com.lyon2.controls.utils.TimeUtils;
-	
-        import mx.logging.ILogger;
+		
+		import mx.collections.ArrayCollection;
+		import mx.collections.ArrayList;
+		import mx.collections.Sort;
+		import mx.events.ItemClickEvent;
+		import mx.logging.ILogger;
 		import mx.logging.Log;
+		
+		import spark.events.IndexChangeEvent;
 			
 		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
 		
@@ -133,7 +131,9 @@
 		}
 		
 		private function  initSessionPane(event:Event):void {
-			sessionComp.sessionList.dataProvider = filterSessionList;
+			// TODO : set only past session and Lable in dataGrid "Date de séances" 
+			sessionComp.pastButton.selected = true;
+			sessionComp.sessionDataGrid.dataProvider = filterSessionList;
 			sessionComp.addEventListener("SelectionEvent", onSessionSelected);
 		}
 
@@ -166,7 +166,7 @@
 			if(sessionId) {
 				var sessionSelection:Vector.<Object> = new Vector.<Object>();
 			
-				logger.debug("Session list's size: {0}", sessionComp.sessionList.dataProvider.length);
+				logger.debug("Session list's size: {0}", sessionComp.listSessionCollection.length);
 				for (var i:int = 0; i<sessionComp.sessionList.dataProvider.length; i = i+1) {
 					var session:Session = sessionComp.sessionList.dataProvider.getItemAt(i) as Session;
 					logger.debug("{0} equals {1}", session.id_session, sessionId);
