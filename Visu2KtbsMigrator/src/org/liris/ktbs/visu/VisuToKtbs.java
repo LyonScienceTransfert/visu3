@@ -111,7 +111,7 @@ public class VisuToKtbs {
 				username);
 
 		if(storedTraceUri == null) {
-			logger.error("The KTBS failed to create the trace {}", traceName);
+			logger.info("The KTBS failed to create the trace {}. It may already exist.", traceName);
 			return;
 		}
 
@@ -186,7 +186,12 @@ public class VisuToKtbs {
 		rootProvider.openClient(visuUserName, visuUserName);
 		ResourceService service = rootProvider.getClient(visuUserName).getResourceService();
 		String baseUri = service.newBase(visuSharedBaseName, visuUserName);
-		service.newTraceModel(baseUri, visuModelLocalName);
+		if(baseUri == null) {
+			logger.info("Could not create the base {}. It may already exist", visuSharedBaseName);
+		} else {
+			logger.info("Creating the trace model {}.", visuModelLocalName);
+			service.newTraceModel(baseUri, visuModelLocalName);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
