@@ -166,7 +166,7 @@
 			if(sessionId) {
 				var sessionSelection:Vector.<Object> = new Vector.<Object>();
 			
-				logger.debug("Session list's size: {0}", sessionComp.listSessionCollection.length);
+				//logger.debug("Session list's size: {0}", sessionComp.listSessionCollection.length);
 				for (var i:int = 0; i<sessionComp.sessionList.dataProvider.length; i = i+1) {
 					var session:Session = sessionComp.sessionList.dataProvider.getItemAt(i) as Session;
 					logger.debug("{0} equals {1}", session.id_session, sessionId);
