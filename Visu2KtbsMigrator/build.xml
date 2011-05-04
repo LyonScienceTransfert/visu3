@@ -2,8 +2,7 @@
 
 <project default="main" basedir=".">
 
-	<property name="ktbs.project.path" location="/home/dcram/dev/ws-visu2/ktbs-2-0"/>
-	<property name="ktbs.lib" location="${ktbs.project.path}/lib"/>
+	<property name="ktbs.dist.path" location="/home/dcram/dev/ws-visu2/ktbs-2-0/dist"/>
 	<property name="migrator.lib" location="lib"/>
 		
 	<property name="user.name" value="Damien Cram"/>
@@ -44,36 +43,16 @@
 	</target>
 		
 	<target name="package-3rd-party-libs" >
-		<copy file="${ktbs.lib}/commons-io-2.0.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/commons-logging-1.1.1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/httpclient-4.1-beta1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/httpclient-cache-4.1-beta1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/httpcore-4.1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/jena-2.6.3.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/icu4j-3.4.4.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/iri-0.8.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/jena-2.6.3.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/lucene-core-2.3.1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/stax-api-1.0.1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/wstx-asl-3.2.9.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/arq-2.8.4.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/log4j-1.2.13.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/slf4j-api-1.5.8.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/slf4j-log4j12-1.5.8.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/xercesImpl-2.7.1.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/guava-r07.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/org.springframework.asm-3.0.5.RELEASE.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/org.springframework.beans-3.0.5.RELEASE.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/org.springframework.context-3.0.5.RELEASE.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/org.springframework.core-3.0.5.RELEASE.jar" todir="dist/lib"/>
-		<copy file="${ktbs.lib}/org.springframework.expression-3.0.5.RELEASE.jar" todir="dist/lib"/>
-		<copy file="${migrator.lib}/ibatis-2.3.4.726.jar" todir="dist/lib"/>
-		<copy file="${migrator.lib}/mysql-connector-java-5.1.5.jar" todir="dist/lib"/>
 		<copy  todir="dist/lib">
-			<fileset dir="${ktbs.project.path}/dist">
+			<fileset dir="${ktbs.dist.path}">
 			    <include name="ktbs-client-*.jar"/>
 			</fileset>
-
+			<fileset dir="${migrator.lib}">
+			    <include name="*.jar"/>
+			</fileset>
+			<fileset dir="${ktbs.dist.path}/lib">
+			    <include name="*.jar"/>
+			</fileset>
 		</copy>
 	</target>
 	
