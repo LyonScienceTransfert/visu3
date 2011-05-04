@@ -236,17 +236,34 @@ package com.ithaca.visu.controls.sessions
 		// listener if filter was call in SessionListView
 		private function onChangeSessionCollection(event:CollectionEvent):void
 		{
-			var session:Session = this.getIndexSession(this.sessionListView.sessionList.dataProvider as ArrayCollection);
-			this.sessionListView.sessionList.selectedItem = null;
-			this.sessionListView.sessionList.selectedItem = session;
+			var session:Session = this.getIndexSession(this.sessionListView.listSessionCollection);
+			if(this.sessionListView.sessionList != null)
+			{
+				this.sessionListView.sessionList.selectedItem = null;
+				this.sessionListView.sessionList.selectedItem = session;
+			}
+			if(this.sessionListView.sessionDataGrid != null)
+			{
+				this.sessionListView.sessionDataGrid.selectedItem = null;
+				this.sessionListView.sessionDataGrid.selectedItem  = session;
+			}
 			updateSeletedSession(session);
 		}
 		// listener if filter was call in SessionListView
 		private function onChangePlanCollection(event:CollectionEvent):void
 		{
-			var session:Session = this.getIndexSession(this.planListView.planList.dataProvider as ArrayCollection);
-			this.planListView.planList.selectedItem = null;
-			this.planListView.planList.selectedItem = session;
+			var session:Session = this.getIndexSession(this.planListView.listPlanCollection);
+			if(this.planListView.sessionList != null)
+			{
+				this.planListView.planList.selectedItem = null;
+				this.planListView.planList.selectedItem = session;
+			}
+			if(this.planListView.sessionDataGrid != null)
+			{
+				this.planListView.planDataGrid.selectedItem = null;
+				this.planListView.planDataGrid.selectedItem  = session;
+			}
+
 			updateSeletedSession(session);
 		}
 				
@@ -257,10 +274,25 @@ package com.ithaca.visu.controls.sessions
 			var session:Session = null;
 			if(sessionListView.id == "sessionListView" )
 			{
-				session = sessionListView.sessionList.selectedItem as Session;	
+				if(sessionListView.sessionList != null)
+				{
+					session = sessionListView.sessionList.selectedItem as Session;	
+				}
+				if(sessionListView.sessionDataGrid != null)
+				{
+					session = sessionListView.sessionDataGrid.selectedItem as Session;	
+				}
+				
 			}else
 			{
-				session = planListView.planList.selectedItem as Session;		
+				if(planListView.planList != null)
+				{
+					session = planListView.planList.selectedItem as Session;		
+				}
+				if(planListView.planDataGrid != null)
+				{
+					session = planListView.planDataGrid.selectedItem as Session;	
+				}
 			}
 			// set session
 			sessionDetailView.session = session;
@@ -382,7 +414,14 @@ package com.ithaca.visu.controls.sessions
 		{
 			var session:Session = getIndexSession(this.sessionList);
 			// FIXME : if session exclus from the list session ?
-			sessionListView.sessionList.selectedItem = session;
+			if(sessionListView.sessionList != null)
+			{
+				sessionListView.sessionList.selectedItem = session;
+			}
+			if(sessionListView.sessionDataGrid != null)
+			{
+				sessionListView.sessionDataGrid.selectedItem = session;
+			}
 			updateSeletedSession(session);
 		}
 		
