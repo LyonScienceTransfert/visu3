@@ -305,39 +305,42 @@
 				<s:DropShadowFilter angle="180" distance="1" blurX="1" blurY="1" color="#FFFFFF" />
 			</s:filters>
 		</s:Path>
-		
-		<s:Label left="25" top="10">
-			<!--<s:text>{fxgt.gettext("titre : ")}</s:text>-->
-			<s:text>Titre d'activité: </s:text>
-		</s:Label>
-<!-- LABEL ACTIVITY-->
-		<s:TextInput id="titleActivity" left="200" top="5" right="150" color="#121212"
-				 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
-				  focusOut="titleActivity_focusOutHandler(event)" 
-				  change="titleActivity_changeHandler(event)"
-				  includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="155" top.openEditable="5" left.openEditable="120" right.openEditable="155">
-			<!--<s:filters>
-				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
-			</s:filters>-->
-		</s:TextInput>
-<!-- MOVE UP/DOWN -->
-		<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12" top="10" right="105" includeIn="normalEditable,openEditable"/>
-		<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12" top="10" right="90"  includeIn="normalEditable,openEditable"/>
-<!-- DURATION -->
-		<s:NumericStepper id="durationActivity" top="3" width="44" right="2" 
-						  maximum="200" value="10"
-						   change="durationActivity_changeHandler(event)" includeIn="normalEditable,openEditable" height.openEditable="22" top.openEditable="5" right.openEditable="2" height.normalEditable="22" top.normalEditable="5" right.normalEditable="2"/>
-		<s:Label id="durationDisplay" right="50" top="10" text="durée" text.normal="durée :" text.normalEditable="durée :" text.open="durée :" text.openEditable="durée :"/>
-<!-- DELETE ACTIVITY -->
-		<mx:Button  id="buttonDeleteActivity" top="5" right="130" 
-					icon="{IconEnum.getIconByName('delete')}"
-					click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="120" top.openEditable="5" right.openEditable="120">
-			<mx:toolTip>Supprimer l'acitivité</mx:toolTip>
-		</mx:Button>
-		<s:Label includeIn="normal,open" text="10 " top="10" id="durationActivityLabel" right="30" width="18"/>
-		<s:Label includeIn="normal,open" text="min." top="10" right="5"/>
-		<s:Label includeIn="normal,open" height="22" textAlign="justify" maxDisplayedLines="1"
-				 text="Label" id="titleActivityLable" top="10" left="{LIFT_EDITABLED_COMPONENT}" fontSize="14" fontWeight="bold" top.normal="10" left.normal="120" right="90" top.open="10" left.open="120"/>
+		<s:HGroup width="100%" top="0" >
+			<mx:Spacer width="25"/>
+			<s:Label  paddingTop="10">
+				<s:text>Titre d'activité: </s:text>
+			</s:Label>
+	<!-- LABEL ACTIVITY-->
+			<s:Label id="titleActivityLable" includeIn="normal,open" width="100%" text="AAAAAA" paddingTop="8" fontSize="14" fontWeight="bold"/>
+			<s:TextInput id="titleActivity"  color="#121212" width="100%"
+					 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
+					  focusOut="titleActivity_focusOutHandler(event)" 
+					  change="titleActivity_changeHandler(event)"
+					  includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="155" top.openEditable="5" left.openEditable="120" right.openEditable="155">
+				<!--<s:filters>
+					<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
+				</s:filters>-->
+			</s:TextInput>
+	<!-- DELETE ACTIVITY -->
+			<mx:Button  id="buttonDeleteActivity" top="5" 
+						icon="{IconEnum.getIconByName('delete')}"
+						click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="120" top.openEditable="5" right.openEditable="120">
+				<mx:toolTip>Supprimer l'acitivité</mx:toolTip>
+			</mx:Button>
+	<!-- MOVE UP/DOWN -->
+			<s:HGroup  paddingTop="5" includeIn="normalEditable,openEditable">
+				<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12"/>
+				<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12"/>
+			</s:HGroup>
+	<!-- DURATION -->
+			<s:Label id="durationDisplay" paddingTop="10" text="durée" text.normal="durée :" text.normalEditable="durée :" text.open="durée :" text.openEditable="durée :"/>
+			<s:Label includeIn="normal,open" text="10 "  id="durationActivityLabel"  width="18" paddingTop="10"/>
+			<s:Label includeIn="normal,open" text="min."   paddingTop="10"/>
+			<s:NumericStepper id="durationActivity" width="44"
+							  maximum="200" value="10"
+							   change="durationActivity_changeHandler(event)" includeIn="normalEditable,openEditable" height.openEditable="22" top.openEditable="5" right.openEditable="2" height.normalEditable="22" top.normalEditable="5" right.normalEditable="2"/>
+			<mx:Spacer width="3"/>
+		</s:HGroup>	
 	</s:Group>
 	
 	<s:Group top="30" bottom="10" includeIn="open,openEditable" id="content" width.open="100%" top.open="30" bottom.open="10" left.openEditable="5" left.open="5" top.openEditable="30" bottom.openEditable="10" width.openEditable="100%">
