@@ -311,7 +311,7 @@
 				<s:text>Titre d'activité: </s:text>
 			</s:Label>
 	<!-- LABEL ACTIVITY-->
-			<s:Label id="titleActivityLable" includeIn="normal,open" width="100%" text="AAAAAA" paddingTop="8" fontSize="14" fontWeight="bold"/>
+			<s:Label id="titleActivityLable" includeIn="normal,open" width="100%" text="AAAAAA" paddingTop="8" fontSize="14" fontWeight="bold" maxDisplayedLines="1"/>
 			<s:TextInput id="titleActivity"  color="#121212" width="100%"
 					 fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
 					  focusOut="titleActivity_focusOutHandler(event)" 
