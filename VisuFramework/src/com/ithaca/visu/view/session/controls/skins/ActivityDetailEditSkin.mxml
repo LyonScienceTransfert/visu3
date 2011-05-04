@@ -42,7 +42,7 @@
 // STATEMANT
 			protected function addStatement_focusInHandler(event:FocusEvent):void
 			{
-				if(addStatement.text == "Ajoutez une nouvelle consigne ici"){
+				if(addStatement.text == "ajoutez une nouvelle consigne ici"){
 					addStatement.text = "";
 					addStatement.setStyle("fontStyle","normal");
 					addStatement.setStyle("color","#000000");
@@ -67,7 +67,7 @@
 			protected function validStatementButton_clickHandler(event:*):void
 			{
 				// add statement
-				if(addStatement.text != "Ajoutez une nouvelle consigne ici" && addStatement.text != "")
+				if(addStatement.text != "ajoutez une nouvelle consigne ici" && addStatement.text != "")
 				{
 					this.hostComponent.addStatement(addStatement.text);
 					addStatement.text = "";
@@ -77,14 +77,14 @@
 
 			private function setMessageStatement():void
 			{
-				addStatement.text = "Ajoutez une nouvelle consigne ici";
+				addStatement.text = "ajoutez une nouvelle consigne ici";
 				addStatement.setStyle("fontStyle","italic");
 				addStatement.setStyle("color","#BBBBBB");
 			}
 // MEMO
 			protected function memoDisplay_focusInHandler(event:FocusEvent):void
 			{
-				if(memoDisplay.text == "Entrez un nouveau mémo ici")
+				if(memoDisplay.text == "entrez un nouveau mémo ici")
 				{
 					memoDisplay.text = "";
 					memoDisplay.setStyle("fontStyle","normal");
@@ -112,7 +112,7 @@
 			
 			protected function addTitreDocument_focusInHandler(event:FocusEvent):void
 			{
-				if(addTitreDocument.text == "Ajoutez un nouveau titre de document ici"){
+				if(addTitreDocument.text == "ajoutez un nouveau titre de document ici"){
 					addTitreDocument.text = "";
 					addTitreDocument.setStyle("fontStyle","normal");
 					addTitreDocument.setStyle("color","#000000");
@@ -121,7 +121,7 @@
 
 			protected function addLienDocument_focusInHandler(event:FocusEvent):void
 			{
-				if(addLienDocument.text == "Ajoutez un nouveau lien ici"){
+				if(addLienDocument.text == "ajoutez un nouveau lien ici"){
 					addLienDocument.text = "";
 					addLienDocument.setStyle("fontStyle","normal");
 					addLienDocument.setStyle("color","#000000");
@@ -149,7 +149,7 @@
 					{
 						type = ActivityElementType.IMAGE;
 					}
-					if(titre =="Ajoutez un nouveau titre de document ici")
+					if(titre =="ajoutez un nouveau titre de document ici")
 					{
 						titre = "...document...";
 					}
@@ -159,28 +159,28 @@
 				}else
 				{
 					// set text to addLienDocument
-					addLienDocument.text = "Ajoutez un nouveau lien ici";
+					addLienDocument.text = "ajoutez un nouveau lien ici";
 					stage.focus = addLienDocument;
 				}
 			}
 
 			private function setMessageTitreDocument():void
 			{
-				addTitreDocument.text = "Ajoutez un nouveau titre de document ici";
+				addTitreDocument.text = "ajoutez un nouveau titre de document ici";
 				addTitreDocument.setStyle("fontStyle","italic");
 				addTitreDocument.setStyle("color","#BBBBBB");
 			}
 			
 			private function setMessageLienDocument():void
 			{
-				addLienDocument.text = "Ajoutez un nouveau lien ici";
+				addLienDocument.text = "ajoutez un nouveau lien ici";
 				addLienDocument.setStyle("fontStyle","italic");
 				addLienDocument.setStyle("color","#BBBBBB");
 			}
 // KEYWORD
 			protected function addKeyword_focusInHandler(event:FocusEvent):void
 			{
-				if(addKeyword.text == "Entrez un nouveau mot-clé"){
+				if(addKeyword.text == "entrez un nouveau mot-clé"){
 					addKeyword.text = "";
 					addKeyword.setStyle("fontStyle","normal");
 					addKeyword.setStyle("color","#000000");
@@ -199,7 +199,7 @@
 				if(event.keyCode == Keyboard.ENTER && addKeyword.text != "")
 				{
 					// add statement
-					if(addKeyword.text != "Entrez un nouveau mot-clé" && addKeyword.text != "")
+					if(addKeyword.text != "entrez un nouveau mot-clé" && addKeyword.text != "")
 					{
 						this.hostComponent.addKeyword(addKeyword.text);
 						addKeyword.text = "";
@@ -210,7 +210,7 @@
 			
 			private function setMessageKeyword():void
 			{
-				addKeyword.text = "Entrez un nouveau mot-clé";
+				addKeyword.text = "entrez un nouveau mot-clé";
 				addKeyword.setStyle("fontStyle","italic");
 				addKeyword.setStyle("color","#BBBBBB");
 			}
@@ -363,7 +363,7 @@
 						focusIn="addStatement_focusInHandler(event)"
 						keyUp="addStatement_keyUpHandler(event)" 
 						focusOut="addStatement_focusOutHandler(event)" includeIn="openEditable">
-				<s:text>ajout une nouvelle consigne ici</s:text>
+				<s:text>ajoutez une nouvelle consigne ici</s:text>
 			</s:TextArea>	
 			<s:Button right="15" top="27" bottom="2" click="validStatementButton_clickHandler(event)" includeIn="openEditable">
 				<s:label>Valider</s:label>
@@ -379,26 +379,34 @@
 			</s:Group>	
 		</s:Group>
 <!-- ADD DOCUMENT -->
-		<s:Group width="100%" left="10">
-			<s:TextArea  id="addTitreDocument" top="0" right="5" maxHeight="22" minWidth="290" textAlign="center"
-						 fontStyle="italic" color="#BBBBBB"
-						 focusOut="addTitreDocument_focusOutHandler(event)"
-						   focusIn="addTitreDocument_focusInHandler(event)" includeIn="openEditable">
-				<s:text>ajout une nouvelle titre de document ici</s:text>
-			</s:TextArea>
-			<s:TextArea  id="addLienDocument" right="140" maxHeight="22" top="25" minWidth="220"
-						 fontStyle="italic" color="#BBBBBB"
-						  focusIn="addLienDocument_focusInHandler(event)"
-						   focusOut="addLienDocument_focusOutHandler(event)" includeIn="openEditable">
-				<s:text>ajout une nouvelle lien de document ici</s:text>
-			</s:TextArea>
-			<s:Button  id="validButtonDocument" right="5" top="25"
-					    click="validButtonDocument_clickHandler(event)" includeIn="openEditable">
-				<s:label>Ajouter le document</s:label>
-			</s:Button>
-			<s:Label includeIn="openEditable" text="Titre du document :" top="5" right="300"/>
-			<s:Label includeIn="openEditable" text="Url du document :" top="30" right="365"/>
-		</s:Group>
+		<s:VGroup width="100%" left="10">
+			<s:HGroup width="100%">
+				<mx:Spacer width="100%"/>
+				<s:Label includeIn="openEditable" text="Titre du document :" paddingTop="5"/>
+				<s:TextArea  id="addTitreDocument" top="0" maxHeight="22" minWidth="290" textAlign="left"
+							 fontStyle="italic" color="#BBBBBB"
+							 focusOut="addTitreDocument_focusOutHandler(event)"
+							   focusIn="addTitreDocument_focusInHandler(event)" includeIn="openEditable">
+					<s:text>ajoutez un nouveau titre de document ici</s:text>
+				</s:TextArea>
+				<mx:Spacer width="0"/>
+			</s:HGroup>
+			<s:HGroup width="100%" right="5">
+				<mx:Spacer width="100%"/>
+				<s:Label includeIn="openEditable" text="Url du document :" paddingTop="5"/>
+				<s:TextArea  id="addLienDocument" right="140" maxHeight="22" minWidth="220"
+							 fontStyle="italic" color="#BBBBBB"
+							  focusIn="addLienDocument_focusInHandler(event)"
+							   focusOut="addLienDocument_focusOutHandler(event)" includeIn="openEditable">
+					<s:text>ajoutez un nouveau lien ici</s:text>
+				</s:TextArea>
+				<s:Button  id="validButtonDocument"
+						    click="validButtonDocument_clickHandler(event)" includeIn="openEditable">
+					<s:label>Ajouter le document</s:label>
+				</s:Button>
+				<mx:Spacer width="0"/>
+			</s:HGroup>
+		</s:VGroup>
 <!-- KEYWORD -->
 		<s:Group width="100%" height="100" height.open="100" height.openEditable="100" right="5">
 			<s:Label left="5" text="Mots-clés : "/>
@@ -410,13 +418,13 @@
 				</s:Group>	
 			</s:Scroller>
 <!-- ADD KEYWORD -->
-			<s:TextArea  id="addKeyword" height="22" right="2" bottom="2"
+			<s:TextInput  id="addKeyword" height="22" right="2" bottom="2"
 							 fontStyle="italic" color="#BBBBBB"
 							 focusIn="addKeyword_focusInHandler(event)"
 							 focusOut="addKeyword_focusOutHandler(event)"
-							 keyUp="addKeyword_keyUpHandler(event)" includeIn="openEditable">
-				<s:text>Entrez un nouveau mot-clé</s:text>
-			</s:TextArea>
+							 keyUp="addKeyword_keyUpHandler(event)" includeIn="openEditable" width="160">
+				<s:text>entrez un nouveau mot-clé</s:text>
+			</s:TextInput>
 		</s:Group>
 <!-- MEMO -->	
 		<s:Group width="100%">
@@ -448,7 +456,6 @@
 						 focusIn="memoDisplay_focusInHandler(event)"
 						 focusOut="memoDisplay_focusOutHandler(event)" 
 						 change="memoDisplay_changeHandler(event)" left="10" right="10" enabled.open="false">
-					<s:text>This ic memo</s:text>
 				</s:RichEditableText>
 			</s:Group>
 		</s:Group>
