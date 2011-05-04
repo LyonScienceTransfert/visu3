@@ -82,25 +82,27 @@ package com.ithaca.visu.view.session.controls
 	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.SkinnableContainer;
+	import spark.components.TextInput;
+	import spark.events.TextOperationEvent;
 	
 	public class SessionPlanEdit extends SkinnableContainer
 	{
 			
 		[SkinPart("true")] 
 		public var activityGroup:Group;
-		
-/*		[SkinPart("true")] 
-		public var keywordGroup:Group;*/
-		
 		[SkinPart("true")] 
 		public var sharePlanButton:Button;
-
 		[SkinPart("true")] 
 		public var createSessionButton:Button;
+		[SkinPart("true")] 
+		public var themeLabel:TextInput;
 		
 		private var editabled:Boolean;
 		private var _activities:ArrayCollection;
 		protected var activitiesChanged:Boolean;
+		
+		private var _theme:String;
+		private var themeChange:Boolean;
 		
 		public function SessionPlanEdit()
 		{
@@ -124,6 +126,10 @@ package com.ithaca.visu.view.session.controls
 			if (instance == sharePlanButton)
 			{
 				sharePlanButton.addEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
+			}
+			if (instance == themeLabel)
+			{
+				themeLabel.addEventListener(TextOperationEvent.CHANGE, onChangeTextTheme);
 			}
 
 		}
@@ -183,6 +189,15 @@ package com.ithaca.visu.view.session.controls
 				}
 					
 			}
+			
+			if(themeChange)
+			{
+				themeChange = false;
+				if(themeLabel != null)
+				{
+					themeLabel.text = _theme;
+				}
+			}
 		}
 		
 		override protected function getCurrentSkinState():String
@@ -206,6 +221,21 @@ package com.ithaca.visu.view.session.controls
 			this.invalidateProperties();
 		}
 		
+		//_____________________________________________________________________
+		//
+		// Setter/getter
+		//
+		//_____________________________________________________________________
+		public function set theme(value:String):void
+		{
+			_theme = value;
+			themeChange = true;
+			invalidateProperties();
+		}
+		public function get theme():String
+		{
+			return _theme;
+		}
 		[Bindable("updateActivities")] 
 		public function get activities():ArrayCollection { return _activities; }
 		public function set activities(value:ArrayCollection):void 
@@ -280,6 +310,13 @@ package com.ithaca.visu.view.session.controls
 			var addActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY);
 			addActivityEvent.activity = activity;
 			this.dispatchEvent(addActivityEvent);
+		}
+		
+		private function onChangeTextTheme(event:TextOperationEvent):void
+		{
+			var updateTheme:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_THEME);
+			updateTheme.theme = themeLabel.text;
+			this.dispatchEvent(updateTheme);
 		}
 		
 		public function onMouseClickButtonCreateSessionByTemplate(event:MouseEvent):void

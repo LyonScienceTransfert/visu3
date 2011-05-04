@@ -2,19 +2,15 @@ package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.utils.VisuUtils;
-	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
-	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
 	import mx.collections.ArrayCollection;
 	
 	import spark.components.Label;
-	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
-	import spark.events.TextOperationEvent;
 	
 	[SkinState("planMine")]
 	[SkinState("planOther")]
@@ -24,7 +20,7 @@ package com.ithaca.visu.controls.sessions
 	public class SessionSummaryView extends SkinnableComponent
 	{
 		[SkinPart("true")]
-		public var themeLabel:TextInput;
+		public var themeLabel:Label;
 		[SkinPart("true")]
 		public var ownerLabel:Label;
 		[SkinPart("true")]
@@ -60,6 +56,9 @@ package com.ithaca.visu.controls.sessions
 		private var presentUsersChanged:Boolean;
 		private var _nbrUserPlaned:int;
 		private var _nbrUserPresent:int;
+
+		private var _theme:String;
+		private var themeChange:Boolean;
 		
 		private var planSkin:Boolean;
 		private var planMineSkin:Boolean;
@@ -160,6 +159,16 @@ package com.ithaca.visu.controls.sessions
 			presentUsersChanged = true;
 			invalidateProperties();
 		}
+		public function set theme(value:String):void
+		{
+			_theme = value;
+			themeChange = true;
+			invalidateProperties();
+		}
+		public function get theme():String
+		{
+			return _theme;
+		}
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -169,10 +178,6 @@ package com.ithaca.visu.controls.sessions
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == themeLabel)
-			{	
-				themeLabel.addEventListener(TextOperationEvent.CHANGE, onChangeTextTheme);
-			}
 		}
 		override protected function commitProperties():void
 		{
@@ -230,6 +235,12 @@ package com.ithaca.visu.controls.sessions
 				nbrRetrodocumentChange = false;
 				if(nbrBilansLabel != null){ nbrBilansLabel.text = this._nbrRetrodocument.toString();};
 			}
+			if(themeChange)
+			{
+				themeChange = false;
+				themeLabel.text = _theme;
+				session.theme = _theme;
+			}
 
 		}
 		
@@ -245,20 +256,6 @@ package com.ithaca.visu.controls.sessions
 			}else if(sessionPastSkin){skinName = "sessionPast"} else{skinName = "sessionComing"};
 			
 			return skinName;
-		}
-		//_____________________________________________________________________
-		//
-		// Listeners
-		//
-		//_____________________________________________________________________
-
-		private function onChangeTextTheme(event:TextOperationEvent):void
-		{
-			this.session.theme = "";
-			this.session.theme = themeLabel.text;
-			var updateTheme:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_THEME);
-			updateTheme.session = this.session;
-			this.dispatchEvent(updateTheme);
 		}
 	}
 }

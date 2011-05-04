@@ -273,6 +273,7 @@ package com.ithaca.visu.controls.sessions
 				sessionPlanEdit.percentWidth = 100;
 				sessionPlanEdit.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
 				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateDurationPlaned,true);
+				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_THEME, onUpdateTheme);
 				planTab = new NavigatorContent();
 				planTab.label = "Plan de séance";
 				planTab.addElement(sessionPlanEdit);
@@ -307,9 +308,7 @@ package com.ithaca.visu.controls.sessions
 			if (instance == sessionSummaryView)
 			{
 				sessionSummaryView.loggedUser = this.loggedUser;
-				sessionSummaryView.addEventListener(SessionEditEvent.UPDATE_THEME, onUpdateTheme);
 			}
-
 		}
 		
 		override protected function commitProperties():void
@@ -321,6 +320,7 @@ package com.ithaca.visu.controls.sessions
 				sessionSummaryView.session = this.session;
 				sessionFormView.session = this.session;	
 				sessionBilanFormView.session = this.session;
+				sessionPlanEdit.theme = this.session.theme;
 			}
 			
 			if(activitiesChanged)
@@ -490,10 +490,13 @@ package com.ithaca.visu.controls.sessions
 		{
 			checkDurationPlaned();
 		}
-// UPDAYE THEME
+// UPDATE THEME
 		private function onUpdateTheme(event:SessionEditEvent):void
 		{
+			this.session.theme = "";
+			this.session.theme = event.theme;
 			updateSession();
+			sessionSummaryView.theme = event.theme;
 		}
 // UPDATE SESSION
 		private function updateSession():void
