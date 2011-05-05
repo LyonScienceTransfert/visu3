@@ -1,8 +1,10 @@
 package com.ithaca.visu.controls.globalNavigation
 {
 	import com.ithaca.utils.VisuToolTip;
+	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 	import com.ithaca.visu.model.Model;
+	import com.ithaca.visu.model.User;
 	
 	import flash.events.MouseEvent;
 	import flash.system.Security;
@@ -43,6 +45,9 @@ package com.ithaca.visu.controls.globalNavigation
 		[SkinPart("true")]
 		public var logo:Label;
 		
+		[SkinPart("true")]
+		public var labelLoggedUser:Label;
+
 		public var listLang:ArrayCollection = new ArrayCollection()
 		public var listLabelModule:Array = new Array();
 		
@@ -147,6 +152,13 @@ package com.ithaca.visu.controls.globalNavigation
 				logo.toolTip = ".";
 				logo.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToolTipVisu);
 				logo.addEventListener(MouseEvent.CLICK, onClickLogo);
+			}
+			
+			if (instance == labelLoggedUser)
+			{
+				var user:User = Model.getInstance().getLoggedUser();
+				var nameUser:String = VisuUtils.getUserLabel(user,true);
+				labelLoggedUser.text = nameUser;
 			}
 		}
 		

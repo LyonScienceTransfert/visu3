@@ -75,6 +75,7 @@
 		<s:Button id="chat" includeIn="authentified" enabled="false">
 			<s:label>{fxgt.gettext("Chat")}</s:label>
 		</s:Button>	
+		<s:Label id="labelLoggedUser"  includeIn="authentified" fontWeight="bold"/>
 		<s:Button id="disconnect" includeIn="authentified" >
 			<s:label>{fxgt.gettext("Déconnexion")}</s:label>
 		</s:Button>	
