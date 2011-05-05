@@ -12,16 +12,16 @@
 	
 	<property name="migrator.propfilename" value="visu2ktbs.properties"/>
 	<property name="ktbs.properties.filename" value="ktbs-client.properties"/>
-	<property name="log4j.properties.filename" value="log4j.properties"/>
+	<property name="logback.properties.filename" value="logback.xml"/>
 	<property name="run.filename" value="run.sh"/>
 	
 	<target name="main">
 	 	<delete dir="dist"/>
 	 	<mkdir dir="dist"/>
-		<copy file="${migrator.propfilename}" todir="dist"/>
 		<copy file="${run.filename}" todir="dist"/>
+		<copy file="src/${migrator.propfilename}" todir="dist"/>
 		<copy file="src/${ktbs.properties.filename}" todir="dist"/>
-		<copy file="src/${log4j.properties.filename}" todir="dist"/>
+		<copy file="src/${logback.properties.filename}" todir="dist"/>
 	 	<antcall target="package-3rd-party-libs"/>
 	 	<antcall target="jar-classes"/>
 	 </target>

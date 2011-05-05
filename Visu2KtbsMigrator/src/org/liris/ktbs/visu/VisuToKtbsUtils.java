@@ -33,7 +33,7 @@ public class VisuToKtbsUtils {
 		int minute  = Integer.parseInt(matcher.group(5));
 		int second  = Integer.parseInt(matcher.group(6));
 
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, month-1);
 		cal.set(Calendar.DAY_OF_MONTH, day);
@@ -85,6 +85,8 @@ public class VisuToKtbsUtils {
 		replacements.put("\" \"ce' problème\"", "\"'ce' problème\"");
 		replacements.put("\" \"un' problème", "\" 'un' problème");
 		replacements.put("\" \"la vie", "\" 'la vie");
+		replacements.put("\" \"verliebt in berlin'\"", "\" 'verliebt in berlin'\"");
+		replacements.put("\" \"film", "\" 'film");
 
 		return replacements;
 	}
