@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="obsel">
+
+	<resultMap class="org.liris.ktbs.visu.vo.ObselVO" id="obselResult">
+		<result column="id_obsel" jdbcType="INTEGER" property="id" />
+		<result column="trace" jdbcType="VARCHAR" property="trace" />
+		<result column="type_obsel" jdbcType="VARCHAR" property="type" />
+		<result column="begin_obsel" javaType="java.util.Date" property="begin" />
+		<result column="rdf" jdbcType="LONGVARCHAR" property="rdf" />
+	</resultMap>
+
+	<sql id="selectBase">
+		SELECT id_obsel, trace, type_obsel, begin_obsel, rdf
+	</sql>
+
+	
+	<select id="getObsels" resultMap="obselResult">
+		<include refid="selectBase" />
+		FROM obsels
+		ORDER BY id_obsel
+	</select>
+
+	<select id="getObsel" resultMap="obselResult" parameterClass="java.lang.Integer">
+		<include refid="selectBase" />
+		FROM obsels
+		WHERE id_obsel = #value#
+		ORDER BY id_obsel
+	</select>
+	
+	<select id="getTraces" resultClass="java.lang.String">
+	    SELECT DISTINCT TRACE FROM obsels where trace  is not NULL order by trace
+	</select>
+
+	<select id="getObselsInTrace" parameterClass="java.lang.String" resultMap="obselResult">
+	    <include refid="selectBase" />
+		FROM obsels
+        WHERE trace like #value#
+        ORDER BY begin_obsel
+	</select>
+</sqlMap>
