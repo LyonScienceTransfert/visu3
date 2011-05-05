@@ -1,6 +1,5 @@
 package org.liris.ktbs.visu;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.SQLException;
@@ -37,7 +36,6 @@ public class VisuToKtbs {
 
 	private static Logger logger = LoggerFactory.getLogger(VisuToKtbs.class);
 
-	private String rootUri;
 	private String visuUserName;
 	private String visuPasswd;
 	private String visuSharedBaseName;
@@ -48,13 +46,12 @@ public class VisuToKtbs {
 
 	private SqlMapClient sqlMap;
 	
-	public VisuToKtbs(SqlMapClient sqlMap, String rootUri, String userName, String userPasswd,
+	public VisuToKtbs(SqlMapClient sqlMap, String userName, String userPasswd,
 			String shareBase, String retroRoomModelLocalName,
 			String visuModelLocalName) {
 		
 		super();
 		this.sqlMap = sqlMap;
-		this.rootUri = rootUri;
 		this.visuUserName = userName;
 		this.visuPasswd = userPasswd;
 		this.visuSharedBaseName = shareBase;
@@ -69,13 +66,13 @@ public class VisuToKtbs {
 		Reader reader = Resources.getResourceAsReader("ibatis/sqlMapConfig.xml");
 		SqlMapClient sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader);
 
+		
 		Properties properties = new Properties();
-		properties.load(new FileInputStream("visu2ktbs.properties"));
+		properties.load(ClassLoader.getSystemResourceAsStream("visu2ktbs.properties"));
 		logger.info("Migration config:\n {}", properties.toString());
 
 		VisuToKtbs visuToKtbs = new VisuToKtbs(
 				sqlMap,
-				properties.getProperty("ktbs.root.uri"),
 				properties.getProperty("ktbs.root.username"),
 				properties.getProperty("ktbs.root.passwd"),
 				properties.getProperty("ktbs.shared.base"),
@@ -185,6 +182,7 @@ public class VisuToKtbs {
 	private void createSharedBaseAndModels() {
 		rootProvider.openClient(visuUserName, visuUserName);
 		ResourceService service = rootProvider.getClient(visuUserName).getResourceService();
+		logger.info("Creating the shared base {}.", visuSharedBaseName);
 		String baseUri = service.newBase(visuSharedBaseName, visuUserName);
 		if(baseUri == null) {
 			logger.info("Could not create the base {}. It may already exist", visuSharedBaseName);
