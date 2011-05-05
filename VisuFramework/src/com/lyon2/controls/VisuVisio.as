@@ -154,7 +154,8 @@ package com.lyon2.controls
 		 * Styles 
 		 */
 		private var padding:int = 5;
-		private const DEFAULT_BACKGROUND_COLOR:uint = 0xDCDCDC;
+		// backGroundColor the VISU1 = 0xDCDCDC;
+		private const DEFAULT_BACKGROUND_COLOR:uint = 0xFFFFFF;
 		
 		private var timer:Timer;
 		private var _debugMode:Boolean;
