@@ -45,11 +45,11 @@ public class VisuToKtbs {
 	private MultiUserRootProvider rootProvider;
 
 	private SqlMapClient sqlMap;
-	
+
 	public VisuToKtbs(SqlMapClient sqlMap, String userName, String userPasswd,
 			String shareBase, String retroRoomModelLocalName,
 			String visuModelLocalName) {
-		
+
 		super();
 		this.sqlMap = sqlMap;
 		this.visuUserName = userName;
@@ -66,7 +66,7 @@ public class VisuToKtbs {
 		Reader reader = Resources.getResourceAsReader("ibatis/sqlMapConfig.xml");
 		SqlMapClient sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader);
 
-		
+
 		Properties properties = new Properties();
 		properties.load(ClassLoader.getSystemResourceAsStream("visu2ktbs.properties"));
 		logger.info("Migration config:\n {}", properties.toString());
@@ -84,11 +84,11 @@ public class VisuToKtbs {
 
 	private int totalObselNb = -1;
 	private int obselCnt = 0;
-	
+
 	@SuppressWarnings("unchecked")
 	private void createTrace(String traceName) throws SQLException {
 		List<ObselVO> obsels = (List<ObselVO>)sqlMap.queryForList("obsel.getObselsInTrace", "%" + traceName + "%");
-		
+
 		Integer userId = VisuToKtbsUtils.parseUserId(traceName);
 		KtbsRootClient client = rootProvider.getClient(VisuToKtbsUtils.makeKtbsUserId(userId));
 		ResourceService service = client.getResourceService();
@@ -112,6 +112,7 @@ public class VisuToKtbs {
 			return;
 		}
 
+
 		List<ObselVO> orderedByendDTObsels = new LinkedList<ObselVO>();
 		// parse all rdf first
 		for(ObselVO vo:obsels) {
@@ -121,14 +122,21 @@ public class VisuToKtbs {
 			} catch (Exception e) {
 				logger.error("Error creating the obsel {}. RDF: \n{}\nfixed:\n{}", new Object[]{vo.getId(), vo.getRdf(), vo.getFixedRdf()});
 				logger.error("",e);
-				return;
+				vo.setParseFailed(true);
 			}
 		}
-		
+
+
 		Collections.sort(orderedByendDTObsels, new Comparator<ObselVO>() {
 			@Override
 			public int compare(ObselVO o1, ObselVO o2) {
 				try {
+					if(o1.isParseFailed() && o2.isParseFailed())
+						return 0;
+					else if(o1.isParseFailed())
+						return 1;
+					else if(o2.isParseFailed())
+						return -1;
 					Date date1 = KtbsUtils.parseXsdDate(o1.getEndDT());
 					Date date2 = KtbsUtils.parseXsdDate(o2.getEndDT());
 					return date1.compareTo(date2);
@@ -138,10 +146,14 @@ public class VisuToKtbs {
 				}
 			}
 		});
-		
+
 		for(ObselVO vo:orderedByendDTObsels) {
 			obselCnt++;
 
+			if(vo.isParseFailed()) {
+				logger.warn("The obsel {} will not be posted on the trace {}, since Jena could not parse the rdf field.", vo.getId(), traceName);
+				continue;
+			} else {
 				String obselURI = service.newObsel(
 						storedTraceUri, 
 						null, 
@@ -160,6 +172,7 @@ public class VisuToKtbs {
 					logger.error("KTBS message {}", new Object[]{service.getLastResponse().getServerMessage()});
 					logger.error("The KTBS failed or rejected the creation of the obsel {}. RDF: \n{}\nfixed:\n{}", new Object[]{vo.getId(), vo.getRdf(), vo.getFixedRdf()});
 				} 
+			}
 		}
 	}
 
@@ -216,10 +229,10 @@ public class VisuToKtbs {
 		List<ObselVO> allObsels = (List<ObselVO>)sqlMap.queryForList("obsel.getObsels");
 		logger.info("Number of obsels in visu database: {}", allObsels.size());
 		totalObselNb = allObsels.size();
-		
+
 		List<String> allTraces = (List<String>)sqlMap.queryForList("obsel.getTraces");
 		logger.info("Number of traces in visu database: {}", allTraces.size());
-		
+
 		// Ensures that the traces are not processed in the same order each time
 		Collections.shuffle(allTraces);
 		for(String trace:allTraces) {

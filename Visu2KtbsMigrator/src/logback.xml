@@ -36,6 +36,7 @@
       <level>WARN</level>
     </filter>
   </appender>
+  
   <logger name="com.ibatis" level="WARN"/>
   <logger name="org.liris.ktbs" level="WARN"/>
   <logger name="org.liris.ktbs.dao.rest" level="DEBUG"/>
@@ -43,9 +44,11 @@
   <logger name="org.liris.ktbs.visu.vo.ObselVO" level="DEBUG"/>
   <logger name="org.liris.ktbs.dao.ResourceProxy" level="WARN"/>
   <logger name="org.liris.ktbs.visu.VisuToKtbs" level="INFO"/>
+  
   <root level="WARN">
     <appender-ref ref="S"/>
     <appender-ref ref="R"/>
     <appender-ref ref="W"/>
   </root>
+  
 </configuration>

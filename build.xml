@@ -589,7 +589,7 @@ or by setting the following environment variable:
 
 		
 		<!-- Deploy the visu server jar and clien swf files to the Red5 server -->
-	    <target name="deploy-server" description="Copies the server jar, configuration files, and dependencies to the web app directory on the server">
+	    <target name="deploy-server" depends="clean-webinf-libs" description="Copies the server jar, configuration files, and dependencies to the web app directory on the server">
 
 	      <mkdir dir="${webapp.dir}" />
 
