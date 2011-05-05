@@ -87,6 +87,8 @@ public class VisuToKtbsUtils {
 		replacements.put("\" \"la vie", "\" 'la vie");
 		replacements.put("\" \"verliebt in berlin'\"", "\" 'verliebt in berlin'\"");
 		replacements.put("\" \"film", "\" 'film");
+		replacements.put("\" \"obsesse", "\" 'obsesse");
+		replacements.put("\" \"nouvelle", "\" 'nouvelle");
 
 		return replacements;
 	}

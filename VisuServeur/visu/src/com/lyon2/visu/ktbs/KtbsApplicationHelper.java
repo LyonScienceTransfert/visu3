@@ -124,12 +124,12 @@ public class KtbsApplicationHelper {
 		if(visuBase == null) {
 			log.info("The base \""+sharedBaseName+"\" does not exist. Creating it.");
 			log.debug("Root URI is DefaultResourceManager is: " + ((RootAwareService)resourceService).getRootUri());
-			visuBase = resourceService.newBase(sharedBaseName, username);
-			if(visuBase == null) {
+			
+			String visuBaseUri = resourceService.newBase(sharedBaseName, username);
+			if(visuBaseUri == null) {
 				log.error("Could not create a base for the user \"visu\".");
-
 			} else
-				visuBase = resourceService.getBase(sharedBaseName);
+				visuBase = resourceService.getBase(visuBaseUri);
 		}
 
 		if(visuBase == null) {
@@ -280,18 +280,18 @@ public class KtbsApplicationHelper {
 				log.debug("No base " + baseName + " exists on the KTBS server");
 				// create the base
 				log.info("Creating the base " + baseName + " on the KTBS server for the user " + userId);
-				base = resourceService.newBase(
+				
+				String userBaseUri = resourceService.newBase(
 						baseName,
 						Integer.toString(userId)
 				);
-
-				if(base == null) 
+				if(userBaseUri == null) 
 					log.error("Could not create the base " + baseName + " for the user ");
 				else {
 					log.debug("The base has been created");
+					base = resourceService.getBase(userBaseUri);
 				}
 			}
-
 		}
 
 		if(base != null)
@@ -324,7 +324,7 @@ public class KtbsApplicationHelper {
 			if(storedTrace == null) {
 				log.info("The trace " + traceLocalName + " could not be retrieved from the KTBS. Creating a new one.");
 				
-				storedTrace = resourceService.newStoredTrace(
+				String storedTraceUri = resourceService.newStoredTrace(
 						baseName, 
 						traceLocalName, 
 						visuTraceModel.getUri(), 
@@ -332,8 +332,10 @@ public class KtbsApplicationHelper {
 						Integer.toString(userId)
 				);
 
-				if(storedTrace == null) 
+				if(storedTraceUri == null) 
 					log.error("Could not create the trace " + traceLocalName);
+				else
+					storedTrace = resourceService.getStoredTrace(storedTraceUri);
 			} else 
 				log.debug("The trace " + storedTrace.getUri() + " was retrieved successfully");
 			storedTraceCache.put(traceLocalName, storedTrace);

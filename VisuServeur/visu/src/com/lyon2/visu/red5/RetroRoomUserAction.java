@@ -88,7 +88,7 @@ public class RetroRoomUserAction {
 	private Application app;
 
 	protected static final Logger log = Red5LoggerFactory.getLogger(
-			ObselInfo.class, "visu2");
+			RetroRoomUserAction.class, "visu2");
 
 	public void test() {
 		log.warn("TEST OVER OBSEL----------");
