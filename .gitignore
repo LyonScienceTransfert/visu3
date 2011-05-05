@@ -43,6 +43,8 @@ VisuFramework/.flexLibProperties
 VisuApplication/.actionScriptProperties
 VisuApplication/.flexProperties
 VisuApplication/.project
-
+Visu2KtbsMigrator/.settings/org.eclipse.jdt.core.prefs
+Visu2KtbsMigrator/bin/
+Visu2KtbsMigrator/dist/
 
 
