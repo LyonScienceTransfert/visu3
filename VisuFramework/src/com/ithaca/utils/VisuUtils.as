@@ -1,24 +1,22 @@
 package com.ithaca.utils
 {
-	import com.ithaca.visu.ui.utils.RoleEnum;
-	import com.ithaca.visu.ui.utils.ConnectionStatus;
-	import com.ithaca.visu.ui.utils.IconEnum;
-	import com.ithaca.visu.ui.utils.SessionStatusEnum;
+	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.utils.StringUtils;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
-	import mx.collections.IList;
-	import com.ithaca.traces.Obsel;
-	import flash.utils.Dictionary; 
-	import com.ithaca.traces.model.TraceModel; 
 	import com.ithaca.visu.model.vo.ObselVO;
+	import com.ithaca.visu.ui.utils.ConnectionStatus;
+	import com.ithaca.visu.ui.utils.IconEnum;
+	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	
+	import flash.utils.Dictionary;
 	
-    import mx.collections.ArrayCollection;
-	
+	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
+	import mx.logging.ILogger;
 	import mx.logging.Log;
-    import mx.logging.ILogger;
-		
-	import com.ithaca.utils.StringUtils;
 			
 	
 	public class VisuUtils
@@ -60,7 +58,7 @@ package com.ithaca.utils
 
 		public static function getUserLabel(user:User, firstnameAbbr:Boolean = false):String
 		{
-			var f = firstnameAbbr?(StringUtils.firstLetterCap(user.lastname) + "."):StringUtils.cap(user.lastname);
+			var f:String = firstnameAbbr?(StringUtils.firstLetterCap(user.lastname) + "."):StringUtils.cap(user.lastname);
 			return f + " " + StringUtils.cap(user.firstname);
 		}
 		
