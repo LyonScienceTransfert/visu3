@@ -47,5 +47,7 @@ Visu2KtbsMigrator/.settings/org.eclipse.jdt.core.prefs
 Visu2KtbsMigrator/bin/
 Visu2KtbsMigrator/dist/
 Visu2KtbsMigrator/dist.tar.gz
+Visu2KtbsMigrator/visu-to-ktbs-error.log
+Visu2KtbsMigrator/visu-to-ktbs.log
 
 
