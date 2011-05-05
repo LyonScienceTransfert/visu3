@@ -13,7 +13,7 @@
 	</fx:Declarations>
  
     <fx:Script>
-        <![CDATA[
+    	<![CDATA[
 		import com.ithaca.documentarisation.model.RetroDocument;
 		import com.ithaca.events.SelectionEvent;
 		import com.ithaca.utils.VisuUtils;
@@ -25,12 +25,14 @@
 		
 		import mx.collections.ArrayCollection;
 		import mx.collections.ArrayList;
+		import mx.collections.ListCollectionView;
 		import mx.collections.Sort;
 		import mx.events.ItemClickEvent;
 		import mx.logging.ILogger;
 		import mx.logging.Log;
 		
 		import spark.events.IndexChangeEvent;
+
 			
 		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
 		
@@ -145,7 +147,7 @@
 				this.selectedFilterSessionId = session.id_session;
 			} else {
 				logger.debug("Setting the session filter to null");
-				this.selectedFilterSessionId = null;
+				this.selectedFilterSessionId = 0;
 			}
 			this.bilanCollection.refresh();
 		}
@@ -164,24 +166,28 @@
 		public function selectSession(sessionId:Number):void {
 			logger.debug("Select the session {0} in the session filter list", sessionId);
 			if(sessionId) {
-				var sessionSelection:Vector.<Object> = new Vector.<Object>();
-			
-				//logger.debug("Session list's size: {0}", sessionComp.listSessionCollection.length);
-				for (var i:int = 0; i<sessionComp.sessionList.dataProvider.length; i = i+1) {
-					var session:Session = sessionComp.sessionList.dataProvider.getItemAt(i) as Session;
-					logger.debug("{0} equals {1}", session.id_session, sessionId);
-					if(session.id_session == sessionId) {
-						logger.debug("YES");
-						sessionSelection.push(session);
-					} else
-						logger.debug("NO");
+				var sessionSelection:Array= new Array();
+				// get list session from dataProvider, didn't set list session by "listSessionCollection" before
+				var listSession:ListCollectionView = sessionComp.sessionDataGrid.dataProvider as ListCollectionView;
+				if(listSession.length > 0 )
+				{
+					logger.debug("Session list's size: {0}", listSession.length);
+					for (var i:int = 0; i<listSession.length; i = i+1) {
+						var session:Session = listSession.getItemAt(i) as Session;
+						logger.debug("{0} equals {1}", session.id_session, sessionId);
+						if(session.id_session == sessionId) {
+							logger.debug("YES");
+							sessionSelection.push(session);
+						} else
+							logger.debug("NO");
+					}
+	
+					logger.debug("Show the session list filter");
+					seanceFilterButton.selected = true;
+	
+					logger.debug("The new selection is {0}", sessionSelection);
+					sessionComp.sessionDataGrid.selectedItems = sessionSelection;
 				}
-
-				logger.debug("Show the session list filter");
-				seanceFilterButton.selected = true;
-
-				logger.debug("The new selection is {0}", sessionSelection);
-				sessionComp.sessionList.selectedItems = sessionSelection;
 				
 				this.selectedFilterSessionId = sessionId;
 
@@ -190,7 +196,7 @@
 			}
 		}
 		         
-		function compareBilanByCreationDates(a:Object, b:Object, fields:Array = null):int {
+		private function compareBilanByCreationDates(a:Object, b:Object, fields:Array = null):int {
 			return TimeUtils.compareDates(
 					(a as RetroDocument).creationDateAsDate,
 					(b as RetroDocument).creationDateAsDate
