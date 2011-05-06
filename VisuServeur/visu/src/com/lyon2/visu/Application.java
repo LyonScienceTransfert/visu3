@@ -617,18 +617,18 @@ IScheduledJob {
 
 		strRdf = strRdf + "." + '\n';
 
-		log.warn("===OBSEL=== ");
-		// log.warn("{}",strRdf);
 		Obsel obsel = new Obsel();
 		obsel.setId(1);
 		obsel.setTrace(trace);
 		obsel.setType(typeObsel);
 		obsel.setBegin(new Date());
 		obsel.setRdf(strRdf);
-		log.warn("=== Adding Obsel to BD ===");
+		
+		log.info("Adding Obsel to BD");
 		getSqlMapClient().insert("obsels.insert", obsel);
 
 		// safety test in case the ktsb would be deactivated
+
 		if(pluggedToKtbs)  {
 			if(!Application.this.ktbsHelper.isStarted()) {
 				Application.this.ktbsHelper.init();
@@ -637,6 +637,7 @@ IScheduledJob {
 				@Override
 				public void run() {
 					try {
+						log.debug("Adding Obsel to KTBS");
 						Application.this.ktbsHelper.sendToKtbs(subject, trace, typeObsel, paramsObsel, traceType);
 					} catch (SQLException e) {
 						Application.log.error("A problem occurred when sending the obsel to the KTBS", e);
@@ -644,17 +645,13 @@ IScheduledJob {
 				}
 			};
 			sentToKtbsThread.setPriority(Thread.MIN_PRIORITY);
+			log.info("Start the the thread that adds the obsel to KTBS");
 			sentToKtbsThread.start();
-		}
+		} else 
+			log.debug("Visu is not plugged to KTBS. Obsel not sent to KTBS.");
 
 		return obsel;
 	}
-
-	// public void testApp(IConnection conn, String[] name)
-	// {
-	// log.warn("===== testApp ===== Name module est : {}",name);
-	// }
-
 
 
 	/**
