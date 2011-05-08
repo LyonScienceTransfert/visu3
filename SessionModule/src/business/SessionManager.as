@@ -194,18 +194,12 @@ package business
 			}
 		}
 /// ADD SESSION
-		public function onAddSession(sessionVO:SessionVO):void
+		public function onAddClonedSession():void
 		{
-			var session:Session = new Session(sessionVO);
-			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
-			addSession.session = session;
-			this.dispatcher.dispatchEvent(addSession);
-			if(!session.isModel){
-				model.clearDateSession();
-			}
+
 			// ADD ACTIVITY
 			var nbrActivity:int = this.listActivities.length;
-			for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
+			/*for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
 			{
 				var activity:Activity = this.listActivities.getItemAt(nActivity) as Activity;
 				var activityVO:ActivityVO = setActivityVO(activity,sessionVO.id_session);
@@ -213,13 +207,13 @@ package business
 				addActivity.activityVO = activityVO;
 				addActivity.activityId = activity.id_activity;
 				this.dispatcher.dispatchEvent(addActivity);
-			}
+			}*/
 		}	
 // ADD EMPTY SESSION
 		public function onAddEmptySession(sessionVO:SessionVO):void
 		{
 			var session:Session = new Session(sessionVO);
-			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
+			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION,true);
 			addSession.session = session;
 			this.dispatcher.dispatchEvent(addSession);
 			if(!session.isModel)
