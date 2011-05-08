@@ -259,26 +259,14 @@ package business
 // USER
 		public function onUpdateSession(sessionVO:SessionVO):void
 		{
-			model.clearDateSession();	
+			/*model.clearDateSession();	
 			// update user fo the session 
 			var updateSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_UPDATED_SESSION);
 			var session:Session = new Session(sessionVO);
 			updateSession.session = session;
-			this.dispatcher.dispatchEvent(updateSession);
+			this.dispatcher.dispatchEvent(updateSession);*/
 		}
 
-		public function onLoadListUsers(value:Array):void
-		{
-			var ar:Array = []
-			for each (var vo:UserVO in value)
-			{
-				ar.push(new User(vo)) ; 
-			}
-			
-			var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS);
-			onLoadedAllUsers.listUser = ar;
-			this.dispatcher.dispatchEvent(onLoadedAllUsers);
-		}
 		/**
 		 * Default error Handler for rtmp method call
 		 */
