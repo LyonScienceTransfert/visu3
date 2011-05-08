@@ -234,6 +234,8 @@ package business
 		{
 			
 			var activity:Activity = this.getActivityById(activityId);
+			// FIXME : can have situation when hasn't activity in the list activities
+			if(activity == null) return;
 			var arrActivityElement:ArrayCollection = activity.activityElements;
 			var nbrActivityElement:int = arrActivityElement.length;
 			for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
