@@ -102,7 +102,7 @@ package business
 		public function onLoadListActivity(arrActivities:Array):void
 		{
 			if(true){
-				this.listActivities.removeAll();
+				this.listActivities = new ArrayCollection();
 				var nbrActivities:uint = arrActivities.length;
 				for(var nActivity:uint = 0; nActivity < nbrActivities; nActivity++){
 					var obj:Object = arrActivities[nActivity];
