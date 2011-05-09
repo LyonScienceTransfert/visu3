@@ -98,7 +98,8 @@
 			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />
 			<rtmp:CallbackRegistrator action="checkPublicMessage" target="{MainManager}" method="onResivePublicMessage" />
 			<rtmp:CallbackRegistrator action="setLoggedUser" target="{MainManager}" method="onSetLoggedUser" />
-			<rtmp:CallbackRegistrator action="checkUpdateSession" target="{MainManager}" method="onCheckUpdateSession" />
+			<rtmp:CallbackRegistrator action="checkListUser" target="{MainManager}" method="onCheckListUser" />
+			<rtmp:CallbackRegistrator action="checkUpdateSessionListUser" target="{MainManager}" method="onCheckUpdateSessionListUser" />
 			<rtmp:CallbackRegistrator action="joinSession" target="{MainManager}" method="onJoinSession"/>
 			<rtmp:CallbackRegistrator action="outSession" target="{MainManager}" method="onOutSession"/>
 			<rtmp:CallbackRegistrator action="sameUserId" target="{MainManager}" method="onSameUserId"/>
@@ -109,6 +110,8 @@
 			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
 			<rtmp:CallbackRegistrator action="checkListDates" target="{MainManager}" method="onCheckListDates"/>
 			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
+			<rtmp:CallbackRegistrator action="checkAddSession" target="{MainManager}" method="onCheckAddSession"/>
+			<rtmp:CallbackRegistrator action="checkUpdateSession" target="{MainManager}" method="onCheckUpdateSession"/>
 			<rtmp:CallbackRegistrator action="checkDeleteSession" target="{MainManager}" method="onCheckDeleteSession"/>
 			<rtmp:CallbackRegistrator action="checkListActiveObsel" target="{MainManager}" method="onCheckListActiveObsel"/>
 			<rtmp:CallbackRegistrator action="checkListObselStartSession" target="{MainManager}" method="onCheckListObselStartSession"/>
