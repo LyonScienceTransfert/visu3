@@ -1,6 +1,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.AddUserTitleWindow;
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.Session;
@@ -19,6 +20,7 @@ package com.ithaca.visu.controls.sessions
 	
 	import spark.components.Button;
 	import spark.components.DropDownList;
+	import spark.components.Label;
 	import spark.components.List;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
@@ -36,12 +38,19 @@ package com.ithaca.visu.controls.sessions
 		public var addUser:Button;
 		[SkinPart("true")]
 		public var deleteUser:Button;
+		[SkinPart("true")]
+		public var labelDuration:Label;
+		[SkinPart("true")]
+		public var labelEndSession:Label;
 		
 		private var sessionChange:Boolean;
+		private var durationPlanedChange:Boolean;
 		
 		private var _session:Session;
 		private var _listUser:ArrayCollection;
 		private var _profiles:Array;
+		// planed duration in minutes
+		private var _durationPlaned:int;
 		
 		private var timeCodes:ArrayCollection = new ArrayCollection();
 		private static var INTERVAL_MINUTE:int = 10;
@@ -96,6 +105,17 @@ package com.ithaca.visu.controls.sessions
 		{
 			this._profiles = value;
 		}
+		
+		public function set durationPlaned(value:int):void
+		{
+			_durationPlaned = value;
+			durationPlanedChange = true;
+			invalidateProperties();
+		}
+		public function get durationPlaned():int
+		{
+			return _durationPlaned;
+		}
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -138,6 +158,17 @@ package com.ithaca.visu.controls.sessions
 				dateField.selectedDate = session.date_session;
 				startDDL.selectedIndex = getIndexStartDDLByDate(session.date_session);
 				deleteUser.enabled = false;
+				setEndSession();
+			}
+			
+			if(durationPlanedChange)
+			{
+				durationPlanedChange = false;
+				this.labelDuration.text = UtilFunction.getHourMin(durationPlaned);
+				if(session != null)
+				{
+					setEndSession();
+				}
 			}
 		}
 		//_____________________________________________________________________
@@ -294,5 +325,15 @@ package com.ithaca.visu.controls.sessions
 				}
 			}
 		}
+		 
+		private function setEndSession():void
+		{
+			var hours:int = session.date_session.hours;
+			var minuts:int = session.date_session.minutes;
+			var endSessionPlaned:int = hours*60 + minuts + durationPlaned;
+			this.labelEndSession.text = UtilFunction.getHourMin(endSessionPlaned);
+		}
+			
+			
 	}
 }
