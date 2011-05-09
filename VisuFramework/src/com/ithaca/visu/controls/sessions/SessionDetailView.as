@@ -7,7 +7,10 @@ package com.ithaca.visu.controls.sessions
 	import com.ithaca.visu.view.session.controls.SessionPlanEdit;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.containers.TabNavigator;
@@ -457,8 +460,10 @@ package com.ithaca.visu.controls.sessions
 		private function onPreAddSession(event:SessionEditEvent):void
 		{
 			var addSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_SESSION);
-			_session.date_session = new Date();
+			//_session.date_session = event.date;
 			addSession.session = session;
+			addSession.date = event.date;
+			addSession.theme = event.theme;
 			addSession.isModel = event.isModel;
 			this.dispatchEvent(addSession);
 		}

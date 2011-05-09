@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="titlewindow1_creationCompleteHandler(event)"
+			   close="titlewindow1_closeHandler(event)"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+			private static var INTERVAL_MINUTE:int = 10;
+			private var timeCodes:ArrayCollection = new ArrayCollection();
+			private var titleWindow:String = "Voulez-vous créer une nouvelle séance à partir de ce plan de séance ?";
+
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+				initTimeCode();
+				startDDL.dataProvider = timeCodes;
+				var date:Date = new Date();
+				dateSession.selectedDate = date;
+				startDDL.selectedIndex = getIndexStartDDLByDate(date);
+				this.title = titleWindow;
+			}
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var clonedSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+				
+				var obj:Object = startDDL.dataProvider.getItemAt(startDDL.selectedIndex) as Object;
+				var hour:int = obj.hour;
+				var minute:int = obj.minute;
+				// set date and time
+				dateSession.selectedDate.setHours(hour);
+				dateSession.selectedDate.setMinutes(minute); 
+				
+				clonedSession.date = dateSession.selectedDate;
+				clonedSession.theme = themeSession.text;
+				this.dispatchEvent(clonedSession);
+				PopUpManager.removePopUp(this);	
+			}
+			// get index for startDDL:DropDownList 
+			private function getIndexStartDDLByDate(date:Date):int
+			{
+				var hour:int = date.getHours();
+				var minute:int = date.getMinutes();
+				var divMinute:int = Math.round((minute/INTERVAL_MINUTE));
+				var result:int = hour*(60/INTERVAL_MINUTE)+divMinute;
+				return result;
+			}
+			private function initTimeCode():void
+			{	
+				var i:int; 
+				for (i = 0; i < 24; i++) { 
+					var j:int; 
+					for (j = 0; j < 60; j+=INTERVAL_MINUTE) {
+						var prefix:String = j<10?"0":"";						
+						timeCodes.addItem({hour:i, minute:j, string:(i+":"+ prefix + j)});
+					}
+				}
+			}
+			public function setTitleWindow(value:String):void
+			{
+				titleWindow = value;
+			}
+			public function setThemeSession(value:String):void
+			{
+				themeSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompletThemeSession);
+				themeSession.text = value;
+			}
+			private function onUpdateCompletThemeSession(event:FlexEvent):void
+			{
+				themeSession.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompletThemeSession);
+				themeSession.selectAll();
+				stage.focus = themeSession;
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</fx:Script>
+	<s:title>{fxgt.gettext("Voulez-vous créer une nouvelle séance à partir de ce plan de séance ?")}</s:title>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup width="100%" height="100%" horizontalAlign="center">
+		<mx:Spacer height="20"/>
+		<s:HGroup width="100%">
+			<mx:Spacer width="10"/>
+			<s:Label  paddingTop="5">
+				<s:text>Thème : </s:text>
+			</s:Label>
+			<s:TextInput id="themeSession" width="100%" text="azazazaz"/>
+			<mx:Spacer width="10"/>
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<mx:Spacer width="10"/>
+			<s:Label paddingTop="5">
+				<s:text>Date de séance : </s:text>
+			</s:Label>
+			<mx:DateField id="dateSession" formatString="DD-MM-YYYY"/>
+			<s:Label paddingTop="5">
+				<s:text> le : </s:text>
+			</s:Label>
+			<s:DropDownList id="startDDL" 
+							width="100"
+							labelField="string"/>
+			<mx:Spacer width="10"/>
+		</s:HGroup>
+		
+		<mx:Spacer height="100%"/>
+		<s:HGroup width="100%" bottom="10">
+			<mx:Spacer width="100%"/>
+			<s:Button click="button1_clickHandler(event)">
+				<s:label>{fxgt.gettext("OK")}</s:label>
+			</s:Button>
+			<s:Button id="buttonCancel" click="PopUpManager.removePopUp(this);" >
+				<s:label>{fxgt.gettext("Cancel")}</s:label>
+			</s:Button>
+			<mx:Spacer width="10"/>
+		</s:HGroup>
+		<mx:Spacer height="10"/>
+	</s:VGroup>
+</s:TitleWindow>

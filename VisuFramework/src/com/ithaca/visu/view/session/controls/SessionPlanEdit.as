@@ -63,6 +63,8 @@
 
 package com.ithaca.visu.view.session.controls
 {
+	import com.ithaca.utils.CreateSessionByTemplate;
+	import com.ithaca.utils.SharePlanByTemplate;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
@@ -78,6 +80,8 @@ package com.ithaca.visu.view.session.controls
 	import mx.events.CloseEvent;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
+	import mx.events.FlexEvent;
+	import mx.managers.PopUpManager;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -321,37 +325,44 @@ package com.ithaca.visu.view.session.controls
 		
 		public function onMouseClickButtonCreateSessionByTemplate(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous créer une nouvelle séance à partir de ce plan de séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, createSessionByTemplateConformed); 
+			var addSessionByTemplate:CreateSessionByTemplate = CreateSessionByTemplate(PopUpManager.createPopUp( 
+				this, CreateSessionByTemplate , true) as spark.components.TitleWindow);
+			addSessionByTemplate.x = (this.parentApplication.width - addSessionByTemplate.width)/2;
+			addSessionByTemplate.y = (this.parentApplication.height - addSessionByTemplate.height)/2;
+			addSessionByTemplate.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onCreateSessionByTemplateConformed);
+			addSessionByTemplate.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateSessionByTemplate);
 		}
-		private function createSessionByTemplateConformed(event:CloseEvent):void{
-			if( event.detail == Alert.YES)
-			{
-				var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
-				this.dispatchEvent(sessionAddEvent);
-			}
+		private function onCreateSessionByTemplateConformed(event:SessionEditEvent):void{
+			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+			sessionAddEvent.theme = event.theme;
+			sessionAddEvent.date = event.date;
+			this.dispatchEvent(sessionAddEvent);
 		}
-
+		private function onCreateSessionByTemplate(event:FlexEvent):void
+		{
+			var addSessionByTemplate:CreateSessionByTemplate = event.currentTarget as CreateSessionByTemplate;
+			addSessionByTemplate.setThemeSession(themeLabel.text);
+		}
 		public function onMouseClickButtonExportSession(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous rendre public ce plan de séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, exportSessionConformed); 
+			var sharePlanByTemplate:SharePlanByTemplate = SharePlanByTemplate(PopUpManager.createPopUp( 
+				this, SharePlanByTemplate , true) as spark.components.TitleWindow);
+			sharePlanByTemplate.x = (this.parentApplication.width - sharePlanByTemplate.width)/2;
+			sharePlanByTemplate.y = (this.parentApplication.height - sharePlanByTemplate.height)/2;
+			sharePlanByTemplate.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onSharePlanByTemplateConformed);
+			sharePlanByTemplate.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletSharePlanByTemplate);
 		}
-		
-		private function exportSessionConformed(event:CloseEvent):void{
-			if( event.detail == Alert.YES)
-			{
-				var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
-				sessionAddEvent.isModel = true;
-				this.dispatchEvent(sessionAddEvent);
-			}
+		private function onSharePlanByTemplateConformed(event:SessionEditEvent):void{
+			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+			sessionAddEvent.theme = event.theme;
+			sessionAddEvent.isModel = true;
+			this.dispatchEvent(sessionAddEvent);
 		}
-		
-
+		private function onCreationCompletSharePlanByTemplate(event:FlexEvent):void
+		{
+			var sharePlanByTemplate:SharePlanByTemplate = event.currentTarget as SharePlanByTemplate;
+			sharePlanByTemplate.setThemeSession(themeLabel.text);
+		}
 // DELETE ACTIVITY ELEMENT FROM ACTIVITY
 		private function deleteActivityElement(deletingActivityElemen:ActivityElement):void
 		{
