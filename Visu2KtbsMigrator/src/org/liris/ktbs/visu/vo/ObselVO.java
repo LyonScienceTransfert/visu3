@@ -179,4 +179,13 @@ public class ObselVO {
 //		XSDDateTime xsdDateTime = new XSDDateTime(beginDtCal);
 		return KtbsConstants.XSD_DATETIME_FORMAT.format(cal.getTime());
 	}
+	
+	private boolean parseFailed = false;
+	public void setParseFailed(boolean parseFailed) {
+		this.parseFailed = parseFailed;
+	}
+	
+	public boolean isParseFailed() {
+		return parseFailed;
+	}
 }
