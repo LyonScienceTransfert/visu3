@@ -256,14 +256,26 @@ public class SessionInfo
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des session " + e);
 		}	
+		
+		log.warn("list user = {}",listUser.toString());
+		log.warn("session = {}", session.toString());
+		
 		session.setListUser(listUser);
-		return session;
+		
+		// notification all users update session
+		Object[] args = { session };
+		// Get the Client Scope
+		IScope scope = conn.getScope();
+		// send message to all users on "Deck"
+		app.invokeOnScopeClients(scope, "checkUpdateSession", args);
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Session addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, int userId) throws SQLException
+	public void addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, int userId, boolean clonedSession) throws SQLException
 	{
 		log.warn("======== addSession ");
+		IClient client = conn.getClient();
 		int sessionId = 0;
 		try
 		{
@@ -306,10 +318,16 @@ public class SessionInfo
 		session.setTheme(sessionWithoutListUser.getTheme());
 		
 		session.setListUser(listUser);
+
 		
 		log.warn("Session = {}",session.toString());	
 		
-		return session;
+		Object[] args = {session, clonedSession};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkAddSession", args);
+		} 	
 	}
 	
 	
