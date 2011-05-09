@@ -712,7 +712,7 @@ IScheduledJob {
 		// Get the Client Scope
 		IScope scope = conn.getScope();
 		// send message to all users for updating session with sessionId
-		invokeOnScopeClients(scope, "checkUpdateSession", args);
+		invokeOnScopeClients(scope, "checkUpdateSessionListUser", args);
 	}
 
 	@SuppressWarnings("unchecked")
