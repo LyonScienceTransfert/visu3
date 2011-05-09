@@ -38,11 +38,21 @@
 				</s:HGroup>
 			</mx:FormItem>
 			
-			<mx:FormItem  label="de:" width="100%">
+			<mx:FormItem  label=" à partir de:" width="100%">
 				<s:HGroup verticalAlign="middle" horizontalAlign="left">
 					<s:DropDownList id="startDDL" 
 									width="100"
 									labelField="string"/>
+				</s:HGroup>
+			</mx:FormItem>
+			<mx:FormItem  label=" jusqu'à:" width="100%">
+				<s:HGroup verticalAlign="middle" horizontalAlign="left">
+					<s:Label id="labelEndSession"/>
+				</s:HGroup>
+			</mx:FormItem>
+			<mx:FormItem  label=" durée:" width="100%">
+				<s:HGroup verticalAlign="middle" horizontalAlign="left">
+					<s:Label id="labelDuration"/>
 				</s:HGroup>
 			</mx:FormItem>
 			

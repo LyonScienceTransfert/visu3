@@ -400,6 +400,8 @@ package com.ithaca.visu.controls.sessions
 				duration += activity.duration;
 			}
 			sessionSummaryView.durationPlaned = duration;
+			sessionFormView.durationPlaned = duration;
+			
 		}
 		
 		override protected function getCurrentSkinState():String
