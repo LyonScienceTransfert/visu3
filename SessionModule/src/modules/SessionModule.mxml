@@ -112,6 +112,16 @@
 				activityVO.ind = activity.ind;
 				return activityVO;
 			}
+			private function setActivityVOAndSessionId(activity:Activity,sessionId:int):ActivityVO
+			{
+				var activityVO:ActivityVO = new ActivityVO();
+				activityVO.id_activity = activity.id_activity; 
+				activityVO.id_session = sessionId;
+				activityVO.title = activity.title;
+				activityVO.duration = activity.duration;
+				activityVO.ind = activity.ind;
+				return activityVO;
+			}
 // ACTIVITYELEMENT
 			private function onDeleteActivityElement(event:SessionEditEvent):void
 			{
@@ -166,103 +176,134 @@
 				}
 				return null;
 			}
-			//private function setActivityVO(activityElement:ActivityElement, 
 // SESSION
 			private function onUpdateSession(event:SessionEditEvent):void
 			{
-				var updateSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_SESSION);
-				var session:Session = event.session;
-				var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
-				sessionVO.duration_session = session.duration_session;
-				sessionVO.id_session = session.id_session;
-				sessionVO.id_user = session.id_user;
-				sessionVO.theme = session.theme;
-				sessionVO.date_session = session.date_session;
-				sessionVO.isModel = session.isModel;
-				sessionVO.description = session.description;
-				sessionVO.start_recording = session.date_start_recording;
-				sessionVO.status_session = session.statusSession;
-				sessionVO.id_currentActivity = 0;
-				updateSession.sessionWitOutListUserVO = sessionVO;
-				this.dispatchEvent(updateSession);
-				// update dataProvider the session
-//??				sessionManagement.updateSession(session);
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var updateSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_SESSION);
+					var session:Session = event.session;
+					var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
+					sessionVO.duration_session = session.duration_session;
+					sessionVO.id_session = session.id_session;
+					sessionVO.id_user = session.id_user;
+					sessionVO.theme = session.theme;
+					sessionVO.date_session = session.date_session;
+					sessionVO.isModel = session.isModel;
+					sessionVO.description = session.description;
+					sessionVO.start_recording = session.date_start_recording;
+					sessionVO.status_session = session.statusSession;
+					sessionVO.id_currentActivity = 0;
+					updateSession.sessionWitOutListUserVO = sessionVO;
+					this.dispatchEvent(updateSession);
+				}
 			}
 			
 			private function onAddSession(event:SessionEditEvent):void
 			{
-				var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
-				var session:Session = event.session;
-				var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
-				sessionVO.duration_session = session.duration_session;
-				sessionVO.id_session = session.id_session;
-				sessionVO.id_user = Model.getInstance().getLoggedUser().id_user
-				sessionVO.theme = session.theme;
-				sessionVO.date_session = session.date_session;
-				sessionVO.isModel = event.isModel;
-				sessionVO.description = session.description;
-				sessionVO.start_recording = session.date_start_recording;
-				var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
-				var userId:int = 0;
-				if(event.isModel)
+				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
-					statusSession = SessionStatusEnum.SESSION_CLOSE; 
-				}else
-				{
-					userId  = Model.getInstance().getLoggedUser().id_user;
+					var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
+					var session:Session = event.session;
+					var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
+					sessionVO.duration_session = session.duration_session;
+					sessionVO.id_session = session.id_session;
+					sessionVO.id_user = Model.getInstance().getLoggedUser().id_user;
+					
+					sessionVO.theme = event.theme;
+					sessionVO.date_session = event.date;
+					sessionVO.isModel = event.isModel;
+					
+					sessionVO.description = session.description;
+					sessionVO.start_recording = session.date_start_recording;
+					var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
+					var userId:int = 0;
+					if(event.isModel)
+					{
+						statusSession = SessionStatusEnum.SESSION_CLOSE; 
+					}else
+					{
+						userId  = Model.getInstance().getLoggedUser().id_user;
+					}
+					sessionVO.status_session = statusSession;
+					sessionVO.id_currentActivity = 0;
+					addSession.sessionWitOutListUserVO = sessionVO;
+					addSession.userId = userId;
+					addSession.clonedSession = true;
+					this.dispatchEvent(addSession);
 				}
-				sessionVO.status_session = statusSession;
-				sessionVO.id_currentActivity = 0;
-				addSession.sessionWitOutListUserVO = sessionVO;
-				addSession.userId = userId;
-				this.dispatchEvent(addSession);
 			}
 			
 			private function onAddEmptySession(event:SessionEditEvent):void
 			{
-				var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_EMPTY_SESSION);
-				var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
-				sessionVO.duration_session = 0;
-				sessionVO.id_session = 0;
-				sessionVO.id_user = Model.getInstance().getLoggedUser().id_user;
-				sessionVO.theme = "---";
-				sessionVO.date_session = new Date();
-				sessionVO.isModel = event.isModel;
-				sessionVO.description = " - - - ";
-				sessionVO.start_recording = new Date();
-				var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
-				var userId:int = 0;
-				if(event.isModel)
+				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
-					statusSession = SessionStatusEnum.SESSION_CLOSE; 
-				}else
-				{
-					userId  = Model.getInstance().getLoggedUser().id_user;
+					var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
+					var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
+					sessionVO.duration_session = 0;
+					sessionVO.id_session = 0;
+					sessionVO.id_user = Model.getInstance().getLoggedUser().id_user;
+					sessionVO.theme = event.theme;
+					sessionVO.date_session = event.date;
+					sessionVO.isModel = event.isModel;
+					sessionVO.description = event.theme;
+					sessionVO.start_recording = new Date();
+					var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
+					var userId:int = 0;
+					if(event.isModel)
+					{
+						statusSession = SessionStatusEnum.SESSION_CLOSE; 
+					}else
+					{
+						userId  = Model.getInstance().getLoggedUser().id_user;
+					}
+					sessionVO.status_session = statusSession;
+					sessionVO.id_currentActivity = 0;
+					addSession.sessionWitOutListUserVO = sessionVO;
+					addSession.userId = userId;
+					addSession.clonedSession = false;
+					this.dispatchEvent(addSession);		
 				}
-				sessionVO.status_session = statusSession;
-				sessionVO.id_currentActivity = 0;
-				addSession.sessionWitOutListUserVO = sessionVO;
-				addSession.userId = userId;
-				this.dispatchEvent(addSession);		
 			}
-
-
 			
 			private function onPreLoadUsers(event:SessionEditEvent):void
 			{
-				var loadUsers:SessionEditEvent = new SessionEditEvent(SessionEditEvent.LOAD_LIST_USERS);
-				this.dispatchEvent(loadUsers);
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var loadUsers:SessionEditEvent = new SessionEditEvent(SessionEditEvent.LOAD_LIST_USERS);
+					this.dispatchEvent(loadUsers);
+				}
 			}
 			private function addClonedSession(event:SessionEvent):void
 			{
-				var session:Session = event.session;
-				sessionManagement.addSession(session);
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var session:Session = event.session;
+					sessionManagement.addSession(session);
+					if (event.clonedSession)
+					{
+						var listActivities:ArrayCollection = sessionManagement.sessionDetailView.sessionPlanEdit.activities;
+						var nbrActivity:int = listActivities.length;
+						for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
+						{
+							var activity:Activity = listActivities.getItemAt(nActivity) as Activity;
+							var activityVO:ActivityVO = setActivityVOAndSessionId(activity,session.id_session);
+							var addActivity:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY);
+							addActivity.activityVO = activityVO;
+							addActivity.activityId = activity.id_activity;
+							dispatchEvent(addActivity);
+						}
+					}
+				}
 			}
 			private function onLoadedAllUsers(event:UserEvent):void
 			{
-				if(sessionManagement.sessionDetailView)
+				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
-					sessionManagement.sessionDetailView.allUsers = event.listUser;
+					if(sessionManagement.sessionDetailView)
+					{
+						sessionManagement.sessionDetailView.allUsers = event.listUser;
+					}
 				}
 			}
 			
@@ -312,7 +353,10 @@
 			
 			public function onShowClonedPlan(event:SessionEvent):void
 			{
-				sessionManagement.showClonedPlan(event.sessionId);
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					sessionManagement.showClonedPlan(event.sessionId);
+				}
 			}
 			
 			private function onRemovedModuleFromStage(event:Event):void
@@ -320,6 +364,7 @@
 				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
 					Model.getInstance().setCurrentSessionSalonSession(sessionManagement.session);
+					Model.getInstance().setCurrentSessionModule(null);
 				}
 			}
 			
