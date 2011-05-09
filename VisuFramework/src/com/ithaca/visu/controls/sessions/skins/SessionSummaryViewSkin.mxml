@@ -32,7 +32,7 @@
 						 text="25 Fév. 2011, à 14h18"/>
 			</mx:FormItem>
 			
-			<mx:FormItem  label="Partagé:" width="100%" includeIn="planMine,planOther">
+			<mx:FormItem  label="Partagé:" width="100%" excludeFrom="sessionComing,sessionPast,planMine,planOther">
 				<s:Label id="partageLabel" width="100%" text="Oui"/>
 			</mx:FormItem>
 			
