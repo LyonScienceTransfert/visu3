@@ -18,6 +18,7 @@
 	<select id="getObsels" resultMap="obselResult">
 		<include refid="selectBase" />
 		FROM obsels
+		where trace  is not NULL
 		ORDER BY id_obsel
 	</select>
 
