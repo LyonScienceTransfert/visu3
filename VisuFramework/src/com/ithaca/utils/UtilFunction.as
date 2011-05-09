@@ -90,6 +90,7 @@ package com.ithaca.utils
 		
 		public static function getLabelDate(date:Date,separateur:String):String
 		{
+			if(date == null) return "?";
 			var day:int = date.getDate();
 			var dayString:String = day.toString();
 			if(day < 10){ dayString = "0"+dayString;};
@@ -102,6 +103,7 @@ package com.ithaca.utils
 		
 		public static function getHeurMinDate(date:Date):String
 		{
+			if(date == null) return "?";
 			var heureString:String = date.getHours().toString();
 			var  heure:Number = date.getHours(); if(heure < 10 ){heureString = "0"+heureString;}
 			var minuteString:String = date.getMinutes().toString();
@@ -112,6 +114,7 @@ package com.ithaca.utils
 		// example return : 22 Fev 16:00
 		public static function getDateMountHourMin(date:Date):String
 		{
+			if(date == null) return "?";
 			var day:int = date.getDate();
 			var dayString:String = day.toString();
 			if(day < 10){ dayString = "0"+dayString;};
@@ -124,6 +127,7 @@ package com.ithaca.utils
 		// example return : 22 Fev. 2011, à 16:00
 		public static function getDateMountYearHourMin(date:Date):String
 		{
+			if(date == null) return "?";
 			var day:int = date.getDate();
 			var dayString:String = day.toString();
 			if(day < 10){ dayString = "0"+dayString;};
