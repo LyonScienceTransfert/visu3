@@ -2,6 +2,7 @@ package business
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
+import com.ithaca.events.SelectionEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.UtilFunction;
@@ -10,6 +11,7 @@ import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.BilanEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
+import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.model.Model;
@@ -25,6 +27,7 @@ import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
 
+import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.net.NetConnection;
@@ -205,6 +208,22 @@ public class MainManager
 		dispatcher.dispatchEvent(eventListSession);	
 	}
 
+	/**
+	 * Get list user from BDD
+	 */
+	public function onCheckListUser(listUserVO:Array):void
+	{
+		var ar:Array = []
+		for each (var vo:UserVO in listUserVO)
+		{
+			ar.push(new User(vo)) ; 
+		}
+		
+		var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS);
+		onLoadedAllUsers.listUser = ar;
+		this.dispatcher.dispatchEvent(onLoadedAllUsers);
+	}
+	
 	public function onCheckListObselSessioExitSessionPause(listObselVO:Array):void
 	{
 		if(!(listObselVO == null || listObselVO.length == 0))
@@ -424,7 +443,7 @@ public class MainManager
 	 * sessionVO
 	 * ar - list participants of this session
 	 */
-	public function onCheckUpdateSession(sessionVO:SessionVO , ar:Array):void{		
+	public function onCheckUpdateSessionListUser(sessionVO:SessionVO , ar:Array):void{		
 		// checking if logged user has this session
 		var sessionId:uint = sessionVO.id_session;
 		var session:Session = Model.getInstance().hasSessionById(sessionId);
@@ -1503,7 +1522,32 @@ public class MainManager
 		eventRemoveSession.userId = userId;
 		dispatcher.dispatchEvent(eventRemoveSession);	
 	}
-	
+	/**
+	 * Call when user cloned session  
+	 */
+	public function onCheckAddSession(sessionVO:SessionVO, clonedSession:Boolean):void
+	{
+		var session:Session = new Session(sessionVO);
+		var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
+		addSession.clonedSession = clonedSession;
+		addSession.session = session;
+		this.dispatcher.dispatchEvent(addSession);
+		if(!session.isModel){
+			Model.getInstance().clearDateSession();
+		}
+	}
+	/**
+	 * Call when user update session
+	 */
+	public function onCheckUpdateSession(sessionVO:SessionVO):void
+	{
+		// TODO : update and notify session for all user the plateforme 
+		//	model.clearDateSession();	
+		var updateSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_UPDATED_SESSION);
+		var session:Session = new Session(sessionVO);
+		updateSession.session = session;
+		this.dispatcher.dispatchEvent(updateSession);
+	}
 	public function onError(event : Object) : void
 	{
 		var closeConnetionEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CLOSE_CONNECTION);
