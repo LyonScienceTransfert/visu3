@@ -117,6 +117,10 @@
         <property name="application" ref="web.handler"/>
         <property name="retroDocumentService" ref="retroDocumentService.service"/>
     </bean>
+<!-- Users -->
+     <bean id="userInfo.service" class="com.lyon2.visu.red5.UserInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
 <!-- BDD -->
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
