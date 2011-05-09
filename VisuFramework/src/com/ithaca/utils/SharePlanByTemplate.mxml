@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="titlewindow1_creationCompleteHandler(event)"
+			   close="titlewindow1_closeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var clonedSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
+				clonedSession.theme = themeSession.text;
+				this.dispatchEvent(clonedSession);
+				PopUpManager.removePopUp(this);	
+			}
+			public function setThemeSession(value:String):void
+			{
+				themeSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompletThemeSession);
+				themeSession.text = value;
+			}
+			private function onUpdateCompletThemeSession(event:FlexEvent):void
+			{
+				themeSession.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompletThemeSession);
+				themeSession.selectAll();
+				stage.focus = themeSession;
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this)
+			}
+
+		]]>
+	</fx:Script>
+	<s:title>{fxgt.gettext("Voulez-vous rendre public ce plan de séance ?")}</s:title>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup width="100%" height="100%" horizontalAlign="center">
+		<mx:Spacer height="20"/>
+		<s:HGroup width="100%">
+			<mx:Spacer width="10"/>
+			<s:Label  paddingTop="5">
+				<s:text>Thème : </s:text>
+			</s:Label>
+			<s:TextInput id="themeSession" width="100%" text="azazazaz"/>
+			<mx:Spacer width="10"/>
+		</s:HGroup>
+		<s:HGroup width="100%" bottom="10">
+			<mx:Spacer width="100%"/>
+			<s:Button click="button1_clickHandler(event)">
+				<s:label>{fxgt.gettext("OK")}</s:label>
+			</s:Button>
+			<s:Button id="buttonCancel" click="PopUpManager.removePopUp(this);" >
+				<s:label>{fxgt.gettext("Cancel")}</s:label>
+			</s:Button>
+			<mx:Spacer width="10"/>
+		</s:HGroup>
+		<mx:Spacer height="10"/>
+	</s:VGroup>
+</s:TitleWindow>

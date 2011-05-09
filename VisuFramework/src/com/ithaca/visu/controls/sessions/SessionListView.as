@@ -1,5 +1,6 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.utils.CreateSessionByTemplate;
 	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
@@ -20,6 +21,7 @@ package com.ithaca.visu.controls.sessions
 	import mx.graphics.SolidColor;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.managers.PopUpManager;
 	import mx.utils.ObjectUtil;
 	
 	import spark.components.Button;
@@ -610,27 +612,50 @@ package com.ithaca.visu.controls.sessions
 			var passTextFilter:Boolean = false;
 			// FIXME : remove Model from here
 			var ownerSession:User = Model.getInstance().getUserPlateformeByUserId(session.id_user);
-			passTextFilter = session.theme.match(filterText.text) || session.description.match(filterText.text) 
+			
+			passTextFilter = matchTheme(session)  || session.description.match(filterText.text) 
 				|| ownerSession.firstname.match(filterText.text) || ownerSession.lastname.match(filterText.text);
 			return passTextFilter;
+			
+			function matchTheme(value:Session):Boolean
+			{
+				if (session.theme != null)
+				{
+					return session.theme.match(filterText.text)
+				}else
+				{
+					return true;
+				}
+			}
 		}
 		
 		public function onAddNewSession(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
+			/*Alert.yesLabel = "Oui";
 			Alert.noLabel = "Non";
 			Alert.show("Voulez-vous créer une nouvelle séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, createEmptySessionConformed); 
+				"Confirmation", Alert.YES|Alert.NO, null, createEmptySessionConformed); */
+			var addEmptySession:CreateSessionByTemplate = CreateSessionByTemplate(PopUpManager.createPopUp( 
+				this, CreateSessionByTemplate , true) as spark.components.TitleWindow);
+			addEmptySession.x = (this.parentApplication.width - addEmptySession.width)/2;
+			addEmptySession.y = (this.parentApplication.height - addEmptySession.height)/2;
+			addEmptySession.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onCreateEmptySessionConformed);
+			addEmptySession.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateEmptySession);
+			addEmptySession.setTitleWindow("Voulez-vous créer une nouvelle séance ?");
 		}
 		
-		private function createEmptySessionConformed(event:CloseEvent):void
+		private function onCreateEmptySessionConformed(event:SessionEditEvent):void
 		{
-			if( event.detail == Alert.YES)
-			{
-				var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_EMPTY_SESSION);
-				sessionAddEvent.isModel = false;
-				this.dispatchEvent(sessionAddEvent);
-			}
+			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_EMPTY_SESSION);
+			sessionAddEvent.date = event.date;
+			sessionAddEvent.theme = event.theme;
+			sessionAddEvent.isModel = false;
+			this.dispatchEvent(sessionAddEvent);
+		}
+		private function onCreateEmptySession(event:FlexEvent):void
+		{
+			var addEmptySession:CreateSessionByTemplate = event.currentTarget as CreateSessionByTemplate;
+			addEmptySession.setThemeSession("nouvelle thème séance ici");
 		}
 		//_____________________________________________________________________
 		//
