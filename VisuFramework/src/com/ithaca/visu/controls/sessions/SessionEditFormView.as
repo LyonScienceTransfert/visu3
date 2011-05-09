@@ -62,7 +62,13 @@ package com.ithaca.visu.controls.sessions
 			if( value != _session )
 			{
 				_session = value;
-				_listUser = value.participants;
+				if(value == null)
+				{
+					_listUser = null;
+				}else
+				{
+					_listUser = value.participants;
+				}
 				
 				sessionChange = true;
 				this.invalidateProperties();
@@ -168,6 +174,7 @@ package com.ithaca.visu.controls.sessions
 		// get index for startDDL:DropDownList 
 		private function getIndexStartDDLByDate(date:Date):int
 		{
+			if( date == null) return 0 ;
 			var hour:int = date.getHours();
 			var minute:int = date.getMinutes();
 			var divMinute:int = Math.round((minute/INTERVAL_MINUTE));
