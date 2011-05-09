@@ -153,74 +153,40 @@
 
 <!-- USERS -->
 		<mate:EventHandlers type="{SessionEditEvent.LOAD_LIST_USERS}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="userInfo.getListUser"/>     				
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 <!-- SESSION -->		
 		<mate:EventHandlers type="{SessionEvent.UPDATE_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.updateSession" arguments="{[event.sessionWitOutListUserVO]}"/>     				
-				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="onUpdateSession" 
-										arguments="{[currentEvent.data]}"/>
-				</rtmp:resultHandlers>			
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" 
-										method="error" 
-										arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{SessionEvent.ADD_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId]}"/>     				
-				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="onAddSession" 
-										arguments="{[currentEvent.data]}"/>
-				</rtmp:resultHandlers>			
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" 
-										method="error" 
-										arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
+				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId, event.clonedSession]}"/>     				
 			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.ADD_CLONED_SESSION}" debug="true" useCapture="true">
+			<mate:MethodInvoker generator="{SessionManager}"
+								method="onAddClonedSession" 
+								/>		
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{SessionEvent.ADD_EMPTY_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId]}"/>     				
-				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="onAddEmptySession" 
-										arguments="{[currentEvent.data]}"/>
-				</rtmp:resultHandlers>			
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" 
-										method="error" 
-										arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
+
 		
 		<mate:EventHandlers type="{SessionEvent.DELETE_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="sessionInfo.deleteSession" arguments="{[event.sessionId, Model.getInstance().getLoggedUser().id_user]}"/>     				
-				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="onDeleteSession" 
-										arguments="{[currentEvent.data]}"/>
-				</rtmp:resultHandlers>			
+				<mate:Request action="sessionInfo.deleteSession" arguments="{[event.sessionId, Model.getInstance().getLoggedUser().id_user]}"/>     						
 				<rtmp:faultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}" 
 										method="error" 
