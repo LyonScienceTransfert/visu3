@@ -66,6 +66,9 @@ package com.ithaca.visu.controls.sessions
 		
 		[SkinPart("true")]
 		public var sessionBilanFormView:SessionBilanFormView;
+		
+		[SkinPart("true")]
+		public var saveButton:Button;
 
 		
 		private var _listUser:ArrayCollection;
@@ -93,6 +96,9 @@ package com.ithaca.visu.controls.sessions
 		private var emptySkin:Boolean;
 		
 		private var planSessionEditabled:Boolean;
+		private var flagNeedUpdateSession:Boolean = false;
+		private var TIME_UPDATE_SESSION:Number = 10000;
+		private var timer:Timer;
 		
 		public function SessionDetailView()
 		{
@@ -100,6 +106,8 @@ package com.ithaca.visu.controls.sessions
 			_listUser = new ArrayCollection();
 			_activities = new ArrayCollection();
 			_listPresentUser = new ArrayCollection();
+			this.addEventListener(Event.REMOVED_FROM_STAGE, stopTimer);
+			startTimer();
 		}
 		
 		//_____________________________________________________________________
@@ -115,6 +123,10 @@ package com.ithaca.visu.controls.sessions
 		
 		public function set session(value:Session):void
 		{
+			if(value != _session)
+			{
+				stopTimer();
+			}
 			_session = value;
 			emptySkin = false;
 			
@@ -309,6 +321,11 @@ package com.ithaca.visu.controls.sessions
 			{
 				sessionSummaryView.loggedUser = this.loggedUser;
 			}
+			if (instance == saveButton)
+			{
+				saveButton.enabled = false;
+				saveButton.addEventListener(MouseEvent.CLICK, onSaveSession);
+			}
 		}
 		
 		override protected function commitProperties():void
@@ -321,6 +338,7 @@ package com.ithaca.visu.controls.sessions
 				sessionFormView.session = this.session;	
 				sessionBilanFormView.session = this.session;
 				sessionPlanEdit.theme = this.session.theme;
+				startTimer();
 			}
 			
 			if(activitiesChanged)
@@ -477,7 +495,7 @@ package com.ithaca.visu.controls.sessions
 			session.date_session = null;
 			session.date_session = date;
 			sessionSummaryView.dateSession = date;
-			updateSession();
+			needUpdateSession();
 		}
 // UPDATE LIST PLANED USER 
 		private function onUpdateListPlanedUser(event:SessionEditEvent):void
@@ -493,9 +511,12 @@ package com.ithaca.visu.controls.sessions
 // UPDATE THEME
 		private function onUpdateTheme(event:SessionEditEvent):void
 		{
-			this.session.theme = "";
-			this.session.theme = event.theme;
-			updateSession();
+			if(session != null && session.theme != null)
+			{
+				this.session.theme = "";
+				this.session.theme = event.theme;
+			}
+			needUpdateSession();
 			sessionSummaryView.theme = event.theme;
 		}
 // UPDATE SESSION
@@ -504,6 +525,56 @@ package com.ithaca.visu.controls.sessions
 			var updateSession:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_SESSION);
 			updateSession.session = this.session;
 			this.dispatchEvent(updateSession);
+		}
+// SAVE SESSION 
+		private function onSaveSession(event:MouseEvent):void
+		{
+			updateSession();
+		}
+		public function feedBackUpdateSession(value:Session):void
+		{
+			if(saveButton != null)
+			{
+				saveButton.enabled = false;
+			}
+		}
+		
+		private function startTimer():void
+		{
+			if(!timer)
+			{
+				timer = new Timer(TIME_UPDATE_SESSION,0);
+				timer.addEventListener(TimerEvent.TIMER, checkUpdateSegment);
+			}
+			timer.start();
+		}
+		private function checkUpdateSegment(event:TimerEvent):void
+		{
+			if(flagNeedUpdateSession)
+			{
+				flagNeedUpdateSession = false;
+				updateSession();
+			}
+		}
+		
+		private function needUpdateSession():void
+		{
+			flagNeedUpdateSession = true;
+			if(saveButton != null)
+			{
+				saveButton.enabled = true;
+			}
+		}
+		
+		private function stopTimer(event:*=null):void
+		{
+			saveButton.enabled = false;
+			flagNeedUpdateSession = false;
+			if(timer != null)
+			{
+				this.timer.stop();
+				this.timer = null;
+			}
 		}
 		
 	}
