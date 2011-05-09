@@ -323,9 +323,10 @@ package com.ithaca.visu.controls.sessions
 				if(session.id_session == value)
 				{
 					indexSession = nSession;
+					break;
 				}
 			}
-			if(indexSession > 1)
+			if(indexSession > -1)
 			{
 				list.removeItemAt(indexSession);
 				return true;
@@ -342,6 +343,8 @@ package com.ithaca.visu.controls.sessions
 				{
 					Alert.show('La Séance "'+session.theme+'" a été supprimer par '+ nameUserDeleteSession, "Information");
 					sessionDetailView.session = null;
+					filterChange = true;
+					this.invalidateProperties();
 				}
 			}
 			if(removeSession(value, this.planList))
@@ -350,12 +353,16 @@ package com.ithaca.visu.controls.sessions
 				{
 					Alert.show('Le plan de la séance "'+session.theme+'" a été supprimer par '+ nameUserDeleteSession, "Information");
 					sessionDetailView.session = null;
+					filterChange = true;
+					this.invalidateProperties();
 				}
 			}
 		}		
 		
 		public function updateSession(value:Session):void
 		{
+			sessionDetailView.feedBackUpdateSession(value);
+			return;
 		}
 // ADD SESSION
 		public function addSession(session:Session):void
@@ -370,10 +377,9 @@ package com.ithaca.visu.controls.sessions
 					// change onglet to "plan"
 					this.explorerSession.selectedIndex = 1;
 					var lastAddedItem:int = this.planList.length-1;
-					this.planListView.planList.selectedIndex = lastAddedItem;
+					this.planListView.planDataGrid.selectedIndex = lastAddedItem;
 					// update session
 					sessionDetailView.session = session;
-					this.planListView.planList.ensureIndexIsVisible(lastAddedItem);			
 				}else
 				{
 					this.sessionList.addItem(session);
@@ -381,10 +387,9 @@ package com.ithaca.visu.controls.sessions
 					this.explorerSession.selectedIndex = 0;
 
 					this.session = session;
-					this.sessionListView.sessionList.selectedItem = session;
+					this.sessionListView.sessionDataGrid.selectedItem = session;
 					// update session
 					sessionDetailView.session = session;
-					this.sessionListView.sessionList.ensureIndexIsVisible(this.sessionList.length-1);
 				}
 
 				Alert.show(typeSession,
