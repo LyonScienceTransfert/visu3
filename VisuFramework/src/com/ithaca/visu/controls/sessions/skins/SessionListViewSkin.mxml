@@ -124,10 +124,10 @@
 				<mx:DataGrid id="planDataGrid" width="100%" height="100%" includeIn="plan">
 					<mx:columns>
 						<mx:DataGridColumn dataField="theme" showDataTips="true" dataTipField="theme">
-							<mx:headerText>Théme de séance</mx:headerText>			
+							<mx:headerText>Thème de séance</mx:headerText>			
 						</mx:DataGridColumn>
 						<mx:DataGridColumn dataField="id_user" labelFunction="labelFunctionOwnerSession" width="100">
-							<mx:headerText>Propriéter de séance</mx:headerText>			
+							<mx:headerText>Propriétaire de séance</mx:headerText>			
 						</mx:DataGridColumn>
 					</mx:columns>
 				</mx:DataGrid>
@@ -160,10 +160,10 @@
 							<mx:headerText>Date prévue</mx:headerText>			
 						</mx:DataGridColumn>
 						<mx:DataGridColumn dataField="theme">
-							<mx:headerText>Théme de séance</mx:headerText>			
+							<mx:headerText>Thème de séance</mx:headerText>			
 						</mx:DataGridColumn>
 						<mx:DataGridColumn dataField="id_user" labelFunction="labelFunctionOwnerSession" width="80">
-							<mx:headerText>Propriéter de séance</mx:headerText>			
+							<mx:headerText>Propriétaire de séance</mx:headerText>			
 						</mx:DataGridColumn>
 					</mx:columns>
 				</mx:DataGrid>
