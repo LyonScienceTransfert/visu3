@@ -13,7 +13,7 @@
       <pattern>%d{yyyy-MM-dd HH:mm:ss} %c [%p] %m%n</pattern>
     </encoder>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
+      <level>DEBUG</level>
     </filter>
   </appender>
   <appender name="R" class="ch.qos.logback.core.FileAppender">
@@ -41,7 +41,8 @@
   <logger name="org.liris.ktbs" level="WARN"/>
   <logger name="org.liris.ktbs.dao.rest" level="DEBUG"/>
   <logger name="java.sql" level="WARN"/>
-  <logger name="org.liris.ktbs.visu.vo.ObselVO" level="DEBUG"/>
+  <logger name="org.liris.ktbs.visu.vo.ObselVO" level="WARN"/>
+  <logger name="org.liris.ktbs.visu.model" level="DEBUG"/>
   <logger name="org.liris.ktbs.dao.ResourceProxy" level="WARN"/>
   <logger name="org.liris.ktbs.visu.VisuToKtbs" level="INFO"/>
   

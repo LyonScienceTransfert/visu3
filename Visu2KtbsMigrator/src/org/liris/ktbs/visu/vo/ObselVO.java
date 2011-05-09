@@ -99,12 +99,12 @@ public class ObselVO {
 		logger.debug("Parsing the rdf field content of obsel {}", id);
 
 		fixedRdf = VisuToKtbsUtils.fixRdfString(rdf, traceModelUri, userbaseUri);
-		Model model = ModelFactory.createDefaultModel();
+		model = ModelFactory.createDefaultModel();
 		model.read(new StringReader(fixedRdf), "", KtbsConstants.JENA_TURTLE);
 
 
 		StmtIterator it2 = model.listStatements();
-		Resource obselResource = null;
+		obselResource = null;
 		while (it2.hasNext()) {
 			Statement statement = (Statement) it2.next();
 			logger.debug("New statement: {}", statement);
@@ -180,12 +180,29 @@ public class ObselVO {
 		return KtbsConstants.XSD_DATETIME_FORMAT.format(cal.getTime());
 	}
 	
+	
+	public Resource asRdfResource() {
+		return obselResource;
+	}
+	
+	public Model getModel() {
+		return model;
+	}
 	private boolean parseFailed = false;
+
+	private Model model;
+
+	private Resource obselResource;
 	public void setParseFailed(boolean parseFailed) {
 		this.parseFailed = parseFailed;
 	}
 	
 	public boolean isParseFailed() {
 		return parseFailed;
+	}
+	
+	public void consume() {
+		this.model = null;
+		this.rdf = null;
 	}
 }
