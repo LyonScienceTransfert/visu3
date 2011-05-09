@@ -48,8 +48,8 @@
 		
 		<s:HGroup width="100%" horizontalAlign="right" includeIn="planMine,planOther,sessionComing,sessionPast">
 			<s:Button id="saveButton"  includeIn="planMine,sessionComing">
-				<s:label.planMine>Sauvegarde plan</s:label.planMine>
-				<s:label.sessionComing>Sauvegarde séance</s:label.sessionComing>
+				<s:label.planMine>Sauvegarder plan</s:label.planMine>
+				<s:label.sessionComing>Sauvegarder séance</s:label.sessionComing>
 			</s:Button>
 			<s:Button width="130" id="deleteButtonPlan" toolTip="Supprime ce plan de séance partagé" label="Supprimer plan" enabled.planOther="false" includeIn="planMine,planOther"/>
 			
