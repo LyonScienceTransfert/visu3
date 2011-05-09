@@ -144,8 +144,10 @@ package com.ithaca.utils
 		{
 			var hourString:String = "0";
 			var hour:int = value/60;
+			var day:int = hour/24;
+			if (hour >= 24 ) {  hour = hour - day*24;  }
 			if(hour > 0){ hourString = hour.toString() };
-			var minute:int = value - hour*60; 	
+			var minute:int = value - hour*60 - day*24*60; 	
 			var minuteString:String = minute.toString()
 			if(minute < 10 ){minuteString = "0"+minuteString;}
 			var result:String = hourString + " h " + minuteString+ " min";
