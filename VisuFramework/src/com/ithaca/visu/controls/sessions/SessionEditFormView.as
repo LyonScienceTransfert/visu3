@@ -328,10 +328,13 @@ package com.ithaca.visu.controls.sessions
 		 
 		private function setEndSession():void
 		{
-			var hours:int = session.date_session.hours;
-			var minuts:int = session.date_session.minutes;
-			var endSessionPlaned:int = hours*60 + minuts + durationPlaned;
-			this.labelEndSession.text = UtilFunction.getHourMin(endSessionPlaned);
+			if(session.date_session != null)
+			{
+				var hours:int = session.date_session.hours;
+				var minuts:int = session.date_session.minutes;
+				var endSessionPlaned:int = hours*60 + minuts + durationPlaned;
+				this.labelEndSession.text = UtilFunction.getHourMin(endSessionPlaned);
+			}
 		}
 			
 			
