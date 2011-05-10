@@ -519,7 +519,7 @@ package com.ithaca.visu.controls.sessions
 			var textColumnDateSession:String = "Date prévue";
 			var sortDateFunction:Function = compareDateSession;
 			// set function "compareDateSessionRecording" for past session
-			if(pastButton.selected)
+			if(pastButton != null && pastButton.selected)
 			{
 				textColumnDateSession = "Date de séance";
 				sortDateFunction = compareDateSessionRecording;
@@ -534,7 +534,10 @@ package com.ithaca.visu.controls.sessions
 				listSessionCollection.refresh();
 				// TODO : move verticalScroller for show selected item
 			}
-			dateSessionDataGrid.headerText = textColumnDateSession;
+			if(dateSessionDataGrid != null)
+			{
+				dateSessionDataGrid.headerText = textColumnDateSession;
+			}
 		}
 		
 		private function onRadioPlanFilter(event:MouseEvent):void
@@ -656,6 +659,22 @@ package com.ithaca.visu.controls.sessions
 		{
 			var addEmptySession:CreateSessionByTemplate = event.currentTarget as CreateSessionByTemplate;
 			addEmptySession.setThemeSession("nouvelle titre séance ici");
+		}
+		public function selectAllPlan():void
+		{
+			sharingAllButton.selected = true;
+			sharingMineButton.selected = false;
+			sharingOtherButton.selected = false;
+			// update list session by filter and sort by date
+			onRadioSessionFilter();
+		}
+		public function selectAllSession():void
+		{
+			allButton.selected = true;
+			pastButton.selected = false;
+			comingButton.selected = false;
+			// update list session by filter and sort by date
+			onRadioSessionFilter();
 		}
 		//_____________________________________________________________________
 		//
