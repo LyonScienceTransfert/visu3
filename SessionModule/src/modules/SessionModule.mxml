@@ -279,7 +279,7 @@
 				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
 					var session:Session = event.session;
-					sessionManagement.addSession(session);
+					sessionManagement.addSession(session, event.clonedSession);
 					if (event.clonedSession)
 					{
 						var listActivities:ArrayCollection = sessionManagement.sessionDetailView.sessionPlanEdit.activities;
@@ -293,7 +293,7 @@
 							addActivity.activityId = activity.id_activity;
 							dispatchEvent(addActivity);
 						}
-					}
+					} 
 				}
 			}
 			private function onLoadedAllUsers(event:UserEvent):void
