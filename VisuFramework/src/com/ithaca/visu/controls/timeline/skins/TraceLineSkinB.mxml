@@ -48,28 +48,18 @@
             /**
              *  @private
              */
-           /*  override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
-            {
-                // Push backgroundColor and backgroundAlpha directly.
-                // Handle undefined backgroundColor by hiding the background object.
-                if (isNaN(getStyle("backgroundColor")))
-                {
-                    background.visible = false;
-                }
-                else
-                {
-                    background.visible = true;
-                    bgFill.color = getStyle("backgroundColor");
-                    bgFill.alpha = getStyle("backgroundAlpha");
-                }
-                
-                super.updateDisplayList(unscaledWidth, unscaledHeight);
-            } */
+
+			[Bindable]
 			private var LEFT_LABEL:String = "15";
+			[Bindable]
 			private var SIZE_IMAGE_TITLE_TRACELINE:int = 20;
+			[Bindable]
 			private var WIDTH_GROUP_ICON:int = 50;
+			[Bindable]
 			private var LEFT_TRACE_LINE_OBSEL:int = 210;
+			[Bindable]
 			private var DELTA_POSSITION_LINE_VERTICAL_START_SESSION:int = -2;
+			[Bindable]
 			private var VERICAL_CENTER_IMAGE_TITLE_TRACELINE:int = 5;
 			private function onClick():void{
 //				nameUser.text = traceLoggedUser.width.toString();

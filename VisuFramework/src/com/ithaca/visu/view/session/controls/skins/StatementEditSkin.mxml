@@ -22,7 +22,7 @@
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
-
+			[Bindable]
 			private var widthAppendix:int = 70;
 			private var currentMouseCursor:String;
 			
