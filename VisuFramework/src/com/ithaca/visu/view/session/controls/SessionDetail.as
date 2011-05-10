@@ -565,7 +565,7 @@ package com.ithaca.visu.view.session.controls
 		}
 		public function setMessageTheme():void
 		{
-			themeSession.text = "Entrez un nouveau thème de séance ici";
+			themeSession.text = "Entrez un nouveau titre de séance ici";
 			themeSession.setStyle("fontStyle","italic");
 			themeSession.setStyle("color","#CCCCCC");
 		}	

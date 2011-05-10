@@ -44,7 +44,7 @@
 			<s:HGroup top="2" bottom="2" right="3" left="3">
 				<s:Group height="100%" width="80" verticalCenter="0">
 					<s:Label id="themeTitleLabel" right="0">
-						<s:text>Thème :</s:text>
+						<s:text>Titre :</s:text>
 					</s:Label>
 					<s:Label id="dateTitleLabel" right="0" top="18">
 						<s:text>Date :</s:text>

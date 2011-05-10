@@ -54,7 +54,7 @@
 		<s:HGroup width="100%" includeIn="normalEditable">
 			<mx:Spacer width="10"/>
 			<s:Label  paddingTop="5">
-				<s:text>Thème:</s:text>
+				<s:text>Titre:</s:text>
 			</s:Label>
 			<s:TextInput id="themeLabel" width="100%" text="Le Brésil" fontWeight="bold" fontSize="14"/>
 			<mx:Spacer width="10"/>
