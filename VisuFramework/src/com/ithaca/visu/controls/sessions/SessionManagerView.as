@@ -370,10 +370,8 @@ package com.ithaca.visu.controls.sessions
 		{
 			if(this.explorerSession != null)
 			{
-				var typeSession:String = "Votre nouvelle séance a été créée et ajoutée à la liste des séances.";
 				if(session.isModel)
 				{
-					typeSession = "Le nouveau plan de séance a été créé et ajouté à la liste des séances.";
 					this.planList.addItem(session);
 					// change onglet to "plan"
 					this.explorerSession.selectedIndex = 1;
@@ -393,9 +391,6 @@ package com.ithaca.visu.controls.sessions
 					sessionDetailView.session = session;
 				}
 
-				Alert.show(typeSession,
-					"Information"); 
-				dispatchEvent( new Event("update") );
 			}
 		}
 		
