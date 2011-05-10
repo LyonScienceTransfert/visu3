@@ -82,6 +82,7 @@ package com.ithaca.visu.view.session.controls.event
 		public static const UPDATE_ACTIVITY_ELEMENT:String="updateActivityElement";
 		public static const PRE_UPDATE_ACTIVITY_ELEMENT:String="preUpdateActivityElement";
 		public static const ADD_ACTIVITY_ELEMENT:String="addActivityElement";
+		public static const PRE_ADD_ACTIVITY_ELEMENT:String="preAddActivityElement";
 		
 		public static const UPDATE_DATE_TIME:String="updateDateTime";
 		public static const UPDATE_THEME:String="updateTheme";
