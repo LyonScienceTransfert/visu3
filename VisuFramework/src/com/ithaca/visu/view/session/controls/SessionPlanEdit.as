@@ -63,6 +63,7 @@
 
 package com.ithaca.visu.view.session.controls
 {
+	import com.ithaca.utils.AddActivityTitleWindow;
 	import com.ithaca.utils.CreateSessionByTemplate;
 	import com.ithaca.utils.SharePlanByTemplate;
 	import com.ithaca.visu.model.Activity;
@@ -82,6 +83,7 @@ package com.ithaca.visu.view.session.controls
 	import mx.events.CollectionEventKind;
 	import mx.events.FlexEvent;
 	import mx.managers.PopUpManager;
+	import mx.utils.ObjectUtil;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -98,6 +100,8 @@ package com.ithaca.visu.view.session.controls
 		public var sharePlanButton:Button;
 		[SkinPart("true")] 
 		public var createSessionButton:Button;
+		[SkinPart("true")] 
+		public var buttonAddActivity:Button;
 		[SkinPart("true")] 
 		public var themeLabel:TextInput;
 		
@@ -134,6 +138,10 @@ package com.ithaca.visu.view.session.controls
 			if (instance == themeLabel)
 			{
 				themeLabel.addEventListener(TextOperationEvent.CHANGE, onChangeTextTheme);
+			}
+			if (instance == buttonAddActivity)
+			{
+				buttonAddActivity.addEventListener(MouseEvent.CLICK, onMouseClickButtonAddActivity);
 			}
 
 		}
@@ -295,17 +303,32 @@ package com.ithaca.visu.view.session.controls
 				invalidateProperties();
 			}
 		}
-// ACTIVITY		
-		public function addActivity():void
+// ACTIVITY	
+		private function onMouseClickButtonAddActivity(event:MouseEvent):void
+		{
+			var addActivity:AddActivityTitleWindow = AddActivityTitleWindow(PopUpManager.createPopUp( 
+				this, AddActivityTitleWindow , true) as spark.components.TitleWindow);
+			addActivity.x = (this.parentApplication.width - addActivity.width)/2;
+			addActivity.y = (this.parentApplication.height - addActivity.height)/2;
+			addActivity.addEventListener(SessionEditEvent.PRE_ADD_ACTIVITY_ELEMENT, onCreateActivityConformed);
+			addActivity.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateActivity);
+		}
+		private function onCreateActivityConformed(event:SessionEditEvent):void
 		{
 			var obj:Object = new Object();
 			obj.duration = 12;
-			obj.title = "New activity";
+			obj.title = event.theme;
 			var activity:Activity = new Activity(obj);
+			
 			var index:int = 0;
-			if(activityGroup != null)
+			// set last index  
+			if(activityGroup != null && event.isModel)
 			{
 				index = activityGroup.numElements;
+			}else
+			{
+				// ++ind for all activities
+				moveAllActivitiesToBottom()
 			}
 			activity.ind = index;
 			_activities.addItem(activity);
@@ -315,6 +338,11 @@ package com.ithaca.visu.view.session.controls
 			var addActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.ADD_ACTIVITY);
 			addActivityEvent.activity = activity;
 			this.dispatchEvent(addActivityEvent);
+		}
+		private function onCreateActivity(event:FlexEvent):void
+		{
+			var addActivity:AddActivityTitleWindow = event.currentTarget as AddActivityTitleWindow;
+			addActivity.setTitleActivity("nouvelle titre d'activité ici");
 		}
 		
 		private function onChangeTextTheme(event:TextOperationEvent):void
@@ -333,7 +361,8 @@ package com.ithaca.visu.view.session.controls
 			addSessionByTemplate.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onCreateSessionByTemplateConformed);
 			addSessionByTemplate.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateSessionByTemplate);
 		}
-		private function onCreateSessionByTemplateConformed(event:SessionEditEvent):void{
+		private function onCreateSessionByTemplateConformed(event:SessionEditEvent):void
+		{
 			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
 			sessionAddEvent.theme = event.theme;
 			sessionAddEvent.date = event.date;
@@ -353,7 +382,8 @@ package com.ithaca.visu.view.session.controls
 			sharePlanByTemplate.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onSharePlanByTemplateConformed);
 			sharePlanByTemplate.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletSharePlanByTemplate);
 		}
-		private function onSharePlanByTemplateConformed(event:SessionEditEvent):void{
+		private function onSharePlanByTemplateConformed(event:SessionEditEvent):void
+		{
 			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
 			sessionAddEvent.theme = event.theme;
 			sessionAddEvent.isModel = true;
@@ -471,11 +501,38 @@ package com.ithaca.visu.view.session.controls
 		private function sortByOrder(list:ArrayCollection):void
 		{
 			var sort:Sort = new Sort();
-			// There is only one sort field, so use a null first parameter.
-			sort.fields = [new SortField("ind", true)];
+			sort.compareFunction = compareInd;
 			list.sort = sort;
 			list.refresh();
 		}
+		//  ind = id+1 for all activities, to give index O for new activity
+		private function moveAllActivitiesToBottom():void
+		{
+			var nbrActivity:int = this.activities.length;
+			for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
+			{
+				var activity:Activity = this.activities.getItemAt(nActivity) as Activity;
+				activity.ind = activity.ind + 1; 
+				// update ind of activity
+				var changeOrderMovedUpActivityEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.UPDATE_ACTIVITY);
+				changeOrderMovedUpActivityEvent.activity = activity;
+				this.dispatchEvent(changeOrderMovedUpActivityEvent);
+			}
+		}
 	
+		// sort by "ind"  of activity  
+		private function compareInd(ObjA:Object,ObjB:Object,fields:Array = null):int
+		{
+			if(ObjA==null && ObjB==null)
+				return 0;
+			if(ObjA==null)
+				return 1;
+			if(ObjB == null)
+				return -1;
+			
+			var indA:Number=ObjA.ind;
+			var indB:Number=ObjB.ind;
+			return ObjectUtil.numericCompare(indA,indB);
+		}
 	}
 }
