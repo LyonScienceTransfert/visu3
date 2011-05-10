@@ -24,12 +24,6 @@
 			{
 				this.percentWidth = 100;
 			}
-			
-			
-			protected function buttonAddActivity_clickHandler(event:MouseEvent):void
-			{
-				this.hostComponent.addActivity();
-			}
 
         ]]>        
     </fx:Script>
@@ -63,7 +57,7 @@
 		<s:HGroup width="100%">
 			<mx:Spacer width="2"/>
 			<s:Button id="buttonAddActivity"
-					   click="buttonAddActivity_clickHandler(event)"  enabled.normal="false" label.normalEditable="Ajouter une activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter une activité" includeIn="normal,normalEditable">
+				 enabled.normal="false" label.normalEditable="Ajouter une activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter une activité" includeIn="normal,normalEditable">
 			</s:Button>
 			<mx:Spacer width="100%"/>
 			<s:HGroup right="5">
