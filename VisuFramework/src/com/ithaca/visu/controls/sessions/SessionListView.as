@@ -634,10 +634,6 @@ package com.ithaca.visu.controls.sessions
 		
 		public function onAddNewSession(event:MouseEvent):void
 		{
-			/*Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous créer une nouvelle séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, createEmptySessionConformed); */
 			var addEmptySession:CreateSessionByTemplate = CreateSessionByTemplate(PopUpManager.createPopUp( 
 				this, CreateSessionByTemplate , true) as spark.components.TitleWindow);
 			addEmptySession.x = (this.parentApplication.width - addEmptySession.width)/2;
