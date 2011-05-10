@@ -36,7 +36,7 @@
 			
 			protected function themeSession_focusInHandler(event:FocusEvent):void
 			{
-				if(themeSession.text == "Entrez un nouveau thème de séance ici")
+				if(themeSession.text == "Entrez un nouveau titre de séance ici")
 				{
 					themeSession.text = "";
 					themeSession.setStyle("fontStyle","normal");
@@ -87,7 +87,7 @@
 					<!-- LABELS -->
 					<s:Group height="100%" width="20%" includeIn="accessRetrospection,normal,normalEditable">
 						<s:Label fontWeight="bold" fontSize="14" right.normalEditable="5" verticalCenter.normalEditable="-3" right.normal="5" verticalCenter.normal="-3" right.accessRetrospection="5" verticalCenter.accessRetrospection="-3">
-							<s:text>Thème :</s:text>
+							<s:text>Titre :</s:text>
 						</s:Label>
 						<s:Label fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" right.normal="5" top.normal="10" right.accessRetrospection="5" top.accessRetrospection="10">
 							<s:text>Date prévue :</s:text>

@@ -18,7 +18,7 @@
 		<mx:Form paddingLeft="5" paddingRight="5" 
 				 paddingTop="5" paddingBottom="5" width="50%">
 			
-			<mx:FormItem width="100%" label="Thème:" >
+			<mx:FormItem width="100%" label="Titre:" >
 				<s:Label id="themeLabel" width="100%" text="Le Brésil"/>
 			</mx:FormItem>
 			

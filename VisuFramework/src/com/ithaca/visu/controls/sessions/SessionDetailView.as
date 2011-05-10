@@ -583,8 +583,5 @@ package com.ithaca.visu.controls.sessions
 				this.timer = null;
 			}
 		}
-		
 	}
-	
-	
 }

@@ -51,7 +51,7 @@
 			<s:HGroup top="2" bottom="2" right="3" left="3">
 				<s:Group height="100%" width="50" verticalCenter="0" width.sessionModel="100">
 					<s:Label id="themeTitleLabel" right="0">
-						<s:text>Thème :</s:text>
+						<s:text>Titre :</s:text>
 					</s:Label>
 					<s:Label id="dateTitleLabel" right="0" top="18" text.sessionModel="Date de la création :" text.sessionWill="planifiée le : " top.sessionWill="18" left.sessionWill="0" right.sessionWill="0" maxDisplayedLines="1" text.sessionWas="effectuée le :" top.sessionWas="18" left.sessionWas="0" right.sessionWas="0" top.sessionModel="18" left.sessionModel="0" right.sessionModel="0" left.model="0" right.model="0" text.model="planifiée le : " top.model="18">
 						<s:text>Date :</s:text>
