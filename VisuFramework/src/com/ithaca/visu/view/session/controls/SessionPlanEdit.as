@@ -258,11 +258,12 @@ package com.ithaca.visu.view.session.controls
 			if (_activities)
 			{
 				_activities.addEventListener(CollectionEvent.COLLECTION_CHANGE, activities_ChangeHandler);
+			
+				dispatchEvent(new Event("updateActivities"));
+				var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
+				_activities.dispatchEvent(event);
 			}
 			
-			dispatchEvent(new Event("updateActivities"));
-			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET);
-			_activities.dispatchEvent(event);
 			
 		}
 		
