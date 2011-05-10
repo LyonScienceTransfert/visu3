@@ -47,6 +47,7 @@ package com.ithaca.visu.controls.sessions
 		private var _loggedUser:User;
 		
 		private var filterChange:Boolean;
+		private var selectedIndexListSessionOutSideModule:int;
 		
 		public function SessionManagerView()
 		{
@@ -425,9 +426,20 @@ package com.ithaca.visu.controls.sessions
 			}
 			if(sessionListView.sessionDataGrid != null)
 			{
-				sessionListView.sessionDataGrid.selectedItem = session;
+				// update selected session after dataGrid creation complet
+				sessionListView.sessionDataGrid.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateDataGridComplet);
 			}
 			updateSeletedSession(session);
+		}
+		/**
+		 * Set session visible in dataGrid that was choose outside the SessionModule
+		 */
+		private function onUpdateDataGridComplet(event:FlexEvent):void
+		{
+			sessionListView.sessionDataGrid.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateDataGridComplet);
+			sessionListView.sessionDataGrid.selectedItem = this.session;
+			selectedIndexListSessionOutSideModule = this.sessionListView.sessionDataGrid.selectedIndex;
+			sessionListView.sessionDataGrid.scrollToIndex(selectedIndexListSessionOutSideModule);
 		}
 		
 		private function getIndexSession(list:ArrayCollection):Session
