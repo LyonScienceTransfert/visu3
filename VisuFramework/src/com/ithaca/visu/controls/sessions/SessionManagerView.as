@@ -47,7 +47,7 @@ package com.ithaca.visu.controls.sessions
 		private var _loggedUser:User;
 		
 		private var filterChange:Boolean;
-		private var selectedIndexListSessionOutSideModule:int;
+		private var selectedIndexListSession:int;
 		
 		public function SessionManagerView()
 		{
@@ -245,8 +245,8 @@ package com.ithaca.visu.controls.sessions
 			}
 			if(this.sessionListView.sessionDataGrid != null)
 			{
-				this.sessionListView.sessionDataGrid.selectedItem = null;
-				this.sessionListView.sessionDataGrid.selectedItem  = session;
+				// update selected session after dataGrid creation complet
+				sessionListView.sessionDataGrid.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateDataGridComplet);
 			}
 			updateSeletedSession(session);
 		}
