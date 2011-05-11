@@ -28,7 +28,7 @@
 		<mx:FormItem label="Bilans existants:" width="100%">
 			<s:VGroup width="100%" horizontalAlign="left"  paddingTop="4">
 				<s:Label id="labelBilan" width="100%" text="(Liste interactive des bilans, à maquetter avec le composant 'Liste des bilans')"/>
-				<mx:LinkButton id="linkButtonGoSalonBilan" color="#0000FF" fontWeight="bold" toolTip="Rejoindre le salon de bilan pour cette séance" label="Aller vers bilan" paddingTop="-5"/>
+				<mx:LinkButton id="linkButtonGoSalonBilan" includeInLayout="false" visible="false" color="#0000FF" fontWeight="bold" toolTip="Rejoindre le salon de bilan pour cette séance" label="Aller vers bilan" paddingTop="-5"/>
 			</s:VGroup>
 		</mx:FormItem>
 		

@@ -151,12 +151,13 @@ package com.ithaca.visu.controls.sessions
 				if(nbrBilan == 0)
 				{
 					labelBilan.text = "Pour cette séance il n'existe pas le bilan";
+					linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = false;
 				}else
 				{
 					var endSBilansAll:String = "";   if(nbrBilan > 1){endSBilansAll = "s";};
 					var endSBilanShared:String = ""; if(this._nbrRetroDocumentShare > 1){endSBilanShared ="s"};
 					labelBilan.text = "Pour cette séance il y a "+nbrBilan.toString() + " bilan"+endSBilansAll+" ("+this._nbrRetroDocumentShare.toString()+" bilan"+endSBilanShared+" partagé)";
-					
+					linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = true;
 				}
 			}
 		}
