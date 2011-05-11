@@ -442,9 +442,12 @@ package com.ithaca.visu.controls.sessions
 		private function onUpdateDataGridComplet(event:FlexEvent):void
 		{
 			sessionListView.sessionDataGrid.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateDataGridComplet);
-			sessionListView.sessionDataGrid.selectedItem = this.session;
-			selectedIndexListSessionOutSideModule = this.sessionListView.sessionDataGrid.selectedIndex;
-			sessionListView.sessionDataGrid.scrollToIndex(selectedIndexListSessionOutSideModule);
+			if(this.session != null)
+			{
+				sessionListView.sessionDataGrid.selectedItem = this.session;
+				selectedIndexListSession = this.sessionListView.sessionDataGrid.selectedIndex;
+				sessionListView.sessionDataGrid.scrollToIndex(selectedIndexListSession);
+			}
 		}
 		
 		private function getIndexSession(list:ArrayCollection):Session
