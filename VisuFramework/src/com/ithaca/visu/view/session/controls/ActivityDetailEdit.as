@@ -78,7 +78,6 @@ package com.ithaca.visu.view.session.controls
 	import mx.controls.Alert;
 	import mx.controls.Image;
 	
-	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.NumericStepper;
