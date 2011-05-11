@@ -1592,7 +1592,6 @@
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 	</fx:Declarations>
-<mx:HDividedBox height="100%" width="100%">
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
 <!-- SESSIONS -->
@@ -1633,26 +1632,60 @@
 				</s:Panel>
 			</mx:VDividedBox>
 <!-- VIDEO -->
-			<s:Panel height="100%" width="50%" id="panelVideo">
-				<s:title>Video</s:title>
-				<s:Group height="100%" width="100%" bottom="2">
-					<controls:VisuVisio id="visio" width="100%" top="0"
-										quality="80"
-										bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"/>
-					<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" bottom.vciel="2" horizontalCenter.vciel="0" right.debug="5">
-						<s:label>Couper le son</s:label>
-					</s:Button>
-					<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
-						<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
-						<s:Label text="Décalage max. autorisé(s) est:" paddingTop="7"/>
-						<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
-						<s:Label text="Périod de verification(s)" paddingTop="7"/>
-						<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
-					</s:HGroup>
-				</s:Group>
-			</s:Panel>
+			<mx:VDividedBox width="60%" height="100%" width.State1="70%">
+				<s:Panel height="100%" width="100%" id="panelVideo">
+					<s:title>Video</s:title>
+					<s:Group height="100%" width="100%" bottom="2">
+						<controls:VisuVisio id="visio" width="100%" top="0"
+											quality="80"
+											bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"/>
+						<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" bottom.vciel="2" horizontalCenter.vciel="0" right.debug="5">
+							<s:label>Couper le son</s:label>
+						</s:Button>
+						<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
+							<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
+							<s:Label text="Décalage max. autorisé(s) est:" paddingTop="7"/>
+							<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
+							<s:Label text="Périod de verification(s)" paddingTop="7"/>
+							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
+						</s:HGroup>
+					</s:Group>
+				</s:Panel>
+<!-- TIMELINE -->
+				<s:Panel width="100%" height="40%" id="panelTimeLine">
+					<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
+					<s:VGroup width="100%" height="100%" gap="0">
+						<s:Group width="100%" height="100%" id="groupTimeLine">
+							<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false" top="0"/>
+							<s:Group width="100%" height="100%" top="75">
+								<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1" bottom.debug="1" left.debug="0" right.debug="1" top.debug="1">
+									<s:Group width="100%" height="100%">
+										<s:layout>
+											<s:VerticalLayout gap="5"/>
+										</s:layout>
+										<s:Group id="traceLineGroup" width="100%" height="100%">
+											<s:layout>
+												<s:VerticalLayout gap="4"/>
+											</s:layout>
+										</s:Group>
+									</s:Group>
+								</s:Scroller>
+							</s:Group>
+						</s:Group>
+						<s:HGroup>
+							<s:Label text="Zoom: " />
+							<s:HSlider id="durationSessionSlider" 						   
+									   liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)" thumbRelease.debug="durationSessionSlider_thumbReleaseHandler(event)"/>
+							
+							<s:Label text="Position: "/>
+							<s:HSlider id="startTimeSessionSlider" 
+									   liveDragging="true" width="70%" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
+						</s:HGroup>
+					</s:VGroup>
+				</s:Panel>
+			</mx:VDividedBox>
 <!-- DOCUMENTARISATION -->
-			<s:Group height="100%" width="20%" minWidth="300">
+			<s:Group height="100%" width="20%" minWidth="300" width.State1="30%">
 				<s:layout>
 					<s:VerticalLayout gap="1"/>
 				</s:layout>
@@ -1679,37 +1712,5 @@
 			</s:Group>
 			
 		</mx:HDividedBox>
-		<s:Panel width="100%" height="40%" id="panelTimeLine">
-			<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-			<s:VGroup width="100%" height="100%" gap="0">
-				<s:Group width="100%" height="100%" id="groupTimeLine">
-					<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="false" top="0"/>
-					<s:Group width="100%" height="100%" top="75">
-						<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1" bottom.debug="1" left.debug="0" right.debug="1" top.debug="1">
-							<s:Group width="100%" height="100%">
-								<s:layout>
-									<s:VerticalLayout gap="5"/>
-								</s:layout>
-								<s:Group id="traceLineGroup" width="100%" height="100%">
-									<s:layout>
-										<s:VerticalLayout gap="4"/>
-									</s:layout>
-								</s:Group>
-							</s:Group>
-						</s:Scroller>
-					</s:Group>
-				</s:Group>
-				<s:HGroup>
-					<s:Label text="Zoom: " />
-					<s:HSlider id="durationSessionSlider" 						   
-							   liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)" thumbRelease.debug="durationSessionSlider_thumbReleaseHandler(event)"/>
-
-					<s:Label text="Position: "/>
-					<s:HSlider id="startTimeSessionSlider" 
-							   liveDragging="true" width="70%" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
-				</s:HGroup>
-			</s:VGroup>
-		</s:Panel>
 	</mx:VDividedBox>
-</mx:HDividedBox>
 </modules:VisuModuleBase>
