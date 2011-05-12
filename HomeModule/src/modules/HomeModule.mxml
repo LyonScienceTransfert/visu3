@@ -18,6 +18,10 @@
 			method="showDateSession" />
 		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"
 			method="showSession" />
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"
+			method="updateDeletedSession" />
+		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"
+			method="showUpdatedSession" />
 			
 <!--		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"
 			method="onLoadedAllUsers" />-->
@@ -264,6 +268,69 @@
 				}
 			}	
 			
+			private function updateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					var sessionId:int = event.sessionId;
+					var nbrSession:int = this.sessionsList.length;
+					var index:int = -1;
+					for ( var nSession:int = 0; nSession < nbrSession; nSession++)
+					{
+						var session:Session = this.sessionsList.getItemAt(nSession) as Session;
+						if(session.id_session == sessionId)
+						{
+							index = nSession;
+							break;
+						}
+					}
+					if(index > -1)
+					{
+						this.sessionsList.removeItemAt(index);
+					}
+					if(this.sessionsList.length == 0)
+					{
+						navigateurDay.selectedIndex = -1;
+					}
+				}
+			}
+			private function showUpdatedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					var sessionUpdated: Session = event.session;
+					var sessionId:int = sessionUpdated.id_session;
+					var nbrSession:int = this.sessionsList.length;
+					for ( var nSession:int = 0; nSession < nbrSession; nSession++)
+					{
+						var session:Session = this.sessionsList.getItemAt(nSession) as Session;
+						if(session.id_session == sessionId)
+						{
+							session.theme = sessionUpdated.theme;
+							session.date_session = sessionUpdated.date_session;
+							session.participants = sessionUpdated.participants;
+							// update status users
+							updateStatusParticipants(session.participants);
+							break;
+						}
+					}
+				}
+			}
+			
+			/**
+			* Update status participants the session by status on the plateforme
+			*/ 
+			private function updateStatusParticipants(list:ArrayCollection):void
+			{
+				var nbrUser:int = list.length;
+				for(var nUser:int = 0; nUser < nbrUser; nUser++)
+				{
+					var user:User = list.getItemAt(nUser) as User;
+					var userPlateforme:User = Model.getInstance().getUserPlateformeByUserId(user.id_user);
+					user.setStatus(userPlateforme.getStatus());
+				}
+			}
+				
 			private function showDateSession(event :SessionEvent):void{
 				if( Model.getInstance().getSessionDate().length == 0)
 				{
@@ -770,6 +837,7 @@
 					case SessionHomeElementEvent.ACTION_CANCEL_SESSION:
 					{
 						eventSession = new SessionEvent(SessionEvent.CANCEL_SESSION);
+						eventSession.sessionId = event.session.id_session;
 						break;
 					}				
 					case SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION:
