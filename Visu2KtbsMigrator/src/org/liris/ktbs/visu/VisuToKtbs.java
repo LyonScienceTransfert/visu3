@@ -17,7 +17,7 @@ import java.util.TreeSet;
 
 import org.liris.ktbs.client.Ktbs;
 import org.liris.ktbs.client.KtbsConstants;
-import org.liris.ktbs.client.KtbsRootClient;
+import org.liris.ktbs.client.KtbsClient;
 import org.liris.ktbs.domain.interfaces.IBase;
 import org.liris.ktbs.domain.interfaces.ITraceModel;
 import org.liris.ktbs.service.MultiUserRootProvider;
@@ -90,7 +90,7 @@ public class VisuToKtbs {
 		List<ObselVO> obsels = (List<ObselVO>)sqlMap.queryForList("obsel.getObselsInTrace", "%" + traceName + "%");
 
 		Integer userId = VisuToKtbsUtils.parseUserId(traceName);
-		KtbsRootClient client = rootProvider.getClient(VisuToKtbsUtils.makeKtbsUserId(userId));
+		KtbsClient client = rootProvider.getClient(VisuToKtbsUtils.makeKtbsUserId(userId));
 		ResourceService service = client.getResourceService();
 
 		String username = VisuToKtbsUtils.makeKtbsUserId(VisuToKtbsUtils.parseUserId(traceName));
@@ -218,7 +218,7 @@ public class VisuToKtbs {
 		for(Integer userId:userIds) {
 			String userName = VisuToKtbsUtils.makeKtbsUserId(userId);
 			rootProvider.openClient(userName, userName);
-			KtbsRootClient client = rootProvider.getClient(userName);
+			KtbsClient client = rootProvider.getClient(userName);
 			String uri = client.getResourceService().newBase(userName, userName);
 			logger.info("Created ktbs:Base at {}", uri);
 		}

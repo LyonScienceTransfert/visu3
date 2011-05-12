@@ -16,7 +16,7 @@ public class CreateVisuTraceModels {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException, SQLException {
-		String rootUri = Ktbs.getRestRootClient().getRootUri();
+		String rootUri = Ktbs.getRestClient().getRootUri();
 		
 		Properties properties = new Properties();
 		properties.load(ClassLoader.getSystemResourceAsStream("visu2ktbs.properties"));
@@ -28,18 +28,18 @@ public class CreateVisuTraceModels {
 		
 		ITraceModel rrTM = createTraceModel(bName, visuTMName);
 		new RetroRoomTraceModelFiller().fill(rrTM, Ktbs.getPojoFactory());
-		Ktbs.getRestRootClient().getResourceService().saveResource(rrTM, true);
+		Ktbs.getRestClient().getResourceService().saveResource(rrTM, true);
 		
 		ITraceModel visuTM = createTraceModel(bName, visuTMName);
 		new VisuModelFiller().fill(visuTM, Ktbs.getPojoFactory());
-		Ktbs.getRestRootClient().getResourceService().saveResource(visuTM, true);
+		Ktbs.getRestClient().getResourceService().saveResource(visuTM, true);
 		
 		logger.info("rootUri: {}", rootUri);
 	}
 
 
 	private static ITraceModel createTraceModel(String bLocalName, String tmLocalName) {
-		ResourceService service = Ktbs.getRestRootClient().getResourceService();
+		ResourceService service = Ktbs.getRestClient().getResourceService();
 		service.newBase(bLocalName, "");
 		String uri = service.newTraceModel(bLocalName, tmLocalName);
 		logger.debug("Trace model created: {}", uri);
