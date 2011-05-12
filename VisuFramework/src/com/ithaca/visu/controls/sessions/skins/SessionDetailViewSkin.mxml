@@ -47,6 +47,14 @@
 			  paddingTop="5" paddingBottom="5">
 		
 		<s:HGroup width="100%" horizontalAlign="right" includeIn="planMine,planOther,sessionComing,sessionPast">
+			<s:HGroup id="groupMessageSaveSession"  includeIn="planMine,sessionComing" paddingTop="5" includeInLayout="false" visible="false">
+				<s:Label >
+					<s:text.planMine>Le plan de séance a été sauvegardé à </s:text.planMine>
+					<s:text.sessionComing>La séance a été sauvegardée à </s:text.sessionComing>
+				</s:Label>
+				<s:Label id="labelLastTimeSave" text="12:88"/>
+				<s:Label id="labelSaveTimeAgo" text="(3 minute ago)"/>
+			</s:HGroup>
 			<s:Button id="saveButton"  includeIn="planMine,sessionComing">
 				<s:label.planMine>Sauvegarder plan</s:label.planMine>
 				<s:label.sessionComing>Sauvegarder séance</s:label.sessionComing>
@@ -62,7 +70,7 @@
 		
 		<mx:TabNavigator id="tabNav" width="100%" height="100%" includeIn="planMine,planOther,sessionComing,sessionPast" />
 		<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center"  includeIn="empty">
-			<s:Label fontStyle="normal" fontWeight="bold" fontSize="14">
+			<s:Label  fontStyle="italic" fontSize="14">
 				<s:text>Aucun plan de séance/aucune séance sélectionné(e)</s:text>
 			</s:Label>
 		</s:HGroup>

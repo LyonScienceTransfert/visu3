@@ -77,7 +77,7 @@ You cannot run it independently. -->
 			<s:label>{fxgt.gettext("OK")}</s:label>
 		</s:Button>
 		<s:Button id="buttonCancel" click="PopUpManager.removePopUp(this);">
-			<s:label>{fxgt.gettext("Cancel")}</s:label>
+			<s:label>{fxgt.gettext("Annuler")}</s:label>
 		</s:Button>
 	</s:HGroup>
 	
