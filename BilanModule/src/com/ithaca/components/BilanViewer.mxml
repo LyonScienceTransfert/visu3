@@ -17,17 +17,19 @@
     <fx:Script>
         <![CDATA[
 		import com.ithaca.documentarisation.model.RetroDocument;
-		import spark.events.IndexChangeEvent;
+		import com.ithaca.documentarisation.model.Segment;
 		import com.ithaca.utils.VisuUtils;
-		import com.ithaca.visu.model.Model;
 		import com.ithaca.visu.events.BilanEvent;
 		import com.ithaca.visu.events.PlaySegmentVideoEvent;
-		import flash.utils.Dictionary; 
-		import com.ithaca.documentarisation.model.Segment;
+		import com.ithaca.visu.model.Model;
+		
 		import flash.events.TimerEvent;
-    
+		import flash.utils.Dictionary;
+		
 		import mx.logging.ILogger;
 		import mx.logging.Log;
+		
+		import spark.events.IndexChangeEvent;
 			
 		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer');
 		
@@ -76,6 +78,10 @@
 						}
 					}
 					this.streamInfos = streamInfos;
+					
+					// Enforce the video component to show up even though it has no stream
+					this.visio.addVideoStream("N'importe quoi");
+					this.visio.seekStreams(0);
 			} else
 				logger.warn("Receiving an obsel list for a different session. Expected: {0}, Actual: {1}", 
 					bilan.sessionId, 
@@ -117,6 +123,9 @@
 		public function setNewBilan(bilan:RetroDocument):void {
 			this.bilan = bilan;
 			
+			if(this.visio!=null) 
+				this.visio.removeAllStreams();
+			
 			logger.debug("Setting a new bilan to the bilan viewer");
 			logger.debug("id: {0}",bilan.id);
 			logger.debug("creation date: {0}",bilan.creationDateAsDate);
@@ -130,7 +139,7 @@
 			logger.debug("session owner id: {0}",bilan.session.id_user);
 			
 			if(bilan != null) {
-				var event = new BilanEvent(BilanEvent.BILAN_LOADED);
+				var event:BilanEvent = new BilanEvent(BilanEvent.BILAN_LOADED);
 				event.sessionId = bilan.sessionId;
 				logger.info("Sending the request for the obsel list of session {0}", bilan.sessionId);
 				logger.info("The attached session object is {0}", bilan.session);
@@ -144,11 +153,11 @@
 		[Bindable]
 		public var showInfo:Boolean = false;
 		
-		private function  toogleShowInfo(event):void {
+		private function  toogleShowInfo(event:MouseEvent):void {
 			showInfo = !showInfo;
 		}
 		
-		private function initVisio(event):void {
+		private function initVisio(event:Event):void {
 			this.visio.connection = Model.getInstance().getNetConnection();
 		}
 
@@ -190,6 +199,11 @@
 				}
 				
 				var durationInMillis:Number = segment.endTimeVideo - segment.beginTimeVideo;
+				// check NaN duration of segment
+				if (isNaN(durationInMillis))
+				{
+					durationInMillis = 0;
+				}
 				logger.debug("Setting up a new timer for the segment video playing. Duration in sec: {0}", int(durationInMillis/1000));
 				this.timer = new Timer(durationInMillis,1);
 				this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
@@ -199,20 +213,43 @@
 		
 		private function timerCompleteHandler(e:TimerEvent):void {
 			logger.debug("Timer complete for the segment video playing. Removing all streams from the video component.");
-			this.visio.removeAllStreams();
-			
+			this.visio.pauseStreams();
+			buttonPlay.enabled = false;
+			this.visio.status = VisuVisio.STATUS_NONE;
 			// Clear the selection
 			this.segmentList.selectedItems = new Vector.<Object>();
         }
         
-        private function onSegmentSelectionChanged(e:IndexChangeEvent):void {
+        private function onSegmentSelectionClick(e:MouseEvent):void {
 			if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1) {
 				var segment:Segment = segmentList.selectedItems[0] as Segment;
 				logger.debug("Ask for playing the video at session time {0}", int((segment.beginTimeVideo - sessionStart)/1000));
 				playVideoSegment(segment);
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				// set status play 
+				this.visio.status = VisuVisio.STATUS_REPLAY;
 			} else
 				logger.debug("Selection changed on segmentList but nothing is selected now");
 		}
+
+			protected function buttonPlay_clickHandler(event:MouseEvent):void
+			{
+				if( buttonPlay.label == "Play")
+				{
+					buttonPlay.label = "Pause";
+					this.visio.resumeStreams();
+					this.visio.status = VisuVisio.STATUS_REPLAY;
+					this.timer.start();
+				}else
+				{
+					buttonPlay.label = "Play";
+					this.visio.pauseStreams();
+					this.visio.status = VisuVisio.STATUS_PAUSE;
+					this.timer.stop();
+				}
+			}
+
         ]]>
     </fx:Script>
 
@@ -248,9 +285,10 @@
 									lineBreak="toFit"
 									width="100%"
 									fontStyle="italic"
+									 visible="false"
 									text="{bilan.description}"/>
 								
-								<s:List id="segmentList" change="onSegmentSelectionChanged(event)" borderVisible="false" width="100%" height="100%" dataProvider="{bilan.listSegment}" >
+								<s:List id="segmentList" click="onSegmentSelectionClick(event)" borderVisible="false" width="100%" height="100%" dataProvider="{bilan.listSegment}" >
 									<s:itemRenderer>
 										<fx:Component>
 											<s:ItemRenderer creationComplete="initRenderer(event)">
@@ -261,10 +299,11 @@
 												</s:states>
 												<fx:Script>
 													<![CDATA[
-														import flash.events.MouseEvent;
-														import com.ithaca.visu.events.PlaySegmentVideoEvent;
 														import com.ithaca.documentarisation.model.Segment;
+														import com.ithaca.visu.events.PlaySegmentVideoEvent;
 														import com.lyon2.controls.utils.TimeUtils;
+														
+														import flash.events.MouseEvent;
 														
 														import mx.logging.ILogger;
 														import mx.logging.Log;
@@ -285,7 +324,7 @@
 															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
 														}
 				
-														private function initRenderer(event):void {
+														private function initRenderer(event:Event):void {
 															logger.debug("SegmentRenderer Initialized. Title: {0}, Comment: {1}", data.title, data.comment);
 															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
 														}
@@ -294,18 +333,18 @@
 													]]>
 												</fx:Script>
 												<s:VGroup paddingTop="5" gap="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
-														<s:HGroup width="100%">
+														<s:HGroup visible="{data.title.length>0}" includeInLayout="{data.title.length>0}" width="100%">
 															<s:Label 
 																fontSize="16"
 																width="100%"
 																text="{data.title}"/>
 														</s:HGroup>
-														<s:HGroup width="100%">
+														<s:HGroup visible="{data.comment.length>0}" includeInLayout="{data.comment.length>0}" width="100%">
 															<s:Label 
 																width="20"/>
-															<s:Label 
+															<s:Label
 																width="100%"
-																lineBreak="toFit"
+															    lineBreak="toFit"
 																fontStyle="italic"
 																text="{data.comment}"/>
 														</s:HGroup>
@@ -326,6 +365,11 @@
 							<controls:VisuVisio id="visio" width="100%" height="100%"
 										quality="80"
 										bandwidth="15000" autoPlay="True" creationComplete="initVisio(event)"/>
+							<mx:Spacer height="5"/>
+							<s:Button id="buttonPlay" click="buttonPlay_clickHandler(event)" enabled="false">
+								<s:label>Pause</s:label>
+							</s:Button>
+							<mx:Spacer height="5"/>
 						</s:VGroup>
 				</s:HGroup>
 	</s:VGroup>
