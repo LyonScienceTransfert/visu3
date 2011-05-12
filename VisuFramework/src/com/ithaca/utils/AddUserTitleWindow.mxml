@@ -46,7 +46,7 @@
 						  />
 		
 	<s:Button id="buttonCancel" click="PopUpManager.removePopUp(this);" bottom="10" right="20">
-		<s:label>{fxgt.gettext("Cancel")}</s:label>
+		<s:label>{fxgt.gettext("Annuler")}</s:label>
 	</s:Button>
 	<s:Button bottom="10" right="120" click="button1_clickHandler(event)">
 		<s:label>{fxgt.gettext("OK")}</s:label>

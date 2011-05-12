@@ -169,7 +169,7 @@
 			<s:label>Valider</s:label>
 		</s:Button>
 		<s:Button  id="buttonCancel" click="onClickButtonCancel(event)">
-			<s:label>Cancel</s:label>
+			<s:label>Annuler</s:label>
 		</s:Button>
 		</s:HGroup>
 	</s:Group>

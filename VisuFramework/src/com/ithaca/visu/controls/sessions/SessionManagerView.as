@@ -363,7 +363,6 @@ package com.ithaca.visu.controls.sessions
 		public function updateSession(value:Session):void
 		{
 			sessionDetailView.feedBackUpdateSession(value);
-			return;
 		}
 // ADD SESSION
 		public function addSession(session:Session, clonedSession:Boolean):void

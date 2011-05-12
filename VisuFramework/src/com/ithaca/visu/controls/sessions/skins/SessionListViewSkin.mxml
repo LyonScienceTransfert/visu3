@@ -61,7 +61,7 @@
 				<s:VGroup id="filterSessionButtonsGroup" width="100%" verticalAlign="middle" includeIn="session">
 					<s:RadioButton groupName="timeFilter" 
 								   id="allButton"
-								   label="Toutes les scéances" 
+								   label="Toutes les séances" 
 								   selected="true"
 								   />
 					<s:RadioButton groupName="timeFilter" 
