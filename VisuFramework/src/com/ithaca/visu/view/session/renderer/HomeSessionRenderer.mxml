@@ -28,6 +28,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.core.INavigatorContent;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
@@ -156,7 +157,17 @@
 			}
 			
 			private function doCancel(event:MouseEvent):void {
+				Alert.yesLabel = "Oui";
+				Alert.noLabel = "Non";
+				Alert.show("Voulez-vous supprimer cet séance ?",
+					"Confirmation", Alert.YES|Alert.NO, null, cancelSessionConformed);
+			}
+			
+			private function cancelSessionConformed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{		
 					dispatch(SessionHomeElementEvent.ACTION_CANCEL_SESSION);
+				}
 			}
 			
 			private function dispatch(eventName:String):void {
@@ -168,7 +179,7 @@
 							data.id_session, 
 							data.theme,
 							eventName);				
-				actionGroup.dispatchEvent(sessionHomeElementEvent);
+				actionGroup.dispatchEvent(sessionHomeElementEvent);			
 			}
 
 		]]>
