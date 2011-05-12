@@ -61,7 +61,13 @@ package com.ithaca.visu.controls.sessions
 			if( value != _session )
 			{
 				_session = value;
-				_listUserPrevu = value.participants;
+				if(value == null)
+				{
+					_listUserPrevu = null;
+				}else
+				{
+					_listUserPrevu = value.participants;
+				}
 				
 				sessionChange = true;
 				this.invalidateProperties();
