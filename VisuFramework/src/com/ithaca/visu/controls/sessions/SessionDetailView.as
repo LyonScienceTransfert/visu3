@@ -1,5 +1,7 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.utils.UtilFunction;
+	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
@@ -21,6 +23,8 @@ package com.ithaca.visu.controls.sessions
 	import mx.events.CollectionEventKind;
 	
 	import spark.components.Button;
+	import spark.components.HGroup;
+	import spark.components.Label;
 	import spark.components.NavigatorContent;
 	import spark.components.supportClasses.SkinnableComponent;
 	
@@ -73,6 +77,13 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var saveButton:Button;
 
+		[SkinPart("true")]
+		public var groupMessageSaveSession:HGroup;
+		[SkinPart("true")]
+		public var labelLastTimeSave:Label;
+		[SkinPart("true")]
+		public var labelSaveTimeAgo:Label;
+		
 		
 		private var _listUser:ArrayCollection;
 		private var _listPresentUser:ArrayCollection;
@@ -101,7 +112,13 @@ package com.ithaca.visu.controls.sessions
 		private var planSessionEditabled:Boolean;
 		private var flagNeedUpdateSession:Boolean = false;
 		private var TIME_UPDATE_SESSION:Number = 10000;
+		// every one minute
+		private var TIME_UPDATE_LABEL_SAVE_MINUTE_AGO:Number = 1000 * 60;
 		private var timer:Timer;
+		
+		private var _minutsSaveAgo:int = 0;
+		private var minuteSaveAgoChange:Boolean;
+		private var timerMinuteSavaAgo:Timer;
 		
 		public function SessionDetailView()
 		{
@@ -109,7 +126,7 @@ package com.ithaca.visu.controls.sessions
 			_listUser = new ArrayCollection();
 			_activities = new ArrayCollection();
 			_listPresentUser = new ArrayCollection();
-			this.addEventListener(Event.REMOVED_FROM_STAGE, stopTimer);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, stopTimers);
 			startTimer();
 		}
 		
@@ -128,7 +145,7 @@ package com.ithaca.visu.controls.sessions
 		{
 			if(value != _session)
 			{
-				stopTimer();
+				stopTimers();
 			}
 			_session = value;
 			emptySkin = false;
@@ -287,7 +304,12 @@ package com.ithaca.visu.controls.sessions
 				sessionPlanEdit.percentHeight = 100;
 				sessionPlanEdit.percentWidth = 100;
 				sessionPlanEdit.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onPreAddSession);
-				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateDurationPlaned,true);
+				sessionPlanEdit.addEventListener(SessionEditEvent.ADD_ACTIVITY, onAddActivity);
+				sessionPlanEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity,true);
+				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateAcitivity,true);
+				sessionPlanEdit.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
+				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);	
+				sessionPlanEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY_ELEMENT, onDeleteActivityElement,true);
 				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_THEME, onUpdateTheme);
 				planTab = new NavigatorContent();
 				planTab.label = "Plan de séance";
@@ -342,6 +364,11 @@ package com.ithaca.visu.controls.sessions
 				sessionBilanFormView.session = this.session;
 				sessionPlanEdit.theme = this.session.theme;
 				startTimer();
+				// remove groupe the message save session
+				if(groupMessageSaveSession)
+				{
+					groupMessageSaveSession.includeInLayout = groupMessageSaveSession.visible = false;
+				}
 			}
 			
 			if(activitiesChanged)
@@ -373,6 +400,12 @@ package com.ithaca.visu.controls.sessions
 				this.sessionSummaryView.nbrRetrodocument = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
 				sessionBilanFormView.nbrRetroDocumentOwner = this._nbrRetroDocumentOwner;
 				sessionBilanFormView.nbrRetroDocumentShare = this._nbrRetroDocumentShare;
+			}
+			
+			if(minuteSaveAgoChange)
+			{
+				minuteSaveAgoChange = false;
+				labelSaveTimeAgo.text = "(il y a "+ this._minutsSaveAgo.toString()+ " min.)";
 			}
 		}
 		//_____________________________________________________________________
@@ -509,11 +542,34 @@ package com.ithaca.visu.controls.sessions
 		{
 			var listPlanedUser:ArrayCollection = event.listPlanedUser;
 			sessionSummaryView.listPresentUser = listPlanedUser;
+			needUpdateSession();
 		}
-// UPDATE DURATION PLANED 
-		private function onUpdateDurationPlaned(event:SessionEditEvent):void
+// ACTIVITY 
+		private function onAddActivity(event:SessionEditEvent):void
+		{
+			needUpdateSession();
+		}
+		private function onUpdateAcitivity(event:SessionEditEvent):void
 		{
 			checkDurationPlaned();
+			needUpdateSession();
+		}
+		private function onDeleteActivity(event:SessionEditEvent):void
+		{
+			needUpdateSession();
+		}
+// ACTIVITY ELEMENT
+		private function onAddActivityElement(event:SessionEditEvent):void
+		{
+			needUpdateSession();
+		}
+		private function onUpdateActivityElement(event:SessionEditEvent):void
+		{
+			needUpdateSession();
+		}
+		private function onDeleteActivityElement(event:SessionEditEvent):void
+		{
+			needUpdateSession();
 		}
 // UPDATE THEME
 		private function onUpdateTheme(event:SessionEditEvent):void
@@ -543,19 +599,44 @@ package com.ithaca.visu.controls.sessions
 			if(saveButton != null)
 			{
 				saveButton.enabled = false;
+				// show message 
+				groupMessageSaveSession.includeInLayout = groupMessageSaveSession.visible = true;
+				var dateLastSave:Date = new Date();
+				labelLastTimeSave.text = UtilFunction.getHeurMinDate(dateLastSave);
+				// init timer 
+				_minutsSaveAgo = 0;
+				minuteSaveAgoChange = true;
+				invalidateProperties();
+				startTimerMinuteSaveAgo();
+				
 			}
 		}
 		
+		private function startTimerMinuteSaveAgo():void
+		{
+			if(timerMinuteSavaAgo == null)
+			{
+				timerMinuteSavaAgo = new Timer(TIME_UPDATE_LABEL_SAVE_MINUTE_AGO, 0);
+				timerMinuteSavaAgo.addEventListener(TimerEvent.TIMER, checkMinutesSaveAgo);
+			}
+			timerMinuteSavaAgo.start();
+		}
+		private function checkMinutesSaveAgo(event:TimerEvent):void
+		{
+			_minutsSaveAgo ++;
+			minuteSaveAgoChange = true;
+			invalidateProperties();
+		}
 		private function startTimer():void
 		{
 			if(!timer)
 			{
 				timer = new Timer(TIME_UPDATE_SESSION,0);
-				timer.addEventListener(TimerEvent.TIMER, checkUpdateSegment);
+				timer.addEventListener(TimerEvent.TIMER, checkUpdateSession);
 			}
 			timer.start();
 		}
-		private function checkUpdateSegment(event:TimerEvent):void
+		private function checkUpdateSession(event:TimerEvent):void
 		{
 			if(flagNeedUpdateSession)
 			{
@@ -573,7 +654,7 @@ package com.ithaca.visu.controls.sessions
 			}
 		}
 		
-		private function stopTimer(event:*=null):void
+		private function stopTimers(event:*=null):void
 		{
 			saveButton.enabled = false;
 			flagNeedUpdateSession = false;
@@ -581,6 +662,12 @@ package com.ithaca.visu.controls.sessions
 			{
 				this.timer.stop();
 				this.timer = null;
+			}
+			// remove timerMinuteSavaAgo from the stage
+			if(timerMinuteSavaAgo != null)
+			{
+				this.timerMinuteSavaAgo.stop();
+				this.timerMinuteSavaAgo = null;
 			}
 		}
 	}
