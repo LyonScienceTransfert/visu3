@@ -25,9 +25,11 @@
 		</s:BorderContainer>
 		
 		<s:HGroup includeIn="normal,read" right="5" verticalAlign="middle">
-            <mx:Label text="Début: {TimeUtils.formatTimeString(startSpinner.value)}"/>
+            <mx:Label text="Début:"/>
+			<mx:Label id="labelStartSpinner" text="11:11"/>
             <s:Spinner visible.read="false" visible.normal="true" id="startSpinner" minimum="0" maximum="{endSpinner.value}"/>               
-	    	<mx:Label text="Fin: {TimeUtils.formatTimeString(endSpinner.value)}"/>
+	    	<mx:Label text="Fin:"/>
+			<mx:Label id="labelEndSpinner" text="11:11"/>
             <s:Spinner visible.read="false" visible.normal="true" id="endSpinner" minimum="{startSpinner.value}" maximum="{24*60*60}"/>                    
         </s:HGroup> 
 	</s:Group>
