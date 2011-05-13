@@ -1321,6 +1321,8 @@
 						}
 						
 					}
+					// set current retroDocumentSegment playing
+					setCurrentRetroDocumentSegmentPlaying(playRetroDocumentSegment);
 					
 					this.beginTimeCurrentSegment = beginTime;
 					var dt:Number = beginTime - this.testTimeLine.startTimeSession;
@@ -1332,8 +1334,6 @@
 					updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
 					// set buttons play/pause on the timeLine
 					sessionTimeLine.setStatusPlay(true);
-					// set current retroDocumentSegment playing
-					setCurrentRetroDocumentSegmentPlaying(playRetroDocumentSegment);
 					// set timer
 					var durationVideoSegment:Number = endTime - beginTime;
 					if(durationVideoSegment < 0)
