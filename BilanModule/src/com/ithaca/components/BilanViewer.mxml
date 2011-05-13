@@ -183,7 +183,7 @@
 			
 			if(lastEntry != null) {
 				logger.info("Playing {0} streams to the visuvisio",newVideoStreams.length);
-				this.visio.playVideoStreams(newVideoStreams);
+			//	this.visio.playVideoStreams(newVideoStreams);
 				
 				// There is at least one stream entry tp play
 				logger.info("Seeking the streams to the right time (current segment time: {0}, streams start time: {1}, seeked to time: {2}s)",
