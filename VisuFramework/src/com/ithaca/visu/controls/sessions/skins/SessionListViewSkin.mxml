@@ -14,11 +14,7 @@
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
 			
-			private function labelFunctionDateSession(item:Object, column:Object):String
-			{
-				var result:String = UtilFunction.getDateMountHourMin(item.date_session);
-				return result;
-			}
+
 			private function labelFunctionOwnerSession(item:Object, column:Object):String
 			{
 				var result:String = VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(item.id_user),true);
@@ -156,7 +152,7 @@
 				</s:List>
 				<mx:DataGrid id="sessionDataGrid" width="100%" height="100%" includeIn="session">
 					<mx:columns>
-						<mx:DataGridColumn id="dateSessionDataGrid" dataField="date_session" labelFunction="labelFunctionDateSession" width="80">
+						<mx:DataGridColumn id="dateSessionDataGrid" dataField="date_session" width="80">
 							<mx:headerText>Date prévue</mx:headerText>			
 						</mx:DataGridColumn>
 						<mx:DataGridColumn dataField="theme">
