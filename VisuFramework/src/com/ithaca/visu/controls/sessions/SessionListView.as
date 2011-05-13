@@ -1,6 +1,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.CreateSessionByTemplate;
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
@@ -517,12 +518,16 @@ package com.ithaca.visu.controls.sessions
 		{		
 			// set text the columne "Date session" by condition the session past/will
 			var textColumnDateSession:String = "Date prévue";
+			var nameFiedDateSession:String = "date_session";
 			var sortDateFunction:Function = compareDateSession;
+			var labelDateFunction:Function = labelFunctionDateSession;
 			// set function "compareDateSessionRecording" for past session
 			if(pastButton != null && pastButton.selected)
 			{
 				textColumnDateSession = "Date de séance";
+				nameFiedDateSession = "date_start_recording";
 				sortDateFunction = compareDateSessionRecording;
+				labelDateFunction = labelFunctionDateSessionRecording;
 			}
 			// sort by date 
 			var sort:Sort = new Sort();
@@ -532,11 +537,12 @@ package com.ithaca.visu.controls.sessions
 				listSessionCollection.sort = sort;
 				// refresh collection for calling filterFunction 
 				listSessionCollection.refresh();
-				// TODO : move verticalScroller for show selected item
 			}
 			if(dateSessionDataGrid != null)
 			{
 				dateSessionDataGrid.headerText = textColumnDateSession;
+				dateSessionDataGrid.dataField = nameFiedDateSession;
+				dateSessionDataGrid.labelFunction = labelDateFunction;
 			}
 		}
 		
@@ -707,5 +713,17 @@ package com.ithaca.visu.controls.sessions
 			return ObjectUtil.dateCompare(dateA, dateB);
 		}
 		
+		// 
+		private function labelFunctionDateSession(item:Object, column:Object):String
+		{
+			var result:String = UtilFunction.getDateMountHourMin(item.date_session);
+			return result;
+		}
+		
+		private function labelFunctionDateSessionRecording(item:Object, column:Object):String
+		{
+			var result:String = UtilFunction.getDateMountHourMin(item.date_start_recording);
+			return result;
+		}
 	}
 }
