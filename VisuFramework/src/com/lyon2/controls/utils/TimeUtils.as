@@ -38,6 +38,7 @@ package com.lyon2.controls.utils
 		
 		 public static function formatTimeString(numberOfSeconds:Number):String
          {
+			if(isNaN(numberOfSeconds)){return '00:00'};
 			if(numberOfSeconds) {
 			var str:String='';
 			var hours:int = numberOfSeconds/3600;
