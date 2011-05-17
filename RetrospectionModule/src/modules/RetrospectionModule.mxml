@@ -9,7 +9,7 @@
 						configure="visumodulebase1_configureHandler(event)" 
 						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
 						xmlns:timeline="com.ithaca.visu.controls.timeline.*"
-						xmlns:controls="com.lyon2.controls.*"  currentState="State1"> 
+						xmlns:controls="com.lyon2.controls.*"  currentState="State1" xmlns:video="com.ithaca.visu.view.video.*"> 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.documentarisation.RetroDocumentSegment;
@@ -157,8 +157,8 @@
 					
 					Model.getInstance().clearListFrameSplit();
 					buttomTraceFrame.visible = true;
-					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
-					this.visio.setDebugMode();
+//					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
+//					this.visio.setDebugMode();
 
 					timerSynchro = new Timer(intervalCheckDecalage*1000,0);
 					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
@@ -171,7 +171,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
+//					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
 				}
 			}
 			
@@ -622,7 +622,9 @@
 				 {
 					 var obsel:Obsel = listObselSessionIn.getItemAt(nObsel) as Obsel;
 					 var pathVideo:String = obsel.props[TraceModel.PATH];
-					 var stream:NetStream = this.visio.addVideoStream(pathVideo);
+					 var ownerFluxVideoId:int = obsel.props[TraceModel.UID];
+					 var ownerFluxVideo:User = Model.getInstance().getUserPlateformeByUserId(ownerFluxVideoId);
+					 var stream:NetStream = this.visio.addVideoStream(pathVideo, ownerFluxVideo); 
 					 // add listener for this stream
 					 if (stream != null)
 					 {
@@ -640,7 +642,7 @@
 				{
 					case "NetStream.Play.Start" :
 						// set status play
-						this.visio.status = VisuVisio.STATUS_REPLAY;
+						this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
 						stream.removeEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
 						var streamId:String = event.info.details;
 						var obsel:Obsel = Model.getInstance().getObselSessionInByPathStream(streamId);
@@ -1365,7 +1367,7 @@
 					{
 						this.visio.resumeStreams();
 						// set status play
-						this.visio.status = VisuVisio.STATUS_REPLAY;
+						this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
 						this.timeStart = this.timeStart  + timePausedNumber;
 						this.timer.start();
 						this.timePause = 0;
@@ -1390,7 +1392,7 @@
 					var playTime:Number = 0;
 					this.visio.pauseStreams();
 					// set status pause
-					this.visio.status = VisuVisio.STATUS_PAUSE;
+					this.visio.status = VisuVisioAdvanced.STATUS_PAUSE;
 					this.timer.stop();
 					// set time pause
 					this.timePause = new Date().time;
@@ -1636,7 +1638,7 @@
 				<s:Panel height="100%" width="100%" id="panelVideo">
 					<s:title>Video</s:title>
 					<s:Group height="100%" width="100%" bottom="2">
-						<controls:VisuVisio id="visio" width="100%" top="0"
+						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
 											quality="80"
 											bandwidth="15000" autoPlay="True" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"/>
 						<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" bottom.vciel="2" horizontalCenter.vciel="0" right.debug="5">
