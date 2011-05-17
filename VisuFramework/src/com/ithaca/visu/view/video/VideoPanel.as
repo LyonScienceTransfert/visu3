@@ -29,18 +29,18 @@ package com.ithaca.visu.view.video
 		public var groupButtonTop:HGroup;
 
 		[SkinPart("true")]
-		public var buttonChat:IconButton;
+		public var buttonChat:Button;
 		[SkinPart("true")]
-		public var buttonMarker:IconButton;
+		public var buttonMarker:Button;
 		[SkinPart("true")]
-		public var buttonZoom:IconButton;
+		public var buttonZoom:Button;
 		[SkinPart("true")]
-		public var buttonVolume:IconButton;
+		public var buttonVolume:Button;
 
 		[SkinPart("true")]
-		public var buttonVolumeUserZoomOut:IconButton;
+		public var buttonVolumeUserZoomOut:Button;
 		[SkinPart("true")]
-		public var buttonVolumeUserZoomIn:IconButton;
+		public var buttonVolumeUserZoomIn:Button;
 		[SkinPart("true")]
 		public var labelUserZoomOut:Label;
 		[SkinPart("true")]

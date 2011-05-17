@@ -23,16 +23,16 @@
 		<controls:VideoComponent id="videoUser" left="0"  top="0"  width="100%" height="100%"/>
 		<s:HGroup  id="groupButtonTop" width="100%" top="0" right="0" gap="0" visible="true" includeIn="disabled,zoomInMouseIn,zoomInMouseOut,zoomOutMouseIn">
 			<mx:Spacer width="30" includeIn="zoomInMouseIn,zoomInMouseOut"/>
-			<components:IconButton  id="buttonVolumeUserZoomIn" label="V" width="30" height="30" visible.zoomInMouseIn="true" visible="false"/>
+			<s:Button  id="buttonVolumeUserZoomIn" label="v" height="22" width="30" visible.zoomInMouseIn="true" visible="false"/>
 			<mx:Spacer width="100%"/>
 			<s:Label id="labelUserZoomIn" text="B.CLOUTER" paddingTop="5" color="#C40A0A" includeIn="disabled,zoomInMouseIn,zoomInMouseOut"/>
 			<mx:Spacer width="100%"/>
-			<components:IconButton id="buttonChat" icon="{IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE)}" width="30" height="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
-			<components:IconButton id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" width="30" height="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
-			<components:IconButton id="buttonZoom" label="Z" width="30" height="30" includeIn="disabled,zoomOutMouseIn"/>		
+			<s:Button id="buttonChat"  label="c" height="22" width="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
+			<s:Button id="buttonMarker" label="m" height="22" width="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
+			<s:Button id="buttonZoom" label="z" height="22" width="30" includeIn="disabled,zoomOutMouseIn"/>		
 		</s:HGroup>
 		<s:HGroup width="100%" bottom="0"  includeIn="zoomOutMouseIn,zoomOutMouseOut">
-			<components:IconButton id="buttonVolumeUserZoomOut" label="V"  left="0" width="30" height="30" visible.zoomOutMouseIn="true" visible="false"/>
+			<s:Button id="buttonVolumeUserZoomOut" label="v"  left="0" height="22" width="30" visible.zoomOutMouseIn="true" visible="false" />
 			<mx:Spacer width="100%"/>
 			<s:Label id="labelUserZoomOut" horizontalCenter="0" text="B.Gouter" paddingTop="5" color="#12C960"/>
 			<mx:Spacer width="100%"/>
