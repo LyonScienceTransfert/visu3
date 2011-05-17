@@ -109,7 +109,7 @@ package com.ithaca.visu.view.video.layouts
 						{ 
 							wVideoElement = obj.h * 4 / 3;
 							var diffX:int = obj.w - wVideoElement;
-							xVideoElement = xVideoElement + diffX;
+							xVideoElement = xVideoElement + diffX/2;
 						}
 						else
 						{ hVideoElement = obj.w * 3 / 4; }
@@ -123,36 +123,87 @@ package com.ithaca.visu.view.video.layouts
 		
 		private function getXYWHByPosition(value:int, numVideoPanel:int):Object
 		{
-			
+			var position:int = 0;
+			var temp:int = target.height/4;
 			switch(numVideoPanel)
 			{
 				case 1:
-					value = value + 3;
+					position = 1;
 					break;
 				case 2:
-					value = value + 3;
+					if (value == 1){position = 3}
 					break;
 				case 3:
-					value = value + 3;
+					switch(value)
+					{
+						case 1:
+							position = 3;
+							break;
+						case 2:
+							position = 5;
+							break;
+					}
 					break;	
 				case 4:
-					value = value + 2;
+					switch(value)
+					{
+						case 1:
+							position = 3;
+							break;
+						case 2:
+							position = 4;
+							break;
+						case 3:
+							position = 5;
+							break;
+					}
 					break;	
 				case 5:
-					value = value + 2;
+					switch(value)
+					{
+						case 1:
+							position = 2;
+							break;
+						case 2:
+							position = 3;
+							break;
+						case 3:
+							position = 4;
+							break;
+						case 4:
+							position = 5;
+							break;
+					}
 					break;	
 				case 6:
-					value = value + 1;
+					switch(value)
+					{
+						case 1:
+							position = 2;
+							break;
+						case 2:
+							position = 3;
+							break;
+						case 3:
+							position = 4;
+							break;
+						case 4:
+							position = 5;
+							break;
+						case 5:
+							position = 6;
+							break;
+					}
 					break;	
 				case 7:
-					value = value + 1;
+				case 8:
+					position = value + 1;
 					break;	
 				
 			}
-			var temp:int = target.height/4;
 			var result:Object = new Object();
 			result.w = target.width/4; result.h = target.height/4;
-			switch(value)
+			switch(position)
 			{
 				case 1:
 					result.x = 0; result.y = 0+temp; 
