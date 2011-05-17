@@ -25,14 +25,14 @@ video|VisuVisioAdvanced
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VisuVisioAdvancedSkin");	
 }
-video|VideoScreen
+/*video|VideoScreen
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoScreenSkin");	
 }
 video|VideoItem
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoItemSkin");	
-}
+}*/
 video|VideoPanel
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoPanelSkin");	
