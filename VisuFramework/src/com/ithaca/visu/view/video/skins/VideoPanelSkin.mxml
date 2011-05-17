@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:controls="com.lyon2.controls.*" xmlns:components="com.ithaca.utils.components.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.video.VideoPanel")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.visu.ui.utils.IconEnum;
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="disabled" />
+		<s:State name="zoomOutMouseOut" />
+		<s:State name="zoomOutMouseIn" />
+		<s:State name="zoomInMouseOut" />
+		<s:State name="zoomInMouseIn" />
+	</s:states>
+	<s:Group width="100%" height="100%">
+		<controls:VideoComponent id="videoUser" left="0"  top="0"  width="100%" height="100%"/>
+		<s:HGroup  id="groupButtonTop" width="100%" top="0" right="0" gap="0" visible="true" includeIn="disabled,zoomInMouseIn,zoomInMouseOut,zoomOutMouseIn">
+			<mx:Spacer width="30" includeIn="zoomInMouseIn,zoomInMouseOut"/>
+			<components:IconButton  id="buttonVolumeUserZoomIn" label="V" width="30" height="30" visible.zoomInMouseIn="true" visible="false"/>
+			<mx:Spacer width="100%"/>
+			<s:Label id="labelUserZoomIn" text="B.CLOUTER" paddingTop="5" color="#C40A0A" includeIn="disabled,zoomInMouseIn,zoomInMouseOut"/>
+			<mx:Spacer width="100%"/>
+			<components:IconButton id="buttonChat" icon="{IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE)}" width="30" height="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
+			<components:IconButton id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" width="30" height="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
+			<components:IconButton id="buttonZoom" label="Z" width="30" height="30" includeIn="disabled,zoomOutMouseIn"/>		
+		</s:HGroup>
+		<s:HGroup width="100%" bottom="0"  includeIn="zoomOutMouseIn,zoomOutMouseOut">
+			<components:IconButton id="buttonVolumeUserZoomOut" label="V"  left="0" width="30" height="30" visible.zoomOutMouseIn="true" visible="false"/>
+			<mx:Spacer width="100%"/>
+			<s:Label id="labelUserZoomOut" horizontalCenter="0" text="B.Gouter" paddingTop="5" color="#12C960"/>
+			<mx:Spacer width="100%"/>
+		</s:HGroup>
+	</s:Group>
+</s:Skin>
