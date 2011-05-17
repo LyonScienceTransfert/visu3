@@ -6,8 +6,6 @@ package com.ithaca.documentarisation
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.lyon2.controls.utils.TimeUtils;
-	import mx.logging.Log;
-    import mx.logging.ILogger;
 	
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
@@ -17,6 +15,8 @@ package com.ithaca.documentarisation
 	import mx.core.DragSource;
 	import mx.events.CloseEvent;
 	import mx.events.DragEvent;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
 	import mx.managers.DragManager;
 	
 	import spark.components.Label;
@@ -76,7 +76,7 @@ package com.ithaca.documentarisation
 		private var _timeEnd:Number=0;
 		private var _textComment:String= "";
 		private var dragSource:DragSource = null;
-		private var _startDateSession:Number;
+		private var _startDateSession:Number = 0;
 		private var _durationSession:Number;
 		private var _segment:Segment;
 		private var _currentTime:String = "";
@@ -259,8 +259,19 @@ package com.ithaca.documentarisation
 			{
 				segmentSet = false;
 				this._textComment = this._segment.comment;
-				this._timeBegin = this._segment.beginTimeVideo;
-				this._timeEnd = this._segment.endTimeVideo;
+				// check NaN time
+				var begin:Number = this._startDateSession;
+				if(!isNaN(this._segment.beginTimeVideo))
+				{
+					begin = this._segment.beginTimeVideo;
+				}
+				this._timeBegin = begin;
+				var end:Number = this._startDateSession;
+				if( !isNaN(this._segment.endTimeVideo))
+				{
+					end = this._segment.endTimeVideo;		
+				}
+				this._timeEnd = end;
 				this._title = this._segment.title;
 				// enabled button playStop
 				setEnabledButtonPlayStop();

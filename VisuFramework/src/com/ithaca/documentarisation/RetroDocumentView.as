@@ -224,9 +224,10 @@ package com.ithaca.documentarisation
 				segmentView.title = segment.title;
 				segmentView.setEmpty(false);
 				segmentView.setEditabled(!normal);
-				segmentView.segment = segment;
+				// firstly set startSession and Duration, need it for set the segment for beginTime, endTime
 				segmentView.startDateSession = _startDateSession;
 				segmentView.durationSession = _durationSession;
+				segmentView.segment = segment;
 				segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
 				segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
 				segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
@@ -265,6 +266,7 @@ package com.ithaca.documentarisation
 			this._retroDocument.listSegment.addItem(segment);
 			var segmentView:RetroDocumentSegment = new RetroDocumentSegment();
 			segmentView.percentWidth = 100;
+			// firstly set startSession and Duration, need it for set the segment for beginTime, endTime
 			segmentView.startDateSession = _startDateSession;
 			segmentView.durationSession = _durationSession;
 			segmentView.setEmpty(true);
