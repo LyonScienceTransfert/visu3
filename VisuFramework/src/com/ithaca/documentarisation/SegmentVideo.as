@@ -90,6 +90,7 @@ package com.ithaca.documentarisation
 		{
 			startSpinner.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletStartSpinner);
 			startSpinner.value = Math.floor(_timeBegin / 1000);
+			startSpinner.maximum = Math.floor(_timeEnd / 1000);
 		}
 		private function onCreationCompletEndSpinner(event:FlexEvent):void
 		{
@@ -137,6 +138,8 @@ package com.ithaca.documentarisation
 				if(startSpinner != null)
 				{
 					startSpinner.value = newBegin;
+					startSpinner.maximum = newEnd;
+					
 				}
 				if(endSpinner != null)
 				{
