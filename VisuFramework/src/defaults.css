@@ -15,6 +15,28 @@
 @namespace documentarisation 		"com.ithaca.documentarisation.*";
 @namespace utils 		"com.ithaca.utils.*";
 @namespace video 		"com.ithaca.visu.view.video.*";
+@namespace components 		"com.ithaca.utils.components.*";
+
+components|IconButton
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.IconButtonSkin");	
+}
+video|VisuVisioAdvanced
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VisuVisioAdvancedSkin");	
+}
+video|VideoScreen
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoScreenSkin");	
+}
+video|VideoItem
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoItemSkin");	
+}
+video|VideoPanel
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoPanelSkin");	
+}
 
 sessions|SessionBilanFormView
 {
