@@ -95,6 +95,7 @@ package com.ithaca.documentarisation
 		{
 			endSpinner.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletEndSpinner);
 			endSpinner.value = Math.floor(_timeEnd / 1000);
+			endSpinner.minimum = Math.floor(_timeBegin / 1000);
 		}
 		
 		override protected function getCurrentSkinState():String
@@ -140,6 +141,7 @@ package com.ithaca.documentarisation
 				if(endSpinner != null)
 				{
 					endSpinner.value = newEnd;
+					endSpinner.minimum = newBegin;
 				}
 				if(labelStartSpinner != null)
 				{
