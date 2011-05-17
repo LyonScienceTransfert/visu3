@@ -597,6 +597,8 @@
 			
 			private function onMouseClickOnTimeLine(event:MouseEvent):void
 			{	
+				// stop play RetroDocumentSegment if playing
+				endVideoSegment();
 				var target:Object = event.target as Object;
 				var deltaXObselTime:Number = 0;
 				
@@ -610,9 +612,7 @@
 				// add value start session slider
 				delta = delta + startTimeSessionSlider.value - this.currentSessionDateRecording.time;
 				// pre play video flux
-				prePlayVideoFlux(0,delta);		
-				
-				
+				prePlayVideoFlux(0,delta);						
 			}
 			
 			 private function addFluxVideo(listObselSessionIn:ArrayCollection):void
@@ -694,7 +694,7 @@
 				}
 			}
 			
-			private function endVideoSegment(event:TimerEvent):void
+			private function endVideoSegment(event:TimerEvent = null):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
@@ -710,9 +710,13 @@
 					this.pauseVideo();
 					// set buttons play/pause on the timeLine
 					sessionTimeLine.setStatusPlay(false);
-					timerRetroDocumentSegment.stop();
-					timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
-					timerRetroDocumentSegment = null;
+					// check if timerRetroDocumentSegment not null, can be null if user see the VidoSegment => click on tileLine
+					if(timerRetroDocumentSegment)
+					{
+						timerRetroDocumentSegment.stop();
+						timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+						timerRetroDocumentSegment = null;
+					}
 				}
 			}
 				
