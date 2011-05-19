@@ -1,19 +1,17 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.utils.components.VisuTabNavigator;
 	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.events.SessionListViewEvent;
 	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
-	import com.ithaca.visu.view.session.controls.SessionDetail;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
-	import mx.containers.TabNavigator;
 	import mx.containers.VBox;
 	import mx.controls.Alert;
 	import mx.events.CollectionEvent;
@@ -21,13 +19,12 @@ package com.ithaca.visu.controls.sessions
 	import mx.events.IndexChangedEvent;
 	
 	import spark.components.supportClasses.SkinnableComponent;
-	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
 	
 	public class SessionManagerView extends SkinnableComponent
 	{
 		[SkinPart("true")]
-		public var explorerSession:TabNavigator;
+		public var explorerSession:VisuTabNavigator;
 		
 		[SkinPart("true")]
 		public var sessionDetailView:SessionDetailView;
