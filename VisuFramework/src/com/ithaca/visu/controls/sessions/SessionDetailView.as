@@ -1,7 +1,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.UtilFunction;
-	import com.ithaca.utils.VisuUtils;
+	import com.ithaca.utils.components.VisuTabNavigator;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
@@ -15,12 +15,10 @@ package com.ithaca.visu.controls.sessions
 	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
-	import mx.containers.TabNavigator;
 	import mx.controls.Alert;
 	import mx.controls.LinkButton;
 	import mx.events.CloseEvent;
 	import mx.events.CollectionEvent;
-	import mx.events.CollectionEventKind;
 	
 	import spark.components.Button;
 	import spark.components.HGroup;
@@ -43,7 +41,7 @@ package com.ithaca.visu.controls.sessions
 
 		
 		[SkinPart("true")]
-		public var tabNav:TabNavigator;
+		public var tabNav:VisuTabNavigator;
 		
 		[SkinPart("true")]
 		public var planTab:NavigatorContent;
