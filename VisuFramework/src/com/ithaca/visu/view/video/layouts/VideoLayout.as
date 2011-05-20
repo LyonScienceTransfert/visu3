@@ -215,7 +215,7 @@ package com.ithaca.visu.view.video.layouts
 					result.x = 0; result.y = target.height/2+temp; 
 					break;
 				case 4:
-					result.x = target.width/2 - (target.width/3)/2; result.y = target.height/2+temp; 
+					result.x = target.width/2 - target.width/8; result.y = target.height/2+temp; 
 					break;
 				case 5:
 					result.x = target.width - result.w;   result.y = target.height/2+temp;
