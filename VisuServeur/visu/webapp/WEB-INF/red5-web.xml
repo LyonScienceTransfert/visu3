@@ -8,7 +8,7 @@
         <property name="location" value="/WEB-INF/red5-web.properties"/>
     </bean>
     
-    <import resource="classpath:**/ktbs-client-context.xml"/>
+    <import resource="classpath:**/ktbs4j-context.xml"/>
 <!--
         Defines the web context
     -->
