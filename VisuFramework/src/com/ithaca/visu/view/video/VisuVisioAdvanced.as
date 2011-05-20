@@ -18,15 +18,14 @@ package com.ithaca.visu.view.video
 	import flash.net.NetStream;
 	import flash.utils.Timer;
 	
-	import gnu.as3.gettext._FxGettext;
-	
 	import mx.collections.ArrayCollection;
-	import mx.core.Container;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	
 	import spark.components.Group;
 	import spark.components.supportClasses.SkinnableComponent;
+	
+	[Event(name="updateTime",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	
 	public class VisuVisioAdvanced extends SkinnableComponent
 	{
@@ -55,6 +54,8 @@ package com.ithaca.visu.view.video
 		
 		private var _currentVolume:Number = 1;
 		private var _frameRateSplit:Number = 1000;
+		
+		// dataProvider : ArrayCollection of the StreamObsel
 		/* 
 		* Status constants
 		*/
@@ -85,13 +86,6 @@ package com.ithaca.visu.view.video
 		/* Camera parameters */
 		private var _width:int = 320;
 		private var _height:int = 240;
-		
-		/**
-		 * Styles 
-		 */
-		private var padding:int = 5;
-		// backGroundColor the VISU1 = 0xDCDCDC;
-		private const DEFAULT_BACKGROUND_COLOR:uint = 0xFFFFFF;
 		
 		public function VisuVisioAdvanced()
 		{
@@ -132,50 +126,32 @@ package com.ithaca.visu.view.video
 			{
 				_microphone.gain = _microphoneGain;
 			}
-			dispatchEvent( new Event("visioPropertyChange"));
 		}
 		
-		[Bindable(event="visioPropertyChange")]
 		public function get quality():int { return _quality}
 		public function set quality(value:int):void
 		{
 			_quality = value;
-			invalidateProperties();
-			dispatchEvent( new Event("visioPropertyChange"));
 		}
-		[Bindable(event="visioPropertyChange")]
 		public function get bandwidth():int { return _bandwidth}
 		public function set bandwidth(value:int):void
 		{
 			_bandwidth = value;
-			invalidateProperties();
-			dispatchEvent( new Event("visioPropertyChange")); 
 		}
-		[Bindable(event="visioPropertyChange")]
 		public function get keyFrameInterval():int { return _keyFrameInterval}
 		public function set keyFrameInterval(value:int):void
 		{
 			_keyFrameInterval = value;
-			invalidateProperties(); 
-			dispatchEvent( new Event("visioPropertyChange"));
 		}
-		[Bindable(event="visioPropertyChange")]
 		public function get fps():int { return _fps}
 		public function set fps(value:int):void
 		{
 			_fps = value;
-			invalidateProperties();
-			dispatchEvent( new Event("visioPropertyChange"));
-			
 		}
-		[Bindable(event="visioPropertyChange")]
 		public function get microphoneRate():int { return _microphoneRate}
 		public function set microphoneRate(value:int):void
 		{
 			_microphoneRate = value;
-			invalidateProperties();
-			dispatchEvent( new Event("visioPropertyChange"));
-			
 		}
 		
 		public function set status(status: int): void
@@ -212,12 +188,6 @@ package com.ithaca.visu.view.video
 			}
 		}
 		
-		
-		//_____________________________________________________________________
-		//
-		// Handlers
-		//
-		//_____________________________________________________________________
 		public function removeVideoStream(sID: String, videoOnly: Boolean = false): void
 		{
 			logger.debug('\tremoveVideoStream ' + sID + " from " + streams.toString());
@@ -238,7 +208,6 @@ package com.ithaca.visu.view.video
 			
 			if (videos[sID])
 			{
-				//removeChild(videos[sID]);
 				groupVideoContener.removeElement(videos[sID]);
 				delete videos[sID];
 			}
@@ -409,7 +378,6 @@ package com.ithaca.visu.view.video
 				
 				publishing = false;
 			}
-			
 		}
 		public function updateCameraSetting(cam:Camera):void
 		{
@@ -471,7 +439,7 @@ package com.ithaca.visu.view.video
 			}
 			trace("---");
 		}
-		/*
+		/**
 		* Verification if the stream existe 
 		* @param : id stream 
 		*/
