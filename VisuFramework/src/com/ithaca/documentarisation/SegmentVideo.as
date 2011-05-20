@@ -1,24 +1,15 @@
 package com.ithaca.documentarisation
 {
 	import com.ithaca.documentarisation.events.RetroDocumentEvent;
-	import com.ithaca.traces.Obsel;
-	import com.ithaca.traces.model.TraceModel;
-	import com.ithaca.traces.view.ObselImage;
 	import com.lyon2.controls.utils.TimeUtils;
 	
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
-	import mx.controls.Button;
-	import mx.controls.Image;
 	import mx.controls.Label;
-	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
-	import mx.managers.DragManager;
 	
-	import spark.components.NumericStepper;
 	import spark.components.Spinner;
 	import spark.components.supportClasses.SkinnableComponent;
 	

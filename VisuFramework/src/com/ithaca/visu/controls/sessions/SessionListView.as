@@ -13,10 +13,8 @@ package com.ithaca.visu.controls.sessions
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
-	import mx.controls.Alert;
 	import mx.controls.DataGrid;
 	import mx.controls.dataGridClasses.DataGridColumn;
-	import mx.events.CloseEvent;
 	import mx.events.FlexEvent;
 	import mx.events.ListEvent;
 	import mx.graphics.SolidColor;
