@@ -33,9 +33,9 @@
 		</s:HGroup>
 		<s:HGroup width="100%" bottom="0"  includeIn="zoomOutMouseIn,zoomOutMouseOut">
 			<s:Button id="buttonVolumeUserZoomOut" label="v"  left="0" height="22" width="30" visible.zoomOutMouseIn="true" visible="false" />
-			<mx:Spacer width="100%"/>
-			<s:Label id="labelUserZoomOut" horizontalCenter="0" text="B.Gouter" paddingTop="5" color="#12C960"/>
-			<mx:Spacer width="100%"/>
+			
+			<s:Label id="labelUserZoomOut" horizontalCenter="0" text="B.Gouter" paddingTop="5" color="#12C960" width="100%" lineBreak="explicit"/>
+			
 		</s:HGroup>
 	</s:Group>
 </s:Skin>
