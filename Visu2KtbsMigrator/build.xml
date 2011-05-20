@@ -11,7 +11,7 @@
 	<property name="title" value="Visu to KTBS Migrator"/>
 	
 	<property name="migrator.propfilename" value="visu2ktbs.properties"/>
-	<property name="ktbs.properties.filename" value="ktbs-client.properties"/>
+	<property name="ktbs.properties.filename" value="ktbs4j.properties"/>
 	<property name="logback.properties.filename" value="logback.xml"/>
 	<property name="run.filename" value="run.sh"/>
 	
@@ -47,7 +47,7 @@
 	<target name="package-3rd-party-libs" >
 		<copy  todir="dist/lib">
 			<fileset dir="${ktbs.dist.path}">
-			    <include name="ktbs-client-*.jar"/>
+			    <include name="ktbs4j-*.jar"/>
 			</fileset>
 			<fileset dir="${migrator.lib}">
 			    <include name="*.jar"/>

@@ -40,7 +40,7 @@ public class CreateVisuTraceModels {
 
 	private static ITraceModel createTraceModel(String bLocalName, String tmLocalName) {
 		ResourceService service = Ktbs.getRestClient().getResourceService();
-		service.newBase(bLocalName, "");
+		service.newBase(bLocalName);
 		String uri = service.newTraceModel(bLocalName, tmLocalName);
 		logger.debug("Trace model created: {}", uri);
 		ITraceModel traceModel = service.getTraceModel(bLocalName+"/"+tmLocalName);

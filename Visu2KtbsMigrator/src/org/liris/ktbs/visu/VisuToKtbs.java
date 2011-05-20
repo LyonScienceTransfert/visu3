@@ -8,19 +8,21 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 
+import org.liris.ktbs.client.ClientFactory;
 import org.liris.ktbs.client.Ktbs;
-import org.liris.ktbs.client.KtbsConstants;
 import org.liris.ktbs.client.KtbsClient;
+import org.liris.ktbs.client.KtbsConstants;
 import org.liris.ktbs.domain.interfaces.IBase;
 import org.liris.ktbs.domain.interfaces.ITraceModel;
-import org.liris.ktbs.service.MultiUserRootProvider;
 import org.liris.ktbs.service.ResourceService;
 import org.liris.ktbs.utils.KtbsUtils;
 import org.liris.ktbs.visu.vo.ObselVO;
@@ -36,29 +38,34 @@ public class VisuToKtbs {
 
 	private static Logger logger = LoggerFactory.getLogger(VisuToKtbs.class);
 
+	private Map<String, KtbsClient> ktbsClients = new HashMap<String, KtbsClient>();
+	
+	
+	private String rootUri;
 	private String visuUserName;
 	private String visuPasswd;
 	private String visuSharedBaseName;
 	private String retroRoomModelLocalName;
 	private String visuModelLocalName;
 
-	private MultiUserRootProvider rootProvider;
+	private ClientFactory clientFactory;
 
 	private SqlMapClient sqlMap;
 
-	public VisuToKtbs(SqlMapClient sqlMap, String userName, String userPasswd,
+	public VisuToKtbs(SqlMapClient sqlMap, String rootUri, String userName, String userPasswd,
 			String shareBase, String retroRoomModelLocalName,
 			String visuModelLocalName) {
 
 		super();
 		this.sqlMap = sqlMap;
+		this.rootUri = rootUri;
 		this.visuUserName = userName;
 		this.visuPasswd = userPasswd;
 		this.visuSharedBaseName = shareBase;
 		this.retroRoomModelLocalName = retroRoomModelLocalName;
 		this.visuModelLocalName = visuModelLocalName;
 
-		this.rootProvider = Ktbs.getMultiUserRestRootProvider();
+		this.clientFactory = Ktbs.getClientFactory();
 	}
 
 	public static void main(String[] args) throws IOException, SQLException {
@@ -69,10 +76,12 @@ public class VisuToKtbs {
 
 		Properties properties = new Properties();
 		properties.load(ClassLoader.getSystemResourceAsStream("visu2ktbs.properties"));
+		properties.load(ClassLoader.getSystemResourceAsStream("ktbs4j.properties"));
 		logger.info("Migration config:\n {}", properties.toString());
 
 		VisuToKtbs visuToKtbs = new VisuToKtbs(
 				sqlMap,
+				properties.getProperty("ktbs.root.uri"),
 				properties.getProperty("ktbs.root.username"),
 				properties.getProperty("ktbs.root.passwd"),
 				properties.getProperty("ktbs.shared.base"),
@@ -90,7 +99,15 @@ public class VisuToKtbs {
 		List<ObselVO> obsels = (List<ObselVO>)sqlMap.queryForList("obsel.getObselsInTrace", "%" + traceName + "%");
 
 		Integer userId = VisuToKtbsUtils.parseUserId(traceName);
-		KtbsClient client = rootProvider.getClient(VisuToKtbsUtils.makeKtbsUserId(userId));
+		String ktbsUserid = VisuToKtbsUtils.makeKtbsUserId(userId);
+		if(ktbsClients.get(ktbsUserid) == null)
+			ktbsClients.put(ktbsUserid, clientFactory.createRestClient(
+					rootUri, 
+					ktbsUserid,
+					ktbsUserid
+					));
+		
+		KtbsClient client = ktbsClients.get(ktbsUserid);
 		ResourceService service = client.getResourceService();
 
 		String username = VisuToKtbsUtils.makeKtbsUserId(VisuToKtbsUtils.parseUserId(traceName));
@@ -192,11 +209,12 @@ public class VisuToKtbs {
 		createTraces(sqlMap);
 	}
 
+
 	private void createSharedBaseAndModels() {
-		rootProvider.openClient(visuUserName, visuUserName);
-		ResourceService service = rootProvider.getClient(visuUserName).getResourceService();
+		ktbsClients.put(visuUserName, clientFactory.createRestClient(rootUri, visuUserName, visuPasswd));
+		ResourceService service = ktbsClients.get(visuUserName).getResourceService();
 		logger.info("Creating the shared base {}.", visuSharedBaseName);
-		String baseUri = service.newBase(visuSharedBaseName, visuUserName);
+		String baseUri = service.newBase(visuSharedBaseName);
 		if(baseUri == null) {
 			logger.info("Could not create the base {}. It may already exist", visuSharedBaseName);
 		} else {
@@ -217,9 +235,10 @@ public class VisuToKtbs {
 
 		for(Integer userId:userIds) {
 			String userName = VisuToKtbsUtils.makeKtbsUserId(userId);
-			rootProvider.openClient(userName, userName);
-			KtbsClient client = rootProvider.getClient(userName);
-			String uri = client.getResourceService().newBase(userName, userName);
+			
+			ktbsClients.put(userName, clientFactory.createRestClient(rootUri, userName, userName));
+			KtbsClient client = ktbsClients.get(userName);
+			String uri = client.getResourceService().newBase(userName);
 			logger.info("Created ktbs:Base at {}", uri);
 		}
 	}
