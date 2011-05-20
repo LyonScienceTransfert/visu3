@@ -76,6 +76,7 @@ package  com.ithaca.visu.model
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.SessionFilterEnum;
 	import com.ithaca.visu.ui.utils.SessionStatusEnum;
+	import com.ithaca.visu.view.video.model.StreamObsel;
 	
 	import flash.net.NetConnection;
 	
@@ -632,6 +633,55 @@ package  com.ithaca.visu.model
 				result = false;
 			}
 			return result;	
+		}
+		/**
+		 * Creation data collection for VisuVisioAdvanced, with classes StreamObsel
+		 */
+		public function getListStreamObsel():ArrayCollection
+		{
+			var result:ArrayCollection = new ArrayCollection();
+			if(this.listObsels != null)
+			{
+				var nbrObsel:int = this.listObsels.length;
+				for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+				{
+					var obsel:Obsel = this.listObsels.getItemAt(nObsel) as Obsel;
+					var typeObsel:String = obsel.type;
+					if(typeObsel == TraceModel.SESSION_IN)
+					{
+						if(!hasStreamObsel(result, obsel))
+						{
+							addStreamObsel(result, obsel);
+						}
+					}
+				}
+			}
+			return result;
+			
+			function addStreamObsel(array:ArrayCollection, obsel:Obsel):ArrayCollection
+			{
+				var streamObsel:StreamObsel = new StreamObsel();
+				streamObsel.begin = obsel.begin;
+				streamObsel.end = obsel.end;
+				// owner the stream
+				streamObsel.userId = obsel.props[TraceModel.UID];
+				streamObsel.pathStream = obsel.props[TraceModel.PATH];
+				array.addItem(streamObsel);
+				return array;
+			}
+			function hasStreamObsel(array:ArrayCollection, obsel:Obsel):Boolean
+			{
+				var nbrStreamObsel:int = array.length;
+				for(var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel; nStreamObsel++)
+				{
+					var streamObsel:StreamObsel = array.getItemAt(nStreamObsel) as StreamObsel;
+					if(streamObsel.pathStream == obsel.props[TraceModel.PATH])
+					{
+						return true;
+					}
+				}
+				return false;
+			}
 		}
 		/**
 		 * get list obsel "SessionIn" for this moment the time
