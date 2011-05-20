@@ -4,9 +4,9 @@ package com.ithaca.visu.view.video
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.view.video.layouts.VideoLayout;
+	import com.ithaca.visu.view.video.model.IStreamObsel;
 	import com.lyon2.controls.VideoComponent;
 	
-	import flash.display.Graphics;
 	import flash.events.Event;
 	import flash.events.NetStatusEvent;
 	import flash.events.StatusEvent;
@@ -56,6 +56,17 @@ package com.ithaca.visu.view.video
 		private var _frameRateSplit:Number = 1000;
 		
 		// dataProvider : ArrayCollection of the StreamObsel
+		private var _dataProvider:ArrayCollection;
+		private var checkingSumFluxVideo:Number = -1;
+		private var timeStartRetrospectionSession:Number;
+		private var timer:Timer;
+		private var _startTimeSession:Number;
+		private var timePause:Number = 0;
+		private var fistTimePlayFluxVideo:Boolean;
+
+		private var currentTimeSessionMilliseconds:Number;
+		// seek session in milliseconds
+		private var _seekSession:Number = 0;
 		/* 
 		* Status constants
 		*/
@@ -176,7 +187,45 @@ package com.ithaca.visu.view.video
 			_currentVolume = value;
 			updateVolume();
 		}
+		public function set dataProvider(value:ArrayCollection):void
+		{
+			_dataProvider = value;
+		}
+		public function get dataProvider():ArrayCollection
+		{
+			return _dataProvider;
+		}
+		public function set startTimeSession(value:Number):void
+		{
+			_startTimeSession = value;
+		}
+		public function get startTimeSession():Number
+		{
+			return _startTimeSession;
+		}
+		// in milliseconds
+		public function set seekSession(value:Number):void
+		{
+			_seekSession = value;
+			timeStartRetrospectionSession = new Date().time;
+			this.timePause = 0;
+			// set zero for case the jupm to time on the same flux
+			this.checkingSumFluxVideo = 0
+			if(this.timer != null && !this.timer.running)
+			{
+				this.timer.start();
+			}
+		}
+		public function get seekSession():Number
+		{
+			return _seekSession;
+		}
 		
+		//_____________________________________________________________________
+		//
+		// Handlers
+		//
+		//_____________________________________________________________________
 		private function updateVolume():void
 		{
 			for (var n: String in streams)
@@ -282,17 +331,79 @@ package com.ithaca.visu.view.video
 				}
 			}
 		}
-		private function remoteStreamStatusHandler(e:NetStatusEvent):void
+		private function remoteStreamStatusHandler(event:NetStatusEvent):void
 		{
+			var stream:NetStream = event.currentTarget as NetStream;
+			switch( event.info.code)
+			{
+				case "NetStream.Buffer.Full" :
+					// set status play for all streams
+					this.status = VisuVisioAdvanced.STATUS_REPLAY;
+					stream.removeEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
+					var streamObsel:IStreamObsel = this.getStreamObselByStreamId(stream);
+					if(streamObsel == null)
+					{
+						trace("<hasn't streamObsel with stremId>");
+					}else
+					{
+						var timeBeginStreamObsel:Number = streamObsel.begin;
+						var deltaSeekSecond:Number = (this.currentTimeSessionMilliseconds - timeBeginStreamObsel)/1000;
+						trace("==========================");
+						trace("deltaSeekSecond = "+deltaSeekSecond.toString());
+						trace("streamId = "+ streamObsel.pathStream);
+						stream.seek(deltaSeekSecond);		
+					}
+					trace("Current time of the stream  after seek = "+stream.time.toString());
+					break;
+			}			
 		}
+		/**
+		 * Get streamObsel by path(id) the stream
+		 */
+		private function getStreamObselByStreamId(netStream:NetStream):IStreamObsel
+		{
+			var pathStream:String = "";
+			for (var n: String in streams)
+			{
+				var tempStream:NetStream = streams[n];
+				if(tempStream == netStream)
+				{
+					pathStream = n;
+					break;
+				}
+			}
+			
+			var nbrStreamObsel:int = dataProvider.length;
+			for (var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel;  nStreamObsel++)
+			{
+				var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
+				if(streamObsel.pathStream == pathStream)
+				{
+					return streamObsel;
+				}
+			}
+			return null;
+		}
+		
+		private function updateTime(event:TimerEvent = null):void
+		{
+			var beginTime:Number = new Date().time - this.timeStartRetrospectionSession + seekSession;
+			
+			this.currentTimeSessionMilliseconds = beginTime + startTimeSession
+			// check end/start flux video 
+			this.checkFluxVideo(this.currentTimeSessionMilliseconds);
+			var updateTime:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.UPDATE_TIME);
+			updateTime.beginTime = beginTime;
+			this.dispatchEvent(updateTime);
+		}
+		
 		private function onVideoPanelZoom(event:VideoPanelEvent):void
 		{
 			var elm:VideoPanel = event.currentTarget as VideoPanel;
 			setZoom(elm);
 			videoPanelLayout.updateZoom();
 		}
-/////////////////////	
-		
+
 		private function setZoom(value:VideoPanel):void
 		{
 			for (var name:String in videos)
@@ -494,19 +605,39 @@ package com.ithaca.visu.view.video
 			
 			return stream;
 		}
+		//_____________________________________________________________________
+		//
+		// Play/Pause Streams 
+		//
+		//_____________________________________________________________________
 
-		
-		
 		public function pauseStreams(): void
 		{
 			for (var n: String in streams)
 			{
 				streams[n].pause();
+				streams[n].addEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
 			}
+			
+			// set timer stop if existe
+			if(this.timer != null)
+			{
+				this.timer.stop();
+				this.timePause = new Date().time;
+			}
+			trace("------ PAUSED ALL STREAMS -------");
+			this.status = VisuVisioAdvanced.STATUS_PAUSE;
 		}
 		
 		public function resumeStreams(): void
 		{
+			if(this.timer != null && !this.timer.running)
+			{
+				var timePausedNumber:Number = new Date().time -  this.timePause;
+				this.timeStartRetrospectionSession = this.timeStartRetrospectionSession  + timePausedNumber;
+				this.timer.start();
+				this.timePause = 0;
+			}
 			for (var n: String in streams)
 			{
 				streams[n].resume();
@@ -543,7 +674,88 @@ package com.ithaca.visu.view.video
 			}
 			return t;
 		}
+		
+		/**
+		 * check flux video for add on the stage
+		 */
+		private function checkFluxVideo(value:Number):void
+		{
+			var sumBeginTimeStamp:Number = 0;
+			var listCurrentIStreamObsel:ArrayCollection = getIStreamObselByTimestamp(value);
+			var nbrObsel:int = listCurrentIStreamObsel.length;
+			if(nbrObsel == 0 ){this.removeAllStreams(); return;}
+			// get sem the begin of obsels sessionIn 
+			sumBeginTimeStamp = getSumBeginTimeStreamObsel(listCurrentIStreamObsel);
+			if(sumBeginTimeStamp != this.checkingSumFluxVideo)
+			{
+				this.removeAllStreams();
+				this.addFluxVideo(listCurrentIStreamObsel);
+				this.checkingSumFluxVideo = sumBeginTimeStamp;
+			}	
+			// set volume
+		//	this.visio.setVolume(this.currentVolume);
+		}
 
+		public function getIStreamObselByTimestamp(value:Number):ArrayCollection
+		{
+			var result:ArrayCollection = new ArrayCollection();
+			if(_dataProvider != null)
+			{
+				var nbrObsel:int = _dataProvider.length;
+				for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+				{
+					var streamObsel:IStreamObsel = _dataProvider.getItemAt(nObsel) as IStreamObsel;
+					if(streamObsel.begin < value && value < streamObsel.end)
+					{
+						result.addItem(streamObsel);	
+					}
+				}
+			}
+			return result;
+		}
+		private function getSumBeginTimeStreamObsel(value:ArrayCollection):Number
+		{
+			var result:Number = 0;
+			var nbrStreamObsel:int = value.length;
+			for(var nObsel:int = 0; nObsel < nbrStreamObsel ; nObsel++ )
+			{
+				var streamObsel:IStreamObsel = value.getItemAt(nObsel) as IStreamObsel;
+				var begin:Number = streamObsel.begin;
+				result += begin;
+			}	
+			return result;
+		}
+		private function addFluxVideo(value:ArrayCollection):void
+		{
+			var nbrObsel:int = value.length;
+			for(var nObsel:int= 0; nObsel < nbrObsel; nObsel++ )
+			{
+				var streamObsel:IStreamObsel = value.getItemAt(nObsel) as IStreamObsel;
+				var pathVideo:String = streamObsel.pathStream;
+				var ownerFluxVideoId:int = streamObsel.userId;
+				var ownerFluxVideo:User = Model.getInstance().getUserPlateformeByUserId(ownerFluxVideoId);
+				var stream:NetStream = addVideoStream(pathVideo, ownerFluxVideo); 
+			}
+		}
+		public function removeTimer():void
+		{
+			if(timer != null)
+			{
+				timer.stop();
+				timer = null;
+			}
+		}
+		public function startTimer():void
+		{
+			this.timeStartRetrospectionSession = new Date().time;
+			if(!timer)
+			{
+				timer = new Timer(1000,0);
+				timer.addEventListener(TimerEvent.TIMER, updateTime);
+				fistTimePlayFluxVideo = false;
+			}
+			timer.start();
+		}
 	}
 }
 
