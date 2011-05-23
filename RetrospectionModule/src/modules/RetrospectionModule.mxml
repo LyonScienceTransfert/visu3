@@ -94,7 +94,10 @@
 			private var currentTime:Number;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
-			{			
+			{	
+				// init list trace lines
+				Model.getInstance().initListTraceLine();
+				
 				if((event.currentTarget as RetrospectionModule).parameters != null)
 				{
 					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
@@ -155,8 +158,6 @@
 					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
 					timerSynchro.start();
 				}
-				// init list trace lines
-				Model.getInstance().initListTraceLine();
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
