@@ -192,8 +192,9 @@ or by setting the following environment variable:
 	  		  	<include-file name="images/ballBlue.png" path="${framework.images}/ballBlue.png"/>
 	  		  	<include-file name="images/ballGreen.png" path="${framework.images}/ballGreen.png"/>
 	  		  	<include-file name="images/ballGrey.png" path="${framework.images}/ballGrey.png"/>
-				<include-file name="images/zoom16x16.png" path="${framework.images}/zoom16x16.png"/>
-				<include-file name="images/chat16x16.png" path="${framework.images}/chat16x16.png"/>
+				<include-file name="images/iconZoom_16x16.png" path="${framework.images}/iconZoom_16x16.png"/>
+				<include-file name="images/iconChat_16x16.png" path="${framework.images}/iconChat_16x16.png"/>
+				<include-file name="images/iconVolume_16x16.png" path="${framework.images}/iconVolume_16x16.png"/>
 
 	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
 	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
