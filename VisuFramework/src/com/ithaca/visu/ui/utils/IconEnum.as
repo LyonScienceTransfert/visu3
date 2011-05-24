@@ -203,6 +203,14 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/ballGreen.png")]
 		static private var ballGreen:Class;
 		
+		[Bindable]
+		[Embed("images/iconZoom_16x16.png.png")]
+		static private var zoom16x16:Class;
+		
+		[Bindable]
+		[Embed("images/iconChat_16x16.png")]
+		static private var chat16x16:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -331,6 +339,12 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "ballBlue" : 
 					icon = ballBlue;
+					break;
+				case "zoom" : 
+					icon = zoom16x16;
+					break;
+				case "chat" : 
+					icon = chat16x16;
 					break;
 				default :
 					break;				
