@@ -27,9 +27,15 @@
 			<mx:Spacer width="100%"/>
 			<s:Label id="labelUserZoomIn" text="B.CLOUTER" paddingTop="5" color="#C40A0A" includeIn="disabled,zoomInMouseIn,zoomInMouseOut"/>
 			<mx:Spacer width="100%"/>
-			<s:Button id="buttonChat"  label="c" height="22" width="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
-			<s:Button id="buttonMarker" label="m" height="22" width="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false"/>		
-			<s:Button id="buttonZoom" label="z" height="22" width="30" includeIn="disabled,zoomOutMouseIn"/>		
+			<mx:Button id="buttonChat" icon="{IconEnum.getIconByName('chat')}"  height="22" width="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false">
+				<mx:toolTip>Envoyer message privé</mx:toolTip>
+			</mx:Button>
+			<mx:Button id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" height="22" width="30" visible.zoomInMouseIn="true" visible.zoomOutMouseIn="true" visible="false">
+				<mx:toolTip>Posé le marqueur</mx:toolTip>
+			</mx:Button>
+			<mx:Button id="buttonZoom" icon="{IconEnum.getIconByName('zoom')}"  height="22" width="30" includeIn="disabled,zoomOutMouseIn">
+				<mx:toolTip>Zoom vidéo</mx:toolTip>
+			</mx:Button>
 		</s:HGroup>
 		<s:HGroup width="100%" bottom="0"  includeIn="zoomOutMouseIn,zoomOutMouseOut">
 			<s:Button id="buttonVolumeUserZoomOut" label="v"  left="0" height="22" width="30" visible.zoomOutMouseIn="true" visible="false" />
