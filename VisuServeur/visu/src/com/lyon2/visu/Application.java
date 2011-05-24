@@ -1314,7 +1314,7 @@ IScheduledJob {
 	 * 
 	 */
 	public void checkOutSession(IConnection conn, Integer loggedUserId) {
-		log.warn("====checkOutSession====");
+		log.warn("====checkOutSession ====");
 		log.warn("loggedUserId = {}", loggedUserId.toString());
 		// set timestamp
 		Date date = new Date();
@@ -1327,6 +1327,9 @@ IScheduledJob {
 		// list user how staying in the session
 		List<IClient> listStayingClient = new ArrayList<IClient>();
 		// set Obsel "SessionExit" only if status recording
+		
+		log.warn("statusClient = {}",statusClient);
+		
 		if (statusClient == 3) {
 			// get sessionId of the loggedUser
 			Integer sessionId = (Integer) client.getAttribute("sessionId");
@@ -1363,7 +1366,8 @@ IScheduledJob {
 			for (IClient connectedClient : this.getClients()) {
 				Integer sessionIdConnectedUser = (Integer) connectedClient
 				.getAttribute("sessionId");
-				if (sessionId == sessionIdConnectedUser) {
+				int diff = sessionId - sessionIdConnectedUser;
+				if (diff == 0) {
 					List<Object> paramsObsel = new ArrayList<Object>();
 					paramsObsel.add("uid");
 					paramsObsel.add(loggedUserId.toString());
@@ -1391,8 +1395,9 @@ IScheduledJob {
 					// add staying client to list
 					Integer connectedClientId = (Integer) connectedClient
 					.getAttribute("uid");
-					Integer diff = loggedUserId - connectedClientId;
-					if (diff != 0) {
+					//Integer diff = loggedUserId - connectedClientId;
+					// if (diff != 0) {
+					if (loggedUserId != connectedClientId) {
 						listStayingClient.add(connectedClient);
 					}
 				}
@@ -1428,6 +1433,12 @@ IScheduledJob {
 
 	public void updateRecordingWhenUserWalkOutSession(IScope scope,
 			List<IClient> listConnectedCleint) {
+			
+			
+		log.warn("===updateRecordingWhenUserWalkOutSession===");	
+		log.warn(" <listConnectedCleint> {}",listConnectedCleint.toString());	
+		log.warn(" listConnectedCleint.size {}",listConnectedCleint.size());	
+		
 		GregorianCalendar calendar = new GregorianCalendar();
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		String sDate = dateFormat.format(calendar.getTime());
