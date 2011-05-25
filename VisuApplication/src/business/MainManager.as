@@ -72,6 +72,8 @@ public class MainManager
 	
 	private var MIN_DURATION_OBSEL_SESSION_OUT:Number = 1000;
 	
+	private var startSessionBySessionInChange:Boolean = false;
+	private var startSessionBySessionIn:Number;
 	// constructor
 	public function MainManager(dispatcher:IEventDispatcher)
 	{
@@ -583,6 +585,8 @@ public class MainManager
 	 */
 	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array = null, sharedSession:Boolean = false , salonTutorat:Boolean = false):void
 	{
+		var listObselTempSessionOut:ArrayCollection = new ArrayCollection();
+		
 		if(listObselCommentVO != null && listObselCommentVO.length != 0)
 		{
 			var firstObselVO:ObselVO = listObselCommentVO[0];
@@ -590,6 +594,7 @@ public class MainManager
 			var arr:ArrayCollection = new ArrayCollection();
 			var listObselUM:ArrayCollection = new ArrayCollection();
 			var listObselDM:ArrayCollection = new ArrayCollection();
+			// add all users present in this session for create list obsel "SessionOut"
 			var nbrObselCommentVO:int = listObselCommentVO.length;
 			for(var nObselCommentVO:int = 0 ; nObselCommentVO < nbrObselCommentVO; nObselCommentVO++)
 			{
@@ -681,6 +686,7 @@ public class MainManager
 						}
 						// remove SI, RFN
 						listObselSI.removeAll();
+						// remove obselRFN only if list obsel SI is not empty
 						listObselRFN.removeAll();
 						
 						var listUser:Array = new Array();
@@ -692,7 +698,23 @@ public class MainManager
 							var obselStartSession:Obsel = Obsel.fromRDF(obselVO.rdf);
 							obselStartSession.props[TraceModel.UID] = userId;
 							obselStartSession.type = TraceModel.SESSION_IN;
-							addTempObsel("SI" , obselStartSession); 
+							addTempObsel("SI" , obselStartSession);
+							// set sytart session by obsel "SessoinIn", 
+							//for create obsels "SessionOut" users join session after start recording
+							if(!startSessionBySessionInChange)
+							{
+								startSessionBySessionIn = obselStartSession.begin;
+								startSessionBySessionInChange = true;
+							}
+							// clone obsel
+							var clonedObselStartSession:Obsel = Obsel.fromRDF(obselStartSession.toRDF());
+							clonedObselStartSession.begin = startSessionBySessionIn;
+							clonedObselStartSession.end = startSessionBySessionIn;
+							// check if user existe 
+							if(!hasTempObselSessionOut(clonedObselStartSession,listObselTempSessionOut))
+							{
+								addTempObselSessionOut(clonedObselStartSession,listObselTempSessionOut);
+							}
 						}
 						// add presents users
 						this.addPresentUsers(obsel);
@@ -818,6 +840,7 @@ public class MainManager
 			// update text obsel marker with the same timestamp
 			updateObselMarker(listObsel, obselUm);	
 		}
+		
 		// remove obsel if user delete it
 		for each (var obselDM:Obsel in listObselDM)
 		{	
@@ -846,7 +869,7 @@ public class MainManager
 		var lastObselSessionIn:Obsel;
 		if(listObsel != null && listObsel.length != 0)
 		{
-			lastObselSessionIn = this.addObselSessionOut(listObsel,startRecordingSession);
+			lastObselSessionIn = this.createListeObselSessionOut(listObsel,listObselTempSessionOut,startSessionBySessionIn);
 		}
 		Model.getInstance().setListObsel(listObsel);
 		
@@ -876,7 +899,28 @@ public class MainManager
 			loadListObselRetro.durationSessionRetro = durationSession;		
 			this.dispatcher.dispatchEvent(loadListObselRetro);			
 		}
+		function addTempObselSessionOut(obsel:Obsel, list:ArrayCollection):void
+		{
 			
+			var obselSessionOut:Obsel = Obsel.fromRDF(obsel.toRDF());
+			obselSessionOut.type = TraceModel.SESSION_OUT;
+			list.addItem(obselSessionOut);
+		}
+		
+		function hasTempObselSessionOut(obsel:Obsel,list:ArrayCollection):Boolean
+		{
+			var nbrObsel:int = list.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
+			{
+				var obselSessionOut:Obsel = list.getItemAt(nObsel) as Obsel;
+				if(obselSessionOut.props[TraceModel.UID] == obsel.props[TraceModel.UID])
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
 		function removeTempObsel(type:String, userId:String):void
 		{
 			var listObselByType:ArrayCollection = getListObselByType(type);
@@ -1037,137 +1081,68 @@ public class MainManager
 			}
 		}
 	}
-	
 	/**
-	 * 
+	 * Creation the obsel types "SessionOuit" 
 	 */
-	private function addObselSessionOut(listObsel:ArrayCollection, startSession:Number):Obsel
+	private function createListeObselSessionOut(listObsel:ArrayCollection, tempListSessionOut:ArrayCollection, startSessionBySessionIn:Number):Obsel
 	{
-		var lastObselSessionIn:Obsel = null;
-		var listObselSO:ArrayCollection = new ArrayCollection();
-		var listNewObselSO:ArrayCollection = new ArrayCollection();
-		var obsel:Obsel= null;
-		var obselSessionOut:Obsel = null;
-		var nbrObsels:int = listObsel.length;
-		// set all users SessionOut
-		var listPresentsUsers:ArrayCollection  = Model.getInstance().getListTraceLines();
-		var nbrTraceLine:int = listPresentsUsers.length;
-		for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++ )
+		var result:Obsel = null;
+		var preListSessionOut:ArrayCollection = new ArrayCollection()
+		var nbrObsel:int =  listObsel.length;
+		for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
 		{
-			var traceLine:Object = listPresentsUsers.getItemAt(nTraceLine) as Object;
-			var userId:String = traceLine.userId;
-			var tempObsel:Obsel = listObsel.getItemAt(0) as Obsel;
-			var obselSessionOut:Obsel = Obsel.fromRDF(tempObsel.toRDF());
-			obselSessionOut.type = TraceModel.SESSION_OUT;
-			obselSessionOut.props[TraceModel.UID] = userId;
-			obselSessionOut.begin = startSession;
-			listObselSO.addItem(obselSessionOut);
-		}
-		for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
-		{	
-			obsel = listObsel.getItemAt(nObsel) as Obsel;
-			var owner:String = obsel.props[TraceModel.UID] 
-			var typeObsel:String = obsel.type;
-			switch (typeObsel)
+			var obsel:Obsel = listObsel[nObsel] as Obsel;
+			if(obsel.uid == obsel.props[TraceModel.UID] && obsel.type == TraceModel.SESSION_IN)
 			{
-				case TraceModel.SESSION_IN:
-					obselSessionOut = getObselByUserIdByType("SO",owner);
-					if(obselSessionOut != null)
+				// get obsel session Out for user id
+				var tempObselSessionOut:Obsel = getObselSessionOutByUserId(tempListSessionOut,obsel.uid);
+				if(tempObselSessionOut == null)
+				{
+					// create obsel SessionOut
+					var newObselSessionOut:Obsel = Obsel.fromRDF(obsel.toRDF());
+					// set begin = end 
+					newObselSessionOut.begin = obsel.end;
+					newObselSessionOut.end = obsel.end;
+					tempListSessionOut.addItem(newObselSessionOut);
+				}
+				else
+				{
+					if(tempObselSessionOut.end != obsel.begin)
 					{
+						
+						var obselSessionOut:Obsel = Obsel.fromRDF(tempObselSessionOut.toRDF());
 						obselSessionOut.end = obsel.begin;
-						var durationObselSO:Number = obselSessionOut.end - obselSessionOut.begin;
-						if(	durationObselSO > MIN_DURATION_OBSEL_SESSION_OUT)
-						{
-							listNewObselSO.addItem(obselSessionOut);
-						}
-						removeTempObsel("SO",owner);			
-					}					
-					// create new onsel only if in obsel sessionIn begin != end, it's last obsel in the salon synchrone
-					if(obsel.begin != obsel.end)
-					{
-						obselSessionOut = Obsel.fromRDF(obsel.toRDF());
-						obselSessionOut.begin = obsel.end;
 						obselSessionOut.type = TraceModel.SESSION_OUT;
-						addTempObsel("SO" , obselSessionOut);					
-					}else
-					{
-						lastObselSessionIn = obsel;
+						preListSessionOut.addItem(obselSessionOut);
 					}
-					break;
-			}	
-		}
-		// create SessionOut
-		var listObselSessionOut:ArrayCollection = getListObselByType("SO");
-		var nbrObsel:int = listObselSessionOut.length;
-		for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
-		{
-			var obselOut:Obsel = listObselSessionOut.getItemAt(nObsel) as Obsel;
-			obselOut.end = obsel.end;
-			listNewObselSO.addItem(obselOut);
-		}
-		// add new obsels to the basic list
-		listObsel.addAll(listNewObselSO);
-		return lastObselSessionIn;
-	
-	
-	function removeTempObsel(type:String, userId:String):void
-	{
-		var listObselByType:ArrayCollection = getListObselByType(type);
-		var nbrObsel:int = listObselByType.length;
-		var index:int = 0;
-		for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
-		{
-			var obsel:Obsel = listObselByType.getItemAt(nObsel) as Obsel;
-			var owner:String = obsel.props[TraceModel.UID]
-			if(owner == userId)
-			{
-				listObselByType.removeItemAt(nObsel);
-				return;
+					// have to change "begin", "end "of the obsel session out
+					tempObselSessionOut.begin = obsel.end;
+					tempObselSessionOut.end = obsel.end;
+				}
+				
+				result = obsel;
 			}
+			
+			listObsel.addAll(preListSessionOut);
+			
 		}
-	}
-	
-	function getListObselByType(type:String):ArrayCollection
-	{
-		var listObselByType:ArrayCollection = null;
-		switch (type)
+		return result;
+		
+		function getObselSessionOutByUserId(listObselSessionOut:ArrayCollection, userId:int):Obsel
 		{
-			case "SO" : 
-				listObselByType = listObselSO;
-				break;
-			default:
-				break;
-		}
-		return listObselByType;
-	}
-	
-	function getObselByUserIdByType(type:String, userId:String):Obsel
-	{
-		var listObselByType:ArrayCollection = getListObselByType(type);
-		var nbrObsel:int = listObselByType.length;
-		for(var nObsel :int ;nObsel < nbrObsel; nObsel++)
-		{
-			var obsel:Obsel = listObselByType.getItemAt(nObsel) as Obsel;
-			var owner:String = obsel.props[TraceModel.UID];
-			if(userId == owner)
+			var nbrObsel:int = listObselSessionOut.length;
+			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
 			{
-				return obsel;
+				var obsel:Obsel = listObselSessionOut.getItemAt(nObsel) as Obsel;
+				if(obsel.props[TraceModel.UID] == userId)
+				{
+					return obsel;
+				}
 			}
+			return null;
 		}
-		return null;
 	}
-	
-	function addTempObsel(type:String, obsel:Obsel):void
-	{
-		var listObselByType:ArrayCollection = getListObselByType(type);
-		listObselByType.addItem(obsel);
-	}		
 
-}
-
-	
-	
-	
 	/**
 	 * get list closed session with logged user 
 	 */
