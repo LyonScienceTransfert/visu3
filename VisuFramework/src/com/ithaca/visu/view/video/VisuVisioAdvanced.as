@@ -35,12 +35,10 @@ package com.ithaca.visu.view.video
 		public var videoPanelLayout:VideoLayout;
 		
 		private var logger:ILogger = Log.getLogger("com.ithaca.visu.view.video.VisuVisioAdvance")
-		
 		// Dictionary of remote AV-streams, indexed by streamname
 		private var streams:Object;
 		// Dictionary of remote VideoComponents, indexed by streamname
 		private var videos:Object;
-		
 		// Local stream/VideoComponent
 		private var _localstream:NetStream;
 		private var localvideo:VideoPanel;
@@ -55,17 +53,25 @@ package com.ithaca.visu.view.video
 		private var _currentVolume:Number = 1;
 		private var _frameRateSplit:Number = 1000;
 		
-		// dataProvider : ArrayCollection of the StreamObsel
+		// dataProvider : ArrayCollection of the StreamObsel;
+		// class StreamObsel implements IStreamObsel;
+		// basic properties : 
+		//             begin -  begin time obsel "RecordFileName"/"SessionIn";
+		//             end   -  end time obsel SessionIn"
+		//            userId -  id of thee owner stream
+		//        pathStream -  name file video format flv/mp4 etc.
 		private var _dataProvider:ArrayCollection;
-		private var checkingSumFluxVideo:Number = -1;
+		private var checkingSumStreamVideo:Number = -1;
+		// time when user start analyse the streams(VISU 2 : came in Retrospection Module )
 		private var timeStartRetrospectionSession:Number;
 		private var timer:Timer;
+		// time start session (milliseconds after 1970 year)
 		private var _startTimeSession:Number;
+		// duration of the pause in ms.(pause the analyse video, example : click button "Pause")
 		private var timePause:Number = 0;
-		private var fistTimePlayFluxVideo:Boolean;
-
+		// current time sessionin ms., value current time session is [startSession, endSession]
 		private var currentTimeSessionMilliseconds:Number;
-		// seek session in milliseconds
+		// seek session in milliseconds, call outside, example : play RetroDocument
 		private var _seekSession:Number = 0;
 		/* 
 		* Status constants
@@ -93,10 +99,21 @@ package com.ithaca.visu.view.video
 		private var _microphoneRate:Number = 22;
 		private var _microphoneGain:Number = 50;
 		
-		
-		/* Camera parameters */
+		/**
+		 * Camera parameters 
+		 */
 		private var _width:int = 320;
 		private var _height:int = 240;
+		
+		/**
+		 * Properties
+		*/
+		// enabled chat buttons
+		private var _buttonChatEnabled:Boolean = false;
+		private var buttonChatEnabledChange:Boolean = false;
+		// enabled marker buttons
+		private var _buttonMarkerEnabled:Boolean = false
+		private var buttonMarkerEnabledChange:Boolean = false;
 		
 		public function VisuVisioAdvanced()
 		{
@@ -195,6 +212,7 @@ package com.ithaca.visu.view.video
 		{
 			return _dataProvider;
 		}
+		// in milliseconds
 		public function set startTimeSession(value:Number):void
 		{
 			_startTimeSession = value;
@@ -209,8 +227,8 @@ package com.ithaca.visu.view.video
 			_seekSession = value;
 			timeStartRetrospectionSession = new Date().time;
 			this.timePause = 0;
-			// set zero for case the jupm to time on the same flux
-			this.checkingSumFluxVideo = 0
+			// set checkSum in zero 
+			this.checkingSumStreamVideo = 0
 			if(this.timer != null && !this.timer.running)
 			{
 				this.timer.start();
@@ -220,7 +238,32 @@ package com.ithaca.visu.view.video
 		{
 			return _seekSession;
 		}
-		
+		public function getStreams():Object
+		{
+			return this.streams;
+		}
+		// enabled chat buttons
+		public function set buttonChatEnabled(value:Boolean):void
+		{
+			_buttonChatEnabled = value;
+			buttonChatEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonChatEnabled():Boolean
+		{
+			return _buttonChatEnabled;
+		}
+		// enabled marker buttons
+		public function set buttonMarkerEnabled(value:Boolean):void
+		{
+			_buttonMarkerEnabled = value;
+			buttonMarkerEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonMarkerEnabled():Boolean
+		{
+			return _buttonMarkerEnabled;
+		}
 		//_____________________________________________________________________
 		//
 		// Handlers
@@ -236,7 +279,6 @@ package com.ithaca.visu.view.video
 				tempStream.soundTransform = tempSoundTransforme;		
 			}
 		}
-		
 		public function removeVideoStream(sID: String, videoOnly: Boolean = false): void
 		{
 			logger.debug('\tremoveVideoStream ' + sID + " from " + streams.toString());
@@ -261,11 +303,6 @@ package com.ithaca.visu.view.video
 				delete videos[sID];
 			}
 			
-		}
-		
-		private function forceResize(event:Event):void
-		{
-			invalidateSize();
 		}
 		
 		public function addVideoStreams(value:Array):void
@@ -336,31 +373,35 @@ package com.ithaca.visu.view.video
 			var stream:NetStream = event.currentTarget as NetStream;
 			switch( event.info.code)
 			{
+				// check when stream show on the screen 
 				case "NetStream.Buffer.Full" :
 					// set status play for all streams
 					this.status = VisuVisioAdvanced.STATUS_REPLAY;
+					// just first time do this synchronisation
 					stream.removeEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
-					var streamObsel:IStreamObsel = this.getStreamObselByStreamId(stream);
+					var streamObsel:IStreamObsel = this.getStreamObselByStream(stream);
 					if(streamObsel == null)
 					{
-						trace("<hasn't streamObsel with stremId>");
+						logger.debug("Hasn't streamObsel for stream");
 					}else
 					{
+						// time begin obsel
 						var timeBeginStreamObsel:Number = streamObsel.begin;
+						// seek stream in seconds 
 						var deltaSeekSecond:Number = (this.currentTimeSessionMilliseconds - timeBeginStreamObsel)/1000;
-						trace("==========================");
-						trace("deltaSeekSecond = "+deltaSeekSecond.toString());
-						trace("streamId = "+ streamObsel.pathStream);
+						logger.debug("(Seek on : {0} secons , for stremId: {1})",
+							deltaSeekSecond.toString(),
+							streamObsel.pathStream
+						);
 						stream.seek(deltaSeekSecond);		
 					}
-					trace("Current time of the stream  after seek = "+stream.time.toString());
 					break;
 			}			
 		}
 		/**
-		 * Get streamObsel by path(id) the stream
+		 * Get streamObsel by stream
 		 */
-		private function getStreamObselByStreamId(netStream:NetStream):IStreamObsel
+		private function getStreamObselByStream(netStream:NetStream):IStreamObsel
 		{
 			var pathStream:String = "";
 			for (var n: String in streams)
@@ -372,7 +413,6 @@ package com.ithaca.visu.view.video
 					break;
 				}
 			}
-			
 			var nbrStreamObsel:int = dataProvider.length;
 			for (var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel;  nStreamObsel++)
 			{
@@ -385,25 +425,16 @@ package com.ithaca.visu.view.video
 			return null;
 		}
 		
-		private function updateTime(event:TimerEvent = null):void
-		{
-			var beginTime:Number = new Date().time - this.timeStartRetrospectionSession + seekSession;
-			
-			this.currentTimeSessionMilliseconds = beginTime + startTimeSession
-			// check end/start flux video 
-			this.checkFluxVideo(this.currentTimeSessionMilliseconds);
-			var updateTime:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.UPDATE_TIME);
-			updateTime.beginTime = beginTime;
-			this.dispatchEvent(updateTime);
-		}
-		
 		private function onVideoPanelZoom(event:VideoPanelEvent):void
 		{
 			var elm:VideoPanel = event.currentTarget as VideoPanel;
 			setZoom(elm);
+			// update layout
 			videoPanelLayout.updateZoom();
 		}
-
+		/**
+		 *  Update property zoomIn
+		 */
 		private function setZoom(value:VideoPanel):void
 		{
 			for (var name:String in videos)
@@ -558,10 +589,7 @@ package com.ithaca.visu.view.video
 		{
 			return streams.hasOwnProperty(streamId);
 		}
-		public function getStreams():Object
-		{
-			return this.streams;
-		}
+
 		public function addVideoStream(streamId : String, ownerFluxVideo:User, status: int = 0) : NetStream
 		{
 			var stream:NetStream = null;	
@@ -588,14 +616,14 @@ package com.ithaca.visu.view.video
 				streams[streamId] = stream;
 				
 				var videoPanel:VideoPanel = new VideoPanel();
-				videoPanel.status = status;			
+				videoPanel.status = status;		
+				// FIXME : During the session(mode synchrone) tuter can set disabled the button chat prive for user 				
+				videoPanel.buttonChatEnabled = this._buttonChatEnabled;
+				videoPanel.buttonMarkerEnabled = this._buttonMarkerEnabled;
+				
 				videoPanel.attachNetStream = stream;
 				videoPanel.ownerFluxVideo = ownerFluxVideo;				
 				videos[streamId] = videoPanel;
-				/* 
-				We add the video component at the beginning of the children list.
-				This way, the first added stream (which is meant to be the local one) will be at the beginning of the list, and we can minimize it and put it over the other children without being hidden.
-				*/
 				groupVideoContener.addElement(videoPanel);
 				// add listener for zoom video
 				videoPanel.addEventListener(VideoPanelEvent.VIDEO_PANEL_ZOOM, onVideoPanelZoom);
@@ -618,14 +646,12 @@ package com.ithaca.visu.view.video
 				streams[n].pause();
 				streams[n].addEventListener( NetStatusEvent.NET_STATUS, remoteStreamStatusHandler);
 			}
-			
 			// set timer stop if existe
 			if(this.timer != null)
 			{
 				this.timer.stop();
 				this.timePause = new Date().time;
 			}
-			trace("------ PAUSED ALL STREAMS -------");
 			this.status = VisuVisioAdvanced.STATUS_PAUSE;
 		}
 		
@@ -676,21 +702,24 @@ package com.ithaca.visu.view.video
 		}
 		
 		/**
-		 * check flux video for add on the stage
+		 * Check if streams end 
 		 */
-		private function checkFluxVideo(value:Number):void
+		private function checkUpdateStreams(value:Number):void
 		{
+			// init sum 
 			var sumBeginTimeStamp:Number = 0;
+			// list current StreamObsel
 			var listCurrentIStreamObsel:ArrayCollection = getIStreamObselByTimestamp(value);
 			var nbrObsel:int = listCurrentIStreamObsel.length;
 			if(nbrObsel == 0 ){this.removeAllStreams(); return;}
-			// get sem the begin of obsels sessionIn 
+			// sum of the begin time in ms. of the current StreamObsels
 			sumBeginTimeStamp = getSumBeginTimeStreamObsel(listCurrentIStreamObsel);
-			if(sumBeginTimeStamp != this.checkingSumFluxVideo)
+			if(sumBeginTimeStamp != this.checkingSumStreamVideo)
 			{
+				// one or more stream end, have to update streams
 				this.removeAllStreams();
-				this.addFluxVideo(listCurrentIStreamObsel);
-				this.checkingSumFluxVideo = sumBeginTimeStamp;
+				this.addVideoStreamsFromListCurrentStreamObsel(listCurrentIStreamObsel);
+				this.checkingSumStreamVideo = sumBeginTimeStamp;
 			}	
 			// set volume
 		//	this.visio.setVolume(this.currentVolume);
@@ -725,7 +754,11 @@ package com.ithaca.visu.view.video
 			}	
 			return result;
 		}
-		private function addFluxVideo(value:ArrayCollection):void
+		
+		/**
+		 * Add video streams from list StreamObsel
+		 */
+		private function addVideoStreamsFromListCurrentStreamObsel(value:ArrayCollection):void
 		{
 			var nbrObsel:int = value.length;
 			for(var nObsel:int= 0; nObsel < nbrObsel; nObsel++ )
@@ -737,6 +770,10 @@ package com.ithaca.visu.view.video
 				var stream:NetStream = addVideoStream(pathVideo, ownerFluxVideo); 
 			}
 		}
+		
+		/**
+		 * Stop end remove timer
+		 */
 		public function removeTimer():void
 		{
 			if(timer != null)
@@ -745,6 +782,9 @@ package com.ithaca.visu.view.video
 				timer = null;
 			}
 		}
+		/**
+		 * Start timer, listener call every second
+		 */ 
 		public function startTimer():void
 		{
 			this.timeStartRetrospectionSession = new Date().time;
@@ -752,10 +792,26 @@ package com.ithaca.visu.view.video
 			{
 				timer = new Timer(1000,0);
 				timer.addEventListener(TimerEvent.TIMER, updateTime);
-				fistTimePlayFluxVideo = false;
 			}
 			timer.start();
-		}
+		} 
+		
+		/**
+		 * Listener of timer, call every second
+		 */
+		private function updateTime(event:TimerEvent = null):void
+		{
+			// time from start session in ms.
+			var beginTime:Number = new Date().time - this.timeStartRetrospectionSession + seekSession;
+			// update current time
+			this.currentTimeSessionMilliseconds = beginTime + startTimeSession
+			// check if stream need upload, if end stream 
+			this.checkUpdateStreams(this.currentTimeSessionMilliseconds);
+			// notify change time
+			var updateTime:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.UPDATE_TIME);
+			updateTime.beginTime = beginTime;
+			this.dispatchEvent(updateTime);
+		}						
 	}
 }
 
