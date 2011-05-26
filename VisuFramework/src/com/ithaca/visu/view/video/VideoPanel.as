@@ -8,14 +8,15 @@ package com.ithaca.visu.view.video
 	
 	import flash.events.MouseEvent;
 	import flash.media.Camera;
+	import flash.media.SoundTransform;
 	import flash.media.Video;
 	import flash.net.NetStream;
 	
 	import gnu.as3.gettext._FxGettext;
 	
+	import mx.controls.Button;
 	import mx.events.FlexEvent;
 	
-	import spark.components.Button;
 	import spark.components.HGroup;
 	import spark.components.Label;
 	import spark.components.Panel;
@@ -34,13 +35,11 @@ package com.ithaca.visu.view.video
 		public var buttonMarker:Button;
 		[SkinPart("true")]
 		public var buttonZoom:Button;
-		[SkinPart("true")]
-		public var buttonVolume:Button;
 
 		[SkinPart("true")]
-		public var buttonVolumeUserZoomOut:Button;
+		public var buttonVolumeUserZoomOut:ImageVolume;
 		[SkinPart("true")]
-		public var buttonVolumeUserZoomIn:Button;
+		public var buttonVolumeUserZoomIn:ImageVolume;
 		[SkinPart("true")]
 		public var labelUserZoomOut:Label;
 		[SkinPart("true")]
@@ -49,14 +48,30 @@ package com.ithaca.visu.view.video
 		private var _zoom:Boolean;
 		private var mouseOver:Boolean;
 		private var _streamId:String;
-		private var _status:int;
-		private var statusChange:Boolean;
 		private var _stream:NetStream;
 		private var streamChange:Boolean;
 		private var _camera:Camera;
 		private var cameraChange:Boolean;
 		private var _ownerFluxVideo:User;
 		private var ownerFluxVideoChange:Boolean;
+		// volume of the stream
+		private var _volume:Number;
+		private var volumeChange:Boolean;
+		// volume mute
+		private var _volumeMute:Boolean;
+		private var volumeMuteChange:Boolean
+		// properties :
+		// status of the stream video
+		private var _status:int;
+		private var statusChange:Boolean;
+		// enabled chat buttons
+		private var _buttonChatEnabled:Boolean = false;
+		private var buttonChatEnabledChange:Boolean = false;
+		// enabled marker buttons
+		private var _buttonMarkerEnabled:Boolean = false
+		private var buttonMarkerEnabledChange:Boolean = false;
+
+		
 		
 		public function VideoPanel()
 		{
@@ -125,7 +140,46 @@ package com.ithaca.visu.view.video
 		{
 			return _ownerFluxVideo;
 		}
-		
+		public function set buttonChatEnabled(value:Boolean):void
+		{
+			_buttonChatEnabled = value;
+			buttonChatEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonChatEnabled():Boolean
+		{
+			return _buttonChatEnabled;
+		}
+		public function set buttonMarkerEnabled(value:Boolean):void
+		{
+			_buttonMarkerEnabled = value;
+			buttonMarkerEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonMarkerEnabled():Boolean
+		{
+			return _buttonMarkerEnabled;
+		}
+		public function set volume(value:Number):void
+		{
+			_volume = value;
+			volumeChange = true;
+			invalidateProperties();
+		}
+		public function get volume():Number
+		{
+			return _volume;
+		}
+		public function set volumeMute(value:Boolean):void
+		{
+			_volumeMute = value;
+			volumeMuteChange = true;
+			invalidateProperties();
+		}
+		public function get volumeMute():Boolean
+		{
+			return _volumeMute;
+		}
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -153,6 +207,33 @@ package com.ithaca.visu.view.video
 			{	
 				labelUserZoomIn.text = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 			}
+			if (instance == buttonMarker)
+			{	
+				if(_buttonMarkerEnabled)
+				{
+					buttonMarker.addEventListener(MouseEvent.CLICK, onClickButtonMarker);
+				}else
+				{
+					buttonMarker.includeInLayout = false;
+					buttonMarker.visible = false;
+				}
+			}
+			if (instance == buttonChat)
+			{	
+				if(_buttonChatEnabled)
+				{
+					buttonChat.addEventListener(MouseEvent.CLICK, onClickButtonChat);
+				}else
+				{
+					buttonChat.includeInLayout = false;
+					buttonChat.visible = false;
+				}
+			}
+			if (instance == buttonVolumeUserZoomIn)
+			{
+				buttonVolumeUserZoomIn.addEventListener(VideoPanelEvent.CHANGE_VOLUME, onChangeVolume);
+				buttonVolumeUserZoomIn.volume = _volume;
+			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
@@ -160,6 +241,14 @@ package com.ithaca.visu.view.video
 			if (instance == buttonZoom)
 			{
 				buttonZoom.removeEventListener(MouseEvent.CLICK, onClickButtonZoom);
+			}
+			if (instance == buttonMarker)
+			{	
+				buttonMarker.removeEventListener(MouseEvent.CLICK, onClickButtonMarker);
+			}
+			if (instance == buttonChat)
+			{	
+				buttonChat.removeEventListener(MouseEvent.CLICK, onClickButtonChat);
 			}
 		}
 		override protected function commitProperties():void
@@ -174,6 +263,7 @@ package com.ithaca.visu.view.video
 			{
 				streamChange = false;
 				videoUser.attachNetStream(_stream, "void");
+				updateStreamVolume();
 			}
 			if(cameraChange)
 			{
@@ -192,6 +282,66 @@ package com.ithaca.visu.view.video
 					labelUserZoomIn.text = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 				}
 			}
+			if(buttonChatEnabledChange)
+			{
+				buttonChatEnabledChange = false;
+				if(buttonChat != null)
+				{
+					if(_buttonChatEnabled)
+					{
+						buttonChat.includeInLayout = true;
+						buttonChat.visible = true;
+						buttonChat.addEventListener(MouseEvent.CLICK, onClickButtonChat);
+					}else
+					{
+						buttonChat.includeInLayout = false;
+						buttonChat.visible = false;
+						buttonChat.removeEventListener(MouseEvent.CLICK, onClickButtonChat);
+					}	
+				}
+			}
+			
+			if(buttonMarkerEnabledChange)
+			{
+				buttonMarkerEnabledChange = false;
+				if(buttonMarker != null)
+				{
+					if(_buttonMarkerEnabled)
+					{
+						buttonMarker.includeInLayout = true;
+						buttonMarker.visible = true;
+						buttonMarker.addEventListener(MouseEvent.CLICK, onClickButtonMarker);
+					}else
+					{
+						buttonMarker.includeInLayout = false;
+						buttonMarker.visible = false;
+						buttonMarker.removeEventListener(MouseEvent.CLICK, onClickButtonMarker);
+					}	
+				}
+			}
+			
+			if(volumeChange)
+			{
+				volumeChange = false;
+				if(buttonVolumeUserZoomIn != null)
+				{
+					buttonVolumeUserZoomIn.volume = _volume;
+				}
+				if(attachNetStream != null)
+				{
+					updateStreamVolume();
+				}
+			}
+			
+			if(volumeMuteChange)
+			{
+				volumeMuteChange = false;
+				if(attachNetStream != null)
+				{
+					updateStreamVolumeMute();
+				}
+			}
+			
 		}
 		override protected function getCurrentSkinState():String
 		{
@@ -228,7 +378,14 @@ package com.ithaca.visu.view.video
 		// Listeners
 		//
 		//_____________________________________________________________________
-
+		private function onClickButtonMarker(event:MouseEvent):void
+		{
+			return;
+		}
+		private function onClickButtonChat(event:MouseEvent):void
+		{
+			return;
+		}
 		private function onClickButtonZoom(even:MouseEvent):void
 		{
 			var zoomEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.VIDEO_PANEL_ZOOM);
@@ -256,6 +413,33 @@ package com.ithaca.visu.view.video
 			{
 				videoUser.clear();
 			}
+		}
+		private function updateStreamVolumeMute():void
+		{
+			// FIXME : can update image volume
+			var tempVolume:Number;
+			if(_volumeMute)
+			{
+				tempVolume = 0;	
+			}else
+			{
+				tempVolume = volume;
+			}
+			var tempSoundTransforme:SoundTransform = attachNetStream.soundTransform;
+			tempSoundTransforme.volume = tempVolume;
+			attachNetStream.soundTransform = tempSoundTransforme;	
+		}
+		
+		private function updateStreamVolume():void
+		{
+			var tempSoundTransforme:SoundTransform = attachNetStream.soundTransform;
+			tempSoundTransforme.volume = volume;
+			attachNetStream.soundTransform = tempSoundTransforme;
+		}
+		private function onChangeVolume(event:VideoPanelEvent):void
+		{
+			volume = event.volume;
+
 		}
 	}
 }
