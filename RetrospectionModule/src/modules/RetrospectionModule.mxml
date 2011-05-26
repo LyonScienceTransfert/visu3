@@ -1004,12 +1004,12 @@
 				{
 					buttonMute.label = "Activer le son";
 					this.currentVolume = 0;
-					this.visio.setVolume(0);
+					this.visio.setVolumeMute(true);
 				}else
 				{
 					buttonMute.label = "Couper le son";
 					this.currentVolume = 1;
-					this.visio.setVolume(this.currentVolume);
+					this.visio.setVolumeMute(false);
 				}
 			}
 			
@@ -1317,6 +1317,8 @@
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
 											quality="80"
 											updateTime="visio_updateTimeHandler(event)"
+											buttonChatEnabled="true"
+											buttonMarkerEnabled="true"
 											bandwidth="15000" autoPlay="true" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"
 											/>
 						<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" bottom.vciel="2" horizontalCenter.vciel="0" right.debug="5">
