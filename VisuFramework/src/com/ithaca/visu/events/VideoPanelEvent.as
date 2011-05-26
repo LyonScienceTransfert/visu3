@@ -14,8 +14,9 @@ package com.ithaca.visu.events
 	{
 		// constants
 		static public const VIDEO_PANEL_ZOOM : String = 'videoPanelZoom';
+		static public const CHANGE_VOLUME : String = 'changeVolume';
 		// properties
-		
+		public var volume:Number;
 		// constructor
 		public function VideoPanelEvent(type : String,
 									 bubbles : Boolean = true,
