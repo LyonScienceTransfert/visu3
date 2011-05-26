@@ -18,11 +18,9 @@
 			import com.ithaca.traces.view.ObselMarker;
 			import com.ithaca.traces.view.ObselSessionOut;
 			import com.ithaca.traces.view.ObselStich;
-			import com.ithaca.traces.view.ObselTime;
 			import com.ithaca.traces.view.skins.ObselMarkerSkin;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
-			import com.ithaca.visu.controls.sessions.ActivityDetail;
 			import com.ithaca.visu.controls.sessions.ActivityDetailB;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
 			import com.ithaca.visu.controls.timeline.TraceLine;
@@ -535,9 +533,12 @@
 						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
 					}
 					// current session
-					var session:Session = Model.getInstance().getCurrentSession()
-					// add obsel "SessionOut" for user in the session
-					Model.getInstance().setObselSessionOutForCurrentUser(session.id_session);
+					var session:Session = Model.getInstance().getCurrentSession();
+					if (session != null)
+					{
+						// add obsel "SessionOut" for user in the session
+						Model.getInstance().setObselSessionOutForCurrentUser(session.id_session);
+					}
 					
 				}
 			}
