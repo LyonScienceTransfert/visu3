@@ -37,7 +37,7 @@ package com.ithaca.visu.view.video
 		private var logger:ILogger = Log.getLogger("com.ithaca.visu.view.video.VisuVisioAdvance")
 		// Dictionary of remote AV-streams, indexed by streamname
 		private var streams:Object;
-		// Dictionary of remote VideoComponents, indexed by streamname
+		// Dictionary of remote VideoPanels, indexed by streamname
 		private var videos:Object;
 		// Local stream/VideoComponent
 		private var _localstream:NetStream;
@@ -198,12 +198,30 @@ package com.ithaca.visu.view.video
 		{
 			return _status;
 		}
-		
-		public function setVolume(value:Number):void
+		// set mute
+		public function setVolumeMute(value:Boolean):void
 		{
-			_currentVolume = value;
-			updateVolume();
+			//_currentVolume = value;
+			/* update volume in every StreamObsel in dataProvider
+			 	every new stream will add on the stage with updated volume
+			*/
+			updateVolumeStreamObsel();
+			// update volume in the current panelVideo
+			updateVolumeVideoPanel(value);
 		}
+		private function updateVolumeVideoPanel(value:Boolean):void
+		{
+			for (var name:String in videos)
+			{
+				var videoPanel:VideoPanel = videos[name];
+				videoPanel.volumeMute = value;
+			}
+		}
+		private function updateVolumeStreamObsel():void
+		{
+			 
+		}
+		
 		public function set dataProvider(value:ArrayCollection):void
 		{
 			_dataProvider = value;
@@ -269,7 +287,7 @@ package com.ithaca.visu.view.video
 		// Handlers
 		//
 		//_____________________________________________________________________
-		private function updateVolume():void
+		/*private function updateVolume():void
 		{
 			for (var n: String in streams)
 			{
@@ -278,7 +296,7 @@ package com.ithaca.visu.view.video
 				tempSoundTransforme.volume = _currentVolume;
 				tempStream.soundTransform = tempSoundTransforme;		
 			}
-		}
+		}*/
 		public function removeVideoStream(sID: String, videoOnly: Boolean = false): void
 		{
 			logger.debug('\tremoveVideoStream ' + sID + " from " + streams.toString());
@@ -309,7 +327,8 @@ package com.ithaca.visu.view.video
 		{ 
 			for each (var stream: String in value)
 			{
-				addVideoStream(stream, null ,this.status);
+				// FIXEME - value of the param volume par default = 1.0
+				addVideoStream(stream, null , 1.0, this.status);
 			}
 		}
 		public function playVideoStreams(value:Array):void
@@ -590,7 +609,7 @@ package com.ithaca.visu.view.video
 			return streams.hasOwnProperty(streamId);
 		}
 
-		public function addVideoStream(streamId : String, ownerFluxVideo:User, status: int = 0) : NetStream
+		public function addVideoStream(streamId : String, ownerFluxVideo:User, volume:Number, status: int = 0) : NetStream
 		{
 			var stream:NetStream = null;	
 			// adding only other "streams", not my own. And do not add
@@ -601,9 +620,9 @@ package com.ithaca.visu.view.video
 				trace('addVideoStream ' + streamId);
 				stream = new NetStream(connection);
 				// set current volume 
-				var tempSoundTransforme:SoundTransform = stream.soundTransform;
+				/*var tempSoundTransforme:SoundTransform = stream.soundTransform;
 				tempSoundTransforme.volume = _currentVolume;
-				stream.soundTransform = tempSoundTransforme;
+				stream.soundTransform = tempSoundTransforme;*/
 				
 				stream.client = this;
 				stream.play(streamId);
@@ -620,7 +639,8 @@ package com.ithaca.visu.view.video
 				// FIXME : During the session(mode synchrone) tuter can set disabled the button chat prive for user 				
 				videoPanel.buttonChatEnabled = this._buttonChatEnabled;
 				videoPanel.buttonMarkerEnabled = this._buttonMarkerEnabled;
-				
+				// set volume
+				videoPanel.volume = volume;
 				videoPanel.attachNetStream = stream;
 				videoPanel.ownerFluxVideo = ownerFluxVideo;				
 				videos[streamId] = videoPanel;
@@ -767,7 +787,8 @@ package com.ithaca.visu.view.video
 				var pathVideo:String = streamObsel.pathStream;
 				var ownerFluxVideoId:int = streamObsel.userId;
 				var ownerFluxVideo:User = Model.getInstance().getUserPlateformeByUserId(ownerFluxVideoId);
-				var stream:NetStream = addVideoStream(pathVideo, ownerFluxVideo); 
+				var volume:Number = streamObsel.volume;
+				var stream:NetStream = addVideoStream(pathVideo, ownerFluxVideo , volume); 
 			}
 		}
 		
