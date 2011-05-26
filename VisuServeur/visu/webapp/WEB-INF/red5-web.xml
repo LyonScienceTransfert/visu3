@@ -109,6 +109,10 @@
      <bean id="obselInfo.service" class="com.lyon2.visu.red5.ObselInfo">
         <property name="application" ref="web.handler"/>
     </bean>
+ <!-- Obsel by ktbs -->
+     <bean id="ktbsObselInfo.service" class="com.lyon2.visu.ktbs.KtbsObselInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
 <!--  RetroRoomActiv -->
      <bean id="retroRoom.service" class="com.lyon2.visu.red5.RetroRoomUserAction">
         <property name="application" ref="web.handler"/>
