@@ -10,5 +10,7 @@ package com.ithaca.visu.view.video.model
 		function get userId():int;
 		function set pathStream(value:String):void;
 		function get pathStream():String;
+		function set volume(value:Number):void;
+		function get volume():Number;
 	}
 }
