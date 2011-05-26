@@ -215,6 +215,10 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/iconVolume_16x16.png")]
 		static private var volume16x16:Class;
 		
+		[Bindable]
+		[Embed("images/iconMute_16x16.png")]
+		static private var mute16x16:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -352,6 +356,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "volume" : 
 					icon = volume16x16;
+					break;
+				case "mute" : 
+					icon = mute16x16;
 					break;
 				default :
 					break;				
