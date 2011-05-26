@@ -204,7 +204,7 @@ package com.ithaca.visu.ui.utils
 		static private var ballGreen:Class;
 		
 		[Bindable]
-		[Embed("images/iconZoom_16x16.png.png")]
+		[Embed("images/iconZoom_16x16.png")]
 		static private var zoom16x16:Class;
 		
 		[Bindable]
