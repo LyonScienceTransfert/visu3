@@ -1128,11 +1128,13 @@
 				if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
 				{
 					pauseVideo();
-					sessionTimeLine.setStatusPlay(false);
+					sessionTimeLine.setStatusPlay(true);
+					setLabelButtonPlayPause(true);
 				}else
 				{
 					this.visio.resumeStreams();
-					sessionTimeLine.setStatusPlay(true);
+					sessionTimeLine.setStatusPlay(false);
+					setLabelButtonPlayPause(false);
 				}
 			}
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
