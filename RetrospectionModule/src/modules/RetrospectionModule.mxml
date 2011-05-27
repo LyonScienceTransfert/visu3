@@ -79,7 +79,6 @@
 			private var DELTA_STICH:int = 20;
 			private var currentRetroDocumentSegmentPlaying:RetroDocumentSegment = null;
 			private var beginTimeCurrentSegment:Number= 0;
-			private var currentVolume:Number = 1;
 			private var clickOnTimeLine:Boolean = true;
 			
 			// interval the decalage max in seconds
@@ -1003,12 +1002,10 @@
 				if(buttonMute.label == "Couper le son")
 				{
 					buttonMute.label = "Activer le son";
-					this.currentVolume = 0;
 					this.visio.setVolumeMute(true);
 				}else
 				{
 					buttonMute.label = "Couper le son";
-					this.currentVolume = 1;
 					this.visio.setVolumeMute(false);
 				}
 			}
