@@ -201,25 +201,29 @@ package com.ithaca.visu.view.video
 		// set mute
 		public function setVolumeMute(value:Boolean):void
 		{
-			//_currentVolume = value;
 			/* update volume in every StreamObsel in dataProvider
 			 	every new stream will add on the stage with updated volume
 			*/
-			updateVolumeStreamObsel();
-			// update volume in the current panelVideo
-			updateVolumeVideoPanel(value);
+			updateMuteStreamObsel(value);
+			// update volume in the currents panelVideo
+			updateMuteVideoPanel(value);
 		}
-		private function updateVolumeVideoPanel(value:Boolean):void
+		private function updateMuteVideoPanel(value:Boolean):void
 		{
 			for (var name:String in videos)
 			{
 				var videoPanel:VideoPanel = videos[name];
-				videoPanel.volumeMute = value;
+				videoPanel.mute = value;
 			}
 		}
-		private function updateVolumeStreamObsel():void
+		private function updateMuteStreamObsel(value:Boolean):void
 		{
-			 
+			 var nbrStreamObsel:int = dataProvider.length;
+			 for(var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel ; nStreamObsel++ )
+			 {
+				 var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
+				 streamObsel.mute = value;
+			 }
 		}
 		
 		public function set dataProvider(value:ArrayCollection):void
