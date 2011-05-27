@@ -451,6 +451,18 @@ package com.ithaca.visu.view.video
 			// update layout
 			videoPanelLayout.updateZoom();
 		}
+		private function onVideoPanelUpdateVolume(event:VideoPanelEvent):void
+		{
+			var userId:int = event.userId;
+			var volume:Number = event.volume;
+			// update volume in all streamObsels
+			updateVolumeStreamObselByUserId(volume, userId);
+		}
+		private function onVideoPanelClick(event:VideoPanelEvent):void
+		{
+			var clickVideoPanelEvent:VisuVisioAdvancedEvent =  new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO);
+			this.dispatchEvent(clickVideoPanelEvent);
+		}
 		/**
 		 *  Update property zoomIn
 		 */
@@ -466,6 +478,28 @@ package com.ithaca.visu.view.video
 					videos[name].zoomIn = false;	
 				}
 				
+			}
+		}
+		/**
+		 * Update volume on all StreamObsels with owner stream by user id
+		 */
+		private function updateVolumeStreamObselByUserId(volume:Number, userId:int):void
+		{
+			trace("update volume for userId"+userId.toString()+ " VOLUME = "+ volume.toString());
+			var nbrStreamObsel:int = dataProvider.length;
+			for (var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel;  nStreamObsel++)
+			{
+				var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
+				if(streamObsel.userId == userId)
+				{
+					streamObsel.volume = volume;
+					var mute:Boolean = false;
+					if(volume == 0 )
+					{
+						mute = true;
+					}
+					streamObsel.mute = mute;
+				}
 			}
 		}
 		public function addLocalDevice():void
@@ -641,12 +675,15 @@ package com.ithaca.visu.view.video
 				videoPanel.buttonMarkerEnabled = this._buttonMarkerEnabled;
 				// set volume
 				videoPanel.volume = volume;
+				videoPanel.mute = mute;
 				videoPanel.attachNetStream = stream;
 				videoPanel.ownerFluxVideo = ownerFluxVideo;				
 				videos[streamId] = videoPanel;
 				groupVideoContener.addElement(videoPanel);
 				// add listener for zoom video
 				videoPanel.addEventListener(VideoPanelEvent.VIDEO_PANEL_ZOOM, onVideoPanelZoom);
+				videoPanel.addEventListener(VideoPanelEvent.UPDATE_VOLUME, onVideoPanelUpdateVolume);
+				videoPanel.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
 				// set zoomIn for new stream
 				setZoom(videoPanel);
 			}
