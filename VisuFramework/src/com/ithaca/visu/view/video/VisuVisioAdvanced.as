@@ -331,8 +331,8 @@ package com.ithaca.visu.view.video
 		{ 
 			for each (var stream: String in value)
 			{
-				// FIXEME - value of the param volume par default = 1.0
-				addVideoStream(stream, null , 1.0, this.status);
+				// FIXEME - value of the param volume par default = 1.0 and mute = false;
+				addVideoStream(stream, null , 1.0, false, this.status);
 			}
 		}
 		public function playVideoStreams(value:Array):void
@@ -647,7 +647,7 @@ package com.ithaca.visu.view.video
 			return streams.hasOwnProperty(streamId);
 		}
 
-		public function addVideoStream(streamId : String, ownerFluxVideo:User, volume:Number, status: int = 0) : NetStream
+		public function addVideoStream(streamId : String, ownerFluxVideo:User, volume:Number, mute:Boolean, status: int = 0) : NetStream
 		{
 			var stream:NetStream = null;	
 			// adding only other "streams", not my own. And do not add
@@ -829,7 +829,8 @@ package com.ithaca.visu.view.video
 				var ownerFluxVideoId:int = streamObsel.userId;
 				var ownerFluxVideo:User = Model.getInstance().getUserPlateformeByUserId(ownerFluxVideoId);
 				var volume:Number = streamObsel.volume;
-				var stream:NetStream = addVideoStream(pathVideo, ownerFluxVideo , volume); 
+				var mute:Boolean = streamObsel.mute;
+				var stream:NetStream = addVideoStream(pathVideo, ownerFluxVideo , volume, mute); 
 			}
 		}
 		
