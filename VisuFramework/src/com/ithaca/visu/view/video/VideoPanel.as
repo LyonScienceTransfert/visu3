@@ -6,6 +6,7 @@ package com.ithaca.visu.view.video
 	import com.ithaca.visu.model.User;
 	import com.lyon2.controls.VideoComponent;
 	
+	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.media.Camera;
 	import flash.media.SoundTransform;
@@ -170,13 +171,13 @@ package com.ithaca.visu.view.video
 		{
 			return _volume;
 		}
-		public function set volumeMute(value:Boolean):void
+		public function set mute(value:Boolean):void
 		{
 			_volumeMute = value;
 			volumeMuteChange = true;
 			invalidateProperties();
 		}
-		public function get volumeMute():Boolean
+		public function get mute():Boolean
 		{
 			return _volumeMute;
 		}
@@ -198,6 +199,9 @@ package com.ithaca.visu.view.video
 				videoUser.status = _status;
 				videoUser.attachNetStream(_stream, "void");
 				videoUser.attachCamera(_camera);
+				videoUser.useHandCursor = true;
+				videoUser.buttonMode = true;
+				videoUser.addEventListener(MouseEvent.CLICK, onMouseClickVideoComposant);
 			}
 			if (instance == labelUserZoomOut)
 			{	
@@ -233,6 +237,13 @@ package com.ithaca.visu.view.video
 			{
 				buttonVolumeUserZoomIn.addEventListener(VideoPanelEvent.CHANGE_VOLUME, onChangeVolume);
 				buttonVolumeUserZoomIn.volume = _volume;
+				buttonVolumeUserZoomIn.mute = _volumeMute;
+			}
+			if (instance == buttonVolumeUserZoomOut)
+			{
+				buttonVolumeUserZoomOut.addEventListener(VideoPanelEvent.CHANGE_VOLUME, onChangeVolume);
+				buttonVolumeUserZoomOut.volume = _volume;
+				buttonVolumeUserZoomOut.mute = _volumeMute;
 			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -327,6 +338,10 @@ package com.ithaca.visu.view.video
 				{
 					buttonVolumeUserZoomIn.volume = _volume;
 				}
+				if(buttonVolumeUserZoomOut != null)
+				{
+					buttonVolumeUserZoomOut.volume = _volume;
+				}
 				if(attachNetStream != null)
 				{
 					updateStreamVolume();
@@ -406,7 +421,11 @@ package com.ithaca.visu.view.video
 			mouseOver = false;
 			invalidateSkinState();
 		}
-		
+		private function onMouseClickVideoComposant(event:MouseEvent):void
+		{
+			var clickOnPanelEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CLICK_VIDEO_PANEL);
+			this.dispatchEvent(clickOnPanelEvent);
+		}
 		public function clear():void
 		{
 			if(videoUser != null)
@@ -416,8 +435,17 @@ package com.ithaca.visu.view.video
 		}
 		private function updateStreamVolumeMute():void
 		{
-			// FIXME : can update image volume
 			var tempVolume:Number;
+			// set icon mute
+			if(buttonVolumeUserZoomIn != null)
+			{
+				buttonVolumeUserZoomIn.mute = _volumeMute;
+			}
+			if(buttonVolumeUserZoomOut != null)
+			{
+				buttonVolumeUserZoomOut.mute = _volumeMute;
+			}
+			
 			if(_volumeMute)
 			{
 				tempVolume = 0;	
@@ -438,8 +466,19 @@ package com.ithaca.visu.view.video
 		}
 		private function onChangeVolume(event:VideoPanelEvent):void
 		{
+			if (event.volume == 0)
+			{
+				mute = true;
+			}else
+			{
+				mute = false;
+			}
+				
 			volume = event.volume;
-
+			var volumeUpdateEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.UPDATE_VOLUME);
+			volumeUpdateEvent.userId = ownerFluxVideo.id_user;
+			volumeUpdateEvent.volume = volume;
+			this.dispatchEvent(volumeUpdateEvent);
 		}
 	}
 }
