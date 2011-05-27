@@ -131,7 +131,7 @@
 				}
 				
  				this.visio.connection = Model.getInstance().getNetConnection();
-
+				this.visio.addEventListener(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO, onClickPanelVideoVisuVisioAdvanced);
 				// removing module from the stage
 				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
 				this.sessionTimeLine.addEventListener(MessageEvent.CHECK_SEEK_STREAM, onCheckSeekStream);
@@ -989,7 +989,7 @@
 				if(!hasListener)
 				{
 					// add drag listener
-					this.visio.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverVisuVideo);
+//					this.visio.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverVisuVideo);
 				}
 			}
 
@@ -1117,6 +1117,22 @@
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					this.visio.pauseStreams();
+				}
+			}
+			private function onClickPanelVideoVisuVisioAdvanced(event:VisuVisioAdvancedEvent):void
+			{
+				// set currentRetrocumentSegmentPlaying to null
+				setCurrentRetroDocumentSegmentPlaying(null);
+				// remove timer RetroDocumentSegment
+				removeTimerRetroDocumentSegment();
+				if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+				{
+					pauseVideo();
+					sessionTimeLine.setStatusPlay(false);
+				}else
+				{
+					this.visio.resumeStreams();
+					sessionTimeLine.setStatusPlay(true);
 				}
 			}
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
