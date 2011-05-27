@@ -12,5 +12,7 @@ package com.ithaca.visu.view.video.model
 		function get pathStream():String;
 		function set volume(value:Number):void;
 		function get volume():Number;
+		function set mute(value:Boolean):void;
+		function get mute():Boolean;
 	}
 }

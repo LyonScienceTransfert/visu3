@@ -9,6 +9,7 @@ package com.ithaca.visu.view.video.model
 		private var _pathStream:String;
 		// init volume max
 		private var _volume:Number = 1.0;
+		private var _mute:Boolean = false;
 		
 		public function StreamObsel()
 		{
@@ -67,6 +68,15 @@ package com.ithaca.visu.view.video.model
 		public function get volume():Number
 		{
 			return _volume;
+		}
+		public function set mute(value:Boolean):void
+		{
+			_mute = value;
+		}
+		
+		public function get mute():Boolean
+		{
+			return _mute;
 		}
 	}
 }
