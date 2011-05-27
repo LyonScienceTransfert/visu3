@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+    
+    <import resource="classpath:**/ktbs4j-context.xml"/>
+    
     <!--
     Defines a properties file for dereferencing variables
+    IMPORTANT : this override the default properties set in ktbs4j.properties
     -->
     <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="/WEB-INF/red5-web.properties"/>
     </bean>
     
-    <import resource="classpath:**/ktbs4j-context.xml"/>
 <!--
         Defines the web context
     -->
@@ -44,22 +47,17 @@
         Defines the web handler which acts as an applications endpoint
     -->
     
-        <!--  Uncomment these lines to reactivate the KTBS-->
-    <bean id="ktbsHelper" class="com.lyon2.visu.ktbs.KtbsApplicationHelper" lazy-init="true" destroy-method="destroy">
-        <property name="sqlMapClient" ref="sqlMap"/>
-        <property name="rootProvider" ref="multiUserRootProvider"/>
-        <property name="username" value="${ktbs.root.username}"/>
-        <property name="passwd" value="${ktbs.root.passwd}"/>
+    <bean id="ktbsHelper" 
+    	class="com.lyon2.visu.ktbs.KtbsApplicationHelper" 
+    	lazy-init="true" destroy-method="destroy">
+        <property name="clientFactory" ref="clientFactory"/>
+        <property name="sharedUsername" value="${ktbs.root.username}"/>
+        <property name="sharedPassword" value="${ktbs.root.passwd}"/>
         <property name="sharedBaseName" value="${ktbs.shared.base}"/>
         <property name="visuTraceModelName" value="${ktbs.model.visu}"/>
         <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
     </bean>
 
-	<bean id="multiUserRootProvider" class="org.liris.ktbs.service.impl.MultiUserServiceImpl" lazy-init="true" 
-		init-method="init" destroy-method="destroy">
-		<property name="rootUri" value="${ktbs.root.uri}" />
-	</bean>
-    
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="smtpServer" value="${visu.smtpServer}" />
