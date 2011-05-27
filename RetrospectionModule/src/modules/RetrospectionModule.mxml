@@ -522,6 +522,8 @@
 				this.clickOnTimeLine = true;
 				// stop play video segment
 				endVideoSegment();
+				// update button play/pause
+				setLabelButtonPlayPause(false);
 				var target:Object = event.target as Object;
 				var deltaXObselTime:Number = 0;
 				
@@ -1099,9 +1101,13 @@
 					if (typeMessage == "play")
 					{
 						this.visio.resumeStreams();
+						// update button play/pause
+						setLabelButtonPlayPause(false);
 					}else
 					{
 						pauseVideo();
+						// update button play/pause
+						setLabelButtonPlayPause(true);
 					}
 				}
 			}
@@ -1283,6 +1289,35 @@
 				this.currentTimeSessionMilliseconds = beginTime + this.testTimeLine.startTimeSession;
 			}
 
+
+			protected function buttonPlayPause_clickHandler(event:MouseEvent):void
+			{
+				// set currentRetrocumentSegmentPlaying to null
+				setCurrentRetroDocumentSegmentPlaying(null);
+				// remove timer RetroDocumentSegment
+				removeTimerRetroDocumentSegment();
+				if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+				{
+					pauseVideo();
+					sessionTimeLine.setStatusPlay(false);
+					setLabelButtonPlayPause(true)
+				}else
+				{
+					this.visio.resumeStreams();
+					sessionTimeLine.setStatusPlay(true);
+					setLabelButtonPlayPause(false);
+				}
+			}
+			private function setLabelButtonPlayPause(value:Boolean):void
+			{
+				var label:String = "Pause";
+				if(value)
+				{
+					label = "Play";	
+				}
+				buttonPlayPause.label = label;
+			}
+
 		]]>
 		
 	</fx:Script>
@@ -1318,9 +1353,14 @@
 											buttonMarkerEnabled="true"
 											bandwidth="15000" autoPlay="true" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"
 											/>
-						<s:Button id="buttonMute" click="buttonMute_clickHandler(event)" bottom="2" bottom.State1="3" horizontalCenter.State1="0" bottom.debug="3" bottom.vciel="2" horizontalCenter.vciel="0" right.debug="5">
-							<s:label>Couper le son</s:label>
-						</s:Button>
+						<s:HGroup bottom="1" horizontalAlign="center"  horizontalCenter="0">
+							<s:Button id="buttonPlayPause" click="buttonPlayPause_clickHandler(event)" bottom="3">
+								<s:label>Pause</s:label>
+							</s:Button>
+							<s:Button id="buttonMute" click="buttonMute_clickHandler(event)"  right.debug="5">
+								<s:label>Couper le son</s:label>
+							</s:Button>
+						</s:HGroup>
 						<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
 							<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
 							<s:Label text="Décalage max. autorisé(s) est:" paddingTop="7"/>
