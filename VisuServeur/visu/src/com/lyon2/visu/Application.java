@@ -90,18 +90,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.liris.ktbs.client.KtbsRootClient;
-import org.liris.ktbs.domain.interfaces.IStoredTrace;
-import org.liris.ktbs.domain.interfaces.ITraceModel;
-import org.liris.ktbs.service.MultiUserRootProvider;
-import org.liris.ktbs.service.ResourceService;
-import org.liris.ktbs.service.StoredTraceService;
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IClient;
@@ -116,16 +109,15 @@ import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.stream.IBroadcastStream;
 import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.MailerFacade;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.ObselType;
+import com.lyon2.utils.SessionStatus;
 import com.lyon2.utils.UserColor;
 import com.lyon2.utils.UserDate;
-import com.lyon2.utils.SessionStatus;
 import com.lyon2.utils.UserStatus;
 import com.lyon2.visu.domain.model.Module;
 import com.lyon2.visu.domain.model.ProfileDescription;
@@ -146,8 +138,6 @@ import com.lyon2.visu.red5.RemoteAppSecurityHandler;
 public class Application extends MultiThreadedApplicationAdapter implements
 IScheduledJob {
 
-	private KtbsApplicationHelper ktbsHelper;
-	private boolean pluggedToKtbs;
 	private SqlMapClient sqlMapClient;
 	private String smtpserver = "";
 	// sheduling interval is 5 min.
@@ -163,10 +153,15 @@ IScheduledJob {
 				.toString());
 	}
 
+	
+	// Injected by Spring
+	private KtbsApplicationHelper ktbsHelper;
 	public void setKtbsHelper(KtbsApplicationHelper ktbsHelper) {
 		this.ktbsHelper = ktbsHelper;
 	}
 	
+	// Injected by Spring
+	private boolean pluggedToKtbs;
 	public void setPluggedToKtbs(boolean pluggedToKtbs) {
 		this.pluggedToKtbs = pluggedToKtbs;
 	}

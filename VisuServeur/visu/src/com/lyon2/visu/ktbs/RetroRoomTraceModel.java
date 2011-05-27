@@ -1,6 +1,6 @@
 package com.lyon2.visu.ktbs;
 
-import org.liris.ktbs.client.KtbsRootClient;
+import org.liris.ktbs.client.KtbsClient;
 import org.liris.ktbs.domain.interfaces.IAttributeType;
 import org.liris.ktbs.domain.interfaces.IObselType;
 import org.liris.ktbs.domain.interfaces.ITraceModel;
@@ -8,7 +8,7 @@ import org.liris.ktbs.service.TraceModelService;
 
 public class RetroRoomTraceModel {
 	
-	public static void load(KtbsRootClient client, String base, String modelName) {
+	public static void load(KtbsClient client, String base, String modelName) {
 		TraceModelService traceModelService = client.getTraceModelService();
 		ITraceModel model = traceModelService.createTraceModel(base + modelName + "/");
 		
