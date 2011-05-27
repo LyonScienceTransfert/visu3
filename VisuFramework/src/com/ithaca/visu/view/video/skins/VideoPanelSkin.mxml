@@ -40,11 +40,11 @@
 			</mx:Button>
 		</s:HGroup>
 		<s:HGroup width="100%" bottom="0"  includeIn="zoomOutMouseIn,zoomOutMouseOut">
-			<video:ImageVolume id="buttonVolumeUserZoomOut" left="0" height="22" width="30" visible.zoomOutMouseIn="true" visible="false">
+			<video:ImageVolume id="buttonVolumeUserZoomOut" left="0" height="22" width="22" visible.zoomOutMouseIn="true" visible="false">
 				<video:toolTip>Volume</video:toolTip>
 			</video:ImageVolume>
-			
-			<s:Label id="labelUserZoomOut" horizontalCenter="0" text="B.Gouter" paddingTop="5" color="#12C960" width="100%" lineBreak="explicit"/>
+			<mx:Spacer width="100%"/>
+			<s:Label id="labelUserZoomOut" right="1" text="B.Gouter" paddingTop="5" color="#12C960"/>
 			
 		</s:HGroup>
 	</s:Group>
