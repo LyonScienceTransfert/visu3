@@ -1,7 +1,9 @@
 package com.lyon2.visu.ktbs;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.liris.ktbs.client.ClientFactory;
 import org.liris.ktbs.client.KtbsClient;
 import org.liris.ktbs.domain.interfaces.IBase;
+import org.liris.ktbs.domain.interfaces.IKtbsResource;
+import org.liris.ktbs.domain.interfaces.IObsel;
 import org.liris.ktbs.domain.interfaces.IStoredTrace;
+import org.liris.ktbs.domain.interfaces.ITrace;
 import org.liris.ktbs.domain.interfaces.ITraceModel;
 import org.liris.ktbs.service.ResourceService;
 import org.liris.ktbs.service.StoredTraceService;
 import org.liris.ktbs.service.impl.ObselBuilder;
 import org.liris.ktbs.utils.KtbsUtils;
 import org.red5.logging.Red5LoggerFactory;
+import org.red5.server.api.IConnection;
+import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
 public class KtbsApplicationHelper {
@@ -33,21 +40,14 @@ public class KtbsApplicationHelper {
 
 	// injected by Spring
 	private String rootUri;
-	public void setRooUri(String rooUri) {
-		this.rootUri = rooUri;
+	public void setRootUri(String rootUri) {
+		this.rootUri = rootUri;
 	}
-
 
 	// injected by Spring
 	private String sharedUsername;
 	public void setSharedUsername(String sharedUsername) {
 		this.sharedUsername = sharedUsername;
-	}
-
-	// injected by Spring
-	private String sharedPassword;
-	public void setSharedPassword(String sharedPassword) {
-		this.sharedPassword = sharedPassword;
 	}
 
 	// injected by Spring
@@ -60,12 +60,6 @@ public class KtbsApplicationHelper {
 	private String visuTraceModelName;
 	public void setVisuTraceModelName(String visuTraceModelName) {
 		this.visuTraceModelName = visuTraceModelName;
-	}
-
-	// injected by Spring
-	private String sharedBaseName;
-	public void setSharedBaseName(String sharedBaseName) {
-		this.sharedBaseName = sharedBaseName;
 	}
 
 	// a flag, true if all KTBS resources have been created on / downloaded from the KTBS
@@ -86,7 +80,7 @@ public class KtbsApplicationHelper {
 	}
 
 	private KtbsClient getSharedKtbsClient() {
-		return getKtbsClient(sharedUsername, sharedPassword);
+		return getKtbsClient(sharedUsername, sharedUsername);
 	}
 
 	private KtbsClient getKtbsClient(String userName, String userPassword) {
@@ -130,12 +124,12 @@ public class KtbsApplicationHelper {
 		ResourceService resourceService = client.getResourceService();
 
 		// creates the java object for the ktbs:Base "visuBase"
-		IBase visuBase = resourceService.getBase(sharedBaseName);
+		IBase visuBase = resourceService.getBase(sharedUsername);
 		if(visuBase == null) {
-			log.info("The base \""+sharedBaseName+"\" does not exist. Creating it.");
+			log.info("The base \""+sharedUsername+"\" does not exist. Creating it.");
 			log.debug("Root URI is DefaultResourceManager is: " + resourceService.getRootUri());
 
-			String visuBaseUri = resourceService.newBase(sharedBaseName);
+			String visuBaseUri = resourceService.newBase(sharedUsername);
 			if(visuBaseUri == null) {
 				log.error("Could not create a base for the user \"visu\".");
 			} else
@@ -199,7 +193,7 @@ public class KtbsApplicationHelper {
 		}
 	};
 
-	public void sendToKtbs(Integer subject, String trace, String typeObsel,
+	public void sendToKtbs(IConnection conn, Integer subject, String trace, String typeObsel,
 			List<Object> paramsObsel, String[] traceType) throws SQLException {
 		if(!started) {
 			String message = "The KTBS client service is not started. The obsel will not be sent to the KTBS server: ";
@@ -233,7 +227,9 @@ public class KtbsApplicationHelper {
 		// collect this obsel to the stored trace on the KTBS
 		StoredTraceService service = rootClient.getStoredTraceService();
 		ObselBuilder builder = service.newObselBuilder(storedTrace);
-		builder.setBeginDT(KtbsUtils.now());
+		String now = KtbsUtils.now();
+		builder.setBeginDT(now);
+		builder.setEndDT(now);
 		builder.setType(storedTrace.getTraceModel().getUri() + typeObsel);
 		builder.setSubject(makeKtbsUserName(subject));
 		for(int k=0; k<paramsObsel.size(); k+=2) {
@@ -248,10 +244,22 @@ public class KtbsApplicationHelper {
 		}
 
 		String uri = builder.create();
-		if(uri == null)
+		if(uri == null) {
+			
 			log.warn("The obsel could not be created on the KTBS server");
-		else
+		} else {
 			log.info("The obsel " + uri + " has been created on the KTBS");
+			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
+			
+			IObsel o = null;
+			for(IObsel obsel:getTraceObsels((Integer)conn.getClient().getAttribute("uid"), trace)) {
+				if(obsel.getUri().equals(uri)) {
+					o = obsel;
+					break;
+				}
+			}
+			sc.invoke("obselAdded", new Object[]{o});
+		}
 
 	}
 
@@ -305,6 +313,10 @@ public class KtbsApplicationHelper {
 						traceLocalName, 
 						visuTraceModel.getUri(), 
 						KtbsUtils.now(), 
+						null,
+						null,
+						null,
+						null,
 						Integer.toString(userId)
 				);
 
@@ -328,5 +340,42 @@ public class KtbsApplicationHelper {
 		message+=", type=" + typeObsel;
 		message+="]";
 		return message;
+	}
+
+	public Collection<IObsel> getTraceObsels(Integer uid, String traceId) {
+		IBase base = getBase(uid);
+		IKtbsResource trace = base.get(traceId);
+		if(trace != null && trace instanceof ITrace)
+			return ((ITrace)trace).getObsels();
+		else
+			return null;
+	}
+
+	private IBase getBase(Integer uid) {
+		IBase base = getKtbsClient(uid).getResourceService().getBase(makeKtbsUserName(uid));
+		if(base == null) {
+			String baseUri = getKtbsClient(uid).getResourceService().newBase(makeKtbsUserName(uid));
+			base = getKtbsClient(uid).getResourceService().getBase(baseUri);
+		}
+		return base;
+	}
+
+	private KtbsClient getKtbsClient(Integer uid) {
+		String username = makeKtbsUserName(uid);
+		KtbsClient client = ktbsClients.get(username);
+		if(client == null) 
+			ktbsClients.put(
+					username, 
+					clientFactory.createRestClient(rootUri, username, username)
+			);
+		return ktbsClients.get(username);
+	}
+
+	public Collection<ITrace> getTraces(Integer uid) {
+		IBase base = getBase(uid);
+		Collection<ITrace> traces = new HashSet<ITrace>();
+		traces.addAll(base.getStoredTraces());
+		traces.addAll(base.getComputedTraces());
+		return traces;
 	}
 }

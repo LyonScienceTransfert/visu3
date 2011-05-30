@@ -122,6 +122,10 @@ public class VisuToKtbs {
 				traceName,
 				getVisuTraceModelURI(service), 
 				origin, 
+				null,
+				null,
+				null,
+				null,
 				username);
 
 		if(storedTraceUri == null) {

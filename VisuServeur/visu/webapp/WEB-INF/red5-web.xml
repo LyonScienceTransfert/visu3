@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
+    <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="/WEB-INF/red5-web.properties"/>
+    </bean>
     
-    <import resource="classpath:**/ktbs4j-context.xml"/>
+    <import resource="classpath:ktbs4j-context.xml"/>
     
     <!--
     Defines a properties file for dereferencing variables
     IMPORTANT : this override the default properties set in ktbs4j.properties
     -->
-    <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="/WEB-INF/red5-web.properties"/>
-    </bean>
     
 <!--
         Defines the web context
@@ -51,9 +51,8 @@
     	class="com.lyon2.visu.ktbs.KtbsApplicationHelper" 
     	lazy-init="true" destroy-method="destroy">
         <property name="clientFactory" ref="clientFactory"/>
+        <property name="rootUri" value="${ktbs.root.uri}"/>
         <property name="sharedUsername" value="${ktbs.root.username}"/>
-        <property name="sharedPassword" value="${ktbs.root.passwd}"/>
-        <property name="sharedBaseName" value="${ktbs.shared.base}"/>
         <property name="visuTraceModelName" value="${ktbs.model.visu}"/>
         <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
     </bean>
@@ -61,8 +60,8 @@
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="smtpServer" value="${visu.smtpServer}" />
-        <property name="pluggedToKtbs" value="${visu.ktbs.plug}"/>
-        <property name="ktbsHelper" ref="ktbsHelper"/>
+        <property name="ktbsService" ref="ktbs.service" />
+       
     </bean>
 
 <!--  DAO Definitions  -->
@@ -124,6 +123,13 @@
         <property name="application" ref="web.handler"/>
     </bean>
 <!-- BDD -->
+
+    <bean id="ktbs.service" class="com.lyon2.visu.ktbs.KtbsService">
+ 		<property name="pluggedToKtbs" value="${visu.ktbs.plug}"/>
+        <property name="ktbsHelper" ref="ktbsHelper"/>
+    </bean>
+    
+    
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
     </bean>
