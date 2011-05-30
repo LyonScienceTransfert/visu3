@@ -245,20 +245,25 @@ public class KtbsApplicationHelper {
 
 		String uri = builder.create();
 		if(uri == null) {
-			
+
 			log.warn("The obsel could not be created on the KTBS server");
 		} else {
 			log.info("The obsel " + uri + " has been created on the KTBS");
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
-			
-			IObsel o = null;
-			for(IObsel obsel:getTraceObsels((Integer)conn.getClient().getAttribute("uid"), trace)) {
-				if(obsel.getUri().equals(uri)) {
-					o = obsel;
-					break;
+
+			if(conn != null) {
+
+				IObsel o = null;
+				for(IObsel obsel:getTraceObsels((Integer)conn.getClient().getAttribute("uid"), trace)) {
+					if(obsel.getUri().equals(uri)) {
+						o = obsel;
+						break;
+					}
 				}
+				sc.invoke("obselAdded", new Object[]{o});
+			} else {
+				log.warn("Unable to notify clients of the new added obsel without a Red5 Connection");
 			}
-			sc.invoke("obselAdded", new Object[]{o});
 		}
 
 	}
