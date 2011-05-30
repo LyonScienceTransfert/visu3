@@ -126,6 +126,7 @@ import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.User;
 import com.lyon2.visu.ktbs.KtbsApplicationHelper;
+import com.lyon2.visu.ktbs.KtbsService;
 import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
@@ -155,16 +156,11 @@ IScheduledJob {
 
 	
 	// Injected by Spring
-	private KtbsApplicationHelper ktbsHelper;
-	public void setKtbsHelper(KtbsApplicationHelper ktbsHelper) {
-		this.ktbsHelper = ktbsHelper;
+	private KtbsService ktbsService;
+	public void setKtbsService(KtbsService ktbsService) {
+		this.ktbsService = ktbsService;
 	}
-	
-	// Injected by Spring
-	private boolean pluggedToKtbs;
-	public void setPluggedToKtbs(boolean pluggedToKtbs) {
-		this.pluggedToKtbs = pluggedToKtbs;
-	}
+
 
 	@SuppressWarnings("unchecked")
 	public void execute(ISchedulingService service) {
@@ -622,29 +618,11 @@ IScheduledJob {
 		log.info("Adding Obsel to BD");
 		getSqlMapClient().insert("obsels.insert", obsel);
 
+		
 		// safety test in case the ktsb would be deactivated
-
-		if(pluggedToKtbs)  {
-			if(!Application.this.ktbsHelper.isStarted()) {
-				Application.this.ktbsHelper.init();
-			}
-			Thread sentToKtbsThread = new Thread() {
-				@Override
-				public void run() {
-					try {
-						log.debug("Adding Obsel to KTBS");
-						Application.this.ktbsHelper.sendToKtbs(subject, trace, typeObsel, paramsObsel, traceType);
-					} catch (SQLException e) {
-						Application.log.error("A problem occurred when sending the obsel to the KTBS", e);
-					}
-				}
-			};
-			sentToKtbsThread.setPriority(Thread.MIN_PRIORITY);
-			log.info("Start the the thread that adds the obsel to KTBS");
-			sentToKtbsThread.start();
-		} else 
-			log.debug("Visu is not plugged to KTBS. Obsel not sent to KTBS.");
-
+		log.info("Delegating the KTBS collect to KtbsService");
+		ktbsService.sendToKtbs(null, subject, trace, typeObsel, paramsObsel, traceType);
+		
 		return obsel;
 	}
 

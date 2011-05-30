@@ -597,13 +597,13 @@ or by setting the following environment variable:
 
 	      <mkdir dir="${webapp.dir}" />
 
-	      <copy todir="${webapp.dir}" overwrite="true">
+	      <copy verbose="true" todir="${webapp.dir}" overwrite="true">
 	        <fileset dir="${project.server.path}/webapp" />
 	      </copy>
 	      
 	      <mkdir dir="${webapp.dir}/WEB-INF/lib" />
 
-	      <copy file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
+	      <copy  verbose="true"  file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
 	    </target>
 		
 		<target name="clean-webinf-libs">
