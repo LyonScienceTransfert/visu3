@@ -29,9 +29,9 @@ import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
-public class VisuModelFiller extends TraceModelFiller {
+public class VisuModelFillerFromDB extends TraceModelFiller {
 
-	private static Logger logger = LoggerFactory.getLogger(VisuModelFiller.class);
+	private static Logger logger = LoggerFactory.getLogger(VisuModelFillerFromDB.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -67,7 +67,7 @@ public class VisuModelFiller extends TraceModelFiller {
 				}
 
 				try {
-					obselVO.parseRdf(
+					obselVO.parseWithJena(
 							traceModel.getUri(),
 							KtbsUtils.resolveParentURI(traceModel.getUri()));
 

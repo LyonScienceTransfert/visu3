@@ -14,37 +14,37 @@ public class CreateVisuTraceModels {
 
 	private static Logger logger = LoggerFactory.getLogger(CreateVisuTraceModels.class);
 
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException, SQLException {
 		String rootUri = Ktbs.getRestClient().getRootUri();
+		logger.info("Creating Visu trace models on the kTBS root {}", rootUri);
 		
 		Properties properties = new Properties();
 		properties.load(ClassLoader.getSystemResourceAsStream("visu2ktbs.properties"));
 
 		String bName = properties.getProperty("ktbs.shared.base");
-
 		String visuTMName= properties.getProperty("ktbs.model.visu");
-//		String rrTMName = properties.getProperty("ktbs.model.retroroom");
-		
-		ITraceModel rrTM = createTraceModel(bName, visuTMName);
-		new RetroRoomTraceModelFiller().fill(rrTM, Ktbs.getPojoFactory());
-		Ktbs.getRestClient().getResourceService().saveResource(rrTM, true);
 		
 		ITraceModel visuTM = createTraceModel(bName, visuTMName);
-		new VisuModelFiller().fill(visuTM, Ktbs.getPojoFactory());
+		visuTM.getObselTypes().clear();
+		visuTM.getAttributeTypes().clear();
+		visuTM.getRelationTypes().clear();
+		new RetroRoomTraceModelFiller().fill(visuTM, Ktbs.getPojoFactory());
+		new VisuModelFillerFromScratch().fill(visuTM, Ktbs.getPojoFactory());
 		Ktbs.getRestClient().getResourceService().saveResource(visuTM, true);
-		
-		logger.info("rootUri: {}", rootUri);
 	}
 
 
 	private static ITraceModel createTraceModel(String bLocalName, String tmLocalName) {
 		ResourceService service = Ktbs.getRestClient().getResourceService();
 		service.newBase(bLocalName);
+		logger.info("Creating the trace model");
 		String uri = service.newTraceModel(bLocalName, tmLocalName);
-		logger.debug("Trace model created: {}", uri);
+		if(uri != null)
+			logger.info("Trace model created: {}", uri);
+		
 		ITraceModel traceModel = service.getTraceModel(bLocalName+"/"+tmLocalName);
-		logger.debug("Returning the trace model {}", traceModel);
+		logger.info("Working trace model: {}", traceModel.getUri());
+		
 		return traceModel;
 	}
 
