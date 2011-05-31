@@ -1,6 +1,6 @@
 package com.ithaca.traces.model.vo
 {
-	public class ObselVO
+	public class ObselKtbsVO
 	{
 		[RemoteClass(alias="org.liris.ktbs.domain.interfaces.IObsel")]
 		[Bindable]
