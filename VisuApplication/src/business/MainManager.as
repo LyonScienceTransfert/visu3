@@ -5,6 +5,7 @@ import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.events.SelectionEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
+import com.ithaca.traces.model.vo.ObselKtbsVO;
 import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.XMLUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
@@ -1167,7 +1168,10 @@ public class MainManager
 		eventLoadListClosedSessionSalonRetrospection.listSession = listSession;
 		this.dispatcher.dispatchEvent(eventLoadListClosedSessionSalonRetrospection);		
 	}
-	
+	public function checkListObselClosedSessionViaKtbs(listObselViaKtbs:ObselKtbsVO):void
+	{
+		return;
+	}
 	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array):void
 	{
 		// creation trace for logged user
