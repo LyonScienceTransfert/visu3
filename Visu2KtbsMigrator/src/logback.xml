@@ -39,7 +39,7 @@
   
   <logger name="com.ibatis" level="WARN"/>
   <logger name="org.liris.ktbs" level="WARN"/>
-  <logger name="org.liris.ktbs.dao.rest" level="DEBUG"/>
+  <logger name="org.liris.ktbs.dao.rest" level="WARN"/>
   <logger name="java.sql" level="WARN"/>
   <logger name="org.liris.ktbs.visu.vo.ObselVO" level="WARN"/>
   <logger name="org.liris.ktbs.visu.model" level="DEBUG"/>

@@ -1,6 +1,7 @@
 package org.liris.ktbs.visu;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -39,30 +40,23 @@ public class VisuToKtbs {
 	private static Logger logger = LoggerFactory.getLogger(VisuToKtbs.class);
 
 	private Map<String, KtbsClient> ktbsClients = new HashMap<String, KtbsClient>();
-	
-	
+
+
 	private String rootUri;
-	private String visuUserName;
-	private String visuPasswd;
-	private String visuSharedBaseName;
-	private String retroRoomModelLocalName;
+	private String visuBaseName;
 	private String visuModelLocalName;
 
 	private ClientFactory clientFactory;
 
 	private SqlMapClient sqlMap;
 
-	public VisuToKtbs(SqlMapClient sqlMap, String rootUri, String userName, String userPasswd,
-			String shareBase, String retroRoomModelLocalName,
+	public VisuToKtbs(SqlMapClient sqlMap, String rootUri, String baseName, 
 			String visuModelLocalName) {
 
 		super();
 		this.sqlMap = sqlMap;
 		this.rootUri = rootUri;
-		this.visuUserName = userName;
-		this.visuPasswd = userPasswd;
-		this.visuSharedBaseName = shareBase;
-		this.retroRoomModelLocalName = retroRoomModelLocalName;
+		this.visuBaseName = baseName;
 		this.visuModelLocalName = visuModelLocalName;
 
 		this.clientFactory = Ktbs.getClientFactory();
@@ -75,17 +69,26 @@ public class VisuToKtbs {
 
 
 		Properties properties = new Properties();
-		properties.load(ClassLoader.getSystemResourceAsStream("visu2ktbs.properties"));
-		properties.load(ClassLoader.getSystemResourceAsStream("ktbs4j.properties"));
+		
+		InputStream ktbs4jProperties = ClassLoader.getSystemResourceAsStream("ktbs4j.properties");
+		if(ktbs4jProperties != null)
+			properties.load(ktbs4jProperties);
+		
+		
+		InputStream visu2ktbsProperties = ClassLoader.getSystemResourceAsStream("visu2ktbs.properties");
+		if(visu2ktbsProperties != null)
+		properties.load(visu2ktbsProperties);
+		else {
+			logger.error("Could not find the file {} in the classpath", "visu2ktbs.properties");
+			System.exit(1);
+		}
+			
 		logger.info("Migration config:\n {}", properties.toString());
 
 		VisuToKtbs visuToKtbs = new VisuToKtbs(
 				sqlMap,
 				properties.getProperty("ktbs.root.uri"),
-				properties.getProperty("ktbs.root.username"),
-				properties.getProperty("ktbs.root.passwd"),
 				properties.getProperty("ktbs.shared.base"),
-				properties.getProperty("ktbs.model.retroroom"),
 				properties.getProperty("ktbs.model.visu"));
 
 		visuToKtbs.doMigration();
@@ -105,8 +108,8 @@ public class VisuToKtbs {
 					rootUri, 
 					ktbsUserid,
 					ktbsUserid
-					));
-		
+			));
+
 		KtbsClient client = ktbsClients.get(ktbsUserid);
 		ResourceService service = client.getResourceService();
 
@@ -117,10 +120,11 @@ public class VisuToKtbs {
 		String origin = KtbsConstants.XSD_DATETIME_FORMAT.format(originCal.getTime());
 
 		logger.info("{}% - Creating the stored trace {}", new Object[]{(obselCnt*100)/totalObselNb, traceName});
+		String traceModelURI = getVisuTraceModelURI(service);
 		String storedTraceUri = service.newStoredTrace(
 				username, 
 				traceName,
-				getVisuTraceModelURI(service), 
+				traceModelURI, 
 				origin, 
 				null,
 				null,
@@ -138,7 +142,8 @@ public class VisuToKtbs {
 		// parse all rdf first
 		for(ObselVO vo:obsels) {
 			try {
-				vo.parseRdf(getVisuTraceModelURI(service), KtbsUtils.resolveParentURI(storedTraceUri));
+				String parentUri = KtbsUtils.resolveParentURI(storedTraceUri);
+				vo.parseRdf(traceModelURI, parentUri);
 				orderedByendDTObsels.add(vo);
 			} catch (Exception e) {
 				logger.error("Error creating the obsel {}. RDF: \n{}\nfixed:\n{}", new Object[]{vo.getId(), vo.getRdf(), vo.getFixedRdf()});
@@ -200,7 +205,7 @@ public class VisuToKtbs {
 	private String lazyVisuTraceModelUri = null;
 	private String getVisuTraceModelURI(ResourceService service) {
 		if(lazyVisuTraceModelUri == null) {
-			IBase base = service.getBase(visuSharedBaseName);
+			IBase base = service.getBase(visuBaseName);
 			ITraceModel tm = base.get(visuModelLocalName, ITraceModel.class);
 			lazyVisuTraceModelUri = tm.getUri();
 		}
@@ -215,12 +220,12 @@ public class VisuToKtbs {
 
 
 	private void createSharedBaseAndModels() {
-		ktbsClients.put(visuUserName, clientFactory.createRestClient(rootUri, visuUserName, visuPasswd));
-		ResourceService service = ktbsClients.get(visuUserName).getResourceService();
-		logger.info("Creating the shared base {}.", visuSharedBaseName);
-		String baseUri = service.newBase(visuSharedBaseName);
+		ktbsClients.put(visuBaseName, clientFactory.createRestClient(rootUri, "default", "default"));
+		ResourceService service = ktbsClients.get(visuBaseName).getResourceService();
+		logger.info("Creating the shared base {}.", visuBaseName);
+		String baseUri = service.newBase(visuBaseName);
 		if(baseUri == null) {
-			logger.info("Could not create the base {}. It may already exist", visuSharedBaseName);
+			logger.info("Could not create the base {}. It may already exist", visuBaseName);
 		} else {
 			logger.info("Creating the trace model {}.", visuModelLocalName);
 			service.newTraceModel(baseUri, visuModelLocalName);
@@ -239,7 +244,7 @@ public class VisuToKtbs {
 
 		for(Integer userId:userIds) {
 			String userName = VisuToKtbsUtils.makeKtbsUserId(userId);
-			
+
 			ktbsClients.put(userName, clientFactory.createRestClient(rootUri, userName, userName));
 			KtbsClient client = ktbsClients.get(userName);
 			String uri = client.getResourceService().newBase(userName);

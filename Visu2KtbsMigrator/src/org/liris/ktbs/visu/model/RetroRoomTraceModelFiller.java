@@ -1,5 +1,6 @@
 package org.liris.ktbs.visu.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.liris.ktbs.domain.PojoFactory;
 import org.liris.ktbs.domain.interfaces.IAttributeType;
 import org.liris.ktbs.domain.interfaces.IObselType;
@@ -7,17 +8,23 @@ import org.liris.ktbs.domain.interfaces.ITraceModel;
 
 public class RetroRoomTraceModelFiller extends TraceModelFiller {
 
+	private ITraceModel model;
+	private PojoFactory factory;
+	
 	@Override
 	public void fill(ITraceModel model, PojoFactory factory) {
-		IObselType retroEvent = factory.createObselType(model.getUri(), "RetroEvent");
-		IAttributeType syncRoomTraceId =  factory.createAttributeType(model.getUri(), "syncRoomTraceId");
-		syncRoomTraceId.getDomains().add(retroEvent);
+		this.model = model;
+		this.factory = factory;
 		
+		IObselType retroEvent = factory.createObselType(model.getUri(), "RetroEvent");
+		model.getObselTypes().add(retroEvent);
+		
+		IAttributeType syncRoomTraceId =  attribute("syncRoomTraceId");
+		syncRoomTraceId.getDomains().add(retroEvent);
 		
 		IObselType retroTraceVisualizationEvent = factory.createObselType(model.getUri(), "RetroTraceVisualizationEvent");
 		retroTraceVisualizationEvent.getSuperObselTypes().add(retroEvent);
 		model.getObselTypes().add(retroTraceVisualizationEvent);
-		
 		
 		IObselType retroExpandTraceLineEvent =  factory.createObselType(model.getUri(), "RetroExpandTraceLineEvent");
 		retroExpandTraceLineEvent.getSuperObselTypes().add(retroTraceVisualizationEvent);
@@ -173,126 +180,102 @@ public class RetroRoomTraceModelFiller extends TraceModelFiller {
 
 		
 		
-		IAttributeType traceSubjectId =  factory.createAttributeType(model.getUri(), "traceSubjectId");
+		IAttributeType traceSubjectId =  attribute("traceSubjectId");
 		traceSubjectId.getDomains().add(retroTraceVisualizationEvent);
 		
-		IAttributeType userName =  factory.createAttributeType(model.getUri(), "userName");
+		IAttributeType userName =  attribute( "userName");
 		userName.getDomains().add(retroTraceVisualizationEvent);
 
-		IAttributeType userAvatar =  factory.createAttributeType(model.getUri(), "userAvatar");
+		IAttributeType userAvatar =  attribute("userAvatar");
 		userAvatar.getDomains().add(retroTraceVisualizationEvent);
 		
-		IAttributeType timeWindowLowerBound =  factory.createAttributeType(model.getUri(), "timeWindowLowerBound");
+		IAttributeType timeWindowLowerBound =  attribute("timeWindowLowerBound");
 		timeWindowLowerBound.getDomains().add(retroStartScaleChangeEvent);
 		timeWindowLowerBound.getDomains().add(retroTraceTimeSlideEvent);
 		
-		IAttributeType timeWindowUpperBound =  factory.createAttributeType(model.getUri(), "timeWindowUpperBound");
+		IAttributeType timeWindowUpperBound =  attribute("timeWindowUpperBound");
 		timeWindowUpperBound.getDomains().add(retroStartScaleChangeEvent);
 		timeWindowUpperBound.getDomains().add(retroTraceTimeSlideEvent);
 		
-		IAttributeType scaleValue =  factory.createAttributeType(model.getUri(), "scaleValue");
+		IAttributeType scaleValue =  attribute("scaleValue");
 		scaleValue.getDomains().add(retroStartScaleChangeEvent);
 		
-		IAttributeType obselId =  factory.createAttributeType(model.getUri(), "obselId");
+		IAttributeType obselId =  attribute( "obselId");
 		obselId.getDomains().add(retroExploreObselEvent);
 		
-		IAttributeType tooltipValue =  factory.createAttributeType(model.getUri(), "tooltipValue");
+		IAttributeType tooltipValue =  attribute("tooltipValue");
 		tooltipValue.getDomains().add(retroExploreObselEvent);
 
-		IAttributeType obselTypeName =  factory.createAttributeType(model.getUri(), "obselTypeName");
+		IAttributeType obselTypeName =  attribute("obselTypeName");
 		obselTypeName.getDomains().add(retroObselTypeLineEvent);
 		
-		IAttributeType uiWidget =  factory.createAttributeType(model.getUri(), "uiWidget");
+		IAttributeType uiWidget =  attribute("uiWidget");
 		uiWidget.getDomains().add(retroObselTypeLineEvent);
 		
-		IAttributeType newActiveTab =  factory.createAttributeType(model.getUri(), "newActiveTab");
+		IAttributeType newActiveTab =  attribute("newActiveTab");
 		newActiveTab.getDomains().add(retroActiveTabEvent);
 		
-		IAttributeType commentValue =  factory.createAttributeType(model.getUri(), "commentValue");
+		IAttributeType commentValue =  attribute("commentValue");
 		commentValue.getDomains().add(retroCommentEvent);
 		
-		IAttributeType commentId =  factory.createAttributeType(model.getUri(), "commentId");
+		IAttributeType commentId =  attribute("commentId");
 		commentId.getDomains().add(retroCommentEvent);
 
-		IAttributeType commentBeginDate =  factory.createAttributeType(model.getUri(), "commentBeginDate");
+		IAttributeType commentBeginDate =  attribute("commentBeginDate");
 		commentBeginDate.getDomains().add(retroCommentEvent);
 
-		IAttributeType commentEndDate =  factory.createAttributeType(model.getUri(), "commentEndDate");
+		IAttributeType commentEndDate =  attribute("commentEndDate");
 		commentEndDate.getDomains().add(retroCommentEvent);
 
-		IAttributeType videoViewWidth =  factory.createAttributeType(model.getUri(), "videoViewWidth");
+		IAttributeType videoViewWidth =  attribute("videoViewWidth");
 		videoViewWidth.getDomains().add(retroViewResizeEvent);
 		
-		IAttributeType videoViewHeight =  factory.createAttributeType(model.getUri(), "videoViewHeight");
+		IAttributeType videoViewHeight =  attribute("videoViewHeight");
 		videoViewHeight.getDomains().add(retroViewResizeEvent);
 
-		IAttributeType traceLineViewWidth =  factory.createAttributeType(model.getUri(), "traceLineViewWidth");
+		IAttributeType traceLineViewWidth =  attribute("traceLineViewWidth");
 		traceLineViewWidth.getDomains().add(retroViewResizeEvent);
 
-		IAttributeType traceLineViewHeight =  factory.createAttributeType(model.getUri(), "traceLineViewHeight");
+		IAttributeType traceLineViewHeight =  attribute("traceLineViewHeight");
 		traceLineViewHeight.getDomains().add(retroViewResizeEvent);
 
-		IAttributeType tabHolderWidth =  factory.createAttributeType(model.getUri(), "tabHolderWidth");
+		IAttributeType tabHolderWidth =  attribute("tabHolderWidth");
 		tabHolderWidth.getDomains().add(retroViewResizeEvent);
 		
-		IAttributeType tabHolderHeight =  factory.createAttributeType(model.getUri(), "tabHolderHeight");
+		IAttributeType tabHolderHeight =  attribute("tabHolderHeight");
 		tabHolderHeight.getDomains().add(retroViewResizeEvent);
 
-		IAttributeType editType =  factory.createAttributeType(model.getUri(), "editType");
+		IAttributeType editType =  attribute("editType");
 		editType.getDomains().add(retroCancelEditEvent);
 		
-		IAttributeType sessionId =  factory.createAttributeType(model.getUri(), "sessionId");
+		IAttributeType sessionId =  attribute("sessionId");
 		sessionId.getDomains().add(retroLoadRetrospectedSessionEvent);
 		
-		IAttributeType sessionTheme =  factory.createAttributeType(model.getUri(), "sessionTheme");
+		IAttributeType sessionTheme = attribute("sessionTheme");
 		sessionTheme.getDomains().add(retroLoadRetrospectedSessionEvent);
 		
-		IAttributeType sessionDescription =  factory.createAttributeType(model.getUri(), "sessionDescription");
+		IAttributeType sessionDescription =  attribute("sessionDescription");
 		sessionDescription.getDomains().add(retroLoadRetrospectedSessionEvent);
 		
-		IAttributeType sessionStartRecordingDate =  factory.createAttributeType(model.getUri(), "sessionStartRecordingDate");
+		IAttributeType sessionStartRecordingDate = attribute("sessionStartRecordingDate");
 		sessionStartRecordingDate.getDomains().add(retroLoadRetrospectedSessionEvent);
 		
-		IAttributeType sessionOwnerId =  factory.createAttributeType(model.getUri(), "sessionOwnerId");
+		IAttributeType sessionOwnerId =  attribute("sessionOwnerId");
 		sessionOwnerId.getDomains().add(retroLoadRetrospectedSessionEvent);
 		
-		IAttributeType cause =  factory.createAttributeType(model.getUri(), "cause");
+		IAttributeType cause = attribute("cause");
 		cause.getDomains().add(retroExitRetrospectedSessionEvent);
 		
-		IAttributeType videoTime =  factory.createAttributeType(model.getUri(), "videoTime");
+		IAttributeType videoTime =  attribute("videoTime");
 		videoTime.getDomains().add(retroVideoEvent);
-		
-		model.getAttributeTypes().add(traceSubjectId);
-		model.getAttributeTypes().add(userName);
-		model.getAttributeTypes().add(userAvatar);
-		model.getAttributeTypes().add(timeWindowLowerBound);
-		model.getAttributeTypes().add(timeWindowUpperBound);
-		model.getAttributeTypes().add(scaleValue);
-		model.getAttributeTypes().add(obselId);
-		model.getAttributeTypes().add(tooltipValue);
-		model.getAttributeTypes().add(obselTypeName);
-		model.getAttributeTypes().add(uiWidget);
-		model.getAttributeTypes().add(newActiveTab);
-		model.getAttributeTypes().add(commentValue);
-		model.getAttributeTypes().add(commentId);
-		model.getAttributeTypes().add(commentBeginDate);
-		model.getAttributeTypes().add(commentEndDate);
-		model.getAttributeTypes().add(videoViewWidth);
-		model.getAttributeTypes().add(videoViewHeight);
-		model.getAttributeTypes().add(traceLineViewWidth);
-		model.getAttributeTypes().add(traceLineViewHeight);
-		model.getAttributeTypes().add(tabHolderWidth);
-		model.getAttributeTypes().add(tabHolderHeight);
-		model.getAttributeTypes().add(editType);
-		model.getAttributeTypes().add(sessionId);
-		model.getAttributeTypes().add(sessionTheme);
-		model.getAttributeTypes().add(sessionDescription);
-		model.getAttributeTypes().add(sessionStartRecordingDate);
-		model.getAttributeTypes().add(sessionOwnerId);
-		model.getAttributeTypes().add(cause);
-		model.getAttributeTypes().add(videoTime);
 		
 		model.getLabels().add("Le modèle de trace du salon de rétrospection de visu");
 		
+	}
+
+	private IAttributeType attribute(String localName) {
+		IAttributeType att = factory.createAttributeType(model.getUri(), "has" + StringUtils.capitalize(localName));
+		model.getAttributeTypes().add(att);
+		return att;
 	}
 }

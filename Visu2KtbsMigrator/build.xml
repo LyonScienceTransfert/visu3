@@ -2,7 +2,7 @@
 
 <project default="main" basedir=".">
 
-	<property name="ktbs.dist.path" location="/home/dcram/dev/ws-visu2/ktbs-2/dist"/>
+	<property name="ktbs.dist.path" location="/home/dcram/dev/ws-visu2/ktbs4j/dist"/>
 	<property name="migrator.lib" location="lib"/>
 		
 	<property name="user.name" value="Damien Cram"/>
