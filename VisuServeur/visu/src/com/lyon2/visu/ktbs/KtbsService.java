@@ -28,7 +28,9 @@ public class KtbsService {
 	}
 	
 	public Collection<IObsel> getTraceObsels(IConnection conn, String traceId) {
-		Integer uid = (Integer)conn.getClient().getAttribute("uid");
+		//Integer uid = (Integer)conn.getClient().getAttribute("uid");
+		int uid = Integer.parseInt(traceId.split("-")[2]);
+		log.warn("Id the bas ktbs est = {}", String.valueOf(uid));
 		return ktbsHelper.getTraceObsels(uid, traceId);
 	}
 	public Collection<ITrace> getTraces(IConnection conn) {
@@ -37,6 +39,7 @@ public class KtbsService {
 		return traces;
 	}
 
+	
 	public void sendToKtbs(final IConnection conn, final Integer subject, final String trace,
 			final String typeObsel, final List<Object> paramsObsel, final String[] traceType) {
 		if(pluggedToKtbs)  {
