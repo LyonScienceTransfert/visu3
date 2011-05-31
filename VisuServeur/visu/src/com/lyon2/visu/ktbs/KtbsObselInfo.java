@@ -2,9 +2,11 @@ package com.lyon2.visu.ktbs;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.liris.ktbs.domain.interfaces.IObsel;
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
@@ -35,20 +37,51 @@ public class KtbsObselInfo {
 	protected static final Logger log = Red5LoggerFactory.getLogger(
 			KtbsObselInfo.class, "visu2");
 	
+	
+	
+	// Injected by Spring
+	private KtbsService ktbsService;
+	public void setKtbsService(KtbsService ktbsService) {
+		this.ktbsService = ktbsService;
+	}
+
+	
+	
 	@SuppressWarnings("unchecked")
 	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
 		log.warn("======== call on KTBS ======");
 		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
+		IClient client = conn.getClient();
+		
+		
+		String traceParam = "%-" + "void" + "%";
+	    String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\"" + "%";
 
-//	
-//		Date sessionStartRecordingDate = session.getStart_recording();
-//		Object[] args = { result, sessionStartRecordingDate , comment};
-//		IConnection connClient = (IConnection) client
-//				.getAttribute("connection");
-//		if (conn instanceof IServiceCapableConnection) {
-//			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-//			sc.invoke("checkListObselClosedSession", args);
-//		}
+		
+		List<String> listTrace = null;
+		try {
+			listTrace = (List<String>) app.getSqlMapClient().queryForList(
+					"obsels.getTracesBySessionId",   new ObselStringParams(traceParam, refParam));
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des traces" + e);
+		}
+		if(listTrace.size() < 1)
+		{
+			log.warn("hasn't trace");
+		}
+		String traceId = listTrace.get(0);
+		Collection<IObsel>  listObsel = ktbsService.getTraceObsels(conn, traceId);
+		
+		log.warn(" !!!! URA OK we have list obsel ktbs");
+	
+		//Date sessionStartRecordingDate = session.getStart_recording();
+		Object[] args = { listObsel };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListObselClosedSessionViaKtbs", args);
+		}
 
 
 	}
