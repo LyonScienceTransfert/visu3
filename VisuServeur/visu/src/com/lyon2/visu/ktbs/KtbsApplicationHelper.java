@@ -30,39 +30,46 @@ import org.slf4j.Logger;
 
 public class KtbsApplicationHelper {
 
-	private static Logger log = Red5LoggerFactory.getLogger(KtbsApplicationHelper.class, "visu2");
+	private static Logger log = Red5LoggerFactory.getLogger(
+			KtbsApplicationHelper.class, "visu2");
 
 	// injected by Spring
 	private ClientFactory clientFactory;
+
 	public void setClientFactory(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
 
 	// injected by Spring
 	private String rootUri;
+
 	public void setRootUri(String rootUri) {
 		this.rootUri = rootUri;
 	}
 
 	// injected by Spring
 	private String sharedUsername;
+
 	public void setSharedUsername(String sharedUsername) {
 		this.sharedUsername = sharedUsername;
 	}
 
 	// injected by Spring
 	private String retroRoomTraceModelName;
+
 	public void setRetroRoomTraceModelName(String retroRoomTraceModelName) {
 		this.retroRoomTraceModelName = retroRoomTraceModelName;
 	}
 
 	// injected by Spring
 	private String visuTraceModelName;
+
 	public void setVisuTraceModelName(String visuTraceModelName) {
 		this.visuTraceModelName = visuTraceModelName;
 	}
 
-	// a flag, true if all KTBS resources have been created on / downloaded from the KTBS
+	// a flag, true if all KTBS resources have been created on / downloaded from
+	// the KTBS
 	// false otherwise
 	private boolean started = false;
 
@@ -75,7 +82,8 @@ public class KtbsApplicationHelper {
 	private KtbsClient getUserKtbsClient(Integer subject) throws SQLException {
 		String ktbsUserName = makeKtbsUserName(subject);
 		String ktbsUserPassword = ktbsUserName;
-		KtbsClient ktbsClientClient = getKtbsClient(ktbsUserName, ktbsUserPassword);
+		KtbsClient ktbsClientClient = getKtbsClient(ktbsUserName,
+				ktbsUserPassword);
 		return ktbsClientClient;
 	}
 
@@ -84,16 +92,19 @@ public class KtbsApplicationHelper {
 	}
 
 	private KtbsClient getKtbsClient(String userName, String userPassword) {
-		if(ktbsClients.get(userName) == null) {
-			KtbsClient ktbsClient = clientFactory.createRestClient(rootUri, userName, userPassword);
+		if (ktbsClients.get(userName) == null) {
+			KtbsClient ktbsClient = clientFactory.createRestCachingClient(rootUri, userName, userPassword, 1000, 10000l);
 			ktbsClients.put(userName, ktbsClient);
 			String baseUri = ktbsClient.getResourceService().newBase(userName);
 
-			if(log.isDebugEnabled()) {
-				if(baseUri != null)
+			if (log.isDebugEnabled()) {
+				if (baseUri != null)
 					log.debug("The base {} has been created on KTBS", baseUri);
 				else
-					log.debug("A base already exists on the KTBS for the user {}. No need to create one", userName);
+					log
+							.debug(
+									"A base already exists on the KTBS for the user {}. No need to create one",
+									userName);
 			}
 		}
 		return ktbsClients.get(userName);
@@ -101,7 +112,7 @@ public class KtbsApplicationHelper {
 
 	// invoked from Spring (destroy-method)
 	public void destroy() {
-		if(cacheTimer != null) {
+		if (cacheTimer != null) {
 			cacheTimer.cancel();
 			cacheTimer = null;
 		}
@@ -115,7 +126,7 @@ public class KtbsApplicationHelper {
 		// creates the KtbsClientObject
 		KtbsClient client = getSharedKtbsClient();
 		String notInitializedMessage = "The KTBS client service could not be initialized";
-		if(client == null) {
+		if (client == null) {
 			log.warn(notInitializedMessage + " (root client is null)");
 			return;
 		}
@@ -125,55 +136,64 @@ public class KtbsApplicationHelper {
 
 		// creates the java object for the ktbs:Base "visuBase"
 		IBase visuBase = resourceService.getBase(sharedUsername);
-		if(visuBase == null) {
-			log.info("The base \""+sharedUsername+"\" does not exist. Creating it.");
-			log.debug("Root URI is DefaultResourceManager is: " + resourceService.getRootUri());
+		if (visuBase == null) {
+			log.info("The base \"" + sharedUsername
+					+ "\" does not exist. Creating it.");
+			log.debug("Root URI is DefaultResourceManager is: "
+					+ resourceService.getRootUri());
 
 			String visuBaseUri = resourceService.newBase(sharedUsername);
-			if(visuBaseUri == null) {
+			if (visuBaseUri == null) {
 				log.error("Could not create a base for the user \"visu\".");
 			} else
 				visuBase = resourceService.getBase(visuBaseUri);
 		}
 
-		if(visuBase == null) {
+		if (visuBase == null) {
 			log.warn(notInitializedMessage + " (the shared base is null)");
 			return;
 		}
 
 		// creates the trace models
-		retroRoomTraceModel = initializeTraceModel(visuBase, retroRoomTraceModelName, client);
-		visuTraceModel = initializeTraceModel(visuBase, visuTraceModelName, client);
+		retroRoomTraceModel = initializeTraceModel(visuBase,
+				retroRoomTraceModelName, client);
+		visuTraceModel = initializeTraceModel(visuBase, visuTraceModelName,
+				client);
 
-		if(retroRoomTraceModel == null || visuTraceModel == null) {
+		if (retroRoomTraceModel == null || visuTraceModel == null) {
 			log.warn(notInitializedMessage);
 			return;
 		}
 
 		// init the timer that will
-		int period = CACHE_CLEAN_PERIOD*60*1000; // period in ms
-		cacheTimer.schedule(cleanStoredTraceCacheTask, period/2, period);
+		int period = CACHE_CLEAN_PERIOD * 60 * 1000; // period in ms
+		cacheTimer.schedule(cleanStoredTraceCacheTask, period / 2, period);
 
 		this.started = true;
 	}
 
-	private ITraceModel initializeTraceModel(IBase base, String modelLocalName, KtbsClient client) {
-		ITraceModel model = base.get(modelLocalName, ITraceModel.class); 
-		if(model == null) {
-			log.info("The trace model \""+modelLocalName+"\" does not exist. Creating it.");
-			String modelUri = client.getResourceService().newTraceModel(base.getUri(), modelLocalName);
-			if(modelUri == null) 
-				log.error("The trace model \""+modelLocalName+"\" could not be created."); 
+	private ITraceModel initializeTraceModel(IBase base, String modelLocalName,
+			KtbsClient client) {
+		ITraceModel model = base.get(modelLocalName, ITraceModel.class);
+		if (model == null) {
+			log.info("The trace model \"" + modelLocalName
+					+ "\" does not exist. Creating it.");
+			String modelUri = client.getResourceService().newTraceModel(
+					base.getUri(), modelLocalName);
+			if (modelUri == null)
+				log.error("The trace model \"" + modelLocalName
+						+ "\" could not be created.");
 			else {
-				log.info("Creating the content of the \"Retro room\" trace model. May take a few seconds...");
-				RetroRoomTraceModel.load(client, base.getUri(), modelLocalName);
-				log.info("\"Retro room\" trace model created.");
+				model = client.getResourceService().getTraceModel(modelUri);
 			}
 		}
+		
+		log.info("Creating the content of the \"{}\" trace model. May take a few seconds...", modelLocalName);
+		RetroRoomTraceModel.load(client, base.getUri(), modelLocalName);
+		log.info("trace model created.");
 
 		return model;
 	}
-
 
 	private ITraceModel retroRoomTraceModel;
 	private ITraceModel visuTraceModel;
@@ -193,34 +213,39 @@ public class KtbsApplicationHelper {
 		}
 	};
 
-	public void sendToKtbs(IConnection conn, Integer subject, String trace, String typeObsel,
-			List<Object> paramsObsel, String[] traceType) throws SQLException {
-		if(!started) {
+	public void sendToKtbs(IConnection conn, Integer subject, String trace,
+			String typeObsel, List<Object> paramsObsel, String[] traceType)
+			throws SQLException {
+		if (!started) {
 			String message = "The KTBS client service is not started. The obsel will not be sent to the KTBS server: ";
 			message += getObselSimpleString(subject, trace, typeObsel);
 			log.warn(message);
 			return;
 		} else
-			log.info("Sending the obsel to the KTBS: " + getObselSimpleString(subject, trace, typeObsel));
+			log.info("Sending the obsel to the KTBS: "
+					+ getObselSimpleString(subject, trace, typeObsel));
 
 		KtbsClient rootClient = getUserKtbsClient(subject);
-		if(rootClient == null) {
+		if (rootClient == null) {
 			log.warn("Could not get a root client for the user: " + subject);
 			return;
 		}
 
 		// Get the base, or create it if none exists
-		// Getting the base ensures that it is created when trying to create the stored trace
+		// Getting the base ensures that it is created when trying to create the
+		// stored trace
 		IBase base = getBase(subject, rootClient.getResourceService());
-		if(base == null) {
+		if (base == null) {
 			log.warn("Could not send the obsel to the KTBS (base is null)");
 			return;
 		}
 
 		// Get the stored trace, or create it if none exists
-		IStoredTrace storedTrace = getStoredTrace(subject, trace, rootClient.getResourceService());
-		if(storedTrace == null) {
-			log.warn("Could not send the obsel to the KTBS (storedtrace is null)");
+		IStoredTrace storedTrace = getStoredTrace(subject, trace, rootClient
+				.getResourceService());
+		if (storedTrace == null) {
+			log
+					.warn("Could not send the obsel to the KTBS (storedtrace is null)");
 			return;
 		}
 
@@ -232,37 +257,42 @@ public class KtbsApplicationHelper {
 		builder.setEndDT(now);
 		builder.setType(storedTrace.getTraceModel().getUri() + typeObsel);
 		builder.setSubject(makeKtbsUserName(subject));
-		for(int k=0; k<paramsObsel.size(); k+=2) {
-			String attributeTypeUri = storedTrace.getTraceModel().getUri()+(String)paramsObsel.get(k);
-			if(Iterable.class.isAssignableFrom(paramsObsel.get(k+1).getClass())) {
-				Iterator<?> it = ((Iterable<?>)paramsObsel.get(k+1)).iterator();
+		for (int k = 0; k < paramsObsel.size(); k += 2) {
+			String attributeTypeUri = storedTrace.getTraceModel().getUri()
+					+ (String) paramsObsel.get(k);
+			if (Iterable.class.isAssignableFrom(paramsObsel.get(k + 1)
+					.getClass())) {
+				Iterator<?> it = ((Iterable<?>) paramsObsel.get(k + 1))
+						.iterator();
 				while (it.hasNext()) {
-					builder.addAttribute(attributeTypeUri,it.next());
+					builder.addAttribute(attributeTypeUri, it.next());
 				}
 			} else
-				builder.addAttribute(attributeTypeUri,paramsObsel.get(k+1));
+				builder.addAttribute(attributeTypeUri, paramsObsel.get(k + 1));
 		}
 
 		String uri = builder.create();
-		if(uri == null) {
+		if (uri == null) {
 
 			log.warn("The obsel could not be created on the KTBS server");
 		} else {
 			log.info("The obsel " + uri + " has been created on the KTBS");
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
 
-			if(conn != null) {
+			if (conn != null) {
 
 				IObsel o = null;
-				for(IObsel obsel:getTraceObsels((Integer)conn.getClient().getAttribute("uid"), trace)) {
-					if(obsel.getUri().equals(uri)) {
+				for (IObsel obsel : getTraceObsels((Integer) conn.getClient()
+						.getAttribute("uid"), trace)) {
+					if (obsel.getUri().equals(uri)) {
 						o = obsel;
 						break;
 					}
 				}
-				sc.invoke("obselAdded", new Object[]{o});
+				sc.invoke("obselAdded", new Object[] { o });
 			} else {
-				log.warn("Unable to notify clients of the new added obsel without a Red5 Connection");
+				log
+						.warn("Unable to notify clients of the new added obsel without a Red5 Connection");
 			}
 		}
 
@@ -270,18 +300,20 @@ public class KtbsApplicationHelper {
 
 	private IBase getBase(Integer userId, ResourceService resourceService) {
 		IBase base = baseCache.get(userId);
-		if(base == null) {
+		if (base == null) {
 			log.debug("No base cached for user" + userId);
 			String baseName = makeKtbsUserName(userId);
-			log.info("Retrieving the base " + baseName + " from the KTBS server");
-
+			log.info("Retrieving the base " + baseName
+					+ " from the KTBS server");
 
 			// retrieve the base from the KTBS
 			base = resourceService.getBase(baseName);
-			if(base == null) {
+			if (base == null) {
 				log.error("No base " + baseName + " exists on the KTBS server");
-				log.error("Ktbs response status: {}", resourceService.getLastResponse().getHttpStatusCode());
-				log.error("Ktbs response message: \n{}",  resourceService.getLastResponse().getServerMessage());
+				log.error("Ktbs response status: {}", resourceService
+						.getLastResponse().getHttpStatusCode());
+				log.error("Ktbs response message: \n{}", resourceService
+						.getLastResponse().getServerMessage());
 			}
 		} else
 			baseCache.put(userId, base);
@@ -295,42 +327,40 @@ public class KtbsApplicationHelper {
 		return "user" + Integer.toString(subject);
 	}
 
-	private IStoredTrace getStoredTrace(
-			Integer userId, 
-			String traceLocalName, 
+	private IStoredTrace getStoredTrace(Integer userId, String traceLocalName,
 			ResourceService resourceService) throws SQLException {
 
 		String baseName = makeKtbsUserName(userId);
 
 		IStoredTrace storedTrace = storedTraceCache.get(traceLocalName);
 
-		if(storedTrace == null) {
+		if (storedTrace == null) {
 			log.debug("The trace " + traceLocalName + " is not in the cache");
 
-			log.info("Retrieving the trace " + traceLocalName + " from the KTBS");
-			storedTrace = resourceService.getResource(baseName + "/" + traceLocalName, IStoredTrace.class);
+			log.info("Retrieving the trace " + traceLocalName
+					+ " from the KTBS");
+			storedTrace = resourceService.getResource(baseName + "/"
+					+ traceLocalName, IStoredTrace.class);
 
-			if(storedTrace == null) {
-				log.info("The trace " + traceLocalName + " could not be retrieved from the KTBS. Creating a new one.");
+			if (storedTrace == null) {
+				log
+						.info("The trace "
+								+ traceLocalName
+								+ " could not be retrieved from the KTBS. Creating a new one.");
 
 				String storedTraceUri = resourceService.newStoredTrace(
-						baseName, 
-						traceLocalName, 
-						visuTraceModel.getUri(), 
-						KtbsUtils.now(), 
-						null,
-						null,
-						null,
-						null,
-						Integer.toString(userId)
-				);
+						baseName, traceLocalName, visuTraceModel.getUri(),
+						KtbsUtils.now(), null, null, null, null, Integer
+								.toString(userId));
 
-				if(storedTraceUri == null) 
+				if (storedTraceUri == null)
 					log.error("Could not create the trace " + traceLocalName);
 				else
-					storedTrace = resourceService.getStoredTrace(storedTraceUri);
-			} else 
-				log.debug("The trace " + storedTrace.getUri() + " was retrieved successfully");
+					storedTrace = resourceService
+							.getStoredTrace(storedTraceUri);
+			} else
+				log.debug("The trace " + storedTrace.getUri()
+						+ " was retrieved successfully");
 			storedTraceCache.put(traceLocalName, storedTrace);
 			return storedTraceCache.get(traceLocalName);
 		} else
@@ -340,26 +370,28 @@ public class KtbsApplicationHelper {
 	private String getObselSimpleString(Integer subject, String trace,
 			String typeObsel) {
 		String message = "";
-		message+="[user=" + subject;
-		message+=", trace=" + trace;
-		message+=", type=" + typeObsel;
-		message+="]";
+		message += "[user=" + subject;
+		message += ", trace=" + trace;
+		message += ", type=" + typeObsel;
+		message += "]";
 		return message;
 	}
 
 	public Collection<IObsel> getTraceObsels(Integer uid, String traceId) {
 		IBase base = getBase(uid);
 		IKtbsResource trace = base.get(traceId);
-		if(trace != null && trace instanceof ITrace)
-			return ((ITrace)trace).getObsels();
+		if (trace != null && trace instanceof ITrace)
+			return ((ITrace) trace).getObsels();
 		else
 			return null;
 	}
 
 	private IBase getBase(Integer uid) {
-		IBase base = getKtbsClient(uid).getResourceService().getBase(makeKtbsUserName(uid));
-		if(base == null) {
-			String baseUri = getKtbsClient(uid).getResourceService().newBase(makeKtbsUserName(uid));
+		IBase base = getKtbsClient(uid).getResourceService().getBase(
+				makeKtbsUserName(uid));
+		if (base == null) {
+			String baseUri = getKtbsClient(uid).getResourceService().newBase(
+					makeKtbsUserName(uid));
 			base = getKtbsClient(uid).getResourceService().getBase(baseUri);
 		}
 		return base;
@@ -368,11 +400,8 @@ public class KtbsApplicationHelper {
 	private KtbsClient getKtbsClient(Integer uid) {
 		String username = makeKtbsUserName(uid);
 		KtbsClient client = ktbsClients.get(username);
-		if(client == null) 
-			ktbsClients.put(
-					username, 
-					clientFactory.createRestClient(rootUri, username, username)
-			);
+		if (client == null)
+			ktbsClients.put(username, clientFactory.createRestCachingClient(rootUri, username, username, 1000, 10000l));
 		return ktbsClients.get(username);
 	}
 
