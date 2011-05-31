@@ -118,6 +118,9 @@
 			<rtmp:CallbackRegistrator action="checkListUserObsel" target="{MainManager}" method="onCheckListUserObsel"/>
 			<rtmp:CallbackRegistrator action="checkListClosedSession" target="{MainManager}" method="onCheckListClosedSession"/>
 			<rtmp:CallbackRegistrator action="checkListObselClosedSession" target="{MainManager}" method="onCheckListObselClosedSession"/>
+
+			<rtmp:CallbackRegistrator action="checkListObselClosedSessionViaKtbs" target="{MainManager}" method="checkListObselClosedSessionViaKtbs"/>
+			
 			<rtmp:CallbackRegistrator action="checkListObselSessionExitSessionPause" target="{MainManager}" method="onCheckListObselSessionExitSessionPause"/>
 			<rtmp:CallbackRegistrator action="checkLastSession" target="{MainManager}" method="onCheckLastSession"/>
 			<rtmp:CallbackRegistrator action="checkUpdatedMarker" target="{MainManager}" method="onCheckUpdatedMarker"/>
