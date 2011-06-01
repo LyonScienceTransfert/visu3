@@ -14,11 +14,13 @@
 	<property name="ktbs.properties.filename" value="ktbs4j.properties"/>
 	<property name="logback.properties.filename" value="logback.xml"/>
 	<property name="run.filename" value="run.sh"/>
+	<property name="createmodels.filename" value="create-visu-model.sh"/>
 	
 	<target name="main">
 	 	<delete dir="dist"/>
 	 	<mkdir dir="dist"/>
 		<copy file="${run.filename}" todir="dist"/>
+		<copy file="${createmodels.filename}" todir="dist"/>
 		<copy file="src/${migrator.propfilename}" todir="dist"/>
 		<copy file="src/${ktbs.properties.filename}" todir="dist"/>
 		<copy file="src/${logback.properties.filename}" todir="dist"/>
