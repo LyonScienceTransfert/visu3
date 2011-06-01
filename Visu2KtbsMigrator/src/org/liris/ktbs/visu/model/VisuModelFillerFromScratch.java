@@ -26,6 +26,7 @@ public class VisuModelFillerFromScratch extends TraceModelFiller {
 	@Override
 	public void fill(ITraceModel model, PojoFactory factory) {
 		IObselType visuEvent = factory.createObselType(model.getUri(), "VisuEvent");
+		model.getObselTypes().add(visuEvent);
 
 		for(String obselTypeName:VISU_MODEL_TYPES) 
 			type(factory, model, visuEvent, obselTypeName);
@@ -37,7 +38,7 @@ public class VisuModelFillerFromScratch extends TraceModelFiller {
 	private void type(PojoFactory factory, ITraceModel model, IObselType visuEvent, String localName) {
 		IObselType type = factory.createObselType(model.getUri(), localName);
 		type.getSuperObselTypes().add(visuEvent);
-		model.getObselTypes().add(visuEvent);
+		model.getObselTypes().add(type);
 	}
 
 	private void attribute(PojoFactory factory, ITraceModel model, IObselType retroEvent,
