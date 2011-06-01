@@ -1,11 +1,10 @@
 package com.lyon2.visu.ktbs;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.liris.ktbs.domain.interfaces.IAttributePair;
 import org.liris.ktbs.domain.interfaces.IObsel;
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IClient;
@@ -13,18 +12,9 @@ import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
-import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
-import com.ithaca.domain.model.Obsel;
-import com.ithaca.domain.model.RetroDocument;
+import com.ithaca.domain.model.KtbsObsel;
 import com.lyon2.utils.ObselStringParams;
-import com.lyon2.utils.UserDate;
 import com.lyon2.visu.Application;
-import com.lyon2.visu.domain.model.Session;
-import com.lyon2.visu.domain.model.User;
-import com.lyon2.utils.ObselType;
-import com.lyon2.utils.UtilFunction;
-
-import java.util.Iterator;
 
 /**
  * 
@@ -70,17 +60,33 @@ public class KtbsObselInfo {
 			log.warn("hasn't trace");
 		}
 		String traceId = listTrace.get(0);
+		log.warn("TraceId = {}",traceId);
+		
 		Collection<IObsel>  listObsel = ktbsService.getTraceObsels(conn, traceId);
 		
 		log.warn(" !!!! URA OK we have list obsel ktbs");
+		log.warn("Nb obsels in the trace: {}", listObsel.size());
 	
+		List<KtbsObsel>  listObselVO = new LinkedList<KtbsObsel>();
+		for(IObsel obsel:listObsel) {
+			listObselVO.add(KtbsResourceVOFactory.createKtbsObsel(obsel));
+			log.warn("---------------------------------");
+			log.warn("Type : {}", obsel.getTypeUri());
+			log.warn("Begin: {}", obsel.getBeginDT());
+			for(IAttributePair attribute:obsel.getAttributePairs())
+				log.warn("         {}: {}", new Object[]{attribute.getAttributeType(), attribute.getValue()});
+		}
+		KtbsVOUtils.sortObselList(listObselVO);
+		
 		//Date sessionStartRecordingDate = session.getStart_recording();
-		Object[] args = { listObsel };
+		Object[] args = { listObselVO };
 		IConnection connClient = (IConnection) client
 				.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			log.warn("Start Red5 Mapping");
 			sc.invoke("checkListObselClosedSessionViaKtbs", args);
+			log.warn("Red5 Mapping finished");
 		}
 
 
