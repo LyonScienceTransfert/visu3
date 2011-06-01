@@ -180,18 +180,12 @@ public class ObselVO {
 
 			if(line.startsWith("ktbs:hasBegin ")) {
 				long begin = Long.parseLong(line.replaceAll("ktbs:hasBegin ", "").replaceAll(";", ""));
-				Calendar c = Calendar.getInstance();
-				c.setTimeInMillis(begin);
-				KtbsUtils.xsdDate(c.getTime());
-				obsel.setBeginDT(KtbsUtils.xsdDate(c.getTime()));
+				obsel.setBeginDT(getXSDDateTime(begin));
 				continue;
 			}
 			if(line.startsWith("ktbs:hasEnd ")) {
 				long end = Long.parseLong(line.replaceAll("ktbs:hasEnd ", "").replaceAll(";", ""));
-				Calendar c = Calendar.getInstance();
-				c.setTimeInMillis(end);
-				KtbsUtils.xsdDate(c.getTime());
-				obsel.setEndDT(KtbsUtils.xsdDate(c.getTime()));
+				obsel.setEndDT(getXSDDateTime(end));
 				continue;
 			}
 			if(line.startsWith("ktbs:hasSubject")) {
@@ -332,10 +326,10 @@ public class ObselVO {
 
 			this.typeUri = obselResource.getProperty(RDF.type).getObject().asResource().getURI();
 			Statement beginDTStmt = obselResource.getProperty(model.getProperty(KtbsConstants.P_HAS_BEGIN));
-			this.beginDT = getXSDDateTime(beginDTStmt);
+			this.beginDT = getXSDDateTime(beginDTStmt.getObject().asLiteral().getLong());
 
 			Statement endDTStmt = obselResource.getProperty(model.getProperty(KtbsConstants.P_HAS_END));
-			this.endDT = getXSDDateTime(endDTStmt);
+			this.endDT = getXSDDateTime(endDTStmt.getObject().asLiteral().getLong());
 
 			Statement subjectStmt = obselResource.getProperty(model.getProperty(KtbsConstants.P_HAS_SUBJECT));
 			this.subject = subjectStmt.getObject().asLiteral().getString();
@@ -345,11 +339,12 @@ public class ObselVO {
 			logger.error("RDF:\n{}", fixedRdf);
 		}
 	}
-	private String getXSDDateTime(Statement stmt) {
+	
+	private String getXSDDateTime(Long millis) {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		cal.setTimeInMillis(stmt.getObject().asLiteral().getLong());
-		//		XSDDateTime xsdDateTime = new XSDDateTime(beginDtCal);
-		return KtbsConstants.XSD_DATETIME_FORMAT.format(cal.getTime());
+		cal.setTimeInMillis(millis);
+		String string = KtbsConstants.XSD_DATETIME_FORMAT.format(cal.getTime());
+		return string;
 	}
 
 
