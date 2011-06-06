@@ -23,6 +23,13 @@
 		<!-- 
 			~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
 		-->	
+		<!-- InitMapEvent.INIT_MAP_BILAN __________________________________________________________________ -->		
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_BILAN}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="testApp"   arguments="{['Bilan']}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
 		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroDocument.getOwnedAndSharedRetroDocumentsByUserId"   arguments="{[event.userId]}" />
