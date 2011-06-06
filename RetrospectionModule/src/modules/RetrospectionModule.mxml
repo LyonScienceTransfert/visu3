@@ -131,6 +131,7 @@
 				}
 				
  				this.visio.connection = Model.getInstance().getNetConnection();
+				// add listener play/pause video by click on component
 				this.visio.addEventListener(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO, onClickPanelVideoVisuVisioAdvanced);
 				// removing module from the stage
 				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
@@ -1119,6 +1120,9 @@
 					this.visio.pauseStreams();
 				}
 			}
+			/**
+			 * Play/pause video by click on component
+			 */
 			private function onClickPanelVideoVisuVisioAdvanced(event:VisuVisioAdvancedEvent):void
 			{
 				// set currentRetrocumentSegmentPlaying to null
