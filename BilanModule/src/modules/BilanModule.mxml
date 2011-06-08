@@ -12,18 +12,13 @@
 	   xmlns:ithaca="com.ithaca.components.*"
 	   creationComplete="initBilanModule(event)"
 	   >
-	
 	<fx:Declarations>
 		<s:ArrayList id="segmentList"/>
-
 		<maps:BilanMap dispatcher="{this}"/>
-		
-		
 		<mate:Listener type="{BilanEvent.SHOW_RETRIEVED_BILAN_LIST}"  method="showRetrievedBilanList"/>
 		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
-		
+		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_BILAN}"  method="initVisio"/>
 	</fx:Declarations>
-	
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
@@ -31,6 +26,7 @@
 			import com.ithaca.events.SelectionEvent;
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
@@ -43,7 +39,6 @@
 			import mx.logging.Log;
 			
 			private var logger : ILogger = Log.getLogger('modules.BilanModule');
-			
 			
 			private function showRetroDocument(event:RetroDocumentEvent):void {
 				if(Model.getInstance().getCurrentBilanModule() == this)
@@ -70,19 +65,35 @@
 							doc.session = retroDoc.session;
 						}
 					}
-	
 					bilanViewer.setNewBilan(doc);
+				}
+			}
+			
+			private function initVisio(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					this.bilanViewer.stop();			
+					this.bilanViewer.visio.removeTimer();
 					
+					var startTimeSession:Number = event.dateStartRecording.time;
+					this.bilanViewer.visio.startTimeSession = startTimeSession;
+					// set dataProvider with collection the StreamObsel
+					var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
+					this.bilanViewer.visio.dataProvider = listStreamObsel;
+					// init button mute volume and button play/pause
+					this.bilanViewer.initButtons(this.bilanViewer.visio.getVolumeMute())	
+					this.bilanViewer.visio.startTimer();
+					this.bilanViewer.visio.autoPlay = false;
 				}
 			}
 			
 			private function onRemovedModuleFromStage(event:Event):void {
 				logger.info("Removing the BilanModule from stage");
-				
-					
 				if(this.bilanViewer) {
 					logger.debug("Stopping the bilan viewer");
 					this.bilanViewer.stop();			
+					this.bilanViewer.visio.removeTimer();
 				}
 					
 				// add obsel user walk out from retro room
@@ -124,12 +135,9 @@
 							logger.debug("Ask for the selection of session {0} in the bilan component", selectedSessionIdWhenInit);
 							bilanComp.selectSession(selectedSessionIdWhenInit);
 						}
-						
 					} else 
 						logger.warn("showRetrievedBilanList. bilanComp NULL");
-					
 				}
-				
 			}
 
 			private var selectedSessionIdWhenInit:Number = -1;
@@ -163,8 +171,6 @@
 				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;
 				
 				this.dispatchEvent(moduleLoadedEvent);
-				
-				
 			}
 
 
