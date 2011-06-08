@@ -111,15 +111,6 @@ public class MainManager
 		dispatcher.dispatchEvent(event);
 	}
 	
-	public function onSessionObselListRetrieved(sessionId:int, obselList: Array):void {
-		logger.info("Processing theobsel list callback. {0} obsels for session {1}", obselList.length, sessionId);
-		var bilanEvent:BilanEvent = new BilanEvent(BilanEvent.SESSION_OBSEL_LIST_RETRIEVED);
-		bilanEvent.sessionId = sessionId;
-		bilanEvent.obselList = obselList;
-		this.dispatcher.dispatchEvent(bilanEvent); 
-	}
-	
-
 	/**
  	 * new user connected to the DECK
 	 * @param

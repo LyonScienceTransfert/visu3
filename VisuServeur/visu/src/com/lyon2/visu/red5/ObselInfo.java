@@ -385,46 +385,6 @@ public class ObselInfo {
 	}
 
 	@SuppressWarnings("unchecked")
-	  public void getStreamObselsBySession(IConnection conn, Integer sessionId) {
-	    log.warn("======== getStreamObselsBySession = {}",sessionId.toString());
-	    String traceParam = "%-" + "void" + "%";
-	    String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\"" + "%";
-	    
-	    try {
-	      traceParam = "%-" + "void" + "%";
-	      refParam = "%:hasSession " + "\"" + sessionId.toString() + "\"" + "%";
-	      List<String> listTraceId = (List<String>) app.getSqlMapClient().queryForList(
-	          "obsels.getTracesBySessionId", 
-	          new ObselStringParams(traceParam, refParam)
-	      );
-	      
-	      List<Obsel> listObselSession = new ArrayList<Obsel>();
-	      for (String traceId : listTraceId) {
-	        List<Obsel> listObselUser = app.getSqlMapClient().queryForList("obsels.getTrace", traceId);
-	        
-	        Iterator<Obsel> it = listObselUser.iterator();
-	        
-	        // filter obsels that have nothing to do with the video stream events.
-	        while (it.hasNext()) {
-	          Obsel obsel = (Obsel) it.next();
-	          if(!obsel.getType().equals("SessionStart") 
-	              && !obsel.getType().equals("RecordFilename")) 
-	            it.remove();
-	        }
-	        listObselSession.addAll(listObselUser);
-	      }
-	      
-	      if (conn instanceof IServiceCapableConnection) {
-	        IServiceCapableConnection sc = (IServiceCapableConnection) conn;
-	        log.info("Sending back a list of {} obsels to the client for session {}", listObselSession.size(), sessionId);
-	        sc.invoke("sessionObselListRetrieved", new Object[]{sessionId, listObselSession});
-	      }
-	    } catch (Exception e) {
-	      log.error("Erreur lors du chargement de la liste des obsels pour la session", e);
-	    }
-	  }
-
-	@SuppressWarnings("unchecked")
 	public void getObselByTypeSessionExitSessionPause(IConnection conn, Integer sessionId) {
 		log.warn("======== getObselByTypeSessionExitSessionPause = {}",sessionId.toString());
 		IClient client = conn.getClient();
