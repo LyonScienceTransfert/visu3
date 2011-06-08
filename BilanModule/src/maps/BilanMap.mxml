@@ -38,7 +38,6 @@
 		
 		<mate:EventHandlers type="{BilanEvent.BILAN_LOADED}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="obselInfo.getStreamObselsBySession"   arguments="{[event.sessionId]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		

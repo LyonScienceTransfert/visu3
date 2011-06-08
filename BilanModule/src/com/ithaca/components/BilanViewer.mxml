@@ -7,13 +7,6 @@
 		xmlns:controls="com.lyon2.controls.*"
 		xmlns:mate="http://mate.asfusion.com/"
 	>
-
-	<fx:Declarations> 
-	
-		<mate:Listener type="{BilanEvent.SESSION_OBSEL_LIST_RETRIEVED}"  method="processVideoStreamsFromSessionObsels"/>
-		
-	</fx:Declarations>
- 
     <fx:Script>
         <![CDATA[
 			import com.ithaca.documentarisation.model.RetroDocument;
