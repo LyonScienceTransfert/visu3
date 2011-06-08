@@ -7,8 +7,17 @@
         xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
+			import com.asfusion.mate.utils.debug.Debugger;
+			import com.flashdevs.mateExt.rtmpService.RtmpService;
 			import com.ithaca.visu.events.BilanEvent;
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.model.Model;
+			
+			import managers.BilanManager;
+			
+			import mx.events.FlexEvent;	
+
+			private var ALL_INFO:int = 777;
 		]]>
 	</fx:Script>
 
@@ -38,6 +47,7 @@
 		
 		<mate:EventHandlers type="{BilanEvent.BILAN_LOADED}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId, ALL_INFO]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
@@ -72,14 +82,4 @@
 			showBusyCursor="true">
 		</s:RemoteObject>	
     </fx:Declarations>
-	
-	<fx:Script><![CDATA[
-		import com.asfusion.mate.utils.debug.Debugger;
-		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.ithaca.visu.events.InitMapEvent;
-		import com.ithaca.visu.model.Model;
-		
-		import managers.BilanManager;	
-		
-	]]></fx:Script>
 </mate:LocalEventMap>
