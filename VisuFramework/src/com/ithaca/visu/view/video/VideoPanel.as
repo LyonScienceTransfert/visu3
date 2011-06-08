@@ -71,6 +71,9 @@ package com.ithaca.visu.view.video
 		// enabled marker buttons
 		private var _buttonMarkerEnabled:Boolean = false
 		private var buttonMarkerEnabledChange:Boolean = false;
+		// logged user
+		private var _loggedUser:User;
+		private var loggedUserChange:Boolean = false;
 
 		
 		
@@ -180,6 +183,16 @@ package com.ithaca.visu.view.video
 		public function get mute():Boolean
 		{
 			return _volumeMute;
+		}
+		public function set loggedUser(value:User):void
+		{
+			_loggedUser = value;
+			loggedUserChange = true;
+			this.invalidateProperties();
+		}
+		public function get loggedUser():User
+		{
+			return _loggedUser;
 		}
 		//_____________________________________________________________________
 		//
@@ -354,6 +367,17 @@ package com.ithaca.visu.view.video
 				if(attachNetStream != null)
 				{
 					updateStreamVolumeMute();
+				}
+			}
+			if(loggedUserChange)
+			{
+				loggedUserChange = false;
+				// disabled button send chat message prived to himself
+				if(loggedUser.id_user == ownerFluxVideo.id_user)
+				{
+					_buttonChatEnabled = false;
+					buttonChatEnabledChange = true;
+					invalidateProperties();
 				}
 			}
 			
