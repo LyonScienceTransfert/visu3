@@ -205,6 +205,11 @@ package com.ithaca.visu.view.video.layouts
 			var tempX:int;
 			switch(numVideoPanel)
 			{
+				case 1:
+					result.h = hZoomIn;
+					result.w = (result.h/3)*4;
+					result.x = unscaledWidth - result.w;
+					result.y = unscaledHeight - result.h;
 				case 2:
 					result.h = hZoomIn/4;
 					result.w = (result.h/3)*4;
@@ -273,6 +278,11 @@ package com.ithaca.visu.view.video.layouts
 			var tempY:int;
 			switch(numVideoPanel)
 			{
+				case 1:
+					result.w = wZoomIn;
+					result.h = (result.w /4)*3;
+					result.x = unscaledWidth - result.w;
+					result.y = unscaledHeight - result.h;
 				case 2:
 					result.w = wZoomIn/5;
 					result.h = (result.w /4)*3;
