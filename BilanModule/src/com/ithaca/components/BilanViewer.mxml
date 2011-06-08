@@ -5,193 +5,85 @@
     	xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:ithaca="com.ithaca.components.*"
 		xmlns:controls="com.lyon2.controls.*"
-		xmlns:mate="http://mate.asfusion.com/"
+		xmlns:mate="http://mate.asfusion.com/" xmlns:video="com.ithaca.visu.view.video.*"
 	>
     <fx:Script>
         <![CDATA[
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.documentarisation.model.Segment;
-			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.events.BilanEvent;
-			import com.ithaca.visu.events.PlaySegmentVideoEvent;
 			import com.ithaca.visu.model.Model;
 			
-			import flash.events.TimerEvent;
-			import flash.utils.Dictionary;
-			
-			import mx.collections.ArrayCollection;
-			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
 			
-			import spark.events.IndexChangeEvent;
+			private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer');
 			
-		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer');
-		
-		/*
-		 * the dictionary of stream info (stream name + user ids + date)
-		 * organized by userId
-		 */
-		private var streamInfos : Dictionary;
-		
-		[Bindable]
-		private var timer:Timer;
+			[Bindable]
+			private var timer:Timer;
 			
-		private var sessionStart:Number;
-		
-		public function stop():void {
-			if(this.visio) {
-				logger.debug("Removing all streams from the video player in bilan module");
-				this.visio.removeAllStreams();
-			}
-				
-			if(this.timer) {
-				logger.debug("Stopping the timer in bilanViewer");
-				this.timer.stop();
-				this.timer = null;
-			} 
-		}
-		
-		private function processVideoStreamsFromSessionObsels(event:BilanEvent):void {
-			if(event.sessionId == bilan.sessionId) {
-				logger.info("Receiving an obsel list of size {0} for session {1}", 
-					event.obselList.size, 
-					event.sessionId);
-					
-					this.sessionStart = VisuUtils.getSessionStartTimeFromObselList(event.obselList);
-					
-					logger.info("The start timestamp of session {0} is {1}", bilan.sessionId, sessionStart); 
-					
-					if(this.sessionStart ==-1)
-						logger.warn("No session start timestamp found in the list of obsels");
-					
-					var streamInfos:Dictionary = VisuUtils.getStreamInfoFromSessionObselList(event.obselList);
-					for (var userId:Object in streamInfos) {
-						var entries:Array = streamInfos[userId];
-						for each (var entry:Object in entries) {
-							logger.debug("RFN {0} - {1} - {2}", entry['path'], entry['userId'], entry['date']);
-						}
-					}
-					this.streamInfos = streamInfos;
-					
-					// Enforce the video component to show up even though it has no stream
-					this.visio.addVideoStream("N'importe quoi");
-					this.visio.seekStreams(0);
-			} else
-				logger.warn("Receiving an obsel list for a different session. Expected: {0}, Actual: {1}", 
-					bilan.sessionId, 
-					event.sessionId);
-		}
-		
-		private function getStreamAtTime(sessionTime:Number, userId:Number):Object {
-			logger.debug("Finding the right stream for the user {0} at session time {1}", userId, sessionTime);
-			if(streamInfos[userId] && streamInfos[userId].length > 0) {
-				var selectedStream:Object = streamInfos[userId][0];
-
-				if(streamInfos[userId].length == 1) 
-					return selectedStream;
-				
-				/*
-				 * constant: the threshold number of milliseconds
-				 * 				for the selection of the next entry. 
-				 */
-				var allowedDelta:Number = 500;
-				
-				for (var i:int = 1; i < streamInfos[userId].length; i++) { 
-					var entry:Object = streamInfos[userId][i];
-					var streamTime:Number = entry['date'];
-					if(streamTime < (sessionTime+allowedDelta)) {
-						selectedStream = entry;
-					}
+			[Bindable]
+			public var bilan:RetroDocument = null;
+			
+			[Bindable]
+			public var showInfo:Boolean = false;	
+			// start session in ms from 1970 year
+			// for calculate seekSession, beginSegment has time ms from 1970
+			private var sessionStart:Number;
+			
+			public function stop():void {
+				if(this.visio) {
+					logger.debug("Removing all streams from the video player in bilan module");
+					this.visio.removeAllStreams();
 				}
-				logger.debug("The right stream is (path:{0}, time:{0})", selectedStream['path'], selectedStream['date']);
-				return selectedStream;
-			} 
-			logger.debug("No stream found for the user {0}", userId);
-			logger.debug("streamInfos[userId]: {0}", streamInfos[userId]);
-			if(streamInfos[userId])
-				logger.debug("streamInfos[userId].length: {0}", streamInfos[userId].length);
-			
-			return null;
-		}
-		
-		public function setNewBilan(bilan:RetroDocument):void {
-			this.bilan = bilan;
 					
-			if(this.visio!=null) 
-				this.visio.removeAllStreams();
-			
-			logger.debug("Setting a new bilan to the bilan viewer");
-			logger.debug("id: {0}",bilan.id);
-			logger.debug("creation date: {0}",bilan.creationDateAsDate);
-			logger.debug("modification date: {0}",bilan.modifyDateAsDate);
-			logger.debug("creation date (str): {0}",bilan.creationDate);
-			logger.debug("modification date (str): {0}",bilan.modifyDate);
-			logger.debug("title: {0}",bilan.title);
-			logger.debug("description: {0}",bilan.description);
-			logger.debug("session id: {0}",bilan.session.id_session);	
-			logger.debug("session theme: {0}",bilan.session.theme);
-			logger.debug("session owner id: {0}",bilan.session.id_user);
-			
-			if(bilan != null) {
-				var event:BilanEvent = new BilanEvent(BilanEvent.BILAN_LOADED);
-				event.sessionId = bilan.sessionId;
-				logger.info("Sending the request for the obsel list of session {0}", bilan.sessionId);
-				logger.info("The attached session object is {0}", bilan.session);
-				this.dispatchEvent(event);
-			}
-		}
-		
-		[Bindable]
-		public var bilan:RetroDocument = null;
-
-		[Bindable]
-		public var showInfo:Boolean = false;
-		
-		private function  toogleShowInfo(event:MouseEvent):void {
-			showInfo = !showInfo;
-		}
-		
-		private function initVisio(event:Event):void {
-			this.visio.connection = Model.getInstance().getNetConnection();
-		}
-
-		private function playVideoSegment(segment:Segment):void {
-			var segmentTime:Number = segment.beginTimeVideo;
-			logger.info("Ask for playing the video of segment {0} - {1} (current time: {2})", segment.title, segment.comment, segmentTime);
-			visio.removeAllStreams();
-			var newVideoStreams:Array = new Array();
-			
-			var lastEntry:Object = null;
-			for (var userIdStr:Object in streamInfos) {
-				var userId:Number = userIdStr as Number;
-				var currentStreamEntry:Object = getStreamAtTime(segmentTime,userId);
-				if(!currentStreamEntry)
-					logger.error('No stream to play at time {0} for user {1}',  segmentTime, userId);
-				logger.info("The stream to play at time {0} for user {1} is {2}", segmentTime, userId, currentStreamEntry['path']);
-				newVideoStreams.push(currentStreamEntry['path']);
-				lastEntry = currentStreamEntry;
-			}
-
-			logger.info("Adding {0} streams to the visuvisio",newVideoStreams.length);
-			this.visio.addVideoStreams(newVideoStreams);
-			
-			if(lastEntry != null) {
-				logger.info("Playing {0} streams to the visuvisio",newVideoStreams.length);
-			//	this.visio.playVideoStreams(newVideoStreams);
-				
-				// There is at least one stream entry tp play
-				logger.info("Seeking the streams to the right time (current segment time: {0}, streams start time: {1}, seeked to time: {2}s)",
-						segmentTime,
-						lastEntry['date'],
-						int((segmentTime-lastEntry['date'])/1000));
-				this.visio.seekStreams(int((segmentTime-lastEntry['date'])/1000));
-				
-				logger.info("Stopping the current timer of the video segment");
 				if(this.timer) {
-					logger.info("Stopping the current timer of the video segment");
+					logger.debug("Stopping the timer in bilanViewer");
 					this.timer.stop();
+					this.timer = null;
+				} 
+			}
+
+			public function setNewBilan(bilan:RetroDocument):void {
+				this.bilan = bilan;
+						
+				if(this.visio!=null) 
+					this.visio.removeAllStreams();
+				logger.debug("Setting a new bilan to the bilan viewer");
+				logger.debug("id: {0}",bilan.id);
+				logger.debug("creation date: {0}",bilan.creationDateAsDate);
+				logger.debug("modification date: {0}",bilan.modifyDateAsDate);
+				logger.debug("creation date (str): {0}",bilan.creationDate);
+				logger.debug("modification date (str): {0}",bilan.modifyDate);
+				logger.debug("title: {0}",bilan.title);
+				logger.debug("description: {0}",bilan.description);
+				logger.debug("session id: {0}",bilan.session.id_session);	
+				logger.debug("session theme: {0}",bilan.session.theme);
+				logger.debug("session owner id: {0}",bilan.session.id_user);
+				
+				if(bilan != null) {
+					var event:BilanEvent = new BilanEvent(BilanEvent.BILAN_LOADED);
+					event.sessionId = bilan.sessionId;
+					logger.info("Sending the request for the obsel list of session {0}", bilan.sessionId);
+					logger.info("The attached session object is {0}", bilan.session);
+					this.dispatchEvent(event);
 				}
+			}
+			
+			private function  toogleShowInfo(event:MouseEvent):void {
+				showInfo = !showInfo;
+			}
+			
+			private function initVisio(event:Event):void {
+				this.visio.connection = Model.getInstance().getNetConnection();
+				this.visio.addVideoStream("void",null, 0.0, true) ;
+			}
+	
+			private function playVideoSegment(segment:Segment):void {
+				var segmentTime:Number = segment.beginTimeVideo;
+				logger.info("Ask for playing the video of segment {0} - {1} (current time: {2})", segment.title, segment.comment, segmentTime);
+				// jump to begin the segment
+				this.visio.seekSession = segmentTime;
 				
 				var durationInMillis:Number = segment.endTimeVideo - segment.beginTimeVideo;
 				// check NaN duration of segment
@@ -200,51 +92,92 @@
 					durationInMillis = 0;
 				}
 				logger.debug("Setting up a new timer for the segment video playing. Duration in sec: {0}", int(durationInMillis/1000));
+				if(this.timer != null && this.timer.running)
+				{
+					this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
+					this.timer.stop();
+					this.timer = null;
+				}
 				this.timer = new Timer(durationInMillis,1);
 				this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
 				this.timer.start();
-			} 
-		}
-		
-		private function timerCompleteHandler(e:TimerEvent):void {
-			logger.debug("Timer complete for the segment video playing. Removing all streams from the video component.");
-			this.visio.pauseStreams();
-			buttonPlay.enabled = false;
-			this.visio.status = VisuVisio.STATUS_NONE;
-			// Clear the selection
-			this.segmentList.selectedItems = new Vector.<Object>();
-        }
-        
-        private function onSegmentSelectionClick(e:MouseEvent):void {
-			if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1 && !(e.target is Button) ) {
-				var segment:Segment = segmentList.selectedItems[0] as Segment;
-				logger.debug("Ask for playing the video at session time {0}", int((segment.beginTimeVideo - sessionStart)/1000));
-				playVideoSegment(segment);
-				// enabled button play/pause
-				buttonPlay.enabled = true;
-				// set status play 
-				this.visio.status = VisuVisio.STATUS_REPLAY;
-			} else
-				logger.debug("Selection changed on segmentList but nothing is selected now");
-		}
-
-			protected function buttonPlay_clickHandler(event:MouseEvent):void
+			}
+			
+			private function timerCompleteHandler(e:TimerEvent):void {
+				logger.debug("Timer complete for the segment video playing. Removing all streams from the video component.");
+				this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
+				this.visio.pauseStreams();
+				buttonPlay.enabled = false;
+				buttonPlay.label = "Pause";
+				this.visio.status = VisuVisioAdvanced.STATUS_NONE;
+				// Clear the selection
+				this.segmentList.selectedItems = new Vector.<Object>();
+	        }
+	        
+			private function onSegmentSelectionClick(e:MouseEvent):void {
+				if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1 && !(e.target is Button) ) {
+					var segment:Segment = segmentList.selectedItems[0] as Segment;
+					logger.debug("Ask for playing the video at session time {0}", int((segment.beginTimeVideo - sessionStart)/1000));
+					this.visio.autoPlay = true;
+					this.buttonPlay.enabled = true;
+					playVideoSegment(segment);
+					// enabled button play/pause
+					buttonPlay.enabled = true;
+					buttonPlay.label = "Pause";
+					// set status play 
+					this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
+				} else
+					logger.debug("Selection changed on segmentList but nothing is selected now");
+			}
+	
+			protected function buttonPlay_clickHandler(event:* = null):void
 			{
 				if( buttonPlay.label == "Play")
 				{
 					buttonPlay.label = "Pause";
 					this.visio.resumeStreams();
-					this.visio.status = VisuVisio.STATUS_REPLAY;
-					this.timer.start();
+					this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
+					if(this.timer != null)
+					{
+						this.timer.start();
+					}
 				}else
 				{
 					buttonPlay.label = "Play";
 					this.visio.pauseStreams();
-					this.visio.status = VisuVisio.STATUS_PAUSE;
-					this.timer.stop();
+					this.visio.status = VisuVisioAdvanced.STATUS_PAUSE;
+					if(this.timer != null)
+					{
+						this.timer.stop();
+					}
 				}
 			}
-
+			protected function buttonMute_clickHandler(event:* = null):void
+			{
+				if(buttonMute.label == "Couper le son")
+				{
+					buttonMute.label = "Activer le son";
+					this.visio.setVolumeMute(true);
+				}else
+				{
+					buttonMute.label = "Couper le son";
+					this.visio.setVolumeMute(false);
+				}
+			}
+			
+			public function initButtons(value:Boolean):void
+			{
+				var label:String = "Couper le son";
+				if(!value)
+				{
+					label = "Activer le son";
+				}
+				buttonMute.label = label;
+				buttonMute_clickHandler();
+				buttonPlay.enabled = false;
+				buttonPlay.label = "Pause";
+				buttonPlay_clickHandler();
+			}
         ]]>
     </fx:Script>
 
@@ -343,20 +276,26 @@
 									</s:itemRenderer>
 								</s:List>
 						</s:VGroup>
-
-					
 						<s:VGroup 
 							width="50%"
 							height="100%"
 							paddingTop="5"
 							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
-							<controls:VisuVisio id="visio" width="100%" height="100%"
+							<!--<controls:VisuVisio id="visio" width="100%" height="100%"
 										quality="80"
-										bandwidth="15000" autoPlay="True" creationComplete="initVisio(event)"/>
+										bandwidth="15000" autoPlay="True" creationComplete="initVisio(event)"/>-->
+							<video:VisuVisioAdvanced id="visio" width="100%" height="100%"
+										quality="80"
+										bandwidth="15000" autoPlay="false" creationComplete="initVisio(event)"/>
 							<mx:Spacer height="5"/>
-							<s:Button id="buttonPlay" click="buttonPlay_clickHandler(event)" enabled="false">
-								<s:label>Pause</s:label>
-							</s:Button>
+							<s:HGroup width="100%" horizontalAlign="center">
+								<s:Button id="buttonPlay" click="buttonPlay_clickHandler(event)" enabled="false">
+									<s:label>Pause</s:label>
+								</s:Button>
+								<s:Button id="buttonMute" click="buttonMute_clickHandler(event)">
+									<s:label>Couper le son</s:label>
+								</s:Button>
+							</s:HGroup>
 							<mx:Spacer height="5"/>
 						</s:VGroup>
 				</s:HGroup>
