@@ -890,6 +890,14 @@ public class MainManager
 			loadListObselRetro.durationSessionRetro = durationSession;		
 			this.dispatcher.dispatchEvent(loadListObselRetro);			
 		}
+		// dispatch event for BilanModule
+		var loadListObselBilan:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_OBSEL_BILAN);
+		loadListObselBilan.dateStartRecording = dateStartRecordingSession;
+		loadListObselBilan.durationSessionRetro = durationSession;		
+		this.dispatcher.dispatchEvent(loadListObselBilan);
+		
+		
+		
 		function addTempObselSessionOut(obsel:Obsel, list:ArrayCollection):void
 		{
 			
