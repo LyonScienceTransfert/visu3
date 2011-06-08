@@ -73,6 +73,8 @@ package com.ithaca.visu.view.video
 		private var _seekSession:Number = 0;
 		// volumeMute
 		private var _volumeMute:Boolean = false;
+		// logged user 
+		private var _loggedUser:User;
 		/* 
 		* Status constants
 		*/
@@ -113,7 +115,9 @@ package com.ithaca.visu.view.video
 		private var buttonChatEnabledChange:Boolean = false;
 		// enabled marker buttons
 		private var _buttonMarkerEnabled:Boolean = false
+			
 		private var buttonMarkerEnabledChange:Boolean = false;
+		private var loggedUserChange:Boolean = false;
 		
 		public function VisuVisioAdvanced()
 		{
@@ -293,6 +297,30 @@ package com.ithaca.visu.view.video
 		{
 			return _buttonMarkerEnabled;
 		}
+		public function set loggedUser(value:User):void
+		{
+			_loggedUser = value;
+			loggedUserChange = true;
+			this.invalidateProperties();
+		}
+		public function get loggedUser():User
+		{
+			return _loggedUser;
+		}
+		//_____________________________________________________________________
+		//
+		// Overriden Methods
+		//
+		//_____________________________________________________________________
+		override protected function commitProperties():void
+		{
+			super.commitProperties();	
+			if(loggedUserChange)
+			{
+				loggedUserChange = false;
+				setLoggedUser();
+			}
+		}
 		//_____________________________________________________________________
 		//
 		// Handlers
@@ -308,6 +336,14 @@ package com.ithaca.visu.view.video
 				tempStream.soundTransform = tempSoundTransforme;		
 			}
 		}*/
+		private function setLoggedUser():void
+		{
+			for (var name:String in videos)
+			{
+				videos[name].loggedUser = loggedUser;	
+			}
+		}
+		
 		public function removeVideoStream(sID: String, videoOnly: Boolean = false): void
 		{
 			logger.debug('\tremoveVideoStream ' + sID + " from " + streams.toString());
