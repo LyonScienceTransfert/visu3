@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:controls="com.lyon2.controls.*" xmlns:components="com.ithaca.utils.components.*" xmlns:video="com.ithaca.visu.view.video.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:controls="com.lyon2.controls.*" 
+		xmlns:components="com.ithaca.utils.components.*" 
+		xmlns:video="com.ithaca.visu.view.video.*"
+		 currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.video.VideoPanel")]
@@ -10,6 +14,17 @@
 		<![CDATA[
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.visu.ui.utils.IconEnum;
+			
+			import mx.events.StateChangeEvent;
+
+			protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				if(this.currentState == "zoomInMouseIn" || this.currentState == "zoomOutMouseIn")
+				{
+					buttonChat.visible = hostComponent.buttonChatEnabled;
+					buttonChat.includeInLayout = hostComponent.buttonChatEnabled;
+				}
+			}
 		]]>
 	</fx:Script>
 	<s:states>
@@ -29,7 +44,7 @@
 			<mx:Spacer width="100%"/>
 			<s:Label id="labelUserZoomIn" text="B.CLOUTER" paddingTop="5" color="#C40A0A" includeIn="disabled,zoomInMouseIn,zoomInMouseOut"/>
 			<mx:Spacer width="100%"/>
-			<mx:Button id="buttonChat" icon="{IconEnum.getIconByName('chat')}"  height="22" width="30" visible.zoomInMouseIn="{hostComponent.buttonChatEnabled}" visible.zoomOutMouseIn="{hostComponent.buttonChatEnabled}" visible="false">
+			<mx:Button id="buttonChat" icon="{IconEnum.getIconByName('chat')}"  height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Envoyer message privé</mx:toolTip>
 			</mx:Button>
 			<mx:Button id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" height="22" width="30" visible.zoomInMouseIn="{hostComponent.buttonMarkerEnabled}" visible.zoomOutMouseIn="{hostComponent.buttonMarkerEnabled}" visible="false">
