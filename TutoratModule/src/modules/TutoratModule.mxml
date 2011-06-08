@@ -1494,6 +1494,19 @@
 				
 			}
 			
+			protected function buttonMute_clickHandler(event:* = null):void
+			{
+				if(buttonMute.label == fxgt.gettext("Couper le son"))
+				{
+					buttonMute.label = fxgt.gettext("Activer le son");
+					this.visio.setVolumeMute(true);
+				}else
+				{
+					buttonMute.label = fxgt.gettext("Couper le son");
+					this.visio.setVolumeMute(false);
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<modules:states>
