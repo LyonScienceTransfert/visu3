@@ -370,18 +370,33 @@ package com.ithaca.visu.view.video
 			
 			if (videos[sID])
 			{
+				var deletedVideoPanel:VideoPanel = videos[sID] as VideoPanel;
+				// check if remove zoomed stream
+				if(deletedVideoPanel.zoomIn)
+				{
+					for (var name:String in videos)
+					{
+						if (videos[name].zoomIn == false)
+						{
+							videos[name].zoomIn = true;	
+							break;
+						}
+					}
+				}
 				groupVideoContener.removeElement(videos[sID]);
 				delete videos[sID];
 			}
 			
 		}
-		
-		public function addVideoStreams(value:Array):void
+		/**
+		 * Add streams, array has: {idClient:idClient, user:user}, idClient - streamId
+		 */
+		public function addVideoStreams(value:Array, mute:Boolean = false):void
 		{ 
-			for each (var stream: String in value)
+			for each (var object:Object in value)
 			{
 				// FIXEME - value of the param volume par default = 1.0 and mute = false;
-				addVideoStream(stream, null , 1.0, false, this.status);
+				addVideoStream(object.idClient, object.user , 1.0, mute, this.status);
 			}
 		}
 		public function playVideoStreams(value:Array):void
@@ -538,24 +553,30 @@ package com.ithaca.visu.view.video
 		 */
 		private function updateVolumeStreamObselByUserId(volume:Number, userId:int):void
 		{
-			trace("update volume for userId"+userId.toString()+ " VOLUME = "+ volume.toString());
-			var nbrStreamObsel:int = dataProvider.length;
-			for (var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel;  nStreamObsel++)
+			logger.debug("update volume for userId"+userId.toString()+ " VOLUME = "+ volume.toString());
+			if(dataProvider != null)
 			{
-				var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
-				if(streamObsel.userId == userId)
+				var nbrStreamObsel:int = dataProvider.length;
+				for (var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel;  nStreamObsel++)
 				{
-					streamObsel.volume = volume;
-					var mute:Boolean = false;
-					if(volume == 0 )
+					var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
+					if(streamObsel.userId == userId)
 					{
-						mute = true;
+						streamObsel.volume = volume;
+						var mute:Boolean = false;
+						if(volume == 0 )
+						{
+							mute = true;
+						}
+						streamObsel.mute = mute;
 					}
-					streamObsel.mute = mute;
 				}
+			}else
+			{
+				logger.debug("Hasn't dataProvider, mode synchrone");
 			}
 		}
-		public function addLocalDevice():void
+		public function addLocalDevice(ownerFluxVideo:User):void
 		{
 			logger.debug("addLocalDevice");
 			
@@ -569,7 +590,18 @@ package com.ithaca.visu.view.video
 			{
 				localvideo = new VideoPanel()
 				localvideo.status = status;
+				localvideo.buttonChatEnabled = this._buttonChatEnabled;
+				localvideo.buttonMarkerEnabled = this._buttonMarkerEnabled;
+
+				localvideo.ownerFluxVideo = ownerFluxVideo;
+				videos[streamID] = localvideo;
 				groupVideoContener.addElement(localvideo);
+				// add listener for zoom video
+				localvideo.addEventListener(VideoPanelEvent.VIDEO_PANEL_ZOOM, onVideoPanelZoom);
+				localvideo.addEventListener(VideoPanelEvent.UPDATE_VOLUME, onVideoPanelUpdateVolume);
+				localvideo.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
+				// set zoomIn for new stream
+				setZoom(localvideo);
 			}
 			
 			if( _camera == null && _microphone == null )
@@ -593,6 +625,9 @@ package com.ithaca.visu.view.video
 					updateCameraSetting( _camera);
 					_localstream.attachCamera( _camera );
 					localvideo.attachCamera = _camera ;
+					localvideo.volume = 1.0;
+					localvideo.mute = false;
+					localvideo.attachNetStream = this._localstream;
 				}
 				
 				if (_microphone)
@@ -621,7 +656,8 @@ package com.ithaca.visu.view.video
 				_localstream = null;				
 				localvideo.attachCamera = null;
 				localvideo.clear();
-				removeChild(localvideo);
+				groupVideoContener.removeElement(localvideo);
+				//removeChild(localvideo);
 				localvideo = null;
 				
 				publishing = false;
