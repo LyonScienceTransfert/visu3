@@ -1745,19 +1745,17 @@ package  com.ithaca.visu.model
 		public function getListIdClient(sessionId:int):Array
 		{
 			var result:Array = new Array();
-//			var nbrUsers:uint = this.listConnectedUsers.length;
 			var nbrUsers:uint = this._listUsersPlateforme.length;
 			for(var nUser:uint = 0; nUser < nbrUsers; nUser++)
 			{
-//				var user:User = this.listConnectedUsers[nUser];
 				var user:User = this._listUsersPlateforme[nUser];
 				var idClient:String = this.getIdClient(user.id_user);
 				var status:int = user.status;
 				var currentSessionUser:int = user.currentSessionId;
 				if((idClient != "") && (status == ConnectionStatus.PENDING || status == ConnectionStatus.RECORDING) && (currentSessionUser == sessionId))
 				{
-					//add idClient only if status Connected or Recording
-					result.push(idClient);				
+					//add idClient and user only if status Connected or Recording
+					result.push({idClient:idClient, user:user});				
 				}
 			}
 			return result;
