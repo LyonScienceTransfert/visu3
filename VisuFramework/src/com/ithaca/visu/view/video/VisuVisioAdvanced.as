@@ -7,13 +7,11 @@ package com.ithaca.visu.view.video
 	import com.ithaca.visu.view.video.model.IStreamObsel;
 	import com.lyon2.controls.VideoComponent;
 	
-	import flash.events.Event;
 	import flash.events.NetStatusEvent;
 	import flash.events.StatusEvent;
 	import flash.events.TimerEvent;
 	import flash.media.Camera;
 	import flash.media.Microphone;
-	import flash.media.SoundTransform;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	import flash.utils.Timer;
@@ -73,6 +71,8 @@ package com.ithaca.visu.view.video
 		private var currentTimeSessionMilliseconds:Number;
 		// seek session in milliseconds, call outside, example : play RetroDocument
 		private var _seekSession:Number = 0;
+		// volumeMute
+		private var _volumeMute:Boolean = false;
 		/* 
 		* Status constants
 		*/
@@ -201,12 +201,17 @@ package com.ithaca.visu.view.video
 		// set mute
 		public function setVolumeMute(value:Boolean):void
 		{
+			_volumeMute = value;
 			/* update volume in every StreamObsel in dataProvider
 			 	every new stream will add on the stage with updated volume
 			*/
 			updateMuteStreamObsel(value);
 			// update volume in the currents panelVideo
 			updateMuteVideoPanel(value);
+		}
+		public function getVolumeMute():Boolean
+		{
+			return _volumeMute;
 		}
 		private function updateMuteVideoPanel(value:Boolean):void
 		{
@@ -243,9 +248,11 @@ package com.ithaca.visu.view.video
 		{
 			return _startTimeSession;
 		}
-		// in milliseconds
+		// in milliseconds from start session
 		public function set seekSession(value:Number):void
 		{
+			// check if seek is value from 1970 or from start the session
+			if(value >= startTimeSession){value = value - startTimeSession};
 			_seekSession = value;
 			timeStartRetrospectionSession = new Date().time;
 			this.timePause = 0;
