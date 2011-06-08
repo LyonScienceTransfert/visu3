@@ -9,7 +9,7 @@
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
 						currentState="BlankState" 
-						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.visu.controls.timeline.*">
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.visu.controls.timeline.*" xmlns:video="com.ithaca.visu.view.video.*">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.traces.Obsel;
@@ -150,7 +150,7 @@
 							this.buttonCloseSession.enabled = true;
 						}
 						// set buttons startActivity enabled = false
-						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
+						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_NONE);
 					}
 					
 					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.CONNECTED);
@@ -210,7 +210,7 @@
 							sessionSharedEvent.senderUserId = 	player.getSenderId();
 							sessionSharedEvent.info = player.toolTip;
 							// set status record for add obsel sharedPlayerAction when session on Paused
-							sessionSharedEvent.status = VisuVisio.STATUS_RECORD;	
+							sessionSharedEvent.status = VisuVisioAdvanced.STATUS_RECORD;	
 							sessionSharedEvent.url = player.url;
 							sessionSharedEvent.idDocument = player.getIdDocument();
 							sessionSharedEvent.currentTimeVideoPlayer = player.getCurrentTime();
@@ -241,7 +241,7 @@
 							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
 							if(event.status == ConnectionStatus.RECORDING)
 							{
-								module.visio.status = VisuVisio.STATUS_RECORD;
+								module.visio.status = VisuVisioAdvanced.STATUS_RECORD;
 							}
 							// status session
 							var statusSession:int = currentSession.statusSession;
@@ -428,7 +428,7 @@
 			{
 				if(this.visio != null)
 				{
-					this.visio.status = VisuVisio.STATUS_RECORD;
+					this.visio.status = VisuVisioAdvanced.STATUS_RECORD;
 					// set group setMarker enabled for all users
 					this.setEnabledGroupSetMarker(true);
 					// update label button on view tutorat
@@ -436,7 +436,7 @@
 						buttonStartRecording.label = fxgt.gettext("Suspendre la séance");	
 						buttonCloseSession.enabled = false;
 						// set buttons startActivity enabled = true
-						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_RECORD);							
+						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_RECORD);							
 					}
 					// current session
 					var session:Session = Model.getInstance().getCurrentSession();
@@ -519,7 +519,7 @@
 				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 				if(this == currentModule)
 				{
-					this.visio.status = VisuVisio.STATUS_NONE;
+					this.visio.status = VisuVisioAdvanced.STATUS_NONE;
 					// set group setMarker enabled for all users
 					this.setEnabledGroupSetMarker(false);
 					// update label button on view tutorat
@@ -530,7 +530,7 @@
 						this._stopTimeRecording = event.timeStartStop;
 						//this.timer.stop();
 						// set buttons startActivity enabled = false
-						this.sessionPlan.setSessionStatus(VisuVisio.STATUS_NONE);
+						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_NONE);
 					}
 					// current session
 					var session:Session = Model.getInstance().getCurrentSession();
@@ -694,7 +694,7 @@
 				sessionSharedEvent.listUsers = listUsersIds;
 				sessionSharedEvent.senderUserId = 	player.getSenderId();
 				// set status record for add obsel sharedPlayerAction when session on Paused
-				sessionSharedEvent.status = VisuVisio.STATUS_RECORD;	
+				sessionSharedEvent.status = VisuVisioAdvanced.STATUS_RECORD;	
 				sessionSharedEvent.url = player.url;
 				sessionSharedEvent.idDocument = idDocument;
 				sessionSharedEvent.currentTimeVideoPlayer = currentTime;
@@ -795,7 +795,7 @@
 			protected function shareActivityElement(event:ActivityElementEvent):void
 			{
 				trace("shareActivityElement");
-				if( this.visio.status != VisuVisio.STATUS_RECORD)
+				if( this.visio.status != VisuVisioAdvanced.STATUS_RECORD)
 				{
 					Alert.show(fxgt.gettext("Poser un marqueur, une consigne, ou un mot-clé est autorisé uniquement après avoir démarré la séance.") , fxgt.gettext("Confirmation"));
 				}else
@@ -864,7 +864,7 @@
 			{
 				if(this.visio != null)
 				{
-					if (this.visio.status == VisuVisio.STATUS_RECORD){
+					if (this.visio.status == VisuVisioAdvanced.STATUS_RECORD){
 						//stop recording	
 						// conformation for closing the session
 						Alert.yesLabel = fxgt.gettext("Oui");
@@ -948,7 +948,7 @@
 			protected function updateLabelsModule(event:ApplicationMenuEvent):void
 			{
 				if(buttonStartRecording != null){
-					if(this.visio.status == VisuVisio.STATUS_NONE)
+					if(this.visio.status == VisuVisioAdvanced.STATUS_NONE)
 					{				
 						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");									
 					}else
@@ -985,7 +985,7 @@
 				var listUsersId:Array;
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-				if (this.visio.status == VisuVisio.STATUS_NONE)
+				if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
 				{
 					// all connected users
 					listUsersId = Model.getInstance().getListUsersIdByConnectedSession(sessionId);
@@ -1556,9 +1556,14 @@
 						<s:layout>
 							<s:VerticalLayout gap="3"/>
 						</s:layout>
-						<controls:VisuVisio id="visio" width="100%" top="0"
+						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
 											quality="80"
-											bandwidth="15000" autoPlay="True"  height="100%" />
+											bandwidth="15000" autoPlay="True"  height="100%" buttonChatEnabled="true" buttonMarkerEnabled="true"/>
+						<s:HGroup bottom="1" horizontalAlign="center"  horizontalCenter="0" width="100%">
+							<s:Button id="buttonMute" click="buttonMute_clickHandler(event)">
+								<s:label>{fxgt.gettext("Couper le son")}</s:label>
+							</s:Button>
+						</s:HGroup>
 						<s:Group width="100%" bottom="3" height="30" id="groupSetMarker">
 							<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 							</mx:TextArea>
