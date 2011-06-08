@@ -15,11 +15,10 @@
 		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
 		import com.ithaca.visu.events.AuthenticationEvent;
 		import com.ithaca.visu.events.MessageEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.SessionSharedEvent;
-		import com.ithaca.visu.events.TraceLineEvent;
 		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.model.Model;
+		import com.ithaca.visu.events.SessionSharedEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.TraceLineEvent;
 		
 		import mx.events.FlexEvent;
 
