@@ -75,7 +75,6 @@ package  com.ithaca.visu.model
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.ui.utils.SessionFilterEnum;
-	import com.ithaca.visu.ui.utils.SessionStatusEnum;
 	import com.ithaca.visu.view.video.model.StreamObsel;
 	
 	import flash.net.NetConnection;
@@ -87,7 +86,6 @@ package  com.ithaca.visu.model
 	
 	import spark.components.Button;
 	import spark.components.Group;
-	import spark.components.RadioButton;
 
 
 	public final class Model
