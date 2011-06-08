@@ -227,12 +227,18 @@ package com.ithaca.visu.view.video
 		}
 		private function updateMuteStreamObsel(value:Boolean):void
 		{
-			 var nbrStreamObsel:int = dataProvider.length;
-			 for(var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel ; nStreamObsel++ )
-			 {
-				 var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
-				 streamObsel.mute = value;
-			 }
+			if(dataProvider != null)
+			{
+				 var nbrStreamObsel:int = dataProvider.length;
+				 for(var nStreamObsel:int = 0 ; nStreamObsel < nbrStreamObsel ; nStreamObsel++ )
+				 {
+					 var streamObsel:IStreamObsel = dataProvider.getItemAt(nStreamObsel) as IStreamObsel;
+					 streamObsel.mute = value;
+				 }
+			}else
+			{
+				logger.debug("updateMuteStreamObsel() : Hasn't dataProvider, mode synchrone");
+			}
 		}
 		
 		public function set dataProvider(value:ArrayCollection):void
