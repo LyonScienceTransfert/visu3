@@ -54,6 +54,7 @@ public class SessionEvent extends Event
 	static public const GET_SESSION : String = 'getSession';
 	static public const GET_SESSION_SALON_RETRO : String = 'getSessionSalonRetro';
 	static public const LOAD_LIST_OBSEL_RETRO : String = 'loadListObselRetro';
+	static public const LOAD_LIST_OBSEL_BILAN : String = 'loadListObselBilan';
 	static public const LOAD_LIST_RETRODOCUMENT_SESSION : String = 'loadListRetrodocumentSession';
 	static public const LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION : String = 'loadListClosedSessionSalonRetrospection';
 	static public const GET_LIST_OBSEL : String = 'getListObsel';
