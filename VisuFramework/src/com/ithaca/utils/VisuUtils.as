@@ -58,6 +58,7 @@ package com.ithaca.utils
 
 		public static function getUserLabel(user:User, firstnameAbbr:Boolean = false):String
 		{
+			if(user == null) return "";
 			var f:String = firstnameAbbr?(StringUtils.firstLetterCap(user.lastname) + "."):StringUtils.cap(user.lastname);
 			return f + " " + StringUtils.cap(user.firstname);
 		}
