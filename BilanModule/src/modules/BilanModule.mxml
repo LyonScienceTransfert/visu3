@@ -168,8 +168,7 @@
 				
 				bilanComp.addEventListener("SelectionEvent", onBilanSelected);
 				var moduleLoadedEvent:BilanEvent = new BilanEvent(BilanEvent.BILAN_MODULE_LOADED);  
-				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;
-				
+				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;				
 				this.dispatchEvent(moduleLoadedEvent);
 			}
 

@@ -13,6 +13,7 @@
 			import com.ithaca.documentarisation.model.Segment;
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			
 			import mx.logging.ILogger;
 			import mx.logging.Log;
@@ -76,7 +77,9 @@
 			
 			private function initVisio(event:Event):void {
 				this.visio.connection = Model.getInstance().getNetConnection();
-				this.visio.addVideoStream("void",null, 0.0, true) ;
+				this.visio.addVideoStream("void",null, 0.0, true);
+				// add listener play/pause video by click on component
+				this.visio.addEventListener(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO, onClickPanelVideoVisuVisioAdvanced);
 			}
 	
 			private function playVideoSegment(segment:Segment):void {
@@ -176,6 +179,13 @@
 				buttonMute_clickHandler();
 				buttonPlay.enabled = false;
 				buttonPlay.label = "Pause";
+				buttonPlay_clickHandler();
+			}
+			/**
+			 * Play/pause video by click on component
+			 */
+			private function onClickPanelVideoVisuVisioAdvanced(event:VisuVisioAdvancedEvent):void
+			{
 				buttonPlay_clickHandler();
 			}
         ]]>
@@ -281,9 +291,6 @@
 							height="100%"
 							paddingTop="5"
 							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
-							<!--<controls:VisuVisio id="visio" width="100%" height="100%"
-										quality="80"
-										bandwidth="15000" autoPlay="True" creationComplete="initVisio(event)"/>-->
 							<video:VisuVisioAdvanced id="visio" width="100%" height="100%"
 										quality="80"
 										bandwidth="15000" autoPlay="false" creationComplete="initVisio(event)"/>
