@@ -276,7 +276,8 @@
 			/**
 			 * Removing all streams and local devices
 			 */
-			private function onRemovedModuleFromStage(event:Event):void{
+			private function onRemovedModuleFromStage(event:Event):void
+			{
 				if(this.visio != null)
 				{
 					this.removeAllStreams();
@@ -289,8 +290,9 @@
 					// add obsel user walk out from retro room
 					var outFromSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
 					this.dispatchEvent(outFromSalonRetro);
-						
 				}
+				// set current module null
+				Model.getInstance().setCurrentRetroModule(null);
 			}
 			
 			/**
@@ -1120,26 +1122,13 @@
 					this.visio.pauseStreams();
 				}
 			}
+
 			/**
 			 * Play/pause video by click on component
 			 */
 			private function onClickPanelVideoVisuVisioAdvanced(event:VisuVisioAdvancedEvent):void
 			{
-				// set currentRetrocumentSegmentPlaying to null
-				setCurrentRetroDocumentSegmentPlaying(null);
-				// remove timer RetroDocumentSegment
-				removeTimerRetroDocumentSegment();
-				if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
-				{
-					pauseVideo();
-					sessionTimeLine.setStatusPlay(true);
-					setLabelButtonPlayPause(true);
-				}else
-				{
-					this.visio.resumeStreams();
-					sessionTimeLine.setStatusPlay(false);
-					setLabelButtonPlayPause(false);
-				}
+				buttonPlayPause_clickHandler();
 			}
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
 			{
@@ -1280,20 +1269,17 @@
 				}
 			}
 
-
 			protected function numStepplerIntervelDecolageFlux_changeHandler(event:Event):void
 			{
 				// update max interval the decalage
 				this.maxIntervalDecalage = (event.currentTarget as NumericStepper).value;	
 			}
 
-
 			protected function numStepplerIntervalCheckDecalageFlux_changeHandler(event:Event):void
 			{
 				this.intervalCheckDecalage = (event.currentTarget as NumericStepper).value;
 				timerSynchro.delay = this.intervalCheckDecalage*1000;
 			}
-
 
 			protected function visio_updateTimeHandler(event:VisuVisioAdvancedEvent):void
 			{
@@ -1311,8 +1297,7 @@
 				this.currentTimeSessionMilliseconds = beginTime + this.testTimeLine.startTimeSession;
 			}
 
-
-			protected function buttonPlayPause_clickHandler(event:MouseEvent):void
+			protected function buttonPlayPause_clickHandler(event:* = null):void
 			{
 				// set currentRetrocumentSegmentPlaying to null
 				setCurrentRetroDocumentSegmentPlaying(null);
@@ -1330,6 +1315,7 @@
 					setLabelButtonPlayPause(false);
 				}
 			}
+			
 			private function setLabelButtonPlayPause(value:Boolean):void
 			{
 				var label:String = "Pause";
@@ -1371,7 +1357,7 @@
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
 											quality="80"
 											updateTime="visio_updateTimeHandler(event)"
-											buttonChatEnabled="true"
+											buttonChatEnabled="false"
 											buttonMarkerEnabled="true"
 											bandwidth="15000" autoPlay="true" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"
 											/>
