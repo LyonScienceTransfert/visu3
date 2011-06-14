@@ -1078,6 +1078,7 @@
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.idUserFor = idUserFor;
 				dispatchEvent(sessionSharedEvent);
 				// update text
 				textChatMarker.text = "";
@@ -1445,9 +1446,13 @@
 				if(!value)
 				{
 					textChatMarker.text = fxgt.gettext("Pose de marqueur non autorisée");
+					// hide button set marcker on composant VideoPanel 
+					visio.buttonMarkerEnabled = false;
 				}else
 				{
 					textChatMarker.text = "";
+					// show button set marcker on composant VideoPanel 
+					visio.buttonMarkerEnabled = true;
 				}
 			}
 
@@ -1521,6 +1526,75 @@
 				}
 			}
 			
+
+			protected function visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var panelEditInfo:PanelEditInfo = new PanelEditInfo();
+				this.groupeVideo.addElement(panelEditInfo);
+				panelEditInfo.x = 25;
+				panelEditInfo.y = 25;
+				
+				panelEditInfo.user = event.user;
+				panelEditInfo.beginTime = event.beginTime;
+				panelEditInfo.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditInfoClickButtonOk);
+				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditInfoClickButtonCancel);
+			}
+			
+			private function mouseMoveHandler(event:MouseEvent):void
+			{
+				var dragInitiator:PanelEditInfo = PanelEditInfo(event.currentTarget);
+				var dragSource:DragSource = new DragSource(); 
+				dragSource.addData(dragInitiator, "panelEditInfo");
+				DragManager.doDrag(dragInitiator, dragSource, event);
+			}
+			
+			private function dragEnterHandler(event:DragEvent):void 
+			{
+				if (event.dragSource.hasFormat("panelEditInfo"))
+				{
+					pointPanelEditInfo = new Point(event.dragInitiator.mouseX, event.dragInitiator.mouseY);
+					DragManager.acceptDragDrop(Panel(event.currentTarget));
+				}
+			}
+			
+			private function dragDropHandler(event:DragEvent):void 
+			{
+				var panel:Panel = Panel(event.currentTarget);
+				var panelEditInfo:PanelEditInfo = PanelEditInfo(event.dragInitiator);
+				var delta:int = 35;
+				var pt:Point = new Point(panel.mouseX, panel.mouseY);
+				pt = panel.localToGlobal(pt);
+				pt = panel.globalToLocal(pt);
+				
+				panelEditInfo.x =
+					pt.x - pointPanelEditInfo.x;
+				panelEditInfo.y =
+					pt.y - pointPanelEditInfo.y - delta;
+			}
+			
+			private function onPanelEditInfoClickButtonOk(event:PanelEditInfoEvent):void
+			{
+				var idUserFor:int = event.user.id_user;
+				var message:String = event.text;
+				// send marker to server 
+				sendMarker(false,message,idUserFor);
+				// remove panelEditInfo
+				var panelEditInfo:PanelEditInfo = event.currentTarget as PanelEditInfo;
+				removePanelEditInfo(panelEditInfo);
+			}
+			
+			private function onPanelEditInfoClickButtonCancel(event:PanelEditInfoEvent):void
+			{
+				// remove panelEditInfo
+				var panelEditInfo:PanelEditInfo = event.currentTarget as PanelEditInfo;
+				removePanelEditInfo(panelEditInfo);
+			}
+
+			private function removePanelEditInfo(panelEditInfo:PanelEditInfo):void
+			{
+				groupeVideo.removeElement(panelEditInfo);
+			}
 		]]>
 	</fx:Script>
 	<modules:states>
