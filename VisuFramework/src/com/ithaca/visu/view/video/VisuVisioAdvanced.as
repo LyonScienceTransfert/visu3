@@ -533,6 +533,15 @@ package com.ithaca.visu.view.video
 			var clickVideoPanelEvent:VisuVisioAdvancedEvent =  new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO);
 			this.dispatchEvent(clickVideoPanelEvent);
 		}
+		
+		private function onButtonMarkerClick(event:VideoPanelEvent):void
+		{
+			var clickButtonMarkerEvent:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_BUTTON_MARKER);
+			clickButtonMarkerEvent.user = event.user;
+			// time the start edit marker
+			clickButtonMarkerEvent.beginTime = currentTimeSessionMilliseconds;
+			this.dispatchEvent(clickButtonMarkerEvent);
+		}
 		/**
 		 *  Update property zoomIn
 		 */
@@ -602,6 +611,7 @@ package com.ithaca.visu.view.video
 				localvideo.addEventListener(VideoPanelEvent.VIDEO_PANEL_ZOOM, onVideoPanelZoom);
 				localvideo.addEventListener(VideoPanelEvent.UPDATE_VOLUME, onVideoPanelUpdateVolume);
 				localvideo.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
+				localvideo.addEventListener(VideoPanelEvent.CLICK_BUTTON_MARKER_VIDEO_PANEL, onButtonMarkerClick);
 				// set zoomIn for new stream
 				setZoom(localvideo);
 			}
@@ -775,6 +785,7 @@ package com.ithaca.visu.view.video
 				videoPanel.addEventListener(VideoPanelEvent.VIDEO_PANEL_ZOOM, onVideoPanelZoom);
 				videoPanel.addEventListener(VideoPanelEvent.UPDATE_VOLUME, onVideoPanelUpdateVolume);
 				videoPanel.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
+				videoPanel.addEventListener(VideoPanelEvent.CLICK_BUTTON_MARKER_VIDEO_PANEL, onButtonMarkerClick);
 				// set zoomIn for new stream
 				setZoom(videoPanel);
 			}
