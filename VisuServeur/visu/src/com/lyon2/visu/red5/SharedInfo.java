@@ -79,6 +79,8 @@ import org.slf4j.Logger;
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.visu.Application;
+
+import com.lyon2.utils.ObselType;
  
 /**
  * 
@@ -99,7 +101,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser)
+	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
@@ -225,6 +227,11 @@ public class SharedInfo
 					List<Object> paramsObselSend= new ArrayList<Object>();
 			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
 			   		paramsObselSend.add("timestamp");paramsObselSend.add(timeStamp.toString());
+			   		// add idUserFor 
+			   		if(typeInfo == 6 && idUserFor > 0)
+			   		{
+			   			paramsObselSend.add(ObselType.ID_USER_FOR);paramsObselSend.add(String.valueOf(idUserFor));
+			   		}
 			   		// add url sending documents
 			   		if(typeInfo == 3 || typeInfo == 4 )
 			   		{
@@ -257,6 +264,11 @@ public class SharedInfo
 		   			paramsObselReceive.add(namePropertyObsel);paramsObselReceive.add(info);
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
 		   			paramsObselReceive.add("timestamp");paramsObselReceive.add(timeStamp.toString());
+		   			// add idUserFor 
+			   		if(typeInfo == 6 && idUserFor > 0)
+			   		{
+			   			paramsObselReceive.add(ObselType.ID_USER_FOR);paramsObselReceive.add(String.valueOf(idUserFor));
+			   		}
 		   			// add url sending/reading documents
 			   		if(typeInfo == 3 || typeInfo == 4 || typeInfo == 7 || typeInfo == 8 || typeInfo == 100)
 			   		{

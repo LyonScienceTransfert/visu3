@@ -27,6 +27,7 @@ public class SessionSharedEvent extends Event
 	public var idDocument:Number = 0;
 	public var currentTimeVideoPlayer:Number = 0;
 	public var action:String = "";
+	public var idUserFor:int = 0;
 	
 	// constructor
 	public function SessionSharedEvent(type : String,
