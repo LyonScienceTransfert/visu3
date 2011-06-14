@@ -24,6 +24,8 @@ package com.ithaca.visu.view.video
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	[Event(name="updateTime",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
+	[Event(name="clickButtonMarker",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
+	[Event(name="clickPanelVideo",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	
 	public class VisuVisioAdvanced extends SkinnableComponent
 	{
