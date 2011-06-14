@@ -419,7 +419,9 @@ package com.ithaca.visu.view.video
 		//_____________________________________________________________________
 		private function onClickButtonMarker(event:MouseEvent):void
 		{
-			return;
+			var clickButtonMarkerEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CLICK_BUTTON_MARKER_VIDEO_PANEL);
+			clickButtonMarkerEvent.user = ownerFluxVideo;
+			dispatchEvent(clickButtonMarkerEvent);
 		}
 		private function onClickButtonChat(event:MouseEvent):void
 		{
