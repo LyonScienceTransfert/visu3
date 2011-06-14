@@ -328,6 +328,11 @@ package com.ithaca.visu.view.video
 				loggedUserChange = false;
 				setLoggedUser();
 			}
+			if(buttonMarkerEnabledChange)
+			{
+				buttonMarkerEnabledChange = false;
+				updateButtonSetMarker(buttonMarkerEnabled)
+			}
 		}
 		//_____________________________________________________________________
 		//
@@ -557,6 +562,17 @@ package com.ithaca.visu.view.video
 					videos[name].zoomIn = false;	
 				}
 				
+			}
+		}
+		/**
+		 * Update enabled button set marker
+		 */
+		private function updateButtonSetMarker(value:Boolean):void
+		{
+			for (var name:String in videos)
+			{
+				var videoPanel:VideoPanel = videos[name];
+				videoPanel.buttonMarkerEnabled = value;
 			}
 		}
 		/**
