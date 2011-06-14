@@ -49,6 +49,7 @@ public class ObselType {
 	public static final String COMMENT_END_DATE = "commentEndDate";
 	public static final String COMMENT_EDIT_TYPE = "editType";
 
+	public static final String ID_USER_FOR = "idUserFor";
 	
 	public static final String PARAM_SYNC_ROOM_TRACE_ID = "syncRoomTraceId";
 	
