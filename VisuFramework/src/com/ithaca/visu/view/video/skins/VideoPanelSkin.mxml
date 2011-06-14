@@ -23,6 +23,9 @@
 				{
 					buttonChat.visible = hostComponent.buttonChatEnabled;
 					buttonChat.includeInLayout = hostComponent.buttonChatEnabled;
+					
+					buttonMarker.visible = hostComponent.buttonMarkerEnabled;
+					buttonMarker.includeInLayout = hostComponent.buttonMarkerEnabled;
 				}
 			}
 		]]>
@@ -47,7 +50,7 @@
 			<mx:Button id="buttonChat" icon="{IconEnum.getIconByName('chat')}"  height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Envoyer message privé</mx:toolTip>
 			</mx:Button>
-			<mx:Button id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" height="22" width="30" visible.zoomInMouseIn="{hostComponent.buttonMarkerEnabled}" visible.zoomOutMouseIn="{hostComponent.buttonMarkerEnabled}" visible="false">
+			<mx:Button id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Posé le marqueur</mx:toolTip>
 			</mx:Button>
 			<mx:Button id="buttonZoom" icon="{IconEnum.getIconByName('zoom')}"  height="22" width="30" includeIn="disabled,zoomOutMouseIn">
