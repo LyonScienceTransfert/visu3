@@ -17,7 +17,6 @@ package com.ithaca.visu.events
 		static public const CLICK_BUTTON_OK : String = 'clickButtonOk';
 		static public const CLICK_BUTTON_CANCEL : String = 'clickButtonCancel';
 		// properties
-		public var beginTime:Number;
 		public var user:User;
 		public var text:String;
 		// constructor
