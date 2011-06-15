@@ -425,7 +425,9 @@ package com.ithaca.visu.view.video
 		}
 		private function onClickButtonChat(event:MouseEvent):void
 		{
-			return;
+			var clickButtonChatEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CLICK_BUTTON_CHAT_VIDEO_PANEL);
+			clickButtonChatEvent.user = ownerFluxVideo;
+			dispatchEvent(clickButtonChatEvent);
 		}
 		private function onClickButtonZoom(even:MouseEvent):void
 		{
