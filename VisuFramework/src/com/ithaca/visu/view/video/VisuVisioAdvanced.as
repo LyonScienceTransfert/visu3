@@ -25,6 +25,7 @@ package com.ithaca.visu.view.video
 	
 	[Event(name="updateTime",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickButtonMarker",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
+	[Event(name="clickButtonChat",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickPanelVideo",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	
 	public class VisuVisioAdvanced extends SkinnableComponent
@@ -539,6 +540,13 @@ package com.ithaca.visu.view.video
 			this.dispatchEvent(clickVideoPanelEvent);
 		}
 		
+		private function onButtonChatClick(event:VideoPanelEvent):void
+		{
+			var clickButtonChatEvent:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_BUTTON_CHAT);
+			clickButtonChatEvent.user = event.user;
+			this.dispatchEvent(clickButtonChatEvent);
+		}
+		
 		private function onButtonMarkerClick(event:VideoPanelEvent):void
 		{
 			var clickButtonMarkerEvent:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_BUTTON_MARKER);
@@ -800,6 +808,7 @@ package com.ithaca.visu.view.video
 				videoPanel.addEventListener(VideoPanelEvent.UPDATE_VOLUME, onVideoPanelUpdateVolume);
 				videoPanel.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
 				videoPanel.addEventListener(VideoPanelEvent.CLICK_BUTTON_MARKER_VIDEO_PANEL, onButtonMarkerClick);
+				videoPanel.addEventListener(VideoPanelEvent.CLICK_BUTTON_CHAT_VIDEO_PANEL, onButtonChatClick);
 				// set zoomIn for new stream
 				setZoom(videoPanel);
 			}
