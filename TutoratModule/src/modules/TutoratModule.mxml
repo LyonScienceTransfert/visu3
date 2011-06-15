@@ -682,20 +682,24 @@
 								sourceImageInfo = fichierIconVisu1;
 								break;
 						}
-						
-						var sharedElementChat:SharedElementChat = new SharedElementChat();
-						// default color of component SharedElementChatSkin 
-						// only for chat messages sended before start session(hasn't info about users)
-						var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
-						var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
-						if(traceLine != null)
+						// check if "message" for logged user or logged user sent message
+						var idLoggedUser:int = Model.getInstance().getLoggedUser().id_user;
+						if(event.idUserFor == 0 || event.idUserFor == idLoggedUser || event.senderUserId == idLoggedUser)
 						{
-							userColor = traceLine.userColor;
+							var sharedElementChat:SharedElementChat = new SharedElementChat();
+							// default color of component SharedElementChatSkin 
+							// only for chat messages sended before start session(hasn't info about users)
+							var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
+							var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
+							if(traceLine != null)
+							{
+								userColor = traceLine.userColor;
+							}
+							sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo, userColor);
+							sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
+							this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+							this.panelChatSession.addElement(sharedElementChat);
 						}
-						sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo, userColor);
-						sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
-						this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
-						this.panelChatSession.addElement(sharedElementChat);
 					}
 				}
 			}
@@ -798,6 +802,8 @@
 				}
 			}
 			protected function onUpdateChatSession(event:FlexEvent):void{
+				// remove listener
+				this.panelChatSession.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 				// update scroll possition
 				scrollerPanelChatSession.viewport.verticalScrollPosition = scrollerPanelChatSession.viewport.contentHeight - scrollerPanelChatSession.height;
 			}
@@ -987,13 +993,14 @@
 			 */
 			protected function onSendMessage(event:*):void
 			{
+				var message:String = textChatMessage.text;
 				if(event is MouseEvent){
-					this.sendMessage(false);
+					this.sendMessage(false, message);
 				}else if (event is KeyboardEvent) 
 				{
 					if(event.keyCode == Keyboard.ENTER)
 					{
-						this.sendMessage(true);
+						this.sendMessage(true, message);
 					}
 				}
 			}
@@ -1001,7 +1008,7 @@
 			/**
 			 * Sending message
 			 */
-			private function sendMessage(cutLastCharMessage:Boolean):void
+			private function sendMessage(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0):void
 			{
 				// TODO send message to one user by click on his video
 				var listUsersId:Array;
@@ -1020,11 +1027,10 @@
 				}
 				
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
-				var message:String = textChatMessage.text;
 				if(cutLastCharMessage)
 				{
 					// remove last character from the message if was click on button "Enter"
-					message = textChatMessage.text.slice(0, textChatMessage.text.length-1);
+					message = message.slice(0, message.length-1);
 				}
 				// check if message empty
 				if(UtilFunction.isEmptyMessage(message))
@@ -1035,6 +1041,7 @@
 				}
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.idUserFor = idUserFor;
 				dispatchEvent(sessionSharedEvent);
 				// update text
 				textChatMessage.text = "";
