@@ -19,6 +19,7 @@ package com.ithaca.visu.events
 		static public const UPDATE_VOLUME : String = 'updateVolume';
 		static public const CLICK_VIDEO_PANEL : String = 'clickVideoPanel';
 		static public const CLICK_BUTTON_MARKER_VIDEO_PANEL : String = 'clickButtonMarkerVideoPanel';
+		static public const CLICK_BUTTON_CHAT_VIDEO_PANEL : String = 'clickButtonChatVideoPanel';
 		// properties
 		public var volume:Number;
 		public var userId:int;
