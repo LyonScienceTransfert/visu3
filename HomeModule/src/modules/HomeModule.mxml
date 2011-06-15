@@ -337,13 +337,17 @@
 					Model.getInstance().setSessionDate(event.listDate);
 					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
 					var elementDateStartToday:Object = getObjectDateSessionStartToday(this.listDateForNavigateurDay);
-					var labelDate:String = elementDateStartToday.labelDate;
-					Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(elementDateStartToday);
-					
-					var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
-					sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
-					sessionEventLoad.sessionDate = labelDate;
-					dispatchEvent(sessionEventLoad);
+					// nothing to show and noting to load
+					if(elementDateStartToday != null)
+					{
+						var labelDate:String = elementDateStartToday.labelDate;
+						Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(elementDateStartToday);
+						
+						var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+						sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+						sessionEventLoad.sessionDate = labelDate;
+						dispatchEvent(sessionEventLoad);
+					}
 				}
 			}
 			
@@ -411,8 +415,8 @@
 						}
 					}
 				}	
-				
-				if(!hasDateToday)
+				// result will null if user hasn't session
+				if(!hasDateToday && result != null)
 				{
 					// where will add date today
 					var obj:Object = null;
