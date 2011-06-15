@@ -49,6 +49,7 @@
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.ui.utils.SharedSatusEnum;
+			import com.ithaca.visu.view.video.PanelEditChatMessage;
 			import com.ithaca.visu.view.video.PanelEditInfo;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			import com.lyon2.controls.ImageDocument;
@@ -1080,11 +1081,10 @@
 				}
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
-				/* var message:String = textChatMarker.text; */
 				// cut last char if was click on button "Enter"
 				if(cutLastCharMessage)
 				{
-					message = textChatMarker.text.slice(0, textChatMarker.text.length-1);
+					message = message.slice(0, message.length-1);
 				}
 				// check if message empty
 				if(UtilFunction.isEmptyMessage(message))
@@ -1542,7 +1542,12 @@
 				}
 			}
 			
-
+			//_____________________________________________________________________
+			//
+			// EvenHandlers : click on button marker
+			//
+			//_____________________________________________________________________
+		
 			protected function visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
 			{
 				var panelEditInfo:PanelEditInfo = new PanelEditInfo();
@@ -1551,42 +1556,9 @@
 				panelEditInfo.y = 25;
 				
 				panelEditInfo.user = event.user;
-				panelEditInfo.beginTime = event.beginTime;
 				panelEditInfo.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditInfoClickButtonOk);
 				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditInfoClickButtonCancel);
-			}
-			
-			private function mouseMoveHandler(event:MouseEvent):void
-			{
-				var dragInitiator:PanelEditInfo = PanelEditInfo(event.currentTarget);
-				var dragSource:DragSource = new DragSource(); 
-				dragSource.addData(dragInitiator, "panelEditInfo");
-				DragManager.doDrag(dragInitiator, dragSource, event);
-			}
-			
-			private function dragEnterHandler(event:DragEvent):void 
-			{
-				if (event.dragSource.hasFormat("panelEditInfo"))
-				{
-					pointPanelEditInfo = new Point(event.dragInitiator.mouseX, event.dragInitiator.mouseY);
-					DragManager.acceptDragDrop(Panel(event.currentTarget));
-				}
-			}
-			
-			private function dragDropHandler(event:DragEvent):void 
-			{
-				var panel:Panel = Panel(event.currentTarget);
-				var panelEditInfo:PanelEditInfo = PanelEditInfo(event.dragInitiator);
-				var delta:int = 35;
-				var pt:Point = new Point(panel.mouseX, panel.mouseY);
-				pt = panel.localToGlobal(pt);
-				pt = panel.globalToLocal(pt);
-				
-				panelEditInfo.x =
-					pt.x - pointPanelEditInfo.x;
-				panelEditInfo.y =
-					pt.y - pointPanelEditInfo.y - delta;
 			}
 			
 			private function onPanelEditInfoClickButtonOk(event:PanelEditInfoEvent):void
@@ -1606,11 +1578,107 @@
 				var panelEditInfo:PanelEditInfo = event.currentTarget as PanelEditInfo;
 				removePanelEditInfo(panelEditInfo);
 			}
+			
+			//_____________________________________________________________________
+			//
+			// EvenHandlers : click on button chat
+			//
+			//_____________________________________________________________________
 
-			private function removePanelEditInfo(panelEditInfo:PanelEditInfo):void
+			protected function visio_clickButtonChatHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var panelEditChatMessage:PanelEditChatMessage = new PanelEditChatMessage();
+				this.groupeVideo.addElement(panelEditChatMessage);
+				panelEditChatMessage.x = 25;
+				panelEditChatMessage.y = 25;
+				
+				panelEditChatMessage.user = event.user;
+				panelEditChatMessage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMovePanelEditChatMessage);
+				panelEditChatMessage.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditChatMessageClickButtonOk);
+				panelEditChatMessage.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditChatMessageButtonCancel);
+			}
+			
+			private function mouseMovePanelEditChatMessage(event:MouseEvent):void
+			{
+				var dragInitiator:PanelEditChatMessage = PanelEditChatMessage(event.currentTarget);
+				var dragSource:DragSource = new DragSource(); 
+				dragSource.addData(dragInitiator, "panelEditChatMessage");
+				DragManager.doDrag(dragInitiator, dragSource, event);
+			}
+			
+			private function onPanelEditChatMessageClickButtonOk(event:PanelEditInfoEvent):void
+			{
+				var idUserFor:int = event.user.id_user;
+				var message:String = event.text;
+				sendMessage(false, message, idUserFor);
+				// remove panelEditChatMessage
+				var panelEditChatMessage:PanelEditChatMessage = event.currentTarget as PanelEditChatMessage;
+				removePanelEditInfo(panelEditChatMessage);
+			}
+			
+			private function onPanelEditChatMessageButtonCancel(event:PanelEditInfoEvent):void
+			{
+				// remove panelEditChatMessage
+				var panelEditChatMessage:PanelEditChatMessage = event.currentTarget as PanelEditChatMessage;
+				removePanelEditInfo(panelEditChatMessage);
+			}
+			
+			//_____________________________________________________________________
+			//
+			// EvenHandlers of the video panel
+			//
+			//_____________________________________________________________________
+			
+			private function mouseMoveHandler(event:MouseEvent):void
+			{
+				var dragSource:DragSource;
+				
+				if(event.currentTarget is PanelEditInfo)
+				{
+					var dragInitiatorPanelEditInfo:PanelEditInfo = PanelEditInfo(event.currentTarget);
+					dragSource = new DragSource(); 
+					dragSource.addData(dragInitiatorPanelEditInfo, "panelEditInfo");
+					DragManager.doDrag(dragInitiatorPanelEditInfo, dragSource, event);
+				}
+				
+				if(event.currentTarget is PanelEditChatMessage)
+				{
+					var dragInitiatorPanelEditChatMessage:PanelEditChatMessage = PanelEditChatMessage(event.currentTarget);
+					dragSource = new DragSource(); 
+					dragSource.addData(dragInitiatorPanelEditChatMessage, "panelEditChatMessage");
+					DragManager.doDrag(dragInitiatorPanelEditChatMessage, dragSource, event);
+				}
+			}
+			
+			private function dragDropHandler(event:DragEvent):void 
+			{
+				var panel:Panel = Panel(event.currentTarget);
+				var panelEditInfo = event.dragInitiator;
+				var delta:int = 35;
+				var pt:Point = new Point(panel.mouseX, panel.mouseY);
+				pt = panel.localToGlobal(pt);
+				pt = panel.globalToLocal(pt);
+				
+				panelEditInfo.x =
+					pt.x - pointPanelEditInfo.x;
+				panelEditInfo.y =
+					pt.y - pointPanelEditInfo.y - delta;
+			}
+			
+			private function dragEnterHandler(event:DragEvent):void 
+			{
+				if (event.dragSource.hasFormat("panelEditInfo") || event.dragSource.hasFormat("panelEditChatMessage"))
+				{
+					pointPanelEditInfo = new Point(event.dragInitiator.mouseX, event.dragInitiator.mouseY);
+					DragManager.acceptDragDrop(Panel(event.currentTarget));
+				}
+			}
+			
+			private function removePanelEditInfo(panelEditInfo:*):void
 			{
 				groupeVideo.removeElement(panelEditInfo);
 			}
+			
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1670,14 +1738,16 @@
 			<mx:HDividedBox width="100%" height="55%">
 				<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200"
 					dragEnter="dragEnterHandler(event);"
-					dragDrop="dragDropHandler(event);">
+					dragDrop="dragDropHandler(event);"
+					>
 					<s:Group  id="groupeVideo" height="100%" width="100%">
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0" bottom="60"
 											quality="80"
 											bandwidth="15000" autoPlay="True"  height="100%" 
 											buttonChatEnabled="true" 
 											buttonMarkerEnabled="false"
-											clickButtonMarker="visio_clickButtonMarkerHandler(event)"/>
+											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
+											clickButtonChat="visio_clickButtonChatHandler(event)"/>
 						<s:VGroup width="100%" bottom="1">
 							<s:HGroup horizontalAlign="center"  horizontalCenter="0" width="100%">
 								<s:Button id="buttonMute" click="buttonMute_clickHandler(event)">
