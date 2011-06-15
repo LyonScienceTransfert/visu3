@@ -21,6 +21,10 @@ components|IconButton
 {
 	skin-class:ClassReference("com.ithaca.utils.components.skins.IconButtonSkin");	
 }
+video|PanelEditChatMessage
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.PanelEditChatMessageSkin");	
+}
 video|PanelEditInfo
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.PanelEditInfoSkin");	
