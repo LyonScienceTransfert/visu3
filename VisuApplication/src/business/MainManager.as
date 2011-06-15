@@ -1453,7 +1453,7 @@ public class MainManager
 	/**
 	 *  call when user receive shared info
 	 */
-	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String, obselVO:ObselVO):void
+	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String, obselVO:ObselVO, idUserFor:int):void
 	{	
 		var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.RECEIVE_SHARED_INFO);	
 		sessionSharedEvent.typeInfo = typeInfo;
@@ -1462,6 +1462,7 @@ public class MainManager
 		sessionSharedEvent.url = urlElement;	
 		// TODO : can make simple
 		sessionSharedEvent.obselVO = obselVO;		
+		sessionSharedEvent.idUserFor = idUserFor;	
 		this.dispatcher.dispatchEvent(sessionSharedEvent);	
 	}
 	
