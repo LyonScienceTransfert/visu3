@@ -29,7 +29,6 @@ package com.ithaca.visu.view.video
 		
 		private var _user:User;
 		private var userChange:Boolean;
-		private var _beginTime:Number;
 		
 		public function PanelEditInfo()
 		{
@@ -52,16 +51,7 @@ package com.ithaca.visu.view.video
 		{
 			return this._user;
 		}
-		
-		public function set beginTime(value:Number):void
-		{
-			_beginTime = value;
-		}
-		public function get beginTime():Number
-		{
-			return this._beginTime;
-		}
-		
+				
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -123,7 +113,6 @@ package com.ithaca.visu.view.video
 		{
 			var clickButtonOkEvent:PanelEditInfoEvent = new PanelEditInfoEvent(PanelEditInfoEvent.CLICK_BUTTON_OK);
 			clickButtonOkEvent.user = user;
-			clickButtonOkEvent.beginTime = beginTime;
 			// TODO : remove text "marker ici"
 			clickButtonOkEvent.text = textInfo.text;
 			this.dispatchEvent(clickButtonOkEvent);

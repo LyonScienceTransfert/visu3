@@ -543,8 +543,6 @@ package com.ithaca.visu.view.video
 		{
 			var clickButtonMarkerEvent:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_BUTTON_MARKER);
 			clickButtonMarkerEvent.user = event.user;
-			// time the start edit marker
-			clickButtonMarkerEvent.beginTime = currentTimeSessionMilliseconds;
 			this.dispatchEvent(clickButtonMarkerEvent);
 		}
 		/**
