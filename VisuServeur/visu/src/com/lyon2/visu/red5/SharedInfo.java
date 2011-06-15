@@ -228,7 +228,7 @@ public class SharedInfo
 			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
 			   		paramsObselSend.add("timestamp");paramsObselSend.add(timeStamp.toString());
 			   		// add idUserFor 
-			   		if(typeInfo == 6 && idUserFor > 0)
+			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor > 0)
 			   		{
 			   			paramsObselSend.add(ObselType.ID_USER_FOR);paramsObselSend.add(String.valueOf(idUserFor));
 			   		}
@@ -265,7 +265,7 @@ public class SharedInfo
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
 		   			paramsObselReceive.add("timestamp");paramsObselReceive.add(timeStamp.toString());
 		   			// add idUserFor 
-			   		if(typeInfo == 6 && idUserFor > 0)
+			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor > 0)
 			   		{
 			   			paramsObselReceive.add(ObselType.ID_USER_FOR);paramsObselReceive.add(String.valueOf(idUserFor));
 			   		}
@@ -303,7 +303,7 @@ public class SharedInfo
 						log.error("=====Errors===== {}", sqle);
 					}		
 					// send shared info to shared users
-					Object[] args = {typeInfo, info, senderUserId, urlElement, obsel};
+					Object[] args = {typeInfo, info, senderUserId, urlElement, obsel, idUserFor};
 					IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
 					if (connSharedUser instanceof IServiceCapableConnection) 
 					{
@@ -319,7 +319,7 @@ public class SharedInfo
 				for(IClient sharedClient : listSharedUsers)
 				{		
 					// send shared info to shared users
-					Object[] args = {typeInfo, info, senderUserId, urlElement, null};
+					Object[] args = {typeInfo, info, senderUserId, urlElement, null, idUserFor};
 					IConnection connSharedUser = (IConnection)sharedClient.getAttribute("connection");
 					if (connSharedUser instanceof IServiceCapableConnection) 
 					{
