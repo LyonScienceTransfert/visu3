@@ -229,7 +229,6 @@
 					sessionVO.id_currentActivity = 0;
 					addSession.sessionWitOutListUserVO = sessionVO;
 					addSession.userId = userId;
-					addSession.clonedSession = true;
 					this.dispatchEvent(addSession);
 				}
 			}
@@ -261,7 +260,6 @@
 					sessionVO.id_currentActivity = 0;
 					addSession.sessionWitOutListUserVO = sessionVO;
 					addSession.userId = userId;
-					addSession.clonedSession = false;
 					this.dispatchEvent(addSession);		
 				}
 			}
@@ -274,28 +272,19 @@
 					this.dispatchEvent(loadUsers);
 				}
 			}
+			
+			/**
+			 * Add cloned session to SessionManagerView
+			 */
 			private function addClonedSession(event:SessionEvent):void
 			{
 				if(Model.getInstance().getCurrentSessionModule() == this)
 				{
 					var session:Session = event.session;
-					sessionManagement.addSession(session, event.clonedSession);
-					if (event.clonedSession)
-					{
-						var listActivities:ArrayCollection = sessionManagement.sessionDetailView.sessionPlanEdit.activities;
-						var nbrActivity:int = listActivities.length;
-						for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
-						{
-							var activity:Activity = listActivities.getItemAt(nActivity) as Activity;
-							var activityVO:ActivityVO = setActivityVOAndSessionId(activity,session.id_session);
-							var addActivity:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY);
-							addActivity.activityVO = activityVO;
-							addActivity.activityId = activity.id_activity;
-							dispatchEvent(addActivity);
-						}
-					} 
+					sessionManagement.addSession(session);
 				}
 			}
+			
 			private function onLoadedAllUsers(event:UserEvent):void
 			{
 				if(Model.getInstance().getCurrentSessionModule() == this)
@@ -351,14 +340,6 @@
 				}
 			}
 			
-			public function onShowClonedPlan(event:SessionEvent):void
-			{
-				if(Model.getInstance().getCurrentSessionModule() == this)
-				{
-					sessionManagement.showClonedPlan(event.sessionId);
-				}
-			}
-			
 			private function onRemovedModuleFromStage(event:Event):void
 			{
 				if(Model.getInstance().getCurrentSessionModule() == this)
@@ -398,7 +379,6 @@
 		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"  method="onShowUpdatedSession"/>
 		<mate:Listener type="{SessionUserEvent.LOAD_LIST_SESSION_USER}"  method="setListPresentUserInSession"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
-		<mate:Listener type="{SessionEvent.SHOW_CLONED_PLAN}"  method="onShowClonedPlan"/>
 		<mate:Listener type="{SessionEvent.LOAD_DURATION_SESSION}"  method="onLoadDurationSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION}"  method="onLoadListRetrodocumentSession"/>
 	</fx:Declarations>
