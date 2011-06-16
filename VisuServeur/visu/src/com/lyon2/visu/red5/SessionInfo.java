@@ -94,6 +94,7 @@ import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.domain.model.Activity;
+import com.lyon2.visu.domain.model.ActivityElement;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.SessionWithoutListUser;
@@ -272,9 +273,12 @@ public class SessionInfo
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, int userId, boolean clonedSession) throws SQLException
+	public void addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, int userId) throws SQLException
 	{
 		log.warn("======== addSession ");
+		// id session for cloned
+		Integer idSessionToClone  = sessionWithoutListUser.getId_session();
+		
 		IClient client = conn.getClient();
 		int sessionId = 0;
 		try
@@ -315,21 +319,47 @@ public class SessionInfo
 		session.setIsModel(sessionWithoutListUser.getIsModel());
 		session.setStart_recording(sessionWithoutListUser.getStart_recording());
 		session.setStatus_session(sessionWithoutListUser.getStatus_session());
-		session.setTheme(sessionWithoutListUser.getTheme());
-		
+		session.setTheme(sessionWithoutListUser.getTheme());	
 		session.setListUser(listUser);
-
 		
-		log.warn("Session = {}",session.toString());	
+		// clone new session with all activity and all activityElements
+		List<Activity> listActivityToClone= null;
+		try
+		{
+			listActivityToClone = (List<Activity>)app.getSqlMapClient().queryForList("activities.getSessionActivities", idSessionToClone );
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des activities " + e);
+		}
 		
-		Object[] args = {session, clonedSession};
+		for(Activity activityToClone : listActivityToClone)
+		{
+			int idActivityToClone = activityToClone.getId_activity();
+			// clone activity by activity
+			Activity activity = activityToClone.cloneMe(sessionId);
+			int idActivity = (Integer)app.getSqlMapClient().insert("activities.insert", activity);
+			List<ActivityElement> listActivityElementToClone = null;
+			try
+			{
+				listActivityElementToClone = (List<ActivityElement>)app.getSqlMapClient().queryForList("activities_elements.getActivityElements", idActivityToClone);			
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des activitiyElement " + e);
+			}
+			for(ActivityElement activityElementToClone : listActivityElementToClone)
+			{
+				// clone activityElement by activityElement
+				ActivityElement activityElement = activityElementToClone.cloneMe(idActivity);
+				// add activityElement
+				app.getSqlMapClient().insert("activities_elements.insert", activityElement);
+			}
+		}
+		
+		Object[] args = {session};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkAddSession", args);
 		} 	
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
