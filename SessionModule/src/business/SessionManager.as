@@ -193,66 +193,14 @@ package business
 				return false;
 			}
 		}
-/// ADD SESSION
-		public function onAddClonedSession():void
-		{
-
-			// ADD ACTIVITY
-			var nbrActivity:int = this.listActivities.length;
-			/*for(var nActivity:int = 0 ; nActivity < nbrActivity; nActivity++)
-			{
-				var activity:Activity = this.listActivities.getItemAt(nActivity) as Activity;
-				var activityVO:ActivityVO = setActivityVO(activity,sessionVO.id_session);
-				var addActivity:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY);
-				addActivity.activityVO = activityVO;
-				addActivity.activityId = activity.id_activity;
-				this.dispatcher.dispatchEvent(addActivity);
-			}*/
-		}	
-// ADD EMPTY SESSION
-		public function onAddEmptySession(sessionVO:SessionVO):void
-		{
-			var session:Session = new Session(sessionVO);
-			var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION,true);
-			addSession.session = session;
-			this.dispatcher.dispatchEvent(addSession);
-			if(!session.isModel)
-			{
-				model.clearDateSession();
-			}
-			// refresh plan the session
-			onAddClonedActivityElement(null , session.id_session);
-		}		
-// ADD ACTIVITY		
-		public function onAddClonedActivity(activityVO:ActivityVO, activityId:int):void
-		{
-			
-			var activity:Activity = this.getActivityById(activityId);
-			// FIXME : can have situation when hasn't activity in the list activities
-			if(activity == null) return;
-			var arrActivityElement:ArrayCollection = activity.activityElements;
-			var nbrActivityElement:int = arrActivityElement.length;
-			for(var nActivityElement:int = 0; nActivityElement < nbrActivityElement; nActivityElement++ )
-			{
-				var activityElement:ActivityElement = arrActivityElement.getItemAt(nActivityElement) as ActivityElement;
-				var activityElementVO: ActivityElementVO = setActivityElementVO(activityElement, activityVO.id_activity);
-				var addActivityElement:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_ACTIVITY_ELEMENT);
-				addActivityElement.sessionId = activityVO.id_session; 
-				addActivityElement.activityElementVO = activityElementVO;
-				this.dispatcher.dispatchEvent(addActivityElement);
-			}
-		}
 		
-		public function onAddClonedActivityElement(value:ActivityElementVO, sessionId:int):void
-		{
-			// FIXME : here call every time when loaded activity, try call only one time
-			var showClonedPlanEvent:SessionEvent = new SessionEvent(SessionEvent.SHOW_CLONED_PLAN);
-			showClonedPlanEvent.sessionId = sessionId;
-			this.dispatcher.dispatchEvent(showClonedPlanEvent);
-		}
+
 // USER
 		public function onUpdateSession(sessionVO:SessionVO):void
 		{
+			// TODO : 1) Notification for all users connected on the plateforme
+			//        2) Update open session in SessionModule
+			
 			/*model.clearDateSession();	
 			// update user fo the session 
 			var updateSession:SessionEvent = new SessionEvent(SessionEvent.SHOW_UPDATED_SESSION);
