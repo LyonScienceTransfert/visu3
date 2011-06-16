@@ -167,14 +167,8 @@
 		
 		<mate:EventHandlers type="{SessionEvent.ADD_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId, event.clonedSession]}"/>     				
+				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId]}"/>     				
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
-		
-		<mate:EventHandlers type="{SessionEvent.ADD_CLONED_SESSION}" debug="true" useCapture="true">
-			<mate:MethodInvoker generator="{SessionManager}"
-								method="onAddClonedSession" 
-								/>		
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{SessionEvent.ADD_EMPTY_SESSION}" debug="true">
@@ -232,18 +226,6 @@
 			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{SessionEvent.ADD_CLONED_ACTIVITY}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="addActivity" arguments="{event.activityVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onAddClonedActivity" arguments="{[resultObject, event.activityId]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>
-		
 <!-- ACTIVITY ELEMENT -->
 		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_ELEMENT}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="updateActivityElement" arguments="{event.activityElementVO}">
@@ -273,18 +255,6 @@
 			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="addActivityElement" arguments="{event.activityElementVO}">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}" method="onAddActivityElement" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>
-		
-		<mate:EventHandlers type="{SessionEvent.ADD_CLONED_ACTIVITY_ELEMENT}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="addActivityElement" arguments="{event.activityElementVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onAddClonedActivityElement" arguments="{[resultObject, event.sessionId]}"/>
 				</mate:resultHandlers>
 				<mate:faultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}"
