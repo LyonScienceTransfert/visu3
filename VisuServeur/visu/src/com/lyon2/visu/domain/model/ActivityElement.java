@@ -285,5 +285,17 @@ public class ActivityElement {
         return out.toString();
     }
 
+    public ActivityElement cloneMe(int id_activity)
+    {
+    	ActivityElement activityElement = new ActivityElement();
+    	activityElement.setData(this.data);
+    	activityElement.setId_activity(id_activity);
+    	activityElement.setId_element(0);
+    	activityElement.setOrder_activity_element(this.order_activity_element);
+    	activityElement.setType_element(this.type_element);
+    	activityElement.setType_mime(this.type_mime);
+    	activityElement.setUrl_element(this.url_element);
+    	return activityElement;
+    }
     
 }
