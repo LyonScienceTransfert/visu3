@@ -361,28 +361,23 @@ package com.ithaca.visu.controls.sessions
 		{
 			sessionDetailView.feedBackUpdateSession(value);
 		}
+		
 // ADD SESSION
-		public function addSession(session:Session, clonedSession:Boolean):void
+		public function addSession(session:Session):void
 		{
 			if(this.explorerSession != null)
 			{
-				// set new session, with null activities
-				if(!clonedSession)
-				{
-					this.session = session;
-				}
+				// set session
+				this.session = session;
 				if(session.isModel)
 				{
 					this.planList.addItem(session);
 					// change onglet to "plan"
 					this.explorerSession.selectedIndex = 1;
-					
 					this.planListView.selectAllPlan();
 					this.planListView.planDataGrid.selectedItem = session;
 					var selectedIndexListPlan:int = this.planListView.planDataGrid.selectedIndex;
 					this.planListView.planDataGrid.scrollToIndex(selectedIndexListPlan);
-					// update session
-					sessionDetailView.session = session;
 				}else
 				{
 					this.sessionList.addItem(session);
@@ -392,17 +387,12 @@ package com.ithaca.visu.controls.sessions
 					this.sessionListView.sessionDataGrid.selectedItem = session;
 					var selectedIndexListSession:int = this.sessionListView.sessionDataGrid.selectedIndex;
 					this.sessionListView.sessionDataGrid.scrollToIndex(selectedIndexListSession);
-					// update session
-					sessionDetailView.session = session;
-					// set session after add item and after dispatche(call) for load activity
-					this.session = session;
 				}
+				// update session
+				sessionDetailView.session = session;
 			}
-		}
-		
-		public function showClonedPlan(value:int):void
-		{
-			loadListActivity(value);
+			// load list activity updated session
+			loadListActivity(session.id_session);
 		}
 
 		private function loadListActivity(value:int):void
