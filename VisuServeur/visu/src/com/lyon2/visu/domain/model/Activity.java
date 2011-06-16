@@ -240,5 +240,15 @@ public class Activity {
         return out.toString();
     }
 
+    public Activity cloneMe(int idSession)
+    {
+    	Activity activity = new Activity();
+    	activity.setDuration(this.duration);
+    	activity.setId_activity(0);
+    	activity.setId_session(idSession);
+    	activity.setInd(this.ind);
+    	activity.setTitle(this.title);
+    	return activity;
+    }
     
 }
