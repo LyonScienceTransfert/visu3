@@ -1503,13 +1503,13 @@ public class MainManager
 	/**
 	 * Call when user cloned session  
 	 */
-	public function onCheckAddSession(sessionVO:SessionVO, clonedSession:Boolean):void
+	public function onCheckAddSession(sessionVO:SessionVO):void
 	{
 		var session:Session = new Session(sessionVO);
 		var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_CLONED_SESSION);
-		addSession.clonedSession = clonedSession;
 		addSession.session = session;
 		this.dispatcher.dispatchEvent(addSession);
+		
 		if(!session.isModel){
 			Model.getInstance().clearDateSession();
 		}
