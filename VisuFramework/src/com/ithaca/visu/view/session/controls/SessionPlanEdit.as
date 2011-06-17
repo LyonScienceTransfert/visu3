@@ -112,6 +112,9 @@ package com.ithaca.visu.view.session.controls
 		private var _theme:String;
 		private var themeChange:Boolean;
 		
+		private var _buttonSharedEnabled:Boolean;
+		private var buttonSharedEnabledChange:Boolean;
+		
 		public function SessionPlanEdit()
 		{
 			super();
@@ -134,6 +137,7 @@ package com.ithaca.visu.view.session.controls
 			if (instance == sharePlanButton)
 			{
 				sharePlanButton.addEventListener(MouseEvent.CLICK, onMouseClickButtonExportSession);
+				sharePlanButton.enabled = _buttonSharedEnabled;
 			}
 			if (instance == themeLabel)
 			{
@@ -210,6 +214,15 @@ package com.ithaca.visu.view.session.controls
 					themeLabel.text = _theme;
 				}
 			}
+			
+			if(buttonSharedEnabledChange)
+			{
+				buttonSharedEnabledChange = false;
+				if(sharePlanButton != null)
+				{
+					sharePlanButton.enabled = this._buttonSharedEnabled;
+				}
+			}
 		}
 		
 		override protected function getCurrentSkinState():String
@@ -233,6 +246,12 @@ package com.ithaca.visu.view.session.controls
 			this.invalidateProperties();
 		}
 		
+		public function setButtonSharedEnabled(value:Boolean):void
+		{
+			_buttonSharedEnabled = value;
+			buttonSharedEnabledChange = true;
+			invalidateProperties();
+		}
 		//_____________________________________________________________________
 		//
 		// Setter/getter
