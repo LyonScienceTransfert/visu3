@@ -372,7 +372,13 @@ package com.ithaca.visu.controls.sessions
 			if(activitiesChanged)
 			{
 				activitiesChanged = false;
-				
+				// set button shared session
+				var sharedButtonEnabled:Boolean = true;
+				if(session && session.isModel && session.id_user != this.loggedUser.id_user)
+				{
+					sharedButtonEnabled = false;
+				}
+				sessionPlanEdit.setButtonSharedEnabled(sharedButtonEnabled);
 				sessionPlanEdit.setEditabled(planSessionEditabled);
 				sessionPlanEdit.activities = activities;
 				checkDurationPlaned()
