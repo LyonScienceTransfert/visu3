@@ -26,6 +26,9 @@
 					
 					buttonMarker.visible = hostComponent.buttonMarkerEnabled;
 					buttonMarker.includeInLayout = hostComponent.buttonMarkerEnabled;
+					
+					buttonComment.visible = hostComponent.buttonCommentEnabled;
+					buttonComment.includeInLayout = hostComponent.buttonCommentEnabled;
 				}
 			}
 		]]>
@@ -52,6 +55,9 @@
 			</mx:Button>
 			<mx:Button id="buttonMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Posé le marqueur</mx:toolTip>
+			</mx:Button>
+			<mx:Button id="buttonComment" icon="{IconEnum.getIconByName('commentAdd')}" height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
+				<mx:toolTip>Poser le commentaire</mx:toolTip>
 			</mx:Button>
 			<mx:Button id="buttonZoom" icon="{IconEnum.getIconByName('zoom')}"  height="22" width="30" includeIn="disabled,zoomOutMouseIn">
 				<mx:toolTip>Zoom vidéo</mx:toolTip>
