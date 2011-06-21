@@ -171,6 +171,7 @@ package com.ithaca.traces.model
         public static const RETRO_EXPLORE_OBSEL_EVENT: String = "RetroExploreObselEvent";
         public static const RETRO_CLICK_BUTTON_START_CREATE_COMMENT_EVENT: String = "RetroClickButtonStartCreateCommentEvent";
         public static const RETRO_DOUBLE_CLICK_TRACE_LINE_START_CREATE_COMMENT_EVENT: String = "RetroDoubleClickTraceLineStartCreateCommentEvent";
+        public static const RETRO_CLICK_VIDEO_PANEL_CREATE_COMMENT_EVENT: String = "RetroDoubleClickVideoPanelStartCreateCommentEvent";
         public static const RETRO_START_EDIT_EVENT: String = "RetroStartEditEvent";
         public static const RETRO_CANCEL_EDIT_EVENT: String = "RetroCancelEditEvent";
         public static const RETRO_EDIT_TYPE_CANCEL_CREATE: String = "CREATE";
