@@ -10,6 +10,7 @@ package com.ithaca.visu.view.video
 		public static const CLICK_PANEL_VIDEO:String="clickPanelVideo";
 		public static const CLICK_BUTTON_MARKER:String="clickButtonMarker";
 		public static const CLICK_BUTTON_CHAT:String="clickButtonChat";
+		public static const CLICK_BUTTON_COMMENT:String="clickButtonComment";
 		
 		public var beginTime:Number;
 		public var user:User;
