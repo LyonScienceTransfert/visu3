@@ -26,6 +26,7 @@
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.visu.events.PanelEditInfoEvent;
 			import com.ithaca.visu.events.SalonRetroEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
@@ -37,6 +38,8 @@
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.view.session.SessionViewSalonRetro;
+			import com.ithaca.visu.view.video.PanelEditComment;
+			import com.ithaca.visu.view.video.PanelEditInfo;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			
 			import gnu.as3.gettext.FxGettext;
@@ -46,6 +49,7 @@
 			import mx.controls.Image;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.core.DragSource;
+			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
 			import mx.events.ToolTipEvent;
@@ -91,6 +95,7 @@
 			private var intervalCheckDecalage:Number = 5;
 			// time start session plus time in this session 
 			private var currentTime:Number;
+			private var pointPanelEditComment:Point;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -131,8 +136,6 @@
 				}
 				
  				this.visio.connection = Model.getInstance().getNetConnection();
-				// add listener play/pause video by click on component
-				this.visio.addEventListener(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO, onClickPanelVideoVisuVisioAdvanced);
 				// removing module from the stage
 				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
 				this.sessionTimeLine.addEventListener(MessageEvent.CHECK_SEEK_STREAM, onCheckSeekStream);
@@ -220,7 +223,7 @@
 				{
 					addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
 				}
-				addObselComment.timeStamp = timeStamp
+				addObselComment.timeStamp = timeStamp;
 				this.dispatchEvent(addObselComment);	
 				Model.getInstance().setCurrentObselComment(null,commentTimeLine.traceTitleLoggedUser);	
 			}
@@ -1126,10 +1129,38 @@
 			/**
 			 * Play/pause video by click on component
 			 */
-			private function onClickPanelVideoVisuVisioAdvanced(event:VisuVisioAdvancedEvent):void
+			private function visio_clickPanelVideoHandler(event:VisuVisioAdvancedEvent):void
 			{
 				buttonPlayPause_clickHandler();
 			}
+
+			private function  visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var panelEditInfo:PanelEditInfo = new PanelEditInfo();
+				this.groupeVideo.addElement(panelEditInfo);
+				panelEditInfo.x = 25;
+				panelEditInfo.y = 25;
+				
+				panelEditInfo.user = event.user;
+				panelEditInfo.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditCommentClickButtonOk);
+				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditCommentClickButtonCancel);
+				
+			}
+			
+			protected function visio_clickButtonCommentHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var panelEditComment:PanelEditComment = new PanelEditComment();
+				this.groupeVideo.addElement(panelEditComment);
+				panelEditComment.x = 25;
+				panelEditComment.y = 25;
+				
+				panelEditComment.user = event.user;
+				panelEditComment.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+				panelEditComment.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditCommentClickButtonOk);
+				panelEditComment.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditCommentClickButtonCancel);
+			}
+			
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
 			{
 				if(delta != 0)
@@ -1326,6 +1357,93 @@
 				buttonPlayPause.label = label;
 			}
 
+			//_____________________________________________________________________
+			//
+			// Set comments
+			//
+			//_____________________________________________________________________
+			private function onPanelEditCommentClickButtonOk(event:PanelEditInfoEvent):void
+			{
+				//  add obsel action user
+				var eventAddCommentObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_COMMENT_TRACE_LINE);
+				var beginTime:String = (commentTimeLine.startTimeSession + this.testCursor.getBegin()).toString();
+				var deltaXObselTime:Number = 0;
+				// type of creation comment
+				eventAddCommentObsel.typeAction = TraceModel.RETRO_CLICK_VIDEO_PANEL_CREATE_COMMENT_EVENT;			
+				var obsel:Obsel = new Obsel(TraceModel.SET_TEXT_COMMENT, 0, null, Number(beginTime));
+				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = event.user.id_user;
+				obsel.props[TraceModel.TIMESTAMP] = 0;
+				obsel.props[TraceModel.TEXT] = event.text;
+				// FIXME : now hasn't children of traceLine comment, all comment for every users add to one traceLine
+				Model.getInstance().addObselComment(obsel, false, commentTimeLine.traceTitleLoggedUser);
+				
+				eventAddCommentObsel.timeObselBegin = Number(beginTime);
+				eventAddCommentObsel.timeObselEnd = Number(beginTime);
+				this.dispatchEvent(eventAddCommentObsel);
+				
+				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+				var text:String = event.text; 
+				// check if message empty
+				if(UtilFunction.isEmptyMessage(text))
+				{
+					text = fxgt.gettext("(vide)");
+				}
+				addObselComment.textComment = text;
+				addObselComment.beginTime = beginTime.toString();
+				addObselComment.endTime = beginTime.toString();
+				addObselComment.forUserId =  event.user.id_user;
+				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+				addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
+				addObselComment.timeStamp = 0;
+				this.dispatchEvent(addObselComment);	
+				
+				Model.getInstance().setCurrentObselComment(null,commentTimeLine.traceTitleLoggedUser);	
+				// remove PanelEditCommenr
+				var panelEditComment:PanelEditComment = event.currentTarget as PanelEditComment;
+				groupeVideo.removeElement(panelEditComment);
+			}
+			
+			private function onPanelEditCommentClickButtonCancel(event:PanelEditInfoEvent):void
+			{
+				var panelEditComment:PanelEditComment = event.currentTarget as PanelEditComment;
+				groupeVideo.removeElement(panelEditComment);
+			}
+			
+			private function mouseMoveHandler(event:MouseEvent):void
+			{
+				var dragInitiator:PanelEditComment = PanelEditComment(event.currentTarget);
+				var dragSource:DragSource = new DragSource();
+				dragSource.addData(dragInitiator, "panelEditComment");
+				DragManager.doDrag(dragInitiator, dragSource, event);
+			}
+			
+			private function dragEnterHandler(event:DragEvent):void 
+			{
+				if (event.dragSource.hasFormat("panelEditComment"))
+				{
+					pointPanelEditComment = new Point(event.dragInitiator.mouseX, event.dragInitiator.mouseY);
+					DragManager.acceptDragDrop(Panel(event.currentTarget));
+				}
+			}
+			
+			private function dragDropHandler(event:DragEvent):void 
+			{
+				var panel:Panel = Panel(event.currentTarget);
+				var panelEditComment:PanelEditComment = PanelEditComment(event.dragInitiator);
+				var delta:int = 35;
+				var pt:Point = new Point(panel.mouseX, panel.mouseY);
+				pt = panel.localToGlobal(pt);
+				pt = panel.globalToLocal(pt);
+				
+				panelEditComment.x =
+					pt.x - pointPanelEditComment.x;
+				panelEditComment.y =
+					pt.y - pointPanelEditComment.y - delta;
+			}
+
+
 		]]>
 		
 	</fx:Script>
@@ -1351,14 +1469,20 @@
 		<mx:HDividedBox width="100%" height="60%">
 <!-- VIDEO -->
 			<mx:VDividedBox width="60%" height="100%" width.State1="70%">
-				<s:Panel height="100%" width="100%" id="panelVideo">
+				<s:Panel height="100%" width="100%" id="panelVideo" dragEnter="dragEnterHandler(event);"
+					
+					dragDrop="dragDropHandler(event);">
 					<s:title>Video</s:title>
-					<s:Group height="100%" width="100%" bottom="2">
+					<s:Group height="100%" width="100%" bottom="2" id="groupeVideo">
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
 											quality="80"
 											updateTime="visio_updateTimeHandler(event)"
+											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
+											clickPanelVideo="visio_clickPanelVideoHandler(event)"
+											clickButtonComment="visio_clickButtonCommentHandler(event)"
 											buttonChatEnabled="false"
-											buttonMarkerEnabled="true"
+											buttonMarkerEnabled="false"
+											buttonCommentEnabled="true"
 											bandwidth="15000" autoPlay="true" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"
 											/>
 						<s:HGroup bottom="1" horizontalAlign="center"  horizontalCenter="0">
