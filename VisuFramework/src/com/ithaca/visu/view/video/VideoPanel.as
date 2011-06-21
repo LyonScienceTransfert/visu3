@@ -36,6 +36,8 @@ package com.ithaca.visu.view.video
 		public var buttonMarker:Button;
 		[SkinPart("true")]
 		public var buttonZoom:Button;
+		[SkinPart("true")]
+		public var buttonComment:Button;
 
 		[SkinPart("true")]
 		public var buttonVolumeUserZoomOut:ImageVolume;
@@ -71,6 +73,9 @@ package com.ithaca.visu.view.video
 		// enabled marker buttons
 		private var _buttonMarkerEnabled:Boolean = false
 		private var buttonMarkerEnabledChange:Boolean = false;
+		// enabled comment buttons
+		private var _buttonCommentEnabled:Boolean = false
+		private var buttonCommentEnabledChange:Boolean = false;
 		// logged user
 		private var _loggedUser:User;
 		private var loggedUserChange:Boolean = false;
@@ -160,6 +165,16 @@ package com.ithaca.visu.view.video
 			buttonMarkerEnabledChange = true;
 			this.invalidateProperties();
 		}
+		public function get buttonCommentEnabled():Boolean
+		{
+			return _buttonCommentEnabled;
+		}
+		public function set buttonCommentEnabled(value:Boolean):void
+		{
+			_buttonCommentEnabled = value;
+			buttonCommentEnabledChange = true;
+			this.invalidateProperties();
+		}
 		public function get buttonMarkerEnabled():Boolean
 		{
 			return _buttonMarkerEnabled;
@@ -246,6 +261,17 @@ package com.ithaca.visu.view.video
 					buttonChat.visible = false;
 				}
 			}
+			if (instance == buttonComment)
+			{	
+				if(_buttonCommentEnabled)
+				{
+					buttonComment.addEventListener(MouseEvent.CLICK, onClickButtonComment);
+				}else
+				{
+					buttonComment.includeInLayout = false;
+					buttonComment.visible = false;
+				}
+			}
 			if (instance == buttonVolumeUserZoomIn)
 			{
 				buttonVolumeUserZoomIn.addEventListener(VideoPanelEvent.CHANGE_VOLUME, onChangeVolume);
@@ -273,6 +299,10 @@ package com.ithaca.visu.view.video
 			if (instance == buttonChat)
 			{	
 				buttonChat.removeEventListener(MouseEvent.CLICK, onClickButtonChat);
+			}
+			if (instance == buttonComment)
+			{	
+				buttonComment.removeEventListener(MouseEvent.CLICK, onClickButtonComment);
 			}
 		}
 		override protected function commitProperties():void
@@ -321,6 +351,25 @@ package com.ithaca.visu.view.video
 						buttonChat.includeInLayout = false;
 						buttonChat.visible = false;
 						buttonChat.removeEventListener(MouseEvent.CLICK, onClickButtonChat);
+					}	
+				}
+			}
+
+			if(buttonCommentEnabledChange)
+			{
+				buttonCommentEnabledChange = false;
+				if(buttonComment != null)
+				{
+					if(_buttonCommentEnabled)
+					{
+						buttonComment.includeInLayout = true;
+						buttonComment.visible = true;
+						buttonComment.addEventListener(MouseEvent.CLICK, onClickButtonComment);
+					}else
+					{
+						buttonComment.includeInLayout = false;
+						buttonComment.visible = false;
+						buttonComment.removeEventListener(MouseEvent.CLICK, onClickButtonComment);
 					}	
 				}
 			}
@@ -426,6 +475,12 @@ package com.ithaca.visu.view.video
 		private function onClickButtonChat(event:MouseEvent):void
 		{
 			var clickButtonChatEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CLICK_BUTTON_CHAT_VIDEO_PANEL);
+			clickButtonChatEvent.user = ownerFluxVideo;
+			dispatchEvent(clickButtonChatEvent);
+		}
+		private function onClickButtonComment(event:MouseEvent):void
+		{
+			var clickButtonChatEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CLICK_BUTTON_COMMENT_VIDEO_PANEL);
 			clickButtonChatEvent.user = ownerFluxVideo;
 			dispatchEvent(clickButtonChatEvent);
 		}
