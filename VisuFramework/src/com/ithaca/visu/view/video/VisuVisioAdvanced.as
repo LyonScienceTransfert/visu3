@@ -26,6 +26,7 @@ package com.ithaca.visu.view.video
 	[Event(name="updateTime",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickButtonMarker",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickButtonChat",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
+	[Event(name="clickButtonComment",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickPanelVideo",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	
 	public class VisuVisioAdvanced extends SkinnableComponent
@@ -117,9 +118,12 @@ package com.ithaca.visu.view.video
 		private var _buttonChatEnabled:Boolean = false;
 		private var buttonChatEnabledChange:Boolean = false;
 		// enabled marker buttons
-		private var _buttonMarkerEnabled:Boolean = false
-			
+		private var _buttonMarkerEnabled:Boolean = false			
 		private var buttonMarkerEnabledChange:Boolean = false;
+		// enabled comment button
+		private var _buttonCommentEnabled:Boolean = false			
+		private var buttonCommentEnabledChange:Boolean = false;
+		
 		private var loggedUserChange:Boolean = false;
 		
 		public function VisuVisioAdvanced()
@@ -305,6 +309,17 @@ package com.ithaca.visu.view.video
 		public function get buttonMarkerEnabled():Boolean
 		{
 			return _buttonMarkerEnabled;
+		}
+		// enabled comment buttons
+		public function set buttonCommentEnabled(value:Boolean):void
+		{
+			_buttonCommentEnabled = value;
+			buttonCommentEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonCommentEnabled():Boolean
+		{
+			return _buttonCommentEnabled;
 		}
 		public function set loggedUser(value:User):void
 		{
@@ -553,6 +568,13 @@ package com.ithaca.visu.view.video
 			clickButtonMarkerEvent.user = event.user;
 			this.dispatchEvent(clickButtonMarkerEvent);
 		}
+
+		private function onButtonCommentClick(event:VideoPanelEvent):void
+		{
+			var clickButtonCommentEvent:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_BUTTON_COMMENT);
+			clickButtonCommentEvent.user = event.user;
+			this.dispatchEvent(clickButtonCommentEvent);
+		}
 		/**
 		 *  Update property zoomIn
 		 */
@@ -625,6 +647,7 @@ package com.ithaca.visu.view.video
 				localvideo.status = status;
 				localvideo.buttonChatEnabled = this._buttonChatEnabled;
 				localvideo.buttonMarkerEnabled = this._buttonMarkerEnabled;
+				localvideo.buttonCommentEnabled = this._buttonMarkerEnabled;
 
 				localvideo.ownerFluxVideo = ownerFluxVideo;
 				videos[streamID] = localvideo;
@@ -634,6 +657,7 @@ package com.ithaca.visu.view.video
 				localvideo.addEventListener(VideoPanelEvent.UPDATE_VOLUME, onVideoPanelUpdateVolume);
 				localvideo.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
 				localvideo.addEventListener(VideoPanelEvent.CLICK_BUTTON_MARKER_VIDEO_PANEL, onButtonMarkerClick);
+				localvideo.addEventListener(VideoPanelEvent.CLICK_BUTTON_COMMENT_VIDEO_PANEL, onButtonCommentClick);
 				// set zoomIn for new stream
 				setZoom(localvideo);
 			}
@@ -796,6 +820,7 @@ package com.ithaca.visu.view.video
 				// FIXME : During the session(mode synchrone) tuter can set disabled the button chat prive for user 				
 				videoPanel.buttonChatEnabled = this._buttonChatEnabled;
 				videoPanel.buttonMarkerEnabled = this._buttonMarkerEnabled;
+				videoPanel.buttonCommentEnabled = this._buttonCommentEnabled;
 				// set volume
 				videoPanel.volume = volume;
 				videoPanel.mute = mute;
@@ -809,6 +834,7 @@ package com.ithaca.visu.view.video
 				videoPanel.addEventListener(VideoPanelEvent.CLICK_VIDEO_PANEL, onVideoPanelClick);
 				videoPanel.addEventListener(VideoPanelEvent.CLICK_BUTTON_MARKER_VIDEO_PANEL, onButtonMarkerClick);
 				videoPanel.addEventListener(VideoPanelEvent.CLICK_BUTTON_CHAT_VIDEO_PANEL, onButtonChatClick);
+				videoPanel.addEventListener(VideoPanelEvent.CLICK_BUTTON_COMMENT_VIDEO_PANEL, onButtonCommentClick);
 				// set zoomIn for new stream
 				setZoom(videoPanel);
 			}
