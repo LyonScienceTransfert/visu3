@@ -60,6 +60,7 @@ or by setting the following environment variable:
    <property name="framework.path" location="${visu.dev.path}/VisuFramework" />
    <property name="framework.src" location="${framework.path}/src" />
    <property name="framework.images" location="${framework.src}/images" />
+   <property name="framework.sounds" location="${framework.src}/sounds" />
    <property name="framework.bin" location="${framework.path}/bin" />
    <property name="framework.linkreport" location="${framework.bin}/link-report.xml" />
    <property name="framework.locale" location="${framework.path}/locale" />
@@ -204,6 +205,8 @@ or by setting the following environment variable:
 	  		  	<include-file name="images/save_edit.png" path="${framework.images}/save_edit.png"/>
 	  		  	<include-file name="images/RetroDocumentAddVer1.png" path="${framework.images}/RetroDocumentAddVer1.png"/>
 	  		  	<include-file name="images/Attention_yellow.png" path="${framework.images}/Attention_yellow.png"/>
+	  		  	
+	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
 	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
