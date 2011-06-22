@@ -9,7 +9,7 @@
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
 						currentState="BlankState" 
-						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.visu.controls.timeline.*" xmlns:video="com.ithaca.visu.view.video.*">
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.visu.controls.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.traces.Obsel;
@@ -29,6 +29,7 @@
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.visu.events.PanelButtonEvent;
 			import com.ithaca.visu.events.PanelEditInfoEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;
@@ -49,6 +50,7 @@
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.ithaca.visu.ui.utils.SharedSatusEnum;
+			import com.ithaca.visu.ui.utils.SoundEnum;
 			import com.ithaca.visu.view.video.PanelEditChatMessage;
 			import com.ithaca.visu.view.video.PanelEditInfo;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
@@ -102,6 +104,8 @@
 			private var testCursor:ObselLine;
 			
 			private var pointPanelEditInfo:Point;
+			
+			private var muteVolume:Boolean = false;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -181,12 +185,7 @@
 					if(listIdClient != null)
 					{
 						// FIXME : if session end recording and for logged user status = 0 , this status by default add to all streams, it's no good!!!
-						var mute:Boolean = true;
-						if(buttonMute.label == fxgt.gettext("Couper le son"))
-						{
-							mute = false;
-						}
-						this.visio.addVideoStreams(listIdClient, mute);	
+						this.visio.addVideoStreams(listIdClient, muteVolume);	
 					}
 					// set logged user
 					this.visio.loggedUser = Model.getInstance().getLoggedUser();
@@ -255,12 +254,7 @@
 						if(module == this && module.visio != null)
 						{
 							var user:User = Model.getInstance().getUserPlateformeByUserId(event.userId);
-							var mute:Boolean = true;
-							if(buttonMute.label == fxgt.gettext("Couper le son"))
-							{
-								mute = false;
-							}
-							module.visio.addVideoStream(event.userIdClient, user, 1.0, mute);
+							module.visio.addVideoStream(event.userIdClient, user, 1.0, muteVolume);
 							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
 							if(event.status == ConnectionStatus.RECORDING)
 							{
@@ -1529,19 +1523,6 @@
 				
 			}
 			
-			protected function buttonMute_clickHandler(event:* = null):void
-			{
-				if(buttonMute.label == fxgt.gettext("Couper le son"))
-				{
-					buttonMute.label = fxgt.gettext("Activer le son");
-					this.visio.setVolumeMute(true);
-				}else
-				{
-					buttonMute.label = fxgt.gettext("Couper le son");
-					this.visio.setVolumeMute(false);
-				}
-			}
-			
 			//_____________________________________________________________________
 			//
 			// EvenHandlers : click on button marker
@@ -1679,6 +1660,31 @@
 				groupeVideo.removeElement(panelEditInfo);
 			}
 			
+			//_____________________________________________________________________
+			//
+			// EvenHandlers of the PanelButton
+			//
+			//_____________________________________________________________________
+			protected function panelbutton1_clickButtonMuteVolumeHandler(event:PanelButtonEvent):void
+			{
+				// set mute volume
+				muteVolume = event.mute;
+				// update mute volume
+				this.visio.setVolumeMute(muteVolume);
+			}
+
+			protected function panelbutton1_clickButtonMuteMicroHandler(event:PanelButtonEvent):void
+			{
+				var mute:Boolean = event.mute;
+				// set micro at mute
+				this.visio.mute = mute;
+				// play sound
+				if(mute)
+				{
+				 	SoundEnum.getSoundByName("blubup").play();
+				}
+			}
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1736,24 +1742,22 @@
 <!-- VIDEO -->		 
 		<mx:VDividedBox width="77%" height="100%" minHeight="400" minWidth="550">
 			<mx:HDividedBox width="100%" height="55%">
-				<s:Panel height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200"
+				<components:PanelButton height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200"
 					dragEnter="dragEnterHandler(event);"
 					dragDrop="dragDropHandler(event);"
+					buttonMuteMicroEnabled="false"
+					clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
+					clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
 					>
 					<s:Group  id="groupeVideo" height="100%" width="100%">
-						<video:VisuVisioAdvanced id="visio" width="100%" top="0" bottom="60"
+						<video:VisuVisioAdvanced id="visio" width="100%" top="0" bottom="30"
 											quality="80"
 											bandwidth="15000" autoPlay="True"  height="100%" 
 											buttonChatEnabled="true" 
-											buttonMarkerEnabled="false"
+											buttonMarkerEnabled="true"
 											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
 											clickButtonChat="visio_clickButtonChatHandler(event)"/>
 						<s:VGroup width="100%" bottom="1">
-							<s:HGroup horizontalAlign="center"  horizontalCenter="0" width="100%">
-								<s:Button id="buttonMute" click="buttonMute_clickHandler(event)">
-									<s:label>{fxgt.gettext("Couper le son")}</s:label>
-								</s:Button>
-							</s:HGroup>
 							<s:Group width="100%" height="30" id="groupSetMarker">
 								<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
 								</mx:TextArea>
@@ -1763,7 +1767,7 @@
 							</s:Group>	
 						</s:VGroup>
 					</s:Group>
-				</s:Panel>
+				</components:PanelButton>
 				<s:Panel   height="100%" width="60%" minWidth="300">
 					<s:title>Chat</s:title>
 					<s:Group height="100%" width="100%">
