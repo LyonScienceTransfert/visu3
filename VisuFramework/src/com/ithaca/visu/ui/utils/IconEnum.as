@@ -219,6 +219,14 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/iconMute_16x16.png")]
 		static private var mute16x16:Class;
 		
+		[Bindable]
+		[Embed("images/mic_on.png")]
+		static private var mic_on:Class;
+		
+		[Bindable]
+		[Embed("images/mic_off.png")]
+		static private var mic_off:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -359,6 +367,12 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "mute" : 
 					icon = mute16x16;
+					break;
+				case "micOn" : 
+					icon = mic_on;
+					break;
+				case "micOff" : 
+					icon = mic_off;
 					break;
 				default :
 					break;				
