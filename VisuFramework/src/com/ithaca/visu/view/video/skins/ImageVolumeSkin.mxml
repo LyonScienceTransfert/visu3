@@ -102,8 +102,8 @@
 			</s:LinearGradientStroke>
 		</s:stroke>
 	</s:Rect>
-	<mx:Image source="{IconEnum.getIconByName('volume')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" excludeFrom="mute"/>
+	<mx:Image id="volumeImage" source="{IconEnum.getIconByName('volume')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" excludeFrom="mute"/>
 	<s:HSlider id="volumeSlider" width="70" includeIn="over,mute" minimum="0" bottom="0" height="18" value="0.5" maximum="1.0"  
 			   liveDragging="true" snapInterval="0.1" left="22" toolTip="" showDataTip="false"/>
-	<mx:Image source="{IconEnum.getIconByName('mute')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" includeIn="mute"/>
+	<mx:Image  id="muteImage" source="{IconEnum.getIconByName('mute')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" includeIn="mute"/>
 </s:Skin>
