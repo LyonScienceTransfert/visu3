@@ -1745,7 +1745,7 @@
 				<components:PanelButton height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200"
 					dragEnter="dragEnterHandler(event);"
 					dragDrop="dragDropHandler(event);"
-					buttonMuteMicroEnabled="false"
+					buttonMuteMicroEnabled="true"
 					clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
 					clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
 					>
