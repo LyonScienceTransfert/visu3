@@ -9,7 +9,7 @@
 						configure="visumodulebase1_configureHandler(event)" 
 						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
 						xmlns:timeline="com.ithaca.visu.controls.timeline.*"
-						xmlns:controls="com.lyon2.controls.*"  currentState="State1" xmlns:video="com.ithaca.visu.view.video.*"> 
+						xmlns:controls="com.lyon2.controls.*"  currentState="State1" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*"> 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.documentarisation.RetroDocumentSegment;
@@ -26,6 +26,7 @@
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.visu.events.PanelButtonEvent;
 			import com.ithaca.visu.events.PanelEditInfoEvent;
 			import com.ithaca.visu.events.SalonRetroEvent;
 			import com.ithaca.visu.events.SessionEvent;
@@ -1003,20 +1004,6 @@
 			{
 				event.toolTip =  createToolTipTreeRetroDocument();
 			}
-
-
-			protected function buttonMute_clickHandler(event:MouseEvent):void
-			{
-				if(buttonMute.label == "Couper le son")
-				{
-					buttonMute.label = "Activer le son";
-					this.visio.setVolumeMute(true);
-				}else
-				{
-					buttonMute.label = "Couper le son";
-					this.visio.setVolumeMute(false);
-				}
-			}
 			
 			private function playRetroDocument(event:RetroDocumentEvent):void
 			{
@@ -1443,6 +1430,11 @@
 					pt.y - pointPanelEditComment.y - delta;
 			}
 
+			protected function panelVideo_clickButtonMuteVolumeHandler(event:PanelButtonEvent):void
+			{
+				// update mute volume
+				this.visio.setVolumeMute(event.mute);
+			}
 
 		]]>
 		
@@ -1469,10 +1461,12 @@
 		<mx:HDividedBox width="100%" height="60%">
 <!-- VIDEO -->
 			<mx:VDividedBox width="60%" height="100%" width.State1="70%">
-				<s:Panel height="100%" width="100%" id="panelVideo" dragEnter="dragEnterHandler(event);"
-					
-					dragDrop="dragDropHandler(event);">
-					<s:title>Video</s:title>
+				<components:PanelButton height="100%" width="100%" id="panelVideo" 
+					dragEnter="dragEnterHandler(event);"
+					dragDrop="dragDropHandler(event);"
+					buttonMuteMicroEnabled="false"
+					clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)">
+					<components:title>Video</components:title>
 					<s:Group height="100%" width="100%" bottom="2" id="groupeVideo">
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
 											quality="80"
@@ -1489,9 +1483,6 @@
 							<s:Button id="buttonPlayPause" click="buttonPlayPause_clickHandler(event)" bottom="3">
 								<s:label>Pause</s:label>
 							</s:Button>
-							<s:Button id="buttonMute" click="buttonMute_clickHandler(event)"  right.debug="5">
-								<s:label>Couper le son</s:label>
-							</s:Button>
 						</s:HGroup>
 						<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
 							<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
@@ -1501,7 +1492,7 @@
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
 					</s:Group>
-				</s:Panel>
+				</components:PanelButton>
 <!-- TIMELINE -->
 				<s:Panel width="100%" height="40%" id="panelTimeLine">
 					<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
