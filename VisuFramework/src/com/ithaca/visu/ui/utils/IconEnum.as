@@ -227,6 +227,10 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/mic_off.png")]
 		static private var mic_off:Class;
 		
+		[Bindable]
+		[Embed("images/iconMax_16x16.png")]
+		static private var iconMax_16x16:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -373,6 +377,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "micOff" : 
 					icon = mic_off;
+					break;
+				case "max" : 
+					icon = iconMax_16x16;
 					break;
 				default :
 					break;				
