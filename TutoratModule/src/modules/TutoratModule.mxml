@@ -1685,6 +1685,22 @@
 				}
 			}
 
+
+			protected function panelbutton1_clickButtonModeMaxHandler(event:PanelButtonEvent):void
+			{
+				var panelButton:PanelButton = event.currentTarget as PanelButton;
+				panelButton.buttonModeMaxEnabled = false;
+				panelButton.buttonModeZoomEnabled = true;
+			}
+
+
+			protected function panelbutton1_clickButtonModeZoomHandler(event:PanelButtonEvent):void
+			{
+				var panelButton:PanelButton = event.currentTarget as PanelButton;
+				panelButton.buttonModeMaxEnabled = true;
+				panelButton.buttonModeZoomEnabled = false;
+			}
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1745,9 +1761,13 @@
 				<components:PanelButton height="100%" width="40%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200"
 					dragEnter="dragEnterHandler(event);"
 					dragDrop="dragDropHandler(event);"
-					buttonMuteMicroEnabled="true"
+					buttonMuteMicroVisible="true"
+					buttonModeMaxVisible="true"
+					buttonModeZoomVisible="true"
 					clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
 					clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
+					clickButtonModeMax="panelbutton1_clickButtonModeMaxHandler(event)"
+					clickButtonModeZoom="panelbutton1_clickButtonModeZoomHandler(event)"
 					>
 					<s:Group  id="groupeVideo" height="100%" width="100%">
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0" bottom="30"
