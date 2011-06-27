@@ -22,7 +22,7 @@
 				<s:SolidColorStroke color="0x000000" />
 			</s:stroke>
 		</s:Rect>
-	<s:HGroup width="100%" horizontalAlign="center" verticalAlign="middle" paddingTop="2" paddingBottom="2">
+	<s:HGroup width="100%" horizontalAlign="center" verticalAlign="middle" paddingTop="3" paddingBottom="2">
 		<s:Label id="labelNameUser" text="Pertovich" paddingLeft="7" paddingRight="7"/>
 	</s:HGroup>
 	</s:Group>
