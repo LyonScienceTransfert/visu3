@@ -192,6 +192,8 @@
 	                          fontWeight="bold" verticalAlign="middle">
 	                </s:Label>
 					<mx:Spacer width="100%"/>
+					<components:IconButton id="buttonMax" height="22" width="22"/>
+					<components:IconButton id="buttonZoom" height="22" width="22"/>
 					<components:IconButton  id="buttonMicro" height="22" width="22"/>
 					<video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" />
 					<mx:Spacer width="1"/>
