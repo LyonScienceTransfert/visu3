@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.video.NameUser")]
+	</fx:Metadata>
+	<s:Group  width="100%" x="0">
+		<s:Rect id="fill" radiusX="10"
+			left="2" right="2" top="1" bottom="1" alpha="0.75">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xFFFFFF" />
+					<s:GradientEntry color="0xD8D8D8" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Rect id="border" radiusX="10"
+			left="2" right="2" top="0" bottom="0">
+			<s:stroke>
+				<s:SolidColorStroke color="0x000000" />
+			</s:stroke>
+		</s:Rect>
+	<s:HGroup width="100%" horizontalAlign="center" verticalAlign="middle" paddingTop="2" paddingBottom="2">
+		<s:Label id="labelNameUser" text="Pertovich" paddingLeft="7" paddingRight="7"/>
+	</s:HGroup>
+	</s:Group>
+</s:Skin>
+
