@@ -44,9 +44,9 @@ package com.ithaca.visu.view.video
 		[SkinPart("true")]
 		public var buttonVolumeUserZoomIn:ImageVolume;
 		[SkinPart("true")]
-		public var labelUserZoomOut:Label;
+		public var labelUserZoomOut:NameUser;
 		[SkinPart("true")]
-		public var labelUserZoomIn:Label;
+		public var labelUserZoomIn:NameUser;
 		
 		private var _zoom:Boolean;
 		private var mouseOver:Boolean;
@@ -233,11 +233,11 @@ package com.ithaca.visu.view.video
 			}
 			if (instance == labelUserZoomOut)
 			{	
-				labelUserZoomOut.text = VisuUtils.getUserLabel(_ownerFluxVideo, true);
+				labelUserZoomOut.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 			}
 			if (instance == labelUserZoomIn)
 			{	
-				labelUserZoomIn.text = VisuUtils.getUserLabel(_ownerFluxVideo, true);
+				labelUserZoomIn.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 			}
 			if (instance == buttonMarker)
 			{	
@@ -329,11 +329,11 @@ package com.ithaca.visu.view.video
 				ownerFluxVideoChange = false;
 				if(labelUserZoomOut != null)
 				{
-					labelUserZoomOut.text = VisuUtils.getUserLabel(_ownerFluxVideo, true);
+					labelUserZoomOut.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 				}
 				if(labelUserZoomIn != null)
 				{
-					labelUserZoomIn.text = VisuUtils.getUserLabel(_ownerFluxVideo, true);
+					labelUserZoomIn.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 				}
 			}
 			if(buttonChatEnabledChange)
