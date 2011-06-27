@@ -1464,7 +1464,7 @@
 				<components:PanelButton height="100%" width="100%" id="panelVideo" 
 					dragEnter="dragEnterHandler(event);"
 					dragDrop="dragDropHandler(event);"
-					buttonMuteMicroEnabled="false"
+					buttonMuteMicroVisible="false"
 					clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)">
 					<components:title>Video</components:title>
 					<s:Group height="100%" width="100%" bottom="2" id="groupeVideo">
