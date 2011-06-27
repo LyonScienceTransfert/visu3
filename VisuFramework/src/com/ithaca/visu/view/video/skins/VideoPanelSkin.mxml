@@ -48,7 +48,7 @@
 				<video:toolTip>Volume</video:toolTip>
 			</video:ImageVolume>
 			<mx:Spacer width="100%"/>
-			<s:Label id="labelUserZoomIn" text="B.CLOUTER" paddingTop="5" color="#C40A0A" includeIn="disabled,zoomInMouseIn,zoomInMouseOut"/>
+			<video:NameUser id="labelUserZoomIn" lastFirstNameUser="B.CLOUTER" includeIn="disabled,zoomInMouseIn,zoomInMouseOut"/>
 			<mx:Spacer width="100%"/>
 			<mx:Button id="buttonChat" icon="{IconEnum.getIconByName('chat')}"  height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Envoyer message privé</mx:toolTip>
@@ -68,7 +68,7 @@
 				<video:toolTip>Volume</video:toolTip>
 			</video:ImageVolume>
 			<mx:Spacer width="100%"/>
-			<s:Label id="labelUserZoomOut" right="1" text="B.Gouter" paddingTop="5" color="#12C960"/>
+			<video:NameUser id="labelUserZoomOut" right="1" lastFirstNameUser="B.Gouter"/>
 			
 		</s:HGroup>
 	</s:Group>
