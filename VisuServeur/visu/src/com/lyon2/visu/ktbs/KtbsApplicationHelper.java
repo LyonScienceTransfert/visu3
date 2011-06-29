@@ -55,11 +55,11 @@ public class KtbsApplicationHelper {
 	}
 
 	// injected by Spring
-//	private String retroRoomTraceModelName;
+	// private String retroRoomTraceModelName;
 
-//	public void setRetroRoomTraceModelName(String retroRoomTraceModelName) {
-//		this.retroRoomTraceModelName = retroRoomTraceModelName;
-//	}
+	// public void setRetroRoomTraceModelName(String retroRoomTraceModelName) {
+	// this.retroRoomTraceModelName = retroRoomTraceModelName;
+	// }
 
 	// injected by Spring
 	private String visuTraceModelName;
@@ -156,8 +156,8 @@ public class KtbsApplicationHelper {
 		}
 
 		// creates the trace models
-//		retroRoomTraceModel = initializeTraceModel(visuBase,
-//				retroRoomTraceModelName, client);
+		// retroRoomTraceModel = initializeTraceModel(visuBase,
+		// retroRoomTraceModelName, client);
 		visuTraceModel = initializeTraceModel(visuBase, visuTraceModelName,
 				client);
 
@@ -199,7 +199,7 @@ public class KtbsApplicationHelper {
 		return model;
 	}
 
-//	private ITraceModel retroRoomTraceModel;
+	// private ITraceModel retroRoomTraceModel;
 	private ITraceModel visuTraceModel;
 
 	// A cache for stored trace
