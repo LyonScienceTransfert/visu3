@@ -55,11 +55,11 @@ public class KtbsApplicationHelper {
 	}
 
 	// injected by Spring
-	private String retroRoomTraceModelName;
+//	private String retroRoomTraceModelName;
 
-	public void setRetroRoomTraceModelName(String retroRoomTraceModelName) {
-		this.retroRoomTraceModelName = retroRoomTraceModelName;
-	}
+//	public void setRetroRoomTraceModelName(String retroRoomTraceModelName) {
+//		this.retroRoomTraceModelName = retroRoomTraceModelName;
+//	}
 
 	// injected by Spring
 	private String visuTraceModelName;
@@ -93,7 +93,8 @@ public class KtbsApplicationHelper {
 
 	private KtbsClient getKtbsClient(String userName, String userPassword) {
 		if (ktbsClients.get(userName) == null) {
-			KtbsClient ktbsClient = clientFactory.createRestCachingClient(rootUri, userName, userPassword, 1000, 10000l);
+			KtbsClient ktbsClient = clientFactory.createRestCachingClient(
+					rootUri, userName, userPassword, 1000, 10000l);
 			ktbsClients.put(userName, ktbsClient);
 			String baseUri = ktbsClient.getResourceService().newBase(userName);
 
@@ -155,12 +156,12 @@ public class KtbsApplicationHelper {
 		}
 
 		// creates the trace models
-		retroRoomTraceModel = initializeTraceModel(visuBase,
-				retroRoomTraceModelName, client);
+//		retroRoomTraceModel = initializeTraceModel(visuBase,
+//				retroRoomTraceModelName, client);
 		visuTraceModel = initializeTraceModel(visuBase, visuTraceModelName,
 				client);
 
-		if (retroRoomTraceModel == null || visuTraceModel == null) {
+		if (visuTraceModel == null) {
 			log.warn(notInitializedMessage);
 			return;
 		}
@@ -187,15 +188,18 @@ public class KtbsApplicationHelper {
 				model = client.getResourceService().getTraceModel(modelUri);
 			}
 		}
-		
-		log.info("Creating the content of the \"{}\" trace model. May take a few seconds...", modelLocalName);
+
+		log
+				.info(
+						"Creating the content of the \"{}\" trace model. May take a few seconds...",
+						modelLocalName);
 		RetroRoomTraceModel.load(client, base.getUri(), modelLocalName);
 		log.info("trace model created.");
 
 		return model;
 	}
 
-	private ITraceModel retroRoomTraceModel;
+//	private ITraceModel retroRoomTraceModel;
 	private ITraceModel visuTraceModel;
 
 	// A cache for stored trace
@@ -335,7 +339,7 @@ public class KtbsApplicationHelper {
 		IStoredTrace storedTrace = storedTraceCache.get(traceLocalName);
 
 		if (storedTrace == null) {
-			log.debug("The trace " + traceLocalName + " is not in the cache");
+			log.info("The trace " + traceLocalName + " is not in the cache");
 
 			log.info("Retrieving the trace " + traceLocalName
 					+ " from the KTBS");
@@ -359,7 +363,7 @@ public class KtbsApplicationHelper {
 					storedTrace = resourceService
 							.getStoredTrace(storedTraceUri);
 			} else
-				log.debug("The trace " + storedTrace.getUri()
+				log.info("The trace " + storedTrace.getUri()
 						+ " was retrieved successfully");
 			storedTraceCache.put(traceLocalName, storedTrace);
 			return storedTraceCache.get(traceLocalName);
@@ -401,7 +405,8 @@ public class KtbsApplicationHelper {
 		String username = makeKtbsUserName(uid);
 		KtbsClient client = ktbsClients.get(username);
 		if (client == null)
-			ktbsClients.put(username, clientFactory.createRestCachingClient(rootUri, username, username, 1000, 10000l));
+			ktbsClients.put(username, clientFactory.createRestCachingClient(
+					rootUri, username, username, 1000, 10000l));
 		return ktbsClients.get(username);
 	}
 
