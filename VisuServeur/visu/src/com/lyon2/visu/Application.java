@@ -620,8 +620,8 @@ IScheduledJob {
 
 		
 		// safety test in case the ktsb would be deactivated
-		log.info("Delegating the KTBS collect to KtbsService");
-		ktbsService.sendToKtbs(null, subject, trace, typeObsel, paramsObsel, traceType);
+//		log.info("Delegating the KTBS collect to KtbsService");
+//		ktbsService.sendToKtbs(null, subject, trace, typeObsel, paramsObsel, traceType);
 		
 		return obsel;
 	}
