@@ -393,7 +393,7 @@ IScheduledJob {
 			paramsObselRetroRoom.add(ObselType.UNKNOWN);
 			Obsel obsel = null;
 			try {
-				obsel = setObsel(userId, traceRetroIdOutSession,
+				obsel = setObsel(conn, userId, traceRetroIdOutSession,
 						ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION,
 						paramsObselRetroRoom);
 			} catch (SQLException sqle) {
@@ -429,6 +429,7 @@ IScheduledJob {
 				;
 				try {
 					Obsel obsel = setObsel(
+							conn,
 							(Integer) client.getAttribute("uid"),
 							(String) client.getAttribute("trace"),
 							"ActivityStop", paramsObsel);
@@ -453,7 +454,7 @@ IScheduledJob {
 					paramsObsel.add("disconnect");
 					// add obsel "RoomExit"
 					try {
-						setObsel((Integer) connectedClient.getAttribute("uid"),
+						setObsel(conn, (Integer) connectedClient.getAttribute("uid"),
 								(String) connectedClient.getAttribute("trace"),
 								"SessionExit", paramsObsel);
 					} catch (SQLException sqle) {
@@ -487,7 +488,7 @@ IScheduledJob {
 		if (hasTrace) {
 			try {
 				if (user != null) {
-					setObsel(userId, (String) client.getAttribute("trace"),
+					setObsel(conn, userId, (String) client.getAttribute("trace"),
 							"Disconnected", paramsObselDisconnected);
 				}
 
@@ -502,7 +503,7 @@ IScheduledJob {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Obsel setObsel(final Integer subject, final String trace, final String typeObsel,
+	public Obsel setObsel(IConnection conn, final Integer subject, final String trace, final String typeObsel,
 			final List<Object> paramsObsel, final String... traceType) throws SQLException {
 		// log.warn("===== setObsel ===== Name module est : {}",listParams);
 		// do not add obsel if hasn't traceId
@@ -621,7 +622,7 @@ IScheduledJob {
 		
 		// safety test in case the ktsb would be deactivated
 		log.info("Delegating the KTBS collect to KtbsService");
-		ktbsService.sendToKtbs(null, subject, trace, typeObsel, paramsObsel, traceType);
+		ktbsService.sendToKtbs(conn, subject, trace, typeObsel, paramsObsel, traceType);
 		
 		return obsel;
 	}
@@ -635,7 +636,7 @@ IScheduledJob {
 	 */
 	public void getClientInfo(IConnection conn) {
 		log.warn("getClientInfo client = {}", conn.getClient().getId());
-		IClient client = conn.getClient();
+		IClient client = conn.getClient(); 
 
 		Map<String, String> o = new HashMap<String, String>();
 		o.put("id", client.getId());
@@ -719,11 +720,12 @@ IScheduledJob {
 		}
 		Date startRecording = session.getStart_recording();
 
+		// Get the Client Scope
+		IConnection conn = (IConnection) clientRecording
+		.getAttribute("connection");
+		
 		// check if mode recording for this client
 		if (status == 3) {
-			// Get the Client Scope
-			IConnection conn = (IConnection) clientRecording
-			.getAttribute("connection");
 			IScope scope = conn.getScope();
 			// start recording
 			GregorianCalendar calendar = new GregorianCalendar();
@@ -877,7 +879,7 @@ IScheduledJob {
 			paramsObselSystem.add("presentcolorscode");
 			paramsObselSystem.add(listPresentsColorUsersCode);
 			try {
-				Obsel obsel = setObsel(0, traceSystem, typeObselSystem,
+				Obsel obsel = setObsel(conn, 0, traceSystem, typeObselSystem,
 						paramsObselSystem);
 			} catch (SQLException sqle) {
 				log.error("=====Errors===== {}", sqle);
@@ -912,7 +914,7 @@ IScheduledJob {
 
 				// add obsel "SessionEnter"
 				try {
-					Obsel obsel = setObsel((Integer) connectedClient
+					Obsel obsel = setObsel(conn, (Integer) connectedClient
 							.getAttribute("uid"), (String) connectedClient
 							.getAttribute("trace"), "SessionEnter",
 							paramsObselSessionEnter);
@@ -940,7 +942,7 @@ IScheduledJob {
 				paramsObsel.add(activityId.toString());
 				;
 				try {
-					Obsel obsel = setObsel((Integer) clientRecording
+					Obsel obsel = setObsel(conn, (Integer) clientRecording
 							.getAttribute("uid"), (String) clientRecording
 							.getAttribute("trace"), "ActivityStart",
 							paramsObsel);
@@ -1327,6 +1329,7 @@ IScheduledJob {
 				;
 				try {
 					Obsel obsel = setObsel(
+							conn,
 							(Integer) client.getAttribute("uid"),
 							(String) client.getAttribute("trace"),
 							"ActivityStop", paramsObsel);
@@ -1359,7 +1362,9 @@ IScheduledJob {
 
 					// add obsel "SessionExit"
 					try {
-						setObsel((Integer) connectedClient.getAttribute("uid"),
+						setObsel(
+								conn,
+								(Integer) connectedClient.getAttribute("uid"),
 								(String) connectedClient.getAttribute("trace"),
 								"SessionExit", paramsObsel);
 					} catch (SQLException sqle) {
@@ -1449,8 +1454,12 @@ IScheduledJob {
 				paramsObselRecordFileName.add("uid");
 				paramsObselRecordFileName.add(userId.toString());
 				// add obsel "RecordFileName"
+				IConnection conn = (IConnection) clientRFN
+				.getAttribute("connection");
+				
 				try {
-					setObsel((Integer) clientRFN.getAttribute("uid"),
+					setObsel(conn,
+							(Integer) clientRFN.getAttribute("uid"),
 							(String) clientRFN.getAttribute("trace"),
 							"RecordFilename", paramsObselRecordFileName);
 				} catch (SQLException sqle) {

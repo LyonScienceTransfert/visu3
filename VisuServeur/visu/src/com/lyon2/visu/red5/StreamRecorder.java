@@ -343,7 +343,7 @@ log.warn("refParam = {}",refParam);
         paramsObselSystem.add("presentcolorscode");paramsObselSystem.add(listPresentsColorUsersCode);
 		try
 		{
-			Obsel obsel = app.setObsel(0, traceSystem, typeObselSystem, paramsObselSystem);
+			Obsel obsel = app.setObsel(conn, 0, traceSystem, typeObselSystem, paramsObselSystem);
 		}
 		catch (SQLException sqle)
 		{
@@ -374,7 +374,7 @@ log.warn("refParam = {}",refParam);
 
     			try
 					{
-						Obsel obsel = app.setObsel(key, (String)listUserStartRecording.get(key).get(0), typeObsel, paramsObselSessionStart);
+						Obsel obsel = app.setObsel(conn, key, (String)listUserStartRecording.get(key).get(0), typeObsel, paramsObselSessionStart);
 						// client start recording
 						IClient clientStartRecording = (IClient)listUserStartRecording.get(key).get(2);
 						// date start recording
@@ -401,7 +401,7 @@ log.warn("refParam = {}",refParam);
     			paramsObselRecordFileName.add("uid");paramsObselRecordFileName.add(String.valueOf(keyUserId));
 				try
 				{
-					app.setObsel(key, (String)listUserStartRecording.get(key).get(0), "RecordFilename", paramsObselRecordFileName);					
+					app.setObsel(conn, key, (String)listUserStartRecording.get(key).get(0), "RecordFilename", paramsObselRecordFileName);					
 				}
 				catch (SQLException sqle)
 				{
@@ -482,7 +482,7 @@ log.warn("refParam = {}",refParam);
 					paramsObselSessionPause.add("uid");paramsObselSessionPause.add(userId.toString());
 	    			try
 						{
-	    					 app.setObsel((Integer)client.getAttribute("uid"), (String)client.getAttribute("trace"), "SessionPause", paramsObselSessionPause);					
+	    					 app.setObsel(conn, (Integer)client.getAttribute("uid"), (String)client.getAttribute("trace"), "SessionPause", paramsObselSessionPause);					
 						}
 						catch (SQLException sqle)
 						{

@@ -241,7 +241,7 @@ public class SharedInfo
 			   		}
 					try
 					{
-						app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
+						app.setObsel(conn, senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
 					}
 						catch (SQLException sqle)
 					{
@@ -296,7 +296,7 @@ public class SharedInfo
 			   		
 					try
 					{
-						obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
+						obsel = app.setObsel(conn, (Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
 					}
 						catch (SQLException sqle)
 					{
@@ -375,7 +375,7 @@ public class SharedInfo
 		{
 			try
 			{
-				obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselUser, paramsObsel);					
+				obsel = app.setObsel(conn, (Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselUser, paramsObsel);					
 			}
 				catch (SQLException sqle)
 			{
@@ -415,7 +415,7 @@ public class SharedInfo
 				paramsObsel.add("session");paramsObsel.add(sessionId.toString());
 				try
 				{
-					obsel = app.setObsel(0, traceSystem, typeObselSystem, paramsObsel);					
+					obsel = app.setObsel(conn, 0, traceSystem, typeObselSystem, paramsObsel);					
 				}
 					catch (SQLException sqle)
 				{

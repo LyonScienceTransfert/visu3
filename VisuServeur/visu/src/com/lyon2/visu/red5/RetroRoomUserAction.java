@@ -125,7 +125,7 @@ public class RetroRoomUserAction {
 
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceRetroId, typeObsel, paramsObsel);
+			obsel = app.setObsel(conn, userId, traceRetroId, typeObsel, paramsObsel);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
 		}
@@ -153,7 +153,7 @@ public class RetroRoomUserAction {
 
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceRetroId, typeObsel, paramsObsel);
+			obsel = app.setObsel(conn, userId, traceRetroId, typeObsel, paramsObsel);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
 		}
@@ -176,7 +176,7 @@ public class RetroRoomUserAction {
 		paramsObsel.add(timeVideo.toString());
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceRetroId, typeObsel, paramsObsel);
+			obsel = app.setObsel(conn, userId, traceRetroId, typeObsel, paramsObsel);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
 		}
@@ -201,7 +201,7 @@ public class RetroRoomUserAction {
 		paramsObsel.add(text);
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceRetroId, typeObsel, paramsObsel);
+			obsel = app.setObsel(conn, userId, traceRetroId, typeObsel, paramsObsel);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
 		}
@@ -235,7 +235,7 @@ public class RetroRoomUserAction {
 		paramsObsel.add(avatarUserTraceLine);
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceRetroId, typeObsel, paramsObsel);
+			obsel = app.setObsel(conn, userId, traceRetroId, typeObsel, paramsObsel);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
 		}
@@ -302,7 +302,7 @@ public class RetroRoomUserAction {
 		paramsObsel.add(typeWidget);
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceRetroId, typeObsel, paramsObsel);
+			obsel = app.setObsel(conn, userId, traceRetroId, typeObsel, paramsObsel);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
 		}
@@ -383,7 +383,7 @@ public class RetroRoomUserAction {
 			paramsObsel.add("cause");
 			paramsObsel.add("LEAVE_ROOM");
 			try {
-				obsel = app.setObsel(userId, traceRetroIdOutSession,
+				obsel = app.setObsel(conn, userId, traceRetroIdOutSession,
 						ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION,
 						paramsObsel);
 			} catch (SQLException sqle) {
@@ -506,7 +506,7 @@ public class RetroRoomUserAction {
 		log.debug("paramsObsel {}", paramsObsel);
 		Obsel obsel = null;
 		try {
-			obsel = app.setObsel(userId, traceComment, typeObsel, paramsObsel,
+			obsel = app.setObsel(conn, userId, traceComment, typeObsel, paramsObsel,
 					"commentObsel", beginTime, endTime);
 		} catch (SQLException sqle) {
 			log.error("=====Errors===== {}", sqle);
