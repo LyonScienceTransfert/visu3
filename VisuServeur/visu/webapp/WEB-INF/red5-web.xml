@@ -54,8 +54,9 @@
         <property name="rootUri" value="${ktbs.root.uri}"/>
         <property name="sharedUsername" value="${ktbs.root.username}"/>
         <property name="visuTraceModelName" value="${ktbs.model.visu}"/>
-        <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
-    </bean>
+       <!--  <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
+  -->
+  </bean>
 
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
         <property name="sqlMapClient" ref="sqlMap"/>
