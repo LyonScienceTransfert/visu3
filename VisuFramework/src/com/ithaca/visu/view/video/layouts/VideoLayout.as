@@ -166,6 +166,11 @@ package com.ithaca.visu.view.video.layouts
 				case 7:
 					result = (unscaledWidth/3) *2;
 					break;
+				case 8:
+				case 9:
+				case 10:
+					result = (unscaledWidth/7) *4;
+					break;
 			}
 			return result;
 		}
@@ -188,6 +193,11 @@ package com.ithaca.visu.view.video.layouts
 				case 7:
 					result = (unscaledHeight/3)*2;
 					break;
+				case 7:
+				case 8:
+				case 9:
+					result = unscaledHeight/2;
+					break;
 			}
 			return result;
 		}
@@ -200,6 +210,8 @@ package com.ithaca.visu.view.video.layouts
 			result.h = unscaledHeight - hZoomIn;
 			result.w = (result.h/3)*4;
 			result.y = hZoomIn;
+			
+			var deltaY:int = 0;
 			
 			var tempW:int;
 			var tempX:int;
@@ -252,12 +264,41 @@ package com.ithaca.visu.view.video.layouts
 					}
 					result.w = tempW;
 					
-					var deltaY:int = 0;
 					if(value > 3)
 					{
 						value = value - 3;
 						deltaY = result.h;
 					}
+					result.x = tempW*(value-1) + tempX; 
+					result.y = result.y + deltaY;
+					break;	
+				case 8:
+				case 9:
+				case 10:
+					// 3 col and 3 row
+					result.h = result.h/3;
+					tempW = (result.h/3)*4;
+					
+					tempX = 0;
+					if(tempW*3 > unscaledWidth)
+					{
+						tempW = unscaledWidth/3;
+						result.h = (tempW/4)*3;
+					}else
+					{
+						tempX = (unscaledWidth - tempW*3)/2;
+					}
+					result.w = tempW;
+					if(value > 6)
+					{
+						value = value - 6;
+						deltaY = result.h*2;
+					}else
+						if(value > 3)
+						{
+							value = value - 3;
+							deltaY = result.h;
+						}
 					result.x = tempW*(value-1) + tempX; 
 					result.y = result.y + deltaY;
 					break;	
@@ -273,6 +314,7 @@ package com.ithaca.visu.view.video.layouts
 			result.w = unscaledWidth - wZoomIn;
 			
 			result.x = wZoomIn;
+			var deltaX:int = 0;
 			
 			var tempH:int;
 			var tempY:int;
@@ -321,7 +363,6 @@ package com.ithaca.visu.view.video.layouts
 					}
 					result.h = tempH;
 					// second row videoPanel
-					var deltaX:int = 0;
 					if(value > 3)
 					{
 						value = value - 3;
@@ -332,6 +373,36 @@ package com.ithaca.visu.view.video.layouts
 					result.x = result.x + deltaX;
 					
 					break;
+				case 8:
+				case 9:
+				case 10:
+					// 3 coll and 3 row
+					result.w = result.w/3;
+					tempH = (result.w /4)*3;
+					if(tempH*3 > unscaledHeight)
+					{
+						tempH = unscaledHeight/3;
+						result.w = (tempH/3)*4;
+					}else
+					{
+						tempY = (unscaledHeight - tempH*3)/2;
+					}
+					result.h = tempH;
+					// second row videoPanel
+					if(value > 6)
+					{
+						value = value - 6;
+						deltaX = result.w*2;
+					}else 
+						if(value > 3)
+						{
+							value = value - 3;
+							deltaX = result.w;
+						}
+						
+					
+					result.y = tempH*(value-1) + tempY; 
+					result.x = result.x + deltaX;
 			}
 			return result;
 		}
