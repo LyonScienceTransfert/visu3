@@ -16,6 +16,8 @@ package com.ithaca.visu.view.video
 	import flash.net.NetStream;
 	import flash.utils.Timer;
 	
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayCollection;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -28,6 +30,7 @@ package com.ithaca.visu.view.video
 	[Event(name="clickButtonChat",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickButtonComment",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	[Event(name="clickPanelVideo",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
+	[Event(name="clickButtonZoom",type="com.ithaca.visu.view.video.VisuVisioAdvancedEvent")]
 	
 	public class VisuVisioAdvanced extends SkinnableComponent
 	{
@@ -331,6 +334,19 @@ package com.ithaca.visu.view.video
 		{
 			return _loggedUser;
 		}
+		public function set zoomMax(value:Boolean):void
+		{
+			if(value)
+			{
+				// set logged user zoomIn when switch mode zoomMax in true
+				setZoomLoggedUser();
+			}
+			videoPanelLayout.zoomMax = value;
+		}
+		public function get zoomMax():Boolean
+		{
+			return videoPanelLayout.zoomMax;
+		}
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -541,6 +557,8 @@ package com.ithaca.visu.view.video
 			setZoom(elm);
 			// update layout
 			videoPanelLayout.updateZoom();
+			var zoomUserEvent:VisuVisioAdvancedEvent = new VisuVisioAdvancedEvent(VisuVisioAdvancedEvent.CLICK_BUTTON_ZOOM);
+			dispatchEvent(zoomUserEvent);
 		}
 		private function onVideoPanelUpdateVolume(event:VideoPanelEvent):void
 		{
@@ -590,6 +608,36 @@ package com.ithaca.visu.view.video
 					videos[name].zoomIn = false;	
 				}
 				
+			}
+		}
+		
+		/**
+		 * Set zoom for logged user
+		 * using for mode zoomMax
+		 */
+		private function setZoomLoggedUser():void
+		{
+			var videoPanel:VideoPanel = null;
+			var ownerFluxVideo:int;
+			var hasStreamLoggedUser:Boolean = false;
+			for (var name:String in videos)
+			{
+				videoPanel = videos[name];
+				ownerFluxVideo = videoPanel.ownerFluxVideo.id_user;
+				if(ownerFluxVideo == this.loggedUser.id_user )
+				{
+					videoPanel.zoomIn = true;
+					hasStreamLoggedUser = true;
+				}else
+				{
+					videoPanel.zoomIn = false;
+				}
+			}
+			// in this case logged user hasn't stream, maybe logged user admin/responsable, or has rights watch the streams other users
+			// zoom for the last stream 
+			if(!hasStreamLoggedUser && videoPanel != null)
+			{
+				videoPanel.zoomIn = true;
 			}
 		}
 		/**
