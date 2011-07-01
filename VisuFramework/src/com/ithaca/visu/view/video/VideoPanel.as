@@ -42,11 +42,7 @@ package com.ithaca.visu.view.video
 		[SkinPart("true")]
 		public var buttonVolumeUserZoomOut:ImageVolume;
 		[SkinPart("true")]
-		public var buttonVolumeUserZoomIn:ImageVolume;
-		[SkinPart("true")]
 		public var labelUserZoomOut:NameUser;
-		[SkinPart("true")]
-		public var labelUserZoomIn:NameUser;
 		
 		private var _zoom:Boolean;
 		private var mouseOver:Boolean;
@@ -93,7 +89,7 @@ package com.ithaca.visu.view.video
 		// Setter/getter
 		//
 		//_____________________________________________________________________
-		
+
 		public function set zoomIn(value:Boolean):void
 		{
 			_zoom = value;
@@ -235,10 +231,6 @@ package com.ithaca.visu.view.video
 			{	
 				labelUserZoomOut.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 			}
-			if (instance == labelUserZoomIn)
-			{	
-				labelUserZoomIn.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
-			}
 			if (instance == buttonMarker)
 			{	
 				if(_buttonMarkerEnabled)
@@ -271,12 +263,6 @@ package com.ithaca.visu.view.video
 					buttonComment.includeInLayout = false;
 					buttonComment.visible = false;
 				}
-			}
-			if (instance == buttonVolumeUserZoomIn)
-			{
-				buttonVolumeUserZoomIn.addEventListener(VideoPanelEvent.CHANGE_VOLUME, onChangeVolume);
-				buttonVolumeUserZoomIn.volume = _volume;
-				buttonVolumeUserZoomIn.mute = _volumeMute;
 			}
 			if (instance == buttonVolumeUserZoomOut)
 			{
@@ -330,10 +316,6 @@ package com.ithaca.visu.view.video
 				if(labelUserZoomOut != null)
 				{
 					labelUserZoomOut.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
-				}
-				if(labelUserZoomIn != null)
-				{
-					labelUserZoomIn.lastFirstNameUser = VisuUtils.getUserLabel(_ownerFluxVideo, true);
 				}
 			}
 			if(buttonChatEnabledChange)
@@ -396,10 +378,6 @@ package com.ithaca.visu.view.video
 			if(volumeChange)
 			{
 				volumeChange = false;
-				if(buttonVolumeUserZoomIn != null)
-				{
-					buttonVolumeUserZoomIn.volume = _volume;
-				}
 				if(buttonVolumeUserZoomOut != null)
 				{
 					buttonVolumeUserZoomOut.volume = _volume;
@@ -520,10 +498,6 @@ package com.ithaca.visu.view.video
 		{
 			var tempVolume:Number;
 			// set icon mute
-			if(buttonVolumeUserZoomIn != null)
-			{
-				buttonVolumeUserZoomIn.mute = _volumeMute;
-			}
 			if(buttonVolumeUserZoomOut != null)
 			{
 				buttonVolumeUserZoomOut.mute = _volumeMute;
