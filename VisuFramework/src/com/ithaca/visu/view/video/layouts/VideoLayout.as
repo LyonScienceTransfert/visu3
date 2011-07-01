@@ -612,6 +612,7 @@ package com.ithaca.visu.view.video.layouts
 			var koeff:int = 0;
 			var tempH:int;
 			var tempY:int;
+			var div3:int = value/3;
 			switch(numVideoPanel)
 			{
 				case 1:
@@ -656,11 +657,7 @@ package com.ithaca.visu.view.video.layouts
 					koeff = 1;
 					if(value%2 > 0 ){koeff = 0};
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					
-					var val3:int = value/3
-					var rr:int = result.h*(val3)
-					var dd:int = deltaY*(val3 + 1)
-					result.y = (unscaledHeight - result.h*2)/2 + rr + dd;
+					result.y = (unscaledHeight - result.h*2)/2 + result.h*(div3) + deltaY*(div3 + 1);
 					break;
 				case 5:
 					result.w = unscaledWidth/2;
@@ -675,7 +672,7 @@ package com.ithaca.visu.view.video.layouts
 					koeff = 1;
 					if(value%2 > 0 ){koeff = 0};
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*2)/2 +  result.h*(value/3) + deltaY*(value/3 + 1);
+					result.y = (unscaledHeight - result.h*2)/2 +  result.h*(div3) + deltaY*(div3 + 1);
 					break;	
 				case 6:
 					result.w = unscaledWidth/3;
@@ -703,7 +700,7 @@ package com.ithaca.visu.view.video.layouts
 						break;
 					}
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*2)/2 +  result.h*((value-1)/3) + deltaY*((value-1)/3 + 1);
+					result.y = (unscaledHeight - result.h*2)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3) + 1);
 					break;
 				case 7:
 					result.w = (unscaledWidth - wZoomIn)/3;
@@ -731,7 +728,7 @@ package com.ithaca.visu.view.video.layouts
 						break;
 					}
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*2)/2 +  result.h*((value-1)/3) + deltaY*((value-1)/3 + 1);
+					result.y = (unscaledHeight - result.h*2)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3) + 1);
 					break;
 				case 8:
 				case 9:
@@ -763,7 +760,7 @@ package com.ithaca.visu.view.video.layouts
 						break;
 					}
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*3)/2 +  result.h*((value-1)/3) + deltaY*((value-1)/3 + 1);
+					result.y = (unscaledHeight - result.h*3)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3) + 1);
 					break;
 				case 10:
 					// 3 coll x 3row +1 
@@ -796,7 +793,7 @@ package com.ithaca.visu.view.video.layouts
 							break;
 					}
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*3)/2 +  result.h*((value-1)/3) + deltaY*((value-1)/3 + 1);
+					result.y = (unscaledHeight - result.h*3)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3) + 1);
 					break;
 			}
 			return result;
@@ -911,7 +908,7 @@ package com.ithaca.visu.view.video.layouts
 				koeff = 1;
 				if(value%2 > 0 ){koeff = 0};
 				result.x =  deltaX*(koeff+1) + result.w*(koeff);
-				result.y = (unscaledHeight - result.h*4)/2 +  result.h*((value-1)/2) + deltaY*((value-1)/2 + 1);
+				result.y = (unscaledHeight - result.h*4)/2 +  result.h*(int((value-1)/2)) + deltaY*(int((value-1)/2) + 1);
 				break;
 			case 10:
 				// 3 coll x 3row +1 
@@ -944,7 +941,7 @@ package com.ithaca.visu.view.video.layouts
 					break;
 				}
 				result.x =  deltaX*(koeff+1) + result.w*(koeff);
-				result.y = (unscaledHeight - result.h*4)/2 +  result.h*((value-1)/3) + deltaY*((value-1)/3);
+				result.y = (unscaledHeight - result.h*4)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3));
 				break;
 			}
 			return result;
