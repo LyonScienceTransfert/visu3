@@ -1436,8 +1436,20 @@
 				this.visio.setVolumeMute(event.mute);
 			}
 
+			protected function panelVideo_clickButtonModeMaxHandler(event:PanelButtonEvent):void
+			{
+				panelVideo.buttonModeMaxEnabled = false;
+				panelVideo.buttonModeZoomEnabled = true;
+				visio.zoomMax = true;
+			}
+
+			protected function panelVideo_clickButtonModeZoomHandler(event:*):void
+			{
+				panelVideo.buttonModeMaxEnabled = true;
+				panelVideo.buttonModeZoomEnabled = false;
+				visio.zoomMax = false;
+			}
 		]]>
-		
 	</fx:Script>
 	<modules:states>
 		<s:State name="State1"/>
@@ -1465,7 +1477,13 @@
 					dragEnter="dragEnterHandler(event);"
 					dragDrop="dragDropHandler(event);"
 					buttonMuteMicroVisible="false"
-					clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)">
+				    buttonModeMaxVisible="true"
+					buttonModeZoomVisible="true"
+					buttonModeZoomEnabled="false"
+					buttonModeMaxEnabled="true"
+					clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
+					clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
+					clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)">
 					<components:title>Video</components:title>
 					<s:Group height="100%" width="100%" bottom="2" id="groupeVideo">
 						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
@@ -1474,11 +1492,13 @@
 											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
 											clickPanelVideo="visio_clickPanelVideoHandler(event)"
 											clickButtonComment="visio_clickButtonCommentHandler(event)"
+											clickButtonZoom="panelVideo_clickButtonModeZoomHandler(event)"
 											buttonChatEnabled="false"
 											buttonMarkerEnabled="false"
 											buttonCommentEnabled="true"
+											buttonMode="true"
 											bandwidth="15000" autoPlay="true" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"
-											/>
+											loggedUser="{Model.getInstance().getLoggedUser()}"/>
 						<s:HGroup bottom="1" horizontalAlign="center"  horizontalCenter="0">
 							<s:Button id="buttonPlayPause" click="buttonPlayPause_clickHandler(event)" bottom="3">
 								<s:label>Pause</s:label>
