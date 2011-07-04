@@ -378,10 +378,11 @@
 					this.visio.startTimeSession = startRecordingSession;
 					// update label start session recording
 					var dateStartRecording:Date = event.dateStartRecording;
-					this.panelTimeLine.title = this.panelTimeLine.title + ""+ 
-						fxgt.gettext(" (séance enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
+					// show info the session 
+					panelVideo.title = fxgt.gettext("La vidéo de la séance ") + '"' + Model.getInstance().getCurrentSession().theme + '",' +
+						fxgt.gettext(" enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
 						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
-						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString()+")";
+						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
 					this.setObsels();
 					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
 					if(listTraceLines != null)
