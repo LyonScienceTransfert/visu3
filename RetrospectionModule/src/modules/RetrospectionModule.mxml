@@ -38,7 +38,6 @@
 			import com.ithaca.visu.model.vo.RetroDocumentVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.IconEnum;
-			import com.ithaca.visu.view.session.SessionViewSalonRetro;
 			import com.ithaca.visu.view.video.PanelEditComment;
 			import com.ithaca.visu.view.video.PanelEditInfo;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
@@ -47,6 +46,7 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.Panel;
 			import mx.controls.Image;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.core.DragSource;
@@ -486,7 +486,7 @@
 				// stop play video segment
 				endVideoSegment();
 				// update button play/pause
-				setLabelButtonPlayPause(false);
+				sessionTimeLine.setLabelButtonPlayPause(false);
 				var target:Object = event.target as Object;
 				var deltaXObselTime:Number = 0;
 				
@@ -547,9 +547,6 @@
 							// pause video if end playing video segment only
 							this.pauseVideo();
 						}
-						// set buttons play/pause on the timeLine
-						sessionTimeLine.setStatusPlay(false);
-					
 					}
 					// check if timerRetroDocumentSegment not null, can be null if user see the VidoSegment => click on tileLine
 					if(timerRetroDocumentSegment)
@@ -631,8 +628,6 @@
 					// set pickCherryClick
 					this.pickCheryClick = 0;					
 					this.visio.startTimer();
-					// set status play the buttos
-					this.sessionTimeLine.setStatusPlay(true);
 					durationSessionSlider.enabled = true;
 					startTimeSessionSlider.enabled = true;
 				} 
@@ -988,7 +983,6 @@
 							*/
 						
 							this.pauseVideo(); 
-							sessionTimeLine.setStatusPlay(false);
 							return;
 						}else
 						{
@@ -1006,8 +1000,6 @@
 							prePlayVideoFlux(this.beginTimeCurrentSegment); */
 							
 							updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
-							// set buttons play/pause on the timeLine
-							sessionTimeLine.setStatusPlay(true);
 							return;
 						}
 						
@@ -1020,8 +1012,6 @@
 					
 					prePlayVideoFlux(dt+deltaTimePause);
 					updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
-					// set buttons play/pause on the timeLine
-					sessionTimeLine.setStatusPlay(true);
 					// set timer
 					var durationVideoSegment:Number = endTime - beginTime;
 					if(durationVideoSegment < 0)
@@ -1035,28 +1025,22 @@
 			/**
 			 * play/pause of the streams
 			 */
-			private function onCheckSeekStream(event:MessageEvent):void
+			private function onCheckSeekStream(event:* = null):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var timeStartSession:Number = this.testTimeLine.startTimeSession;
-					var playTime:Number = 0;
 					// set currentRetrocumentSegmentPlaying to null
 					setCurrentRetroDocumentSegmentPlaying(null);
 					// remove timer RetroDocumentSegment
 					removeTimerRetroDocumentSegment();
-					var typeMessage:String =""
-					typeMessage = event.message;
-					if (typeMessage == "play")
-					{
-						this.visio.resumeStreams();
-						// update button play/pause
-						setLabelButtonPlayPause(false);
-					}else
+					if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
 					{
 						pauseVideo();
-						// update button play/pause
-						setLabelButtonPlayPause(true);
+						sessionTimeLine.setLabelButtonPlayPause(true);
+					}else
+					{
+						this.visio.resumeStreams();
+						sessionTimeLine.setLabelButtonPlayPause(false);
 					}
 				}
 			}
@@ -1074,7 +1058,7 @@
 			 */
 			private function visio_clickPanelVideoHandler(event:VisuVisioAdvancedEvent):void
 			{
-				buttonPlayPause_clickHandler();
+				onCheckSeekStream();
 			}
 
 			private function  visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
@@ -1118,8 +1102,6 @@
 				trace("prePlayVideoFlux delta= "+delta.toString());
 				
 				this.pickCheryClick = value;
-				// update buttons play/stop
-				this.sessionTimeLine.setStatusPlay(true);
 				// jump session on position delta in millesonds
 				this.visio.seekSession = delta;
 				
@@ -1271,35 +1253,6 @@
 				this.currentTimeSessionMilliseconds = beginTime + this.testTimeLine.startTimeSession;
 			}
 
-			protected function buttonPlayPause_clickHandler(event:* = null):void
-			{
-				// set currentRetrocumentSegmentPlaying to null
-				setCurrentRetroDocumentSegmentPlaying(null);
-				// remove timer RetroDocumentSegment
-				removeTimerRetroDocumentSegment();
-				if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
-				{
-					pauseVideo();
-					sessionTimeLine.setStatusPlay(false);
-					setLabelButtonPlayPause(true)
-				}else
-				{
-					this.visio.resumeStreams();
-					sessionTimeLine.setStatusPlay(true);
-					setLabelButtonPlayPause(false);
-				}
-			}
-			
-			private function setLabelButtonPlayPause(value:Boolean):void
-			{
-				var label:String = "Pause";
-				if(value)
-				{
-					label = "Play";	
-				}
-				buttonPlayPause.label = label;
-			}
-
 			//_____________________________________________________________________
 			//
 			// Set comments
@@ -1428,51 +1381,43 @@
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
 <!-- VIDEO -->
-			<mx:VDividedBox width="60%" height="100%" width.State1="70%">
-				<components:PanelButton height="100%" width="100%" id="panelVideo" 
-					dragEnter="dragEnterHandler(event);"
-					dragDrop="dragDropHandler(event);"
-					buttonMuteMicroVisible="false"
-				    buttonModeMaxVisible="true"
-					buttonModeZoomVisible="true"
-					buttonModeZoomEnabled="false"
-					buttonModeMaxEnabled="true"
-					clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
-					clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
-					clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)">
-					<components:title>Video</components:title>
-					<s:Group height="100%" width="100%" bottom="2" id="groupeVideo">
-						<video:VisuVisioAdvanced id="visio" width="100%" top="0"
-											quality="80"
-											updateTime="visio_updateTimeHandler(event)"
-											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
-											clickPanelVideo="visio_clickPanelVideoHandler(event)"
-											clickButtonComment="visio_clickButtonCommentHandler(event)"
-											clickButtonZoom="panelVideo_clickButtonModeZoomHandler(event)"
-											buttonChatEnabled="false"
-											buttonMarkerEnabled="false"
-											buttonCommentEnabled="true"
-											buttonMode="true"
-											bandwidth="15000" autoPlay="true" bottom="28" height.vciel="100%" top.State1="0" bottom.State1="25" bottom.debug="25" top.debug="0"
-											loggedUser="{Model.getInstance().getLoggedUser()}"/>
-						<s:HGroup bottom="1" horizontalAlign="center"  horizontalCenter="0">
-							<s:Button id="buttonPlayPause" click="buttonPlayPause_clickHandler(event)" bottom="3">
-								<s:label>Pause</s:label>
-							</s:Button>
-						</s:HGroup>
-						<s:HGroup gap="3"  includeIn="debug" bottom="1" left="0">
+			<components:PanelButton height="100%" width="100%" id="panelVideo"
+				dragEnter="dragEnterHandler(event);"
+				dragDrop="dragDropHandler(event);"
+				buttonMuteMicroVisible="false"
+				buttonModeMaxVisible="true"
+				buttonModeZoomVisible="true"
+				buttonModeZoomEnabled="false"
+				buttonModeMaxEnabled="true"
+				clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
+				clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
+				clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)">
+				<mx:VDividedBox width="100%" height="100%">
+					<s:VGroup height="75%" width="100%" id="groupeVideo">
+						<video:VisuVisioAdvanced id="visio" width="100%"  height="100%"
+							quality="80"
+							updateTime="visio_updateTimeHandler(event)"
+							clickButtonMarker="visio_clickButtonMarkerHandler(event)"
+							clickPanelVideo="visio_clickPanelVideoHandler(event)"
+							clickButtonComment="visio_clickButtonCommentHandler(event)"
+							clickButtonZoom="panelVideo_clickButtonModeZoomHandler(event)"
+							buttonChatEnabled="false"
+							buttonMarkerEnabled="false"
+							buttonCommentEnabled="true"
+							buttonMode="true"
+							bandwidth="15000" autoPlay="true"
+							loggedUser="{Model.getInstance().getLoggedUser()}">
+						</video:VisuVisioAdvanced>
+						<s:HGroup gap="3"  includeIn="debug" width="100%">
+							<mx:Spacer width="100%"/>
 							<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
 							<s:Label text="Décalage max. autorisé(s) est:" paddingTop="7"/>
 							<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
 							<s:Label text="Périod de verification(s)" paddingTop="7"/>
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
-					</s:Group>
-				</components:PanelButton>
-<!-- TIMELINE -->
-				<s:Panel width="100%" height="40%" id="panelTimeLine">
-					<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-					<s:VGroup width="100%" height="100%" gap="0">
+					</s:VGroup>
+					<s:VGroup width="100%" height="25%" gap="0">
 						<s:Group width="100%" height="100%" id="groupTimeLine">
 							<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="true" top="0"/>
 							<s:Group width="100%" height="100%" top="75">
@@ -1493,15 +1438,15 @@
 						<s:HGroup>
 							<s:Label text="Zoom: " />
 							<s:HSlider id="durationSessionSlider" 						   
-									   liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)" thumbRelease.debug="durationSessionSlider_thumbReleaseHandler(event)"/>
+								liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)" thumbRelease.debug="durationSessionSlider_thumbReleaseHandler(event)"/>
 							
 							<s:Label text="Position: "/>
 							<s:HSlider id="startTimeSessionSlider" 
-									   liveDragging="true" width="70%" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
+								liveDragging="true" width="70%" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
 						</s:HGroup>
 					</s:VGroup>
-				</s:Panel>
-			</mx:VDividedBox>
+				</mx:VDividedBox>
+			</components:PanelButton>
 <!-- DOCUMENTARISATION -->
 			<s:Group height="100%" width="20%" minWidth="300" width.State1="30%">
 				<s:layout>
@@ -1528,7 +1473,6 @@
 							</s:Group>
 				</mx:VDividedBox>
 			</s:Group>
-			
 		</mx:HDividedBox>
 	</mx:VDividedBox>
 </modules:VisuModuleBase>
