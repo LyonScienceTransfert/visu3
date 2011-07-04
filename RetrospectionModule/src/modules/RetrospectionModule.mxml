@@ -106,6 +106,7 @@
 				if((event.currentTarget as RetrospectionModule).parameters != null)
 				{
 					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
+					Model.getInstance().setCurrentSession(param as Session);
 				}
 				fxgt = FxGettext;
 				// set current module
