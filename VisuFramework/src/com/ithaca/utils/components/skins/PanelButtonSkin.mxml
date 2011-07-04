@@ -187,11 +187,10 @@
                 <s:HGroup  left="9" right="3" top="1" bottom="0" minHeight="30" verticalAlign="middle" gap="1"> 
 	                <!-- layer 3: text -->
 	                <!--- @copy spark.components.Panel#titleDisplay -->
-	                <s:Label id="titleDisplay" maxDisplayedLines="1"
-	                          height="100%" minHeight="30"
-	                          fontWeight="bold" verticalAlign="middle">
+	                <s:Label id="titleDisplay" maxDisplayedLines="1" lineBreak="toFit" height="100%" width="100%" minHeight="30"
+	                         fontWeight="bold" verticalAlign="middle"  >
 	                </s:Label>
-					<mx:Spacer width="100%"/>
+					<mx:Spacer width="1"/>
 					<components:IconButton id="buttonMax" height="22" width="22"/>
 					<components:IconButton id="buttonZoom" height="22" width="22"/>
 					<components:IconButton  id="buttonMicro" height="22" width="22"/>

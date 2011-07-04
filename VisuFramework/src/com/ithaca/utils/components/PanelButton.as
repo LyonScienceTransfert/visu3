@@ -187,6 +187,15 @@ package com.ithaca.utils.components
 			}
 		}
 		
+		override public function set title(value:String):void 
+		{
+			if (titleDisplay)
+			{
+				titleDisplay.text = value;
+				titleDisplay.toolTip = value;
+			}
+		}
+
 		//_____________________________________________________________________
 		//
 		// Setter/getter
