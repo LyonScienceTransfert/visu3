@@ -365,52 +365,6 @@
 				}
 			}
 
-			private function addSessionView(group:Group,listSession:ArrayCollection, clickListener:Function):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					
-					var nbrSession:int = listSession.length;
-					trace("nbrSession = "+nbrSession.toString())
-					for(var nSession:int = 0 ; nSession < nbrSession ; nSession++)
-					{
-						var session:Object = listSession.getItemAt(nSession) as Object;
-						//	label:sessionTheme, traceId:traceId, sessionId:sessionId, dateRecording:"waiting.....";
-						var sessionView:SessionViewSalonRetro = new SessionViewSalonRetro();
-						sessionView.percentWidth = 100;
-						sessionView.theme = session.label;
-						var sessionId:int = int(session.sessionId);
-						sessionView.sessionId = sessionId;
-						sessionView.traceId = session.traceId;
-						//sessionView.ownerSession = Model.getInstance().getLoggedUser();
-						sessionView.addEventListener(MouseEvent.CLICK, clickListener);
-						group.addElement(sessionView);
-						// get detail the session for salon retro
-						var sessionSalonRetroEvent:SessionEvent = new SessionEvent(SessionEvent.GET_SESSION_SALON_RETRO);
-						sessionSalonRetroEvent.sessionId = sessionId;
-						this.dispatchEvent(sessionSalonRetroEvent);
-					}
-				}
-			}
-			
-			private function setDateRecording(group:Group, session:Session):void
-			{
-				var value:int = session.id_session;
-				var nbrSessionView:int = group.numElements;
-				for(var nSessionView:int = 0; nSessionView < nbrSessionView ; nSessionView++)
-				{
-					var sessionView:SessionViewSalonRetro = group.getElementAt(nSessionView) as SessionViewSalonRetro;
-					if(value == sessionView.sessionId)
-					{
-						var dateStartRecording:Date = session.date_start_recording;
-						// set date session
-						sessionView.dateRecorded = session.date_start_recording;
-						// set owner session
-						sessionView.ownerSession = Model.getInstance().getUserPlateformeByUserId(session.id_user);
-						return;
-					}
-				}
-			}
 			// creation the resume activity
 			private function updateTimeLine(event:SessionEvent):void
 			{
