@@ -19,13 +19,12 @@
 			
 			public function setShowButtonNavigation(value:Boolean):void
 			{
-				this.buttonPause.visible = this.buttonPlay.visible = value;
+				this.buttonPlayPause.visible = value;
 			}
-			public function setStatusPlay(value:Boolean):void
+/* 			public function setStatusPlay(value:Boolean):void
 			{
-				this.buttonPlay.enabled = !value;
-				this.buttonPause.enabled = value;
-			}
+				this.buttonPlayPause.enabled = !value;
+			} */
 			
 			protected function sessionTimeLineLoggedUser_clickHandler(event:MouseEvent):void
 			{
@@ -45,35 +44,31 @@
 
 			protected function skinnablecontainer1_creationCompleteHandler(event:FlexEvent):void
 			{
-				this.buttonPause.visible = this.buttonPlay.visible = this.showButtonNavigation;
-				this.buttonPlay.enabled = false;
+				this.buttonPlayPause.visible = this.showButtonNavigation;
 			}
 
-			protected function buttonPlay_clickHandler(event:MouseEvent):void
+			protected function buttonPlayPause_clickHandler(event:MouseEvent):void
 			{
-				this.buttonPlay.enabled = false;
-				this.buttonPause.enabled = true;
-				var eventPlay:MessageEvent = new MessageEvent(MessageEvent.CHECK_SEEK_STREAM);
-				eventPlay.message = "play";
-				this.dispatchEvent(eventPlay);
-			}
-
-
-			protected function buttonPause_clickHandler(event:MouseEvent):void
-			{
-				this.buttonPlay.enabled = true;
-				this.buttonPause.enabled = false;
+				this.buttonPlayPause.enabled = true;
 				var eventPause:MessageEvent = new MessageEvent(MessageEvent.CHECK_SEEK_STREAM);
-				eventPause.message = "pause";
 				this.dispatchEvent(eventPause);
 			}
 
+			public function setLabelButtonPlayPause(value:Boolean):void
+			{
+				var label:String = "Pause";
+				if(value)
+				{
+					label = "Play";	
+				}
+				buttonPlayPause.label = label;
+			}
 		]]>
 	</fx:Script>
 	
-	<s:Button id="buttonPlay" left="5" label="play" width="60" top="7" click="buttonPlay_clickHandler(event)"/>
-	<s:Button id="buttonPause" left="70" label="pause" width="60" top="7" click="buttonPause_clickHandler(event)"/>
-	
+	<s:Button id="buttonPlayPause" left="45" width="60" top="7" click="buttonPlayPause_clickHandler(event)">
+		<s:label>Pause</s:label>
+	</s:Button>
 	<s:Label text="" left="135" top="15"  id="labelCurrentTimeSession" fontWeight="bold"/>
 
 	<s:Group top="3" right="0" height="35" id="sessionTimeLineLoggedUser" click="sessionTimeLineLoggedUser_clickHandler(event)" useHandCursor="true" buttonMode="true">
