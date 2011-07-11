@@ -710,6 +710,14 @@ IScheduledJob {
 		log.warn("status = {}", status.toString());
 		// find time start recording
 		Integer sessionId = (Integer) clientRecording.getAttribute("sessionId");
+		// check if recording only audio stream
+		
+		log.warn("===sessionId = {}", sessionId);
+		if(sessionId == 0)
+		{
+			return;
+		}
+		
 		Session session = null;
 		try {
 			session = (Session) getSqlMapClient().queryForObject(
