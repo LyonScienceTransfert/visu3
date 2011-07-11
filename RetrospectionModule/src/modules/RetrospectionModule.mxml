@@ -380,7 +380,7 @@
 					// update label start session recording
 					var dateStartRecording:Date = event.dateStartRecording;
 					// show info the session 
-					panelVideo.title = fxgt.gettext("La vidéo de la séance ") + '"' + Model.getInstance().getCurrentSession().theme + '",' +
+					panelVideo.title = '"' + Model.getInstance().getCurrentSession().theme + '",' +
 						fxgt.gettext(" enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
 						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
 						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
