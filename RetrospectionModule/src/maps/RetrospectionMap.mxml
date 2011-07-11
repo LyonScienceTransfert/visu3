@@ -11,6 +11,7 @@
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.documentarisation.events.AudioRecorderEvent;
 		import com.ithaca.documentarisation.events.RetroDocumentEvent;
 		import com.ithaca.traces.model.TraceModel;
 		import com.ithaca.visu.events.InitMapEvent;
@@ -150,6 +151,18 @@
 		<mate:EventHandlers type="{RetroDocumentEvent.UPDATE_RETRO_DOCUMENT}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+<!-- RECORD AUDIO -->
+		<mate:EventHandlers type="{AudioRecorderEvent.RECORD_AUDIO}" debug="true" useCapture="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="recorder.startRecordAudio"
+					arguments="{[event.pathAudio]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		<mate:EventHandlers type="{AudioRecorderEvent.STOP_RECORD_AUDIO}" debug="true" useCapture="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="recorder.stopRecordAudio"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 <!-- USERS -->
