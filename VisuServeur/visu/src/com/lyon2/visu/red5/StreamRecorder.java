@@ -76,7 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.UUID;
 
 import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IClient;
@@ -95,8 +95,6 @@ import com.lyon2.utils.UserStatus;
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
-
-import java.util.Date;
  
 /**
  * 
@@ -113,8 +111,72 @@ public class StreamRecorder
 	 */
 
 	private Application app;
+	
+	private static String FOLDER_NAME_AUDIO_RECORDERS = "usersAudioRetroDocument";
   	
 	protected static final Logger log = Red5LoggerFactory.getLogger(StreamRecorder.class, "visu" );
+	
+	@SuppressWarnings("unchecked")
+	public void startRecordAudio(IConnection conn, String filePath)
+	{
+		log.warn("=== startRecordAudio ===");
+		log.warn("for userId path= {}", filePath);
+		IClient client = conn.getClient();
+		IScope scope = conn.getScope();
+		User user = (User) client.getAttribute("user");
+		int userId = user.getId_user();
+		
+		String clientId = (String) client.getAttribute("id");
+		ClientBroadcastStream streamByClientId = (ClientBroadcastStream) app.getBroadcastStream(
+				scope, clientId);
+		// folder name
+		String folderName = FOLDER_NAME_AUDIO_RECORDERS+"/"+ userId+"/";
+		// check if first recording
+		if(filePath == null)
+		{
+			// filePath
+			filePath = "audio-"+ UUID.randomUUID() +"-"+ userId; 	
+			// notify client for new audio path file recording
+			Object[] namePathAudio = {filePath};
+			IConnection connectionClient = (IConnection)client.getAttribute("connection");
+			if (connectionClient instanceof IServiceCapableConnection) {
+				IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
+				sc.invoke("savePathAudioRecording", namePathAudio);
+			} 
+		}
+		
+		// file name
+		String recordFileName = folderName + filePath;
+		log.warn(" recordFileName = ",recordFileName);
+		try {
+			// save the stream to disk
+			streamByClientId.saveAs(recordFileName, false);
+		} catch (Exception e) {
+			log.error("Error while saving stream: "
+					+ streamByClientId.getName(), e);
+		}
+		
+	}
+	
+	public void stopRecordAudio(IConnection conn)
+	{
+		log.warn("=== stopRecordAudio ===");
+		IClient client = conn.getClient();
+		IScope scope = conn.getScope();
+		String clientId = (String) client.getAttribute("id");
+		
+		ClientBroadcastStream streamByClientId = (ClientBroadcastStream) app.getBroadcastStream(
+				scope, clientId);
+		// stop recording
+		if(streamByClientId != null)
+		{
+			streamByClientId.stopRecording();
+		}else
+		{
+			log.warn("hasn't stream !!!");
+		}
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public void startRecordRoom(IConnection conn, Integer session_id)
