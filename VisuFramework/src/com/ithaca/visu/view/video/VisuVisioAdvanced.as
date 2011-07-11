@@ -456,41 +456,46 @@ package com.ithaca.visu.view.video
 		
 		private function localStreamStatusHandler(event:StatusEvent):void
 		{
-			logger.debug('statusHandler ' + event.target.name + " - " + event.code)	    	
-			if( event.code == "Camera.Unmuted")
+			// attach camera only if need for this component
+			// not for other, for example AudioRecorder
+			if(streamID)
 			{
-				if( publishing ) 
+				logger.debug('statusHandler ' + event.target.name + " - " + event.code)	    	
+				if( event.code == "Camera.Unmuted")
 				{
-					//the stream is already published, we only update the stream
-					logger.debug("update camera settings" )
-					updateCameraSetting( _camera );
-					_localstream.attachCamera( _camera );
+					if( publishing ) 
+					{
+						//the stream is already published, we only update the stream
+						logger.debug("update camera settings" )
+						updateCameraSetting( _camera );
+						_localstream.attachCamera( _camera );
+					}
+					else
+					{
+						publishing = true;
+						//the stream is not currently published
+						logger.debug("publishStream publish stream n°" + streamID.toString() );
+						_localstream.attachCamera( _camera );
+						_localstream.publish(streamID.toString());
+					}
 				}
-				else
+				
+				if( event.code == "Microphone.Unmuted" ) 
 				{
-					publishing = true;
-					//the stream is not currently published
-					logger.debug("publishStream publish stream n°" + streamID.toString() );
-					_localstream.attachCamera( _camera );
-					_localstream.publish(streamID.toString());
-				}
-			}
-			
-			if( event.code == "Microphone.Unmuted" ) 
-			{
-				if( publishing )
-				{
-					logger.debug("update microphone settings" )
-					updateMicrophoneSetting( _microphone );
-					_localstream.attachAudio( _microphone );	
-				}
-				else
-				{
-					publishing = true;
-					//the stream is not currently published
-					logger.debug("publishStream publish stream n°" + streamID.toString() );
-					_localstream.attachAudio( _microphone );
-					_localstream.publish(streamID.toString());					
+					if( publishing )
+					{
+						logger.debug("update microphone settings" )
+						updateMicrophoneSetting( _microphone );
+						_localstream.attachAudio( _microphone );	
+					}
+					else
+					{
+						publishing = true;
+						//the stream is not currently published
+						logger.debug("publishStream publish stream n°" + streamID.toString() );
+						_localstream.attachAudio( _microphone );
+						_localstream.publish(streamID.toString());					
+					}
 				}
 			}
 		}
