@@ -200,6 +200,11 @@ or by setting the following environment variable:
 				<include-file name="images/iconMax_16x16.png" path="${framework.images}/iconMax_16x16.png"/>
 				<include-file name="images/mic_on.png" path="${framework.images}/mic_on.png"/>
 				<include-file name="images/mic_off.png" path="${framework.images}/mic_off.png"/>
+				<include-file name="images/deleteRoundIcon_16x16.png" path="${framework.images}/deleteRoundIcon_16x16.png"/>
+				<include-file name="images/dragDropPlace_16x8.png" path="${framework.images}/dragDropPlace_16x8.png"/>
+				<include-file name="images/playWhiteTriangle_16x16.png" path="${framework.images}/playWhiteTriangle_16x16.png"/>
+				<include-file name="images/recordWhiteRectangle_16x16.png" path="${framework.images}/recordWhiteRectangle_16x16.png"/>
+				<include-file name="images/recordRedBall_16x16.png" path="${framework.images}/recordRedBall_16x16.png"/>
 
 	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
 	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
