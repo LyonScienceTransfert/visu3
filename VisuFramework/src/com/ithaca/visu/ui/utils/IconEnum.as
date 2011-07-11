@@ -231,6 +231,23 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/iconMax_16x16.png")]
 		static private var iconMax_16x16:Class;
 		
+		[Bindable]
+		[Embed("images/playWhiteTriangle_16x16.png")]
+		static private var playWhiteTriangle_16x16:Class;
+		[Bindable]
+		[Embed("images/recordWhiteRectangle_16x16.png")]
+		static private var recordWhiteRectangle_16x16:Class;
+		[Bindable]
+		[Embed("images/recordRedBall_16x16.png")]
+		static private var recordRedBall_16x16:Class;
+		
+		[Bindable]
+		[Embed("images/dragDropPlace_16x8.png")]
+		static private var dragDropPlace_16x8:Class;
+		[Bindable]
+		[Embed("images/deleteRoundIcon_16x16.png")]
+		static private var deleteRoundIcon_16x16:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -380,6 +397,21 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "max" : 
 					icon = iconMax_16x16;
+					break;
+				case "audioRecorderWhiteTriangle" : 
+					icon = playWhiteTriangle_16x16;
+					break;
+				case "audioRecorderWhiteRectangle" : 
+					icon = recordWhiteRectangle_16x16;
+					break;
+				case "audioRecorderRedBall" : 
+					icon = recordRedBall_16x16;
+					break;
+				case "dragDropFlag" : 
+					icon = dragDropPlace_16x8;
+					break;
+				case "deleteRoundIcon" : 
+					icon = deleteRoundIcon_16x16;
 					break;
 				default :
 					break;				
