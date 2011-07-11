@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" width="100%">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.documentarisation.AudioRecorder")]
+	</fx:Metadata>
+	
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+	]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="empty"/>
+		<s:State name="normal"/>
+		<s:State name="playing" />
+		<s:State name="recording" />
+	</s:states>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%">
+			<s:Rect id="fill" 
+				left="0" right="0" top="0" bottom="0" minHeight="25">
+<!--			<s:Rect id="fill" radiusX="5"
+				left="2" right="2" top="1" bottom="1" minHeight="25">-->
+				<s:fill>
+					<s:SolidColor color="0x4d3f3f"/>
+					<!--<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>-->
+				</s:fill>
+			</s:Rect>
+<!--			<s:Rect id="border" radiusX="5"
+				left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+							alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+							alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>-->
+			
+			<s:Rect height="8" id = "myProgressBarFrame" left="13" right="13" top="13">
+				<s:stroke>
+					<s:SolidColorStroke color="0Xaaaaaa" weight="1"/>
+				</s:stroke>
+			</s:Rect>
+			
+			<s:Rect height="5" id = "progressBar" left="15" right="15" top="15">
+				<s:fill>
+					<s:SolidColor color="0xc9f485" id="myProgressBarFill"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:HGroup width="100%" top="30"  left="13" right="13" horizontalCenter="0" bottom="5" horizontalAlign="center" verticalAlign="middle">
+				<!-- BUTTON PLAY --> 
+				<mx:Button id="buttonPlay" width="50%">
+					<!-- EMPTY -->
+					<mx:enabled.empty>false</mx:enabled.empty>
+					<mx:label.empty>Ecouter</mx:label.empty>
+					<mx:color.empty>#FFFFFF</mx:color.empty>
+					<mx:icon.empty >{IconEnum.getIconByName("audioRecorderWhiteTriangle")}</mx:icon.empty>
+					<!-- NORMAL -->
+					<mx:label.normal>Ecouter</mx:label.normal>
+					<mx:icon.normal>{IconEnum.getIconByName("audioRecorderWhiteTriangle")}</mx:icon.normal>
+					<mx:color.normal>#FFFFFF</mx:color.normal>
+					<mx:chromeColor.normal>#5588E6</mx:chromeColor.normal>
+					<!-- PLAY -->
+					<mx:label.playing>Arrêter</mx:label.playing>
+					<mx:icon.playing>{IconEnum.getIconByName("audioRecorderWhiteRectangle")}</mx:icon.playing>
+					<mx:color.playing>#FFFFFF</mx:color.playing>
+					<mx:chromeColor.playing>#5588E6</mx:chromeColor.playing>
+					<!-- RECORD -->	
+					<mx:label.recording>Annuler</mx:label.recording>
+					<mx:chromeColor.recording>#FFFFFF</mx:chromeColor.recording>
+				</mx:Button>
+				<!-- BUTTON RECORD --> 
+				<mx:Button id="buttonRecord" width="50%">
+					<!-- EMPTY -->
+					<mx:label.empty>Enregistrer</mx:label.empty>
+					<mx:icon.empty>{IconEnum.getIconByName("audioRecorderRedBall")}</mx:icon.empty>
+					<mx:chromeColor.empty>#FFFFFF</mx:chromeColor.empty>
+					<!-- NORMAL -->
+					<mx:label.normal>Enregistrer</mx:label.normal>
+					<mx:icon.normal>{IconEnum.getIconByName("audioRecorderRedBall")}</mx:icon.normal>
+					<mx:chromeColor.normal>#FFFFFF</mx:chromeColor.normal>
+					<!-- PLAY -->
+					<mx:label.playing>Enregistrer</mx:label.playing>
+					<mx:icon.playing>{IconEnum.getIconByName("audioRecorderRedBall")}</mx:icon.playing>
+					<mx:enabled.playing>false</mx:enabled.playing>
+					<!-- RECORD -->	
+					<mx:label.recording>Arrêter</mx:label.recording>
+					<mx:icon.recording>{IconEnum.getIconByName("audioRecorderWhiteRectangle")}</mx:icon.recording>
+					<mx:chromeColor.recording>#f64141</mx:chromeColor.recording>
+					<mx:color.recording>#FFFFFF</mx:color.recording>
+				</mx:Button>
+			</s:HGroup>
+			
+		</s:Group>
+	</s:Group>		
+</s:Skin>
