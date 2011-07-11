@@ -17,6 +17,18 @@
 @namespace video 		"com.ithaca.visu.view.video.*";
 @namespace components 		"com.ithaca.utils.components.*";
 
+documentarisation|SegmentTitle
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentTitleSkin");
+}
+documentarisation|SegmentCommentAudio
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentCommentAudioSkin");
+}
+documentarisation|AudioRecorder
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.AudioRecorderSkin");
+}
 components|PanelButton
 {
 	skin-class:ClassReference("com.ithaca.utils.components.skins.PanelButtonSkin");	
