@@ -44,6 +44,9 @@
 		<controls:VideoComponent id="videoUser" left="0"  top="0"  width="100%" height="100%"/>
 		<s:HGroup  id="groupButtonTop" width="100%" top="0" right="0" gap="0" visible="true" includeIn="disabled,zoomInMouseIn,zoomInMouseOut,zoomOutMouseIn">
 			<mx:Spacer width="100%"/>
+			<video:ImageVolume id="buttonVolumeUserZoomOut" height="22" width="22" includeIn="zoomOutMouseIn,zoomInMouseIn">
+				<video:toolTip>Volume</video:toolTip>
+			</video:ImageVolume>
 			<mx:Button id="buttonChat" icon="{IconEnum.getIconByName('chat')}"  height="22" width="30" visible="false" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Envoyer message privé</mx:toolTip>
 			</mx:Button>
@@ -56,10 +59,7 @@
 			<mx:Button id="buttonZoom" icon="{IconEnum.getIconByName('zoom')}"  height="22" width="30" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<mx:toolTip>Zoom vidéo</mx:toolTip>
 			</mx:Button>
+			<video:NameUser id="labelUserZoomOut" lastFirstNameUser="B.Gouter"/>
 		</s:HGroup>
-		<video:ImageVolume id="buttonVolumeUserZoomOut" left="0" bottom="0" height="22" width="22" includeIn="zoomOutMouseIn,zoomInMouseIn">
-				<video:toolTip>Volume</video:toolTip>
-		</video:ImageVolume>
-		<video:NameUser id="labelUserZoomOut" right="1" bottom="0" lastFirstNameUser="B.Gouter"/>
 	</s:Group>
 </s:Skin>
