@@ -7,16 +7,16 @@ package com.ithaca.visu.view.video
 	
 	import mx.controls.Image;
 	import mx.events.FlexEvent;
-	import mx.events.SliderEvent;
 	
 	import spark.components.HSlider;
+	import spark.components.VSlider;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.TrackBaseEvent;
 	
 	public class ImageVolume extends SkinnableComponent
 	{
 		[SkinPart("true")]
-		public var volumeSlider:HSlider;
+		public var volumeSlider:VSlider
 		[SkinPart("true")]
 		public var volumeImage:Image;
 		[SkinPart("true")]
@@ -30,9 +30,6 @@ package com.ithaca.visu.view.video
 		private var volumeChange:Boolean;
 		// set volume slider enabled
 		private var _volumeSliderEnabled:Boolean = true;
-		private var volumeSliderEnabledChange:Boolean = false;
-		
-		
 		public function ImageVolume()
 		{
 			super();
@@ -75,8 +72,6 @@ package com.ithaca.visu.view.video
 		public function set volumeSliderEnabled(value:Boolean):void
 		{
 			_volumeSliderEnabled = value;
-			volumeSliderEnabledChange = true;
-			invalidateProperties();
 		}
 		public function get volumeSliderEnabled():Boolean
 		{
@@ -91,19 +86,35 @@ package com.ithaca.visu.view.video
 
 		private function onMouseOver(event:MouseEvent):void
 		{
-			mouseOver = true;
-			invalidateSkinState();
+			if(_volumeSliderEnabled)
+			{
+				volumeSlider.includeInLayout = true;
+				volumeSlider.visible = true;
+				volumeSlider.value = volume;
+				//volumeSlider.addEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
+				volumeSlider.addEventListener(TrackBaseEvent.THUMB_PRESS , onPressThumb);
+				volumeSlider.addEventListener(TrackBaseEvent.THUMB_RELEASE , onReleaseThumb);
+				volumeSlider.addEventListener(FlexEvent.CHANGE_END, onChangeEnd);
+			}		
 		}
 
 		private function onMouseOut(event:MouseEvent):void
 		{
-			mouseOver = false;
-			invalidateSkinState();
+			if(volumeSlider)
+			{
+				volumeSlider.includeInLayout = false;
+				volumeSlider.visible = false;
+				//volumeSlider.removeEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
+				volumeSlider.removeEventListener(TrackBaseEvent.THUMB_PRESS , onPressThumb);
+				volumeSlider.removeEventListener(TrackBaseEvent.THUMB_RELEASE , onReleaseThumb);
+				volumeSlider.removeEventListener(FlexEvent.CHANGE_END, onChangeEnd);
+			}	
 		}
+		
 		private function onChangeVolume(event:FlexEvent):void
 		{
-			var hSlider:HSlider = event.currentTarget as HSlider;
-			volume = hSlider.value;
+			var vSlider:VSlider = event.currentTarget as VSlider;
+			volume = vSlider.value;
 			var volumeChange:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CHANGE_VOLUME);
 			volumeChange.volume = volume;
 			dispatchEvent(volumeChange);
@@ -134,8 +145,8 @@ package com.ithaca.visu.view.video
 		}
 		private function onChangeEnd(event:FlexEvent):void
 		{
-			var hSlider:HSlider = event.currentTarget as HSlider;
-			volume = hSlider.value;
+			var vSlider:VSlider = event.currentTarget as VSlider;
+			volume = vSlider.value;
 			var volumeChange:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.CHANGE_VOLUME);
 			volumeChange.volume = volume;
 			dispatchEvent(volumeChange);
@@ -192,25 +203,6 @@ package com.ithaca.visu.view.video
 				{
 					tempVolume = 0;	
 				}
-				
-				if(_volumeSliderEnabled)
-				{
-					volumeSlider.includeInLayout = true;
-					volumeSlider.visible = true;
-					volumeSlider.value = volume;
-					//volumeSlider.addEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
-					volumeSlider.addEventListener(TrackBaseEvent.THUMB_PRESS , onPressThumb);
-					volumeSlider.addEventListener(TrackBaseEvent.THUMB_RELEASE , onReleaseThumb);
-					volumeSlider.addEventListener(FlexEvent.CHANGE_END, onChangeEnd);
-				}else
-				{
-					volumeSlider.includeInLayout = false;
-					volumeSlider.visible = false;
-					//volumeSlider.removeEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
-					volumeSlider.removeEventListener(TrackBaseEvent.THUMB_PRESS , onPressThumb);
-					volumeSlider.removeEventListener(TrackBaseEvent.THUMB_RELEASE , onReleaseThumb);
-					volumeSlider.removeEventListener(FlexEvent.CHANGE_END, onChangeEnd);
-				}	
 			}
 		}
 		override protected function commitProperties():void
@@ -230,10 +222,6 @@ package com.ithaca.visu.view.video
 				var tempVolume:Number = volume;
 				if(mute)
 				{
-/*					if(volumeSlider != null && _volumeSliderEnabled)
-					{
-						volumeSlider.removeEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
-					}*/
 					tempVolume = 0;	
 				}else
 				{
@@ -242,31 +230,6 @@ package com.ithaca.visu.view.video
 				if(volumeSlider != null && _volumeSliderEnabled)
 				{
 					volumeSlider.value = tempVolume;
-				}
-			}
-			if(volumeSliderEnabledChange)
-			{
-				volumeSliderEnabledChange = false;
-				if(volumeSlider != null)
-				{
-					if(_volumeSliderEnabled)
-					{
-						volumeSlider.includeInLayout = true;
-						volumeSlider.visible = true;
-						volumeSlider.value = volume;
-						//volumeSlider.addEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
-						volumeSlider.addEventListener(TrackBaseEvent.THUMB_PRESS , onPressThumb);
-						volumeSlider.addEventListener(TrackBaseEvent.THUMB_RELEASE , onReleaseThumb);
-						volumeSlider.addEventListener(FlexEvent.CHANGE_END, onChangeEnd);
-					}else
-					{
-						volumeSlider.includeInLayout = false;
-						volumeSlider.visible = false;
-					//	volumeSlider.removeEventListener(FlexEvent.VALUE_COMMIT, onChangeVolume);
-						volumeSlider.removeEventListener(TrackBaseEvent.THUMB_PRESS , onPressThumb);
-						volumeSlider.removeEventListener(TrackBaseEvent.THUMB_RELEASE , onReleaseThumb);
-						volumeSlider.removeEventListener(FlexEvent.CHANGE_END, onChangeEnd);
-					}	
 				}
 			}
 		}
