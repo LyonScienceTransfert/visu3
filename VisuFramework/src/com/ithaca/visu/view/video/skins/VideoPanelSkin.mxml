@@ -42,7 +42,7 @@
 	</s:states>
 	<s:Group width="100%" height="100%">
 		<controls:VideoComponent id="videoUser" left="0"  top="0"  width="100%" height="100%"/>
-		<s:HGroup  id="groupButtonTop" width="100%" top="0" right="0" gap="0" visible="true" includeIn="disabled,zoomInMouseIn,zoomInMouseOut,zoomOutMouseIn">
+		<s:HGroup  id="groupButtonTop" width="100%" top="0" right="0" gap="0" visible="true">
 			<mx:Spacer width="100%"/>
 			<video:ImageVolume id="buttonVolumeUserZoomOut" height="22" width="22" includeIn="zoomOutMouseIn,zoomInMouseIn">
 				<video:toolTip>Volume</video:toolTip>
