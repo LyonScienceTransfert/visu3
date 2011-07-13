@@ -74,7 +74,7 @@ package com.ithaca.visu.view.video.layouts
 			target.setContentSize(unscaledWidth, unscaledHeight);	
 			if(target){
 				// set zoomed panel index = 0
-				setChildIndexOnZoomInPanel();
+				setChildIndexOnZoomInPanel(0);
 				
 				var count:int = target.numElements;
 				var layoutElement:ILayoutElement;
@@ -121,18 +121,64 @@ package com.ithaca.visu.view.video.layouts
 									xVideoElement = (unscaledWidth - wVideoElement)/2 ;
 									yVideoElement = (unscaledHeight - hVideoElement)/2;
 								}else
-								if (count == 4)
+								if (count == 4) // all videos has same size
 								{
-									if(tempH > unscaledHeight)
+									tempW = unscaledWidth/2;
+									tempH = (tempW/4)*3;
+									if(tempH*2 > unscaledHeight )
 									{
-										hVideoElement = unscaledHeight;
-										wVideoElement = (hVideoElement/3)*4;
+										hVideoElement = unscaledHeight/2;
+										wVideoElement = (hVideoElement/3)*4
 									}else
 									{
 										hVideoElement = tempH;
 									}
-									xVideoElement = unscaledWidth - wVideoElement*1.2 ;
-									yVideoElement = unscaledHeight - hVideoElement*1.2;
+									xVideoElement = ((unscaledWidth - wVideoElement*2)/3)*2 + wVideoElement ;
+									yVideoElement = (unscaledHeight - hVideoElement*2)/2 + hVideoElement;
+								}else
+								if (count == 6) // all videos has same size
+								{
+									tempW = unscaledWidth/3;
+									tempH = (tempW/4)*3;
+									if(tempH*2 > unscaledHeight )
+									{
+										hVideoElement = unscaledHeight/2;
+										wVideoElement = (hVideoElement/3)*4
+									}else
+									{
+										hVideoElement = tempH;
+									}
+									xVideoElement = ((unscaledWidth - wVideoElement*3)/4)*3 + wVideoElement*2;
+									yVideoElement = (unscaledHeight - hVideoElement*2)/2 + hVideoElement;
+								}else
+								if (count == 8 || count == 9) // all videos has same size
+								{
+									tempW = unscaledWidth/3;
+									tempH = (tempW/4)*3;
+									if(tempH*3 > unscaledHeight )
+									{
+										hVideoElement = unscaledHeight/3;
+										wVideoElement = (hVideoElement/3)*4
+									}else
+									{
+										hVideoElement = tempH;
+									}
+									xVideoElement = ((unscaledWidth - wVideoElement*3)/4)*3 + wVideoElement*2 ;
+									yVideoElement = (unscaledHeight - hVideoElement*3)/2 + hVideoElement*2;
+								}else
+								if(count == 3) // superposition Video
+								{
+									wVideoElement = (unscaledWidth/8)*2;
+									hVideoElement = (wVideoElement/4)*3;
+									xVideoElement =  unscaledWidth/2 - wVideoElement/2
+									yVideoElement = unscaledHeight - hVideoElement;
+								}else
+								if(count == 5) // superposition Video
+								{
+									wVideoElement = unscaledWidth/8;
+									hVideoElement = (wVideoElement/4)*3;
+									xVideoElement =  unscaledWidth/2 - wVideoElement/2
+									yVideoElement = unscaledHeight - hVideoElement;
 								}else
 								{
 									if(tempH > unscaledHeight/3)
@@ -172,6 +218,81 @@ package com.ithaca.visu.view.video.layouts
 									}
 									xVideoElement = (unscaledWidth - wVideoElement)/2 ;
 									yVideoElement = (unscaledHeight - hVideoElement)/2;
+								}else
+								if(count == 3) // superposition Video
+								{
+									hVideoElement = unscaledHeight/4;
+									wVideoElement = (hVideoElement/3)*4;
+									xVideoElement =  unscaledWidth - wVideoElement;
+									yVideoElement = unscaledHeight - hVideoElement;
+								}else
+								if (count == 4) // all videos has same size
+								{
+									tempW = unscaledWidth/2;
+									tempH = (tempW/4)*3;
+									if(tempH*2 > unscaledHeight )
+									{
+										hVideoElement = unscaledHeight/2;
+										wVideoElement = (hVideoElement/3)*4
+									}else										{
+										hVideoElement = tempH;
+										wVideoElement = tempW;
+									}
+									xVideoElement = ((unscaledWidth - wVideoElement*2)/3)*2 + wVideoElement ;
+									yVideoElement = ((unscaledHeight - hVideoElement*2)/3)*2 + hVideoElement;
+								}else
+								if(count == 5) // superposition Video
+								{
+									wVideoElement = unscaledWidth/4;
+									hVideoElement = (wVideoElement/4)*3;
+									xVideoElement =  unscaledWidth/2 - wVideoElement/2
+									yVideoElement = unscaledHeight - hVideoElement;
+								}else
+								if (count == 6) // all videos has same size
+								{
+									tempW = unscaledWidth/2;
+									tempH = (tempW/4)*3;
+									if(tempH*3 > unscaledHeight )
+									{
+										hVideoElement = unscaledHeight/3;
+										wVideoElement = (hVideoElement/3)*4
+									}else
+									{
+										hVideoElement = tempH;
+										wVideoElement = tempW;
+									}
+									xVideoElement = ((unscaledWidth - wVideoElement*2)/3)*2 + wVideoElement;
+									yVideoElement = (unscaledHeight - hVideoElement*3)/4 + hVideoElement*2;
+								}else
+								if (count == 8) // all videos has same size
+								{
+									tempW = unscaledWidth/2;
+									tempH = (tempW/4)*3;
+									if(tempH*4 > unscaledHeight )
+									{
+										hVideoElement = unscaledHeight/4;
+										wVideoElement = (hVideoElement/3)*4
+									}else
+									{
+										hVideoElement = tempH;
+										wVideoElement = tempW;
+									}
+									xVideoElement = ((unscaledWidth - wVideoElement*2)/3)*2 + wVideoElement;
+									yVideoElement = (unscaledHeight - hVideoElement*4)/5 + hVideoElement*3;
+								}else
+								if(count == 9) // superposition Video
+								{
+									hVideoElement = unscaledHeight/8;
+									wVideoElement = (hVideoElement/3)*4;
+									xVideoElement =  unscaledWidth - wVideoElement
+									yVideoElement = unscaledHeight - hVideoElement;
+								}else
+								if(count == 10) // superposition Video
+								{
+									hVideoElement = unscaledHeight/6;
+									wVideoElement = (hVideoElement/3)*4;
+									xVideoElement =  unscaledWidth - wVideoElement
+									yVideoElement = unscaledHeight - hVideoElement;
 								}else
 								{
 									if(tempW > unscaledWidth/4)
@@ -259,14 +380,15 @@ package com.ithaca.visu.view.video.layouts
 							}
 						}
 					}
-					
-					
-					
-					
 					layoutElement.setLayoutBoundsSize(wVideoElement, hVideoElement);
 					layoutElement.setLayoutBoundsPosition(xVideoElement, yVideoElement);
 				}				
-			}	
+			}
+			if(zoomMax)
+			{
+				// set zoomed VideoPanel over others
+				setChildIndexOnZoomInPanel(count-1);
+			}
 		}
 		
 		private function getWidthZoomIn(unscaledWidth:int, numVideoPanel:int):int
@@ -305,11 +427,13 @@ package com.ithaca.visu.view.video.layouts
 					result = unscaledWidth/5;
 					break;
 				case 3:
-					result = unscaledWidth/4;
+					result = unscaledWidth/2;
 					break;
 				case 4:
+					result = unscaledWidth/4;
+					break;
 				case 5:
-					result = unscaledWidth/6;
+					result = unscaledWidth/2;
 					break;
 				case 6:
 					result = unscaledWidth/8;
@@ -352,6 +476,7 @@ package com.ithaca.visu.view.video.layouts
 				case 7:
 				case 8:
 				case 9:
+				case 10:
 					result = unscaledHeight/2;
 					break;
 			}
@@ -635,16 +760,17 @@ package com.ithaca.visu.view.video.layouts
 				case 3:
 					result.w = unscaledWidth/2;
 					result.h = (result.w/4)*3;
-					if(result.h > hForAllMax )
+					if(result.h > unscaledHeight )
 					{
-						result.h = hForAllMax;
+						result.h = unscaledHeight;
 						result.w = (result.h/3)*4
 					}
 					deltaX = (unscaledWidth - result.w*2)/3;
 					result.x =  deltaX*(value) + result.w*(value-1);
-					result.y = (hForAllMax - result.h)/2;
+					result.y = (unscaledHeight - result.h)/3;
 					break;
 				case 4:
+				case 5:
 					result.w = unscaledWidth/2;
 					result.h = (result.w/4)*3;
 					if(result.h*2 > unscaledHeight )
@@ -658,21 +784,6 @@ package com.ithaca.visu.view.video.layouts
 					if(value%2 > 0 ){koeff = 0};
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
 					result.y = (unscaledHeight - result.h*2)/2 + result.h*(div3) + deltaY*(div3 + 1);
-					break;
-				case 5:
-					result.w = unscaledWidth/2;
-					result.h = (result.w/4)*3;
-					if(result.h*2 > unscaledHeight )
-					{
-						result.h = unscaledHeight/2;
-						result.w = (result.h/3)*4
-					}
-					deltaX = (unscaledWidth - result.w*2 - wZoomIn)/3;
-					deltaY = (unscaledHeight - result.h*2)/3;
-					koeff = 1;
-					if(value%2 > 0 ){koeff = 0};
-					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*2)/2 +  result.h*(div3) + deltaY*(div3 + 1);
 					break;	
 				case 6:
 					result.w = unscaledWidth/3;
@@ -728,7 +839,7 @@ package com.ithaca.visu.view.video.layouts
 						break;
 					}
 					result.x =  deltaX*(koeff+1) + result.w*(koeff);
-					result.y = (unscaledHeight - result.h*2)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3) + 1);
+					result.y = (unscaledHeight - result.h*2)/3 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3) + 1);
 					break;
 				case 8:
 				case 9:
@@ -811,7 +922,7 @@ package com.ithaca.visu.view.video.layouts
 			result.h = unscaledHeight - hZoomIn;
 			result.w = (result.h/3)*4;
 			result.y = hZoomIn;
-			
+			var div3:int = value/3;
 			var hForAllMax:int = unscaledHeight - hZoomIn;
 			
 			var deltaY:int = 0;
@@ -838,18 +949,34 @@ package com.ithaca.visu.view.video.layouts
 				result.y = (unscaledHeight - result.h - hZoomIn)/2;
 				break;
 			case 3:
-				result.h = hForAllMax/2;
+				result.h = unscaledHeight/2;
 				result.w = (result.h/3)*4;
 				if(result.w > unscaledWidth )
 				{
 					result.w = 	unscaledWidth;
 					result.h = (result.w/4)*3
 				}
-				deltaY = (unscaledHeight - result.h*2 - wZoomIn )/3;
+				deltaY = (unscaledHeight - result.h*2)/3;
 				result.y =  deltaY*(value) + result.h*(value-1);
-				result.x = (unscaledWidth - result.w)/2;
+				result.x = (unscaledWidth - result.w)/3;
 				break;
 			case 4:
+			case 5:
+				result.w = unscaledWidth/2;
+				result.h = (result.w/4)*3;
+				if(result.h*2 > unscaledHeight )
+				{
+					result.h = unscaledHeight/2;
+					result.w = (result.h/3)*4
+				}
+				deltaX = (unscaledWidth - result.w*2)/3;
+				deltaY = (unscaledHeight - result.h*2)/3;
+				koeff = 1;
+				if(value%2 > 0 ){koeff = 0};
+				result.x =  deltaX*(koeff+1) + result.w*(koeff);
+				result.y = result.h*(div3) + deltaY*(div3 + 1);
+				break;	
+/*			case 4:
 				result.h = hForAllMax/3;
 				result.w = (result.h/3)*4;
 				if(result.w > unscaledWidth )
@@ -872,18 +999,18 @@ package com.ithaca.visu.view.video.layouts
 				deltaY = (unscaledHeight - result.h*4)/4;
 				result.y =  deltaY*(value) + result.h*(value-1);
 				result.x = (unscaledWidth - result.w)/2;
-				break;	
+				break;*/	
 			
 			case 6:
 			case 7:
 				result.w = unscaledWidth/2;
 				result.h = (result.w/4)*3;
-				if(result.h*3 > unscaledHeight - hZoomIn)
+				if(result.h*3 > unscaledHeight)
 				{
-					result.h = (unscaledHeight - hZoomIn)/3;
+					result.h = (unscaledHeight)/3;
 					result.w = (result.h/3)*4
 				}
-				deltaX = (unscaledWidth - result.w*2 - wZoomIn)/3;
+				deltaX = (unscaledWidth - result.w*2)/3;
 				deltaY = (unscaledHeight - result.h*3)/4;
 				koeff = 1;
 				if(value%2 > 0 ){koeff = 0};
@@ -892,7 +1019,8 @@ package com.ithaca.visu.view.video.layouts
 				var val3:int = (value-1)/2
 				var rr:int = result.h*(val3)
 				var dd:int = deltaY*(val3 + 1)
-				result.y = (unscaledHeight - result.h*3)/2 +  rr + dd;
+				result.y = (unscaledHeight - result.h*3)/4 +  rr + dd;
+				// FIXME : can move block with 6 video on right side
 				break;
 			case 8:
 			case 9:
@@ -903,7 +1031,7 @@ package com.ithaca.visu.view.video.layouts
 					result.h = unscaledHeight/4;
 					result.w = (result.h/3)*4
 				}
-				deltaX = (unscaledWidth - result.w*2 - wZoomIn)/3;
+				deltaX = (unscaledWidth - result.w*2)/3;
 				deltaY = (unscaledHeight - result.h*4)/3;
 				koeff = 1;
 				if(value%2 > 0 ){koeff = 0};
@@ -912,14 +1040,14 @@ package com.ithaca.visu.view.video.layouts
 				break;
 			case 10:
 				// 3 coll x 3row +1 
-				result.w = (unscaledWidth - wZoomIn)/3;
+				result.w = (unscaledWidth)/3;
 				result.h = (result.w/4)*3;
 				if(result.h*3 > unscaledHeight )
 				{
 					result.h = unscaledHeight/3;
 					result.w = (result.h/3)*4
 				}
-				deltaX = ((unscaledWidth - wZoomIn) - result.w*3)/4;
+				deltaX = ((unscaledWidth) - result.w*3)/4;
 				deltaY = (unscaledHeight - result.h*3)/4;
 				
 				switch(value)
@@ -941,7 +1069,7 @@ package com.ithaca.visu.view.video.layouts
 					break;
 				}
 				result.x =  deltaX*(koeff+1) + result.w*(koeff);
-				result.y = (unscaledHeight - result.h*4)/2 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3));
+				result.y = (unscaledHeight - result.h*3)/4 +  result.h*(int((value-1)/3)) + deltaY*(int((value-1)/3));
 				break;
 			}
 			return result;
@@ -949,7 +1077,7 @@ package com.ithaca.visu.view.video.layouts
 		/**
 		 * Update deep the zoomed panel at 0(index => 0)
 		 */
-		private function setChildIndexOnZoomInPanel():void
+		private function setChildIndexOnZoomInPanel(newIndex:int):void
 		{
 			var count:int = target.numElements;
 			var layoutElement:ILayoutElement;
@@ -969,7 +1097,7 @@ package com.ithaca.visu.view.video.layouts
 			{
 				var group:Group = target as Group;
 				videoPanel = target.getElementAt(index) as VideoPanel;
-				group.setElementIndex(videoPanel,0);
+				group.setElementIndex(videoPanel,newIndex);
 			}
 		}
 	}
