@@ -576,6 +576,10 @@ public class MainManager
 	 */
 	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array = null, sharedSession:Boolean = false , salonTutorat:Boolean = false):void
 	{
+		
+		
+		listObselCommentVO = null;
+		
 		var listObselTempSessionOut:ArrayCollection = new ArrayCollection();
 		
 		if(listObselCommentVO != null && listObselCommentVO.length != 0)
@@ -1300,6 +1304,13 @@ public class MainManager
 		bilanEvent.retroDocuments = bilanList;
 		bilanEvent.filterSessionCollection = listFilterSessions;
 		this.dispatcher.dispatchEvent(bilanEvent);
+	}
+	/**
+	 * call by serveur : give name recording audio path
+	 */
+	public function onSavePathAudioRecording(pathAudio:String):void
+	{
+		return;
 	}
 	
 	/**
