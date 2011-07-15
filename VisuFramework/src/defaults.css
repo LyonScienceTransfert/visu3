@@ -17,6 +17,10 @@
 @namespace video 		"com.ithaca.visu.view.video.*";
 @namespace components 		"com.ithaca.utils.components.*";
 
+documentarisation|SegmentVideoAdvanced
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin");
+}
 documentarisation|SegmentTitle
 {
 	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentTitleSkin");
