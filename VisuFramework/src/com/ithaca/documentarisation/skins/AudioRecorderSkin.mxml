@@ -23,18 +23,18 @@
 			<s:VerticalLayout gap="4"/>
 		</s:layout>
 		<s:Group width="100%">
-			<s:Rect id="fill" 
-				left="0" right="0" top="0" bottom="0" minHeight="25">
+			<!--<s:Rect id="fill" 
+				left="0" right="0" top="0" bottom="0" minHeight="25">-->
 <!--			<s:Rect id="fill" radiusX="5"
 				left="2" right="2" top="1" bottom="1" minHeight="25">-->
-				<s:fill>
-					<s:SolidColor color="0x4d3f3f"/>
+				<!--<s:fill>
+					<s:SolidColor color="0x4d3f3f"/>-->
 					<!--<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
 						<s:GradientEntry color="0xD8D8D8" />
 					</s:LinearGradient>-->
-				</s:fill>
-			</s:Rect>
+			<!--	</s:fill>
+			</s:Rect>-->
 <!--			<s:Rect id="border" radiusX="5"
 				left="2" right="2" top="0" bottom="0">
 				<s:stroke>
