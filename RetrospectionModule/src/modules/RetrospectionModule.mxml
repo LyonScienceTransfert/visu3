@@ -808,7 +808,7 @@
 				// change labels on the buttons the retroDocumentSegment
 				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
 				if(retroDocmentView != null){
-					retroDocmentView.updateButtonPlayStop(value);			
+//					retroDocmentView.updateButtonPlayStop(value);			
 				}
 			}
 			
