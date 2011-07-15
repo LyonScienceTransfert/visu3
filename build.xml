@@ -206,6 +206,13 @@ or by setting the following environment variable:
 				<include-file name="images/recordWhiteRectangle_16x16.png" path="${framework.images}/recordWhiteRectangle_16x16.png"/>
 				<include-file name="images/recordRedBall_16x16.png" path="${framework.images}/recordRedBall_16x16.png"/>
 
+				<include-file name="images/ScreenShot80x60.png" path="${framework.images}/ScreenShot80x60.png"/>
+				<include-file name="images/iconVideo_16x16.png" path="${framework.images}/iconVideo_16x16.png"/>
+				<include-file name="images/iconPlay_16x16.png" path="${framework.images}/iconPlay_16x16.png"/>
+				<include-file name="images/iconPause_16x16.png" path="${framework.images}/iconPause_16x16.png"/>
+				<include-file name="images/iconEdit_16x16.png" path="${framework.images}/iconEdit_16x16.png"/>
+				<include-file name="images/iconStop_16x16.png" path="${framework.images}/iconStop_16x16.png"/>
+
 	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
 	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
 	  		  	<include-file name="images/save_edit.png" path="${framework.images}/save_edit.png"/>
