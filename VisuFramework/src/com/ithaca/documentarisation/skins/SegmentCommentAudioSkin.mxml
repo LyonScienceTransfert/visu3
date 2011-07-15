@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.documentarisation.SegmentCommentAudio")]
+	</fx:Metadata>
+	<s:states>
+		<s:State name="edit"/>
+		<s:State name="normal"/>
+	</s:states>
+		<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.ui.utils.IconEnum;
+		]]>
+		</fx:Script>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%">
+<!--			<s:Rect id="border" radiusX="2" radiusY="2"
+				left="1" right="1" top="1" bottom="1">
+				<s:stroke>
+					<s:SolidColorStroke color="0x000000"/>
+				</s:stroke>
+			</s:Rect>-->
+		<s:VGroup width="100%" left="4"  top="4" bottom="4" right="4" gap="3">
+			<documentarisation:SegmentTitle  id="labelSegmentTitle" width="100%" editabled="true" skinClass="com.ithaca.documentarisation.skins.SegmentTitleSkin"/>
+			<!--<s:HGroup width="100%" gap="3">
+
+				<mx:Image source="{IconEnum.getIconByName('dragDropFlag')}" width="8" height="16">
+					<mx:includeInLayout.normal>false</mx:includeInLayout.normal>
+					<mx:visible.normal>false</mx:visible.normal>
+				</mx:Image>
+			
+				<s:TextArea id="textSegment" width="100%" height="44">
+					<s:editable.normal>false</s:editable.normal>
+					<s:text.normal>KO ko ghsgfdjhjkhqdsfqs</s:text.normal>
+					<s:borderVisible.normal>false</s:borderVisible.normal>
+				</s:TextArea>
+
+				<mx:Image source="{IconEnum.getIconByName('deleteRoundIcon')}" width="16" height="16">
+					<mx:includeInLayout.normal>false</mx:includeInLayout.normal>
+					<mx:visible.normal>false</mx:visible.normal>
+				</mx:Image>
+			</s:HGroup>-->
+			<s:Line   left="-4" right="-4"  width="100%">
+				<s:stroke>
+					<s:SolidColorStroke color="0x000000" weight="1" joints="miter"/>
+				</s:stroke>
+			</s:Line>
+			<documentarisation:AudioRecorder id="audioRecorder" width="100%" skinClass="com.ithaca.documentarisation.skins.AudioRecorderSkin">
+				
+			</documentarisation:AudioRecorder>
+		</s:VGroup>
+			
+		</s:Group>
+	</s:Group>		
+</s:Skin>
