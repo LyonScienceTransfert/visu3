@@ -248,6 +248,26 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/deleteRoundIcon_16x16.png")]
 		static private var deleteRoundIcon_16x16:Class;
 		
+		[Bindable]
+		[Embed("images/ScreenShot80x60.png")]
+		static private var ScreenShot80x60:Class;
+		
+		[Bindable]
+		[Embed("images/iconVideo_16x16.png")]
+		static private var iconVideo_16x16:Class;
+		[Bindable]
+		[Embed("images/iconPlay_16x16.png")]
+		static private var iconPlay_16x16:Class;
+		[Bindable]
+		[Embed("images/iconPause_16x16.png")]
+		static private var iconPause_16x16:Class;
+		[Bindable]
+		[Embed("images/iconEdit_16x16.png")]
+		static private var iconEdit_16x16:Class;
+		[Bindable]
+		[Embed("images/iconStop_16x16.png")]
+		static private var iconStop_16x16:Class;
+		
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
@@ -412,6 +432,24 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "deleteRoundIcon" : 
 					icon = deleteRoundIcon_16x16;
+					break;
+				case "ScreenShot80x60" : 
+					icon = ScreenShot80x60;
+					break;
+				case "iconVideo_16x16" : 
+					icon = iconVideo_16x16;
+					break;
+				case "iconPlay_16x16" : 
+					icon = iconPlay_16x16;
+					break;
+				case "iconPause_16x16" : 
+					icon = iconPause_16x16;
+					break;
+				case "iconEdit_16x16" : 
+					icon = iconEdit_16x16;
+					break;
+				case "iconStop_16x16" : 
+					icon = iconStop_16x16;
 					break;
 				default :
 					break;				
