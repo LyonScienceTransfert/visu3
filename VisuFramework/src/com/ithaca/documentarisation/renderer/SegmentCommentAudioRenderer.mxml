@@ -10,6 +10,11 @@
 	]]>
 	</fx:Script>
 	
-	<documentarisation:SegmentCommentAudio width="100%" segment="{data}" streamId="{Model.getInstance().getUserIdClient()}" connection="{Model.getInstance().getNetConnection()}"  skinClass="com.ithaca.documentarisation.skins.SegmentCommentAudioSkin"/>
+	<documentarisation:SegmentCommentAudio width="100%" 
+		segment="{data}" 
+		streamId="{Model.getInstance().getUserIdClient()}" 
+		userId="{Model.getInstance().getLoggedUser().id_user.toString()}"
+		connection="{Model.getInstance().getNetConnection()}"  
+		skinClass="com.ithaca.documentarisation.skins.SegmentCommentAudioSkin"/>
 	
 </s:ItemRenderer>
