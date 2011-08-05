@@ -1,5 +1,7 @@
 package com.ithaca.documentarisation
 {
+import com.ithaca.documentarisation.model.Segment;
+
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 
@@ -9,6 +11,7 @@ import mx.controls.Image;
 import spark.components.Label;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
+import spark.events.TextOperationEvent;
 
 public class SegmentVideoAdvanced extends SkinnableComponent
 {
@@ -55,6 +58,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	
 	private var _text:String ="";
 	private var textChange:Boolean;
+	
+	private var _segment:Segment;
+	private var segmentChange:Boolean;
+	
 	public function SegmentVideoAdvanced()
 	{
 		super();
@@ -74,7 +81,19 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	{
 		return _text;
 	}
-	
+	public function set segment(value:Segment):void
+	{
+		if(value && value != segment)
+		{
+			_segment = value;
+			segmentChange = true;
+			invalidateProperties();
+		}
+	}
+	public function get segment():Segment
+	{
+		return _segment;
+	}
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -135,11 +154,22 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	override protected function commitProperties():void
 	{
 		super.commitProperties();	
-		if(true)
+		if(segmentChange)
 		{
-		}
-		
-		
+			segmentChange = false;
+			
+			text = segment.comment;
+			// set text message
+			if(text == "")
+			{
+				setRichEditText();
+			}else
+			{
+				richEditableText.text = text;
+			}
+			richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+			richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+		}	
 	}
 	override protected function getCurrentSkinState():String
 	{
@@ -157,7 +187,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
 			skinName = "editPaused";
 		}
-		
 		return skinName;
 	}
 	//_____________________________________________________________________
@@ -220,6 +249,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			richEditableText.setStyle("fontStyle","normal");
 			richEditableText.setStyle("color","#000000");
 		}
+		richEditableText.addEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
 	private function onFocusOutRichEditableText(event:FocusEvent):void
 	{
@@ -230,8 +260,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
 			text = richEditableText.text;
 		}
+		richEditableText.removeEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
-	
+	private function onChangeRichEditableText(event:TextOperationEvent):void
+	{
+		segment.comment = richEditableText.text;
+	}
 	//_____________________________________________________________________
 	//
 	// Utils
@@ -243,10 +277,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		richEditableText.text = "ajoutez une nouvelle commentaire ici";
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
-/*		if(edit)
-		{
-			colorText = "#000000";
-		}*/
 		richEditableText.setStyle("color", colorText);
 	}
 	

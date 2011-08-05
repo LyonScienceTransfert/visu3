@@ -30,13 +30,6 @@
 		<s:State name="editPaused"/>
 		<s:State name="shared"/>
 	</s:states>
-	<s:transitions>
-		<s:Transition autoReverse="true" fromState="normalOver" toState="edit">
-			<s:Fade duration="2000" target="{groupSegmentVideo}">
-
-			</s:Fade>
-		</s:Transition>
-	</s:transitions>
 	<s:VGroup width="100%" id="groupSegmentVideo">
 		<!-- CONTROLE -->
 		<s:mouseOver>
@@ -59,6 +52,7 @@
 			}
 		]]>
 		</s:mouseOut>
+		<!-- MENU BAR -->
 		<s:HGroup width="100%" verticalAlign="middle">
 			<mx:Image source="{IconEnum.getIconByName('iconVideo_16x16')}">
 			</mx:Image>
@@ -89,7 +83,7 @@
 		</s:HGroup>
 		<!-- TEXT -->
 		<s:RichEditableText id="richEditableText" width="100%" 
-			 color.edit="#000000" color.editPlay="#000000">
+			color="#000000">
 			<s:text>votre text ici</s:text>
 		</s:RichEditableText>
 		<!-- GROUPE VIDEO -->
