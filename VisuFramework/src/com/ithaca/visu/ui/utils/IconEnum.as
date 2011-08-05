@@ -267,6 +267,15 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/iconStop_16x16.png")]
 		static private var iconStop_16x16:Class;
+		[Bindable]
+		[Embed("images/iconAudio_16x16.png")]
+		static private var iconAudio_16x16:Class;
+		[Bindable]
+		[Embed("images/iconMinimaze_16x16.png")]
+		static private var iconMinimaze_16x16:Class;
+		[Bindable]
+		[Embed("images/iconSave_16x16.png")]
+		static private var iconSave_16x16:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -450,6 +459,15 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "iconStop_16x16" : 
 					icon = iconStop_16x16;
+					break;
+				case "iconAudio_16x16" : 
+					icon = iconAudio_16x16;
+					break;
+				case "iconMinimaze_16x16" : 
+					icon = iconMinimaze_16x16;
+					break;
+				case "iconSave_16x16" : 
+					icon = iconSave_16x16;
 					break;
 				default :
 					break;				
