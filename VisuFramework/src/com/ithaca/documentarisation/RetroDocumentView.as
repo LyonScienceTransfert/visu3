@@ -343,18 +343,21 @@ package com.ithaca.documentarisation
 					listSegment.addItem(segment);
 					break;
 				case "AudioSegment" :
-/*					segment = new Segment(this._retroDocument);
+					segment = new Segment(this._retroDocument);
 					segment.order = 1;
 					segment.typeSource = "AudioSegment";
-					segment.comment = "audioSegment ici";
-					listSegment.addItem(segment);*/
-					Alert.show("Under construction","Information");
+					segment.comment = "";
+					//
+					segment.link = "audio-09467503-769b-46d2-9f5b-224a6a88c210-21.flv";
+					//
+					listSegment.addItem(segment);
+
 					break;
 				case "VideoSegment" :
 					segment = new Segment(this._retroDocument);
 					segment.order = 3;
 					segment.typeSource = "VideoSegment";
-					segment.comment = "videoSegment ici";
+					segment.comment = "";
 					listSegment.addItem(segment);
 					break;
 			}
