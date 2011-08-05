@@ -10,11 +10,14 @@ public class AudioRecorderEvent extends Event
 	static public const RECORD_AUDIO : String = 'recordAudio';
 	static public const STOP_RECORD_AUDIO : String = 'stopRecordAudio';
 	static public const PLAY_AUDIO : String = 'playAudio';
+	static public const PLAYING_AUDIO : String = 'playingAudio';
 	static public const STOP_PLAY_AUDIO : String = 'stopPlayAudio';
 	
 	
 	// properties
 	public var pathAudio : String;
+	// current time audion in ms
+	public var currentTimeAudio:int;
 
 	// constructor
 	public function AudioRecorderEvent(type : String,

@@ -16,8 +16,11 @@ package com.ithaca.documentarisation.model
 
 		[Bindable]
 		public var endTimeVideo:Number;
-
+		// duration of the comment audio file
+		public var durationCommentAudio:Number = 0;
+		
 		public var typeSource:String;
+		
 
 		[Bindable]
 		public var comment:String="";
@@ -39,6 +42,8 @@ package com.ithaca.documentarisation.model
 			endTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_TO_TIME).toString()); 
 			comment = segment.child(RetroDocumentConst.TAG_COMMENT).toString(); 
 			link = segment.child(RetroDocumentConst.TAG_VIDEO_LINK).toString(); 
+			typeSource = segment.child(RetroDocumentConst.TAG_TYPE_SOURCE).toString(); 
+			durationCommentAudio = segment.child(RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO).toString(); 
 		}
 	}
 }

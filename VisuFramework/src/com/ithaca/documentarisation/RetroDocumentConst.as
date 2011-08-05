@@ -12,5 +12,7 @@ package com.ithaca.documentarisation {
 		 public static const TAG_TO_TIME: String = "to-time";
 		 public static const TAG_COMMENT: String = "comment";
 		 public static const TAG_VIDEO_LINK: String = "link";
+		 public static const TAG_TYPE_SOURCE: String = "typeSource";
+		 public static const TAG_DURATION_COMMENT_AUDIO: String = "durationCommentAudio";
 	}
 }
