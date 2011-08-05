@@ -21,6 +21,8 @@ package com.ithaca.utils
 	
 	public class VisuUtils
 	{
+		public static var FOLDER_AUDIO_COMMENT_FILES:String = "usersAudioRetroDocument";
+		
 		private static var logger:ILogger = Log.getLogger("com.ithaca.utils.VisuUtils");
 		
 		public static function isStudent(user:User) : Boolean {
