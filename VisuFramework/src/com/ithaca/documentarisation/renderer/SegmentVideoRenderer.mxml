@@ -9,6 +9,6 @@
 	]]>
 	</fx:Script>
 	
-	<documentarisation:SegmentVideoAdvanced width="100%" skinClass="com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin"/>
+	<documentarisation:SegmentVideoAdvanced width="100%" segment="{data}" skinClass="com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin"/>
 	
 </s:ItemRenderer>
