@@ -32,26 +32,7 @@
 		]]>
 		</s:mouseOut.edit>
 		<s:HGroup width="100%" gap="3" verticalAlign="middle">
-			<!-- DRAG IMAGE -->
-<!--			<mx:Image id="imageDrag" source="{IconEnum.getIconByName('dragDropFlag')}" width="8" height="16">
-				<mx:includeInLayout.normal>false</mx:includeInLayout.normal>
-				<mx:visible.normal>false</mx:visible.normal>
-				<mx:buttonMode>true</mx:buttonMode>
-			</mx:Image>-->
-			<!-- LABEL -->
-<!--			<s:Label  id="labelSegment" width="100%" text="Some text " verticalAlign="bottom"  textAlign="left">
-				<s:mouseOver.edit>
-				<![CDATA[
-					backGroundLabel = labelSegment.getStyle("backgroundColor");
-					labelSegment.setStyle("backgroundColor", COLOR_OVER);
-				]]>
-				</s:mouseOver.edit>
-				<s:mouseOut.edit>
-				<![CDATA[
-					labelSegment.setStyle("backgroundColor",backGroundLabel);
-				]]>
-				</s:mouseOut.edit>
-			</s:Label>-->
+
 			<!-- TEXTAREA -->
 			<s:RichEditableText id="textSegment" width="100%" textAlign="center"/>
 			<!-- DELETE BUTTON -->

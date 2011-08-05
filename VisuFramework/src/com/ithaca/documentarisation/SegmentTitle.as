@@ -230,6 +230,7 @@ public class SegmentTitle extends SkinnableComponent
 		{
 			segment.comment = textSegment.text;
 		}
+		textSegment.removeEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
 	private function onChangeRichEditableText(event:TextOperationEvent):void
 	{
