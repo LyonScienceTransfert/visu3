@@ -116,7 +116,6 @@ public class StreamRecorder
   	
 	protected static final Logger log = Red5LoggerFactory.getLogger(StreamRecorder.class, "visu" );
 	
-	@SuppressWarnings("unchecked")
 	public void startRecordAudio(IConnection conn, String filePath)
 	{
 		log.warn("=== startRecordAudio ===");
@@ -125,37 +124,28 @@ public class StreamRecorder
 		IScope scope = conn.getScope();
 		User user = (User) client.getAttribute("user");
 		int userId = user.getId_user();
+		log.warn("userId = {}", userId);
 		
 		String clientId = (String) client.getAttribute("id");
+		log.warn("clientId = {}", clientId);
 		ClientBroadcastStream streamByClientId = (ClientBroadcastStream) app.getBroadcastStream(
 				scope, clientId);
+		
 		// folder name
 		String folderName = FOLDER_NAME_AUDIO_RECORDERS+"/"+ userId+"/";
-		// check if first recording
-		if(filePath == null)
-		{
-			// filePath
-			filePath = "audio-"+ UUID.randomUUID() +"-"+ userId; 	
-			// notify client for new audio path file recording
-			Object[] namePathAudio = {filePath};
-			IConnection connectionClient = (IConnection)client.getAttribute("connection");
-			if (connectionClient instanceof IServiceCapableConnection) {
-				IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
-				sc.invoke("savePathAudioRecording", namePathAudio);
-			} 
-		}
+		log.warn("folderName= {}", folderName);
 		
 		// file name
 		String recordFileName = folderName + filePath;
-		log.warn(" recordFileName = ",recordFileName);
+		log.warn(" recordFileName = {}",recordFileName);
+		
 		try {
-			// save the stream to disk
+			// save the stream 
 			streamByClientId.saveAs(recordFileName, false);
 		} catch (Exception e) {
 			log.error("Error while saving stream: "
 					+ streamByClientId.getName(), e);
 		}
-		
 	}
 	
 	public void stopRecordAudio(IConnection conn)
