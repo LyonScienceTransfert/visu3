@@ -21,6 +21,7 @@ package com.ithaca.visu.view.video
 	import mx.collections.ArrayCollection;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.states.Transition;
 	
 	import spark.components.Group;
 	import spark.components.supportClasses.SkinnableComponent;

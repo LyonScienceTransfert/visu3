@@ -14,14 +14,6 @@
 		import spark.skins.spark.SpinnerSkin;
 	]]>
 	</fx:Script>
-	<fx:Script>
-	<![CDATA[
-
-	
-		
-		
-	]]>
-	</fx:Script>
 	<s:states>
 		<s:State name="normal" />
 		<s:State name="normalOver" />
@@ -67,19 +59,6 @@
 				<mx:toolTip>Edit segment</mx:toolTip>
 				<mx:buttonMode>true</mx:buttonMode>
 			</mx:Image>
-			<!-- SAVE SEGMENT -->
-<!--			<s:Label id="labelSave" includeIn="edit, editPaused, editPlay" visible="false" fontSize="10" maxDisplayedLines="1" lineBreak="toFit">
-				<s:text>le segment a été sauvegardée il y a 5 sec</s:text>
-				<s:toolTip>le segment a été sauvegardée il y a 5 sec</s:toolTip>
-			</s:Label>
-			<mx:Button id="buttonSave" includeIn="edit, editPaused, editPlay" enabled="false">
-				<mx:label>Sauvegarder</mx:label>
-			</mx:Button>-->
-<!--			<mx:Image id="imageDelete" source="{IconEnum.getIconByName('deleteRoundIcon')}" 
-				excludeFrom="shared" visible.normal="false" visible.edit="true" visible.editPaused="true" visible.editPlay="true">
-				<mx:toolTip>Suprimer</mx:toolTip>
-				<mx:buttonMode>true</mx:buttonMode>
-			</mx:Image>-->
 			<components:IconDelete id="iconDelete"
 				buttonMode="true"
 				excludeFrom="shared" 

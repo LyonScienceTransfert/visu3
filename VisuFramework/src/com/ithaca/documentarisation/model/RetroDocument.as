@@ -102,7 +102,6 @@ package com.ithaca.documentarisation.model
 				segment.order = nSegment + 1;
 				listSegment.addItem(segment);				
 			}
-			//title = xml.child(RetroDocumentConst.TAG_TITLE).toString(); 
 			description = xml.child(RetroDocumentConst.TAG_DOCUMENT_DESCRIPTION).toString(); 
 			createur = xml.child(RetroDocumentConst.TAG_CREATOR).toString(); 
 			creationDate = xml.child(RetroDocumentConst.TAG_CREATION_DATE).toString(); 
@@ -134,9 +133,6 @@ package com.ithaca.documentarisation.model
 			{
 				var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
 				var segmentXML:XML = new XML("<"+RetroDocumentConst.TAG_SEGMENT+"/>");
-/*				var stringTitleSegment:String = "<"+RetroDocumentConst.TAG_TITLE+"><![CDATA["+segment.title+"]]></"+RetroDocumentConst.TAG_TITLE+">";
-				var titleSegment:XML = new XML(stringTitleSegment);
-				segmentXML.appendChild(titleSegment);*/
 				var stringBeginTimeVideo:String = "<"+RetroDocumentConst.TAG_FROM_TIME+">"+segment.beginTimeVideo.toString()+"</"+RetroDocumentConst.TAG_FROM_TIME+">";
 				var beginTimeVideo:XML = new XML(stringBeginTimeVideo);
 				segmentXML.appendChild(beginTimeVideo);

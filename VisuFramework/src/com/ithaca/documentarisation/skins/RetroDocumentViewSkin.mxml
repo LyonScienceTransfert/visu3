@@ -16,14 +16,6 @@
 			import com.ithaca.visu.ui.utils.SharedSatusEnum;
 		]]>
 	</fx:Script>
-	<!-- SkinParts
-	name=titleDocument, type=spark.components.Label, required=false
-	name=groupSegment, type=spark.components.Group, required=false
-	name=addButton, type=spark.components.Button, required=false
-	name=shareButton, type=spark.components.Button, required=false
-	name=titleDocumentTextInput, type=spark.components.TextInput, required=false
-	name=removeButton, type=spark.components.Button, required=false
-	-->
 	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
 		<s:fill>
 			<!--- @private -->
@@ -37,7 +29,6 @@
 			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited" fontSize="12"/>
 			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited"/>
 			<mx:Button icon="{IconEnum.getIconByName('retroDocumentShared')}" id="shareButton" enabled="true" width="30" includeIn="edited" visible="true"/>
-	<!--		<mx:Button icon="{IconEnum.getIconByName('retroDocumentSegemntAdd')}" id="addButton" width="30" includeIn="edited"/>-->
 			<mx:PopUpButton icon="{IconEnum.getIconByName('retroDocumentSegemntAdd')}" id="addPopUpButton"  width="50" includeIn="edited"/>
 		</s:HGroup>
 		<s:Group top="37" bottom="1" left="0" right="1">
@@ -45,14 +36,5 @@
 						
 			</s:List>
 		</s:Group>
-<!--		<s:Group top="37" bottom="1" left="0" right="1">
-			<s:Scroller top="0"  bottom="0" left="0" right="0">
-					<s:Group top="0"  bottom="0" left="0" right="0" id="groupSegment">
-						<s:layout>
-							<s:VerticalLayout gap="5"/>
-						</s:layout>
-					</s:Group>
-			</s:Scroller>
-		</s:Group>-->
 	</s:Group>
 </s:Skin>

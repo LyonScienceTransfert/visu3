@@ -1028,7 +1028,7 @@ package  com.ithaca.visu.model
 			}
 			
 			_listViewObselComment.addItem(viewObsel);
-				
+
 		}
 		
 		/**

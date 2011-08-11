@@ -18,16 +18,9 @@ public class SegmentTitle extends SkinnableComponent
 {
 	[SkinState("edit")]
 	[SkinState("normal")]
-	
-	/*[SkinPart("true")]
-	public var 	labelSegment:Label;*/
-	
+		
 	[SkinPart("true")]
 	public var 	textSegment:RichEditableText;
-/*	[SkinPart("true")]
-	public var 	imageDrag:Image;*/
-/*	[SkinPart("true")]
-	public var 	imageDelete:Image;*/
 	[SkinPart("true")]
 	public var 	iconDelete:IconDelete;
 	
@@ -63,7 +56,6 @@ public class SegmentTitle extends SkinnableComponent
 	public function set editabled(value:Boolean):void
 	{
 		_editabled = value;
-/*		addListenerLabelSegment();*/
 		invalidateSkinState();
 	}
 	public function get editabled():Boolean
@@ -103,12 +95,6 @@ public class SegmentTitle extends SkinnableComponent
 	override protected function partAdded(partName:String, instance:Object):void
 	{
 		super.partAdded(partName,instance);
-/*		if(instance == labelSegment)
-		{
-			labelSegment.text =text;
-			setFont(labelSegment);
-			addListenerLabelSegment();
-		}*/
 		if(instance == textSegment)
 		{
 			textSegment.text =text;
@@ -120,10 +106,6 @@ public class SegmentTitle extends SkinnableComponent
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
 		}
-		/*if(instance == imageDrag)
-		{
-			imageDrag.addEventListener(MouseEvent.MOUSE_DOWN, onMouseImageDrag);
-		}*/
 	}
 	
 	
@@ -133,20 +115,17 @@ public class SegmentTitle extends SkinnableComponent
 		if(fontBoldChange)
 		{
 			fontBoldChange = false;
-/*			setFont(labelSegment);*/
 			setFont(textSegment);
 		}
 		if(textChange)
 		{
 			textChange = false;
-			/*labelSegment.text = text;*/
 			textSegment.text = text;
 		}
 		if(segmentChange)
 		{
 			segmentChange = false;
 			_text = segment.comment;
-		/*	labelSegment.text = text;*/
 			textSegment.text = text;
 			if(textSegment.text == "")
 			{
@@ -155,7 +134,6 @@ public class SegmentTitle extends SkinnableComponent
 			if(segment.typeSource == RetroDocumentConst.TITLE_SEGMENT)
 			{
 				_fontBold = true;
-			/*	setFont(labelSegment);*/
 				setFont(textSegment);
 			}
 		}
@@ -181,31 +159,6 @@ public class SegmentTitle extends SkinnableComponent
 	// Listeners
 	//
 	//_____________________________________________________________________
-	
-/*	private function onClickLabelSegment(event:MouseEvent):void
-	{
-		labelSegment.includeInLayout = labelSegment.visible = false;
-		textSegment.includeInLayout = textSegment.visible = true;
-		textSegment.selectAll();
-		// FIXME : hasn't focus if too segment selected
-		textSegment.text = text;
-		if(this.stage != null)
-		{
-			this.stage.focus = textSegment;
-		}
-		textSegment.addEventListener(FocusEvent.FOCUS_OUT, onTextSegmentFocusOut);
-	}*/
-/*	private function onTextSegmentFocusOut(event:FocusEvent):void
-	{
-		textSegment.removeEventListener(FocusEvent.FOCUS_OUT, onTextSegmentFocusOut);
-		text = textSegment.text;
-		
-		textSegment.includeInLayout = textSegment.visible = false;
-		labelSegment.includeInLayout = labelSegment.visible = true;
-		
-		// TODO Update RetroDocument 
-		segment.comment = text;
-	}*/
 	// richText
 	private function onFocusInRichEditableText(event:FocusEvent):void
 	{	
@@ -285,13 +238,5 @@ public class SegmentTitle extends SkinnableComponent
 		value.setStyle("fontWeight", fontValue);
 		value.setStyle("textAlign", textAlign);
 	}
-	
-	/*private function addListenerLabelSegment():void
-	{
-		if(editabled && labelSegment)
-		{
-			labelSegment.addEventListener(MouseEvent.CLICK, onClickLabelSegment);
-		}
-	}*/
 }
 }

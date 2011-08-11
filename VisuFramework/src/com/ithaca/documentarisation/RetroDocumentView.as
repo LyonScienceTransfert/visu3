@@ -8,7 +8,6 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.renderer.SegmentVideoRenderer;
 	import com.ithaca.utils.ShareUserTitleWindow;
 	import com.ithaca.visu.events.UserEvent;
-	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	import com.ithaca.visu.ui.utils.RoleEnum;
@@ -32,14 +31,11 @@ package com.ithaca.documentarisation
 	import mx.events.MenuEvent;
 	import mx.managers.PopUpManager;
 	
-	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.List;
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
-	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
-	import spark.skins.spark.ListSkin;
 	
 	public class RetroDocumentView extends SkinnableComponent
 	{
@@ -58,9 +54,6 @@ package com.ithaca.documentarisation
 		
 		[SkinPart("true")]
 		public var removeButton:Button;
-		
-		[SkinPart("true")]
-		public var addButton:Button;
 		
 		[SkinPart("true")]
 		public var addPopUpButton:PopUpButton;
@@ -155,11 +148,6 @@ package com.ithaca.documentarisation
 				removeButton.addEventListener(MouseEvent.CLICK, onRemoveDocument);	
 				removeButton.toolTip = fxgt.gettext("Supprimer ce bilan");
 			}
-			if(instance == addButton)
-			{
-				addButton.addEventListener(MouseEvent.CLICK, onAddSegment);	
-				addButton.toolTip = fxgt.gettext("Ajouter un nouveau segment");
-			}
 			if(instance == addPopUpButton)
 			{
 				addPopUpButton.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteAddSegmentPopUpButton);
@@ -238,9 +226,7 @@ package com.ithaca.documentarisation
 			{
 				retroDocumentChange = false;
 				
-//				groupSegment.removeAllElements();
 				parseRetroDocument();
-				//addSegment();	
 				
 				if(titleDocument != null)
 				{
@@ -264,35 +250,13 @@ package com.ithaca.documentarisation
 			}	
 			
 		}
-		/*protected function addSegment():void
-		{
-			for each( var segment:Segment in this.listSegment)
-			{
-				var segmentView:RetroDocumentSegment = new RetroDocumentSegment();
-				segmentView.percentWidth = 100;
-				segmentView.title = segment.title;
-				segmentView.setEmpty(false);
-				segmentView.setEditabled(!normal);
-				// firstly set startSession and Duration, need it for set the segment for beginTime, endTime
-				segmentView.startDateSession = _startDateSession;
-				segmentView.durationSession = _durationSession;
-				segmentView.segment = segment;
-				segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
-				segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
-				segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
-//				groupSegment.addElement(segmentView);
-			}
-		}*/
+
 		private function onSharedDocument(event:MouseEvent):void
 		{
 			var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
 			this.dispatchEvent(loadListUsers);
-			
-/*			var segment:Segment = new Segment(this._retroDocument);
-			segment.order = 2;
-			segment.comment = "DFDFDFDA"
-			listSegment.addItem(segment);*/
 		}
+		
 		private function onRemoveDocument(event:MouseEvent):void
 		{
 			Alert.yesLabel = fxgt.gettext("Oui");
@@ -315,42 +279,6 @@ package com.ithaca.documentarisation
 			menuAddSegment.selectedIndex = 0;       
 			menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
 			addPopUpButton.popUp = menuAddSegment;
-		}
-
-		
-		private function onAddSegment(event:MouseEvent):void
-		{
-/*			var segment:Segment = new Segment(this._retroDocument);
-			segment.title = "";
-			this.listSegment.addItem(segment);
-			this._retroDocument.listSegment.addItem(segment);
-			var segmentView:RetroDocumentSegment = new RetroDocumentSegment();
-			segmentView.percentWidth = 100;
-			// firstly set startSession and Duration, need it for set the segment for beginTime, endTime
-			segmentView.startDateSession = _startDateSession;
-			segmentView.durationSession = _durationSession;
-			segmentView.setEmpty(true);
-			segmentView.setEditabled(true);
-			segmentView.setOpen(true);
-			segmentView.segment = segment;
-			segmentView.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment);
-			segmentView.addEventListener(RetroDocumentEvent.UPDATE_RETRO_SEGMENT, updateRetroDocument);
-			segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
-			groupSegment.addElement(segmentView);ê
-			// update retroDocument
-			this.updateRetroDocument();	*/	
-			var segment:Segment = new Segment(this._retroDocument);
-			segment.order = 1;
-			segment.comment = "audioSegment ici";
-			listSegment.addItem(segment);
-/*			var segmentView:AudioRecorder = new AudioRecorder();
-			segmentView.percentWidth = 100;
-			segmentView.connection = Model.getInstance().getNetConnection();
-			segmentView.streamId = Model.getInstance().getUserIdClient();*/
-//			groupSegment.addElement(segmentView);
-			
-			
-			
 		}
 		//_____________________________________________________________________
 		//
@@ -403,7 +331,6 @@ package com.ithaca.documentarisation
 		private function onRmoveSegment(event:RetroDocumentEvent):void
 		{
 			removingSegment = event.segment;
-			//removingSegementView =event.currentTarget as RetroDocumentSegment;
 			
 			Alert.yesLabel = fxgt.gettext("Oui");
 			Alert.noLabel = fxgt.gettext("Non");
@@ -434,7 +361,6 @@ package com.ithaca.documentarisation
 				{
 					listSegment.removeItemAt(indexSegment);
 					this._retroDocument.listSegment.removeItemAt(indexSegment);
-//					groupSegment.removeElementAt(indexSegment);
 					// update the retroDocument
 					this.updateRetroDocument();
 				}
@@ -533,7 +459,6 @@ package com.ithaca.documentarisation
 				}
 				return false;
 			}
-
 		}
 		private function onSelectUser(event:UserEvent):void
 		{
@@ -541,23 +466,5 @@ package com.ithaca.documentarisation
 			// update retroDocument
 			updateRetroDocument();
 		}
-/*		public function updateButtonPlayStop(value:RetroDocumentSegment):void
-		{
-			var nbrRetroDocumentSegment:int = groupSegment.numElements;
-			for(var nRetroDocumentSegment:int = 0; nRetroDocumentSegment < nbrRetroDocumentSegment; nRetroDocumentSegment++)
-			{
-				var retroDocumentSegment:RetroDocumentSegment = groupSegment.getElementAt(nRetroDocumentSegment) as RetroDocumentSegment;
-				var statusPlay:Boolean = false;
-				if(value != null && retroDocumentSegment == value)
-				{
-					// status "pause"
-					statusPlay = true;
-				}
-				// set label play/stop
-//				retroDocumentSegment.setLabelPlay(statusPlay);
-				// set label time 
-				retroDocumentSegment.setBeginEndTime();
-			}
-		}
-*/	}
+	}
 }
