@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	currentState="normal"
+	rollOver="group1_rollOverHandler(event)"
+	rollOut="group1_rollOutHandler(event)"
+	>
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+
+		protected function group1_rollOverHandler(event:MouseEvent):void
+		{
+			this.currentState = "hovered";
+		}
+
+		protected function group1_rollOutHandler(event:MouseEvent):void
+		{
+			this.currentState = "normal";
+		}
+
+	]]>
+	</fx:Script>
+	<s:transitions>
+		<s:Transition id="t1" autoReverse="true">
+			<s:CrossFade
+				target="{groupIconDelete}" 
+				duration="1000" />
+		</s:Transition>
+	</s:transitions>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="hovered" />
+	</s:states>
+	<s:Group id="groupIconDelete">
+		<s:BitmapImage
+			source="{IconEnum.getIconByName('deleteRoundIcon')}"
+			visible="true" visible.hovered="false"/>
+		<s:BitmapImage
+			source="{IconEnum.getIconByName('deleteRoundIconRed_16x16')}"
+			visible="false" visible.hovered="true">
+		</s:BitmapImage>
+	</s:Group>
+</s:Group>
