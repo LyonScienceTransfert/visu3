@@ -25,6 +25,7 @@ package  com.ithaca.documentarisation.events
 		static public const UPDATE_TITLE_RETRO_DOCUMENT : String = 'updateTitleRetroDocument';
 		static public const LOAD_LIST_USERS : String = 'loadListUsers';
 		static public const LOADED_ALL_USERS : String = 'loadedAllUsersRetroDocument';
+		static public const UPDATE_STREAM_PATH_AUDIO_COMMENT_SEGMENT_RETRO_DOCUMENT : String = 'updateStremPathAudioCommentSegmentRetroDocument';
 		
 		static public const PLAY_RETRO_SEGMENT : String = 'playRetroSegment';
 		
@@ -41,6 +42,7 @@ package  com.ithaca.documentarisation.events
 		public var endTime:Number;
 		public var titleRetrodocument:String;
 		public var statusPlaySegment:Boolean;
+		public var streamPathAudioCommentSegment:String;
 		
 		
 		
