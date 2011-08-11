@@ -1305,13 +1305,6 @@ public class MainManager
 		bilanEvent.filterSessionCollection = listFilterSessions;
 		this.dispatcher.dispatchEvent(bilanEvent);
 	}
-	/**
-	 * call by serveur : give name recording audio path
-	 */
-	public function onSavePathAudioRecording(pathAudio:String):void
-	{
-		return;
-	}
 	
 	/**
 	 * call if user join the session
