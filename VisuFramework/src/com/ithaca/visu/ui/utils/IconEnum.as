@@ -276,6 +276,21 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/iconSave_16x16.png")]
 		static private var iconSave_16x16:Class;
+		[Bindable]
+		[Embed("images/iconPlayGreen_16x16.png")]
+		static private var iconPlayGreen_16x16:Class;
+		[Bindable]
+		[Embed("images/iconRecordBorder_16x16.png")]
+		static private var iconRecordBorder_16x16:Class;
+		[Bindable]
+		[Embed("images/iconStopRed_16x16.png")]
+		static private var iconStopRed_16x16:Class;
+		[Bindable]
+		[Embed("images/iconStopYellow_16x16.png")]
+		static private var iconStopYellow_16x16:Class;
+		[Bindable]
+		[Embed("images/deleteRoundIconRed_16x16.png")]
+		static private var deleteRoundIconRed_16x16:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -468,6 +483,21 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "iconSave_16x16" : 
 					icon = iconSave_16x16;
+					break;
+				case "iconPlayGreen_16x16" : 
+					icon = iconPlayGreen_16x16;
+					break;
+				case "iconRecordBorder_16x16" : 
+					icon = iconRecordBorder_16x16;
+					break;
+				case "iconStopRed_16x16" : 
+					icon = iconStopRed_16x16;
+					break;
+				case "iconStopYellow_16x16" : 
+					icon = iconStopYellow_16x16;
+					break;
+				case "deleteRoundIconRed_16x16" : 
+					icon = deleteRoundIconRed_16x16;
 					break;
 				default :
 					break;				
