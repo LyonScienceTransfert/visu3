@@ -145,9 +145,6 @@ package com.ithaca.documentarisation
 			super.partAdded(partName,instance);
 			if(instance == segmentVideo)
 			{
-//				segmentVideo.deltaTime = this.DELTA_TIME;
-//				segmentVideo.startDateSession = _startDateSession;
-//				segmentVideo.durationSession = this._durationSession;
 				segmentVideo.setNewBeginEnd(
 					_timeBegin - startDateSession,
 					_timeEnd - startDateSession
@@ -235,11 +232,7 @@ package com.ithaca.documentarisation
 				this.segmentVideo.setNewBeginEnd(
 					this._timeBegin - this._startDateSession,
 					this._timeEnd - this._startDateSession
-					);
-
-				//this.segmentVideo.timeBegin = this._timeBegin - this._startDateSession;
-				//this.segmentVideo.timeEnd = this._timeEnd - this._startDateSession;
-				
+					);				
 				this.segmentComment.text = this._textComment;
 				this.segmentComment.selectAll();
 				this.stage.focus = this.segmentComment;
@@ -479,7 +472,6 @@ package com.ithaca.documentarisation
 		protected function titleSegmentTextInput_changeHandler(event:TextOperationEvent):void
 		{
 			this._title = titleSegmentTextInput.text;
-			//_segment.title = this._title;
 			notifyUpdateSegment();
 		}
 		protected function segmentCommentTextInput_changeHandler(event:TextOperationEvent):void

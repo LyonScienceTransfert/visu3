@@ -42,7 +42,6 @@ package com.ithaca.documentarisation.model
 		
 		public function setSegmentXML(segment:XML):void
 		{
-//			title = segment.child(RetroDocumentConst.TAG_TITLE).toString();
 			beginTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_FROM_TIME).toString()); 
 			endTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_TO_TIME).toString()); 
 			comment = segment.child(RetroDocumentConst.TAG_COMMENT).toString(); 

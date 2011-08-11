@@ -3,8 +3,6 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*"
 	>
-	<!--mouseOver="{hostComponent.onMouseOverSegment(event)}"
-	mouseOut="{hostComponent.onMouseOutSegment(event)}"-->
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentCommentAudio")]
@@ -21,76 +19,6 @@
 		]]>
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
-			<!-- CONTROLE -->
-			<!--<s:mouseOver>
-				<![CDATA[
-				if(currentState == "normal")
-				{
-				imagePlay.visible = true;
-				imageEdit.visible = true;
-				imageDelete.visible = true;
-				}
-				]]>
-			</s:mouseOver>
-			<s:mouseOut>
-				<![CDATA[
-				if(currentState == "normal")
-				{
-				imagePlay.visible = false;
-				imageEdit.visible = false;
-				imageDelete.visible = false;
-				}
-				]]>
-			</s:mouseOut>-->
-			<!-- MENU BAR -->
-			<!--<s:HGroup width="100%" verticalAlign="middle">-->
-<!--				<mx:Image source="{IconEnum.getIconByName('iconAudio_16x16')}">
-				</mx:Image>-->
-<!--				<mx:Spacer width="100%"/>
-				<s:HGroup verticalAlign="middle" horizontalAlign="center" fontSize="10">
-					<s:Label id="labelCurrentTimeDigit"
-						includeIn="normalOver" visible="false">
-					</s:Label>
-					<s:Label id="labelDurationInfo"
-						includeIn="normalOver">
-					</s:Label>
-					<s:Label id="labelDurationDigit"
-						includeIn="normalOver">
-						<s:text>0:59</s:text>
-					</s:Label>
-				</s:HGroup>
-				<mx:Image  id="imagePlay" 
-					source="{IconEnum.getIconByName('iconPlay_16x16')}"
-					includeIn="normalOver, sharedOver">
-					<mx:buttonMode>true</mx:buttonMode>
-				</mx:Image>
-				<mx:Image  id="imageEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}" 
-					includeIn="normalOver">
-					<mx:toolTip>Edit segment</mx:toolTip>
-					<mx:buttonMode>true</mx:buttonMode>
-				</mx:Image>-->
-				<!-- SAVE SEGMENT -->
-<!--				<s:Label id="labelSave" includeIn="edit" visible="false" fontSize="10" maxDisplayedLines="1" lineBreak="toFit">
-					<s:text>le segment a été sauvegardée il y a 5 sec</s:text>
-					<s:toolTip>le segment a été sauvegardée il y a 5 sec</s:toolTip>
-				</s:Label>
-				<mx:Image id="imageSave" includeIn="edit" source="{IconEnum.getIconByName('iconSave_16x16')}">
-					<mx:toolTip>Sauvegarder le segment</mx:toolTip>
-					<mx:buttonMode>true</mx:buttonMode>
-				</mx:Image>-->
-				<!-- MINIMAZE -->
-<!--				<mx:Image id="imageMinimaze"  source="{IconEnum.getIconByName('iconMinimaze_16x16')}"
-					includeIn="edit" visible="false">
-					<mx:buttonMode>true</mx:buttonMode>
-					<mx:toolTip>Minimaze</mx:toolTip>
-				</mx:Image>-->
-				<!-- DELETE -->
-<!--				<mx:Image id="imageDelete" source="{IconEnum.getIconByName('deleteRoundIcon')}" 
-					excludeFrom="shared" visible.normal="false" visible.edit="true">
-					<mx:toolTip>Suprimer segment</mx:toolTip>
-					<mx:buttonMode>true</mx:buttonMode>
-				</mx:Image>-->
-		<!--	</s:HGroup>-->
 			<s:HGroup width="100%" gap="1" paddingTop="3">
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText" 
@@ -109,7 +37,6 @@
 				<!-- AUDIO RECORDER -->
 				<documentarisation:AudioRecorder id="audioRecorder" 
 					skinClass="com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin"	/>
-					<!--skinClass="com.ithaca.documentarisation.skins.AudioRecorderSkin"/>-->
 			</s:HGroup>
 			<s:Line width="100%" includeIn="edit, editOver">
 				<s:stroke>

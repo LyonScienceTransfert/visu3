@@ -1,7 +1,9 @@
 package com.ithaca.utils.components
 {
 	import spark.components.Button;
+	import spark.components.Label;
 	import spark.primitives.BitmapImage;
+
 //	import spark.primitives.supportClasses.TextGraphicElement;
 	
 	public class IconButton extends Button
@@ -31,8 +33,7 @@ package com.ithaca.utils.components
 		 *  @private
 		 *  Internal storage for the icon property.
 		 */
-		private var _icon:Class;
-		
+		private var _icon:Class;		
 		[Bindable]
 		
 		/**
@@ -53,7 +54,6 @@ package com.ithaca.utils.components
 			if (iconElement != null)
 				iconElement.source = _icon;
 		}
-		
 		//--------------------------------------------------------------------------
 		//
 		//  Skin Parts
@@ -61,8 +61,7 @@ package com.ithaca.utils.components
 		//--------------------------------------------------------------------------
 		
 		[SkinPart("false")]
-		public var iconElement:BitmapImage;
-		
+		public var iconElement:BitmapImage
 		
 		//--------------------------------------------------------------------------
 		//

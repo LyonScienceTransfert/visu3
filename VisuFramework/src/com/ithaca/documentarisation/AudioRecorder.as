@@ -80,7 +80,6 @@ public class AudioRecorder extends SkinnableComponent
 	// update time interval in ms
 	private var _updateTimeInterval:int;
 	private var mouseOver:Boolean;
-//	private var modePlayingChange:Boolean;
 	
 	public function AudioRecorder()
 	{
@@ -222,14 +221,6 @@ public class AudioRecorder extends SkinnableComponent
 	override protected function partAdded(partName:String, instance:Object):void
 	{
 		super.partAdded(partName,instance);
-/*		if(instance == buttonPlay)
-		{
-			buttonPlay.addEventListener(MouseEvent.CLICK, onClickButtonPlay);
-		}
-		if(instance == buttonRecord)
-		{
-			buttonRecord.addEventListener(MouseEvent.CLICK, onClickButtonRecord);
-		}*/
 		if(instance == lableDuration)
 		{
 			lableDuration.text = getTimeInMinSec(durationAudio-currentTimeAudio);
@@ -274,7 +265,6 @@ public class AudioRecorder extends SkinnableComponent
 			{
 				currentTimeAudionSlider.maximum =  durationAudio;
 			}
-			
 		}
 		
 		if(currentTimeAudioChange)
@@ -284,29 +274,11 @@ public class AudioRecorder extends SkinnableComponent
 			{
 				labelCurrnetTime.text = getTimeInMinSec(currentTimeAudio);
 			}
-			/*if(lableDuration)
-			{
-				lableDuration.text = getTimeInMinSec(durationAudio-currentTimeAudio);
-			}*/
 			if(currentTimeAudionSlider)
 			{
 				currentTimeAudionSlider.value = currentTimeAudio;
 			}
 		}
-		/*if(modePlayingChange)
-		{
-			modePlayingChange = false;
-			if(timer && timer.running)
-			{
-				var playAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.PLAY_AUDIO);
-				dispatchEvent(playAudioEvent);
-			}else
-			{
-				var stopAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_PLAY_AUDIO);
-				dispatchEvent(stopAudioEvent);
-			}
-		}*/
-		
 	}
 	override protected function getCurrentSkinState():String
 	{
@@ -471,14 +443,10 @@ public class AudioRecorder extends SkinnableComponent
 			timer.stop();
 			_stream.close();
 		}
-		/*var stopAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_PLAY_AUDIO);
-		dispatchEvent(stopAudioEvent);*/
 		initSimpleSkinVars();
 		
 		currentTimeAudio = 0;
-		//modePlayingChange = true;
 		currentTimeAudioChange = true;
-		//invalidateProperties();
 		
 		if(mouseOver)
 		{
@@ -489,47 +457,6 @@ public class AudioRecorder extends SkinnableComponent
 		}
 		invalidateSkinState();
 	}
-/*	private function onClickButtonRecord(event:MouseEvent):void
-	{
-		if(empty)
-		{
-			empty = false;
-			play = false;
-			record = true;
-			normal = false;
-			// publish stream
-			publishStream();
-			// start record
-			var audioStartRecordEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.RECORD_AUDIO);
-			// path the audio file empty, serveur will give new name
-			audioStartRecordEvent.pathAudio = null;
-			this.dispatchEvent(audioStartRecordEvent);
-			
-		}else if(normal)
-		{
-			play = false;
-			record = true;
-			normal = false;
-			publishStream();
-			// start record
-			var audioStartRecordEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.RECORD_AUDIO);
-			audioStartRecordEvent.pathAudio = streamPath;
-			this.dispatchEvent(audioStartRecordEvent);
-		}else if(record)
-		{
-			record = play = false;
-			normal = true;
-			// stop publish stream
-			closeStream();
-			// FIXME : can do on server side,
-			// for this have to stop recording on server side,
-			// send notification here,
-			// close stream
-			//var audioStopRecordEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_RECORD_AUDIO);
-			//this.dispatchEvent(audioStopRecordEvent);
-		}
-		invalidateSkinState();
-	}*/
 	private function onCreationComplete(event:FlexEvent):void
 	{
 		micro = Microphone.getMicrophone();
@@ -539,10 +466,6 @@ public class AudioRecorder extends SkinnableComponent
 		micro.setUseEchoSuppression(true);
 		micro.soundTransform = new SoundTransform(0,0);
 		micro.setLoopBack(true);
-		
-		/*timer = new Timer(100);
-		timer.addEventListener(TimerEvent.TIMER, microLevel);
-		timer.start();*/
 	}
 	
 	private function microLevel(event:TimerEvent):void {

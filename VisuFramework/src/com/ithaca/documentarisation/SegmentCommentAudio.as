@@ -27,26 +27,7 @@ import spark.events.TextOperationEvent;
 
 public class SegmentCommentAudio extends SkinnableComponent
 {	
-/*	[SkinPart("true")]
-	public var groupSegmentAudio:VGroup;*/
-/*	[SkinPart("true")]
-	public var labelSave:Label;*/
-/*	[SkinPart("true")]
-	public var labelDurationInfo:Label;
-	[SkinPart("true")]
-	public var labelDurationDigit:Label;
-	[SkinPart("true")]
-	public var labelCurrentTimeDigit:Label;*/
-/*	[SkinPart("true")]
-	public var imageSave:Image;
-	[SkinPart("true")]
-	public var imageEdit:Image;
-	[SkinPart("true")]
-	public var imagePlay:Image;
-	[SkinPart("true")]
-	public var imageMinimaze:Image;*/
-	/*[SkinPart("true")]
-	public var imageDelete:Image;*/
+
 	[SkinPart("true")]
 	public var iconDelete:IconDelete;
 	
@@ -68,17 +49,10 @@ public class SegmentCommentAudio extends SkinnableComponent
 	private var connectionChange:Boolean; 	
 	private var _segment:Segment;
 	private var segmentChange:Boolean;
-	
+
 	private var durationAudio:int;// ms
-/*	private var currentTimeAudio:int= 0;// ms
-	private var currentTimeAudioChange:Boolean;*/
-	
-	
 	private var durationAudioChange:Boolean;
-/*	private var modePlayingChange:Boolean;*/
-/*	private var audioPlaying:Boolean;*/
-	
-	// TODO change mequinisme the timer
+
 	private var timer:Timer;
 	private static var UPDATE_TIME_INTERVAL:int = 250;
 	
@@ -339,9 +313,6 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// richText
 	private function onFocusInRichEditableText(event:FocusEvent):void
 	{
-		// change skin to "edit"
-		//onClickImageEdit();
-		
 		if(richEditableText.text == "ajoutez une nouvelle commentaire ici")
 		{
 			richEditableText.text = "";
@@ -399,10 +370,6 @@ public class SegmentCommentAudio extends SkinnableComponent
 		richEditableText.text = "ajoutez une nouvelle commentaire ici";
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
-		/*		if(edit)
-		{
-		colorText = "#000000";
-		}*/
 		richEditableText.setStyle("color", colorText);
 	}
 	/**

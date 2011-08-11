@@ -16,17 +16,7 @@ import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
 public class SegmentVideoAdvanced extends SkinnableComponent
-{
-	
-	/*<s:states>
-		<s:State name="normal" />
-		<s:State name="normalOver" />
-		<s:State name="edit"/>
-		<s:State name="editPlay"/>
-		<s:State name="editPaused"/>
-		<s:State name="shared"/>
-	</s:states>*/
-		
+{		
 	[SkinPart("true")]
 	public var imageEdit:Image;
 	[SkinPart("true")]

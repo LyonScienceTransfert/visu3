@@ -113,12 +113,12 @@
 		<s:BitmapImage 
 			id="iconElement"
 			/>
-<!--		<s:Label
+		<!--<s:Label
 				id="labelElement"
-				color="0xEFEFEF"
+				color="0x000000"
 				fontWeight="bold"
 				verticalCenter="1"
-				/>-->
+				 text.up="sdsdqdqdq"/>-->
 	</s:Group>
 	
 	
