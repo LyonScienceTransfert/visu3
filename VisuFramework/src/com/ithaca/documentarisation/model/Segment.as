@@ -1,15 +1,21 @@
 package com.ithaca.documentarisation.model
 {
 	import com.ithaca.documentarisation.RetroDocumentConst;
+	import com.ithaca.documentarisation.RetroDocumentView;
 	import com.ithaca.documentarisation.model.RetroDocument;
+	
+	import flash.events.TextEvent;
+	import flash.text.TextField;
+	
+	import spark.components.Label;
 
 	public class Segment
 	{
 		[Bindable]
 		public var order:int;
 
-		[Bindable]
-		public var title:String="";
+		/*[Bindable]
+		public var title:String="";*/
 
 		[Bindable]
 		public var beginTimeVideo:Number;
@@ -21,14 +27,13 @@ package com.ithaca.documentarisation.model
 		
 		public var typeSource:String;
 		
-
 		[Bindable]
 		public var comment:String="";
 
 		public var parentRetroDocument:RetroDocument;
 
 		[Bindable]
-		public var link:String="";
+		public var pathCommentAudio:String="";
 
 		public function Segment(parentRetroDocument:RetroDocument)
 		{
@@ -37,13 +42,13 @@ package com.ithaca.documentarisation.model
 		
 		public function setSegmentXML(segment:XML):void
 		{
-			title = segment.child(RetroDocumentConst.TAG_TITLE).toString();
+//			title = segment.child(RetroDocumentConst.TAG_TITLE).toString();
 			beginTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_FROM_TIME).toString()); 
 			endTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_TO_TIME).toString()); 
 			comment = segment.child(RetroDocumentConst.TAG_COMMENT).toString(); 
-			link = segment.child(RetroDocumentConst.TAG_VIDEO_LINK).toString(); 
 			typeSource = segment.child(RetroDocumentConst.TAG_TYPE_SOURCE).toString(); 
 			durationCommentAudio = segment.child(RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO).toString(); 
+			pathCommentAudio = segment.child(RetroDocumentConst.TAG_PATH_COMMENT_AUDIO).toString(); 
 		}
 	}
 }

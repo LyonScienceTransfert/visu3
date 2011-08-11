@@ -84,7 +84,7 @@
 	
 			private function playVideoSegment(segment:Segment):void {
 				var segmentTime:Number = segment.beginTimeVideo;
-				logger.info("Ask for playing the video of segment {0} - {1} (current time: {2})", segment.title, segment.comment, segmentTime);
+				logger.info("Ask for playing the video of segment {0} (current time: {2})", segment.comment, segmentTime);
 				// jump to begin the segment
 				this.visio.seekSession = segmentTime;
 				
@@ -267,7 +267,7 @@
 														}
 				
 														private function initRenderer(event:Event):void {
-															logger.debug("SegmentRenderer Initialized. Title: {0}, Comment: {1}", data.title, data.comment);
+															logger.debug("SegmentRenderer Initialized. Comment: {1}", data.comment);
 															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
 															
 															playImage.includeInLayout = playImage.visible = false;

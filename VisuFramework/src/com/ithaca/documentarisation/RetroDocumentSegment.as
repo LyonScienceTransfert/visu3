@@ -272,7 +272,7 @@ package com.ithaca.documentarisation
 					end = this._segment.endTimeVideo;		
 				}
 				this._timeEnd = end;
-				this._title = this._segment.title;
+				//this._title = this._segment.title;
 				// enabled button playStop
 				setEnabledButtonPlayStop();
 				labelStartDuration.text = getLabelStartDuration();
@@ -440,9 +440,9 @@ package com.ithaca.documentarisation
 			logger.debug("_segment.endTimeVideo = _timeEnd");
 			_segment.comment = _textComment;
 			logger.debug("_segment.comment = _textComment;");
-			_segment.link = "voidLink";
+			_segment.pathCommentAudio = "voidLink";
 			logger.debug("_segment.link = \"voidLink\"");
-			_segment.title = _title;
+			//_segment.title = _title;
 			logger.debug("_segment.title = _title");
 			segmentChange = true;
 			
@@ -479,7 +479,7 @@ package com.ithaca.documentarisation
 		protected function titleSegmentTextInput_changeHandler(event:TextOperationEvent):void
 		{
 			this._title = titleSegmentTextInput.text;
-			_segment.title = this._title;
+			//_segment.title = this._title;
 			notifyUpdateSegment();
 		}
 		protected function segmentCommentTextInput_changeHandler(event:TextOperationEvent):void
