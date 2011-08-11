@@ -1,15 +1,13 @@
 package com.ithaca.documentarisation.model
 {
 	import com.ithaca.documentarisation.RetroDocumentConst;
-	
+	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
-import com.ithaca.visu.model.Session;
-			
-			import mx.logging.ILogger;
-		import mx.logging.Log;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
 			
 		
 	public class RetroDocument
@@ -104,7 +102,7 @@ import com.ithaca.visu.model.Session;
 				segment.order = nSegment + 1;
 				listSegment.addItem(segment);				
 			}
-			title = xml.child(RetroDocumentConst.TAG_TITLE).toString(); 
+			//title = xml.child(RetroDocumentConst.TAG_TITLE).toString(); 
 			description = xml.child(RetroDocumentConst.TAG_DOCUMENT_DESCRIPTION).toString(); 
 			createur = xml.child(RetroDocumentConst.TAG_CREATOR).toString(); 
 			creationDate = xml.child(RetroDocumentConst.TAG_CREATION_DATE).toString(); 
@@ -136,22 +134,32 @@ import com.ithaca.visu.model.Session;
 			{
 				var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
 				var segmentXML:XML = new XML("<"+RetroDocumentConst.TAG_SEGMENT+"/>");
-				var stringTitleSegment:String = "<"+RetroDocumentConst.TAG_TITLE+"><![CDATA["+segment.title+"]]></"+RetroDocumentConst.TAG_TITLE+">";
+/*				var stringTitleSegment:String = "<"+RetroDocumentConst.TAG_TITLE+"><![CDATA["+segment.title+"]]></"+RetroDocumentConst.TAG_TITLE+">";
 				var titleSegment:XML = new XML(stringTitleSegment);
-				segmentXML.appendChild(titleSegment);
+				segmentXML.appendChild(titleSegment);*/
 				var stringBeginTimeVideo:String = "<"+RetroDocumentConst.TAG_FROM_TIME+">"+segment.beginTimeVideo.toString()+"</"+RetroDocumentConst.TAG_FROM_TIME+">";
 				var beginTimeVideo:XML = new XML(stringBeginTimeVideo);
 				segmentXML.appendChild(beginTimeVideo);
 				var stringEndTimeVideo:String = "<"+RetroDocumentConst.TAG_TO_TIME+">"+segment.endTimeVideo.toString()+"</"+RetroDocumentConst.TAG_TO_TIME+">";
 				var endTimeVideo:XML = new XML(stringEndTimeVideo);
 				segmentXML.appendChild(endTimeVideo);
+				// comment
 				var stringComment:String = "<"+RetroDocumentConst.TAG_COMMENT+"><![CDATA["+segment.comment+"]]></"+RetroDocumentConst.TAG_COMMENT+">";
 				var comment:XML = new XML(stringComment);
 				segmentXML.appendChild(comment);
-				var stringLink:String = "<"+RetroDocumentConst.TAG_VIDEO_LINK+"><![CDATA["+segment.link+"]]></"+RetroDocumentConst.TAG_VIDEO_LINK+">";
-				var link:XML = new XML(stringLink);
-				segmentXML.appendChild(link);
-				
+				// type source 
+				var stringTypeSource:String = "<"+RetroDocumentConst.TAG_TYPE_SOURCE+">"+segment.typeSource+"</"+RetroDocumentConst.TAG_TYPE_SOURCE+">";
+				var typeSource:XML = new XML(stringTypeSource);
+				segmentXML.appendChild(typeSource);
+				// duration audio
+				var stringDurationCommentAudio:String = "<"+RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+">"+segment.durationCommentAudio.toString()+"</"+RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+">";
+				var durationCommentAudio:XML = new XML(stringDurationCommentAudio);
+				segmentXML.appendChild(durationCommentAudio);
+				// path stream audio
+				var stringPathCommentAudio:String = "<"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">"+segment.pathCommentAudio+"</"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">";
+				var pathCommentAudio:XML = new XML(stringPathCommentAudio);
+				segmentXML.appendChild(pathCommentAudio);
+			
 				root.appendChild(segmentXML);
 			}
 			
