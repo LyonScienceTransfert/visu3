@@ -14,5 +14,11 @@ package com.ithaca.documentarisation {
 		 public static const TAG_VIDEO_LINK: String = "link";
 		 public static const TAG_TYPE_SOURCE: String = "typeSource";
 		 public static const TAG_DURATION_COMMENT_AUDIO: String = "durationCommentAudio";
+		 public static const TAG_PATH_COMMENT_AUDIO: String = "pathCommentAudio";
+		 
+		 public static const TEXT_SEGMENT:String = "TextSegment";
+		 public static const TITLE_SEGMENT:String = "TitleSegment";
+		 public static const COMMENT_AUDIO_SEGMENT:String = "CommentAudioSegment";
+		 public static const VIDEOO_SEGMENT:String = "VideoSegment";
 	}
 }
