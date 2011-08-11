@@ -132,7 +132,6 @@
 			<rtmp:CallbackRegistrator action="checkListObselSessioExitSessionPause" target="{MainManager}" method="onCheckListObselSessioExitSessionPause"/>
 			<rtmp:CallbackRegistrator action="checkListRetroDocumentBySessionId" target="{MainManager}" method="onCheckListRetroDocumentBySessionId"/>
 			<rtmp:CallbackRegistrator action="bilanListRetrieved" target="{MainManager}" method="onBilanListRetrieved"/>
-			<rtmp:CallbackRegistrator action="savePathAudioRecording" target="{MainManager}" method="onSavePathAudioRecording"/>
 			<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
         </mate:EventHandlers>
 
