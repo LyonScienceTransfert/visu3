@@ -31,7 +31,7 @@ documentarisation|SegmentCommentAudio
 }
 documentarisation|AudioRecorder
 {
-	skinClass: ClassReference("com.ithaca.documentarisation.skins.AudioRecorderSkin");
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin");
 }
 components|PanelButton
 {
