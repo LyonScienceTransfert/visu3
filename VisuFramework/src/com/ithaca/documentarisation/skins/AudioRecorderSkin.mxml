@@ -15,20 +15,20 @@
 	<s:states>
 		<s:State name="empty"/>
 		<s:State name="normal"/>
-		<s:State name="playing" />
-		<s:State name="recording" />
+		<s:State name="play" />
+		<s:State name="record" />
 	</s:states>
 	<s:VGroup  top="0" bottom="3" left="13" right="13" gap="4">
 		<!-- TIME SLIDER -->
-		<s:HGroup width="100%"  height="50%" verticalAlign="middle" horizontalAlign="center">
-			<s:Label id="currentTimeAudioLabel">
+		<s:HGroup width="100%"  height="50%" verticalAlign="middle" horizontalAlign="center" fontSize="10">
+			<s:Label id="labelCurrnetTime">
 				<s:text>0:17</s:text>
 			</s:Label>
 			<s:HSlider id="currentTimeAudionSlider" width="100%">
 				<s:value>23</s:value>
 				<s:maximum>60</s:maximum>
 			</s:HSlider>
-			<s:Label id="durationTimeAudioLabel">
+			<s:Label id="lableDuration">
 				<s:text>-0:57</s:text>
 			</s:Label>
 		</s:HGroup>
@@ -47,15 +47,15 @@
 				<mx:color.normal>#FFFFFF</mx:color.normal>
 				<mx:chromeColor.normal>#5588E6</mx:chromeColor.normal>
 				<!-- PLAY -->
-				<mx:label.playing>Arrêter</mx:label.playing>
-				<mx:icon.playing>{IconEnum.getIconByName("audioRecorderWhiteRectangle")}</mx:icon.playing>
-				<mx:color.playing>#FFFFFF</mx:color.playing>
-				<mx:chromeColor.playing>#5588E6</mx:chromeColor.playing>
+				<mx:label.play>Arrêter</mx:label.play>
+				<mx:icon.play>{IconEnum.getIconByName("audioRecorderWhiteRectangle")}</mx:icon.play>
+				<mx:color.play>#FFFFFF</mx:color.play>
+				<mx:chromeColor.play>#5588E6</mx:chromeColor.play>
 				<!-- RECORD -->	
-				<mx:enabled.recording>false</mx:enabled.recording>
-				<mx:label.recording>Ecouter</mx:label.recording>
-				<mx:color.recording>#FFFFFF</mx:color.recording>
-				<mx:icon.recording >{IconEnum.getIconByName("audioRecorderWhiteTriangle")}</mx:icon.recording>
+				<mx:enabled.record>false</mx:enabled.record>
+				<mx:label.record>Ecouter</mx:label.record>
+				<mx:color.record>#FFFFFF</mx:color.record>
+				<mx:icon.record >{IconEnum.getIconByName("audioRecorderWhiteTriangle")}</mx:icon.record>
 			</mx:Button>
 			<!-- BUTTON RECORD --> 
 			<mx:Button id="buttonRecord" width="50%">
@@ -68,14 +68,14 @@
 				<mx:icon.normal>{IconEnum.getIconByName("audioRecorderRedBall")}</mx:icon.normal>
 				<mx:chromeColor.normal>#FFFFFF</mx:chromeColor.normal>
 				<!-- PLAY -->
-				<mx:label.playing>Enregistrer</mx:label.playing>
-				<mx:icon.playing>{IconEnum.getIconByName("audioRecorderRedBall")}</mx:icon.playing>
-				<mx:enabled.playing>false</mx:enabled.playing>
+				<mx:label.play>Enregistrer</mx:label.play>
+				<mx:icon.play>{IconEnum.getIconByName("audioRecorderRedBall")}</mx:icon.play>
+				<mx:enabled.play>false</mx:enabled.play>
 				<!-- RECORD -->	
-				<mx:label.recording>Arrêter</mx:label.recording>
-				<mx:icon.recording>{IconEnum.getIconByName("audioRecorderWhiteRectangle")}</mx:icon.recording>
-				<mx:chromeColor.recording>#f64141</mx:chromeColor.recording>
-				<mx:color.recording>#FFFFFF</mx:color.recording>
+				<mx:label.record>Arrêter</mx:label.record>
+				<mx:icon.record>{IconEnum.getIconByName("audioRecorderWhiteRectangle")}</mx:icon.record>
+				<mx:chromeColor.record>#f64141</mx:chromeColor.record>
+				<mx:color.record>#FFFFFF</mx:color.record>
 			</mx:Button>
 		</s:HGroup>
 	</s:VGroup>		

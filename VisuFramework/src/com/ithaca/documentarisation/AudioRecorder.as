@@ -14,7 +14,9 @@ import flash.net.NetStream;
 import flash.utils.Timer;
 
 import mx.controls.Button;
+import mx.controls.Image;
 import mx.events.FlexEvent;
+import mx.events.StateChangeEvent;
 import mx.logging.ILogger;
 import mx.logging.Log;
 
@@ -27,11 +29,6 @@ public class AudioRecorder extends SkinnableComponent
 {
 	private static var logger:ILogger = Log.getLogger("com.ithaca.documentarisation.SegmentVideo");
 	
-	[SkinState("empty")]
-	[SkinState("normal")]
-	[SkinState("recording")]
-	[SkinState("playing")]
-	
 /*	[SkinPart("true")]
 	public var progressBar:Rect;*/
 	
@@ -40,16 +37,26 @@ public class AudioRecorder extends SkinnableComponent
 	[SkinPart("true")]
 	public var buttonRecord:Button;
 	[SkinPart("true")]
-	public var currentTimeAudioLabel:Label;
+	public var imagePlay:Image;
 	[SkinPart("true")]
-	public var durationTimeAudioLabel:Label;
+	public var imageStop:Image;
+	[SkinPart("true")]
+	public var imageRecord:Image;
+	
+	[SkinPart("true")]
+	public var labelCurrnetTime:Label;
+	[SkinPart("true")]
+	public var lableDuration:Label;
 	[SkinPart("true")]
 	public var currentTimeAudionSlider:HSlider;
 	
-	private var empty:Boolean = true;
+	private var empty:Boolean = false;
 	private var play:Boolean = false;
 	private var record:Boolean = false;
 	private var normal:Boolean = false;
+	private var normalEmpty:Boolean = false;
+	private var overEmpty:Boolean = false;
+	private var over:Boolean = false;
 	
 	// net Stream
 	private var _stream:NetStream;
@@ -58,9 +65,12 @@ public class AudioRecorder extends SkinnableComponent
 	// path audio file
 	private var _streamPath:String;
 	// user id
+	private var _userId:String;
 	private var micro:Microphone;
 	private var timer:Timer;
 	
+	// max duration recording audio, ms
+	private var MAXIMUM_DURATION_AUDIO:int = 60*1000;
 	// duration audio file in ms
 	private var _durationAudio:int = 0;
 	private var durationAudioChange:Boolean;
@@ -69,6 +79,7 @@ public class AudioRecorder extends SkinnableComponent
 	private var currentTimeAudioChange:Boolean;
 	// update time interval in ms
 	private var _updateTimeInterval:int;
+	private var mouseOver:Boolean;
 //	private var modePlayingChange:Boolean;
 	
 	public function AudioRecorder()
@@ -110,7 +121,22 @@ public class AudioRecorder extends SkinnableComponent
 	}
 	public function set durationAudio(value:int):void
 	{
+		initSimpleSkinVars();
 		_durationAudio = value;
+		if(_durationAudio > 0)
+		{
+			normal = true;
+		}else
+		{
+			normalEmpty = true;
+		}
+		invalidateSkinState();
+		
+		addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, onCurrentStateChange);
+	}
+	private function onCurrentStateChange(event:StateChangeEvent):void
+	{
+		removeEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, onCurrentStateChange);
 		durationAudioChange = true;
 		invalidateProperties();
 	}
@@ -138,29 +164,53 @@ public class AudioRecorder extends SkinnableComponent
 	}
 	public function set userId(value:String):void
 	{
-	//	_userId = value;
+		_userId = value;
 	}
 	public function get userId():String
 	{
-		return "e";
+		return _userId;
 	}
 	// init skin states
 	public function skinNormal():void
 	{
-		initSkinVars();
-		normal = true;
-		invalidateSkinState();
+		initSimpleSkinVars();
+		mouseOver = false;
+		// do nothing if play or record
+		if(!(play || record))
+		{
+			if(durationAudio > 0)
+			{
+				normal = true;
+			}else
+			{
+				normalEmpty = true;
+			}
+			invalidateSkinState();
+		}
 	}
+	
+	public function skinOver():void
+	{
+		initSimpleSkinVars();
+		mouseOver = true;
+		// do nothing if play or record
+		if(!(play || record))
+		{
+			if(durationAudio > 0)
+			{
+				over = true;
+			}else
+			{
+				overEmpty = true;
+			}
+			invalidateSkinState();
+		}
+	}
+	
 	public function skinPlaying():void
 	{
 		initSkinVars();
 		play = true;
-		invalidateSkinState();
-	}
-	public function skinEmpty():void
-	{
-		initSkinVars();
-		empty = true;
 		invalidateSkinState();
 	}
 	//_____________________________________________________________________
@@ -172,27 +222,40 @@ public class AudioRecorder extends SkinnableComponent
 	override protected function partAdded(partName:String, instance:Object):void
 	{
 		super.partAdded(partName,instance);
-		if(instance == buttonPlay)
+/*		if(instance == buttonPlay)
 		{
 			buttonPlay.addEventListener(MouseEvent.CLICK, onClickButtonPlay);
 		}
 		if(instance == buttonRecord)
 		{
 			buttonRecord.addEventListener(MouseEvent.CLICK, onClickButtonRecord);
-		}
-		if(instance == durationTimeAudioLabel)
+		}*/
+		if(instance == lableDuration)
 		{
-			durationTimeAudioLabel.text = "-"+getTimeInMinSec(durationAudio-currentTimeAudio);
+			lableDuration.text = getTimeInMinSec(durationAudio-currentTimeAudio);
 		}
-		if(instance == currentTimeAudioLabel)
+		if(instance == labelCurrnetTime)
 		{
-			currentTimeAudioLabel.text =  getTimeInMinSec(currentTimeAudio);
+			labelCurrnetTime.text =  getTimeInMinSec(currentTimeAudio);
 		}
 		if(instance == currentTimeAudionSlider)
 		{
 			currentTimeAudionSlider.minimum =  0;
 			currentTimeAudionSlider.maximum =  durationAudio;
 			currentTimeAudionSlider.value = currentTimeAudio;
+		}
+		
+		if(instance == imagePlay)
+		{
+			imagePlay.addEventListener(MouseEvent.CLICK, onClickImagePlay);
+		}
+		if(instance == imageStop)
+		{
+			imageStop.addEventListener(MouseEvent.CLICK, onClickImageStop);
+		}
+		if(instance == imageRecord)
+		{
+			imageRecord.addEventListener(MouseEvent.CLICK, onClickImageRecord);
 		}
 	}
 	
@@ -203,16 +266,32 @@ public class AudioRecorder extends SkinnableComponent
 		if(durationAudioChange)
 		{
 			durationAudioChange = false;
-			durationTimeAudioLabel.text = "-"+getTimeInMinSec(durationAudio-currentTimeAudio);
-			currentTimeAudionSlider.maximum =  durationAudio;
+			if(lableDuration)
+			{
+				lableDuration.text = getTimeInMinSec(durationAudio-currentTimeAudio);
+			}
+			if(currentTimeAudionSlider)
+			{
+				currentTimeAudionSlider.maximum =  durationAudio;
+			}
+			
 		}
 		
 		if(currentTimeAudioChange)
 		{
 			currentTimeAudioChange = false;
-			currentTimeAudioLabel.text = getTimeInMinSec(currentTimeAudio);
-			durationTimeAudioLabel.text = "-"+getTimeInMinSec(durationAudio-currentTimeAudio);
-			currentTimeAudionSlider.value = currentTimeAudio;
+			if(labelCurrnetTime)
+			{
+				labelCurrnetTime.text = getTimeInMinSec(currentTimeAudio);
+			}
+			/*if(lableDuration)
+			{
+				lableDuration.text = getTimeInMinSec(durationAudio-currentTimeAudio);
+			}*/
+			if(currentTimeAudionSlider)
+			{
+				currentTimeAudionSlider.value = currentTimeAudio;
+			}
 		}
 		/*if(modePlayingChange)
 		{
@@ -237,15 +316,27 @@ public class AudioRecorder extends SkinnableComponent
 			skinName = "disable";
 		}else if(play)
 		{
-			skinName = "playing";
+			skinName = "play";
 		}
 		else if(record)
 		{
-			skinName = "recording";
+			skinName = "record";
 		}
 		else if(empty)
 		{
 			skinName = "empty";
+		}
+		else if(normalEmpty)
+		{
+			skinName = "normalEmpty";
+		}
+		else if(overEmpty)
+		{
+			skinName = "overEmpty";
+		}
+		else if(over)
+		{
+			skinName = "over";
 		}
 		else
 		{
@@ -260,42 +351,75 @@ public class AudioRecorder extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 
-	private function onClickButtonPlay(event:*=null):void
+	private function onClickImagePlay(even:*=null):void
 	{
-		if(normal)
-		{
-			record = false;
-			play = true;
-			normal = false;
-			
-			stream.client = this;
-			var streamPathFull:String = VisuUtils.FOLDER_AUDIO_COMMENT_FILES+"/"+"21"+"/"+streamPath;
-			stream.play(streamPathFull);
-			// set timer
-			timer = new Timer(updateTimeInterval,0);
-			timer.addEventListener(TimerEvent.TIMER, updateCurrentTimeAudio);
-			timer.start();
-			
-			/*modePlayingChange = true;
-			invalidateProperties();*/
-			var playAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.PLAY_AUDIO);
-			dispatchEvent(playAudioEvent);
-			
-		}else if(play)
-		{
-			record = play = false;
-			normal = true;
-			// stop playing
-			stopPlayAudio();
-		}
-		else if(record)
-		{
-			record = play = false;
-			normal = true;
-		}
-	    invalidateSkinState();
+		stream.client = this;
+		// TODO if i partage avec qq
+		var streamPathFull:String = VisuUtils.FOLDER_AUDIO_COMMENT_FILES+"/"+userId.toString()+"/"+streamPath;
+		stream.play(streamPathFull);
+		// set timer
+		timer = new Timer(updateTimeInterval,0);
+		timer.addEventListener(TimerEvent.TIMER, updateCurrentTimeAudio);
+		timer.start();
+		
+		initSimpleSkinVars();
+		// TODO modeEdit
+		play = true;
+		invalidateSkinState();
+		
 	}
-	
+	private function onClickImageStop(even:*=null):void
+	{
+		if(record)
+		{
+			// stop publish stream
+			closeStream();
+			
+			_durationAudio = currentTimeAudio;
+		}
+		stopPlayAudio();
+		
+	}
+	private function onClickImageRecord(even:*=null):void
+	{
+		stopPlayAudio();
+		initSimpleSkinVars();
+		record = true;
+		invalidateSkinState();
+		
+		publishStream();
+		
+		// start record
+		var audioStartRecordEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.RECORD_AUDIO);
+		var nameFileWithoutExtention:String = ""; 
+		if(durationAudio > 0)
+		{
+			nameFileWithoutExtention = streamPath.split(".")[0];
+		}else
+		{
+			// generate file name audio
+			var date:Date = new Date();
+			nameFileWithoutExtention = "audio-"+date.time.toString()+'-'+userId;
+			streamPath = nameFileWithoutExtention+".flv";
+			//  dispatchEvent update streamPath
+			var updatePathCommentAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.UPDATE_PATH_COMMENT_AUDIO);
+			updatePathCommentAudioEvent.pathAudio = streamPath;
+			this.dispatchEvent(updatePathCommentAudioEvent);
+		}
+		
+		audioStartRecordEvent.pathAudio = nameFileWithoutExtention;
+		this.dispatchEvent(audioStartRecordEvent);
+		
+		_durationAudio = MAXIMUM_DURATION_AUDIO;
+		durationAudioChange = true;
+		
+		// set timer
+		timer = new Timer(updateTimeInterval,0);
+		timer.addEventListener(TimerEvent.TIMER, updateRecordTimeAudio);
+		timer.start();
+		
+	}
+
 	private function updateCurrentTimeAudio(event:*=null):void
 	{
 		currentTimeAudioChange = true;
@@ -316,25 +440,56 @@ public class AudioRecorder extends SkinnableComponent
 		}
 	}
 	
+	private function updateRecordTimeAudio(event:*=null):void
+	{
+		currentTimeAudioChange = true;
+		invalidateProperties();
+		
+		currentTimeAudio += updateTimeInterval;
+		// notify current time change
+		if(timer && timer.running)
+		{
+			var playingAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.PLAYING_AUDIO);
+			playingAudioEvent.currentTimeAudio = currentTimeAudio;
+			dispatchEvent(playingAudioEvent);
+		}
+		
+		if(currentTimeAudio >= MAXIMUM_DURATION_AUDIO)
+		{
+			_durationAudio = MAXIMUM_DURATION_AUDIO;
+			stopPlayAudio();
+		}
+	}
+	
+	
+	
 	public function stopPlayAudio(event:*=null):void
 	{
 		trace("stop playing audio on AudioPlayer");
 		if(timer && timer.running)
 		{
 			timer.stop();
+			_stream.close();
 		}
-		var stopAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_PLAY_AUDIO);
-		dispatchEvent(stopAudioEvent);
-		_stream.close();
+		/*var stopAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_PLAY_AUDIO);
+		dispatchEvent(stopAudioEvent);*/
+		initSimpleSkinVars();
+		
 		currentTimeAudio = 0;
 		//modePlayingChange = true;
 		currentTimeAudioChange = true;
 		//invalidateProperties();
-		initSkinVars();
-		normal = true;
+		
+		if(mouseOver)
+		{
+			over = true;
+		}else
+		{
+			normal = true;
+		}
 		invalidateSkinState();
 	}
-	private function onClickButtonRecord(event:MouseEvent):void
+/*	private function onClickButtonRecord(event:MouseEvent):void
 	{
 		if(empty)
 		{
@@ -370,11 +525,11 @@ public class AudioRecorder extends SkinnableComponent
 			// for this have to stop recording on server side,
 			// send notification here,
 			// close stream
-			/*var audioStopRecordEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_RECORD_AUDIO);
-			this.dispatchEvent(audioStopRecordEvent);*/
+			//var audioStopRecordEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.STOP_RECORD_AUDIO);
+			//this.dispatchEvent(audioStopRecordEvent);
 		}
 		invalidateSkinState();
-	}
+	}*/
 	private function onCreationComplete(event:FlexEvent):void
 	{
 		micro = Microphone.getMicrophone();
@@ -428,7 +583,30 @@ public class AudioRecorder extends SkinnableComponent
 		result = minutes.toString() + ":"+ secondsString.toString();
 		return result;
 	}
+	private function initSimpleSkinVars():void
 	
+	{
+		if(play || record)
+		{
+			if(record)
+			{
+				// stop publish stream
+				closeStream();
+				_durationAudio = currentTimeAudio;
+				durationAudioChange = true;
+				invalidateProperties();
+				// dispatch
+				var updateDurationCommentAudioEvent:AudioRecorderEvent = new AudioRecorderEvent(AudioRecorderEvent.UPDATE_DURATION_COMMENT_AUDIO);
+				updateDurationCommentAudioEvent.durationTimeAudio = _durationAudio;
+				this.dispatchEvent(updateDurationCommentAudioEvent);
+			}
+			
+			record  = play =  false;
+			// stop audion if listen
+			stopPlayAudio();
+		}
+		normalEmpty = normal = overEmpty = over = record  = play =  false;
+	}
 	private function initSkinVars():void
 	{
 		normal = record = empty  = play =  false;

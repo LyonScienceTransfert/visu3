@@ -1,6 +1,8 @@
 package com.ithaca.documentarisation
 {
+import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.utils.components.IconDelete;
 
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
@@ -22,10 +24,12 @@ public class SegmentTitle extends SkinnableComponent
 	
 	[SkinPart("true")]
 	public var 	textSegment:RichEditableText;
+/*	[SkinPart("true")]
+	public var 	imageDrag:Image;*/
+/*	[SkinPart("true")]
+	public var 	imageDelete:Image;*/
 	[SkinPart("true")]
-	public var 	imageDrag:Image;
-	[SkinPart("true")]
-	public var 	imageDelete:Image;
+	public var 	iconDelete:IconDelete;
 	
 	private var _text:String ="text init";
 	private var _editabled:Boolean = false; 
@@ -112,14 +116,14 @@ public class SegmentTitle extends SkinnableComponent
 			textSegment.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
 			textSegment.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 		}
-		if(instance == imageDelete)
+		if(instance == iconDelete)
 		{
-			imageDelete.addEventListener(MouseEvent.CLICK, onClickImageDelete);
+			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
 		}
-		if(instance == imageDrag)
+		/*if(instance == imageDrag)
 		{
 			imageDrag.addEventListener(MouseEvent.MOUSE_DOWN, onMouseImageDrag);
-		}
+		}*/
 	}
 	
 	
@@ -148,7 +152,7 @@ public class SegmentTitle extends SkinnableComponent
 			{
 				setRichEditText();
 			}
-			if(segment.typeSource == "TitleSegment")
+			if(segment.typeSource == RetroDocumentConst.TITLE_SEGMENT)
 			{
 				_fontBold = true;
 			/*	setFont(labelSegment);*/
@@ -235,18 +239,26 @@ public class SegmentTitle extends SkinnableComponent
 	private function onChangeRichEditableText(event:TextOperationEvent):void
 	{
 		segment.comment = textSegment.text;
+		notifyUpdateSegment();
 	}
 	
-	private function onClickImageDelete(event:MouseEvent):void
+	private function onClickIconDelete(event:MouseEvent):void
 	{
-		return;
+		var removeSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_REMOVE_SEGMENT);
+		removeSegmentEvent.segment = segment;
+		this.dispatchEvent(removeSegmentEvent);
 	}
+	//_____________________________________________________________________
+	//
+	// Dispatchers
+	//
+	//_____________________________________________________________________
 	
-	private function onMouseImageDrag(event:MouseEvent):void
+	private function notifyUpdateSegment():void
 	{
-		return;
+		var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
+		this.dispatchEvent(notifyUpdateEvent);
 	}
-	
 	//_____________________________________________________________________
 	//
 	// Utils
