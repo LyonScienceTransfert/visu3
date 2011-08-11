@@ -37,7 +37,9 @@ package com.ithaca.documentarisation
 	import spark.components.List;
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
+	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
+	import spark.skins.spark.ListSkin;
 	
 	public class RetroDocumentView extends SkinnableComponent
 	{
@@ -135,7 +137,11 @@ package com.ithaca.documentarisation
 			shareUser.shareUserManagement.users = listUserShow;
 			shareUser.shareUserManagement.profiles = _profiles;
 		}
-		
+		//_____________________________________________________________________
+		//
+		// Overriden Methods
+		//
+		//_____________________________________________________________________
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
@@ -176,11 +182,11 @@ package com.ithaca.documentarisation
 				{
 					var className:Class = SegmentTitleRenderer;
 							
-					if(item.order == 1)
+					if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
 					{
 						className = SegmentCommentAudioRenderer;
 					}else
-						if(item.order == 3)
+						if(item.typeSource == RetroDocumentConst.VIDEOO_SEGMENT)
 						{
 							className = SegmentVideoRenderer;
 						}
@@ -191,6 +197,8 @@ package com.ithaca.documentarisation
 				groupSegment.dragMoveEnabled = true;
 				groupSegment.dropEnabled = true;
 				
+				groupSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
+				groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true)
 			}
 		}
 		
@@ -231,8 +239,8 @@ package com.ithaca.documentarisation
 				retroDocumentChange = false;
 				
 //				groupSegment.removeAllElements();
-				perseRetroDocument();
-				addSegment();	
+				parseRetroDocument();
+				//addSegment();	
 				
 				if(titleDocument != null)
 				{
@@ -245,7 +253,7 @@ package com.ithaca.documentarisation
 			}
 		}
 		
-		private function perseRetroDocument():void
+		private function parseRetroDocument():void
 		{
 			_labelRetroDocument = this._retroDocument.title;
 			var nbrSegment:int = this._retroDocument.listSegment.length;
@@ -256,7 +264,7 @@ package com.ithaca.documentarisation
 			}	
 			
 		}
-		protected function addSegment():void
+		/*protected function addSegment():void
 		{
 			for each( var segment:Segment in this.listSegment)
 			{
@@ -274,16 +282,16 @@ package com.ithaca.documentarisation
 				segmentView.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment);
 //				groupSegment.addElement(segmentView);
 			}
-		}
+		}*/
 		private function onSharedDocument(event:MouseEvent):void
 		{
-/*			var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
-			this.dispatchEvent(loadListUsers);*/
+			var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
+			this.dispatchEvent(loadListUsers);
 			
-			var segment:Segment = new Segment(this._retroDocument);
+/*			var segment:Segment = new Segment(this._retroDocument);
 			segment.order = 2;
 			segment.comment = "DFDFDFDA"
-			listSegment.addItem(segment);
+			listSegment.addItem(segment);*/
 		}
 		private function onRemoveDocument(event:MouseEvent):void
 		{
@@ -291,17 +299,6 @@ package com.ithaca.documentarisation
 			Alert.noLabel = fxgt.gettext("Non");
 			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+this.retroDocument.title+'"'+" ?"),
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
-		}
-		private function removeRetroDocumentConformed(event:CloseEvent):void
-		{
-			if( event.detail == Alert.YES)
-			{
-				var removeRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.DELETE_RETRO_DOCUMENT);
-				removeRetroDocumentEvent.idRetroDocument = this._retroDocument.id;
-				removeRetroDocumentEvent.sessionId = this._retroDocument.sessionId;
-				this.dispatchEvent(removeRetroDocumentEvent);
-			}
-			
 		}
 			
 		/**
@@ -319,50 +316,7 @@ package com.ithaca.documentarisation
 			menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
 			addPopUpButton.popUp = menuAddSegment;
 		}
-		/**
-		 *  listener the PopUp button
-		 */
-		private function onClickMenuAddSegment(event:MenuEvent):void
-		{
-			var segment:Segment;
-			var typeSegment:String = event.item.typeSegment;
-			switch (typeSegment)
-			{
-				case "TitleSegment" :
-					segment = new Segment(this._retroDocument);
-					segment.order = 2;
-					segment.comment = "TITLE";
-					segment.typeSource = "TitleSegment";
-					listSegment.addItem(segment);
-					break;
-				case "TexteSegment" :
-					segment = new Segment(this._retroDocument);
-					segment.order = 2;
-					segment.comment = "text";
-					segment.typeSource = "TexteSegment";
-					listSegment.addItem(segment);
-					break;
-				case "AudioSegment" :
-					segment = new Segment(this._retroDocument);
-					segment.order = 1;
-					segment.typeSource = "AudioSegment";
-					segment.comment = "";
-					//
-					segment.link = "audio-09467503-769b-46d2-9f5b-224a6a88c210-21.flv";
-					//
-					listSegment.addItem(segment);
 
-					break;
-				case "VideoSegment" :
-					segment = new Segment(this._retroDocument);
-					segment.order = 3;
-					segment.typeSource = "VideoSegment";
-					segment.comment = "";
-					listSegment.addItem(segment);
-					break;
-			}
-		}
-		
 		
 		private function onAddSegment(event:MouseEvent):void
 		{
@@ -398,15 +352,64 @@ package com.ithaca.documentarisation
 			
 			
 		}
+		//_____________________________________________________________________
+		//
+		// Listeners
+		//
+		//_____________________________________________________________________	
+		/**
+		 *  listener the PopUp button
+		 */
+		private function onClickMenuAddSegment(event:MenuEvent):void
+		{
+			var segment:Segment;
+			var typeSegment:String = event.item.typeSegment;
+			switch (typeSegment)
+			{
+			case "TitleSegment" :
+				segment = new Segment(this._retroDocument);
+				segment.order = 2;
+				segment.comment = "TITLE";
+				segment.typeSource = RetroDocumentConst.TITLE_SEGMENT;
+				break;
+			case "TexteSegment" :
+				segment = new Segment(this._retroDocument);
+				segment.order = 2;
+				segment.comment = "text";
+				segment.typeSource = RetroDocumentConst.TEXT_SEGMENT;
+				break;
+			case "AudioSegment" :
+				segment = new Segment(this._retroDocument);
+				segment.order = 1;
+				segment.typeSource = RetroDocumentConst.COMMENT_AUDIO_SEGMENT;
+				segment.comment = "";
+				segment.durationCommentAudio = 0;
+				break;
+			case "VideoSegment" :
+				segment = new Segment(this._retroDocument);
+				segment.order = 3;
+				segment.typeSource = RetroDocumentConst.VIDEOO_SEGMENT;
+				segment.comment = "";
+				break;
+			}
+			// add segment
+			listSegment.addItem(segment);
+			//  add segment in retroDocument
+			this._retroDocument.listSegment.addItem(segment);
+			// update retroDocument
+			updateRetroDocument();
+		}
 		
 		private function onRmoveSegment(event:RetroDocumentEvent):void
 		{
 			removingSegment = event.segment;
-			removingSegementView =event.currentTarget as RetroDocumentSegment;
+			//removingSegementView =event.currentTarget as RetroDocumentSegment;
 			
 			Alert.yesLabel = fxgt.gettext("Oui");
 			Alert.noLabel = fxgt.gettext("Non");
-			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le segment intitulé "+'"'+removingSegment.title+'"'+"?"),
+/*			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le segment intitulé "+'"'+removingSegment.title+'"'+"?"),
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeSegmentConformed); */
+			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer ce segment ?"),
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeSegmentConformed); 
 		}
 		private function removeSegmentConformed(event:CloseEvent):void
@@ -419,7 +422,7 @@ package com.ithaca.documentarisation
 				for(var nSegment:int = 0 ; nSegment < nbrSegment ; nSegment++)
 				{
 					var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
-					if(segment == this.removingSegment)
+					if(segment == removingSegment)
 					{
 						indexSegment = nSegment;
 					}
@@ -437,22 +440,6 @@ package com.ithaca.documentarisation
 				}
 			}
 		}
-		private function updateRetroDocument(event:*=null):void
-		{
-			var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
-			retroDocumentVO.documentId = _retroDocument.id;
-			retroDocumentVO.title = _retroDocument.title;
-			retroDocumentVO.description = _retroDocument.description;
-			retroDocumentVO.ownerId = _retroDocument.ownerId;
-			var xml:String = _retroDocument.getRetroDocumentXMLtoSTRING();
-			retroDocumentVO.xml = xml;
-			retroDocumentVO.sessionId = _retroDocument.sessionId;
-			var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT);
-			updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
-			updateRetroDocumentEvent.listUser = this._listUser;
-			this.dispatchEvent(updateRetroDocumentEvent);
-		}
-		
 		protected function titleDocumentTextInput_changeHandler(event:TextOperationEvent):void
 		{
 			this._labelRetroDocument = titleDocumentTextInput.text;
@@ -469,7 +456,44 @@ package com.ithaca.documentarisation
 		{
 			this.needUpdateRetroDocument = true;
 		}
-		
+		//_____________________________________________________________________
+		//
+		//  Dispatchers
+		//
+		//_____________________________________________________________________	
+		// update retroDocument
+		private function updateRetroDocument(event:*=null):void
+		{
+			var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+			retroDocumentVO.documentId = _retroDocument.id;
+			retroDocumentVO.title = _retroDocument.title;
+			retroDocumentVO.description = _retroDocument.description;
+			retroDocumentVO.ownerId = _retroDocument.ownerId;
+			var xml:String = _retroDocument.getRetroDocumentXMLtoSTRING();
+			retroDocumentVO.xml = xml;
+			retroDocumentVO.sessionId = _retroDocument.sessionId;
+			var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT);
+			updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
+			updateRetroDocumentEvent.listUser = this._listUser;
+			this.dispatchEvent(updateRetroDocumentEvent);
+		}
+		// remove retroDocument
+		private function removeRetroDocumentConformed(event:CloseEvent):void
+		{
+			if( event.detail == Alert.YES)
+			{
+				var removeRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.DELETE_RETRO_DOCUMENT);
+				removeRetroDocumentEvent.idRetroDocument = this._retroDocument.id;
+				removeRetroDocumentEvent.sessionId = this._retroDocument.sessionId;
+				this.dispatchEvent(removeRetroDocumentEvent);
+			}
+		}
+
+		//_____________________________________________________________________
+		//
+		//  Utils
+		//
+		//_____________________________________________________________________	
 		private function getListUserShow(value:Array):Array
 		{
 			var result:Array = new Array();
