@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx">
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentTitle")]
 	</fx:Metadata>
-	<fx:Script>
-	<![CDATA[
-		import com.ithaca.visu.ui.utils.IconEnum;
-		
-		import mx.managers.FocusManager;
-		 
-		private var backGroundLabel;
-		private var COLOR_OVER:String = "#EFEEA1";
-	]]>
-	</fx:Script>
 	<s:states>
 		<s:State name="edit"/>
 		<s:State name="normal"/>
 	</s:states>
-	<s:Group width="100%">
+	<s:VGroup width="100%" gap="1" verticalAlign="top">
 		<s:mouseOver.edit>
 		<![CDATA[
-			imageDelete.visible = true;
+			iconDelete.visible = true;
 		]]>
 		</s:mouseOver.edit>
 		<s:mouseOut.edit>
 		<![CDATA[
-			imageDelete.visible = false;
+			iconDelete.visible = false;
 		]]>
 		</s:mouseOut.edit>
-		<s:HGroup width="100%" gap="3" verticalAlign="middle">
+		<s:HGroup width="100%" gap="1" paddingTop="3">
 
 			<!-- TEXTAREA -->
-			<s:RichEditableText id="textSegment" width="100%" textAlign="center"/>
-			<!-- DELETE BUTTON -->
-			<mx:Image  id="imageDelete" source="{IconEnum.getIconByName('deleteRoundIcon')}" width="16" height="16" visible="false">
-				<mx:includeInLayout.normal>false</mx:includeInLayout.normal>
-				<mx:visible.normal>false</mx:visible.normal>
-				<mx:buttonMode>true</mx:buttonMode>
-			</mx:Image>
+			<s:RichEditableText id="textSegment" width="100%" textAlign="center"/>		
+			<!-- DELETE ICON -->
+			<components:IconDelete id="iconDelete"
+				visible="false"
+				buttonMode="true"
+				visible.normal="false"
+				includeInLayout.normal="false">
+				<components:toolTip>Suprimer ce segment</components:toolTip>
+			</components:IconDelete>
 		</s:HGroup>
-	</s:Group>
+		<s:Line width="100%" includeIn="edit">
+			<s:stroke>
+				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
+	</s:VGroup>
 </s:Skin>

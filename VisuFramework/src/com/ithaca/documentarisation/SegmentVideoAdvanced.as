@@ -1,6 +1,8 @@
 package com.ithaca.documentarisation
 {
+import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.utils.components.IconDelete;
 
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
@@ -31,6 +33,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	public var imagePlay:Image;
 	[SkinPart("true")]
 	public var imageDelete:Image;
+	[SkinPart("true")]
+	public var iconDelete:IconDelete;
 	
 	[SkinPart("true")]
 	public var labelSave:Label;
@@ -111,9 +115,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
 			imagePlay.addEventListener(MouseEvent.CLICK, onClickImagePlay);	
 		}
-		if (instance == imageDelete)
+		if (instance == iconDelete)
 		{
-			imageDelete.addEventListener(MouseEvent.CLICK, onClickImageDelete);	
+			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);	
 		}
 		if (instance == buttonSave)
 		{
@@ -207,9 +211,11 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		editPlay = true;
 		invalidateSkinState();
 	}
-	private function onClickImageDelete(event:MouseEvent):void
+	private function onClickIconDelete(event:MouseEvent):void
 	{
-		return;
+		var removeSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_REMOVE_SEGMENT);
+		removeSegmentEvent.segment = segment;
+		this.dispatchEvent(removeSegmentEvent);
 	}
 	private function onClickButtonSave(event:MouseEvent):void
 	{
@@ -265,6 +271,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	private function onChangeRichEditableText(event:TextOperationEvent):void
 	{
 		segment.comment = richEditableText.text;
+		notifyUpdateSegment();
+	}
+	//_____________________________________________________________________
+	//
+	// Dispatchers
+	//
+	//_____________________________________________________________________
+	
+	private function notifyUpdateSegment():void
+	{
+		var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
+		this.dispatchEvent(notifyUpdateEvent);
 	}
 	//_____________________________________________________________________
 	//
