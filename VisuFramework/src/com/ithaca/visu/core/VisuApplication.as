@@ -2,6 +2,7 @@ package com.ithaca.visu.core
 {
 	import com.asual.swfaddress.SWFAddress;
 	import com.asual.swfaddress.SWFAddressEvent;
+	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.visu.controls.globalNavigation.ApplicationMenu;
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 	import com.ithaca.visu.controls.login.LoginForm;
@@ -13,15 +14,14 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
 	
-	import mx.logging.Log;
-    import mx.logging.ILogger;
-	
 	import flash.events.Event;
 	
 	import mx.controls.ProgressBar;
 	import mx.controls.ProgressBarLabelPlacement;
 	import mx.events.FlexEvent;
 	import mx.events.ModuleEvent;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
 	
 	import spark.components.Application;
 	
@@ -197,7 +197,19 @@ package com.ithaca.visu.core
 		
 		protected function goBilan(event:SessionEvent):void{
 			logger.debug("The application is requested to go to the bilan of the session {0}", event.session.id_session);
-			moduleNavigator.navigateToModule( "bilan", event.session);
+			var obj:Array = new Array();
+			obj[0] = "CameFromHomeModule";
+			obj[1] = event.session.id_session;
+			moduleNavigator.navigateToModule( "bilan", obj );
+		}
+		
+		protected function goBilanFromRetrospection(event:RetroDocumentEvent):void{
+			logger.debug("The application is requested to go to the bilan of the session {0} and retroDocumentId {1}", event.sessionId, event.idRetroDocument);
+			var obj:Array = new Array();
+			obj[0] = "CameFromRetroModule";
+			obj[1] = event.sessionId;
+			obj[2] = event.idRetroDocument;
+			moduleNavigator.navigateToModule( "bilan", obj );
 		}
 		 
 		/**
