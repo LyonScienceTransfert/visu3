@@ -191,6 +191,11 @@
 	                         fontWeight="bold" verticalAlign="middle"  >
 	                </s:Label>
 					<mx:Spacer width="1"/>
+					
+					<components:IconButton id="buttonDelete" height="22" width="22"/>
+					<components:IconButton id="buttonAdd" height="22" width="22"/>
+					<components:IconButton id="buttonShare" height="22" width="22"/>
+					
 					<components:IconButton id="buttonMax" height="22" width="22"/>
 					<components:IconButton id="buttonZoom" height="22" width="22"/>
 					<components:IconButton  id="buttonMicro" height="22" width="22"/>

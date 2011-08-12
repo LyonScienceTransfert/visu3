@@ -13,6 +13,9 @@ package com.ithaca.utils.components
 	[Event(name="clickButtonMuteMicro",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonModeZoom",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonModeMax",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonDelete",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonAdd",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonShare",type="com.ithaca.visu.events.PanelButtonEvent")]
 		
 	public class PanelButton extends Panel
 	{
@@ -22,11 +25,16 @@ package com.ithaca.utils.components
 		
 		[SkinPart("true")]
 		public var buttonMicro:IconButton;
-
 		[SkinPart("true")]
 		public var buttonZoom:IconButton;
 		[SkinPart("true")]
 		public var buttonMax:IconButton;
+		[SkinPart("true")]
+		public var buttonAdd:IconButton;
+		[SkinPart("true")]
+		public var buttonDelete:IconButton;
+		[SkinPart("true")]
+		public var buttonShare:IconButton;
 		
 		private var _muteMicro:Boolean;
 		private var _buttonMuteMicroVisible:Boolean;
@@ -36,10 +44,25 @@ package com.ithaca.utils.components
 		private var _buttonModeMaxVisible:Boolean;
 		private var buttonModeMaxVisibleChange:Boolean;
 		
+		private var _buttonAddVisible:Boolean;
+		private var buttonAddVisibleChange:Boolean;
+		private var _buttonDeleteVisible:Boolean;
+		private var buttonDeleteVisibleChange:Boolean;
+		private var _buttonShareVisible:Boolean;
+		private var buttonShareVisibleChange:Boolean;
+		private var _buttonVolumeVisible:Boolean;
+		private var buttonVolumeVisibleChange:Boolean;
+		
 		private var _buttonModeZoomEnabled:Boolean;
 		private var buttonModeZoomEnabledChange:Boolean;
 		private var _buttonModeMaxEnabled:Boolean;
 		private var buttonModeMaxEnabledChange:Boolean;
+		
+		private var _buttonDeleteEnabled:Boolean;
+		private var buttonDeleteEnabledChange:Boolean;
+		private var _buttonShareEnabled:Boolean;
+		private var buttonShareEnabledChange:Boolean;
+		
 
 		public function PanelButton()
 		{
@@ -56,7 +79,15 @@ package com.ithaca.utils.components
 			super.partAdded(partName,instance);
 			if (instance == buttonVolume)
 			{
-				buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume)
+				if(!_buttonVolumeVisible)
+				{
+					buttonVolume.includeInLayout = false;
+					buttonVolume.visible = false;
+				}else
+				{
+					buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume)
+					buttonVolume.toolTip = "Desactiver son micro";
+				}
 			}
 			if (instance == buttonMicro)
 			{
@@ -102,10 +133,72 @@ package com.ithaca.utils.components
 					buttonMax.toolTip = "Mode max";
 				}
 			}
+			if (instance == buttonAdd)
+			{
+				if(!_buttonAddVisible)
+				{
+					buttonAdd.includeInLayout = false;
+					buttonAdd.visible = false;
+				}else
+				{
+					buttonAdd.addEventListener(MouseEvent.CLICK, onClickButtonAdd);
+					buttonAdd.icon =  IconEnum.getIconByName('retroDocumentAdd');
+					buttonAdd.toolTip = "Créer un nouveau bilan pour cette séance";
+				}
+			}
+			if (instance == buttonShare)
+			{
+				buttonShare.enabled = _buttonShareEnabled;
+				
+				if(!_buttonShareVisible)
+				{
+					buttonShare.includeInLayout = false;
+					buttonShare.visible = false;
+				}else
+				{
+					buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
+					buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
+					buttonShare.toolTip = "Partager ce bilan";
+				}
+			}
+			if (instance == buttonDelete)
+			{
+				buttonDelete.enabled = _buttonDeleteEnabled;
+				
+				if(!_buttonDeleteVisible)
+				{
+					buttonDelete.includeInLayout = false;
+					buttonDelete.visible = false;
+				}else
+				{
+					buttonDelete.addEventListener(MouseEvent.CLICK, onClickButtonDelete);
+					buttonDelete.icon =  IconEnum.getIconByName('delete');
+					buttonDelete.toolTip = "Supprimer ce bilan";
+				}
+			}
 		}
 		override protected function commitProperties():void
 		{
 			super.commitProperties();	
+			if(buttonVolumeVisibleChange)
+			{
+				buttonVolumeVisibleChange = false;
+				if(buttonVolume != null)
+				{
+					if(_buttonVolumeVisible)
+					{
+						buttonVolume.includeInLayout = true;
+						buttonVolume.visible = true;
+						buttonVolume.addEventListener(MouseEvent.CLICK, onClickButtonVolume);
+						buttonVolume.toolTip = "Desactiver son micro";
+					}else
+					{
+						buttonVolume.includeInLayout = false;
+						buttonVolume.visible = false;
+						buttonVolume.removeEventListener(MouseEvent.CLICK, onClickButtonVolume);
+					}	
+				}
+			}
 			if(buttonMuteMicroVisibleChange)
 			{
 				buttonMuteMicroVisibleChange = false;
@@ -168,6 +261,64 @@ package com.ithaca.utils.components
 				}
 			}
 			
+			if(buttonAddVisibleChange)
+			{
+				buttonAddVisibleChange = false;
+				if(buttonAdd != null)
+				{
+					if(_buttonAddVisible)
+					{
+						buttonAdd.includeInLayout = true;
+						buttonAdd.visible = true;
+						buttonAdd.toolTip = "Créer un nouveau bilan pour cette séance";
+						buttonAdd.addEventListener(MouseEvent.CLICK, onClickButtonAdd);
+					}else
+					{
+						buttonAdd.includeInLayout = false;
+						buttonAdd.visible = false;
+						buttonAdd.removeEventListener(MouseEvent.CLICK, onClickButtonAdd);
+					}	
+				}
+			}
+			if(buttonShareVisibleChange)
+			{
+				buttonShareVisibleChange = false;
+				if(buttonShare != null)
+				{
+					if(_buttonShareVisible)
+					{
+						buttonShare.includeInLayout = true;
+						buttonShare.visible = true;
+						buttonShare.toolTip = "Partager ce bilan";
+						buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
+					}else
+					{
+						buttonShare.includeInLayout = false;
+						buttonShare.visible = false;
+						buttonShare.removeEventListener(MouseEvent.CLICK, onClickButtonShare);
+					}	
+				}
+			}
+			if(buttonDeleteVisibleChange)
+			{
+				buttonDeleteVisibleChange = false;
+				if(buttonDelete != null)
+				{
+					if(_buttonDeleteVisible)
+					{
+						buttonDelete.includeInLayout = true;
+						buttonDelete.visible = true;
+						buttonDelete.toolTip = "Supprimer ce bilan";
+						buttonDelete.addEventListener(MouseEvent.CLICK, onClickButtonDelete);
+					}else
+					{
+						buttonDelete.includeInLayout = false;
+						buttonDelete.visible = false;
+						buttonDelete.removeEventListener(MouseEvent.CLICK, onClickButtonDelete);
+					}	
+				}
+			}
+			
 			if(buttonModeMaxEnabledChange)
 			{
 				buttonModeMaxEnabledChange = false;
@@ -183,6 +334,23 @@ package com.ithaca.utils.components
 				if(buttonZoom != null)
 				{
 					buttonZoom.enabled = _buttonModeZoomEnabled
+				}
+			}
+			
+			if(buttonShareEnabledChange)
+			{
+				buttonShareEnabledChange = false;
+				if(buttonShare != null)
+				{
+					buttonShare.enabled = _buttonShareEnabled
+				}
+			}
+			if(buttonDeleteEnabledChange)
+			{
+				buttonDeleteEnabledChange = false;
+				if(buttonDelete != null)
+				{
+					buttonDelete.enabled = _buttonDeleteEnabled
 				}
 			}
 		}
@@ -201,6 +369,16 @@ package com.ithaca.utils.components
 		// Setter/getter
 		//
 		//_____________________________________________________________________
+		public function set buttonVolumeVisible(value:Boolean):void
+		{
+			_buttonVolumeVisible = value;
+			buttonVolumeVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonVolumeVisible():Boolean
+		{
+			return _buttonVolumeVisible;
+		}
 		public function set buttonMuteMicroVisible(value:Boolean):void
 		{
 			_buttonMuteMicroVisible = value;
@@ -231,6 +409,36 @@ package com.ithaca.utils.components
 		{
 			return _buttonModeZoomVisible;
 		}
+		public function set buttonAddVisible(value:Boolean):void
+		{
+			_buttonAddVisible = value;
+			buttonAddVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonAddVisible():Boolean
+		{
+			return _buttonAddVisible;
+		}
+		public function set buttonShareVisible(value:Boolean):void
+		{
+			_buttonShareVisible = value;
+			buttonShareVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonShareVisible():Boolean
+		{
+			return _buttonShareVisible;
+		}
+		public function set buttonDeleteVisible(value:Boolean):void
+		{
+			_buttonDeleteVisible = value;
+			buttonDeleteVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonDeleteVisible():Boolean
+		{
+			return _buttonDeleteVisible;
+		}
 		
 		public function set buttonModeMaxEnabled(value:Boolean):void
 		{
@@ -252,6 +460,26 @@ package com.ithaca.utils.components
 		public function get buttonModeZoomEnabled():Boolean
 		{
 			return _buttonModeZoomEnabled;
+		}
+		public function set buttonShareEnabled(value:Boolean):void
+		{
+			_buttonShareEnabled = value;
+			buttonShareEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonShareEnabled():Boolean
+		{
+			return _buttonShareEnabled;
+		}
+		public function set buttonDeleteEnabled(value:Boolean):void
+		{
+			_buttonDeleteEnabled = value;
+			buttonDeleteEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonDeleteEnabled():Boolean
+		{
+			return _buttonDeleteEnabled;
 		}
 		
 		
@@ -300,6 +528,21 @@ package com.ithaca.utils.components
 			var clickButtonModeMax:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_MODE_MAX);
 			clickButtonModeMax.modeMax = true;
 			dispatchEvent(clickButtonModeMax);
+		}
+		private function onClickButtonAdd(event:MouseEvent):void
+		{
+			var clickButtonAdd:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_ADD);
+			dispatchEvent(clickButtonAdd);
+		}
+		private function onClickButtonDelete(event:MouseEvent):void
+		{
+			var clickButtonDelete:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_DELETE);
+			dispatchEvent(clickButtonDelete);
+		}
+		private function onClickButtonShare(event:MouseEvent):void
+		{
+			var clickButtonShare:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_SHARE);
+			dispatchEvent(clickButtonShare);
 		}
 	}
 }
