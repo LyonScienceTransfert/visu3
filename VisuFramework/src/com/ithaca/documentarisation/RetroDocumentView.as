@@ -50,7 +50,7 @@ package com.ithaca.documentarisation
 		public var titleDocumentTextInput:TextInput;
 		
 		[SkinPart("true")]
-		public var shareButton:Button;
+		public var buttonSwitch:Button;
 		
 		[SkinPart("true")]
 		public var removeButton:Button;
@@ -138,15 +138,16 @@ package com.ithaca.documentarisation
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if(instance == shareButton)
+			if(instance == buttonSwitch)
 			{
-				shareButton.addEventListener(MouseEvent.CLICK, onSharedDocument);	
-				shareButton.toolTip = fxgt.gettext("Partager ce bilan");
+				buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);	
+				buttonSwitch.toolTip = fxgt.gettext("Visualiser ce bilan");
 			}
 			if(instance == removeButton)
 			{
 				removeButton.addEventListener(MouseEvent.CLICK, onRemoveDocument);	
 				removeButton.toolTip = fxgt.gettext("Supprimer ce bilan");
+				removeButton.includeInLayout = removeButton.visible = false;
 			}
 			if(instance == addPopUpButton)
 			{
@@ -251,10 +252,17 @@ package com.ithaca.documentarisation
 			
 		}
 
-		private function onSharedDocument(event:MouseEvent):void
+		//_____________________________________________________________________
+		//
+		// Listeners
+		//
+		//_____________________________________________________________________	
+		private function onClickButtonSwitch(event:MouseEvent):void
 		{
-			var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
-			this.dispatchEvent(loadListUsers);
+			var clickButtonSwitchEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CLICK_BUTTON_SWITCH);
+			clickButtonSwitchEvent.idRetroDocument = retroDocument.id;
+			clickButtonSwitchEvent.sessionId = retroDocument.sessionId;
+			dispatchEvent(clickButtonSwitchEvent);
 		}
 		
 		private function onRemoveDocument(event:MouseEvent):void
@@ -264,7 +272,7 @@ package com.ithaca.documentarisation
 			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+this.retroDocument.title+'"'+" ?"),
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
 		}
-			
+		
 		/**
 		 * init Pop-up button add segment
 		 */
@@ -272,19 +280,14 @@ package com.ithaca.documentarisation
 		{
 			var menuAddSegment:Menu = new Menu();
 			var dp:Object = [{label: fxgt.gettext("Segment titre "), typeSegment: "TitleSegment"}, 
-							{label: fxgt.gettext("Segment texte"), typeSegment: "TexteSegment"}, 
-							{label: fxgt.gettext("Segment audio commentaire"), typeSegment: "AudioSegment"},        
-							{label: fxgt.gettext("Segment video"), typeSegment: "VideoSegment"}];        
+				{label: fxgt.gettext("Segment texte"), typeSegment: "TexteSegment"}, 
+				{label: fxgt.gettext("Segment audio commentaire"), typeSegment: "AudioSegment"},        
+				{label: fxgt.gettext("Segment video"), typeSegment: "VideoSegment"}];        
 			menuAddSegment.dataProvider = dp;
 			menuAddSegment.selectedIndex = 0;       
 			menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
 			addPopUpButton.popUp = menuAddSegment;
 		}
-		//_____________________________________________________________________
-		//
-		// Listeners
-		//
-		//_____________________________________________________________________	
 		/**
 		 *  listener the PopUp button
 		 */
