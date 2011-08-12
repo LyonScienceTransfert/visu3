@@ -35,6 +35,7 @@
 		<mate:Listener type="{SessionEvent.GO_HOME_MODULE}"  method="goHome"/>
 		<mate:Listener type="{SessionEvent.GO_RETROSPECTION_MODULE}"  method="goRetrospection"/>
 		<mate:Listener type="{SessionEvent.GO_BILAN_MODULE}"  method="goBilan"/>
+		<mate:Listener type="{RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO}"  method="goBilanFromRetrospection"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
 	
@@ -56,6 +57,7 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.utils.EditObselMarkerTitleWindow;
