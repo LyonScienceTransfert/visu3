@@ -162,7 +162,22 @@
 		private function onSeanceFilterButtonChange(event:*):void {
 			   bilanCollection.refresh();
 		}
-		
+		public function selectRetroDocument(retroDocumentId:Number):void
+		{
+			if(retroDocumentId)
+			{
+				var nbrRetroDocument:int = bilanCollection.length;
+				for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
+				{
+					var retroDocument:RetroDocument = bilanCollection.getItemAt(nRetroDocument) as RetroDocument;
+					if(retroDocument.id == retroDocumentId)
+					{
+						dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
+						this.bilanListComponent.selectedItem = retroDocument;
+					}
+				}
+			}
+		}
 		public function selectSession(sessionId:Number):void {
 			logger.debug("Select the session {0} in the session filter list", sessionId);
 			if(sessionId) {
