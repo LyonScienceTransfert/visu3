@@ -139,7 +139,7 @@
 		
 		<mate:EventHandlers type="{RetroDocumentEvent.CREATE_RETRO_DOCUMENT}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="retroDocument.createRetroDocument"   arguments="{[ event.retroDocumentVO , event.sessionId]}" />
+				<mate:Request action="retroDocument.createRetroDocument"   arguments="{[ event.retroDocumentVO]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
