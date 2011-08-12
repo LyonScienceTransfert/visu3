@@ -239,7 +239,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		// change skin to "edit"
 		onClickImageEdit();
 		
-		if(richEditableText.text == "ajoutez une nouvelle commentaire ici")
+		if(richEditableText.text == "Ajouter du texte à ce fragment vidéo")
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
@@ -282,7 +282,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	
 	private function setRichEditText():void
 	{
-		richEditableText.text = "ajoutez une nouvelle commentaire ici";
+		richEditableText.text = "Ajouter du texte à ce fragment vidéo";
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
