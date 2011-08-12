@@ -37,6 +37,7 @@ import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
+import mx.core.INavigatorContent;
 import mx.logging.ILogger;
 import mx.logging.Log;
 
@@ -312,54 +313,31 @@ public class MainManager
 	 */
 	public function onCheckListRetroDocument(listRetroDocumentOwner:Array, listRetroDocumentShared:Array):void
 	{
-		var myRetroDocumentNodes:XML = new XML("<myDocument title='Mes bilans'/>");
+		var listRetroDocument:ArrayCollection = new ArrayCollection();
 		for each(var retroDocumentVO:RetroDocumentVO in listRetroDocumentOwner)
 		{
-			var createur:String = Model.getInstance().getLoggedUser().lastname;
-			createur = XMLUtils.toXMLString(createur);
-			var titre:String = XMLUtils.toXMLString(retroDocumentVO.title);
-			var date:String = UtilFunction.getLabelDate(retroDocumentVO.creationDate,"/");
-			var id:String = retroDocumentVO.documentId.toString();
-			var nodeString:String = "<retroDocument creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='true'/>";
-			var retroDocumentNode:XML = new XML(nodeString);
-			myRetroDocumentNodes.appendChild(retroDocumentNode);
+			listRetroDocument.addItem(retroDocumentVO);
 		}
-		var shareRetroDocumentNodes:XML = new XML("<node title='Bilans des autres'/>");
-		for each(var shareRetroDocumentVO:RetroDocumentVO in listRetroDocumentShared)
-		{
-			var createurUser:User = Model.getInstance().getUserPlateformeByUserId(shareRetroDocumentVO.ownerId);
-			var createur:String = XMLUtils.toXMLString(createurUser.lastname);
-			var titre:String = createur = XMLUtils.toXMLString(shareRetroDocumentVO.title);
-			var date:String = UtilFunction.getLabelDate(shareRetroDocumentVO.creationDate,"/");
-			var id:String = shareRetroDocumentVO.documentId.toString();
-			var nodeString:String = "<node creator='"+createur+"' title='"+titre+"' date='"+date+"' documentId='"+id+"' editabled='false'/>";
-			var shareRetroDocumentNode:XML = new XML(nodeString);
-			shareRetroDocumentNodes.appendChild(shareRetroDocumentNode);
-		}
-		var xmlNode:XML = new XML("<node title='Bilans'/>");
-		xmlNode.appendChild(myRetroDocumentNodes);
-		xmlNode.appendChild(shareRetroDocumentNodes);
-		var loadTreeRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_TREE_RETRO_DOCUMENT);
-		/*		var str:String = " <node title='Bilans'><node title='Mes bilans'><node creator='Damien' title='Mon bilan perso' date='23/02/2011' documentId='1'/>"+
-                    "<node creator='Damien' title='Toto à la montagne' date='24/02/2011' documentId='2'/>"+
-                "</node>"+
-                "<node title='Bilans des autres'>"+
-                   " <node creator='Serguei' title='Toto à la montagne' date='24/02/2011'  documentId='4'/>"+
-                    "<node creator='Nicolas' title='Toto à la mer' date='27/02/2011'  documentId='5'/>"+
-                "</node></node>";
-		var xml:XML = new XML(str);*/
-		loadTreeRetroDocumentEvent.xmlTreeRetroDocument = xmlNode;
-		this.dispatcher.dispatchEvent(loadTreeRetroDocumentEvent);
+		
+		var loadListRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_RETRO_DOCUMENT);
+		
+		loadListRetroDocumentEvent.listRetroDocument = listRetroDocument;
+		this.dispatcher.dispatchEvent(loadListRetroDocumentEvent);
 	}
+	
+	public function onCheckUpdateAddedRetrodocument( retroDocumentId:int):void
+	{
+		var updateAddedRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_ADDED_RETRO_DOCUMENT);
+		updateAddedRetroDocumentEvent.idRetroDocument = retroDocumentId;
+		this.dispatcher.dispatchEvent(updateAddedRetroDocumentEvent);
+	}
+	
 	
 	public function onCheckRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array, editabled:Boolean):void
 	{
 		logger.info("onCheckRetroDocument(retroDocumentVO:{0}, listInvitees:{1}, editabled:{2})", retroDocumentVO, listInvitees, editabled);
 		var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
-		retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-		//retroDocument.sessionId = retroDocumentVO.sessionId;
-		//retroDocument.id = retroDocumentVO.documentId;
-		//retroDocument.ownerId = retroDocumentVO.ownerId;		
+		retroDocument.setRetroDocumentXML(retroDocumentVO.xml);	
 		var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.SHOW_RETRO_DOCUMENT);
 		retroDocumentEvent.retroDocument = retroDocument;
 		retroDocumentEvent.listUser = listInvitees;
