@@ -40,6 +40,10 @@
 			
 			private var logger : ILogger = Log.getLogger('modules.BilanModule');
 			
+			private var selectedSessionIdWhenInit:Number = -1;
+			private var selectedRetroDocumentIdWhenInit:Number = -1;
+			
+			
 			private function showRetroDocument(event:RetroDocumentEvent):void {
 				if(Model.getInstance().getCurrentBilanModule() == this)
 				{
@@ -132,6 +136,8 @@
 						
 						logger.debug("Select the right session in the session list if any");
 						if(selectedSessionIdWhenInit != -1) {
+							logger.debug("Ask for the selection of retroDocument {0} in the bilan component", selectedSessionIdWhenInit);
+							bilanComp.selectRetroDocument(selectedRetroDocumentIdWhenInit);
 							logger.debug("Ask for the selection of session {0} in the bilan component", selectedSessionIdWhenInit);
 							bilanComp.selectSession(selectedSessionIdWhenInit);
 						}
@@ -140,17 +146,27 @@
 				}
 			}
 
-			private var selectedSessionIdWhenInit:Number = -1;
-
 			protected function configureHandler(event:VisuModuleEvent):void
 			{	
 				logger.debug("BilanModule.configureHandler");
 				if((event.currentTarget as BilanModule).parameters != null)
 				{
 					logger.debug("There are parameters passed to BilanModule");
-					var param:Object = (event.currentTarget as BilanModule).parameters ;
+					var param:Array = (event.currentTarget as BilanModule).parameters as Array ;
 					logger.debug("param: {0}", param);
-					this.selectedSessionIdWhenInit = (param as Session).id_session;
+					var cameFromModule:String = param[0];
+					switch (cameFromModule)
+					{
+						case "CameFromHomeModule" :
+							// 
+							break;
+						case "CameFromRetroModule" :
+							this.selectedRetroDocumentIdWhenInit = param[2];
+							break;
+					}
+					// set selected sessionId
+					this.selectedSessionIdWhenInit = param[1];
+					
 					logger.debug("selectedSessionIdWhenInit: {0}", this.selectedSessionIdWhenInit);
 				} else
 					logger.debug("No parameter passed to the module");
