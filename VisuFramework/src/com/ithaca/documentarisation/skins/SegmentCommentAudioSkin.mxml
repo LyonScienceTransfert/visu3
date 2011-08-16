@@ -2,7 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*"
-	>
+	 currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentCommentAudio")]
@@ -12,33 +12,53 @@
 		<s:State name="sharedOver"/>
 		<s:State name="edit"/>
 		<s:State name="editOver"/>
+		<s:State name="editSelected"/>
 	</s:states>
 		<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
+			
+			import mx.events.StateChangeEvent;
+
+			protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				switch (currentState)
+				{
+					case "editSelected" : 
+						this.hostComponent.onFocusInRichEditableText();
+						break;
+					case "edit","editOver" :
+						this.hostComponent.onFocusOutRichEditableText();
+						break;
+				}
+			}
+
 		]]>
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
-			<s:HGroup width="100%" gap="1" paddingTop="3">
+			<s:HGroup width="100%" gap="1">
+				<!-- LICON SEGMENT -->
+				<s:BitmapImage source="{IconEnum.getIconByName('iconAudio_16x16')}"/>
 				<!-- TEXT -->
-				<s:RichEditableText id="richEditableText" 
+				<s:RichEditableText id="richEditableText"
 					width="100%" 
-					color="#000000" paddingTop="0">
+					color="#000000" paddingTop="3">
 					<s:text>votre text ici</s:text>
 				</s:RichEditableText>
 				<components:IconDelete id="iconDelete"
 					buttonMode="true"
-					includeIn="edit, editOver"
-					visible.edit="false">
+					includeIn="edit, editOver, editSelected"
+					visible.edit="false"
+					visible.editSelected="true">
 					<components:toolTip>Suprimer ce segment</components:toolTip>
 				</components:IconDelete>
 			</s:HGroup>
-			<s:HGroup width="100%" horizontalAlign="right">
+			<s:HGroup width="100%" paddingLeft="{(this.width - 100)/2 + 18}">
 				<!-- AUDIO RECORDER -->
-				<documentarisation:AudioRecorder id="audioRecorder" 
+				<documentarisation:AudioRecorder id="audioRecorder"
 					skinClass="com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin"	/>
 			</s:HGroup>
-			<s:Line width="100%" includeIn="edit, editOver">
+			<s:Line width="100%" includeIn="edit, editOver, editSelected">
 				<s:stroke>
 					<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
 				</s:stroke>
