@@ -10,9 +10,6 @@
 		<!--1 From normal to over -->
 		<s:Transition fromState="normal" toState="over" >
 			<s:Sequence>
-				<s:Parallel>
-					<s:Move targets="{[imageIconSegment, labelGroup]}"/>
-				</s:Parallel>
 				<s:Parallel targets="{[imagePlay, imageRecord]}">
 					<s:AddAction/>
 					<s:Fade/>
@@ -24,7 +21,6 @@
 			<s:Sequence>
 					<s:RemoveAction/>
 					<s:Fade targets="{[imagePlay, imageRecord]}"/>
-					<s:Move targets="{[imageIconSegment, labelGroup]}"/>
 			</s:Sequence>
 		</s:Transition>
 		<!--3 From over to play -->
@@ -34,11 +30,8 @@
 				<s:RemoveAction/>
 				<s:AddAction target="{imageStop}"/>
 				<s:Fade  target="{imageStop}"/>
-				<s:Move targets="{[imageIconSegment, labelGroup]}"/>
 			</s:Sequence>
 		</s:Transition>
-		
-		
 		<!--4 From play to over -->
 		<s:Transition fromState="play" toState="over">
 			<s:Sequence>
@@ -46,7 +39,6 @@
 				<s:RemoveAction target="{imageStop}"/>
 				<s:AddAction targets="{[imagePlay, imageRecord]}"/>
 				<s:Fade targets="{[imagePlay, imageRecord]}"/>
-				<s:Move targets="{[imageIconSegment, labelGroup]}"/>
 			</s:Sequence>
 		</s:Transition>
 		<!--5 From overEmpty to record -->
@@ -58,7 +50,6 @@
 				<s:Fade target="{imageStop}"/>
 			</s:Sequence>
 		</s:Transition>
-		
 		<!--6 From normalEmpty to overEmpty -->
 		<s:Transition fromState="normalEmpty" toState="overEmpty">
 			<s:Sequence>
@@ -67,7 +58,6 @@
 			</s:Sequence>
 		</s:Transition>
 		<!--7 From overEmpty to normalEmpty -->
-		<s:Transition fromState="overEmpty" toState="normalEmpty">
 			<s:Sequence>
 				<s:RemoveAction/>
 				<s:Fade target="{imageRecord}"/>
@@ -89,7 +79,6 @@
 				<s:RemoveAction target="{imageStop}"/>
 				<s:AddAction targets="{[imagePlay, imageRecord]}"/>
 				<s:Fade targets="{[imagePlay, imageRecord]}"/>
-				<s:Move targets="{[imageIconSegment, labelGroup]}"/>
 			</s:Sequence>
 		</s:Transition>
 		<!--10 From play to normal -->
@@ -97,7 +86,6 @@
 			<s:Sequence>
 				<s:Fade target="{imageStop}"/>
 				<s:RemoveAction target="{imageStop}"/>
-				<s:Move targets="{[imageIconSegment, labelGroup]}"/>
 			</s:Sequence>
 		</s:Transition>
 		<!--10 From record to normal -->
@@ -105,10 +93,8 @@
 			<s:Sequence>
 				<s:Fade target="{imageStop}"/>
 				<s:RemoveAction target="{imageStop}"/>
-				<s:Move targets="{[imageIconSegment, labelGroup]}"/>
 			</s:Sequence>
 		</s:Transition>
-		
 	</s:transitions>
 	<fx:Script>
 	<![CDATA[
