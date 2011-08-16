@@ -58,6 +58,7 @@
 			</s:Sequence>
 		</s:Transition>
 		<!--7 From overEmpty to normalEmpty -->
+		<s:Transition fromState="overEmpty" toState="normalEmpty">
 			<s:Sequence>
 				<s:RemoveAction/>
 				<s:Fade target="{imageRecord}"/>
