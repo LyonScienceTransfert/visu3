@@ -4,10 +4,12 @@ import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.utils.components.IconDelete;
 
+import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 
 import mx.controls.Image;
+import mx.events.StateChangeEvent;
 
 import spark.components.Label;
 import spark.components.RichEditableText;
@@ -20,20 +22,25 @@ public class SegmentTitle extends SkinnableComponent
 	[SkinState("normal")]
 		
 	[SkinPart("true")]
+	public var 	labelSegment:Label;
+	[SkinPart("true")]
 	public var 	textSegment:RichEditableText;
 	[SkinPart("true")]
 	public var 	iconDelete:IconDelete;
 	
 	private var _text:String ="text init";
 	private var _editabled:Boolean = false; 
+	private var selected:Boolean = false; 
 	private var _fontBold:Boolean  = false;
 	private var fontBoldChange:Boolean;
 	private var textChange:Boolean;
 	
 	private var _segment:Segment;
 	private var segmentChange:Boolean;
-	
-	
+	// init backGroundColor
+	private var _backGroundColorRichEditableText:String = "#FFFFFF";
+	// selected backgroundColor
+	private var colorBackGround:String = "#FFEBCC";
 	public function SegmentTitle()
 	{
 		super();
@@ -106,6 +113,11 @@ public class SegmentTitle extends SkinnableComponent
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
 		}
+		if(instance == labelSegment)
+		{
+			labelSegment.text = "t";
+			labelSegment.setStyle("fontWeight", "normal");
+		}
 	}
 	
 	
@@ -146,7 +158,13 @@ public class SegmentTitle extends SkinnableComponent
 			skinName = "disable";
 		}else if(editabled)
 		{
-			skinName = "edit";
+			if(selected)
+			{
+				skinName = "editSelected";
+			}else
+			{
+				skinName = "edit";
+			}
 		}
 		else {
 			skinName = "normal"
@@ -160,26 +178,24 @@ public class SegmentTitle extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 	// richText
-	private function onFocusInRichEditableText(event:FocusEvent):void
+	
+	public function onFocusInRichEditableText(event:* = null):void
 	{	
-		if(textSegment.text == "ajoutez le texte ici")
+		textSegment.setStyle("fontStyle","normal");
+		textSegment.setStyle("backgroundColor", colorBackGround);
+		
+		textSegment.selectAll();
+		
+		if(this.stage != null)
 		{
-			textSegment.text = "";
-			textSegment.setStyle("fontStyle","normal");
-			textSegment.setStyle("color","#000000");
-		}else
-		{
-			textSegment.selectAll();
-			// FIXME : hasn't focus if too segment selected
-			if(this.stage != null)
-			{
-				this.stage.focus = textSegment;
-			}
+			this.stage.focus = textSegment;
 		}
+		
 		textSegment.addEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
-	private function onFocusOutRichEditableText(event:FocusEvent):void
+	public function onFocusOutRichEditableText(event:* = null):void
 	{
+		textSegment.setStyle("backgroundColor", _backGroundColorRichEditableText);
 		if(textSegment.text == "")
 		{
 			setRichEditText();
@@ -201,6 +217,7 @@ public class SegmentTitle extends SkinnableComponent
 		removeSegmentEvent.segment = segment;
 		this.dispatchEvent(removeSegmentEvent);
 	}
+
 	//_____________________________________________________________________
 	//
 	// Dispatchers
@@ -218,25 +235,42 @@ public class SegmentTitle extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 	
-	private function setRichEditText():void
+	public function selectRenderer():void
+	{
+		selected = true;
+		invalidateSkinState();
+	}
+	public function deselectRenderer():void
+	{
+		selected = false;
+		invalidateSkinState();
+	}
+	
+	public function setRichEditText():void
 	{
 		textSegment.text = "ajoutez le texte ici";
 		textSegment.setStyle("fontStyle","italic");
-		var colorText:String = "#000000";
-		textSegment.setStyle("color", colorText);
+		textSegment.setStyle("backgroundColor", _backGroundColorRichEditableText);
 	}	
 	
 	private function setFont(value:Object):void
 	{
 		var fontValue:String = "normal";
 		var textAlign:String = "left";
+		var labelText:String = "t";
 		if(_fontBold)
 		{
 			fontValue = "bold";
 			textAlign = "center";
+			labelText = "T";
 		}
 		value.setStyle("fontWeight", fontValue);
 		value.setStyle("textAlign", textAlign);
+		if(labelSegment)
+		{
+			labelSegment.setStyle("fontWeight", fontValue);
+			labelSegment.text = labelText;
+		}
 	}
 }
 }
