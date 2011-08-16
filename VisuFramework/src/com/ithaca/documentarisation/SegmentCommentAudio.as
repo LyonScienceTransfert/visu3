@@ -61,11 +61,17 @@ public class SegmentCommentAudio extends SkinnableComponent
 	private var edit:Boolean = false;
 	private var shared:Boolean = false;
 	private var sharedOver:Boolean = false;
+	private var selected:Boolean;
 	
 	private var _modeEdit:Boolean = true;
 
 	// net Stream
 	private var _stream:NetStream;
+	
+	// init backGroundColor
+	private var _backGroundColorRichEditableText:String = "#FFFFFF";
+	// selected backgroundColor
+	private var colorBackGround:String = "#FFEBCC";
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -178,7 +184,16 @@ public class SegmentCommentAudio extends SkinnableComponent
 	}
 	public function rendererSelected():void
 	{
-		
+		if(modeEdit)
+		{
+			audioRecorder.skinOver();
+			initSkinVars();
+			selected = true;
+			invalidateSkinState();
+		}else
+		{
+			
+		}	
 	}
 	public function SegmentCommentAudio()
 	{
@@ -293,6 +308,9 @@ public class SegmentCommentAudio extends SkinnableComponent
 		}else if(editOver)
 		{
 			skinName = "editOver";
+		}else if(selected)
+		{
+			skinName = "editSelected"
 		}
 		return skinName;
 	}
@@ -311,7 +329,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 		this.dispatchEvent(removeSegmentEvent);
 	}
 	// richText
-	private function onFocusInRichEditableText(event:FocusEvent):void
+	public function onFocusInRichEditableText(event:*=null):void
 	{
 		if(richEditableText.text == "Ajoutez du texte à cet enregistrement")
 		{
@@ -319,9 +337,15 @@ public class SegmentCommentAudio extends SkinnableComponent
 			richEditableText.setStyle("fontStyle","normal");
 			richEditableText.setStyle("color","#000000");
 		}
+		richEditableText.selectAll();
+		if(this.stage != null)
+		{
+			this.stage.focus = richEditableText;
+		}
+		richEditableText.setStyle("backgroundColor", colorBackGround);
 		richEditableText.addEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
-	private function onFocusOutRichEditableText(event:FocusEvent):void
+	public function onFocusOutRichEditableText(event:*=null):void
 	{
 		if(richEditableText.text == "")
 		{
@@ -330,6 +354,8 @@ public class SegmentCommentAudio extends SkinnableComponent
 		{
 			text = richEditableText.text;
 		}
+		
+		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
 		richEditableText.removeEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
 	
@@ -371,6 +397,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
+		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
 	}
 	/**
 	 * params: value - time in ms
@@ -391,7 +418,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	
 	private function initSkinVars():void
 	{
-		shared = sharedOver = edit = editOver  = false;
+		shared = sharedOver = edit = editOver = selected = false;
 	}
 	public function onMetaData(infoObject:Object):void {
 		trace("metadata");
