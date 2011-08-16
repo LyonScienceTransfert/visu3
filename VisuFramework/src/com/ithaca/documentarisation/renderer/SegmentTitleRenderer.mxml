@@ -2,13 +2,32 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*">
+	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*"
+	 currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
 	<fx:Script>
 	<![CDATA[
 		import com.ithaca.documentarisation.skins.SegmentTitleSkin;
+		
+		import mx.events.StateChangeEvent;
+
+		protected function itemrenderer1_currentStateChangeHandler(event:StateChangeEvent):void
+		{
+			if(this.currentState == "selected")
+			{
+				segmentTitle.selectRenderer();
+			}else
+			{
+				segmentTitle.deselectRenderer();
+			}
+		}
+
 	]]>
 	</fx:Script>
-
-	<documentarisation:SegmentTitle width="100%" segment="{data}" editabled="true" skinClass="com.ithaca.documentarisation.skins.SegmentTitleSkin"/>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+		<s:State name="hovered" />
+	</s:states>
+	<documentarisation:SegmentTitle  id="segmentTitle" width="100%" segment="{data}" editabled="true" skinClass="com.ithaca.documentarisation.skins.SegmentTitleSkin"/>
 	
 </s:ItemRenderer>
