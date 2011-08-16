@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*">
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
+	 currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentTitle")]
 	</fx:Metadata>
+
+	<fx:Script>
+	<![CDATA[
+		import mx.events.StateChangeEvent;
+
+		protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+		{
+			if(this.currentState == "editSelected")
+			{
+				this.hostComponent.onFocusInRichEditableText();
+			}else if(this.currentState == "edit")
+			{
+				this.hostComponent.onFocusOutRichEditableText();
+			}
+		}
+
+	]]>
+	</fx:Script>
 	<s:states>
 		<s:State name="edit"/>
+		<s:State name="editSelected"/>
 		<s:State name="normal"/>
 	</s:states>
 	<s:VGroup width="100%" gap="1" verticalAlign="top">
@@ -22,19 +42,19 @@
 		]]>
 		</s:mouseOut.edit>
 		<s:HGroup width="100%" gap="1" paddingTop="3">
-
+			<!-- ICON SEGMENT -->
+			<s:Label id="labelSegment" width="16" textAlign="center"/>
 			<!-- TEXTAREA -->
-			<s:RichEditableText id="textSegment" width="100%" textAlign="center"/>		
+			<s:RichEditableText id="textSegment" width="100%" textAlign="center" backgroundColor.edit="#FFFFFF"/>		
 			<!-- DELETE ICON -->
 			<components:IconDelete id="iconDelete"
-				visible="false"
+				visible.edit="false"
 				buttonMode="true"
-				visible.normal="false"
-				includeInLayout.normal="false">
+ 				includeIn=" edit, editSelected">
 				<components:toolTip>Suprimer ce segment</components:toolTip>
 			</components:IconDelete>
 		</s:HGroup>
-		<s:Line width="100%" includeIn="edit">
+		<s:Line width="100%" includeIn="edit, editSelected">
 			<s:stroke>
 				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
 			</s:stroke>
