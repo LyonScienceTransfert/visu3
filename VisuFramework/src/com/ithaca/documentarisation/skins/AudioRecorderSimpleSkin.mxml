@@ -109,6 +109,8 @@
 		<s:State name="over"/>
 		<s:State name="play" />
 		<s:State name="record" />
+		<s:State name="overShare"/>
+		<s:State name="overShareEmpty"/>
 	</s:states>
 	<s:HGroup width="100%" height="50%" verticalAlign="middle" horizontalAlign="center" gap="1">
 		<!-- ICON SEGMENT AUDIO -->
@@ -119,17 +121,17 @@
 			<s:Label id="labelCurrnetTime" includeIn="play,record" color.record="#E73A3A">
 				
 			</s:Label>
-			<s:Label id="labelInfo" text.normal="Durée" text.normalEmpty="Pas d'audio" text.overEmpty="Pas d'audio" text.over="Durée" text.play="/" text.record="/" color.record="#FF2B2B">
+			<s:Label id="labelInfo" text.normal="Durée" text.normalEmpty="Pas d'audio" text.overEmpty="Pas d'audio" text.over="Durée" text.play="/" text.record="/" color.record="#FF2B2B" text.overShare="Durée" text.overShareEmpty="Pas d'audio">
 				
 			</s:Label>
-			<s:Label id="lableDuration" includeIn="normal,over,play,record" color.record="#ED3030">
+			<s:Label id="lableDuration" includeIn="normal,over,overShare,play,record" color.record="#ED3030">
 				
 			</s:Label>
 		</s:HGroup>
 		<!-- IMAGE PLAY --> 
 		<mx:Image id="imagePlay" 
 			buttonMode="true" 
-			source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="over">
+			source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="over,overShare">
 			<mx:toolTip>Ecouter</mx:toolTip>
 		</mx:Image>
 		<!-- IMAGE STOP -->

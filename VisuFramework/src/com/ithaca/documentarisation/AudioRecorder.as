@@ -57,6 +57,8 @@ public class AudioRecorder extends SkinnableComponent
 	private var normalEmpty:Boolean = false;
 	private var overEmpty:Boolean = false;
 	private var over:Boolean = false;
+	private var overShare:Boolean = false;
+	private var overShareEmpty:Boolean = false;
 	
 	// net Stream
 	private var _stream:NetStream;
@@ -80,6 +82,7 @@ public class AudioRecorder extends SkinnableComponent
 	// update time interval in ms
 	private var _updateTimeInterval:int;
 	private var mouseOver:Boolean;
+	private var modeShare:Boolean;
 	
 	public function AudioRecorder()
 	{
@@ -205,6 +208,24 @@ public class AudioRecorder extends SkinnableComponent
 			invalidateSkinState();
 		}
 	}
+	public function skinOverShare():void
+	{
+		initSimpleSkinVars();
+		mouseOver = true;
+		modeShare = true;
+		// do nothing if play or record
+		if(!play)
+		{
+			if(durationAudio > 0)
+			{
+				overShare = true;
+			}else
+			{
+				overShareEmpty= true;
+			}
+			invalidateSkinState();
+		}
+	}
 	
 	public function skinPlaying():void
 	{
@@ -310,11 +331,19 @@ public class AudioRecorder extends SkinnableComponent
 		{
 			skinName = "over";
 		}
+		else if(overShare)
+		{
+			skinName = "overShare";
+		}
+		else if(overShareEmpty)
+		{
+			skinName = "overShareEmpty";
+		}
 		else
 		{
 			skinName = "normal"
 		}
-		
+		trace("skinName = ", skinName);
 		return skinName;
 	}
 	//_____________________________________________________________________
@@ -333,7 +362,6 @@ public class AudioRecorder extends SkinnableComponent
 		timer = new Timer(updateTimeInterval,0);
 		timer.addEventListener(TimerEvent.TIMER, updateCurrentTimeAudio);
 		timer.start();
-		
 		initSimpleSkinVars();
 		// TODO modeEdit
 		play = true;
@@ -450,7 +478,14 @@ public class AudioRecorder extends SkinnableComponent
 		
 		if(mouseOver)
 		{
-			over = true;
+			if(modeShare)
+			{
+				overShare = true;
+			}else
+			{
+				over = true;
+			}
+			
 		}else
 		{
 			normal = true;
@@ -528,7 +563,7 @@ public class AudioRecorder extends SkinnableComponent
 			// stop audion if listen
 			stopPlayAudio();
 		}
-		normalEmpty = normal = overEmpty = over = record  = play =  false;
+		normalEmpty = normal = overEmpty = over = record  = play = overShare = overShareEmpty =   false;
 	}
 	private function initSkinVars():void
 	{
