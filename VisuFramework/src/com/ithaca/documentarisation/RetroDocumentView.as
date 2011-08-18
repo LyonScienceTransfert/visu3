@@ -10,6 +10,7 @@ package com.ithaca.documentarisation
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
+	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	
 	import flash.events.MouseEvent;
@@ -153,6 +154,7 @@ package com.ithaca.documentarisation
 			{
 				addPopUpButton.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteAddSegmentPopUpButton);
 				addPopUpButton.toolTip = fxgt.gettext("Ajouter un nouveau segment");
+				addPopUpButton.addEventListener(MouseEvent.CLICK, onClickButtonAddSegment);
 			}
 			if(instance == titleDocument)
 			{
@@ -163,6 +165,7 @@ package com.ithaca.documentarisation
 			{
 				titleDocumentTextInput.text = _labelRetroDocument;
 				titleDocumentTextInput.addEventListener(TextOperationEvent.CHANGE, titleDocumentTextInput_changeHandler);
+				titleDocumentTextInput.addEventListener(FlexEvent.CREATION_COMPLETE, onCreatioCompleteTextInput);
 			}	
 			if(instance == groupSegment)
 			{
@@ -175,7 +178,7 @@ package com.ithaca.documentarisation
 					{
 						className = SegmentCommentAudioRenderer;
 					}else
-						if(item.typeSource == RetroDocumentConst.VIDEOO_SEGMENT)
+						if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
 						{
 							className = SegmentVideoRenderer;
 						}
@@ -279,14 +282,20 @@ package com.ithaca.documentarisation
 		private function onCreationCompleteAddSegmentPopUpButton(event:FlexEvent):void
 		{
 			var menuAddSegment:Menu = new Menu();
-			var dp:Object = [{label: fxgt.gettext("Segment titre "), typeSegment: "TitleSegment"}, 
-				{label: fxgt.gettext("Segment texte"), typeSegment: "TexteSegment"}, 
-				{label: fxgt.gettext("Segment audio commentaire"), typeSegment: "AudioSegment"},        
-				{label: fxgt.gettext("Segment video"), typeSegment: "VideoSegment"}];        
+			var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment"}, 
+				{label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment"}, 
+				{label: fxgt.gettext("Bloc vidéo + texte"), typeSegment: "VideoSegment", iconName : "iconVideo_16x16"},        
+				{label: fxgt.gettext("Bloc commentaire audio"), typeSegment: "AudioSegment", iconName: "iconAudio_16x16"}];        
 			menuAddSegment.dataProvider = dp;
-			menuAddSegment.selectedIndex = 0;       
+			menuAddSegment.selectedIndex = 0;
+			menuAddSegment.iconFunction = setIconMenuAddSegmentFunction;
 			menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
 			addPopUpButton.popUp = menuAddSegment;
+		}
+		private function setIconMenuAddSegmentFunction(item:Object):Class
+		{
+			var iconName:String = item.iconName;
+			return IconEnum.getIconByName(iconName);
 		}
 		/**
 		 *  listener the PopUp button
@@ -300,13 +309,13 @@ package com.ithaca.documentarisation
 			case "TitleSegment" :
 				segment = new Segment(this._retroDocument);
 				segment.order = 2;
-				segment.comment = "TITLE";
+				segment.comment = "";
 				segment.typeSource = RetroDocumentConst.TITLE_SEGMENT;
 				break;
 			case "TexteSegment" :
 				segment = new Segment(this._retroDocument);
 				segment.order = 2;
-				segment.comment = "text";
+				segment.comment = "";
 				segment.typeSource = RetroDocumentConst.TEXT_SEGMENT;
 				break;
 			case "AudioSegment" :
@@ -319,18 +328,53 @@ package com.ithaca.documentarisation
 			case "VideoSegment" :
 				segment = new Segment(this._retroDocument);
 				segment.order = 3;
-				segment.typeSource = RetroDocumentConst.VIDEOO_SEGMENT;
+				segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
 				segment.comment = "";
 				break;
 			}
 			// add segment
-			listSegment.addItem(segment);
-			//  add segment in retroDocument
-			this._retroDocument.listSegment.addItem(segment);
-			// update retroDocument
-			updateRetroDocument();
+			addSegment(segment);
 		}
 		
+		// by default add text segment
+		private function onClickButtonAddSegment(event:MouseEvent):void
+		{
+			var segment:Segment = new Segment(this._retroDocument);
+			segment.order = 2;
+			segment.comment = "";
+			segment.typeSource = RetroDocumentConst.TEXT_SEGMENT;
+			// add segment
+			addSegment(segment);
+		}
+		
+		private function addSegment(value:Segment):void
+		{
+			listSegment.addItem(value);
+			//  add segment in retroDocument
+			this._retroDocument.listSegment.addItem(value);
+			// update retroDocument
+			updateRetroDocument();
+			// notify change list segment 
+			notifyChangeListSegment();
+			// get index added segment
+			//var indexAddedSegment:int = listSegment.length - 1;
+			//groupSegment.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateGroupeSegmentComplete);
+			//groupSegment.selectedItem = segment;
+		}
+		private function notifyChangeListSegment():void
+		{
+			var xml:String = _retroDocument.getRetroDocumentXMLtoSTRING();
+			var updateListSegmentRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_LIST_RETRO_SEGMENT);
+			updateListSegmentRetroDocument.xmlRetrodocument = xml;
+			dispatchEvent(updateListSegmentRetroDocument);
+		}
+		
+		private function onUpdateGroupeSegmentComplete(event:FlexEvent):void
+		{
+			// get index added segment
+			var indexAddedSegment:int = listSegment.length - 1;
+			groupSegment.selectedIndex = indexAddedSegment;
+		}
 		private function onRmoveSegment(event:RetroDocumentEvent):void
 		{
 			removingSegment = event.segment;
@@ -366,6 +410,8 @@ package com.ithaca.documentarisation
 					this._retroDocument.listSegment.removeItemAt(indexSegment);
 					// update the retroDocument
 					this.updateRetroDocument();
+					// notify change list segment
+					notifyChangeListSegment();
 				}
 			}
 		}
@@ -379,6 +425,12 @@ package com.ithaca.documentarisation
 			updateTitleRetroDocument.idRetroDocument = _retroDocument.id;
 			updateTitleRetroDocument.titleRetrodocument = _retroDocument.title;
 			this.dispatchEvent(updateTitleRetroDocument);
+		}
+		private function onCreatioCompleteTextInput(event:FlexEvent):void
+		{
+			// set focus and select title retroDocument
+			this.titleDocumentTextInput.selectAll();
+			this.stage.focus = this.titleDocumentTextInput;
 		}
 		
 		private function onChangeRetroSegment(event:RetroDocumentEvent):void
