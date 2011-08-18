@@ -17,6 +17,14 @@
 @namespace video 		"com.ithaca.visu.view.video.*";
 @namespace components 		"com.ithaca.utils.components.*";
 
+documentarisation|RetroDocumentListItemSimple
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentListItemSimpleSkin");
+}
+components|IconInfoSegment
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.IconInfoSegmentSkin");	
+}
 documentarisation|SegmentVideoAdvanced
 {
 	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin");
