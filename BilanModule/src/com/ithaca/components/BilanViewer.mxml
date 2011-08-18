@@ -5,16 +5,23 @@
     	xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:ithaca="com.ithaca.components.*"
 		xmlns:controls="com.lyon2.controls.*"
-		xmlns:mate="http://mate.asfusion.com/" xmlns:video="com.ithaca.visu.view.video.*"
-	>
+		xmlns:mate="http://mate.asfusion.com/" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*"
+	    >
     <fx:Script>
         <![CDATA[
+			import com.ithaca.documentarisation.RetroDocumentConst;
+			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.documentarisation.model.Segment;
+			import com.ithaca.documentarisation.renderer.BlocCommentAudioBilanRenderer;
+			import com.ithaca.documentarisation.renderer.BlocTitleBilanRenderer;
+			import com.ithaca.documentarisation.renderer.BlocVideoBilanRenderer;
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			
+			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
 			
@@ -26,8 +33,6 @@
 			[Bindable]
 			public var bilan:RetroDocument = null;
 			
-			[Bindable]
-			public var showInfo:Boolean = false;	
 			// start session in ms from 1970 year
 			// for calculate seekSession, beginSegment has time ms from 1970
 			private var sessionStart:Number;
@@ -68,13 +73,16 @@
 					logger.info("Sending the request for the obsel list of session {0}", bilan.sessionId);
 					logger.info("The attached session object is {0}", bilan.session);
 					this.dispatchEvent(event);
+					// can edit if logged user owner of the bilen
+					var canEditBilan:Boolean = false;
+					if(bilan.ownerId == Model.getInstance().getLoggedUser().id_user)
+					{
+						canEditBilan = true;
+					}
+					buttonSwitch.enabled = canEditBilan;
 				}
 			}
-			
-			private function  toogleShowInfo(event:MouseEvent):void {
-				showInfo = !showInfo;
-			}
-			
+						
 			private function initVisio(event:Event):void {
 				this.visio.connection = Model.getInstance().getNetConnection();
 				this.visio.addVideoStream("void",null, 0.0, true);
@@ -118,7 +126,7 @@
 	        }
 	        
 			private function onSegmentSelectionClick(e:MouseEvent):void {
-				if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1 && !(e.target is Button) ) {
+				if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1 && !(e.target is mx.controls.Button) ) {
 					var segment:Segment = segmentList.selectedItems[0] as Segment;
 					logger.debug("Ask for playing the video at session time {0}", int((segment.beginTimeVideo - sessionStart)/1000));
 					this.visio.autoPlay = true;
@@ -189,36 +197,75 @@
 				buttonPlay_clickHandler();
 			}
 
+			protected function buttonPlusInfo_clickHandler(event:MouseEvent):void
+			{
+				if(this.currentState == "normal")
+				{
+					this.currentState = "plusInfo";
+				}else if(this.currentState == "plusInfo")
+				{
+					this.currentState = "normal";
+				}
+			}
 
+			protected function buttonSwitch_clickHandler(event:MouseEvent):void
+			{
+				var switchModuleEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN);
+				switchModuleEvent.session = bilan.session;
+				switchModuleEvent.idRetroDocument = bilan.id;
+				this.dispatchEvent(switchModuleEvent);
+			}
+
+			private function setRendererSegmentFunction(item:Object):ClassFactory
+			{
+				var className:Class = BlocTitleBilanRenderer;
+				
+				if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+				{
+					className = BlocCommentAudioBilanRenderer;
+				}else
+					if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+					{
+						className = BlocVideoBilanRenderer;
+					}
+				return new ClassFactory( className);
+			}
         ]]>
     </fx:Script>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="plusInfo"/>
+    </s:states>
 
 	<s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
 			<s:Label text="Aucun bilan sélectionné" fontSize="14" fontStyle="italic"/>
 	</s:VGroup>
  
 	<s:VGroup includeInLayout="{bilan}" visible="{bilan}" width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-
-				<ithaca:BilanSummary includeInLayout="{showInfo}" visible="{showInfo}"
-					width="100%"
-					bilan="{bilan}"
-					horizontalAlign="left" 
-					/>
-
 				<s:HGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="100%">
 
 						<s:VGroup 
 							minWidth="150"
 							width="50%"
 							height="100%">
-								<s:HGroup width="100%"> 
+								<s:HGroup width="100%" gap="2"> 
 									<s:Label 
 										fontSize="20"
 										fontWeight="bold"
 										lineBreak="toFit"
 										width="100%"
 										text="{bilan.title}"/>
-									<mx:LinkButton label="{showInfo?'Cacher les informations':'Voir les informations'}" click="toogleShowInfo(event)"/>
+									<mx:Spacer width="2"/>
+									<mx:Button id="buttonSwitch" icon="{IconEnum.getIconByName('iconMinimaze_16x16')}" enabled="true" width="22" height="22" buttonMode="true"
+										 click="buttonSwitch_clickHandler(event)">
+										<mx:toolTip>Editer ce bilan</mx:toolTip>
+									</mx:Button>
+									<mx:Button  id="buttonPlusInfo" height="22"
+										click="buttonPlusInfo_clickHandler(event)" 
+										buttonMode="true">
+										<mx:label.normal>Voir les informations</mx:label.normal>
+										<mx:label.plusInfo>Cacher les informations</mx:label.plusInfo>
+									</mx:Button>
 								</s:HGroup>
 								<s:Label 
 									fontSize="12"
@@ -228,8 +275,12 @@
 									 visible="false"
 									text="{bilan.description}"/>
 								
-								<s:List id="segmentList" click="onSegmentSelectionClick(event)" borderVisible="false" width="100%" height="100%"  dataProvider="{bilan.listSegment}" >
-									<s:itemRenderer>
+								<s:List id="segmentList" 
+									
+									borderVisible="false" width="100%" height="100%"  
+									dataProvider="{bilan.listSegment}" 
+									itemRendererFunction="setRendererSegmentFunction">
+									<!--<s:itemRenderer>
 										<fx:Component>
 											<s:ItemRenderer creationComplete="initRenderer(event)" left="0" right="0" currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
 												<s:states>
@@ -330,24 +381,6 @@
 														
 													]]>
 												</fx:Script>
-												
-												<!--<s:HGroup width="100%" verticalAlign="bottom">
-													<s:VGroup paddingTop="5" gap="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
-															<s:HGroup visible="{data.title.length>0}" includeInLayout="{data.title.length>0}" width="100%">
-																<s:Label 
-																	fontSize="16"
-																	width="100%"
-																	text="{data.title}"/>
-															</s:HGroup>
-															<s:HGroup visible="{data.comment.length>0}" includeInLayout="{data.comment.length>0}" width="100%" paddingLeft="5" paddingRight="5">
-																<mx:Text width="90%" text="{data.comment}" toolTip="{data.comment}"/>
-															</s:HGroup>
-													</s:VGroup>
-													<s:VGroup height="100%">
-														<mx:Spacer height="100%"/>
-														<mx:Image id="imageTypeSegment"/>
-													</s:VGroup>
-												</s:HGroup>-->
 												<s:VGroup width="100%" gap="1">
 													<s:VGroup paddingTop="5" gap="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
 															<s:HGroup visible="{data.title.length>0}" includeInLayout="{data.title.length>0}" width="100%">
@@ -393,7 +426,7 @@
 												</s:VGroup>
 											</s:ItemRenderer>
 										</fx:Component>
-									</s:itemRenderer>
+									</s:itemRenderer>-->
 								</s:List>
 						</s:VGroup>
 						<s:VGroup 
@@ -401,6 +434,11 @@
 							height="100%"
 							paddingTop="5"
 							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
+							<ithaca:BilanSummary
+								width="100%"
+								bilan="{bilan}"
+								horizontalAlign="left" 
+								includeIn="plusInfo"/>
 							<video:VisuVisioAdvanced id="visio" width="100%" height="100%"
 										quality="80"
 										bandwidth="15000" autoPlay="false" creationComplete="initVisio(event)"/>
