@@ -13,6 +13,7 @@ package com.ithaca.visu.modules
 	import mx.core.IContainer;
 	import mx.core.IVisualElement;
 	import mx.events.ModuleEvent;
+	import mx.managers.CursorManager;
 	import mx.modules.IModuleInfo;
 	import mx.modules.ModuleManager;
 	import mx.styles.IStyleManager2;
@@ -114,6 +115,8 @@ package com.ithaca.visu.modules
 			{
 				trace("Do nothing, requested module already loaded")
 			}
+			// set busy cursor
+			//CursorManager.setBusyCursor();
 			
 		}
 		
