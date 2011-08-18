@@ -36,6 +36,7 @@
 		<mate:Listener type="{SessionEvent.GO_RETROSPECTION_MODULE}"  method="goRetrospection"/>
 		<mate:Listener type="{SessionEvent.GO_BILAN_MODULE}"  method="goBilan"/>
 		<mate:Listener type="{RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO}"  method="goBilanFromRetrospection"/>
+		<mate:Listener type="{RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN}"  method="goRetroFromBilan"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
 	
