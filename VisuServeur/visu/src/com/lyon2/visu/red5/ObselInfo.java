@@ -495,7 +495,7 @@ public class ObselInfo {
 		List<RetroDocument> listRetroDocumentOwner = null;
 		try {
 			listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+					"rd.getDocumentsByOwnerIdAndSessionId", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des retroDocument " + e, e);
 		}
