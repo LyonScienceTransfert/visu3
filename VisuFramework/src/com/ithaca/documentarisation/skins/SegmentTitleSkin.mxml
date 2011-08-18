@@ -43,9 +43,9 @@
 		</s:mouseOut.edit>
 		<s:HGroup width="100%" gap="1" paddingTop="3">
 			<!-- ICON SEGMENT -->
-			<s:Label id="labelSegment" width="16" textAlign="center"/>
+			<s:Label id="labelSegment" width="16" textAlign="center"  includeIn="edit, editSelected"/>
 			<!-- TEXTAREA -->
-			<s:RichEditableText id="textSegment" width="100%" textAlign="center" backgroundColor.edit="#FFFFFF"/>		
+			<s:RichEditableText editable.normal="false" id="textSegment" width="100%" textAlign="center" backgroundColor.edit="#FFFFFF"/>		
 			<!-- DELETE ICON -->
 			<components:IconDelete id="iconDelete"
 				visible.edit="false"

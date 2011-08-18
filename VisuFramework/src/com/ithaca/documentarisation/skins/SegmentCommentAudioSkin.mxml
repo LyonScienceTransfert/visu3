@@ -38,9 +38,10 @@
 		<s:VGroup width="100%" gap="1">
 			<s:HGroup width="100%" gap="1">
 				<!-- LICON SEGMENT -->
-				<s:BitmapImage source="{IconEnum.getIconByName('iconAudio_16x16')}"/>
+				<s:BitmapImage source="{IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected"/>
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText"
+					 editable.sharedOver="false" editable.shared="false"
 					width="100%" 
 					color="#000000" paddingTop="3">
 					<s:text>votre text ici</s:text>

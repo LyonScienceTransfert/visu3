@@ -106,8 +106,11 @@ public class SegmentTitle extends SkinnableComponent
 		{
 			textSegment.text =text;
 			setFont(textSegment);
-			textSegment.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
-			textSegment.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			if(editabled)
+			{
+				textSegment.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+				textSegment.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			}
 		}
 		if(instance == iconDelete)
 		{
@@ -139,7 +142,7 @@ public class SegmentTitle extends SkinnableComponent
 			segmentChange = false;
 			_text = segment.comment;
 			textSegment.text = text;
-			if(textSegment.text == "")
+			if(textSegment.text == "" && editabled)
 			{
 				setRichEditText();
 			}
