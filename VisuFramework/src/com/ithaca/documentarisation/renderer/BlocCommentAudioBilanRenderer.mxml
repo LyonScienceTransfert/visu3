@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*"
+	 currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.documentarisation.skins.SegmentCommentAudioSkin;
+		import com.ithaca.visu.model.Model;
+		
+		import mx.events.StateChangeEvent;
+
+		protected function itemrenderer1_currentStateChangeHandler(event:StateChangeEvent):void
+		{
+			switch (currentState)
+			{
+			case "normal" :
+				segmentCommentAudio.rendererNormal();
+				break;
+			case "hovered" :
+				segmentCommentAudio.rendererOver();
+				break;
+			}
+		}
+	]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+		<s:State name="hovered" />
+	</s:states>
+	<documentarisation:SegmentCommentAudio 
+		id="segmentCommentAudio"
+	 	width="100%"
+		skinClass="com.ithaca.documentarisation.skins.SegmentCommentAudioSkin"
+		segment="{data}" 
+		streamId="{Model.getInstance().getUserIdClient()}" 
+		userId="{data.parentRetroDocument.ownerId.toString()}"
+		connection="{Model.getInstance().getNetConnection()}"  
+		modeEdit="false">
+	</documentarisation:SegmentCommentAudio>
+</s:ItemRenderer>
