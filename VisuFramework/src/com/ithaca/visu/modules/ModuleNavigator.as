@@ -104,7 +104,7 @@ package com.ithaca.visu.modules
 			if( !isCurrentModule(mod) )
 			{
 				SWFAddress.setTitle(mod.name +" | "+ browserTitleBase) 
-				SWFAddress.setValue(mod.name+urlparams);
+				//SWFAddress.setValue(mod.name+urlparams);
 				
 				if( info != null ) unloadModule();
 				
