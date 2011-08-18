@@ -2,6 +2,7 @@ package  com.ithaca.documentarisation.events
 {	
 	import com.ithaca.documentarisation.model.RetroDocument;
 	import com.ithaca.documentarisation.model.Segment;
+	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	
 	import flash.events.Event;
@@ -34,16 +35,19 @@ package  com.ithaca.documentarisation.events
 		static public const CLICK_BUTTON_SWITCH : String = 'clickButtonSwitch';
 		static public const UPDATE_ADDED_RETRO_DOCUMENT : String = 'updateAddedRetroDocument';
 		static public const GO_BILAN_MODULE_FROM_RETRO : String = 'goBilanModuleFromRetro';
+		static public const GO_RETRO_MODULE_FROM_BILAN : String = 'goRetroModuleFromBilan';
 		
+		static public const CHANGE_LIST_RETRO_SEGMENT : String = 'changeListRetroSegment';
 		// properties
 		public var segment  :Segment;
-		public var xmlTreeRetroDocument:XML;
+		public var xmlRetrodocument:String;
 		public var listRetroDocument:ArrayCollection;
 		public var idRetroDocument:int;
 		public var retroDocument:RetroDocument;
 		public var editabled:Boolean;
 		public var retroDocumentVO:RetroDocumentVO;
 		public var sessionId:int;
+		public var session:Session;
 		public var listUser:Array;
 		public var beginTime:Number;
 		public var endTime:Number;
