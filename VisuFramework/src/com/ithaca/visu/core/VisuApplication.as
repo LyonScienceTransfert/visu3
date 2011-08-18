@@ -192,7 +192,10 @@ package com.ithaca.visu.core
 
 		protected function goRetrospection(event:SessionEvent):void{
 			logger.debug("The application is requested to go to the retrospection room of the session {0}", event.session.id_session);
-			moduleNavigator.navigateToModule( "retrospection", event.session);
+			var obj:Array = new Array();
+			obj[0] = "CameFromHomeModule";
+			obj[1] = event.session;
+			moduleNavigator.navigateToModule( "retrospection", obj);
 		}
 		
 		protected function goBilan(event:SessionEvent):void{
@@ -210,6 +213,15 @@ package com.ithaca.visu.core
 			obj[1] = event.sessionId;
 			obj[2] = event.idRetroDocument;
 			moduleNavigator.navigateToModule( "bilan", obj );
+		}
+		
+		protected function goRetroFromBilan(event:RetroDocumentEvent):void{
+			logger.debug("The application is requested to go to the retro of the session {0} and retroDocumentId {1}", event.sessionId, event.idRetroDocument);
+			var obj:Array = new Array();
+			obj[0] = "CameFromBilanModule";
+			obj[1] = event.session;
+			obj[2] = event.idRetroDocument;
+			moduleNavigator.navigateToModule( "retrospection", obj );
 		}
 		 
 		/**
