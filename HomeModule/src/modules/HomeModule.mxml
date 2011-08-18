@@ -67,6 +67,7 @@
 			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
+			import mx.managers.CursorManager;
 			
 			import spark.components.supportClasses.GroupBase;
 			import spark.events.IndexChangeEvent;
@@ -185,6 +186,9 @@
 				// initialisize list Users
 				var listUsersPlateforme:ArrayCollection = Model.getInstance().getListUserPlateforme();
 				initializeUsers(listUsersPlateforme);
+				
+				// set cursor 
+				CursorManager.removeBusyCursor();
 			}
 			
 			/**

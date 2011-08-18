@@ -35,6 +35,7 @@
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.IndexChangedEvent;
+			import mx.managers.CursorManager;
 			
 			private var currentSession:Session = null;
 			
@@ -78,6 +79,8 @@
 					// removing module from the stage
 					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
 				}
+				// set cursor 
+				CursorManager.removeBusyCursor();
 			}
 // ACTIVITY
 			private function onDeleteActivity(event:SessionEditEvent):void

@@ -37,6 +37,7 @@
 			import mx.collections.ArrayList;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
+			import mx.managers.CursorManager;
 			
 			private var logger : ILogger = Log.getLogger('modules.BilanModule');
 			
@@ -90,6 +91,7 @@
 					this.bilanViewer.visio.startTimer();
 					this.bilanViewer.visio.autoPlay = false;
 				}
+				
 			}
 			
 			private function onRemovedModuleFromStage(event:Event):void {
@@ -186,6 +188,9 @@
 				var moduleLoadedEvent:BilanEvent = new BilanEvent(BilanEvent.BILAN_MODULE_LOADED);  
 				moduleLoadedEvent.userId = Model.getInstance().getLoggedUser().id_user;				
 				this.dispatchEvent(moduleLoadedEvent);
+				
+				// set cursor 
+				CursorManager.removeBusyCursor(); 
 			}
 
 

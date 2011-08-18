@@ -17,6 +17,7 @@
 			import com.ithaca.documentarisation.RetroDocumentView;
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
+			import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
@@ -56,6 +57,7 @@
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
 			import mx.events.ToolTipEvent;
+			import mx.managers.CursorManager;
 			import mx.managers.DragManager;
 			
 			import spark.events.IndexChangeEvent;
@@ -101,6 +103,9 @@
 			private var currentTime:Number;
 			private var pointPanelEditComment:Point;
 			
+			private var selectedSessionIdWhenInit:Number = -1;
+			private var selectedRetroDocumentIdWhenInit:Number = -1;
+			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
 				// init list trace lines
@@ -108,9 +113,26 @@
 				
 				if((event.currentTarget as RetrospectionModule).parameters != null)
 				{
-					var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
-					Model.getInstance().setCurrentSession(param as Session);
+					//var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
+					//Model.getInstance().setCurrentSession(param as Session);
+					
+					var param:Array = (event.currentTarget as RetrospectionModule).parameters as Array ;
+					var cameFromModule:String = param[0];
+					switch (cameFromModule)
+					{
+					case "CameFromHomeModule" :
+						// 
+						break;
+					case "CameFromBilanModule" :
+						this.selectedRetroDocumentIdWhenInit = param[2]; 
+						break;
+					}
+					// set selected sessionId
+					var session:Session = param[1];
+					Model.getInstance().setCurrentSession(session);
+					this.selectedSessionIdWhenInit = session.id_session;
 				}
+				
 				fxgt = FxGettext;
 				// set current module
 				Model.getInstance().setCurrentRetroModule(this);
@@ -118,9 +140,9 @@
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
 				this.dispatchEvent(initMapEvent); 
 				
-				var session:Session = param as Session;
+
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
-				getListObselEvent.sessionId = session.id_session;
+				getListObselEvent.sessionId = selectedSessionIdWhenInit;
 				// set current sessionId
 				this.currentSessionId = session.id_session;
 				this.dispatchEvent(getListObselEvent);
@@ -746,8 +768,25 @@
 					messageAboutRetroDocument.y = this.groupRetroDocumentView.height/2;					
 					messageAboutRetroDocument.text =  fxgt.gettext("Aucun bilan sélectionné");
 					this.groupRetroDocumentView.addElement(messageAboutRetroDocument);
+					
+					if(selectedRetroDocumentIdWhenInit > 0)
+					{
+						var nbrRetroDocument:int = listRetroDocument.dataProvider.length;
+						for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
+						{
+							var retrodocumentVO:RetroDocumentVO = listRetroDocument.dataProvider.getItemAt(nRetroDocument) as RetroDocumentVO;
+							if(retrodocumentVO.documentId == selectedRetroDocumentIdWhenInit)
+							{
+								listRetroDocument.selectedIndex = nRetroDocument;
+								// load retroDocument
+								dispatchLoadRetroDocument(retrodocumentVO);
+								break;
+							}
+						}
+					}
+					// set cursor 
+					CursorManager.removeBusyCursor();
 				}
-				
 			}
 			
 				
@@ -838,13 +877,14 @@
 				createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
 				this.dispatchEvent(createRetroDocumentVOEvent);
 				
+				// set mouse cursor
+				CursorManager.setBusyCursor();
 				// set new RetroDocument
-				// TODO : add image loading during update id the retrodocument
 				this.listRetroDocument.dataProvider.addItem(retroDocumentVO);
 				this.listRetroDocument.selectedItem = retroDocumentVO;
 				var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
 				retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-				initRetroDocument(retroDocument, null);
+				initRetroDocument(retroDocument, new Array());
 				
 			}
 
@@ -872,16 +912,24 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
+					// update id retroDocument 
 					var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
 					retroDocmentView.retroDocument.id = event.idRetroDocument;
+					// update id retroDocument in the list retroDocuments
+					var nbrRetroDocumentVO:int = this.listRetroDocument.dataProvider.length;
+					for(var nRetroDocumentVO:int = 0; nRetroDocumentVO < nbrRetroDocumentVO; nRetroDocumentVO++)
+					{
+						var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(nRetroDocumentVO) as RetroDocumentVO;
+						if(retroDocumentVO.documentId == 0)
+						{
+							retroDocumentVO.documentId = event.idRetroDocument;
+							break;
+						}
+					}
+					// remove cursor
+					CursorManager.removeBusyCursor();
 				}
-			}
-			protected function panelDocumentarisation_clickButtonShareHandler(event:PanelButtonEvent):void
-			{
-				var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
-				this.dispatchEvent(loadListUsers);
-			}
-			
+			}			
 			//_____________________________________________________________________
 			//
 			// Listeners ListRetroDocument
@@ -891,8 +939,13 @@
 			protected function listRetroDocument_changeHandler(event:IndexChangeEvent):void
 			{
 				var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(event.newIndex) as RetroDocumentVO;
+				dispatchLoadRetroDocument(retroDocumentVO);
+			}
+			
+			private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
+			{
 				var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
-				loadRetroDocument.idRetroDocument =  retroDocumentVO.documentId
+				loadRetroDocument.idRetroDocument =  value.documentId
 				loadRetroDocument.editabled = true;				
 				this.dispatchEvent(loadRetroDocument);
 			}
@@ -906,6 +959,20 @@
 					var index:int = listRetroDocument.selectedIndex;
 					var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(index) as RetroDocumentVO;
 					retroDocumentVO.title = event.titleRetrodocument;
+				}
+			}
+			
+			/**
+			 * update list segment the retroDocument
+			 */
+			private function onUpdateListSegmentRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var index:int = listRetroDocument.selectedIndex;
+					var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(index) as RetroDocumentVO;
+					retroDocumentVO.xml = event.xmlRetrodocument;
+					//retroDocumentVO.title = event.titleRetrodocument;
 				}
 			}
 
@@ -1401,6 +1468,7 @@
 		<mate:Listener type="{RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT}"  method="updateTitleRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		<mate:Listener type="{RetroDocumentEvent.CHANGE_LIST_RETRO_SEGMENT}"  method="onUpdateListSegmentRetroDocument"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -1473,7 +1541,7 @@
 				</mx:VDividedBox>
 			</components:PanelButton>
 <!-- DOCUMENTARISATION -->
-			<s:Group height="100%" width="20%" minWidth="300" width.State1="30%">
+			<s:Group height="100%" minWidth="330" width.State1="30%">
 				<s:layout>
 					<s:VerticalLayout gap="1"/>
 				</s:layout>
@@ -1482,17 +1550,16 @@
 				<components:PanelButton width="100%" height="100%"  id="panelDocumentarisation"
 					 buttonAddVisible="true"
 					 buttonDeleteVisible="false"
-					 buttonShareVisible="true"
-					 buttonShareEnabled="true"
+					 buttonShareVisible="false"
 					 buttonMuteMicroVisible="false"
 					 buttonVolumeVisible="false"
 					 clickButtonAdd="panelDocumentarisation_clickButtonAddHandler(event)"
-					 clickButtonShare="panelDocumentarisation_clickButtonShareHandler(event)"
 					 >
 					<mx:VDividedBox width="100%" height="100%"  includeIn="State1,vciel">
-						<s:List id="listRetroDocument" width="100%"
-							  change="listRetroDocument_changeHandler(event)"
-							 />
+						<s:List id="listRetroDocument" 
+							width="100%"
+							change="listRetroDocument_changeHandler(event)"
+							itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
 						<s:Group width="100%" height="100%" id="groupRetroDocumentView">
 									<s:layout>
 										<s:VerticalLayout gap="0"/>
