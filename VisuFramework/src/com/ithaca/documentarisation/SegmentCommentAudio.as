@@ -158,16 +158,16 @@ public class SegmentCommentAudio extends SkinnableComponent
 	
 	public function rendererNormal():void
 	{
+		initSkinVars();
 		if(modeEdit)
 		{
-			audioRecorder.skinNormal();
-			initSkinVars();
 			edit = true;
-			invalidateSkinState();
 		}else
 		{
-			
+			edit = false;
 		}
+		audioRecorder.skinNormal();
+		invalidateSkinState();
 	}
 	public function rendererOver():void
 	{
@@ -179,7 +179,10 @@ public class SegmentCommentAudio extends SkinnableComponent
 			invalidateSkinState();
 		}else
 		{
-			
+			audioRecorder.skinOverShare();
+			initSkinVars();
+			editOver = false;
+			invalidateSkinState();
 		}		
 	}
 	public function rendererSelected():void
@@ -231,15 +234,18 @@ public class SegmentCommentAudio extends SkinnableComponent
 		if (instance == richEditableText)
 		{
 			// set text message
-			if(text == "")
+			if(text == "" && modeEdit)
 			{
 				setRichEditText();
 			}else
 			{
 				richEditableText.text = text;
 			}
-			richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
-			richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			if(modeEdit)
+			{
+				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			}
 		}
 	}	
 	override protected function commitProperties():void
@@ -267,15 +273,18 @@ public class SegmentCommentAudio extends SkinnableComponent
 			
 			text = segment.comment;
 			// set text message
-			if(text == "")
+			if(text == "" && modeEdit)
 			{
 				setRichEditText();
 			}else
 			{
 				richEditableText.text = text;
 			}
-			richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
-			richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			if(modeEdit)
+			{
+				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			}
 
 			streamPath = segment.pathCommentAudio;
 			// set user id
