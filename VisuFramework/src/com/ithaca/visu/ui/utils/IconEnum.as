@@ -291,6 +291,9 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/deleteRoundIconRed_16x16.png")]
 		static private var deleteRoundIconRed_16x16:Class;
+		[Bindable]
+		[Embed("images/iconOption_16x16.png")]
+		static private var iconOption_16x16:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -498,6 +501,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "deleteRoundIconRed_16x16" : 
 					icon = deleteRoundIconRed_16x16;
+					break;
+				case "iconOption_16x16" : 
+					icon = iconOption_16x16;
 					break;
 				default :
 					break;				
