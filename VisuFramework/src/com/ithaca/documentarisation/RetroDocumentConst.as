@@ -19,6 +19,6 @@ package com.ithaca.documentarisation {
 		 public static const TEXT_SEGMENT:String = "TextSegment";
 		 public static const TITLE_SEGMENT:String = "TitleSegment";
 		 public static const COMMENT_AUDIO_SEGMENT:String = "CommentAudioSegment";
-		 public static const VIDEOO_SEGMENT:String = "VideoSegment";
+		 public static const VIDEO_SEGMENT:String = "VideoSegment";
 	}
 }
