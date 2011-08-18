@@ -192,14 +192,14 @@
 	                </s:Label>
 					<mx:Spacer width="1"/>
 					
-					<components:IconButton id="buttonDelete" height="22" width="22"/>
-					<components:IconButton id="buttonAdd" height="22" width="22"/>
-					<components:IconButton id="buttonShare" height="22" width="22"/>
+					<components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true"/>
+					<components:IconButton id="buttonAdd" height="22" width="22" buttonMode="true"/>
+					<components:IconButton id="buttonShare" height="22" width="22" buttonMode="true"/>
 					
-					<components:IconButton id="buttonMax" height="22" width="22"/>
-					<components:IconButton id="buttonZoom" height="22" width="22"/>
-					<components:IconButton  id="buttonMicro" height="22" width="22"/>
-					<video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" />
+					<components:IconButton id="buttonMax" height="22" width="22" buttonMode="true"/>
+					<components:IconButton id="buttonZoom" height="22" width="22" buttonMode="true"/>
+					<components:IconButton  id="buttonMicro" height="22" width="22" buttonMode="true"/>
+					<video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" buttonMode="true"/>
 					<mx:Spacer width="1"/>
 				</s:HGroup>
             </s:Group>
