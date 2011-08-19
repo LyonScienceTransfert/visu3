@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.documentarisation.SegmentVideoAdvanced")]
+	</fx:Metadata>
+	
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+		
+		import spark.skins.spark.SpinnerSkin;
+	]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="shared"/>
+		<s:State name="sharedOver"/>
+		<s:State name="sharedPlay"/>
+		<s:State name="sharedPause"/>
+		<s:State name="edit"/>
+		<s:State name="editOver"/>
+		<s:State name="editSelected"/>
+		<s:State name="editPlay"/>
+		<s:State name="editPause"/>
+	</s:states>
+	<s:VGroup width="100%" gap="1">
+		<s:HGroup width="100%" gap="1">
+			<!-- ICON SEGMENT -->
+			<s:BitmapImage source="{IconEnum.getIconByName('iconVideo_16x16')}" includeIn="edit,editOver,editPause,editPlay,editSelected"/>
+			<s:VGroup width="100%" gap="3">
+				<s:HGroup width="100%" gap="1">
+					<!-- TEXT -->
+					<s:RichEditableText id="richEditableText"
+						editable.sharedOver="false" editable.shared="false"
+						width="100%" 
+						color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false">
+						<s:text>votre text ici</s:text>
+					</s:RichEditableText>
+					<!-- ICON DELETE -->
+					<components:IconDelete id="iconDelete"
+						buttonMode="true"
+						includeIn="edit,editOver,editPause,editPlay,editSelected"
+						visible.edit="false"
+						visible.editSelected="true" visible.editPlay="true" visible.editPause="true">
+						<components:toolTip>Suprimer ce segment</components:toolTip>
+					</components:IconDelete>
+				</s:HGroup>
+				<!-- GROUPE VIDEO -->
+				<s:HGroup width="100%" gap="3" verticalAlign="middle" verticalAlign.sharedOver="bottom" verticalAlign.shared="bottom" verticalAlign.sharedPlay="bottom" verticalAlign.sharedPause="bottom">
+					<!-- SCREEN SHOT -->
+					<mx:Image source="{IconEnum.getIconByName('ScreenShot80x60')}" width="80" height="60">
+						<mx:toolTip>Screen shot</mx:toolTip>
+					</mx:Image>
+					<s:VGroup width="100%" gap="5">
+						<!-- LABELS START END -->
+						<s:HGroup  verticalAlign="middle" width="100%" horizontalAlign="center" includeIn="edit,editOver,editPause,editPlay,editSelected" gap="0">
+							<mx:Label text="Début:"/>
+							<mx:Label id="labelStartSpinner" text="11:11"/>
+							<s:Spinner  id="startSpinner" minimum="0" skinClass="spark.skins.spark.SpinnerSkin" width="12" height="18"/>               
+							<mx:Spacer width="7"/>
+							<mx:Label text="Fin:"/>
+							<mx:Label id="labelEndSpinner" text="14:14"/>
+							<s:Spinner id="endSpinner"  maximum="{24*60*60}" skinClass="spark.skins.spark.SpinnerSkin" width="12" height="18"/>                    
+						</s:HGroup>
+						<!-- DURATION -->
+						<s:HGroup width="100%" verticalAlign="middle" gap="1" height="22" paddingLeft="{(this.width - 100)/2 + 18 - 80}">
+							<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
+							<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
+								<!-- ICON SEGMENT -->
+								<s:BitmapImage source="{IconEnum.getIconByName('iconVideo_16x16')}"/>
+								<s:Label id="labelCurrnetTime" includeIn="editPause,editPlay,sharedPlay,sharedPause" text.editPlay="0:07" text.sharedPause="0:07" text.editPause="0:07" text.sharedPlay="0:07">
+								</s:Label>
+								<s:Label id="labelInfo" text.editSelected="Durée" text.edit="Durée" text.editOver="Durée" text.editPlay="/" text.editPause="/"  text.sharedOver="Durée" text.shared="Durée" text.sharedPlay="/" text.sharedPause="/"/>
+								<s:Label id="lableDuration" text="02:24">
+								</s:Label>
+							</s:HGroup>
+							<!-- IMAGE JUMP START --> 
+							<mx:Image id="imageJumpStart" 
+								buttonMode="true" 
+								source="{IconEnum.getIconByName('iconStopYellow_16x16')}" includeIn=" editPause, sharedPause">
+								<mx:toolTip>Vers début</mx:toolTip>
+							</mx:Image>
+							<!-- IMAGE PLAY --> 
+							<mx:Image id="imagePlay" 
+								buttonMode="true" 
+								source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause">
+								<mx:toolTip>Play</mx:toolTip>
+							</mx:Image>
+							<!-- IMAGE PAUSE --> 
+							<mx:Image id="imagePause" 
+								buttonMode="true" 
+								source="{IconEnum.getIconByName('iconPauseYellow_16x16')}" includeIn="editPlay,sharedPlay">
+								<mx:toolTip>Pause</mx:toolTip>
+							</mx:Image>
+						</s:HGroup>
+					</s:VGroup>
+				</s:HGroup>
+			</s:VGroup>
+		</s:HGroup>
+		<s:Line width="100%" includeIn="edit,editOver,editPause,editPlay,editSelected">
+			<s:stroke>
+				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
+			</s:stroke>
+		</s:Line>
+	</s:VGroup>
+</s:Skin>
