@@ -118,8 +118,15 @@ public class SegmentTitle extends SkinnableComponent
 		}
 		if(instance == labelSegment)
 		{
-			labelSegment.text = "t";
-			labelSegment.setStyle("fontWeight", "normal");
+			var fontValue:String = "normal";
+			var labelText:String = "t";
+			if(_fontBold)
+			{
+				fontValue = "bold";
+				labelText = "T";
+			}
+			labelSegment.setStyle("fontWeight", fontValue);
+			labelSegment.text = labelText;
 		}
 	}
 	

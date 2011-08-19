@@ -448,7 +448,7 @@ package com.ithaca.visu.view.video
 		}
 		public function removeAllStreams():void
 		{
-			logger.debug("removeAllStreams" + streams );
+//			logger.debug("removeAllStreams" + streams );
 			for (var streamname: String in streams)
 			{
 				removeVideoStream(streamname);

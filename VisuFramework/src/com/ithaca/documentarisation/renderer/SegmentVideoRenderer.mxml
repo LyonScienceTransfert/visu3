@@ -2,13 +2,42 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*">
+	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*"
+	currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
 	<fx:Script>
 	<![CDATA[
 		import com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin;
+		import com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin;
+		
+		import mx.events.StateChangeEvent;
+
+		protected function itemrenderer1_currentStateChangeHandler(event:StateChangeEvent):void
+		{
+			switch (currentState)
+			{
+			case "selected" :
+				segmentVideo.rendererSelected();
+				break;
+			case "normal" :
+				segmentVideo.rendererNormal();
+				break;
+			case "hovered" :
+				segmentVideo.rendererOver();
+				break;
+			}
+		}
+
 	]]>
 	</fx:Script>
-	
-	<documentarisation:SegmentVideoAdvanced width="100%" segment="{data}" skinClass="com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin"/>
-	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+		<s:State name="hovered" />
+	</s:states>
+	<documentarisation:SegmentVideoAdvanced 
+		width="100%" 
+		id="segmentVideo"
+		segment="{data}" 
+		modeEdit="true" 
+		skinClass="com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin"/>
 </s:ItemRenderer>
