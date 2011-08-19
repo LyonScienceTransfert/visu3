@@ -18,18 +18,14 @@ import spark.events.TextOperationEvent;
 public class SegmentVideoAdvanced extends SkinnableComponent
 {		
 	[SkinPart("true")]
-	public var imageEdit:Image;
-	[SkinPart("true")]
 	public var imagePlay:Image;
 	[SkinPart("true")]
-	public var imageDelete:Image;
+	public var imagePause:Image;
 	[SkinPart("true")]
-	public var iconDelete:IconDelete;
+	public var imageJumpStart:Image;
 	
 	[SkinPart("true")]
-	public var labelSave:Label;
-	[SkinPart("true")]
-	public var buttonSave:Button;
+	public var iconDelete:IconDelete;
 	
 	[SkinPart("true")]
 	public var labelCurrentTime:Label;
@@ -37,24 +33,30 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	public var labelDuration:Label;
 	
 	[SkinPart("true")]
-	public var buttonStop:Button;
-	[SkinPart("true")]
-	public var buttonPlay:Button;
-	[SkinPart("true")]
-	public var buttonPause:Button;
-	
-	[SkinPart("true")]
 	public var richEditableText:RichEditableText;
-	
+
+	private var shared:Boolean = false;
+	private var sharedOver:Boolean = false;
+	private var sharedPlay:Boolean = false;
+	private var sharedPause:Boolean = false;
 	private var edit:Boolean = false;
+	private var editOver:Boolean = false;
+	private var editSelected:Boolean = false;
 	private var editPlay:Boolean = false;
 	private var editPause:Boolean = false;
+	
+	private var _modeEdit:Boolean = true;
 	
 	private var _text:String ="";
 	private var textChange:Boolean;
 	
 	private var _segment:Segment;
 	private var segmentChange:Boolean;
+	
+	// init backGroundColor
+	private var _backGroundColorRichEditableText:String = "#FFFFFF";
+	// selected backgroundColor
+	private var colorBackGround:String = "#FFEBCC";
 	
 	public function SegmentVideoAdvanced()
 	{
@@ -88,6 +90,54 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	{
 		return _segment;
 	}
+	public function set modeEdit(value:Boolean):void
+	{
+		_modeEdit = value;
+	}
+	public function get modeEdit():Boolean
+	{
+		return _modeEdit;
+	}
+	public function rendererNormal():void
+	{
+		initSkinVars();
+		if(modeEdit)
+		{
+			edit = true;
+		}else
+		{
+			edit = false;
+		}
+		invalidateSkinState();
+	}
+	public function rendererOver():void
+	{
+		if(modeEdit)
+		{
+			initSkinVars();
+			editOver = true;
+			invalidateSkinState();
+		}else
+		{
+			initSkinVars();
+			sharedOver = true;
+			invalidateSkinState();
+		}		
+	}
+	public function rendererSelected():void
+	{
+		if(modeEdit)
+		{
+			initSkinVars();
+			editSelected = true;
+			invalidateSkinState();
+		}else
+		{
+			initSkinVars();
+			sharedOver = true;
+			invalidateSkinState();
+		}	
+	}
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -97,46 +147,37 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	override protected function partAdded(partName:String, instance:Object):void
 	{
 		super.partAdded(partName,instance);
-		if (instance == imageEdit)
-		{
-			imageEdit.addEventListener(MouseEvent.CLICK, onClickImageEdit);	
-		}
 		if (instance == imagePlay)
 		{
 			imagePlay.addEventListener(MouseEvent.CLICK, onClickImagePlay);	
+		}
+		if (instance == imagePause)
+		{
+			imagePause.addEventListener(MouseEvent.CLICK, onClickImagePause);	
+		}
+		if (instance == imageJumpStart)
+		{
+			imageJumpStart.addEventListener(MouseEvent.CLICK, onClickImageJumpStart);	
 		}
 		if (instance == iconDelete)
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);	
 		}
-		if (instance == buttonSave)
-		{
-			buttonSave.addEventListener(MouseEvent.CLICK, onClickButtonSave);	
-		}
-		if (instance == buttonPlay)
-		{
-			buttonPlay.addEventListener(MouseEvent.CLICK, onClickButtonPlay);	
-		}
-		if (instance == buttonStop)
-		{
-			buttonStop.addEventListener(MouseEvent.CLICK, onClickButtonStop);	
-		}
-		if (instance == buttonPause)
-		{
-			buttonPause.addEventListener(MouseEvent.CLICK, onClickButtonPause);	
-		}
 		if (instance == richEditableText)
 		{
 			// set text message
-			if(text == "")
+			if(text == "" && modeEdit)
 			{
 				setRichEditText();
 			}else
 			{
 				richEditableText.text = text;
 			}
-			richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
-			richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			if(modeEdit)
+			{
+				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			}
 		}
 		
 	}
@@ -154,15 +195,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			
 			text = segment.comment;
 			// set text message
-			if(text == "")
+			if(text == "" && modeEdit)
 			{
 				setRichEditText();
 			}else
 			{
 				richEditableText.text = text;
 			}
-			richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
-			richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			if(modeEdit)
+			{
+				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			}
 		}	
 	}
 	override protected function getCurrentSkinState():String
@@ -171,15 +215,33 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		if(!enabled)
 		{
 			skinName = "disable";
+		}else if(sharedOver)
+		{
+			skinName = "sharedOver";
+		}else if(sharedPlay)
+		{
+			skinName = "sharedPlay";
+		}else if(sharedPause)
+		{
+			skinName = "sharedPause";
 		}else if(edit)
 		{
 			skinName = "edit";
+		}else if(editOver)
+		{
+			skinName = "editOver";
+		}else if(editSelected)
+		{
+			skinName = "editSelected";
 		}else if(editPlay)
 		{
 			skinName = "editPlay";
 		}else if(editPause)
 		{
-			skinName = "editPaused";
+			skinName = "editPause";
+		}else
+		{
+			skinName = "shared";
 		}
 		return skinName;
 	}
@@ -189,16 +251,40 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 
-	// images
-	private function onClickImageEdit(event:*=null):void
-	{
-		edit = true;
-		invalidateSkinState();
-	}
 	private function onClickImagePlay(event:MouseEvent):void
 	{
-		edit = false;
-		editPlay = true;
+		initSkinVars();
+		if(modeEdit)
+		{
+			editPlay = true;
+		}else
+		{
+			sharedPlay = true;
+		}
+		invalidateSkinState();
+	}
+	private function onClickImagePause(event:MouseEvent):void
+	{
+		initSkinVars();
+		if(modeEdit)
+		{
+			editPause = true;
+		}else
+		{
+			sharedPause = true;
+		}	
+		invalidateSkinState();
+	}
+	private function onClickImageJumpStart(event:MouseEvent):void
+	{
+		initSkinVars();
+		if(modeEdit)
+		{
+			editOver = true;
+		}else
+		{
+			sharedOver = true;
+		}
 		invalidateSkinState();
 	}
 	private function onClickIconDelete(event:MouseEvent):void
@@ -207,45 +293,22 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		removeSegmentEvent.segment = segment;
 		this.dispatchEvent(removeSegmentEvent);
 	}
-	private function onClickButtonSave(event:MouseEvent):void
-	{
-		return;
-	}
-	// buttons
-	private function onClickButtonPlay(event:MouseEvent):void
-	{
-		edit = false;
-		editPlay = true;
-		editPause = false;
-		invalidateSkinState();
-	}
-	private function onClickButtonStop(event:MouseEvent):void
-	{
-		edit = true;
-		editPlay = false;
-		editPause = false;
-		invalidateSkinState();
-	}
-	private function onClickButtonPause(event:MouseEvent):void
-	{
-		edit = false;
-		editPlay = false;
-		editPause = true;
-		invalidateSkinState();
-	}
 	// richText
 	private function onFocusInRichEditableText(event:FocusEvent):void
-	{
-		// change skin to "edit"
-		onClickImageEdit();
-		
+	{		
 		if(richEditableText.text == "Ajouter du texte à ce fragment vidéo")
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
 			richEditableText.setStyle("color","#000000");
 		}
+		richEditableText.selectAll();
+		if(this.stage != null)
+		{
+			this.stage.focus = richEditableText;
+		}
 		richEditableText.addEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
+		richEditableText.setStyle("backgroundColor", colorBackGround);
 	}
 	private function onFocusOutRichEditableText(event:FocusEvent):void
 	{
@@ -257,6 +320,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			text = richEditableText.text;
 		}
 		richEditableText.removeEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
+		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
+
 	}
 	private function onChangeRichEditableText(event:TextOperationEvent):void
 	{
@@ -286,7 +351,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
+		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
 	}
 	
+	private function initSkinVars():void
+	{
+		shared = sharedOver = sharedPlay = sharedPause = edit = editOver = editSelected = editPlay = editPause = false;
+	}
 }
 }

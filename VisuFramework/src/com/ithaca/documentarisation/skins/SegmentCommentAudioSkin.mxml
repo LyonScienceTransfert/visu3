@@ -37,7 +37,7 @@
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
 			<s:HGroup width="100%" gap="1">
-				<!-- LICON SEGMENT -->
+				<!-- ICON SEGMENT -->
 				<s:BitmapImage source="{IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected"/>
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText"
