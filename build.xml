@@ -18,10 +18,8 @@ or by setting the following environment variable:
 
 -->
 
-
 <project name="Visu Client Builder" default="build-and-deploy-all">
  
-
 <loadproperties srcFile="build.properties"/>
 
    
@@ -55,6 +53,9 @@ or by setting the following environment variable:
 
 	<!-- The temporary output folder where to place the swf files before being deployed to the server --> 
    <property name="app.deploy" location="${visu.dev.path}/${deploy.tmp}" />
+   
+   <!-- The temporary output folder where to place the wrapper files before being deployed to the server --> 
+   <property name="app.wrappers" location="${app.deploy}/wrappers" />
 	
 	<!-- Visu framework related variables --> 
    <property name="framework.path" location="${visu.dev.path}/VisuFramework" />
@@ -564,6 +565,29 @@ or by setting the following environment variable:
 	      </mxmlc>
 	   </target>
 	
+	<target name="build-test-page">
+	      <echo>Build Test page</echo>
+		     <mxmlc 
+	         file="${app.src}/Test.mxml"
+	         output="${app.wrappers}/Test.swf"
+	         debug="${debug}"
+	         strict="true" 
+	         warnings="${warnings}"
+		     incremental="${mxmlc.incremental}"
+	         headless-server="true">
+	      </mxmlc>
+	      <html-wrapper 
+			file="Test.html" 
+	            application="app" 
+	            swf="Test" 
+	            history="true" 
+	            express-install="true" 
+	            version-detection="true" 
+	            width="100%"
+	            height="100%"
+	            output="${app.wrappers}"/> 
+		   </target>
+	
 	<target name="html-wrapper" description="Creates a HTML wrapper and other js files required for the application to run in an HTML page"> 
 	   <html-wrapper 
 	       	title="Welcome to Visu 2" 
@@ -573,24 +597,26 @@ or by setting the following environment variable:
 	            history="true" 
 	            express-install="true" 
 	            version-detection="true" 
-	            output="${app.deploy}"/> 
+	            width="100%"
+	            height="100%"
+	            output="${app.wrappers}"/>  
 	</target> 
 	
+	<target name="build-client-all" description="Builds the client app, all client modules, and dependencies">
+   		<antcall target="build-framework" />
+    	<antcall target="build-visuclient-swf" />
+    	<antcall target="build-user-module" />
+    	<antcall target="build-home-module" />
+    	<antcall target="build-session-module" />
+    	<antcall target="build-retrospection-module" />
+    	<antcall target="build-tutorat-module" />
+    	<antcall target="build-bilan-module" />
+    	
+    	<mkdir dir="${app.wrappers}"/>
+    	<antcall target="html-wrapper" />
+    	<antcall target="build-test-page" />
+	</target>
 	
-   <target name="build-client-all" description="Builds the client app, all client modules, and dependencies">
-
-
-	<antcall target="build-framework" />
-      <antcall target="build-visuclient-swf" />
-      <antcall target="build-user-module" />
-      <antcall target="build-home-module" />
-      <antcall target="build-session-module" />
-      <antcall target="build-retrospection-module" />
-      <antcall target="build-tutorat-module" />
-       <antcall target="build-bilan-module" />
-   </target>
-	
-
 	    <target name="build-server" description="Builds the java server classes and puts them in a jar">
 	        <delete dir="${server.tmp.classes}"/>
 	        <mkdir dir="${server.tmp.classes}"/>
@@ -619,8 +645,28 @@ or by setting the following environment variable:
 	      <copy file="${app.deploy}/${sessionmodule.name}.swf" todir="${webapp.dir}/modules" />
 	      <copy file="${app.deploy}/${usermodule.name}.swf" todir="${webapp.dir}/modules" />
 	      <copy file="${app.deploy}/${bilanmodule.name}.swf" todir="${webapp.dir}/modules" />
+	      <!-- copy wrappers -->
+	      <echo>Copy wrappers</echo>
+		  <copy todir="${webapp.dir}">
+	        <fileset dir="${app.wrappers}" includes="**"/>
+	      </copy>
+	      <!-- copy flex frameworks -->
+	      <echo>Copy frameworks</echo>
+	      <copy todir="${webapp.dir}">	         
+	          <fileset dir="${FLEX_HOME}/frameworks/rsls/">
+		         <include name="*.swf"/>
+		      </fileset>
+	      </copy>
+	      <!-- copy internalisation folder "locale" -->
+	      <echo>Copy folder "locale"</echo>
+		  <copy todir="${webapp.dir}/locale">
+	        <fileset dir="${app.src}/locale/" includes="**"/>
+	      </copy>
+	     <!-- copy start page, images, manuals files--> 
+		  <copy todir="${webapp.dir}">
+	        <fileset dir="${visu.dev.path}/start_page_assets/" includes="**"/>
+	      </copy>
 	    </target>
-
 		
 		<!-- Deploy the visu server jar and clien swf files to the Red5 server -->
 	    <target name="deploy-server" depends="clean-webinf-libs" description="Copies the server jar, configuration files, and dependencies to the web app directory on the server">
