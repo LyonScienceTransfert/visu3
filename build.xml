@@ -567,6 +567,7 @@ or by setting the following environment variable:
 	
 	<target name="build-test-page">
 	      <echo>Build Test page</echo>
+	      <mkdir dir="${app.wrappers}"/>
 		     <mxmlc 
 	         file="${app.src}/Test.mxml"
 	         output="${app.wrappers}/Test.swf"
@@ -589,6 +590,8 @@ or by setting the following environment variable:
 		   </target>
 	
 	<target name="html-wrapper" description="Creates a HTML wrapper and other js files required for the application to run in an HTML page"> 
+	   <echo>Creates a HTML wrapper</echo>
+	   <mkdir dir="${app.wrappers}"/>
 	   <html-wrapper 
 	       	title="Welcome to Visu 2" 
 			file="${clientapp.name}.html" 
@@ -612,7 +615,6 @@ or by setting the following environment variable:
     	<antcall target="build-tutorat-module" />
     	<antcall target="build-bilan-module" />
     	
-    	<mkdir dir="${app.wrappers}"/>
     	<antcall target="html-wrapper" />
     	<antcall target="build-test-page" />
 	</target>
