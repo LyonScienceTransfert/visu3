@@ -1,32 +1,51 @@
-The server has been tested and deployed on red5 0.8.0.
 
-
-* Layout
-
-The configuration/compilation files are expecting by default that the
-red5 directory is at the same level as the visu source directory,
-i.e.:
-
-PATH/red5
-PATH/visu/visu - server sources
-PATH/visu/VisuClient - client sources
+* Installation red5
+  The server has been tested and deployed on red5 0.8.0.
 
 * Database initialisation
 
   Configure the mysql connnection in
-  webapp/WEB-INF/classes/ibatis/sqlMapConfig.xml
+  VisuServeur/visu/webapp/WEB-INF/classes/ibatis/sqlMapConfig.xml
 
+	<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu"/>
+	<property name="JDBC.Username" value="HERE"/>
+	<property name="JDBC.Password" value="HERE"/>
+	
   Create a "visu" database with the appropriate login/password credentials.
 
-  Initialize an empty database from dump/empty_db.sql :
-   mysql -u_login_ -p visu < dump/empty_db.sql
+  Create an admin user from VisuServeur/dump/admin_db.sql:
+   mysql -u_login_ -p visu < VisuServeur/dump/admin_db.sql
 
-  Create an admin user from dump/admin_db.sql:
-   mysql -u_login_ -p visu < dump/admin_db.sql
+* Configure variables in files :
 
-* Compilation 
+   build.properties(webapp.name=instance_name)
+   VisuServeur/visu/webapp/WEB-INF/red5-web.properties (webapp.contextPath = instance_name)
+   
 
-Since we are completely rebuilding the version 2, we are working on 
-a global ANT build file for building both client and server side.
-Still in a "work in progress" state, you can see 
-VisuApplication/build directory for the client part.
+* Compilation and deployment
+	
+	Set extended memory :
+	export ANT_OPTS="-Xms768m -Xmx1024m -XX:MaxPermSize=512m"
+	sudo ant 
+		if you has message "Erreur: PermGen space", can try 
+		compiled the modules one by one(the list off all projects : ant -p)
+	sudo ant build-framework
+	sudo ant build-visuclient-swf
+		if you has message "Erreur: Probl?me lors de la recherche du fichier externe : ../../.git/refs/remotes/origin/master",
+		have to create fichier master in folder .git/refs/remotes/origin/
+	sudo ant build-bilan-module 
+	sudo ant build-home-module
+	sudo ant build-retrospection-module
+	sudo ant build-session-module
+	sudo ant build-tutorat-module
+	sudo ant build-user-module
+	sudo ant html-wrapper
+	sudo ant build-test-page
+	sudo ant  deploy-client 
+	sudo build-and-deploy-server
+
+* Run application
+
+    http://path_red5/instance_name
+
+
