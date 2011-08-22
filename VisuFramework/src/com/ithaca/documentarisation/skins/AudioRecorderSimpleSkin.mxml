@@ -113,9 +113,6 @@
 		<s:State name="overShareEmpty"/>
 	</s:states>
 	<s:HGroup width="100%" height="50%" verticalAlign="middle" horizontalAlign="center" gap="1">
-		<!-- ICON SEGMENT AUDIO -->
-		<mx:Image id="imageIconSegment" source="{IconEnum.getIconByName('iconAudio_16x16')}">
-		</mx:Image>
 		<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
 		<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
 			<s:Label id="labelCurrnetTime" includeIn="play,record" color.record="#E73A3A">
