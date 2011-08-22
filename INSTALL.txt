@@ -26,24 +26,28 @@
 	
 	Set extended memory :
 	export ANT_OPTS="-Xms768m -Xmx1024m -XX:MaxPermSize=512m"
-	sudo ant 
+	ant 
 		if you has message "Erreur: PermGen space", can try 
 		compiled the modules one by one(the list off all projects : ant -p)
-	sudo ant build-framework
-	sudo ant build-visuclient-swf
+	ant build-framework
+	ant build-visuclient-swf
 		if you has message "Erreur: Probl?me lors de la recherche du fichier externe : ../../.git/refs/remotes/origin/master",
 		have to create fichier master in folder .git/refs/remotes/origin/
-	sudo ant build-bilan-module 
-	sudo ant build-home-module
-	sudo ant build-retrospection-module
-	sudo ant build-session-module
-	sudo ant build-tutorat-module
-	sudo ant build-user-module
-	sudo ant html-wrapper
-	sudo ant build-test-page
-	sudo ant  deploy-client 
-	sudo build-and-deploy-server
+	ant build-bilan-module 
+	ant build-home-module
+	ant build-retrospection-module
+	ant build-session-module
+	ant build-tutorat-module
+	ant build-user-module
+	ant html-wrapper
+	ant build-test-page
+	ant  deploy-client 
+	build-and-deploy-server
 
+* Run server red5
+
+	sudo sh red5.sh
+	
 * Run application
 
     http://path_red5/instance_name
