@@ -36,16 +36,14 @@
 		]]>
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
-			<s:HGroup width="100%" gap="1">
+			<s:HGroup width="100%" gap="1" horizontalAlign="center" verticalAlign="middle">
 				<!-- ICON SEGMENT -->
 				<s:BitmapImage source="{IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected"/>
-				<!-- TEXT -->
-				<s:RichEditableText id="richEditableText"
-					 editable.sharedOver="false" editable.shared="false"
-					width="100%" 
-					color="#000000" paddingTop="3">
-					<s:text>votre text ici</s:text>
-				</s:RichEditableText>
+				<!-- AUDIO RECORDER -->
+				<documentarisation:AudioRecorder id="audioRecorder"
+					skinClass="com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin"	/>
+				<mx:Spacer width="100%"/>
+				<!-- ICON DELETE -->
 				<components:IconDelete id="iconDelete"
 					buttonMode="true"
 					includeIn="edit, editOver, editSelected"
@@ -54,10 +52,13 @@
 					<components:toolTip>Suprimer ce segment</components:toolTip>
 				</components:IconDelete>
 			</s:HGroup>
-			<s:HGroup width="100%" paddingLeft="{(this.width - 100)/2 + 18}">
-				<!-- AUDIO RECORDER -->
-				<documentarisation:AudioRecorder id="audioRecorder"
-					skinClass="com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin"	/>
+			<s:HGroup width="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+				<!-- TEXT -->
+				<s:RichEditableText id="richEditableText"
+					editable.sharedOver="false" editable.shared="false"
+					width="100%" 
+					color="#000000" paddingTop="3">
+				</s:RichEditableText>
 			</s:HGroup>
 			<s:Line width="100%" includeIn="edit, editOver, editSelected">
 				<s:stroke>
