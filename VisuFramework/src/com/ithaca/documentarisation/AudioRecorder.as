@@ -27,10 +27,7 @@ import spark.primitives.Rect;
 
 public class AudioRecorder extends SkinnableComponent
 {
-	private static var logger:ILogger = Log.getLogger("com.ithaca.documentarisation.SegmentVideo");
-	
-/*	[SkinPart("true")]
-	public var progressBar:Rect;*/
+	private static var logger:ILogger = Log.getLogger("com.ithaca.documentarisation.AudioRecorder");
 	
 	[SkinPart("true")]
 	public var buttonPlay:Button;
@@ -494,13 +491,16 @@ public class AudioRecorder extends SkinnableComponent
 	}
 	private function onCreationComplete(event:FlexEvent):void
 	{
-		micro = Microphone.getMicrophone();
-		micro.rate = 44;
-		micro.setSilenceLevel(0);
-		
-		micro.setUseEchoSuppression(true);
-		micro.soundTransform = new SoundTransform(0,0);
-		micro.setLoopBack(true);
+		if(!modeShare)
+		{
+			micro = Microphone.getMicrophone();
+			micro.rate = 44;
+			micro.setSilenceLevel(0);
+			
+			micro.setUseEchoSuppression(true);
+			micro.soundTransform = new SoundTransform(0,0);
+			micro.setLoopBack(true);
+		}
 	}
 	
 	private function microLevel(event:TimerEvent):void {
