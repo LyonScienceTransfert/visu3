@@ -868,7 +868,7 @@
 				var createurUser:User = Model.getInstance().getLoggedUser();
 				retroDocumentVO.ownerId = createurUser.id_user;
 				retroDocumentVO.sessionId = this.currentSessionId;
-				retroDocumentVO.title = "Nouveau bilan";
+				retroDocumentVO.title = "Bilan sur la séance du " + '"'+Model.getInstance().getCurrentSession().theme+'"'; 
 				
 				var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
 				var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
