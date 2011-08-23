@@ -224,7 +224,8 @@ or by setting the following environment variable:
 				<include-file name="images/iconRecordBorder_16x16.png" path="${framework.images}/iconRecordBorder_16x16.png"/>
 				<include-file name="images/iconStopRed_16x16.png" path="${framework.images}/iconStopRed_16x16.png"/>
 				<include-file name="images/iconStopYellow_16x16.png" path="${framework.images}/iconStopYellow_16x16.png"/>
-
+ 				<include-file name="images/iconLettre_t__16x16.png" path="${framework.images}/iconLettre_t__16x16.png"/>
+ 				<include-file name="images/iconLettre_T_16x16.png" path="${framework.images}/iconLettre_T_16x16.png"/>
 				
 	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
 	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
