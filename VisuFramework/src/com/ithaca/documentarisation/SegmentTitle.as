@@ -197,9 +197,9 @@ public class SegmentTitle extends SkinnableComponent
 	public function onFocusInRichEditableText(event:* = null):void
 	{	
 		
-		if(richEditableText.text == "Cliquer ici pour ajouter du text")
+		if(textSegment.text == "Cliquer ici pour ajouter du text")
 		{
-			richEditableText.text = "";
+			textSegment.text = "";
 		}
 		
 		textSegment.selectAll();
