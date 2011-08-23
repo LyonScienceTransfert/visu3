@@ -196,8 +196,11 @@ public class SegmentTitle extends SkinnableComponent
 	
 	public function onFocusInRichEditableText(event:* = null):void
 	{	
-		textSegment.setStyle("fontStyle","normal");
-		textSegment.setStyle("backgroundColor", colorBackGround);
+		
+		if(richEditableText.text == "Cliquer ici pour ajouter du text")
+		{
+			richEditableText.text = "";
+		}
 		
 		textSegment.selectAll();
 		
@@ -206,6 +209,8 @@ public class SegmentTitle extends SkinnableComponent
 			this.stage.focus = textSegment;
 		}
 		
+		textSegment.setStyle("backgroundColor", colorBackGround);
+		textSegment.setStyle("fontStyle","normal");
 		textSegment.addEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
 	public function onFocusOutRichEditableText(event:* = null):void
@@ -268,7 +273,7 @@ public class SegmentTitle extends SkinnableComponent
 	
 	public function setRichEditText():void
 	{
-		textSegment.text = "ajoutez le texte ici";
+		textSegment.text = "Cliquer ici pour ajouter du text";
 		textSegment.setStyle("fontStyle","italic");
 		textSegment.setStyle("backgroundColor", _backGroundColorRichEditableText);
 	}	
