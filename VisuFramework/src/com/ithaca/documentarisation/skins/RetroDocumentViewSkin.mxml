@@ -13,7 +13,6 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
-			import com.ithaca.visu.ui.utils.SharedSatusEnum;
 		]]>
 	</fx:Script>
 	<s:Rect id="background" left="0" right="0" top="0" bottom="0">

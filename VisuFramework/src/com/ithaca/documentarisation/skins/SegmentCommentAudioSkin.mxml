@@ -16,8 +16,6 @@
 	</s:states>
 		<fx:Script>
 		<![CDATA[
-			import com.ithaca.visu.ui.utils.IconEnum;
-			
 			import mx.events.StateChangeEvent;
 
 			protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
@@ -36,9 +34,9 @@
 		]]>
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
-			<s:HGroup width="100%" gap="1" horizontalAlign="center" verticalAlign="middle">
+			<s:HGroup width="100%" gap="1" horizontalAlign="center" verticalAlign="middle" height="22">
 				<!-- ICON SEGMENT -->
-				<s:BitmapImage source="{IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected"/>
+				<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected"/>
 				<!-- AUDIO RECORDER -->
 				<documentarisation:AudioRecorder id="audioRecorder"
 					skinClass="com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin"	/>
@@ -52,7 +50,19 @@
 					<components:toolTip>Suprimer ce segment</components:toolTip>
 				</components:IconDelete>
 			</s:HGroup>
-			<s:HGroup width="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+			<s:HGroup width="100%" 
+				paddingLeft.edit="5"
+				paddingLeft.editOver="5"
+				paddingLeft.editSelected="5"
+				paddingRight.edit="5" 
+				paddingRight.editOver="5" 
+				paddingRight.editSelected="5" 
+				paddingTop.edit="5" 
+				paddingTop.editOver="5" 
+				paddingTop.editSelected="5" 
+				paddingBottom.edit="5"
+				paddingBottom.editOver="5"
+				paddingBottom.editSelected="5">
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText"
 					editable.sharedOver="false" editable.shared="false"

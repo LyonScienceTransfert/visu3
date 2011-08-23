@@ -28,6 +28,7 @@ package com.ithaca.documentarisation
 	import mx.controls.PopUpButton;
 	import mx.core.ClassFactory;
 	import mx.events.CloseEvent;
+	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.events.MenuEvent;
 	import mx.managers.PopUpManager;
@@ -185,12 +186,12 @@ package com.ithaca.documentarisation
 					return new ClassFactory( className);
 				};
 				
-				groupSegment.dragEnabled = true;
-				groupSegment.dragMoveEnabled = true;
-				groupSegment.dropEnabled = true;
-				
 				groupSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
-				groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true)
+				groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
+				
+				groupSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
+				groupSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
+				
 			}
 		}
 		
@@ -282,8 +283,8 @@ package com.ithaca.documentarisation
 		private function onCreationCompleteAddSegmentPopUpButton(event:FlexEvent):void
 		{
 			var menuAddSegment:Menu = new Menu();
-			var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment"}, 
-				{label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment"}, 
+			var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
+				{label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment" , iconName : "iconLettre_t_16x16"}, 
 				{label: fxgt.gettext("Bloc vidéo + texte"), typeSegment: "VideoSegment", iconName : "iconVideo_16x16"},        
 				{label: fxgt.gettext("Bloc commentaire audio"), typeSegment: "AudioSegment", iconName: "iconAudio_16x16"}];        
 			menuAddSegment.dataProvider = dp;
@@ -350,8 +351,8 @@ package com.ithaca.documentarisation
 		private function addSegment(value:Segment):void
 		{
 			listSegment.addItem(value);
-			//  add segment in retroDocument
-			this._retroDocument.listSegment.addItem(value);
+			// set updated listSegment
+			_retroDocument.listSegment = listSegment;
 			// update retroDocument
 			updateRetroDocument();
 			// notify change list segment 
@@ -437,6 +438,20 @@ package com.ithaca.documentarisation
 		{
 			this.needUpdateRetroDocument = true;
 		}
+		
+		private function onReadyToDragSegment(event:RetroDocumentEvent):void
+		{
+			setDragDropEnabled(true);
+		}
+		
+		private function onDragCompleteSegment(event:DragEvent):void
+		{
+			setDragDropEnabled(false);
+			// set updated listSegment
+			listSegment = this.groupSegment.dataProvider;
+			_retroDocument.listSegment = listSegment;
+			needUpdateRetroDocument = true;
+		}
 		//_____________________________________________________________________
 		//
 		//  Dispatchers
@@ -520,6 +535,13 @@ package com.ithaca.documentarisation
 			this._listUser = event.listUser;
 			// update retroDocument
 			updateRetroDocument();
+		}
+		
+		private function setDragDropEnabled(value:Boolean):void
+		{
+			groupSegment.dragEnabled = value;
+			groupSegment.dragMoveEnabled = value;
+			groupSegment.dropEnabled = value;
 		}
 	}
 }

@@ -3,15 +3,13 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.visu.ui.utils.IconEnum;
 
-import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 
 import mx.controls.Image;
-import mx.events.StateChangeEvent;
 
-import spark.components.Label;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
@@ -20,9 +18,10 @@ public class SegmentTitle extends SkinnableComponent
 {
 	[SkinState("edit")]
 	[SkinState("normal")]
-		
+
 	[SkinPart("true")]
-	public var 	labelSegment:Label;
+	public var 	iconSegment:Image;
+	
 	[SkinPart("true")]
 	public var 	textSegment:RichEditableText;
 	[SkinPart("true")]
@@ -116,17 +115,23 @@ public class SegmentTitle extends SkinnableComponent
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
 		}
-		if(instance == labelSegment)
+		
+		if (instance == iconSegment)
 		{
-			var fontValue:String = "normal";
-			var labelText:String = "t";
+			// can drag/drop this segment
+			iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+			var toolTipText:String = "Bloc texte";
+			// TODO : message "Vous pouver deplace cet block en haut en bas",
+			// show this message only if has many blocs
+			// MouseCursor = HAND just if has many blocs
+			var iconName:String ="iconLettre_t_16x16";
 			if(_fontBold)
 			{
-				fontValue = "bold";
-				labelText = "T";
+				toolTipText = "Bloc titre";
+				iconName = "iconLettre_T_16x16";
 			}
-			labelSegment.setStyle("fontWeight", fontValue);
-			labelSegment.text = labelText;
+			iconSegment.source = IconEnum.getIconByName(iconName);
+			iconSegment.toolTip = toolTipText;
 		}
 	}
 	
@@ -228,6 +233,11 @@ public class SegmentTitle extends SkinnableComponent
 		this.dispatchEvent(removeSegmentEvent);
 	}
 
+	private function onMouseDownIconSegment(event:MouseEvent):void
+	{
+		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
+		dispatchEvent(mouseDownIconSegment);
+	}
 	//_____________________________________________________________________
 	//
 	// Dispatchers
@@ -267,20 +277,25 @@ public class SegmentTitle extends SkinnableComponent
 	{
 		var fontValue:String = "normal";
 		var textAlign:String = "left";
-		var labelText:String = "t";
+		var toolTipText:String = "Bloc texte";
+		// TODO : message "Vous pouver deplace cet block en haut en bas",
+		// show this message only if has many blocs
+		// MouseCursor = HAND just if has many blocs
+		var iconName:String = "iconLettre_t_16x16";
 		if(_fontBold)
 		{
 			fontValue = "bold";
 			textAlign = "center";
-			labelText = "T";
+			toolTipText = "Bloc titre";
+			iconName = "iconLettre_T_16x16";
 		}
 		value.setStyle("fontWeight", fontValue);
 		value.setStyle("textAlign", textAlign);
-		if(labelSegment)
+		if(iconSegment)
 		{
-			labelSegment.setStyle("fontWeight", fontValue);
-			labelSegment.text = labelText;
-		}
+			iconSegment.toolTip = toolTipText;
+			iconSegment.source = IconEnum.getIconByName(iconName);
+		}		
 	}
 }
 }
