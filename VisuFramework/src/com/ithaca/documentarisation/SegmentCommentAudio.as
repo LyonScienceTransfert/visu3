@@ -344,7 +344,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// richText
 	public function onFocusInRichEditableText(event:*=null):void
 	{
-		if(richEditableText.text == "Ajoutez du texte à cet enregistrement")
+		if(richEditableText.text == "Cliquer ici pour ajouter du text")
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
@@ -412,7 +412,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	
 	private function setRichEditText():void
 	{
-		richEditableText.text = "Ajoutez du texte à cet enregistrement";
+		richEditableText.text = "Cliquer ici pour ajouter du text";
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
