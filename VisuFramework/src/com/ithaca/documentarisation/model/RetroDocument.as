@@ -140,7 +140,12 @@ package com.ithaca.documentarisation.model
 				var endTimeVideo:XML = new XML(stringEndTimeVideo);
 				segmentXML.appendChild(endTimeVideo);
 				// comment
-				var stringComment:String = "<"+RetroDocumentConst.TAG_COMMENT+"><![CDATA["+segment.comment+"]]></"+RetroDocumentConst.TAG_COMMENT+">";
+				var commentText:String = segment.comment;
+				if(commentText == "Cliquer ici pour ajouter du text")
+				{
+					commentText = "";
+				}
+				var stringComment:String = "<"+RetroDocumentConst.TAG_COMMENT+"><![CDATA["+commentText+"]]></"+RetroDocumentConst.TAG_COMMENT+">";
 				var comment:XML = new XML(stringComment);
 				segmentXML.appendChild(comment);
 				// type source 
