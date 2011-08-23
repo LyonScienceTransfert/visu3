@@ -7,7 +7,6 @@ import com.ithaca.utils.components.IconDelete;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 
-import mx.controls.Button;
 import mx.controls.Image;
 
 import spark.components.Label;
@@ -17,6 +16,8 @@ import spark.events.TextOperationEvent;
 
 public class SegmentVideoAdvanced extends SkinnableComponent
 {		
+	[SkinPart("true")]
+	public var iconSegment:Image;
 	[SkinPart("true")]
 	public var imagePlay:Image;
 	[SkinPart("true")]
@@ -179,6 +180,16 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 			}
 		}
+		if (instance == iconSegment)
+		{
+			// can drag/drop this segment
+			iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+			iconSegment.toolTip = "Bloc vidéo + texte";
+			// TODO : message "Vous pouver deplace cet block en haut en bas",
+			// show this message only if has many blocs
+			// MouseCursor = HAND just if has many blocs
+		}
+
 		
 	}
 	override protected function partRemoved(partName:String, instance:Object):void
@@ -327,6 +338,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	{
 		segment.comment = richEditableText.text;
 		notifyUpdateSegment();
+	}
+	
+	private function onMouseDownIconSegment(event:MouseEvent):void
+	{
+		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
+		dispatchEvent(mouseDownIconSegment);
 	}
 	//_____________________________________________________________________
 	//

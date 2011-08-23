@@ -340,7 +340,6 @@ public class AudioRecorder extends SkinnableComponent
 		{
 			skinName = "normal"
 		}
-		trace("skinName = ", skinName);
 		return skinName;
 	}
 	//_____________________________________________________________________

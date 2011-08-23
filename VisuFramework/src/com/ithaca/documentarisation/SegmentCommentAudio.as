@@ -3,25 +3,17 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
-import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconDelete;
-import com.ithaca.visu.ui.utils.IconEnum;
 
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
-import flash.events.TimerEvent;
 import flash.net.NetConnection;
 import flash.net.NetStream;
-import flash.ui.Mouse;
 import flash.utils.Timer;
 
-import mx.controls.Button;
 import mx.controls.Image;
-import mx.events.FlexEvent;
 
-import spark.components.Label;
 import spark.components.RichEditableText;
-import spark.components.VGroup;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
@@ -36,6 +28,9 @@ public class SegmentCommentAudio extends SkinnableComponent
 	
 	[SkinPart("true")]
 	public var audioRecorder:AudioRecorder;
+	
+	[SkinPart("true")]
+	public var iconSegment:Image;
 	
 	private var _text:String;
 	private var textChange:Boolean;
@@ -247,6 +242,15 @@ public class SegmentCommentAudio extends SkinnableComponent
 				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 			}
 		}
+		if (instance == iconSegment)
+		{
+			// can drag/drop this segment
+			iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+			iconSegment.toolTip = "Bloc commentaire audio";
+			// TODO : message "Vous pouver deplace cet block en haut en bas",
+			// show this message only if has many blocs
+			// MouseCursor = HAND just if has many blocs
+		}
 	}	
 	override protected function commitProperties():void
 	{
@@ -383,6 +387,12 @@ public class SegmentCommentAudio extends SkinnableComponent
 		segment.durationCommentAudio = event.durationTimeAudio;
 		notifyUpdateSegment();
 	}
+	private function onMouseDownIconSegment(event:MouseEvent):void
+	{
+		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
+		dispatchEvent(mouseDownIconSegment);
+	}
+		
 	//_____________________________________________________________________
 	//
 	// Dispatchers
