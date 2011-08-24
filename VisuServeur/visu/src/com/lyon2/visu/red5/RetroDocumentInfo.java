@@ -154,47 +154,6 @@ public class RetroDocumentInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des deleteAllInvitations" + e);
 		}
-		
-		// get retroOdocuments of the owner
-		List<RetroDocument> listRetroDocumentOwner = null;
-		try {
-			listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des retroDocument " + e, e);
-		}
-		if(listRetroDocumentOwner != null)
-		{
-			log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());
-//			log.warn("xml the first retroDocument = {}",listRetroDocumentOwner.get(0).getCreationDate().toString());	
-		}else
-		{
-			log.warn("List empty !!!!!!");
-		}
-		// get retroOdocuments of the other users
-		List<RetroDocument> listRetroDocumentShared = null;
-		try {
-			listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
-		}
-		if(listRetroDocumentShared != null)
-		{
-			log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());
-//			log.warn("xml the first retroDocument = {}",listRetroDocumentShared.get(0).getCreationDate().toString());	
-		}else
-		{
-			log.warn("List empty !!!!!!");
-		}
-		
-		Object[] argsRetroDocument = { listRetroDocumentOwner, listRetroDocumentShared};
-		if (conn instanceof IServiceCapableConnection) 
-		{
-			IConnection connClient = (IConnection) client.getAttribute("connection");
-			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
-			sc.invoke("checkListRetroDocument", argsRetroDocument);
-		}
 	}
 	
 	@SuppressWarnings("unchecked")
