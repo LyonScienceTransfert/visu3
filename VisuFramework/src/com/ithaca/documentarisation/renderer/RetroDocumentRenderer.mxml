@@ -2,13 +2,39 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	autoDrawBackground="true" xmlns:skins="com.ithaca.documentarisation.skins.*" xmlns:documentarisation="com.ithaca.documentarisation.*">
+	autoDrawBackground="true" xmlns:skins="com.ithaca.documentarisation.skins.*" xmlns:documentarisation="com.ithaca.documentarisation.*"
+	currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
 	<fx:Script>
 	<![CDATA[
 		import com.ithaca.documentarisation.skins.RetroDocumentListItemSimpleSkin;
+		
+		import mx.events.StateChangeEvent;
+
+		protected function itemrenderer1_currentStateChangeHandler(event:StateChangeEvent):void
+		{
+			switch (currentState)
+			{
+			case "selected" :
+				retroDocumentListItem.rendererOver();
+				break;
+			case "normal" :
+				retroDocumentListItem.rendererNormal();
+				break;
+			case "hovered" :
+				retroDocumentListItem.rendererOver();
+				break;
+			}
+		}
+
 	]]>
 	</fx:Script>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+		<s:State name="hovered" />
+	</s:states>
 	<documentarisation:RetroDocumentListItemSimple
+	     id="retroDocumentListItem"
 		 retroDocumentVO="{data}"
 		 skinClass="com.ithaca.documentarisation.skins.RetroDocumentListItemSimpleSkin"/>
 </s:ItemRenderer>

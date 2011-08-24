@@ -12,33 +12,38 @@
 		import com.ithaca.visu.ui.utils.IconEnum;
 	]]>
 	</fx:Script>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="over"/>
+	</s:states>
 	<s:VGroup gap="0" width="100%">
-		<s:HGroup  left="9" right="3" top="1" bottom="0" minHeight="30" gap="1" horizontalAlign="right" verticalAlign="bottom" 
-			paddingBottom="2" paddingLeft="3"> 
+		<s:HGroup  width="100%" top="1" bottom="0" minHeight="30" gap="2" horizontalAlign="right" verticalAlign="bottom" 
+			paddingBottom="2" paddingLeft="3" paddingRight="3"> 
 			<!-- LABAL RETRODOCUMENT -->
-			<s:Label id="labelRetroDocument" maxDisplayedLines="1" lineBreak="toFit" height="100%" maxWidth="220" width="220" minHeight="30"
+			<s:Label id="labelRetroDocument" maxDisplayedLines="1" lineBreak="toFit" height="100%" maxWidth="200" width="200" minHeight="26"
 				fontWeight="normal" verticalAlign="middle" fontSize="14" />
 			<!-- LINE HORISONTAL -->
-			<s:Line height="100%" right="103">
+			<s:Line height="100%">
 				<s:stroke>
 					<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
 				</s:stroke>
 			</s:Line>
-			<mx:Spacer width="1"/>
+			<mx:Spacer width="100%"/>
 			
 			<!-- ICON INFO VIDEO -->
 			<components:IconInfoSegment id="iconInfoVideo" 
 				skinClass="com.ithaca.utils.components.skins.IconInfoSegmentSkin"
-				>
+				 visible.normal="false">
 			</components:IconInfoSegment>
 			<!-- ICON INFO AUDIO -->
 			<components:IconInfoSegment id="iconInfoAudio"  
 				skinClass="com.ithaca.utils.components.skins.IconInfoSegmentSkin"
-				>
+				 visible.normal="false">
 			</components:IconInfoSegment>
-			<mx:PopUpButton id="buttonAction" icon="{IconEnum.getIconByName('iconOption_16x16')}" width="36" height="16" >	
-				<mx:buttonMode>true</mx:buttonMode>
-			</mx:PopUpButton>
+			<!-- BUTTON DELETE -->
+			<components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true" visible.normal="false"/>
+			<!-- BUTTON SHARE -->
+			<components:IconButton id="buttonShare" height="22" width="22" buttonMode="true" visible.normal="false"/>
 			<mx:Spacer width="1"/>
 		</s:HGroup>
 		<s:Line width="100%">
