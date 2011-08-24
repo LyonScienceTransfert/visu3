@@ -759,6 +759,7 @@
 				{
 					listRetroDocument.dataProvider = event.listRetroDocument;
 					listRetroDocument.labelField = "title";
+					listRetroDocument.addEventListener(RetroDocumentEvent.DELETE_RETRO_DOCUMENT, onPreDeleteRetroDocumen, true);
 					
 					this.groupRetroDocumentView.removeAllElements();
 					
@@ -1445,7 +1446,28 @@
 				panelVideo.buttonModeZoomEnabled = false;
 				visio.zoomMax = false;
 			}
-
+			
+			private function onPreDeleteRetroDocumen(event:RetroDocumentEvent):void
+			{
+				var nbrRetroDocument:int = listRetroDocument.dataProvider.length;
+				for( var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++)
+				{
+					var retroDocumentVO:RetroDocumentVO = listRetroDocument.dataProvider.getItemAt(nRetroDocument) as RetroDocumentVO;
+					if(event.idRetroDocument == retroDocumentVO.documentId)
+					{
+						listRetroDocument.dataProvider.removeItemAt(nRetroDocument);
+						break;
+					}
+				}
+				
+				this.groupRetroDocumentView.removeAllElements();	
+				var messageAboutRetroDocument:Label = new Label();
+				messageAboutRetroDocument.percentWidth = 100;
+				messageAboutRetroDocument.percentHeight = 100;
+				messageAboutRetroDocument.y = this.groupRetroDocumentView.height/2;					
+				messageAboutRetroDocument.text =  fxgt.gettext("Aucun bilan sélectionné");
+				this.groupRetroDocumentView.addElement(messageAboutRetroDocument);
+			}
 
 		]]>
 	</fx:Script>

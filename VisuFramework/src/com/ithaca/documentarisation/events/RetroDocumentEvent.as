@@ -19,6 +19,7 @@ package  com.ithaca.documentarisation.events
 		static public const SHOW_RETRO_DOCUMENT : String = 'showRetroDocument';
 		static public const CREATE_RETRO_DOCUMENT : String = 'createRetroDocument';
 		static public const DELETE_RETRO_DOCUMENT : String = 'deleteRetroDocument';
+		static public const PRE_DELETE_RETRO_DOCUMENT : String = 'preDeleteRetroDocument';
 		static public const PRE_UPDATE_RETRO_DOCUMENT : String = 'preUpdateRetroDocument';
 		static public const UPDATE_RETRO_DOCUMENT : String = 'updateRetroDocument';
 		static public const UPDATE_RETRO_SEGMENT : String = 'updateRetroSegment';
