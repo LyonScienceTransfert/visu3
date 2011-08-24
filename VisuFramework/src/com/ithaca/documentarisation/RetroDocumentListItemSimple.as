@@ -1,6 +1,7 @@
 package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
+import com.ithaca.utils.components.IconButton;
 import com.ithaca.utils.components.IconInfoSegment;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.ui.utils.IconEnum;
@@ -28,7 +29,9 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	[SkinPart("true")]
 	public var iconInfoAudio:IconInfoSegment;
 	[SkinPart("true")]
-	public var buttonAction:PopUpButton;
+	public var buttonDelete:IconButton;
+	[SkinPart("true")]
+	public var buttonShare:IconButton;
 	
 	private var _retroDocumentVO:RetroDocumentVO;
 	private var retroDocumentVOChange:Boolean;
@@ -37,6 +40,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	
 	private var nbrAudioSegment:int;
 	private var nbrVideoSegment:int;
+	
+	private var over:Boolean;
 	
 	[Bindable]
 	private var fxgt:_FxGettext;
@@ -62,6 +67,17 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	{
 		return _retroDocumentVO;
 	}
+	public function rendererNormal():void
+	{
+		over = false;
+		invalidateSkinState();
+	}
+	public function rendererOver():void
+	{
+		over = true;
+		invalidateSkinState();
+	}
+	
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -101,13 +117,20 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoAudio.nbrElement = nbrAudioSegment;
 			iconInfoAudio.sourceIcon = IconEnum.getIconByName('iconAudio_16x16');
 		}
-		if (instance == buttonAction)
+		if (instance == buttonDelete)
 		{
-			initMenuAction();
-			buttonAction.addEventListener(MouseEvent.CLICK, onMouseClickButtonAction);
-			buttonAction.toolTip = "Plus d'action sur ce bilan";
+			buttonDelete.addEventListener(MouseEvent.CLICK, onClickButtonDelete);
+			buttonDelete.icon =  IconEnum.getIconByName('delete');
+			buttonDelete.toolTip = "Supprimer ce bilan";
+		}
+		if (instance == buttonShare)
+		{
+			buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
+			buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
+			buttonShare.toolTip = "Partager ce bilan";
 		}
 	}
+
 	override protected function partRemoved(partName:String, instance:Object):void
 	{
 		super.partRemoved(partName,instance);
@@ -127,7 +150,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			if(iconInfoVideo)
 			{
 				var iconInfoVideoVisible:Boolean = true;
-				if(nbrVideoSegment == 0)
+				if(nbrVideoSegment == 0 || !over)
 				{
 					iconInfoVideoVisible = false;
 				}
@@ -137,7 +160,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			if(iconInfoAudio)
 			{			
 				var iconInfoAudioVisible:Boolean = true;
-				if(nbrAudioSegment == 0)
+				if(nbrAudioSegment == 0 || !over)
 				{
 					iconInfoAudioVisible = false;
 				}
@@ -147,30 +170,38 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			
 		}	
 	}
+	override protected function getCurrentSkinState():String
+	{
+		var skinName:String;
+		if(!enabled)
+		{
+			skinName = "disable";
+		}else if(over)
+		{
+			skinName = "over";
+		}else
+		{
+			skinName = "normal"
+		}
+		return skinName;
+	}
 	//_____________________________________________________________________
 	//
 	// Listeners
 	//
 	//_____________________________________________________________________
-	private function onItemMenuActionClickHandler(event:MenuEvent):void
-	{		
-		var selectedIndex:int = menuAction.selectedIndex;
-		if(selectedIndex == 0)
-		{
-			var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
-			this.dispatchEvent(loadListUsers);
-		}else
-		{
-			Alert.yesLabel = fxgt.gettext("Oui");
-			Alert.noLabel = fxgt.gettext("Non");
-			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+retroDocumentVO.title+'"'+" ?"),
-				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
-		}
-	}
-	
-	private function onMouseClickButtonAction(event:MouseEvent):void
+
+	private function onClickButtonDelete(event:MouseEvent):void
 	{
-		//menuAction.show();
+		Alert.yesLabel = fxgt.gettext("Oui");
+		Alert.noLabel = fxgt.gettext("Non");
+		Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+retroDocumentVO.title+'"'+" ?"),
+			fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
+	}
+	private function onClickButtonShare(event:MouseEvent):void
+	{
+		var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
+		this.dispatchEvent(loadListUsers);
 	}
 	// remove retroDocument
 	private function removeRetroDocumentConformed(event:CloseEvent):void
@@ -188,25 +219,6 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	// Utils
 	//
 	//_____________________________________________________________________
-	
-	// Initialize the Menu control, and specify it as the pop up object
-	// of the PopUpButton control. 
-	private function initMenuAction():void {
-		menuAction = new Menu();
-		var dp:Object = [{label: "Partager", iconName: "retroDocumentShared" }, {label: "Supprimer", iconName: "delete"}];        
-		menuAction.dataProvider = dp;
-		menuAction.selectedIndex = 0;
-		menuAction.iconFunction = setIconMenuFunction;
-		menuAction.addEventListener(MenuEvent.ITEM_CLICK, onItemMenuActionClickHandler);
-		buttonAction.popUp = menuAction;
-	}
-
-	private function setIconMenuFunction(item:Object):Class
-	{
-
-		var iconName:String = item.iconName;
-		return IconEnum.getIconByName(iconName);
-	}
 	
 	private function parseRetroDocument():void
 	{
