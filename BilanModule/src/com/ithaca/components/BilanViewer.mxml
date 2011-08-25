@@ -21,6 +21,7 @@
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			
+			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
@@ -51,6 +52,20 @@
 			}
 
 			public function setNewBilan(bilan:RetroDocument):void {
+				// remove all empty segments  : empty text , durationCommentAudio = 0
+				var listSegmentClean:ArrayCollection = new ArrayCollection();
+				var listSegment:ArrayCollection = bilan.listSegment as ArrayCollection;
+				var nbrSegment:int = listSegment.length;
+				for(var nSegment:int = 0; nSegment < nbrSegment; nSegment++)
+				{
+					var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
+					if(!(segment.comment == "" && segment.durationCommentAudio == 0))
+					{
+						listSegmentClean.addItem(segment);
+					}
+				}
+				bilan.listSegment = listSegmentClean;
+				
 				this.bilan = bilan;
 						
 				if(this.visio!=null) 
@@ -73,13 +88,6 @@
 					logger.info("Sending the request for the obsel list of session {0}", bilan.sessionId);
 					logger.info("The attached session object is {0}", bilan.session);
 					this.dispatchEvent(event);
-					// can edit if logged user owner of the bilen
-					var canEditBilan:Boolean = false;
-					if(bilan.ownerId == Model.getInstance().getLoggedUser().id_user)
-					{
-						canEditBilan = true;
-					}
-					buttonSwitch.enabled = canEditBilan;
 				}
 			}
 						
@@ -197,25 +205,6 @@
 				buttonPlay_clickHandler();
 			}
 
-			protected function buttonPlusInfo_clickHandler(event:MouseEvent):void
-			{
-				if(this.currentState == "normal")
-				{
-					this.currentState = "plusInfo";
-				}else if(this.currentState == "plusInfo")
-				{
-					this.currentState = "normal";
-				}
-			}
-
-			protected function buttonSwitch_clickHandler(event:MouseEvent):void
-			{
-				var switchModuleEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN);
-				switchModuleEvent.session = bilan.session;
-				switchModuleEvent.idRetroDocument = bilan.id;
-				this.dispatchEvent(switchModuleEvent);
-			}
-
 			private function setRendererSegmentFunction(item:Object):ClassFactory
 			{
 				var className:Class = BlocTitleBilanRenderer;
@@ -234,7 +223,6 @@
     </fx:Script>
     <s:states>
         <s:State name="normal"/>
-        <s:State name="plusInfo"/>
     </s:states>
 
 	<s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
@@ -256,16 +244,6 @@
 										width="100%"
 										text="{bilan.title}"/>
 									<mx:Spacer width="2"/>
-									<mx:Button id="buttonSwitch" icon="{IconEnum.getIconByName('iconMinimaze_16x16')}" enabled="true" width="22" height="22" buttonMode="true"
-										 click="buttonSwitch_clickHandler(event)">
-										<mx:toolTip>Editer ce bilan</mx:toolTip>
-									</mx:Button>
-									<mx:Button  id="buttonPlusInfo" height="22"
-										click="buttonPlusInfo_clickHandler(event)" 
-										buttonMode="true">
-										<mx:label.normal>Voir les informations</mx:label.normal>
-										<mx:label.plusInfo>Cacher les informations</mx:label.plusInfo>
-									</mx:Button>
 								</s:HGroup>
 								<s:Label 
 									fontSize="12"
@@ -276,157 +254,9 @@
 									text="{bilan.description}"/>
 								
 								<s:List id="segmentList" 
-									
 									borderVisible="false" width="100%" height="100%"  
 									dataProvider="{bilan.listSegment}" 
 									itemRendererFunction="setRendererSegmentFunction">
-									<!--<s:itemRenderer>
-										<fx:Component>
-											<s:ItemRenderer creationComplete="initRenderer(event)" left="0" right="0" currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
-												<s:states>
-													<s:State name="normal" />
-													<s:State name="selected" />
-													<s:State name="hovered" />
-												</s:states>
-												<fx:Script>
-													<![CDATA[
-														import com.ithaca.documentarisation.model.Segment;
-														import com.ithaca.visu.events.PlaySegmentVideoEvent;
-														import com.ithaca.visu.ui.utils.IconEnum;
-														import com.lyon2.controls.utils.TimeUtils;
-														
-														import flash.events.MouseEvent;
-														
-														import mx.events.StateChangeEvent;
-														import mx.logging.ILogger;
-														import mx.logging.Log;
-														private var segment:Segment;
-														private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer.anonymousRenderer');
-
-														[Bindable]
-														private var sessionStart:Number;
-														
-														 override public function set data(value:Object):void { 
-													    	super.data = value; 
-														    if (value== null) 
-														      return; 
-															
-															segment = data as Segment;
-															//logger.debug("SegmentRenderer set data. Title: {0}, Comment: {1}", data.title, data.comment);
-
-															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
-														}
-				
-														private function initRenderer(event:Event):void {
-															logger.debug("SegmentRenderer Initialized. Comment: {1}", data.comment);
-															this.sessionStart = data.parentRetroDocument.session.date_start_recording.time;
-															
-															playImage.includeInLayout = playImage.visible = false;
-															
-															var nameIcon:String = "";
-															switch (segment.typeSource)
-															{
-																case "3" :
-																	nameIcon = "iconAudio_16x16";
-																	if(data.durationCommentAudio != 0)
-																	{
-																		pasAudio.includeInLayout = pasAudio.visible = false;
-																		labelDuration.text = data.durationCommentAudio;
-																	}else
-																	{
-																		idDuree.includeInLayout = idDuree.visible = false;
-																	}
-																	break;
-																case "4" :
-																	nameIcon = "iconVideo_16x16";
-																	idDuree.includeInLayout = idDuree.visible = true;
-																	if(data.durationCommentAudio == 0)
-																	{
-																		labelDuration.text = "51";
-																	}
-																	pasAudio.includeInLayout = pasAudio.visible = false;
-																	break;
-																default :
-																	idDuree.includeInLayout = idDuree.visible = false;
-																	pasAudio.includeInLayout = pasAudio.visible = false;
-																	break;
-																
-															}
-															playLabel.includeInLayout = playLabel.visible = false;
-															imageTypeSegment.source =IconEnum.getIconByName(nameIcon);
-														}
-														private function itemrenderer1_currentStateChangeHandler(event:Event):void
-														{
-															playImage.includeInLayout = playImage.visible = false;
-															
-															if(currentState == "selected")
-															{
-																pasAudio.includeInLayout = pasAudio.visible = false;
-																idDuree.includeInLayout = idDuree.visible = false;
-																playLabel.includeInLayout = playLabel.visible = true;
-																playImage.includeInLayout = playImage.visible = false;
-															}else if (currentState == "hovered")
-															{
-																pasAudio.includeInLayout = pasAudio.visible = false;
-																playLabel.includeInLayout = playLabel.visible = false;
-																if(data.durationCommentAudio != 0)
-																{
-																	idDuree.includeInLayout = idDuree.visible = true;
-																	playImage.includeInLayout = playImage.visible = true;
-																}
-															}
-																
-															
-														}
-														
-													]]>
-												</fx:Script>
-												<s:VGroup width="100%" gap="1">
-													<s:VGroup paddingTop="5" gap="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%">
-															<s:HGroup visible="{data.title.length>0}" includeInLayout="{data.title.length>0}" width="100%">
-																<s:Label 
-																	fontSize="16"
-																	width="100%"
-																	text="{data.title}"/>
-															</s:HGroup>
-															<s:HGroup visible="{data.comment.length>0}" includeInLayout="{data.comment.length>0}" width="100%" paddingLeft="5" paddingRight="5">
-																<mx:Text width="90%" text="{data.comment}" toolTip="{data.comment}"/>
-															</s:HGroup>
-													</s:VGroup>
-													<s:HGroup width="100%" gap="1" fontSize="10" verticalAlign="middle">
-														<mx:Spacer width="100%"/>
-														<mx:Image id="imageTypeSegment"/>
-														<s:HGroup id="idDuree" gap="0">
-															<s:Label>
-																<s:text>Durée 0:</s:text>
-															</s:Label>
-															<s:Label id="labelDuration">
-															</s:Label>
-														</s:HGroup>
-														<s:Label id="pasAudio">
-															<s:text>Pas d'audio</s:text>
-														</s:Label>
-														
-														<mx:Image id="playImage" height="12" width="12" source="{IconEnum.getIconByName('iconPlay_16x16')}">
-															<mx:toolTip>Play audio</mx:toolTip>
-															<mx:buttonMode>true</mx:buttonMode>
-														</mx:Image>
-														
-														<s:HGroup id="playLabel" gap="1" verticalAlign="middle">
-															<s:Label>
-																<s:text>0:07/0:55</s:text>
-															</s:Label>
-															<mx:Image source="{IconEnum.getIconByName('iconPause_16x16')}" height="12" width="12">
-																<mx:toolTip>Pause audio</mx:toolTip>
-																<mx:buttonMode>true</mx:buttonMode>
-															</mx:Image>
-														</s:HGroup>
-														<mx:Spacer width="2"/>
-													</s:HGroup>
-												</s:VGroup>
-											</s:ItemRenderer>
-										</fx:Component>
-									</s:itemRenderer>-->
 								</s:List>
 						</s:VGroup>
 						<s:VGroup 
@@ -434,11 +264,6 @@
 							height="100%"
 							paddingTop="5"
 							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
-							<ithaca:BilanSummary
-								width="100%"
-								bilan="{bilan}"
-								horizontalAlign="left" 
-								includeIn="plusInfo"/>
 							<video:VisuVisioAdvanced id="visio" width="100%" height="100%"
 										quality="80"
 										bandwidth="15000" autoPlay="false" creationComplete="initVisio(event)"/>
