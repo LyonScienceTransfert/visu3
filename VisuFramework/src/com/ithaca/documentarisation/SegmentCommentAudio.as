@@ -219,7 +219,8 @@ public class SegmentCommentAudio extends SkinnableComponent
 			audioRecorder.streamId = streamId;
 			audioRecorder.streamPath = streamPath;
 			audioRecorder.userId = userId;
-
+			audioRecorder.modeShare = !modeEdit;
+			
 			// set update time interval 
 			audioRecorder.updateTimeInterval = UPDATE_TIME_INTERVAL;
 			audioRecorder.addEventListener(AudioRecorderEvent.UPDATE_PATH_COMMENT_AUDIO, onUpdatePathCommentAudio);
