@@ -17,6 +17,14 @@
 @namespace video 		"com.ithaca.visu.view.video.*";
 @namespace components 		"com.ithaca.utils.components.*";
 
+components|BilanSummaryToolTip
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.BilanSummaryToolTipSkin");	
+}
+documentarisation|Documentarisation
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.DocumentarisationSkin");
+}
 documentarisation|RetroDocumentListItemSimple
 {
 	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentListItemSimpleSkin");

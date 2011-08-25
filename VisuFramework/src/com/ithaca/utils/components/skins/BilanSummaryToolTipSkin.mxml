@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	 creationComplete="skin1_creationCompleteHandler(event)">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.utils.components.BilanSummaryToolTip")]
+	</fx:Metadata>
+
+	<fx:Script>
+	<![CDATA[
+		import mx.events.FlexEvent;
+		import com.ithaca.documentarisation.model.RetroDocument;
+		import com.ithaca.utils.VisuUtils;
+		import com.ithaca.visu.model.Model;
+		import com.lyon2.controls.utils.TimeUtils;
+		
+		[Bindable]
+		public var bilan:RetroDocument = null;
+		
+		protected function skin1_creationCompleteHandler(event:FlexEvent):void
+		{
+			bilan  = this.hostComponent.retroDocument;
+		}
+
+	]]>
+	</fx:Script>
+	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<!--- @private -->
+			<s:SolidColor id="bgFill" color="#abe69d"/>
+		</s:fill>
+	</s:Rect>
+	<s:HGroup
+		horizontalAlign="left"
+		gap="5"
+		 >
+		<mx:Form includeInLayout="{bilan}" visible="{bilan}" paddingLeft="5" paddingRight="5" 
+			paddingTop="5" paddingBottom="5">
+			
+			<mx:FormItem label="Titre:" width="100%">
+				<s:Label  width="100%" lineBreak="toFit" text="{bilan.title}"/>
+			</mx:FormItem>
+<!--			
+			<mx:FormItem label="Description:" width="100%">
+				<s:Label width="100%" lineBreak="toFit" text="{bilan.description}"/>
+			</mx:FormItem>-->
+			
+			<mx:FormItem label="Propriétaire:" width="100%">
+				<s:Label width="100%" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(bilan.ownerId))}"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Création:" width="100%">
+				<s:Label width="100%" text="{TimeUtils.formatVisuDateTime(bilan.creationDateAsDate)}"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Dernière modification:" width="100%">
+				<s:Label width="100%" text="{TimeUtils.formatVisuDateTime(bilan.modifyDateAsDate)}"/>
+			</mx:FormItem>
+			
+			<mx:FormItem 
+				label="À propos de la séance:" 
+				width="100%">
+				<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
+					<s:Label text="{'['+TimeUtils.formatVisuDateTime(bilan.session.date_session)+']'}"/>
+					<s:Label width="100%" lineBreak="toFit" text="{bilan.session.theme}"/>
+					<s:Label text="{'(de ' + VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user),true) + ')'}"/>
+				</s:HGroup>
+			</mx:FormItem>
+			
+		</mx:Form>
+		
+	</s:HGroup>
+
+</s:Skin>
