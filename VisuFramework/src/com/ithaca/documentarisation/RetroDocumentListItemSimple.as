@@ -150,7 +150,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			if(iconInfoVideo)
 			{
 				var iconInfoVideoVisible:Boolean = true;
-				if(nbrVideoSegment == 0 || !over)
+				if(nbrVideoSegment == 0)
 				{
 					iconInfoVideoVisible = false;
 				}
@@ -160,7 +160,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			if(iconInfoAudio)
 			{			
 				var iconInfoAudioVisible:Boolean = true;
-				if(nbrAudioSegment == 0 || !over)
+				if(nbrAudioSegment == 0)
 				{
 					iconInfoAudioVisible = false;
 				}
