@@ -307,7 +307,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	// richText
 	private function onFocusInRichEditableText(event:FocusEvent):void
 	{		
-		if(richEditableText.text == "Cliquer ici pour ajouter du text")
+		if(richEditableText.text == "Cliquer ici pour ajouter du texte")
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
@@ -364,7 +364,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	
 	private function setRichEditText():void
 	{
-		richEditableText.text = "Cliquer ici pour ajouter du text";
+		richEditableText.text = "Cliquer ici pour ajouter du texte";
 		richEditableText.setStyle("fontStyle","italic");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
