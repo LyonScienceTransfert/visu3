@@ -98,6 +98,8 @@ package com.ithaca.documentarisation
 		public function set retroDocument(value:RetroDocument):void
 		{
 			_retroDocument = value;
+			listSegment = new ArrayCollection();
+			
 			retroDocumentChange = true;
 			invalidateProperties();
 		}
@@ -254,6 +256,7 @@ package com.ithaca.documentarisation
 				this.listSegment.addItem(segment);
 			}	
 			
+			groupSegment.dataProvider = listSegment;
 		}
 
 		//_____________________________________________________________________
@@ -262,7 +265,7 @@ package com.ithaca.documentarisation
 		//
 		//_____________________________________________________________________	
 		private function onClickButtonSwitch(event:MouseEvent):void
-		{
+		{	
 			var clickButtonSwitchEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CLICK_BUTTON_SWITCH);
 			clickButtonSwitchEvent.idRetroDocument = retroDocument.id;
 			clickButtonSwitchEvent.sessionId = retroDocument.sessionId;
@@ -353,6 +356,9 @@ package com.ithaca.documentarisation
 			listSegment.addItem(value);
 			// set updated listSegment
 			_retroDocument.listSegment = listSegment;
+			
+			groupSegment.dataProvider = listSegment;
+			
 			// update retroDocument
 			updateRetroDocument();
 			// notify change list segment 
