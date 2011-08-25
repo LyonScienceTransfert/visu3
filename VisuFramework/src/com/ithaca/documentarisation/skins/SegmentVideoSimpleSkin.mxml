@@ -40,17 +40,17 @@
 					<s:Label id="lableDuration" text="02:24">
 					</s:Label>
 				</s:HGroup>
+				<!-- IMAGE PLAY --> 
+				<mx:Image id="imagePlay" 
+					buttonMode="true" 
+					source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause">
+					<mx:toolTip>Play</mx:toolTip>
+				</mx:Image>
 				<!-- IMAGE JUMP START --> 
 				<mx:Image id="imageJumpStart" 
 					buttonMode="true" 
 					source="{IconEnum.getIconByName('iconStopYellow_16x16')}" includeIn=" editPause, sharedPause">
 					<mx:toolTip>Vers début</mx:toolTip>
-				</mx:Image>
-				<!-- IMAGE PLAY --> 
-				<mx:Image id="imagePlay" 
-					buttonMode="true" 
-					source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause, sharedPlay">
-					<mx:toolTip>Play</mx:toolTip>
 				</mx:Image>
 				<!-- IMAGE PAUSE --> 
 				<mx:Image id="imagePause" 
