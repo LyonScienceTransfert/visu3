@@ -14,6 +14,8 @@ public class PanelButtonEvent extends Event
 	static public const CLICK_BUTTON_ADD : String = 'clickButtonAdd';
 	static public const CLICK_BUTTON_DELETE : String = 'clickButtonDelete';
 	static public const CLICK_BUTTON_SHARE : String = 'clickButtonShare';
+	static public const CLICK_BUTTON_RETURN : String = 'clickButtonReturn';
+	static public const CLICK_BUTTON_SWITCH : String = 'clickButtonSwitch';
 	// properties
 	public var mute:Boolean;
 	public var modeZoom:Boolean;

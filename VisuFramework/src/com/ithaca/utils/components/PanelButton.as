@@ -1,11 +1,16 @@
 package com.ithaca.utils.components
 {
+	import com.ithaca.documentarisation.model.RetroDocument;
 	import com.ithaca.visu.events.ImageVolumeEvent;
 	import com.ithaca.visu.events.PanelButtonEvent;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.view.video.ImageVolume;
 	
 	import flash.events.MouseEvent;
+	
+	import mx.controls.Image;
+	import mx.events.ToolTipEvent;
+	import mx.managers.ToolTipManager;
 	
 	import spark.components.Panel;
 	
@@ -16,6 +21,8 @@ package com.ithaca.utils.components
 	[Event(name="clickButtonDelete",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonAdd",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonShare",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonReturn",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonSwitch",type="com.ithaca.visu.events.PanelButtonEvent")]
 		
 	public class PanelButton extends Panel
 	{
@@ -35,6 +42,12 @@ package com.ithaca.utils.components
 		public var buttonDelete:IconButton;
 		[SkinPart("true")]
 		public var buttonShare:IconButton;
+		[SkinPart("true")]
+		public var buttonReturn:IconButton;
+		[SkinPart("true")]
+		public var buttonSwitch:IconButton;
+		[SkinPart("true")]
+		public var imageInfo:Image;
 		
 		private var _muteMicro:Boolean;
 		private var _buttonMuteMicroVisible:Boolean;
@@ -52,6 +65,12 @@ package com.ithaca.utils.components
 		private var buttonShareVisibleChange:Boolean;
 		private var _buttonVolumeVisible:Boolean;
 		private var buttonVolumeVisibleChange:Boolean;
+		private var _buttonReturnVisible:Boolean;
+		private var buttonReturnVisibleChange:Boolean;
+		private var _buttonSwitchVisible:Boolean;
+		private var buttonSwitchVisibleChange:Boolean;
+		private var _imageInfoVisible:Boolean;
+		private var imageInfoVisibleChange:Boolean;
 		
 		private var _buttonModeZoomEnabled:Boolean;
 		private var buttonModeZoomEnabledChange:Boolean;
@@ -62,7 +81,12 @@ package com.ithaca.utils.components
 		private var buttonDeleteEnabledChange:Boolean;
 		private var _buttonShareEnabled:Boolean;
 		private var buttonShareEnabledChange:Boolean;
+		private var _buttonReturnEnabled:Boolean;
+		private var buttonReturnEnabledChange:Boolean;
+		private var _buttonSwitchEnabled:Boolean;
+		private var buttonSwitchEnabledChange:Boolean;
 		
+		private var _retroDocument:RetroDocument;
 
 		public function PanelButton()
 		{
@@ -176,6 +200,51 @@ package com.ithaca.utils.components
 					buttonDelete.toolTip = "Supprimer ce bilan";
 				}
 			}
+			if (instance == buttonReturn)
+			{
+				buttonReturn.enabled = _buttonReturnEnabled;
+				
+				if(!_buttonReturnVisible)
+				{
+					buttonReturn.includeInLayout = false;
+					buttonReturn.visible = false;
+				}else
+				{
+					buttonReturn.addEventListener(MouseEvent.CLICK, onClickButtonReturn);
+					buttonReturn.icon =  IconEnum.getIconByName('iconReturnLeft_16x16');
+					buttonReturn.toolTip = "Retourner vers liste des bilans";
+				}
+			}
+			if (instance == buttonSwitch)
+			{
+				buttonSwitch.enabled = _buttonSwitchEnabled;
+				
+				if(!_buttonSwitchVisible)
+				{
+					buttonSwitch.includeInLayout = false;
+					buttonSwitch.visible = false;
+				}else
+				{
+					buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
+					buttonSwitch.icon =  IconEnum.getIconByName('iconMinimaze_16x16');
+					buttonSwitch.toolTip = "Editer ce bilan";
+				}
+			}
+			if (instance == imageInfo)
+			{
+				
+				if(!_imageInfoVisible)
+				{
+					imageInfo.includeInLayout = false;
+					imageInfo.visible = false;
+				}else
+				{
+					imageInfo.source =  IconEnum.getIconByName('iconInfo_16x16');
+					imageInfo.toolTip = "In construction";
+					imageInfo.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToolTipBilanInfo);
+					imageInfo.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onShowToolTipBilanInfo);
+				}
+			}
 		}
 		override protected function commitProperties():void
 		{
@@ -189,13 +258,13 @@ package com.ithaca.utils.components
 					{
 						buttonVolume.includeInLayout = true;
 						buttonVolume.visible = true;
-						buttonVolume.addEventListener(MouseEvent.CLICK, onClickButtonVolume);
+						buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume);
 						buttonVolume.toolTip = "Desactiver son micro";
 					}else
 					{
 						buttonVolume.includeInLayout = false;
 						buttonVolume.visible = false;
-						buttonVolume.removeEventListener(MouseEvent.CLICK, onClickButtonVolume);
+						buttonVolume.removeEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume);
 					}	
 				}
 			}
@@ -318,6 +387,61 @@ package com.ithaca.utils.components
 					}	
 				}
 			}
+			if(buttonReturnVisibleChange)
+			{
+				buttonReturnVisibleChange = false;
+				if(buttonReturn != null)
+				{
+					if(_buttonReturnVisible)
+					{
+						buttonReturn.includeInLayout = true;
+						buttonReturn.visible = true;
+						buttonReturn.toolTip = "Retourner vers liste des bilans";
+						buttonReturn.addEventListener(MouseEvent.CLICK, onClickButtonReturn);
+					}else
+					{
+						buttonReturn.includeInLayout = false;
+						buttonReturn.visible = false;
+						buttonReturn.removeEventListener(MouseEvent.CLICK, onClickButtonReturn);
+					}	
+				}
+			}
+			if(buttonSwitchVisibleChange)
+			{
+				buttonSwitchVisibleChange = false;
+				if(buttonSwitch != null)
+				{
+					if(_buttonSwitchVisible)
+					{
+						buttonSwitch.includeInLayout = true;
+						buttonSwitch.visible = true;
+						buttonSwitch.toolTip = "Editer ce bilan";
+						buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
+					}else
+					{
+						buttonSwitch.includeInLayout = false;
+						buttonSwitch.visible = false;
+						buttonSwitch.removeEventListener(MouseEvent.CLICK, onClickButtonSwitch);
+					}	
+				}
+			}
+			if(imageInfoVisibleChange)
+			{
+				imageInfoVisibleChange = false;
+				if(imageInfo != null)
+				{
+					if(_imageInfoVisible)
+					{
+						imageInfo.includeInLayout = true;
+						imageInfo.visible = true;
+						imageInfo.toolTip = " Under construction";
+					}else
+					{
+						imageInfo.includeInLayout = false;
+						imageInfo.visible = false;
+					}	
+				}
+			}
 			
 			if(buttonModeMaxEnabledChange)
 			{
@@ -342,7 +466,7 @@ package com.ithaca.utils.components
 				buttonShareEnabledChange = false;
 				if(buttonShare != null)
 				{
-					buttonShare.enabled = _buttonShareEnabled
+					buttonShare.enabled = _buttonShareEnabled 
 				}
 			}
 			if(buttonDeleteEnabledChange)
@@ -351,6 +475,22 @@ package com.ithaca.utils.components
 				if(buttonDelete != null)
 				{
 					buttonDelete.enabled = _buttonDeleteEnabled
+				}
+			}
+			if(buttonReturnEnabledChange)
+			{
+				buttonReturnEnabledChange = false;
+				if(buttonReturn != null)
+				{
+					buttonReturn.enabled = _buttonReturnEnabled
+				}
+			}
+			if(buttonSwitchEnabledChange)
+			{
+				buttonSwitchEnabledChange = false;
+				if(buttonSwitch != null)
+				{
+					buttonSwitch.enabled = _buttonSwitchEnabled
 				}
 			}
 		}
@@ -439,6 +579,37 @@ package com.ithaca.utils.components
 		{
 			return _buttonDeleteVisible;
 		}
+		public function set buttonReturnVisible(value:Boolean):void
+		{
+			_buttonReturnVisible = value;
+			buttonReturnVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonReturnVisible():Boolean
+		{
+			return _buttonReturnVisible;
+		}
+		public function set buttonSwitchVisible(value:Boolean):void
+		{
+			_buttonSwitchVisible = value;
+			buttonSwitchVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonSwitchVisible():Boolean
+		{
+			return _buttonSwitchVisible;
+		}
+		public function set imageInfoVisible(value:Boolean):void
+		{
+			_imageInfoVisible = value;
+			imageInfoVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get imageInfoVisible():Boolean
+		{
+			return _imageInfoVisible;
+		}
+		
 		
 		public function set buttonModeMaxEnabled(value:Boolean):void
 		{
@@ -450,7 +621,6 @@ package com.ithaca.utils.components
 		{
 			return _buttonModeMaxEnabled;
 		}
-		
 		public function set buttonModeZoomEnabled(value:Boolean):void
 		{
 			_buttonModeZoomEnabled = value;
@@ -481,7 +651,31 @@ package com.ithaca.utils.components
 		{
 			return _buttonDeleteEnabled;
 		}
+		public function set buttonReturnEnabled(value:Boolean):void
+		{
+			_buttonReturnEnabled = value;
+			buttonReturnEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonReturnEnabled():Boolean
+		{
+			return _buttonReturnEnabled;
+		}
+		public function set buttonSwitchEnabled(value:Boolean):void
+		{
+			_buttonSwitchEnabled = value;
+			buttonSwitchEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonSwitchEnabled():Boolean
+		{
+			return _buttonSwitchEnabled;
+		}
 		
+		public function set retroDocument(value:RetroDocument):void
+		{
+			_retroDocument = value;
+		}
 		
 		//_____________________________________________________________________
 		//
@@ -543,6 +737,28 @@ package com.ithaca.utils.components
 		{
 			var clickButtonShare:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_SHARE);
 			dispatchEvent(clickButtonShare);
+		}
+		private function onClickButtonReturn(event:MouseEvent):void
+		{
+			var clickButtonReturn:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_RETURN);
+			dispatchEvent(clickButtonReturn);
+		}
+		private function onClickButtonSwitch(event:MouseEvent):void
+		{
+			var clickButtonSwitch:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_SWITCH);
+			dispatchEvent(clickButtonSwitch);
+		}
+		
+		private function onCreateToolTipBilanInfo(event:ToolTipEvent):void
+		{
+			var toolTip:BilanSummaryToolTip = new BilanSummaryToolTip();
+			toolTip.retroDocument = _retroDocument;
+			event.toolTip = toolTip;
+		}
+		private function onShowToolTipBilanInfo(event:ToolTipEvent):void
+		{
+			var toolTip:BilanSummaryToolTip = event.toolTip as BilanSummaryToolTip;
+			toolTip.x = this.width  - toolTip.width - 50;
 		}
 	}
 }

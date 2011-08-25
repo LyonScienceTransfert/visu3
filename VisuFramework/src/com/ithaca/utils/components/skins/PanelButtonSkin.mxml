@@ -200,6 +200,9 @@
 					<components:IconButton id="buttonZoom" height="22" width="22" buttonMode="true"/>
 					<components:IconButton  id="buttonMicro" height="22" width="22" buttonMode="true"/>
 					<video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" buttonMode="true"/>
+					<components:IconButton id="buttonSwitch" height="22" width="22" buttonMode="true"/>
+					<mx:Image id="imageInfo" height="16" width="16" buttonMode="true"/>
+					<components:IconButton id="buttonReturn" height="22" width="22" buttonMode="true"/>
 					<mx:Spacer width="1"/>
 				</s:HGroup>
             </s:Group>
