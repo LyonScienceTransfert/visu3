@@ -79,7 +79,7 @@ public class AudioRecorder extends SkinnableComponent
 	// update time interval in ms
 	private var _updateTimeInterval:int;
 	private var mouseOver:Boolean;
-	private var modeShare:Boolean;
+	private var _modeShare:Boolean;
 	
 	public function AudioRecorder()
 	{
@@ -169,6 +169,14 @@ public class AudioRecorder extends SkinnableComponent
 	{
 		return _userId;
 	}
+	public function set modeShare(value:Boolean):void
+	{
+		_modeShare = value;
+	}
+	public function get modeShare():Boolean
+	{
+		return _modeShare;
+	}
 	// init skin states
 	public function skinNormal():void
 	{
@@ -209,7 +217,7 @@ public class AudioRecorder extends SkinnableComponent
 	{
 		initSimpleSkinVars();
 		mouseOver = true;
-		modeShare = true;
+		_modeShare = true;
 		// do nothing if play or record
 		if(!play)
 		{
@@ -474,7 +482,7 @@ public class AudioRecorder extends SkinnableComponent
 		
 		if(mouseOver)
 		{
-			if(modeShare)
+			if(_modeShare)
 			{
 				overShare = true;
 			}else
@@ -490,7 +498,7 @@ public class AudioRecorder extends SkinnableComponent
 	}
 	private function onCreationComplete(event:FlexEvent):void
 	{
-		if(!modeShare)
+		if(!_modeShare)
 		{
 			micro = Microphone.getMicrophone();
 			micro.rate = 44;
