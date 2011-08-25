@@ -33,6 +33,7 @@ package  com.ithaca.documentarisation.events
 		static public const PLAY_RETRO_SEGMENT : String = 'playRetroSegment';
 		static public const CLICK_BUTTON_SWITCH : String = 'clickButtonSwitch';
 		static public const UPDATE_ADDED_RETRO_DOCUMENT : String = 'updateAddedRetroDocument';
+		static public const ADD_RETRO_DOCUMENT : String = 'addRetroDocument';
 		static public const GO_BILAN_MODULE_FROM_RETRO : String = 'goBilanModuleFromRetro';
 		static public const GO_RETRO_MODULE_FROM_BILAN : String = 'goRetroModuleFromBilan';
 		
