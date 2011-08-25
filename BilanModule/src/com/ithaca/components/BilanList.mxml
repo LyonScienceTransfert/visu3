@@ -318,7 +318,7 @@
 						<s:VGroup paddingTop="10" paddingBottom="10" paddingRight="5" paddingLeft="5" width="100%">
 							<s:HGroup  width="100%" verticalAlign="middle">
 							     <s:Label fontStyle="italic" fontSize="12" color="0xFF0000" visible="{data.inviteeIds.length > 0}" includeInLayout="{data.inviteeIds.length > 0}"  text="[partagé]"/>
-							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit"  text="{data.title}" maxDisplayedLines="1"/>
+							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit"  text="{data.title}" toolTip="{data.title}" maxDisplayedLines="2" maxWidth="250"/>
 								 <mx:Spacer width="100%"/>
 							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit" text="- {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.ownerId), true)} -"/>
 							</s:HGroup>
@@ -332,7 +332,8 @@
 								
 								<mx:FormItem label="À propos de la séance:" width="100%">
 									<s:VGroup width="100%">
-										 <s:Label lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"/>
+										<!-- <s:Label lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"/>-->
+										 <s:RichText lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"  maxWidth="200"/>
 										 <s:Label text="De {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
 									</s:VGroup>
 								</mx:FormItem>
