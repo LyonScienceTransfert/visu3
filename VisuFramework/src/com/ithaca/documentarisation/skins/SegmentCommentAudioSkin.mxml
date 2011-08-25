@@ -38,7 +38,7 @@
 		<s:VGroup width="100%" gap="1">
 			<s:HGroup width="100%" gap="1" horizontalAlign="center" verticalAlign="middle" height="22">
 				<!-- ICON SEGMENT -->
-				<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{ IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected"/>
+				<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{ IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected, shared, sharedOver"/>
 				<!-- AUDIO RECORDER -->
 				<documentarisation:AudioRecorder id="audioRecorder"
 					skinClass="com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin"	/>

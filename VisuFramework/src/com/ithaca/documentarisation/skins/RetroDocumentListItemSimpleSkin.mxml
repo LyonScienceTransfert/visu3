@@ -33,12 +33,14 @@
 			<!-- ICON INFO VIDEO -->
 			<components:IconInfoSegment id="iconInfoVideo" 
 				skinClass="com.ithaca.utils.components.skins.IconInfoSegmentSkin"
-				 visible.normal="false">
+				visible.normal="false"
+				visible="true">
 			</components:IconInfoSegment>
 			<!-- ICON INFO AUDIO -->
 			<components:IconInfoSegment id="iconInfoAudio"  
 				skinClass="com.ithaca.utils.components.skins.IconInfoSegmentSkin"
-				 visible.normal="false">
+				visible.normal="false"
+				visible="true">
 			</components:IconInfoSegment>
 			<!-- BUTTON DELETE -->
 			<components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true" visible.normal="false"/>
