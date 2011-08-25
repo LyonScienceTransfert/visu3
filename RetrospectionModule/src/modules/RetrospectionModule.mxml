@@ -9,7 +9,7 @@
 						configure="visumodulebase1_configureHandler(event)" 
 						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
 						xmlns:timeline="com.ithaca.visu.controls.timeline.*"
-						xmlns:controls="com.lyon2.controls.*"  currentState="State1" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*"> 
+						xmlns:controls="com.lyon2.controls.*"  currentState="State1" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*"> 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.documentarisation.RetroDocumentSegment;
@@ -188,7 +188,24 @@
 					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
 					timerSynchro.start();
 				}
-				this.panelDocumentarisation.title = fxgt.gettext("Documentarisation");
+				//this.panelDocumentarisation.title = fxgt.gettext("Documentarisation");
+				// set the data of the session
+				documentarisation.initDataRetroDocument(
+					this.currentSessionDateRecording, 
+					this.currentSessionDuration,
+					Model.getInstance().profiles,
+					Model.getInstance().getListUserPresentOnTimeLine());
+				// set listeners
+				documentarisation.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch, true);
+				documentarisation.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument, true);
+				
+				// show retroDocument if was selected
+				if(selectedRetroDocumentIdWhenInit > 0)
+				{
+					documentarisation.selectedRetroDocument(selectedRetroDocumentIdWhenInit)
+				}
+				// set cursor 
+				CursorManager.removeBusyCursor();
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -464,6 +481,15 @@
 				}
 				// add drag listener
 				setListenerDragVideo();
+				if(documentarisation)
+				{
+					// set the data of the session
+					documentarisation.initDataRetroDocument(
+						this.currentSessionDateRecording, 
+						this.currentSessionDuration,
+						Model.getInstance().profiles,
+						Model.getInstance().getListUserPresentOnTimeLine());
+				}
 			}
 			
 			private function addTraceLineOnViewTraceLineGroup(traceLineObj:Object, durationSession:Number,startRecordingSession:Number):void
@@ -757,36 +783,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					listRetroDocument.dataProvider = event.listRetroDocument;
-					listRetroDocument.labelField = "title";
-					listRetroDocument.addEventListener(RetroDocumentEvent.DELETE_RETRO_DOCUMENT, onPreDeleteRetroDocumen, true);
-					
-					this.groupRetroDocumentView.removeAllElements();
-					
-					var messageAboutRetroDocument:Label = new Label();
-					messageAboutRetroDocument.percentWidth = 100;
-					messageAboutRetroDocument.percentHeight = 100;
-					messageAboutRetroDocument.y = this.groupRetroDocumentView.height/2;					
-					messageAboutRetroDocument.text =  fxgt.gettext("Aucun bilan sélectionné");
-					this.groupRetroDocumentView.addElement(messageAboutRetroDocument);
-					
-					if(selectedRetroDocumentIdWhenInit > 0)
-					{
-						var nbrRetroDocument:int = listRetroDocument.dataProvider.length;
-						for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
-						{
-							var retrodocumentVO:RetroDocumentVO = listRetroDocument.dataProvider.getItemAt(nRetroDocument) as RetroDocumentVO;
-							if(retrodocumentVO.documentId == selectedRetroDocumentIdWhenInit)
-							{
-								listRetroDocument.selectedIndex = nRetroDocument;
-								// load retroDocument
-								dispatchLoadRetroDocument(retrodocumentVO);
-								break;
-							}
-						}
-					}
-					// set cursor 
-					CursorManager.removeBusyCursor();
+					documentarisation.listRetroDocumentVO = event.listRetroDocument;
 				}
 			}
 			
@@ -795,7 +792,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					initRetroDocument(event.retroDocument, event.listUser);
+					setRetroDocument(event.retroDocument, event.listUser);
 				}
 			}
 			
@@ -826,10 +823,10 @@
 			private function updateLabelButtonPlayStopRetroDocumentSegment(value:RetroDocumentSegment = null):void
 			{
 				// change labels on the buttons the retroDocumentSegment
-				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
-				if(retroDocmentView != null){
+//				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
+//				if(retroDocmentView != null){
 //					retroDocmentView.updateButtonPlayStop(value);			
-				}
+//				}
 			}
 
 			protected function addRetroDocument_clickHandler(event:MouseEvent):void
@@ -858,7 +855,26 @@
 			// Listeners PanelDocumentarisation
 			//
 			//_____________________________________________________________________
-			protected function panelDocumentarisation_clickButtonAddHandler(event:PanelButtonEvent):void
+
+
+			private function setRetroDocument(retroDocument:RetroDocument, listUser:Array ):void
+			{
+				documentarisation.setRetroDocument(retroDocument, listUser);
+			}
+			/**
+			 * set id the retrodocument
+			 */ 
+			protected function updateAddedRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					documentarisation.updateIdRetroDocument(event.idRetroDocument);
+					// remove cursor
+					CursorManager.removeBusyCursor();
+				}
+			}
+			
+			protected function documentarisation_addRetroDocumentHandler(event:RetroDocumentEvent):void
 			{
 				var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
 				var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
@@ -881,68 +897,18 @@
 				// set mouse cursor
 				CursorManager.setBusyCursor();
 				// set new RetroDocument
-				this.listRetroDocument.dataProvider.addItem(retroDocumentVO);
-				this.listRetroDocument.selectedItem = retroDocumentVO;
+				documentarisation.listRetroDocument.dataProvider.addItem(retroDocumentVO);
+				documentarisation.listRetroDocument.selectedItem = retroDocumentVO;
 				var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
 				retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-				initRetroDocument(retroDocument, new Array());
-				
+				setRetroDocument(retroDocument, new Array());
 			}
-
-			private function initRetroDocument(retroDocument:RetroDocument, listUser:Array ):void
-			{
-				var retroDocumentView:RetroDocumentView = new RetroDocumentView();
-				retroDocumentView.percentWidth = 100;
-				retroDocumentView.percentHeight = 100;
-				retroDocumentView.setEditabled(true);
-				retroDocumentView.retroDocument = retroDocument;
-				retroDocumentView.startDateSession = this.currentSessionDateRecording.time;
-				retroDocumentView.durationSession = this.currentSessionDuration;
-				retroDocumentView.profiles = Model.getInstance().profiles;
-				retroDocumentView.listShareUser = listUser;
-				retroDocumentView.listUsersPresentOnTimeLine = Model.getInstance().getListUserPresentOnTimeLine();	
-				retroDocumentView.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument);
-				retroDocumentView.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch);
-				groupRetroDocumentView.removeAllElements();
-				groupRetroDocumentView.addElement(retroDocumentView);
-			}
-			/**
-			 * set id the retrodocument
-			 */ 
-			protected function updateAddedRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					// update id retroDocument 
-					var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
-					retroDocmentView.retroDocument.id = event.idRetroDocument;
-					// update id retroDocument in the list retroDocuments
-					var nbrRetroDocumentVO:int = this.listRetroDocument.dataProvider.length;
-					for(var nRetroDocumentVO:int = 0; nRetroDocumentVO < nbrRetroDocumentVO; nRetroDocumentVO++)
-					{
-						var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(nRetroDocumentVO) as RetroDocumentVO;
-						if(retroDocumentVO.documentId == 0)
-						{
-							retroDocumentVO.documentId = event.idRetroDocument;
-							break;
-						}
-					}
-					// remove cursor
-					CursorManager.removeBusyCursor();
-				}
-			}			
 			//_____________________________________________________________________
 			//
 			// Listeners ListRetroDocument
 			//
 			//_____________________________________________________________________
-			
-			protected function listRetroDocument_changeHandler(event:IndexChangeEvent):void
-			{
-				var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(event.newIndex) as RetroDocumentVO;
-				dispatchLoadRetroDocument(retroDocumentVO);
-			}
-			
+
 			private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
 			{
 				var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
@@ -950,40 +916,12 @@
 				loadRetroDocument.editabled = true;				
 				this.dispatchEvent(loadRetroDocument);
 			}
-			/**
-			 * update title the retroDocument
-			 */
-			private function updateTitleRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var index:int = listRetroDocument.selectedIndex;
-					var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(index) as RetroDocumentVO;
-					retroDocumentVO.title = event.titleRetrodocument;
-				}
-			}
-			
-			/**
-			 * update list segment the retroDocument
-			 */
-			private function onUpdateListSegmentRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var index:int = listRetroDocument.selectedIndex;
-					var retroDocumentVO:RetroDocumentVO = this.listRetroDocument.dataProvider.getItemAt(index) as RetroDocumentVO;
-					retroDocumentVO.xml = event.xmlRetrodocument;
-					//retroDocumentVO.title = event.titleRetrodocument;
-				}
-			}
-
 			
 			private function loadedAllUsers(event:RetroDocumentEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var currentRetroDocumentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
-					currentRetroDocumentView.allUsers = event.listUser;
+					this.documentarisation.retroDocumentView.allUsers = event.listUser;
 				}
 			}
 			
@@ -1241,7 +1179,7 @@
 					ar.push(dgc);
 				}
 				
-				dataDebug.columns = ar;
+//				dataDebug.columns = ar;
 				
 				var html:XML = new XML("<html/>");
 				var body:XML = new XML("<body/>");
@@ -1266,7 +1204,7 @@
 				}
 
 				var xmlList:XMLList = html.body.table.tr as XMLList;
-				dataDebug.dataProvider = xmlList;
+//				dataDebug.dataProvider = xmlList;
 				
 				function getTimeByUserId(value:Object, listUser:Array):XML
 				{
@@ -1446,28 +1384,7 @@
 				panelVideo.buttonModeZoomEnabled = false;
 				visio.zoomMax = false;
 			}
-			
-			private function onPreDeleteRetroDocumen(event:RetroDocumentEvent):void
-			{
-				var nbrRetroDocument:int = listRetroDocument.dataProvider.length;
-				for( var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++)
-				{
-					var retroDocumentVO:RetroDocumentVO = listRetroDocument.dataProvider.getItemAt(nRetroDocument) as RetroDocumentVO;
-					if(event.idRetroDocument == retroDocumentVO.documentId)
-					{
-						listRetroDocument.dataProvider.removeItemAt(nRetroDocument);
-						break;
-					}
-				}
-				
-				this.groupRetroDocumentView.removeAllElements();	
-				var messageAboutRetroDocument:Label = new Label();
-				messageAboutRetroDocument.percentWidth = 100;
-				messageAboutRetroDocument.percentHeight = 100;
-				messageAboutRetroDocument.y = this.groupRetroDocumentView.height/2;					
-				messageAboutRetroDocument.text =  fxgt.gettext("Aucun bilan sélectionné");
-				this.groupRetroDocumentView.addElement(messageAboutRetroDocument);
-			}
+
 
 		]]>
 	</fx:Script>
@@ -1478,19 +1395,13 @@
 	</modules:states>
 	<fx:Declarations>
 		<maps:RetrospectionMap id="retrospectionMap"  dispatcher="{this}"/>
-<!--		<mate:Listener type="{SessionEvent.LOAD_LIST_SESSION_SALON_RETROSPECTION}"  method="updateListSession"/>
-		<mate:Listener type="{SessionEvent.LOAD_LIST_CLOSED_SESSION_SALON_RETROSPECTION}"  method="updateListClosedSession"/>-->
 		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_RETRO}"  method="updateTimeLine"/>
-<!--		<mate:Listener type="{SessionEvent.LOAD_SESSION_SALON_RETROSPECTION}"  method="updateSessionDate"/>-->
-		<!--<mate:Listener type="{RetroDocumentEvent.LOAD_TREE_RETRO_DOCUMENT}"  method="updateTreeRetroDocument"/>-->
 		<mate:Listener type="{RetroDocumentEvent.LOAD_LIST_RETRO_DOCUMENT}"  method="loadListRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.UPDATE_ADDED_RETRO_DOCUMENT}"  method="updateAddedRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="playRetroDocument" />
-		<mate:Listener type="{RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT}"  method="updateTitleRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
-		<mate:Listener type="{RetroDocumentEvent.CHANGE_LIST_RETRO_SEGMENT}"  method="onUpdateListSegmentRetroDocument"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -1562,34 +1473,11 @@
 					</s:VGroup>
 				</mx:VDividedBox>
 			</components:PanelButton>
-<!-- DOCUMENTARISATION -->
-			<s:Group height="100%" minWidth="330" width.State1="30%">
-				<s:layout>
-					<s:VerticalLayout gap="1"/>
-				</s:layout>
-				<mx:DataGrid width="100%"  height="100%" includeIn="debug" id="dataDebug">
-				</mx:DataGrid>
-				<components:PanelButton width="100%" height="100%"  id="panelDocumentarisation"
-					 buttonAddVisible="true"
-					 buttonDeleteVisible="false"
-					 buttonShareVisible="false"
-					 buttonMuteMicroVisible="false"
-					 buttonVolumeVisible="false"
-					 clickButtonAdd="panelDocumentarisation_clickButtonAddHandler(event)"
-					 >
-					<mx:VDividedBox width="100%" height="100%"  includeIn="State1,vciel">
-						<s:List id="listRetroDocument" 
-							width="100%"
-							change="listRetroDocument_changeHandler(event)"
-							itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
-						<s:Group width="100%" height="100%" id="groupRetroDocumentView">
-									<s:layout>
-										<s:VerticalLayout gap="0"/>
-									</s:layout>
-						</s:Group>
-					</mx:VDividedBox>			
-				</components:PanelButton>
-			</s:Group>
+<!-- DOCUMENTARISATION -->		
+			<documentarisation:Documentarisation height="100%" minWidth="330"
+				 id="documentarisation"
+				 addRetroDocument="documentarisation_addRetroDocumentHandler(event)">				 
+			</documentarisation:Documentarisation>
 		</mx:HDividedBox>
 	</mx:VDividedBox>
 </modules:VisuModuleBase>
