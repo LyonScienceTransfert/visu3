@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.documentarisation.Documentarisation")]
+	</fx:Metadata>
+
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
+	]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="listRetroDocument" />
+		<s:State name="editRetroDocument" />
+	</s:states>
+	<s:transitions>
+		<s:Transition fromState="listRetroDocument" toState="editRetroDocument">
+			<s:Sequence>
+				<s:Parallel targets="{[panelListRetroDocument,panelEditRetroDocument]}">
+					<s:Fade/>
+				</s:Parallel>
+			</s:Sequence>
+		</s:Transition>
+		<s:Transition fromState="editRetroDocument" toState="listRetroDocument">
+			<s:Sequence>
+				<s:Parallel targets="{[panelListRetroDocument,panelEditRetroDocument]}">
+					<s:Fade/>
+				</s:Parallel>
+			</s:Sequence>
+		</s:Transition>
+	</s:transitions>
+	<components:PanelButton width="100%" height="100%" 
+		id="panelListRetroDocument"
+		buttonAddVisible="true"
+		buttonDeleteVisible="false"
+		buttonShareVisible="false"
+		buttonMuteMicroVisible="false"
+		buttonVolumeVisible="false"
+		buttonReturnVisible="false"
+		includeIn="listRetroDocument"
+		>
+		<s:List width="100%" height="100%"
+			id="listRetroDocument" 
+		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
+	</components:PanelButton>
+	
+	<components:PanelButton width="100%" height="100%" 
+		id="panelEditRetroDocument"
+		buttonAddVisible="false"
+		buttonDeleteVisible="false"
+		buttonShareVisible="false"
+		buttonShareEnabled="false"
+		buttonMuteMicroVisible="false"
+		buttonVolumeVisible="false"
+		buttonReturnVisible="true"
+		buttonReturnEnabled="true"
+		includeIn="editRetroDocument"
+		>
+		<documentarisation:RetroDocumentView width="100%" height="100%"
+			id="retroDocumentView">
+			
+		</documentarisation:RetroDocumentView>
+ 	</components:PanelButton>
+</s:Skin>
