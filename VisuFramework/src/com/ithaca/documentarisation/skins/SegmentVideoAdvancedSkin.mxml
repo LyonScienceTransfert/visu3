@@ -72,7 +72,7 @@
 		<!-- TEXT -->
 		<s:RichEditableText id="richEditableText" width="100%" 
 			color="#000000">
-			<s:text>votre text ici</s:text>
+			<s:text>votre texte ici</s:text>
 		</s:RichEditableText>
 		<!-- GROUPE VIDEO -->
 		<s:VGroup width="100%" excludeFrom="normal, normalOver, shared">

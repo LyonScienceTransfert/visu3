@@ -197,7 +197,7 @@ public class SegmentTitle extends SkinnableComponent
 	public function onFocusInRichEditableText(event:* = null):void
 	{	
 		
-		if(textSegment.text == "Cliquer ici pour ajouter du text")
+		if(textSegment.text == "Cliquer ici pour ajouter du texte")
 		{
 			textSegment.text = "";
 		}
@@ -273,7 +273,7 @@ public class SegmentTitle extends SkinnableComponent
 	
 	public function setRichEditText():void
 	{
-		textSegment.text = "Cliquer ici pour ajouter du text";
+		textSegment.text = "Cliquer ici pour ajouter du texte";
 		textSegment.setStyle("fontStyle","italic");
 		textSegment.setStyle("backgroundColor", _backGroundColorRichEditableText);
 	}	
