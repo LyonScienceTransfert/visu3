@@ -3,14 +3,19 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.utils.components.IconDelete;
+import com.lyon2.controls.utils.TimeUtils;
 
+import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 
 import mx.controls.Image;
+import mx.events.FlexEvent;
+import mx.events.StateChangeEvent;
 
 import spark.components.Label;
 import spark.components.RichEditableText;
+import spark.components.Spinner;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
@@ -29,9 +34,21 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	public var iconDelete:IconDelete;
 	
 	[SkinPart("true")]
-	public var labelCurrentTime:Label;
+	public var labelCurrentTime:Label
+	
 	[SkinPart("true")]
-	public var labelDuration:Label;
+	public var labelDuration:Label
+	
+	[SkinPart("true")]
+	public var startSpinner:Spinner;
+	
+	[SkinPart("true")]
+	public var endSpinner:Spinner;
+	
+	[SkinPart("true")]
+	public var labelStartSpinner:Label;
+	[SkinPart("true")]
+	public var labelEndSpinner:Label;
 	
 	[SkinPart("true")]
 	public var richEditableText:RichEditableText;
@@ -46,6 +63,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	private var editPlay:Boolean = false;
 	private var editPause:Boolean = false;
 	
+	private var currentTimeChange:Boolean;
+	private var durationChange:Boolean;
+	private var timeSegmentChange:Boolean;
+	
 	private var _modeEdit:Boolean = true;
 	
 	private var _text:String ="";
@@ -53,6 +74,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	
 	private var _segment:Segment;
 	private var segmentChange:Boolean;
+	
+	private var _startDateSession:Number = 0;
+	private var _durationSession:Number;
+	private var _timeBegin:Number=0;
+	private var _timeEnd:Number=0;
+	private var _currentTime:Number = 0;
 	
 	// init backGroundColor
 	private var _backGroundColorRichEditableText:String = "#FFFFFF";
@@ -110,6 +137,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			edit = false;
 		}
 		invalidateSkinState();
+		// if click on button play the other SegmentVideo
+		durationChange = true;
+		invalidateProperties();
 	}
 	public function rendererOver():void
 	{
@@ -138,6 +168,26 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			sharedOver = true;
 			invalidateSkinState();
 		}	
+	}
+	
+	public function set startDateSession(value:Number):void{_startDateSession = value;};
+	public function get startDateSession():Number{return _startDateSession;};
+	public function set durationSession(value:Number):void{_durationSession = value;};
+	public function get durationSession():Number{return _durationSession;};
+	
+	public function set currentTime(value:Number):void{
+		_currentTime = value;
+		currentTimeChange = true;
+		invalidateProperties();
+	};
+	public function get currentTime():Number{return _currentTime;};
+	
+	public function setBeginEndTime():void
+	{
+		/*durationChange = true;
+		invalidateProperties();
+		*/
+		onClickImageJumpStart();
 	}
 	//_____________________________________________________________________
 	//
@@ -189,7 +239,37 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			// show this message only if has many blocs
 			// MouseCursor = HAND just if has many blocs
 		}
+		
+		if(instance == startSpinner)
+		{
+			startSpinner.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletStartSpinner);
+			startSpinner.addEventListener(Event.CHANGE, onChange);
+		}
+		if(instance == endSpinner)
+		{
+			endSpinner.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletEndSpinner);
+			endSpinner.addEventListener(Event.CHANGE, onChange);
+		}
+		if(instance == labelStartSpinner)
+		{
+			labelStartSpinner.text = TimeUtils.formatTimeString(Math.floor(_timeBegin / 1000)); 
+		}
+		if(instance == labelEndSpinner)
+		{
+			labelEndSpinner.text = TimeUtils.formatTimeString(Math.floor(_timeEnd / 1000)); 
+		}
 
+		if(instance == labelDuration)
+		{
+			var durationMs:Number = _timeEnd - _timeBegin;
+			var duration:Number = Math.floor(durationMs / 1000); 
+			labelDuration.text = TimeUtils.formatTimeString(duration); 
+		}
+		if(instance == labelCurrentTime)
+		{
+			// set current time
+			updateLabelCurrentTime();
+		}
 		
 	}
 	override protected function partRemoved(partName:String, instance:Object):void
@@ -218,7 +298,82 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
 				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 			}
-		}	
+			
+			/////////////////////////
+			// check NaN time
+			if(isNaN(this._segment.beginTimeVideo))
+			{
+				this._timeBegin = 0;
+			}else
+			{
+				this._timeBegin = this._segment.beginTimeVideo - this._startDateSession;
+			}
+			
+			if( isNaN(this._segment.endTimeVideo))
+			{
+				this._timeEnd = 0;		
+			}else
+			{
+				this._timeEnd = this._segment.endTimeVideo - this._startDateSession;
+			}
+			//this._title = this._segment.title;
+			// enabled button playStop
+		//	setEnabledButtonPlayStop();
+		//	labelStartDuration.text = getLabelStartDuration();
+		//	labelStartDuration.setStyle("fontWeight","normal");
+			/////////////////////////
+			if(labelDuration)
+			{
+				var durationMs:Number = _timeEnd - _timeBegin;
+				var duration:Number = Math.floor(durationMs / 1000);
+				labelDuration.text = TimeUtils.formatTimeString(duration); 
+			}
+			
+		}
+		if(currentTimeChange)
+		{
+			currentTimeChange = false;
+			
+			// set current time
+			updateLabelCurrentTime();
+		}
+		if(durationChange)
+		{
+			durationChange = false;
+			// set duration
+			updateLabelDuration();
+		}
+		if(timeSegmentChange)
+		{
+			timeSegmentChange = false;
+			
+			var newBegin:Number = Math.floor(_timeBegin / 1000);
+			var newEnd:Number = Math.floor(_timeEnd / 1000);
+			
+			if(startSpinner != null)
+			{
+				startSpinner.value = newBegin;
+				startSpinner.maximum = newEnd;
+				
+			}
+			if(endSpinner != null)
+			{
+				endSpinner.value = newEnd;
+				endSpinner.minimum = newBegin;
+			}
+			if(labelStartSpinner != null)
+			{
+				labelStartSpinner.text  = TimeUtils.formatTimeString(newBegin); 
+			}
+			if(labelEndSpinner != null)
+			{
+				labelEndSpinner.text  = TimeUtils.formatTimeString(newEnd); 
+			}
+			if(labelDuration)
+			{
+				updateLabelDuration();
+			}
+		}
 	}
 	override protected function getCurrentSkinState():String
 	{
@@ -264,6 +419,21 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 
 	private function onClickImagePlay(event:MouseEvent):void
 	{
+		var playSegmentVideoEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
+		var playTime:Number = this._timeBegin;
+		if(currentTime > playTime)
+		{
+			playTime = currentTime;
+			updateLabelCurrentTime();
+		}else
+		{
+			currentTime = playTime;
+		}
+		
+		playSegmentVideoEvent.beginTime = playTime;
+		playSegmentVideoEvent.endTime = this._timeEnd;
+		dispatchEvent(playSegmentVideoEvent);
+		
 		initSkinVars();
 		if(modeEdit)
 		{
@@ -273,20 +443,21 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			sharedPlay = true;
 		}
 		invalidateSkinState();
+		
+		var endTimeS:Number = Math.floor(_timeEnd / 1000); 
+		labelDuration.text = TimeUtils.formatTimeString(endTimeS); 
 	}
+	
 	private function onClickImagePause(event:MouseEvent):void
 	{
-		initSkinVars();
-		if(modeEdit)
-		{
-			editPause = true;
-		}else
-		{
-			sharedPause = true;
-		}	
-		invalidateSkinState();
+		
+		setPause();
+		
+		var playSegmentVideoEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PAUSE_RETRO_SEGMENT);
+		dispatchEvent(playSegmentVideoEvent);
 	}
-	private function onClickImageJumpStart(event:MouseEvent):void
+	
+	private function onClickImageJumpStart(event:*=null):void
 	{
 		initSkinVars();
 		if(modeEdit)
@@ -297,6 +468,13 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			sharedOver = true;
 		}
 		invalidateSkinState();
+		
+		var durationMs:Number = _timeEnd - _timeBegin;
+		var duration:Number = Math.floor(durationMs / 1000); 
+		labelDuration.text = TimeUtils.formatTimeString(duration); 
+		
+		this.currentTime = this._timeBegin;
+
 	}
 	private function onClickIconDelete(event:MouseEvent):void
 	{
@@ -345,6 +523,33 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
 		dispatchEvent(mouseDownIconSegment);
 	}
+	private function onCreationCompletStartSpinner(event:FlexEvent):void
+	{
+		startSpinner.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletStartSpinner);
+		startSpinner.value = Math.floor(_timeBegin / 1000);
+		startSpinner.maximum = Math.floor(_timeEnd / 1000);
+	}
+	private function onCreationCompletEndSpinner(event:FlexEvent):void
+	{
+		endSpinner.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletEndSpinner);
+		endSpinner.value = Math.floor(_timeEnd / 1000);
+		endSpinner.minimum = Math.floor(_timeBegin / 1000);
+	}
+
+	private function onChange(event:Event):void
+	{
+		_timeBegin = startSpinner.value * 1000; 
+		_timeEnd = endSpinner.value * 1000; 
+		timeSegmentChange = true;
+		invalidateProperties();
+		// update segment
+		segment.beginTimeVideo = _timeBegin + _startDateSession;
+		segment.endTimeVideo = _timeEnd + _startDateSession;
+		notifyUpdateSegment();
+		
+		currentTime = 0;
+	}
+	
 	//_____________________________________________________________________
 	//
 	// Dispatchers
@@ -374,6 +579,37 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	private function initSkinVars():void
 	{
 		shared = sharedOver = sharedPlay = sharedPause = edit = editOver = editSelected = editPlay = editPause = false;
+	}
+	
+	public function setPause():void
+	{		
+		initSkinVars();
+		if(modeEdit)
+		{
+			editPause = true;
+		}else
+		{
+			sharedPause = true;
+		}	
+		invalidateSkinState();
+		
+		currentTimeChange  = true;
+		invalidateProperties();
+		
+	}
+	private function updateLabelCurrentTime():void
+	{
+		var currnetTimeS:Number = Math.floor(this.currentTime / 1000);
+		if(labelCurrentTime)
+		{
+			labelCurrentTime.text = TimeUtils.formatTimeString(currnetTimeS);  
+		}
+	}
+	private function updateLabelDuration():void
+	{
+		var durationMs:Number = _timeEnd - _timeBegin;
+		var duration:Number = Math.floor(durationMs / 1000); 
+		labelDuration.text = TimeUtils.formatTimeString(duration); 
 	}
 }
 }
