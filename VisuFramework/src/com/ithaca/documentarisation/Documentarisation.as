@@ -44,6 +44,8 @@ public class Documentarisation extends SkinnableComponent
 	private var _listUserPresentsOnTimeLine:Array;
 	private var retroDocumentChange:Boolean;
 	
+	private var _currentTime:Number;
+	private var currentTimeChange:Boolean;
 	
 	public function Documentarisation()
 	{
@@ -124,6 +126,12 @@ public class Documentarisation extends SkinnableComponent
 		this.invalidateSkinState();
 	}
 	
+	public function set currentTime(value:Number):void
+	{
+		_currentTime = value;
+		currentTimeChange = true;
+		invalidateProperties();
+	};
 	
 	//_____________________________________________________________________
 	//
@@ -198,6 +206,16 @@ public class Documentarisation extends SkinnableComponent
 				retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
 			}
 		}
+		
+		if(currentTimeChange)
+		{
+			currentTimeChange = true;
+			if(retroDocumentView)
+			{
+				retroDocumentView.currentTime = _currentTime;
+			}
+		}
+		
 	}
 	
 	override protected function getCurrentSkinState():String
