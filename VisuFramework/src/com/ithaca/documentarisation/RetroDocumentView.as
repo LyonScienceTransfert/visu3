@@ -81,6 +81,8 @@ package com.ithaca.documentarisation
 		private var removingSegementView:RetroDocumentSegment;
 		private var TIME_UPDATE_RETRODOCUMENT:Number = 1000;
 		
+		private var _currentTime:Number;
+		
 		[Bindable]
 		private var fxgt:_FxGettext;
 		
@@ -134,6 +136,10 @@ package com.ithaca.documentarisation
 			shareUser.shareUserManagement.users = listUserShow;
 			shareUser.shareUserManagement.profiles = _profiles;
 		}
+		public function set currentTime(value:Number):void
+		{
+			_currentTime = value;
+		};
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -334,6 +340,9 @@ package com.ithaca.documentarisation
 				segment.order = 3;
 				segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
 				segment.comment = "";
+				
+				segment.beginTimeVideo = this._startDateSession + _currentTime;
+				segment.endTimeVideo = this._startDateSession + _currentTime + 10000;
 				break;
 			}
 			// add segment
