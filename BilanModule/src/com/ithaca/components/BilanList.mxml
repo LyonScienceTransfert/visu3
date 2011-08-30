@@ -271,7 +271,7 @@
 						 <s:RadioButton 
 							value="shared"
 							groupName="filterType"
-							label="Autres bilans partagés pour moi (créés par d'autres)" 
+							label="Autres bilans (créés par d'autres) et partagés avec moi" 
 							toolTip="Affiche uniquement les bilans créés par d'autres et partagés pour moi" 
 							/>
 				</s:VGroup>
