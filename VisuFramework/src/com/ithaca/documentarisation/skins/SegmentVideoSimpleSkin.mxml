@@ -30,14 +30,14 @@
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{IconEnum.getIconByName('iconVideo_16x16')}" includeIn="edit,editOver,editPause,editPlay,editSelected, shared, sharedOver, sharedPause, sharedPlay"/>
 			<!-- DURATION, PLAY, STOP, PAUSE -->
-			<s:HGroup width="85" verticalAlign="middle" gap="1" height="22">
+			<s:HGroup width="90" verticalAlign="middle" gap="1" height="22">
 				<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
 				<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
 					<!-- ICON SEGMENT -->
-					<s:Label id="labelCurrnetTime" includeIn="editPause,editPlay,sharedPlay,sharedPause, shared, sharedOver" text.editPlay="0:07" text.sharedPause="0:07" text.editPause="0:07" text.sharedPlay="0:07">
+					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPlay,sharedPause, shared, sharedOver" text.editPlay="0:00" text.sharedPause="0:00" text.editPause="0:00" text.sharedPlay="0:00">
 					</s:Label>
 					<s:Label id="labelInfo" text.editSelected="Durée" text.edit="Durée" text.editOver="Durée" text.editPlay="/" text.editPause="/"  text.sharedOver="Durée" text.shared="Durée" text.sharedPlay="/" text.sharedPause="/"/>
-					<s:Label id="lableDuration" text="02:24">
+					<s:Label id="labelDuration" text="02:24">
 					</s:Label>
 				</s:HGroup>
 				<!-- IMAGE PLAY --> 
@@ -66,13 +66,21 @@
 			</mx:Image>
 			<!-- LABELS START END -->
 			<s:HGroup  verticalAlign="middle" width="100%" horizontalAlign="center" includeIn="edit,editOver,editPause,editPlay,editSelected" gap="0" fontSize="10">
-				<mx:Label text="Début:"/>
-				<mx:Label id="labelStartSpinner" text="11:11"/>
-				<s:Spinner  id="startSpinner" minimum="0" skinClass="spark.skins.spark.SpinnerSkin" width="12" height="18"/>               
+				<s:Label text="Début:"/>
+				<s:Label id="labelStartSpinner" text="11:11"/>
+				<s:Spinner  id="startSpinner" minimum="0" 
+					skinClass="spark.skins.spark.SpinnerSkin" 
+					width="12" height="18"
+					enabled.editPause="false"
+					enabled.editPlay="false"/>               
 				<mx:Spacer width="7"/>
-				<mx:Label text="Fin:"/>
-				<mx:Label id="labelEndSpinner" text="14:14"/>
-				<s:Spinner id="endSpinner"  maximum="{24*60*60}" skinClass="spark.skins.spark.SpinnerSkin" width="12" height="18"/>                    
+				<s:Label text="Fin:"/>
+				<s:Label id="labelEndSpinner" text="14:14"/>
+				<s:Spinner id="endSpinner"  maximum="{24*60*60}" 
+					skinClass="spark.skins.spark.SpinnerSkin" 
+					width="12" height="18"
+					enabled.editPause="false"
+					enabled.editPlay="false"/>                    
 			</s:HGroup>
 			<mx:Spacer width="100%"/>
 			<!-- ICON DELETE -->
