@@ -21,21 +21,15 @@
 			<s:SolidColor id="bgFill" color="#ffffff"/>
 		</s:fill>
 	</s:Rect>
-	<s:Group width="100%" height="100%">
-
-		<s:HGroup  top="2" height="35" width="100%" gap="3" verticalAlign="middle">
+	<s:VGroup width="100%" height="100%">
+		<s:HGroup  width="100%" gap="3" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5">
 			<s:Label text="balbla" id="titleDocument" minWidth="100" width="100%" includeIn="normal" fontWeight="bold" paddingLeft="5"/>
 			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited" fontSize="12"/>
 			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited"/>
 			<mx:PopUpButton icon="{IconEnum.getIconByName('retroDocumentSegemntAdd')}" id="addPopUpButton"  width="50" includeIn="edited" buttonMode="true"/>
-			
-			<!--<components:IconButton icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}" width="31" height="22" id="buttonMenuAddSegment" includeIn="edited" buttonMode="true"/>-->
 			<mx:Button icon="{IconEnum.getIconByName('iconMinimaze_16x16')}" id="buttonSwitch" enabled="true" width="22" includeIn="edited" visible="true" buttonMode="true"/>
 		</s:HGroup>
-		<s:Group top="37" bottom="1" left="0" right="1">
-			<s:List top="0"  bottom="0" left="0" right="0" id="groupSegment">
-						
-			</s:List>
-		</s:Group>
-	</s:Group>
+		<!-- LIST THE SEGMENTS/BLOC -->
+		<s:List width="100%" height="100%" id="groupSegment"/>
+	</s:VGroup>
 </s:Skin>
