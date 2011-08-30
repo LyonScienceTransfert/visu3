@@ -15,6 +15,7 @@
 			import com.ithaca.documentarisation.RetroDocumentSegment;
 			import com.ithaca.documentarisation.RetroDocumentTreeToolTip;
 			import com.ithaca.documentarisation.RetroDocumentView;
+			import com.ithaca.documentarisation.SegmentVideoAdvanced;
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
@@ -87,7 +88,7 @@
 			private var currentSessionDuration:Number;
 			private var currentSessionId:int;
 			private var DELTA_STICH:int = 20;
-			private var currentRetroDocumentSegmentPlaying:RetroDocumentSegment = null;
+			private var currentRetroDocumentSegmentPlaying:SegmentVideoAdvanced = null;
 			private var beginTimeCurrentSegment:Number= 0;
 			private var clickOnTimeLine:Boolean = true;
 			
@@ -354,11 +355,11 @@
 			
 
 			
-			private function setCurrentRetroDocumentSegmentPlaying(value:RetroDocumentSegment):void
+			private function setCurrentRetroDocumentSegmentPlaying(value:SegmentVideoAdvanced):void
 			{
 				this.currentRetroDocumentSegmentPlaying = value;
 			}
-			private function getCurrentRetroDocumentSegmentPlaying():RetroDocumentSegment
+			private function getCurrentRetroDocumentSegmentPlaying():SegmentVideoAdvanced
 			{
 				return this.currentRetroDocumentSegmentPlaying;
 			}
@@ -589,7 +590,7 @@
 					// set time to current video segment 
 					if(this.currentRetroDocumentSegmentPlaying != null)
 					{
-						var tempCurrentRetroDocumentSegment:RetroDocumentSegment = this.currentRetroDocumentSegmentPlaying;
+						var tempCurrentRetroDocumentSegment:SegmentVideoAdvanced = this.currentRetroDocumentSegmentPlaying;
 						// set curentRetroDocumentSegment to null
 						this.setCurrentRetroDocumentSegmentPlaying(null);
 						tempCurrentRetroDocumentSegment.setBeginEndTime();
@@ -819,15 +820,6 @@
 				switchModuleEvent.idRetroDocument = event.idRetroDocument;
 				this.dispatchEvent(switchModuleEvent);
 			}
-			
-			private function updateLabelButtonPlayStopRetroDocumentSegment(value:RetroDocumentSegment = null):void
-			{
-				// change labels on the buttons the retroDocumentSegment
-//				var retroDocmentView:RetroDocumentView = groupRetroDocumentView.getElementAt(0) as RetroDocumentView;
-//				if(retroDocmentView != null){
-//					retroDocmentView.updateButtonPlayStop(value);			
-//				}
-			}
 
 			protected function addRetroDocument_clickHandler(event:MouseEvent):void
 			{
@@ -986,58 +978,19 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var playRetroDocumentSegment : RetroDocumentSegment = event.target as RetroDocumentSegment;
-					var statusPlaySegment:Boolean = event.statusPlaySegment;
+					var segmentVideoAdvanced : SegmentVideoAdvanced = event.target as SegmentVideoAdvanced;
 					var deltaTimePause:Number = 0;
 					var beginTime:Number = event.beginTime;
 					var endTime:Number   = event.endTime;
 					// pause on button play/pause in the segment
-					if(false)
-//					if(playRetroDocumentSegment == this.getCurrentRetroDocumentSegmentPlaying())
-					{
-						if(statusPlaySegment)
-						{
-							// pause timer
-/* 							this.timerRetroDocumentSegment.stop();
-							trace("================================= statusPlaySegment ... this.timePause "+statusPlaySegment+" "+this.timePause.toString());
-							if(this.timePause != 0)
-							{
-								deltaTimePause = new Date().time - this.timePause;
-							}
-							this.beginTimeCurrentSegment = new Date().time - this.timeStart + this.deltaTime + deltaTimePause;
-							trace("================================= TODO PAUSE : this.beginTimeCurrentSegment "+ this.beginTimeCurrentSegment.toString());
-							*/
-						
-							this.pauseVideo(); 
-							return;
-						}else
-						{
-/* 							var timeToRest:Number = endTime - this.beginTimeCurrentSegment;
-							startTimerRetroDocumentSegment(timeToRest);
-							trace("================================= statusPlaySegment ... this.timePause "+statusPlaySegment+" "+this.timePause.toString());
-							if(this.timePause != 0)
-							{
-								deltaTimePause = new Date().time - this.timePause;
-							}
-							this.beginTimeCurrentSegment = this.beginTimeCurrentSegment + deltaTimePause;
-							
-							trace("================================= deltaTimePause = "+ deltaTimePause.toString());
-							trace("================================= TODO PLAY : this.beginTimeCurrentSegment "+ this.beginTimeCurrentSegment.toString());
-							prePlayVideoFlux(this.beginTimeCurrentSegment); */
-							
-							updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
-							return;
-						}
-						
-					}
 					// set current retroDocumentSegment playing
-					setCurrentRetroDocumentSegmentPlaying(playRetroDocumentSegment);
+					setCurrentRetroDocumentSegmentPlaying(segmentVideoAdvanced);
 					
 					this.beginTimeCurrentSegment = beginTime;
-					var dt:Number = beginTime - this.testTimeLine.startTimeSession;
+					var dt:Number = beginTime 
+						//- this.testTimeLine.startTimeSession;
 					
 					prePlayVideoFlux(dt+deltaTimePause);
-					updateLabelButtonPlayStopRetroDocumentSegment(playRetroDocumentSegment);
 					// set timer
 					var durationVideoSegment:Number = endTime - beginTime;
 					if(durationVideoSegment < 0)
@@ -1047,6 +1000,15 @@
 					this.startTimerRetroDocumentSegment(durationVideoSegment);
 				}
 			}
+			
+			private function pauseRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					onCheckSeekStream();
+				}
+			}
+			
 			
 			/**
 			 * play/pause of the streams
@@ -1084,6 +1046,10 @@
 			 */
 			private function visio_clickPanelVideoHandler(event:VisuVisioAdvancedEvent):void
 			{
+				if(currentRetroDocumentSegmentPlaying)
+				{
+					this.currentRetroDocumentSegmentPlaying.setPause();
+				}
 				onCheckSeekStream();
 			}
 
@@ -1272,11 +1238,13 @@
 				this.sessionTimeLine.labelCurrentTimeSession.text = currentTime;
 				if( this.currentRetroDocumentSegmentPlaying != null)
 				{
-					this.currentRetroDocumentSegmentPlaying.currentTime = currentTime;
+					this.currentRetroDocumentSegmentPlaying.currentTime = beginTime;
 				}
 				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
 				// set current time for drag/drop video to retroDocument
 				this.currentTimeSessionMilliseconds = beginTime + this.testTimeLine.startTimeSession;
+				
+				this.documentarisation.currentTime = beginTime;
 			}
 
 			//_____________________________________________________________________
@@ -1400,6 +1368,7 @@
 		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.UPDATE_ADDED_RETRO_DOCUMENT}"  method="updateAddedRetroDocument"/>
 		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="playRetroDocument" />
+		<mate:Listener type="{RetroDocumentEvent.PAUSE_RETRO_SEGMENT}"  method="pauseRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 	</fx:Declarations>
