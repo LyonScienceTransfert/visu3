@@ -231,8 +231,11 @@ package com.ithaca.utils.components
 					buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
 					buttonSwitch.icon =  IconEnum.getIconByName('iconMinimaze_16x16');
 					buttonSwitch.toolTip = "Editer ce bilan";
-					spicerBeforeTitle.includeInLayout = true;
-					spicerBeforeTitle.visible = true;
+					if(spicerBeforeTitle)
+					{
+						spicerBeforeTitle.includeInLayout = true;
+						spicerBeforeTitle.visible = true;
+					}
 				}
 			}
 			if (instance == imageInfo)
@@ -427,8 +430,11 @@ package com.ithaca.utils.components
 						buttonSwitch.includeInLayout = false;
 						buttonSwitch.visible = false;
 						buttonSwitch.removeEventListener(MouseEvent.CLICK, onClickButtonSwitch);
-						spicerBeforeTitle.includeInLayout = true;
-						spicerBeforeTitle.visible = true;
+						if(spicerBeforeTitle)
+						{
+							spicerBeforeTitle.includeInLayout = true;
+							spicerBeforeTitle.visible = true;
+						}
 					}	
 				}
 			}
