@@ -31,6 +31,7 @@ package  com.ithaca.documentarisation.events
 		static public const UPDATE_STREAM_PATH_AUDIO_COMMENT_SEGMENT_RETRO_DOCUMENT : String = 'updateStremPathAudioCommentSegmentRetroDocument';
 		
 		static public const PLAY_RETRO_SEGMENT : String = 'playRetroSegment';
+		static public const PAUSE_RETRO_SEGMENT : String = 'pauseRetroSegment';
 		static public const CLICK_BUTTON_SWITCH : String = 'clickButtonSwitch';
 		static public const UPDATE_ADDED_RETRO_DOCUMENT : String = 'updateAddedRetroDocument';
 		static public const ADD_RETRO_DOCUMENT : String = 'addRetroDocument';
