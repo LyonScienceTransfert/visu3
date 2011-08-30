@@ -8,6 +8,7 @@
 	<![CDATA[
 		import com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin;
 		import com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin;
+		import com.ithaca.visu.model.Model;
 		
 		import mx.events.StateChangeEvent;
 
@@ -37,7 +38,9 @@
 	<documentarisation:SegmentVideoAdvanced 
 		width="100%" 
 		id="segmentVideo"
-		segment="{data}" 
+		durationSession="{Model.getInstance().getCurrentSession().duration_session}"
+		startDateSession="{Model.getInstance().getCurrentSession().date_start_recording.time}"
 		modeEdit="true" 
+		segment="{data}"
 		skinClass="com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin"/>
 </s:ItemRenderer>
