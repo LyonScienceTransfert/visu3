@@ -138,6 +138,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}
 		invalidateSkinState();
 		// if click on button play the other SegmentVideo
+		currentTime = 0
 		durationChange = true;
 		invalidateProperties();
 	}

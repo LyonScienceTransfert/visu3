@@ -63,6 +63,7 @@
 package  com.ithaca.visu.model
 {
 	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.Trace;
 	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.traces.view.ObselComment;
 	import com.ithaca.traces.view.ObselImage;
@@ -130,6 +131,7 @@ package  com.ithaca.visu.model
 		private var _beginTimeSalonSynchrone:Number;
 	
 		private var listTraceLine:ArrayCollection;
+		private var listTraceGroup:ArrayCollection;
 
 		private var _buttonSalonSynchrone:Button; 
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
@@ -747,12 +749,20 @@ package  com.ithaca.visu.model
 		{
 			return this.listTraceLine;
 		}
+	
+		// getter the liste the TraceGroup [ userId, userColor, userAvatar, userName, userTrace, uri ?]
+		public function getListTraceGroup():ArrayCollection
+		{
+			return this.listTraceGroup;
+		}
 		
 		public function initListTraceLine():void
 		{
 			this.listTraceLine = new ArrayCollection();
 			this._listObselsComment = new ArrayCollection();
 		    this._listViewObselComment = new ArrayCollection();
+			
+			listTraceGroup = new ArrayCollection();
 		}
 		public function getListViewObselComment():ArrayCollection
 		{
@@ -770,7 +780,10 @@ package  com.ithaca.visu.model
 				listElementsTraceLine.addItem({id: 2, titleTraceLine: "Documents", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
 				listElementsTraceLine.addItem({id: 3, titleTraceLine: "Messages", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
 				listElementsTraceLine.addItem({id: 4, titleTraceLine: "Marqueurs", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : true});
-				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });	
+				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });
+				
+				var userTrace:Trace = new Trace(userId, "" );
+				this.listTraceGroup.addItem({userId: userId, userColor: userColor, userAvatar : userAvatar, userName : userName, userTrace : userTrace});
 			}
 		}
 		
@@ -959,6 +972,23 @@ package  com.ithaca.visu.model
 			return false;
 		}
 		
+		/**
+		 * 
+		 */
+		public function getTraceGroupByUserId(userId:int):Object
+		{
+			var nbrTraceGroup:int = this.listTraceGroup.length;
+			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup; nTraceGroup++)
+			{
+				var traceGroup:Object = this.listTraceGroup[nTraceGroup] as Object;
+				var id:int = traceGroup.userId;
+				if(id == userId)
+				{
+					return traceGroup;
+				}
+			}
+			return null;
+		}
 		/**
 		 * 
 		 */
@@ -1195,12 +1225,26 @@ package  com.ithaca.visu.model
 					break;
 			}
 			
-			Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel)
+			Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel,obsel)
 			return result;
 		}
 		
-		public function setObsel(obsel:*, userId:int, typeObsel:String):void
+		public function setObsel(obsel:*, userId:int, typeObsel:String, obselOrigin:Obsel = null):void
 		{
+			
+			// 
+			var traceGroup:Object = getTraceGroupByUserId(userId);
+			if(traceGroup == null)
+			{
+				// TODO message
+				return;
+			}
+			var trace:Trace = traceGroup.userTrace;
+			if(obselOrigin)
+			{
+				trace.addObsel(obselOrigin);
+			}
+				
 			var traceLine:Object = getTraceLineByUserId(userId);
 			if(traceLine == null)
 			{

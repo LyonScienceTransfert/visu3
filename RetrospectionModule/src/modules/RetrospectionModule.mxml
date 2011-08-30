@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<modules:VisuModuleBase width="100%" height="100%" 
+						creationComplete="visumodulebase1_creationCompleteHandler(event)" 
+						configure="visumodulebase1_configureHandler(event)" 
+						xmlns:fx="http://ns.adobe.com/mxml/2009" 
 						xmlns:s="library://ns.adobe.com/flex/spark" 
 						xmlns:mx="library://ns.adobe.com/flex/mx" 
 						xmlns:modules="com.ithaca.visu.modules.*"
-						
-						width="100%" height="100%" 
-						creationComplete="visumodulebase1_creationCompleteHandler(event)" 
-						configure="visumodulebase1_configureHandler(event)" 
 						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
-						xmlns:timeline="com.ithaca.visu.controls.timeline.*"
-						xmlns:controls="com.lyon2.controls.*"  currentState="State1" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*"> 
+						xmlns:timeline="com.ithaca.timeline.*"
+						xmlns:controls="com.lyon2.controls.*" 
+						xmlns:video="com.ithaca.visu.view.video.*" 
+						xmlns:components="com.ithaca.utils.components.*" 
+						xmlns:documentarisation="com.ithaca.documentarisation.*"
+						currentState="State1" > 
 	<fx:Script>
 		<![CDATA[ 
 			import com.ithaca.documentarisation.RetroDocumentSegment;
@@ -19,7 +22,10 @@
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
+			import com.ithaca.timeline.Layout;
+			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.traces.Obsel;
+			import com.ithaca.traces.Trace;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.traces.view.ObselStich;
@@ -114,9 +120,6 @@
 				
 				if((event.currentTarget as RetrospectionModule).parameters != null)
 				{
-					//var param:Object = (event.currentTarget as RetrospectionModule).parameters ;
-					//Model.getInstance().setCurrentSession(param as Session);
-					
 					var param:Array = (event.currentTarget as RetrospectionModule).parameters as Array ;
 					var cameFromModule:String = param[0];
 					switch (cameFromModule)
@@ -166,15 +169,9 @@
  				this.visio.connection = Model.getInstance().getNetConnection();
 				// removing module from the stage
 				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
-				this.sessionTimeLine.addEventListener(MessageEvent.CHECK_SEEK_STREAM, onCheckSeekStream);
 				// add obsel join retro room
 				var joinSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.GO_IN_MODULE);
 				this.dispatchEvent(joinSalonRetro);
-				
-				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
-				this.durationSessionSlider.dataTipFormatFunction = formatDurationSlider;
-				// enable button add bilan
-//				addRetroDocument.enabled = true;
 				
 				if( Model.getInstance().getModeDebug())
 				{
@@ -189,7 +186,6 @@
 					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
 					timerSynchro.start();
 				}
-				//this.panelDocumentarisation.title = fxgt.gettext("Documentarisation");
 				// set the data of the session
 				documentarisation.initDataRetroDocument(
 					this.currentSessionDateRecording, 
@@ -229,8 +225,8 @@
 				{
 					eventAddCommentObsel.typeAction = TraceModel.RETRO_DOUBLE_CLICK_TRACE_LINE_START_CREATE_COMMENT_EVENT;
 					var localX:Number = event.clickLocalX + deltaXObselTime;
-					var timeStartSession:Number = this.testTimeLine.startTimeSession;
-					var duration:Number = this.testTimeLine.durationSession;
+					var timeStartSession:Number = this.timeline.begin;
+					var duration:Number = this.timeline.duration;
 					var wightGroup:Number = commentTimeLine.traceTitleLoggedUser.width;
 					var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
 					var begin :Number = delta + timeStartSession;
@@ -353,8 +349,6 @@
 				this.visio.removeAllStreams();
 			}
 			
-
-			
 			private function setCurrentRetroDocumentSegmentPlaying(value:SegmentVideoAdvanced):void
 			{
 				this.currentRetroDocumentSegmentPlaying = value;
@@ -364,50 +358,11 @@
 				return this.currentRetroDocumentSegmentPlaying;
 			}
 			
-			
 			private function createSessionTimeLine(durationSession:Number,startSession:Number):void
 			{
 				// set current session duration 
 				this.currentSessionDuration = durationSession;
-				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
-				this.sessionTimeLine.sessionTimeLineLayout.startTime = startSession;
-				
-				var widthGroup:Number = this.sessionTimeLine.sessionTimeLineLoggedUser.width;
-				var nbrLabelTime:int = widthGroup/DELTA_STICH;
-				nbrLabelTime = 50;
-				var deltaTime:int = durationSession/nbrLabelTime;
-				var every:int = 6;
-				var count:int = 1;
-				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
-				{
-					var beginTimeObsel:Number = nPart*deltaTime;
-					// in seconds
-					
-					var obselTime:ObselStich = new ObselStich()
-					obselTime.setBegin(beginTimeObsel);
-					obselTime.setEnd(beginTimeObsel);
-					obselTime.height = 10;
-					if(count == every)
-					{
-						obselTime.height = 20;
-						count = 1;
-						var minuts:int = (beginTimeObsel/1000)/60;
-						var minutsString:String = minuts.toString();
-						if(minuts<10){
-							minutsString = "0"+minutsString; 
-						}
-						var seconds:int = (beginTimeObsel/1000)-minuts*60;
-						var secondsString:String = seconds.toString();
-						if(seconds < 10)
-						{
-							secondsString = "0"+secondsString;
-						}
-						obselTime.setLabel(minutsString+":"+secondsString);
-					}
-					count++;
-					//obselTime.text = labelTextMin+" min.";
-					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
-				}
+				timeline.range.addTime(startSession, startSession + durationSession);
 			}
 
 			// creation the resume activity
@@ -419,6 +374,9 @@
 					this.currentSessionDateRecording = event.dateStartRecording;
 					var durationSession:Number = event.durationSessionRetro;
 					var startRecordingSession:Number = event.dateStartRecording.time;
+					
+					timeline.range.addTime(startRecordingSession, startRecordingSession + durationSession);
+
 					// set timeStartSession in VisuVisioAdvaned
 					this.visio.startTimeSession = startRecordingSession;
 					// update label start session recording
@@ -428,57 +386,10 @@
 						fxgt.gettext(" enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
 						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
 						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
-					this.setObsels();
-					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
-					if(listTraceLines != null)
-					{
-						var nbrTraceLines:int = listTraceLines.length;
-						for(var nTraceLine:int =0; nTraceLine < nbrTraceLines ; nTraceLine++)
-						{
-							var traceLineObj:Object = listTraceLines[nTraceLine] as Object;						
-							this.addTraceLineOnViewTraceLineGroup(traceLineObj,durationSession,startRecordingSession);
-						}
-					}
-					// add view Obsel comment 
-					this.commentTimeLine = new TraceLineComment();
-					this.commentTimeLine.percentWidth = 100; 
-					this.commentTimeLine.top = 40; 
-					this.commentTimeLine.left = 1; 
-					this.commentTimeLine.right = 1; 
-					this.commentTimeLine.addEventListener(ObselEvent.ADD_OBSEL, onAddObselComment);
-					this.commentTimeLine.addEventListener(ObselEvent.EDIT_OBSEL, onEditObselComment, true);
-					this.commentTimeLine.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselComment, true);
-					this.commentTimeLine.addEventListener(SalonRetroEvent.PRE_ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT, onPreActionUserObselComment);
-					this.commentTimeLine.visible = true;
-					var nbrElement:int = groupTimeLine.numElements;
-					groupTimeLine.addElementAt(this.commentTimeLine,nbrElement);
-					commentTimeLine.durationSession = durationSession;
-					commentTimeLine.startTimeSession = startRecordingSession;
-					var obj:Object =  Model.getInstance().getTraceLineByUserId(Model.getInstance().getLoggedUser().id_user);
-					if(obj == null)
-					{
-						// BUG ICI
-						obj =  Model.getInstance().getTraceLineByUserId(0);
-					}
-					var backGroundColorObsel:uint = obj.userColor;
-					this.commentTimeLine.backGroundColor = backGroundColorObsel;
-					var listObselComment:ArrayCollection = Model.getInstance().getListViewObselComment();	
-					commentTimeLine.listTitleObsels = listObselComment;		
-					// update sliders
-					this.startTimeSessionSlider.minimum = startRecordingSession;
-					this.startTimeSessionSlider.maximum = startRecordingSession + durationSession;
-					this.startTimeSessionSlider.value = startRecordingSession;		
-					// creation slider session duration
-					if(durationSession < 60000)
-					{
-						this.durationSessionSlider.enabled = false;
-					}else
-					{
-						this.durationSessionSlider.enabled = true;
-						this.durationSessionSlider.minimum = 60000;
-						this.durationSessionSlider.maximum = durationSession;
-						this.durationSessionSlider.value  = durationSession;		
-					}
+					
+					var loader:URLLoader=new URLLoader();			
+					loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
+					loader.load(new URLRequest("layoutVisu2.xml"));	
 				}
 				// add drag listener
 				setListenerDragVideo();
@@ -492,68 +403,45 @@
 						Model.getInstance().getListUserPresentOnTimeLine());
 				}
 			}
-			
-			private function addTraceLineOnViewTraceLineGroup(traceLineObj:Object, durationSession:Number,startRecordingSession:Number):void
+			private function onLoadLayoutComplete(event:Event):void 
 			{
-				var userId:int = traceLineObj.userId;
-				var traceLine:TraceLineB = new TraceLineB()
-				traceLine.percentWidth = 100;
-				//	traceLine.height = 30;
-				traceLine.left = 0;
-				traceLine.right = 0;
-				traceLine.sourceImageUserTraceLine = traceLineObj.userAvatar;
-				traceLine.nameUserTraceLine = traceLineObj.userName;
-				traceLine.colorUserTraceLine = traceLineObj.userColor;
-				traceLine.durationSession = durationSession;
-				traceLine.startTimeSession = startRecordingSession;								
-				traceLine.idUserTraceLine = userId;		
-				traceLine.tempList = traceLineObj.listTitleObsels;
-				traceLine.listElementTraceline = traceLineObj.listElementTraceLine;
- 				traceLine.addEventListener(TraceLineEvent.ADD_LIST_OBSEL, onAddListObsel);
-				traceLine.addEventListener(TraceLineEvent.REMOVE_LIST_OBSEL, onRemoveListObsel); 
+				//we init the trace object
+				var loader:URLLoader=event.target as URLLoader;
+				timeline.layoutXML 		= new XML( loader.data );
+				timeline.timelineLayout = new Layout( timeline ); 	
 				
-				traceLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
-				// listener activity user on observer the obsel
-				traceLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
-			
-				if(userId == Model.getInstance().getLoggedUser().id_user)
-				{
-					// create sessionTimeLine
-					this.createSessionTimeLine(durationSession,0); 
-					this.testTimeLine = traceLine;
-					
-					traceLine.nameUserTraceLine = fxgt.gettext("Ma trace");
-					this.traceLineGroup.addElementAt(traceLine, 0); 
-					
-				}else
-				{
-					this.traceLineGroup.addElement(traceLine);
-				}
-				traceLineObj.show = true;
-			}
-			
-			private function onMouseClickOnTimeLine(event:MouseEvent):void
-			{	
-				// stop play RetroDocumentSegment if playing
-				this.clickOnTimeLine = true;
-				// stop play video segment
-				endVideoSegment();
-				// update button play/pause
-				sessionTimeLine.setLabelButtonPlayPause(false);
-				var target:Object = event.target as Object;
-				var deltaXObselTime:Number = 0;
+				this.setObsels();
 				
-				var localX:Number = event.stageX - event.currentTarget.x;
-				
-				var timeStartSession:Number = this.testTimeLine.startTimeSession;
-				var duration:Number = this.testTimeLine.durationSession;
-				var groupTimeLine:Group = event.currentTarget as Group;
-				var wightGroup:Number = groupTimeLine.width;
-				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
-				// add value start session slider
-				delta = delta + startTimeSessionSlider.value - this.currentSessionDateRecording.time;
-				// pre play video flux
-				prePlayVideoFlux(0,delta);						
+				timeline.addTrace( new Trace(), 0, "Comments");
+
+				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+				if(listTraceGroup != null)
+				{											
+					var nbrTraceGroup:int = listTraceGroup.length;
+					for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+					{												
+						var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+						
+						var tlg :TraceLineGroup = timeline.addTrace(traceGroup.userTrace);					
+						tlg.setStyle("bgColor", traceGroup.userColor);
+						tlg.setStyle("icon", traceGroup.userAvatar );	
+						
+						if(traceGroup.userId == Model.getInstance().getLoggedUser().id_user)
+						{					
+							tlg.setStyle("title", fxgt.gettext("Mama trace") );
+							var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
+							// set dataProvider with collection the StreamObsel
+							this.visio.dataProvider = Model.getInstance().getListStreamObsel();
+							// set pickCherryClick
+							this.pickCheryClick = 0;					
+							this.visio.startTimer();	
+						}
+						else
+						{
+							tlg.setStyle("title", traceGroup.userName );				
+						}
+					}
+				}		
 			}
 					
 			private function removeTimerRetroDocumentSegment():void
@@ -655,37 +543,7 @@
 				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
 				Model.getInstance().removeListObselTitleTraceLine(userTraceLineId, listObsel);
 			}
-			private function onCreationCompletTraceLine(event:FlexEvent):void
-			{
-				var traceLine:TraceLineB = event.currentTarget as TraceLineB;
-				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
-				traceLine.listTitleObsels = traceLine.tempList;		
- 				var userId:int = traceLine.idUserTraceLine;
-				traceLine.checkBoxMarkerObsel.selected = true;
-				if(userId == Model.getInstance().getLoggedUser().id_user)
-				{
-					sessionTimeLine.sessionTimeLineLoggedUser.left = traceLine.traceLoggedUser.left;
-					sessionTimeLine.sessionTimeLineLoggedUser.addEventListener(MouseEvent.CLICK, onMouseClickOnTimeLine);
-					this.testCursor = new ObselLine();
-					this.testCursor.height = 50;
-					var beginTime:Number = new Date().time - this.testTimeLine.startTimeSession;
-					this.testCursor.setBegin(beginTime);
-					this.testCursor.setEnd(beginTime);
-					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(this.testCursor); 
-					
-					
-					var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
-					// set dataProvider with collection the StreamObsel
-					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
-					
-					// set pickCherryClick
-					this.pickCheryClick = 0;					
-					this.visio.startTimer();
-					durationSessionSlider.enabled = true;
-					startTimeSessionSlider.enabled = true;
-				} 
-				
-			}
+
 			private function setObsels():void{
 				// add obsels traceLine 
 				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
@@ -710,53 +568,7 @@
 						Model.getInstance().addObselComment(obselComment,false);
 					}
 				}
-			}
-			
-			private function hasElement():Boolean
-			{
-				var nbrElm:int = this.groupTimeLine.numElements;
-				for(var nElm:int = 0; nElm < nbrElm; nElm++)
-				{
-					var obj = this.groupTimeLine.getElementAt(nElm);
-					if(obj is TraceLineComment)
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-			
-			protected function durationSessionSlider_valueCommitHandler(event:FlexEvent):void
-			{
-				var hSlider:HSlider = event.currentTarget as HSlider;
-				var duration:int = hSlider.value;
-				// TODO gestion time the session
-				this.sessionTimeLine.sessionTimeLineLayout.durationSession = duration;
-				var nbrTraceLine:int = this.traceLineGroup.numElements;
-				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
-				{
-					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
-					traceLine.durationSession = duration;
-				}	
-				this.commentTimeLine.durationSession = duration;
-			}
-			
-			
-			protected function startTimeSessionSlider_valueCommitHandler(event:FlexEvent):void
-			{
-				var hSlider:HSlider = event.currentTarget as HSlider;
-				var startTime:Number = hSlider.value;
-				// TODO gestion time the session`
-				var startTimeSessionTimeLayout:Number = startTime -  this.currentSessionDateRecording.time;
-				this.sessionTimeLine.sessionTimeLineLayout.startTime = startTimeSessionTimeLayout;
-				var nbrTraceLine:int = this.traceLineGroup.numElements;
-				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
-				{
-					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
-					traceLine.startTimeSession = startTime;
-				}
-				this.commentTimeLine.startTimeSession = startTime;
-			}
+			} 
 
 			protected function startTimeSessionSlider_thumbReleaseHandler(event:TrackBaseEvent):void
 			{
@@ -917,25 +729,6 @@
 				}
 			}
 			
-			/**
-			 * format text slider duration of the session
-			 */
-			private function formatDurationSlider(value:Number):Object { 
-				var duration:int = value/60000;
-				var percent:int = (value*100/durationSessionSlider.maximum);
-				var result:String = percent.toString() + " %";
-				return result;
-			}
-			
-			/**
-			 * format text slider start session
-			 */
-			private function formatStartTimeSlider(value:Number):Object { 
-				var duration:int = (value - startTimeSessionSlider.minimum)/60000;
-				var result:String = duration.toString() + " min.";
-				return result;
-			}
-			
 			//_____________________________________________________________________
 			//
 			// Drag/Drop video
@@ -1024,11 +817,9 @@
 					if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
 					{
 						pauseVideo();
-						sessionTimeLine.setLabelButtonPlayPause(true);
 					}else
 					{
 						this.visio.resumeStreams();
-						sessionTimeLine.setLabelButtonPlayPause(false);
 					}
 				}
 			}
@@ -1084,11 +875,11 @@
 			{
 				if(delta != 0)
 				{
-					value = delta + this.testTimeLine.startTimeSession;
+					value = delta + this.timeline.begin;
 				}else
 				{
 					delta = value;
-					value = value + this.testTimeLine.startTimeSession;
+					value = value +  this.timeline.begin;
 				}
 				trace("prePlayVideoFlux value= "+value.toString());
 				trace("prePlayVideoFlux delta= "+delta.toString());
@@ -1232,17 +1023,17 @@
 			protected function visio_updateTimeHandler(event:VisuVisioAdvancedEvent):void
 			{
 				var beginTime:Number = event.beginTime;
-				this.testCursor.setBegin(beginTime);
-				this.testCursor.setEnd(beginTime);
+				
+				timeline.changeCursorValue( timeline.begin + beginTime );
+				
 				var currentTime:String = updateLabelTimer(beginTime);
-				this.sessionTimeLine.labelCurrentTimeSession.text = currentTime;
 				if( this.currentRetroDocumentSegmentPlaying != null)
 				{
 					this.currentRetroDocumentSegmentPlaying.currentTime = beginTime;
 				}
-				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
+				
 				// set current time for drag/drop video to retroDocument
-				this.currentTimeSessionMilliseconds = beginTime + this.testTimeLine.startTimeSession;
+				this.currentTimeSessionMilliseconds = beginTime + this.timeline.begin;
 				
 				this.documentarisation.currentTime = beginTime;
 			}
@@ -1352,8 +1143,6 @@
 				panelVideo.buttonModeZoomEnabled = false;
 				visio.zoomMax = false;
 			}
-
-
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1412,34 +1201,7 @@
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
 					</s:VGroup>
-					<s:VGroup width="100%" height="25%" gap="0">
-						<s:Group width="100%" height="100%" id="groupTimeLine">
-							<timeline:TimeLineSession id="sessionTimeLine" width="100%"  showButtonNavigation="true" top="0"/>
-							<s:Group width="100%" height="100%" top="75">
-								<s:Scroller left="1" right="1" top="1" bottom="1" top.State1="1" left.State1="0" bottom.State1="1" right.State1="1" bottom.debug="1" left.debug="0" right.debug="1" top.debug="1">
-									<s:Group width="100%" height="100%">
-										<s:layout>
-											<s:VerticalLayout gap="5"/>
-										</s:layout>
-										<s:Group id="traceLineGroup" width="100%" height="100%">
-											<s:layout>
-												<s:VerticalLayout gap="4"/>
-											</s:layout>
-										</s:Group>
-									</s:Group>
-								</s:Scroller>
-							</s:Group>
-						</s:Group>
-						<s:HGroup>
-							<s:Label text="Zoom: " />
-							<s:HSlider id="durationSessionSlider" 						   
-								liveDragging="true" width="15%" valueCommit="durationSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease.State1="durationSessionSlider_thumbReleaseHandler(event)" thumbRelease.debug="durationSessionSlider_thumbReleaseHandler(event)"/>
-							
-							<s:Label text="Position: "/>
-							<s:HSlider id="startTimeSessionSlider" 
-								liveDragging="true" width="70%" valueCommit="startTimeSessionSlider_valueCommitHandler(event)" enabled="false" thumbRelease="startTimeSessionSlider_thumbReleaseHandler(event)"/>
-						</s:HGroup>
-					</s:VGroup>
+					<timeline:Timeline id="timeline" width="100%"  height="100%" />
 				</mx:VDividedBox>
 			</components:PanelButton>
 <!-- DOCUMENTARISATION -->		
