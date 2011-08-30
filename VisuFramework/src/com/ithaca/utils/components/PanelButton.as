@@ -9,6 +9,7 @@ package com.ithaca.utils.components
 	import flash.events.MouseEvent;
 	
 	import mx.controls.Image;
+	import mx.controls.Spacer;
 	import mx.events.ToolTipEvent;
 	import mx.managers.ToolTipManager;
 	
@@ -48,6 +49,8 @@ package com.ithaca.utils.components
 		public var buttonSwitch:IconButton;
 		[SkinPart("true")]
 		public var imageInfo:Image;
+		[SkinPart("true")]
+		public var spicerBeforeTitle:Spacer;
 		
 		private var _muteMicro:Boolean;
 		private var _buttonMuteMicroVisible:Boolean;
@@ -228,6 +231,8 @@ package com.ithaca.utils.components
 					buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
 					buttonSwitch.icon =  IconEnum.getIconByName('iconMinimaze_16x16');
 					buttonSwitch.toolTip = "Editer ce bilan";
+					spicerBeforeTitle.includeInLayout = true;
+					spicerBeforeTitle.visible = true;
 				}
 			}
 			if (instance == imageInfo)
@@ -422,6 +427,8 @@ package com.ithaca.utils.components
 						buttonSwitch.includeInLayout = false;
 						buttonSwitch.visible = false;
 						buttonSwitch.removeEventListener(MouseEvent.CLICK, onClickButtonSwitch);
+						spicerBeforeTitle.includeInLayout = true;
+						spicerBeforeTitle.visible = true;
 					}	
 				}
 			}
