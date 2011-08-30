@@ -34,7 +34,7 @@
 				<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
 				<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
 					<!-- ICON SEGMENT -->
-					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPlay,sharedPause, shared, sharedOver" text.editPlay="0:00" text.sharedPause="0:00" text.editPause="0:00" text.sharedPlay="0:00">
+					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPlay,sharedPause, shared, sharedOver">
 					</s:Label>
 					<s:Label id="labelInfo" text.editSelected="Durée" text.edit="Durée" text.editOver="Durée" text.editPlay="/" text.editPause="/"  text.sharedOver="Durée" text.shared="Durée" text.sharedPlay="/" text.sharedPause="/"/>
 					<s:Label id="labelDuration" text="02:24">
