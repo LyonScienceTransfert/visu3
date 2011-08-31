@@ -412,7 +412,8 @@
 				
 				this.setObsels();
 				
-				timeline.addTrace( new Trace(), 0, "Comments");
+				var traceComment:Trace = Model.getInstance().getTraceComment();
+				timeline.addTrace( traceComment, 0, "Comments");
 
 				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
 				if(listTraceGroup != null)
