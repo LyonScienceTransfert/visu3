@@ -689,6 +689,12 @@ or by setting the following environment variable:
 		  <copy todir="${webapp.dir}/locale">
 	        <fileset dir="${app.src}/locale/" includes="**"/>
 	      </copy>
+	       <!-- copy file layoutVisu2.xml -->
+	      <echo>Copy file layoutVisu2.xml</echo>
+		  <copy todir="${webapp.dir}">
+	        <fileset dir="${visu.dev.path}/xml/" includes="**"/>
+	      </copy>
+	      
 	     <!-- copy start page, images, manuals files--> 
 		  <copy todir="${webapp.dir}">
 	        <fileset dir="${visu.dev.path}/start_page_assets/" includes="**"/>
