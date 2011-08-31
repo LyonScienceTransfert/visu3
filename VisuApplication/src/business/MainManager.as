@@ -554,9 +554,8 @@ public class MainManager
 	 */
 	public function onCheckListUserObsel(listObselVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array = null, sharedSession:Boolean = false , salonTutorat:Boolean = false):void
 	{
-		
-		
-		listObselCommentVO = null;
+			
+//		listObselCommentVO = null;
 		
 		var listObselTempSessionOut:ArrayCollection = new ArrayCollection();
 		
@@ -601,6 +600,8 @@ public class MainManager
 			}
 			
 			Model.getInstance().setListObselComment(arr);
+			// set trace obsel comment
+			Model.getInstance().setTraceCommentObsel(arr);
 		}
 		var startRecordingSession:Number = dateStartRecordingSession.time;
 		var listObsel:ArrayCollection = null;

@@ -132,6 +132,7 @@ package  com.ithaca.visu.model
 	
 		private var listTraceLine:ArrayCollection;
 		private var listTraceGroup:ArrayCollection;
+		private var traceComment:Trace;
 
 		private var _buttonSalonSynchrone:Button; 
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
@@ -598,6 +599,19 @@ package  com.ithaca.visu.model
 		}
 		
 		/**
+		 * add all comment obsel in Trace obsel
+		 */
+		public function setTraceCommentObsel(value:ArrayCollection):void
+		{
+			var nbrObsel:int = value.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obsel:Obsel = value.getItemAt(nObsel) as Obsel;
+				traceComment.addObsel(obsel);
+			}
+		}
+		
+		/**
 		 * Get list obsels comment
 		 */
 		public function getListObselComment():ArrayCollection
@@ -763,7 +777,16 @@ package  com.ithaca.visu.model
 		    this._listViewObselComment = new ArrayCollection();
 			
 			listTraceGroup = new ArrayCollection();
+			// init trace comment
+			var loggedUserId:int = _loggedUser.id_user;
+			traceComment = new Trace(loggedUserId, "" );
 		}
+		
+		public function getTraceComment():Trace
+		{
+			return traceComment;
+		}
+		
 		public function getListViewObselComment():ArrayCollection
 		{
 			return this._listViewObselComment;
@@ -1058,6 +1081,8 @@ package  com.ithaca.visu.model
 			}
 			
 			_listViewObselComment.addItem(viewObsel);
+			
+			traceComment.addObsel(obsel);
 
 		}
 		
