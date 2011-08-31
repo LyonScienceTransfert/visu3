@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<tlg styleName="Comments" > 	
+		<tl title="" styleName="Comments" />
+	</tlg> 	
+	<tlg> 	
+		<tl styleName="background" 		selector="SelectorRegexp" field="type" regexp="Activity" />
+		<tl styleName="contextPreview"  selector="SelectorRegexp" field="type" regexp="Marker|Instructions|Keyword|Document|Message" />
+		
+		<tl title="" selector="SelectorRegexp" field="type" regexp="Marker|Instructions|Keyword|Document|Message" >
+			<tl title="Marqueurs" selector="SelectorRegexp" field="type" regexp="Marker" />
+			<tl title="Instructions" selector="SelectorRegexp" field="type" regexp="Instructions" />
+			<tl title="Mots-Clefs" selector="SelectorRegexp" field="type" regexp="Keyword" />
+			<tl title="Documents" selector="SelectorRegexp" field="type" regexp="Document" />		
+			<tl title="Messages"  selector="SelectorRegexp" field="type" regexp="Message"/>			
+		</tl>
+	</tlg>
+</root>			
