@@ -13,6 +13,7 @@ import flash.utils.Timer;
 
 import mx.controls.Image;
 
+import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
@@ -31,6 +32,11 @@ public class SegmentCommentAudio extends SkinnableComponent
 	
 	[SkinPart("true")]
 	public var iconSegment:Image;
+	
+	[SkinPart("true")]
+	public var groupAudioRecorder:HGroup;
+	[SkinPart("true")]
+	public var groupText:HGroup;
 	
 	private var _text:String;
 	private var textChange:Boolean;
@@ -214,7 +220,6 @@ public class SegmentCommentAudio extends SkinnableComponent
 
 		if(instance == audioRecorder)
 		{
-			trace("partAdd => audioRecorder");
 			audioRecorder.stream = _stream;
 			audioRecorder.streamId = streamId;
 			audioRecorder.streamPath = streamPath;
@@ -225,7 +230,6 @@ public class SegmentCommentAudio extends SkinnableComponent
 			audioRecorder.updateTimeInterval = UPDATE_TIME_INTERVAL;
 			audioRecorder.addEventListener(AudioRecorderEvent.UPDATE_PATH_COMMENT_AUDIO, onUpdatePathCommentAudio);
 			audioRecorder.addEventListener(AudioRecorderEvent.UPDATE_DURATION_COMMENT_AUDIO, onUpdateDuratioCommentAudio);
-			
 		}
 		if (instance == richEditableText)
 		{
@@ -296,11 +300,23 @@ public class SegmentCommentAudio extends SkinnableComponent
 			audioRecorder.userId = userId;
 			// set duration audio
 			durationAudio = segment.durationCommentAudio;
-
+			
 			if(audioRecorder)
 			{
+
 				audioRecorder.streamPath = streamPath;
 				audioRecorder.durationAudio = durationAudio;
+			}
+			
+			// check duration audio 
+			if(!modeEdit && durationAudio == 0)
+			{
+				groupAudioRecorder.includeInLayout = groupAudioRecorder.visible = false;
+			}
+			// check text
+			if(!modeEdit && text == "")
+			{
+				groupText.includeInLayout = groupText.visible = false;
 			}
 		}
 	}
@@ -345,11 +361,12 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// richText
 	public function onFocusInRichEditableText(event:*=null):void
 	{
-		if(richEditableText.text == "Cliquer ici pour ajouter du texte")
+		if(richEditableText.text == "Cliquer ici pour enregistrer un commentaire")
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
 			richEditableText.setStyle("color","#000000");
+			richEditableText.setStyle("textAlign","left");
 		}
 		richEditableText.selectAll();
 		if(this.stage != null)
@@ -413,8 +430,9 @@ public class SegmentCommentAudio extends SkinnableComponent
 	
 	private function setRichEditText():void
 	{
-		richEditableText.text = "Cliquer ici pour ajouter du texte";
+		richEditableText.text = "Cliquer ici pour enregistrer un commentaire";
 		richEditableText.setStyle("fontStyle","italic");
+		richEditableText.setStyle("textAlign","right");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
 		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
