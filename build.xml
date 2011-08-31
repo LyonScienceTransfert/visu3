@@ -61,6 +61,7 @@ or by setting the following environment variable:
    <property name="framework.path" location="${visu.dev.path}/VisuFramework" />
    <property name="framework.src" location="${framework.path}/src" />
    <property name="framework.images" location="${framework.src}/images" />
+   <property name="framework.timeLineImages" location="${framework.src}/com/ithaca/timeline/images" />
    <property name="framework.sounds" location="${framework.src}/sounds" />
    <property name="framework.bin" location="${framework.path}/bin" />
    <property name="framework.linkreport" location="${framework.bin}/link-report.xml" />
@@ -237,25 +238,25 @@ or by setting the following environment variable:
 	  		  	
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 	  		  	
-	  		  	<!-- TimeLine LC -->
-				<include-file name="images/BlackCrossClick.png" path="${framework.images}/BlackCrossClick.png"/>
-				<include-file name="images/BlackCrossOver.png" path="${framework.images}/BlackCrossOver.png"/>
-				<include-file name="images/curseurBigVerticalGrip.png" path="${framework.images}/curseurBigVerticalGrip.png"/>
-				<include-file name="images/curseurLeftGrip.png" path="${framework.images}/curseurLeftGrip.png"/>
-				<include-file name="images/curseurRightGrip.png" path="${framework.images}/curseurRightGrip.png"/>
-				<include-file name="images/iconMinus.png" path="${framework.images}/iconMinus.png"/>
-				<include-file name="images/iconPlus.png" path="${framework.images}/iconPlus.png"/>
-				<include-file name="images/magnifier.png" path="${framework.images}/magnifier.png"/>
-				<include-file name="images/magnifierClick.png" path="${framework.images}/magnifierClick.png"/>
-				<include-file name="images/reset.png" path="${framework.images}/reset.png"/>
-				<include-file name="images/resetClick.png" path="${framework.images}/resetClick.png"/>
-				<include-file name="images/resize.png" path="${framework.images}/resize.png"/>
-				<include-file name="images/scissors.png" path="${framework.images}/scissors.png"/>
-				<include-file name="images/scissorsClick.png" path="${framework.images}/scissorsClick.png"/>
-				<include-file name="images/zcCursor.png" path="${framework.images}/zcCursor.png"/>
-				<include-file name="images/zcCursor1.png" path="${framework.images}/zcCursor1.png"/>
-				<include-file name="images/zcLeftRange.png" path="${framework.images}/zcLeftRange.png"/>
-				<include-file name="images/zcRightRange.png" path="${framework.images}/zcRightRange.png"/>
+	  		  	<!-- TimeLine LC from com/ithaca/timeline/images/-->
+				<include-file name="com/ithaca/timeline/images/BlackCrossClick.png" path="${framework.timeLineImages}/BlackCrossClick.png"/>
+				<include-file name="com/ithaca/timeline/images/BlackCrossOver.png" path="${framework.timeLineImages}/BlackCrossOver.png"/>
+				<include-file name="com/ithaca/timeline/images/curseurBigVerticalGrip.png" path="${framework.timeLineImages}/curseurBigVerticalGrip.png"/>
+				<include-file name="com/ithaca/timeline/images/curseurLeftGrip.png" path="${framework.timeLineImages}/curseurLeftGrip.png"/>
+				<include-file name="com/ithaca/timeline/images/curseurRightGrip.png" path="${framework.timeLineImages}/curseurRightGrip.png"/>
+				<include-file name="com/ithaca/timeline/images/iconMinus.png" path="${framework.timeLineImages}/iconMinus.png"/>
+				<include-file name="com/ithaca/timeline/images/iconPlus.png" path="${framework.timeLineImages}/iconPlus.png"/>
+				<include-file name="com/ithaca/timeline/images/magnifier.png" path="${framework.timeLineImages}/magnifier.png"/>
+				<include-file name="com/ithaca/timeline/images/magnifierClick.png" path="${framework.timeLineImages}/magnifierClick.png"/>
+				<include-file name="com/ithaca/timeline/images/reset.png" path="${framework.timeLineImages}/reset.png"/>
+				<include-file name="com/ithaca/timeline/images/resetClick.png" path="${framework.timeLineImages}/resetClick.png"/>
+				<include-file name="com/ithaca/timeline/images/resize.png" path="${framework.timeLineImages}/resize.png"/>
+				<include-file name="com/ithaca/timeline/images/scissors.png" path="${framework.timeLineImages}/scissors.png"/>
+				<include-file name="com/ithaca/timeline/images/scissorsClick.png" path="${framework.timeLineImages}/scissorsClick.png"/>
+				<include-file name="com/ithaca/timeline/images/zcCursor.png" path="${framework.timeLineImages}/zcCursor.png"/>
+				<include-file name="com/ithaca/timeline/images/zcCursor1.png" path="${framework.timeLineImages}/zcCursor1.png"/>
+				<include-file name="com/ithaca/timeline/images/zcLeftRange.png" path="${framework.timeLineImages}/zcLeftRange.png"/>
+				<include-file name="com/ithaca/timeline/images/zcRightRange.png" path="${framework.timeLineImages}/zcRightRange.png"/>
 							
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
 	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
