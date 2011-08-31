@@ -224,6 +224,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			}else
 			{
 				richEditableText.text = text;
+				richEditableText.setStyle("textAlign","left");
 			}
 			if(modeEdit)
 			{
@@ -293,6 +294,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			}else
 			{
 				richEditableText.text = text;
+				richEditableText.setStyle("textAlign","left");
 			}
 			if(modeEdit)
 			{
@@ -491,6 +493,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
 			richEditableText.setStyle("color","#000000");
+			richEditableText.setStyle("textAlign","left");
 		}
 		richEditableText.selectAll();
 		if(this.stage != null)
@@ -572,6 +575,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	{
 		richEditableText.text = "Cliquer ici pour ajouter du texte";
 		richEditableText.setStyle("fontStyle","italic");
+		richEditableText.setStyle("textAlign","right");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
 		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);

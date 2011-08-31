@@ -26,7 +26,7 @@
 		<s:State name="editPause"/>
 	</s:states>
 	<s:VGroup width="100%" gap="1">
-		<s:HGroup width="100%" gap="1" verticalAlign="middle">
+		<s:HGroup width="100%" gap="1" verticalAlign="middle" height="32">
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{IconEnum.getIconByName('iconVideo_16x16')}" includeIn="edit,editOver,editPause,editPlay,editSelected, shared, sharedOver, sharedPause, sharedPlay"/>
 			<!-- DURATION, PLAY, STOP, PAUSE -->
@@ -34,7 +34,7 @@
 				<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
 				<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
 					<!-- ICON SEGMENT -->
-					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPlay,sharedPause, shared, sharedOver">
+					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPause,sharedPlay">
 					</s:Label>
 					<s:Label id="labelInfo" text.editSelected="Durée" text.edit="Durée" text.editOver="Durée" text.editPlay="/" text.editPause="/"  text.sharedOver="Durée" text.shared="Durée" text.sharedPlay="/" text.sharedPause="/"/>
 					<s:Label id="labelDuration" text="02:24">
@@ -103,16 +103,8 @@
 			paddingRight.editPause="5"
 			paddingRight.editPlay="5"
 			paddingRight.editSelected="5"
-			paddingTop.edit="5"
-			paddingTop.editOver="5"
-			paddingTop.editPause="5"
-			paddingTop.editPlay="5"
-			paddingTop.editSelected="5"
-			paddingBottom.edit="5"
-			paddingBottom.editOver="5"
-			paddingBottom.editPause="5"
-			paddingBottom.editPlay="5"
-			paddingBottom.editSelected="5">
+			paddingTop="0"
+			paddingBottom="0">
 			<!-- TEXT -->
 			<s:RichEditableText id="richEditableText"
 				editable.sharedOver="false" editable.shared="false"

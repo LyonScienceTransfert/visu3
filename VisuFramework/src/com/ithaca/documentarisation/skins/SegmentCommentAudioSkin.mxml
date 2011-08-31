@@ -36,7 +36,7 @@
 		]]>
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
-			<s:HGroup width="100%" gap="1" horizontalAlign="center" verticalAlign="middle" height="22">
+			<s:HGroup width="100%"  id="groupAudioRecorder" gap="1" horizontalAlign="center" verticalAlign="middle" height="16">
 				<!-- ICON SEGMENT -->
 				<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{ IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected, shared, sharedOver"/>
 				<!-- AUDIO RECORDER -->
@@ -53,23 +53,20 @@
 				</components:IconDelete>
 			</s:HGroup>
 			<s:HGroup width="100%" 
+				id="groupText"
 				paddingLeft.edit="5"
 				paddingLeft.editOver="5"
 				paddingLeft.editSelected="5"
 				paddingRight.edit="5" 
 				paddingRight.editOver="5" 
 				paddingRight.editSelected="5" 
-				paddingTop.edit="5" 
-				paddingTop.editOver="5" 
-				paddingTop.editSelected="5" 
-				paddingBottom.edit="5"
-				paddingBottom.editOver="5"
-				paddingBottom.editSelected="5">
+				paddingTop="0" 
+				paddingBottom="0">
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText"
 					editable.sharedOver="false" editable.shared="false"
 					width="100%" 
-					color="#000000" paddingTop="3">
+					color="#000000" paddingTop="3" >
 				</s:RichEditableText>
 			</s:HGroup>
 			<s:Line width="100%" includeIn="edit, editOver, editSelected">
