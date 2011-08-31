@@ -200,6 +200,10 @@ public class SegmentTitle extends SkinnableComponent
 		if(textSegment.text == "Cliquer ici pour ajouter du texte")
 		{
 			textSegment.text = "";
+			if(!_fontBold)
+			{
+				textSegment.setStyle("textAlign", "left");
+			}
 		}
 		
 		textSegment.selectAll();
@@ -276,12 +280,16 @@ public class SegmentTitle extends SkinnableComponent
 		textSegment.text = "Cliquer ici pour ajouter du texte";
 		textSegment.setStyle("fontStyle","italic");
 		textSegment.setStyle("backgroundColor", _backGroundColorRichEditableText);
+		if(!_fontBold)
+		{
+			textSegment.setStyle("textAlign", "right");
+		}
 	}	
 	
 	private function setFont(value:Object):void
 	{
 		var fontValue:String = "normal";
-		var textAlign:String = "left";
+		var textAlign:String = "left";		
 		var toolTipText:String = "Bloc texte";
 		// TODO : message "Vous pouver deplace cet block en haut en bas",
 		// show this message only if has many blocs

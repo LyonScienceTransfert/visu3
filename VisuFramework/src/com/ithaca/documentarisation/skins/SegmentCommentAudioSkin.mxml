@@ -37,6 +37,8 @@
 		</fx:Script>
 		<s:VGroup width="100%" gap="1">
 			<s:HGroup width="100%"  id="groupAudioRecorder" gap="1" horizontalAlign="center" verticalAlign="middle" height="16">
+				<!-- SPACER FOR BILAN MODULE-->
+				<mx:Spacer width="35" includeIn="shared, sharedOver"/>
 				<!-- ICON SEGMENT -->
 				<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{ IconEnum.getIconByName('iconAudio_16x16')}" includeIn="edit, editOver, editSelected, shared, sharedOver"/>
 				<!-- AUDIO RECORDER -->
