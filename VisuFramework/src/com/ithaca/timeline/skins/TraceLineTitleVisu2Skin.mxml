@@ -71,8 +71,14 @@
 				hostComponent.updateDisplayLevel();
 				hostComponent.addEventListener	( ElementExistenceEvent.ELEMENT_ADD , 		onChildrenChange);
 				hostComponent.addEventListener	( ElementExistenceEvent.ELEMENT_REMOVE , 	onChildrenChange);
+				stage.addEventListener( MouseEvent.MOUSE_UP,	zcStopDrag);
 			}
 			
+			protected function zcStopDrag(e:MouseEvent):void
+			{
+				CursorIcons.SetDefaultCursor(e);
+			}
+
 			private function onRemoveTraceLine(evt:Event):void
 			{
 				if (evt.currentTarget.confirm)
@@ -117,10 +123,10 @@
 						var editDialog:TraceLineEditDialog = new TraceLineEditDialog();
 						editDialog.tracelineTitle = hostComponent.tl.title;
 						editDialog.tracelineSource = (hostComponent.tl.sourceStr == "parent") ? 1 : 0;
-						if (hostComponent.tl._selector is SelectorRegexp)
+						if (hostComponent.tl.selector is SelectorRegexp)
 						{
-							editDialog.selectorField = (hostComponent.tl._selector as SelectorRegexp).field;
-							editDialog.selectorRegexp = (hostComponent.tl._selector as SelectorRegexp).regexp;
+							editDialog.selectorField = (hostComponent.tl.selector as SelectorRegexp).field;
+							editDialog.selectorRegexp = (hostComponent.tl.selector as SelectorRegexp).regexp;
 						}
 						editDialog.traceline = hostComponent.tl;
 						PopUpManager.addPopUp(editDialog, parentApplication.timeline, true);
@@ -148,7 +154,10 @@
 			
 			protected function onChildrenChange(event:Event):void
 			{
-				OpenButton.visible = (hostComponent.tl.numElements > 0);
+				if ( visible )
+					OpenButton.visible = (hostComponent.tl.numElements > 0);
+				else
+					OpenButton.visible = false;
 			}
 			
 			protected function onOpenButtonClick():void
@@ -171,14 +180,15 @@
                 var ds:DragSource = new DragSource();
                 ds.addData(dragInitiator, "traceLine");               
                 DragManager.doDrag(dragInitiator, ds, event);
-				stage.removeEventListener(MouseEvent.MOUSE_OUT, CursorIcons.SetDefaultCursor);				
             }
 					
             private function dragEnterHandler( event:DragEvent ) : void 
 			{			
 				if ( event.dragSource.hasFormat("traceLine") )
                 {
-                    DragManager.acceptDragDrop( UIComponent( event.currentTarget ) );
+					// Check if the dragged element come from the same TLG
+					if ( (event.dragInitiator as TraceLineTitle).tl.getTraceLineGroup() == hostComponent.tl.getTraceLineGroup() )
+						DragManager.acceptDragDrop( UIComponent( event.currentTarget ) );
             	}
             }
 			
@@ -198,7 +208,6 @@
 					}
 					(traceline.titleComponent as TraceLineTitle).updateDisplayLevel();
 				}
-				stage.addEventListener(MouseEvent.MOUSE_OUT, CursorIcons.SetDefaultCursor);
             }
 			
 			override public function styleChanged(styleProp:String):void

@@ -11,20 +11,21 @@ package com.ithaca.timeline
 	public class TraceLine  extends LayoutNode
 	{	
 		//private var _title 			: String;
-		public var sourceStr 		: String;
-		public var _selector 		: ISelector;
-		public var _obsels 			: ArrayCollection = new ArrayCollection();
-		public var rendererHeight	: Number;
+		public var sourceStr 			: String;
+		private var _selector 			: ISelector;
+		public var _obsels 				: ArrayCollection = new ArrayCollection();
+		public var lastRendererHeight	: Number;
+		public var lastRendererGap		: Number;
 		
 		public function TraceLine( tl : Timeline, tlTitle : String = null, tlSelector : ISelector = null, tlSource : String = null, tlSkinClass : String = null )
 		{
-			_timeline = tl;
-			titleComponent = new TraceLineTitle( this );
-			title 	= tlTitle;
-			this.id = title;
-			_selector = tlSelector;
-			sourceStr = tlSource;		
-			styleName = tlSkinClass;
+			_timeline		= tl;
+			titleComponent	= new TraceLineTitle( this );
+			title			= tlTitle;
+			this.name		= title;
+			_selector		= tlSelector;
+			sourceStr		= tlSource;		
+			styleName		= tlSkinClass;
 		}
 		
 		public function set title ( value : String ) : void
@@ -34,9 +35,20 @@ package com.ithaca.timeline
 		
 		public function get title (  ) : String
 		{
-			return getStyle('title');
+			return getStyle('title');			
 		}
 		
+		public function set selector ( value : ISelector ) : void
+		{			
+			_selector = value;
+			resetObselCollection();
+		}
+		
+		public function get selector (  ) : ISelector
+		{
+			return _selector;
+		}
+
 		public function getCollectionSource() : ArrayCollection
 		{
 			switch ( sourceStr )
@@ -82,20 +94,24 @@ package com.ithaca.timeline
 		};
 		
 		override public function resetObselCollection ( obselsCollection : ArrayCollection = null) : void
-		{			
+		{		
+			_obsels.disableAutoUpdate();
 			_obsels.removeAll();
 		
 			if ( obselsCollection == null )
 				obselsCollection = getCollectionSource();				
 			if (obselsCollection != null && obselsCollection.length >0)
-			{				
+			{					
 				for each( var obsel :  Obsel in obselsCollection)
-					addObsel( obsel );			
+					addObsel( obsel );							
 			}
+			_obsels.enableAutoUpdate();
 		}		
 		
 		override public function onSourceChange( event : CollectionEvent ) : void
 		{
+			_obsels.disableAutoUpdate();
+			
 			var obsel : Obsel;
 			switch (event.kind)
 			{
@@ -114,10 +130,33 @@ package com.ithaca.timeline
 				case CollectionEventKind.REPLACE :
 				break;
 				
-				case CollectionEventKind.RESET :					
+				case CollectionEventKind.RESET :	
+					resetObselCollection();
 				break;				
 				
 				default:
+			}						
+					
+			_obsels.enableAutoUpdate();
+		}
+
+		public function SetToVisible( visible: Boolean ) : void
+		{
+			visible 							= visible;
+			titleComponent.visible				= visible;
+			if ((titleComponent as TraceLineTitle).OpenButton)
+				(titleComponent as TraceLineTitle).OpenButton.visible = visible && (numElements > 0);
+			if ( visible )
+			{
+				setStyle("rendererHeight", lastRendererHeight);
+				setStyle("rendererGap", lastRendererGap);
+			}
+			else
+			{
+				lastRendererGap		= getStyle( 'rendererGap' );
+				lastRendererHeight	= getStyle( 'rendererHeight' );
+				setStyle("rendererHeight", 0);
+				setStyle("rendererGap", 0);
 			}
 		}
 	}

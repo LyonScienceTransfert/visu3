@@ -39,7 +39,7 @@ timeline|TraceLineGroupTitle
 	bgColor		:#FFA6A8;
 }
 
-timeline|TraceLineGroupTitle.Comments
+timeline|TraceLineGroupTitle.comments
 {
 	skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupTitleCommentsVisu2Skin");
 	bgColor		:#FFA6A8;
@@ -68,16 +68,23 @@ timeline|ZoomContext
 	backgroundColor 	: #F5F5F5;
 }
 
+timeline|ObselSkin
+{
+	skin-class		: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	icon 			: Embed("images/iconInfo_16x16.png");	
+}
+
+
 timeline|ObselSkin.Message
 {
 	skin-class		: ClassReference("com.ithaca.timeline.skins.IconSkin");
-	icon 			: Embed("images/chatMessageVisu1.png");	
+	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
 }
 
 timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
 {
 	skin-class		: ClassReference("com.ithaca.timeline.skins.IconTextSkin");
-	icon 			: Embed("images/chatMessageVisu1.png");	
+	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
 	backgroundColor 	: #FFFFB3;
 }
 

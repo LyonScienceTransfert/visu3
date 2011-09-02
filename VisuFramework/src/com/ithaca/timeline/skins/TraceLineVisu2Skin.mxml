@@ -67,18 +67,18 @@
 				obselsRenderer.percentWidth 	= 100;
 				obselsRenderer.right			= obselsRenderer.left			= renderersSidePadding;
 				obselsRenderer.obselsCollection = hostComponent._obsels;
-				obselsRenderer.addEventListener(MouseEvent.CLICK, onSelect);
+			//obselsRenderer.addEventListener(MouseEvent.CLICK, onSelect);
 				obselsRenderer.styleName = hostComponent.styleName;		
 				rendererGroup.height 			= obselsRenderer.height + hostComponent.getStyle("rendererGap") as Number;
 				rendererGroup.addElement( obselsRenderer );
 				timeline = hostComponent._timeline;
 			}
 			
-			protected function onSelect(event:Event):void
+	/* 		protected function onSelect(event:Event):void
 			{
 				parentApplication.dg_label.text = hostComponent.title + " : " + hostComponent._obsels.length + " obsels";
 				parentApplication.obselList_dg.dataProvider = hostComponent._obsels;
-			}
+			} */
 			
 			override public function styleChanged(styleProp:String):void
 			{
