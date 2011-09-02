@@ -11,25 +11,54 @@ package com.ithaca.timeline
 		[Embed(source="images/resize.png")]
 		static public var Resize:Class;
 		
-		static public function SetResizeCursor(e:MouseEvent) : void
+		static private var currentObject:Object = null;
+
+		static public function SetResizeCursor(event:MouseEvent) : void
 		{
-			CursorManager.setCursor(CursorIcons.Resize, 2, -8, -8);
+			if ( !event.buttonDown )
+			{
+				CursorManager.setCursor(CursorIcons.Resize, 3, -8, -8);
+				if ( (event.currentTarget as Object).hasOwnProperty("alpha") )
+				{
+					currentObject = (event.currentTarget as Object);
+					currentObject.alpha = 0.5;
+				}
+				else
+					currentObject = null;
+			}
 		}
 		
-		static public function SetHandCursor(e:MouseEvent) : void
+		static public function SetHandCursor(event:MouseEvent) : void
 		{
-			Mouse.cursor = MouseCursor.HAND;
+			if ( !event.buttonDown )
+			{
+				Mouse.cursor = MouseCursor.HAND;
+				if ( (event.currentTarget as Object).hasOwnProperty("alpha") )
+				{
+					currentObject = (event.currentTarget as Object);
+					currentObject.alpha = 0.5;
+				}
+				else
+					currentObject = null;
+			}
 		}
 		
-		static public function SetButtonCursor(e:MouseEvent) : void
+		static public function SetButtonCursor(event:MouseEvent) : void
 		{
-			Mouse.cursor = MouseCursor.BUTTON;
+			if ( !event.buttonDown )
+				Mouse.cursor = MouseCursor.BUTTON;
 		}
 		
-		static public function SetDefaultCursor(e:MouseEvent) : void
+		static public function SetDefaultCursor(event:MouseEvent) : void
 		{
-			CursorManager.removeAllCursors();
-			Mouse.cursor = MouseCursor.AUTO;
+			if ( !event.buttonDown )
+			{
+				CursorManager.removeAllCursors();
+				Mouse.cursor = MouseCursor.AUTO;
+				if ( currentObject )
+					currentObject.alpha = 1.0;
+				currentObject = null;
+			}
 		}
 	}
 }
