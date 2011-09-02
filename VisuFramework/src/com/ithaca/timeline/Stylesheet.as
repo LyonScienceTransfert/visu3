@@ -16,7 +16,8 @@ package com.ithaca.timeline
 		
 		static public var obselsSkinsSelectors : Array = [  { id : 'Message' , 		selector : new SelectorRegexp('Message','type') },
 															{ id : 'Document' ,  	selector : new SelectorRegexp('Document','type')},
-															{ id : 'Instructions' ,	selector : new SelectorRegexp('Instructions','type')},
+															{ id : 'Instructions' ,	selector : new SelectorRegexp('Instructions','type')},															
+															{ id : 'Marker' , 		selector : new SelectorRegexp('Marker', 'type') },
 															{ id : 'Keyword' , 		selector : new SelectorRegexp('Keyword', 'type') },
 															{ id : 'Activity' , 	selector : new SelectorRegexp('ActivityStart', 'type') },
 															{ id : 'Comment' , 		selector : new SelectorRegexp('omment','type')} ];
@@ -27,13 +28,12 @@ package com.ithaca.timeline
 		 		
 		public function getParameteredSkin( obsel : Obsel, traceline : TraceLine ) :  ObselSkin 
 		{ 	
-			var obselSkin : ObselSkin = new ObselSkin( traceline );
-			obselSkin.obsel = obsel;
+			var obselSkin : ObselSkin = new ObselSkin( obsel, traceline );			
 			for each ( var item : Object in obselsSkinsSelectors )
 				if ( (item.selector as ISelector).isObselMatching( obsel ) )
 				{
 					obselSkin.styleName = item.id;			
-					return obselSkin;
+					break;
 				}
 				
 			return obselSkin;
