@@ -413,7 +413,7 @@
 				this.setObsels();
 				
 				var traceComment:Trace = Model.getInstance().getTraceComment();
-				timeline.addTrace( traceComment, 0, "Comments");
+				timeline.addTrace( traceComment, 0, "comments");
 
 				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
 				if(listTraceGroup != null)
@@ -423,13 +423,11 @@
 					{												
 						var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
 						
-						var tlg :TraceLineGroup = timeline.addTrace(traceGroup.userTrace);					
-						tlg.setStyle("bgColor", traceGroup.userColor);
-						tlg.setStyle("icon", traceGroup.userAvatar );	
+						var tlg :TraceLineGroup ;					
 						
 						if(traceGroup.userId == Model.getInstance().getLoggedUser().id_user)
-						{					
-							tlg.setStyle("title", fxgt.gettext("Mama trace") );
+						{			
+							tlg = timeline.addTrace(traceGroup.userTrace,1);
 							var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
 							// set dataProvider with collection the StreamObsel
 							this.visio.dataProvider = Model.getInstance().getListStreamObsel();
@@ -439,8 +437,12 @@
 						}
 						else
 						{
-							tlg.setStyle("title", traceGroup.userName );				
+							tlg = timeline.addTrace(traceGroup.userTrace);
 						}
+						
+						tlg.setStyle("title", traceGroup.userName );				
+						tlg.setStyle("bgColor", traceGroup.userColor);
+						tlg.setStyle("icon", traceGroup.userAvatar );	
 					}
 				}		
 			}
