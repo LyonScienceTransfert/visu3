@@ -68,7 +68,7 @@ package business
 					var ev:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.SHOW_LIST_ACTIVITY);
 					ev.listActivity = this.listActivities;
 					var modulTutorat:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
-					modulTutorat.updateView(this.listActivities);
+					//modulTutorat.updateView(this.listActivities);
 					// FIXME : If using dispatcher => Error : many instances the TutoratModule
 					//TypeError: Error #1034: Echec de la contrainte de type : c
 					//onversion de com.ithaca.visu.events::VisuActivityEvent@2d2a6191 en com.ithaca.visu.events.VisuActivityEvent impossible.

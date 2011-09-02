@@ -462,10 +462,10 @@
 			 */ 
 			// FIXME : 	Echec de la contrainte de type, look at TutoratManageronLoadListActivityElement
 			//	public function updateView(event:VisuActivityEvent):void
-			public function updateView(listActivity:ArrayCollection):void
+			/* public function updateView(listActivity:ArrayCollection):void
 			{
 				
-			}
+			} */
 
 			
 			private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
