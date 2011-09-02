@@ -412,8 +412,10 @@
 				
 				this.setObsels();
 				
-				var traceComment:Trace = Model.getInstance().getTraceComment();
-				timeline.addTrace( traceComment, 0, "comments");
+				var traceComment:Trace = Model.getInstance().getTraceComment();				
+				var tlgComment : TraceLineGroup;
+				tlgComment = timeline.addTrace( traceComment, 0, "comments");
+				tlgComment .setStyle( "title", fxgt.gettext("Comments") );
 
 				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
 				if(listTraceGroup != null)
@@ -1180,7 +1182,7 @@
 				clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
 				clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)">
 				<mx:VDividedBox width="100%" height="100%">
-					<s:VGroup height="75%" width="100%" id="groupeVideo">
+					<s:Group height="75%" width="100%" id="groupeVideo">
 						<video:VisuVisioAdvanced id="visio" width="100%"  height="100%"
 							quality="80"
 							updateTime="visio_updateTimeHandler(event)"
@@ -1203,7 +1205,7 @@
 							<s:Label text="Périod de verification(s)" paddingTop="7"/>
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
-					</s:VGroup>
+					</s:Group>
 					<timeline:Timeline id="timeline" width="100%"  height="100%" />
 				</mx:VDividedBox>
 			</components:PanelButton>
