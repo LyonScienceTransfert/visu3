@@ -257,7 +257,10 @@ or by setting the following environment variable:
 				<include-file name="com/ithaca/timeline/images/zcCursor1.png" path="${framework.timeLineImages}/zcCursor1.png"/>
 				<include-file name="com/ithaca/timeline/images/zcLeftRange.png" path="${framework.timeLineImages}/zcLeftRange.png"/>
 				<include-file name="com/ithaca/timeline/images/zcRightRange.png" path="${framework.timeLineImages}/zcRightRange.png"/>
+				<include-file name="com/ithaca/timeline/images/eye.png" path="${framework.timeLineImages}/eye.png"/>
+				<include-file name="com/ithaca/timeline/images/tree.png" path="${framework.timeLineImages}/tree.png"/>
 				
+
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
 	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
 	  	  	
