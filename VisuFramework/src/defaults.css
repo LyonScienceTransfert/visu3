@@ -96,20 +96,20 @@ timeline|ObselSkin.Message mx|Label
 timeline|ObselSkin.Document
 {
 	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
-	icon : Embed("images/fichierVisu1.png");
+	icon : Embed("images/fichierVisu2_20x20.png");
 	toolTip : "Document :  {obsel.props.text} "
 }
 
 timeline|ObselSkin.Instructions
 {
 skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
-icon :Embed("images/consigneVisu1.png");
+icon :Embed("images/consigneVisu2_20x20.png");
 }
 
 timeline|ObselSkin.Keyword
 {
 skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
-icon : Embed("images/motCleVisu1.png");
+icon : Embed("images/motCleVisu2_20x20.png");
 }
 
 timeline|ObselSkin.Activity
@@ -121,7 +121,7 @@ backgroundColors : #F4FA29, #3355F7, #D134E2, #1CFD81 ;
 timeline|ObselSkin.Comment
 {
 skin-class: ClassReference("com.ithaca.timeline.skins.CommentSkin");	
-icon :Embed("images/consigneVisu1.png");
+icon :Embed("images/consigneVisu2_20x20.png");
 }
 
 
