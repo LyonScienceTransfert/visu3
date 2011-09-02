@@ -8,10 +8,12 @@
 						configure="visumodulebase1_configureHandler(event)"
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
-						currentState="BlankState" 
-						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.visu.controls.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*">
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*">
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.timeline.Layout;
+			import com.ithaca.timeline.Timeline;
+			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
@@ -23,8 +25,6 @@
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetailB;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
-			import com.ithaca.visu.controls.timeline.TraceLine;
-			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
@@ -99,7 +99,7 @@
 			[Bindable]
 			private var timer:Timer;
 			
-			private var testTimeLine:TraceLineB;
+//			private var testTimeLine:TraceLineB;
 			
 			private var testCursor:ObselLine;
 			
@@ -272,15 +272,17 @@
 									if(role < RoleEnum.TUTEUR)
 									{
 										// get traceLineView
-										var nbrTraceLine:int = this.traceLineGroup.numElements;
+									/*		var nbrTraceLine:int = this.traceLineGroup.numElements;
 										for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
 										{
+													
 											var traceLineView:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
 											if( traceLineView.idUserTraceLine == event.userId)
 											{
 												traceLineView.sharedIconMarkerCode = SharedSatusEnum.SHARED_OK_OTHER_TO_THIS;
 											}
-										}	
+
+										}											*/
 									}
 								}
 								
@@ -338,106 +340,12 @@
 
 			private function createSessionTimeLine(currentSession:Session):void
 			{
-				var durationSession:int = currentSession.duration_session;
-				this.sessionTimeLine.sessionTimeLineLayout.durationSession = durationSession;
-				this.sessionTimeLine.sessionTimeLineLayout.startTime = 0;
-/* 				// TODO calcul number of labels
-				var nbrLabelTime:int = 6;
-				var deltaTime:int = durationSession/nbrLabelTime;
-				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
-				{
-					var beginTimeObsel:Number = nPart*deltaTime;
-					// in seconds
-					var labelTextSec:String = (beginTimeObsel/1000).toString();
-					var labelTextMin:String = Math.round((beginTimeObsel/1000)/60).toString();
-					var obselTime:ObselTime = new ObselTime()
-					obselTime.setBegin(beginTimeObsel);
-					obselTime.setEnd(beginTimeObsel);
-					obselTime.text = labelTextMin+" min.";
-					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
-				} */
-				var widthGroup:Number = this.sessionTimeLine.sessionTimeLineLoggedUser.width;
-				var nbrLabelTime:int = widthGroup/DELTA_STICH;
-				nbrLabelTime = 50;
-				var deltaTime:int = durationSession/nbrLabelTime;
-				var every:int = 6;
-				var count:int = 1;
-				for(var nPart:int = 0 ; nPart < nbrLabelTime; nPart++)
-				{
-					var beginTimeObsel:Number = nPart*deltaTime;
-					// in seconds
-					
-					var obselTime:ObselStich = new ObselStich()
-					obselTime.setBegin(beginTimeObsel);
-					obselTime.setEnd(beginTimeObsel);
-					obselTime.height = 10;
-					if(count == every)
-					{
-						obselTime.height = 20;
-						count = 1;
-						var minuts:int = (beginTimeObsel/1000)/60;
-						var minutsString:String = minuts.toString();
-						if(minuts<10){
-							minutsString = "0"+minutsString; 
-						}
-						var seconds:int = (beginTimeObsel/1000)-minuts*60;
-						var secondsString:String = seconds.toString();
-						if(seconds < 10)
-						{
-							secondsString = "0"+secondsString;
-						}
-						obselTime.setLabel(minutsString+":"+secondsString);
-					}
-					count++;
-					this.sessionTimeLine.sessionTimeLineLoggedUser.addElement(obselTime);
-				}
-				// creation slider session startTime
-				var startSession:Number = currentSession.date_start_recording.getTime();
-				this.startTimeSessionSlider.minimum = startSession;
-				this.startTimeSessionSlider.maximum = startSession + durationSession - 60000;
-				this.startTimeSessionSlider.value = startSession;
-				this.startTimeSessionSlider.dataTipFormatFunction = formatStartTimeSlider;
-				this.startTimeSessionSlider.toolTip = "Temps du début de la séance";			
-				// creation slider session duration
-				this.durationSessionSlider.minimum = 60000;
-				this.durationSessionSlider.maximum = durationSession*2;
-				this.durationSessionSlider.value  = durationSession;		
-				this.durationSessionSlider.dataTipFormatFunction = formatDurationSlider;
-				this.durationSessionSlider.toolTip = "Durée de la séance"
+				var durationSession	: int = currentSession.duration_session;
+				var startTime 		: int = 0;
+				
+				timeline.range.addTime( startTime, startTime + durationSession);				
 			}
-			
-
-			/* 			
-			private function formatDurationSlider(value:Number):Object { 
-				var duration:int = value/60000;
-				var result:String = duration.toString() + " min.";
-				return result;
-			}
-			
-			private function formatStartTimeSlider(value:Number):Object { 
-				var duration:int = (value - this.currentSession.date_start_recording.getTime())/60000;
-				var result:String = duration.toString() + " min.";
-				return result;
-			} */ 
-			/**
-			 * format text slider duration of the session
-			 */
-			private function formatDurationSlider(value:Number):Object { 
-				var duration:int = value/60000;
-				var percent:int = (value*100/durationSessionSlider.maximum);
-				var result:String = percent.toString() + " %";
-				return result;
-			}
-			
-			/**
-			 * format text slider start session
-			 */
-			private function formatStartTimeSlider(value:Number):Object { 
-				var duration:int = (value - startTimeSessionSlider.minimum)/60000;
-				var result:String = duration.toString() + " min.";
-				return result;
-			}
-			
+		
 			/**
 			 * Update status on recording mode
 			 */
@@ -484,19 +392,8 @@
 			private function updateTime(event:TimerEvent):void
 			{
 				var currentTimeServeur:Number = Model.getInstance().getTimeServeur();
-				var beginTime:Number =  currentTimeServeur - this.currentSession.date_start_recording.time;
-				this.testCursor.setBegin(beginTime);
-				this.testCursor.setEnd(beginTime);
-				this.sessionTimeLine.labelCurrentTimeSession.text = updateLabelTimer(beginTime);
-				this.sessionTimeLine.sessionTimeLineLoggedUser.invalidateDisplayList();
-				// update obsels "SessionOut"
-				Model.getInstance().setTimeViewObselSessionOut(beginTime + this.currentSession.date_start_recording.time);
-				var nbrTraceLine:int = this.traceLineGroup.numElements;
-				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
-				{
-					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
-					traceLine.updateObsel();
-				}	 			
+				var beginTime:Number =  currentTimeServeur - this.currentSession.date_start_recording.time;			
+				timeline.changeCursorValue( timeline.begin + beginTime );
 			}
 			
 			private function updateLabelTimer(value:Number):String
@@ -1152,48 +1049,35 @@
 				
 			}
 			
-			private function addTraceLineOnViewTraceLineGroup(traceLineObj:Object):void
+			
+
+			
+			private function addTraceLineOnViewTraceLineGroup(traceGroup:Object):void
 			{
-				var userId:int = traceLineObj.userId;
-				var traceLine:TraceLineB = new TraceLineB();
-				traceLine.percentWidth = 100;
-			//	traceLine.height = 30;
-				traceLine.left = 0;
-				traceLine.right = 0;
-				traceLine.sourceImageUserTraceLine = traceLineObj.userAvatar;
-				traceLine.nameUserTraceLine = traceLineObj.userName;
-				traceLine.colorUserTraceLine = traceLineObj.userColor;
-				traceLine.durationSession = this.currentSession.duration_session;
-				traceLine.startTimeSession = this.currentSession.date_start_recording.getTime();				
-//				traceLine.startTimeSession = Model.getInstance().getBeginTimeSalonSynchrone();					
-				traceLine.idUserTraceLine = userId;		
-				traceLine.tempList = traceLineObj.listTitleObsels;
-				traceLine.listElementTraceline = traceLineObj.listElementTraceLine;
-				traceLine.addEventListener(TraceLineEvent.ADD_LIST_OBSEL, onAddListObsel);
-				traceLine.addEventListener(TraceLineEvent.REMOVE_LIST_OBSEL, onRemoveListObsel);
-				/* traceLine.addEventListener(TraceLineEvent.ADD_TRACE_LINE_ELEMENT, onAddTraceLineElement);
-				traceLine.addEventListener(TraceLineEvent.REMOVE_TRACE_LINE_ELEMENT, onRemoveTraceLineElement); */
-				traceLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
+				var userId:int = traceGroup.userId;
+				
+				var tlg :TraceLineGroup = timeline.addTrace(traceGroup.userTrace);					
+				tlg.setStyle("bgColor", traceGroup.userColor);
+				tlg.setStyle("icon", traceGroup.userAvatar );	
+				
 				// logged user
-				var loggedUser:User = Model.getInstance().getLoggedUser();
+				var loggedUser:User = Model.getInstance().getLoggedUser();				
 				var sharedIconMarkerCode:String ="";
 				if(userId == loggedUser.id_user)
-				{
-					sessionTimeLine.sessionTimeLineLayout.startTime = 0;	
-					sessionTimeLine.sessionTimeLineLayout.durationSession = this.currentSession.duration_session;				
-					traceLine.nameUserTraceLine = fxgt.gettext("Ma trace");
-					this.traceLineGroup.addElementAt(traceLine, 0);
+				{					
+					tlg.setStyle("title", fxgt.gettext("Ma trace") );			
 					if(loggedUser.role < RoleEnum.TUTEUR)
 					{
-						// etudiant shared mark by default
-						sharedIconMarkerCode = SharedSatusEnum.SHARED_OK_THIS_TO_OTHER;
+					// etudiant shared mark by default
+					sharedIconMarkerCode = SharedSatusEnum.SHARED_OK_THIS_TO_OTHER;
 					}else
 					{
 						sharedIconMarkerCode = SharedSatusEnum.SHARED_NON_THIS_TO_OTHER;
-					}					
+					}		
 				}else
 				{
-					this.traceLineGroup.addElement(traceLine);
+					tlg.setStyle("title", traceGroup.userName );				
+	
 					// FIXMI : if user walk out from session will set shared icon NON_OTHER_TO_THIS
 					// TODO : update icon when use join session
 					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
@@ -1206,28 +1090,13 @@
 						sharedIconMarkerCode = SharedSatusEnum.SHARED_NON_OTHER_TO_THIS;
 					}	
 				}			
-				traceLineObj.show = true;
+				traceGroup.show = true;
 				// set shared icon
-				traceLine.sharedIconMarkerCode = sharedIconMarkerCode;	
+				/*traceLine.sharedIconMarkerCode = sharedIconMarkerCode;	
+				
+				traceLine.startTimeSession = this.currentSession.date_start_recording.getTime();		*/		
 			}
-			
-			/**
-			 * add list obsel to Model 
-			 */	
-			private function onAddListObsel(event:TraceLineEvent):void{
-				var listObsel:ArrayCollection = event.listObsel;
-				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
-				Model.getInstance().addListObselTitleTraceLine(userTraceLineId, listObsel);
-			}
-			
-			/**
-			 * remove list obsel to Model 
-			 */	
-			private function onRemoveListObsel(event:TraceLineEvent):void{
-				var listObsel:ArrayCollection = event.listObsel;
-				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
-				Model.getInstance().removeListObselTitleTraceLine(userTraceLineId, listObsel);
-			}
+					
 			/**
 			 * Update current activity in list activity, update label the button "start" to "en cours"
 			 */
@@ -1244,14 +1113,14 @@
 				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 				if(this == currentModule)
 				{
-					var traceLineObj:Object = Model.getInstance().getTraceLineByUserId(event.userId);
-					if(traceLineObj != null)
-					{
-						var show:Boolean = traceLineObj.show;
+					var traceGroup : Object = Model.getInstance().getTraceGroupByUserId( event.userId );
+					if( traceGroup != null)
+					{																	
+						var show:Boolean = traceGroup.show;
 						if(!show)
 						{
-							this.addTraceLineOnViewTraceLineGroup(traceLineObj);
-						}					
+							this.addTraceLineOnViewTraceLineGroup(traceGroup);
+						}	
 					}else
 					{
 						Alert.show("Hasn't time for add new traceline to the model","Bug...");
@@ -1264,24 +1133,41 @@
 				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 				if(this == currentModule)
 				{
-					
 					this.setObsels();
 					
-					var listTraceLines:ArrayCollection = Model.getInstance().getListTraceLines();
-					if(listTraceLines != null)
-					{
-						var nbrTraceLines:int = listTraceLines.length;
-						for(var nTraceLine:int =0; nTraceLine < nbrTraceLines ; nTraceLine++)
+					var loader:URLLoader=new URLLoader();			
+					loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
+					loader.load(new URLRequest("layoutVisu2.xml"));	
+					
+					
+						
+				}
+			}
+			private function onLoadLayoutComplete(event:Event):void 
+			{
+				//we init the trace object
+				var loader:URLLoader=event.target as URLLoader;
+				timeline.layoutXML 		= new XML( loader.data );
+				timeline.timelineLayout = new Layout( timeline );
+				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+				if(listTraceGroup != null)
+				{											
+					var nbrTraceGroup:int = listTraceGroup.length;
+					for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+					{												
+						var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+						var show:Boolean = traceGroup.show;
+						if(!show)
 						{
-							var traceLineObj:Object = listTraceLines[nTraceLine] as Object;
-							var show:Boolean = traceLineObj.show;
-							if(!show)
-							{
-								this.addTraceLineOnViewTraceLineGroup(traceLineObj);
-							}
+							this.addTraceLineOnViewTraceLineGroup(traceGroup);
 						}
 					}
-				}
+				}	
+				
+				var beginTime:Number = this.currentSession.date_start_recording.time;
+				timeline.range.addTime(beginTime, beginTime + this.currentSession.duration_session);
+				
+				this.startTimer();
 			}
 			
 			private function onCreationCompletTraceLine(event:FlexEvent):void
@@ -1289,7 +1175,7 @@
 				// add listener
 				this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 				
-				var traceLine:TraceLineB = event.currentTarget as TraceLineB;
+				/*var traceLine:TraceLineB = event.currentTarget as TraceLineB;
 				traceLine.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletTraceLine);
 				// add listener edit obsel
 				traceLine.addEventListener(ObselEvent.EDIT_OBSEL, onEditObsel);				
@@ -1329,7 +1215,7 @@
 						}
 					}
 					return null;
-				}
+				}*/
 			}
 			/**
 			 * listener of the obsel type "SetMarqueur"
@@ -1436,13 +1322,13 @@
 			
 			
 			// add element traceLine
-			private function onAddTraceLineElement(event:TraceLineEvent):void
+		/*	private function onAddTraceLineElement(event:TraceLineEvent):void
 			{
 				var userId:int = event.userId;
 				var traceLine:TraceLine = event.currentTarget as TraceLine;
 				var list:ArrayList = Model.getInstance().getListElementsTraceLineByUserId(userId);
 				traceLine.elementsTraceLines = list;
-			}
+			}*/
 			
 			// remove element traceLine
 			private function onRemoveTraceLineElement(event:TraceLineEvent):void
@@ -1463,36 +1349,6 @@
 					textChatMarker.text = "";
 					// show button set marcker on composant VideoPanel 
 					visio.buttonMarkerEnabled = true;
-				}
-			}
-
-			protected function durationSessionSlider_valueCommitHandler(event:FlexEvent):void
-			{
-				var hSlider:HSlider = event.currentTarget as HSlider;
-				var duration:int = hSlider.value;
-				// TODO gestion time the session
-				this.sessionTimeLine.sessionTimeLineLayout.durationSession = duration;
-				var nbrTraceLine:int = this.traceLineGroup.numElements;
-				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
-				{
-					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
-					traceLine.durationSession = duration;
-				}				
-			}
-
-
-			protected function startTimeSessionSlider_valueCommitHandler(event:FlexEvent):void
-			{
-				var hSlider:HSlider = event.currentTarget as HSlider;
-				var startTime:Number = hSlider.value;
-				// TODO gestion time the session`
-				var startTimeSessionTimeLayout:Number = startTime - this.currentSession.date_start_recording.time;
-				this.sessionTimeLine.sessionTimeLineLayout.startTime = startTimeSessionTimeLayout;
-				var nbrTraceLine:int = this.traceLineGroup.numElements;
-				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine; nTraceLine++)
-				{
-					var traceLine:TraceLineB = this.traceLineGroup.getElementAt(nTraceLine) as TraceLineB;
-					traceLine.startTimeSession = startTime;
 				}
 			}
 
@@ -1703,7 +1559,6 @@
 	</fx:Script>
 	<modules:states>
 		<s:State name="MainState"/>
-		<s:State name="BlankState"/>
 		<s:State name="StudentState"/>
 	</modules:states>
 	<fx:Declarations>
@@ -1722,7 +1577,7 @@
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 		
 	</fx:Declarations>
-	<mx:HDividedBox width="100%" height="100%" includeIn="MainState,StudentState">
+	<mx:HDividedBox width="100%" height="100%">
 		<s:VGroup width="33%" height="100%" minWidth="200">
 			<mx:Spacer height="5" />
 			<s:HGroup width="100%">
@@ -1818,51 +1673,10 @@
 <!-- TIMELINE -->
 			<s:Panel width="100%" height="35%" id="panelTimeLine">
 				<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-				<s:Group width="100%" height="100%">
-					<s:layout >
-						<s:VerticalLayout gap="0"/>
-					</s:layout>
-					<timeline:TimeLineSession id="sessionTimeLine" width="100%"/>
-					<s:Group width="100%" height="100%">
-						<s:Scroller left="1" right="1" top="1" bottom="1">
-							<s:Group width="100%" height="100%">
-								<s:layout>
-									<s:VerticalLayout gap="5"/>
-								</s:layout>
-								
-								<s:Group id="traceLineGroup" width="100%" height="100%">
-									<!--<local:TraceLineMXML id="traceLine" width="100%" visible="false"/>-->
-									<s:layout>
-										<s:VerticalLayout gap="4"/>
-									</s:layout>
-								</s:Group>
-							</s:Group>
-						</s:Scroller>
-					</s:Group>
-					<s:HGroup>
-						<s:Label text="Position: "/>
-						<s:HSlider id="startTimeSessionSlider" 
-								   liveDragging="true" width="300"  valueCommit="startTimeSessionSlider_valueCommitHandler(event)" visible="true"/>
-						<s:Label text="Zoom: " />
-						<s:HSlider id="durationSessionSlider" 
-								   liveDragging="true" width="300" valueCommit="durationSessionSlider_valueCommitHandler(event)"/>
-					</s:HGroup>
+				<s:Group width="100%" height="100%">					
+					<timeline:Timeline id="timeline" width="100%" height="100%"/>					
 				</s:Group>
 			</s:Panel>
 		</mx:VDividedBox>	
 	</mx:HDividedBox>	
-	<s:Label includeIn="BlankState" text="Rejoindre la séance simplement par l'accueil" fontSize="22" left="50" top="50" width="474"/>
-	<s:Button includeIn="BlankState" x="73" y="142" label="Button"  id="debugButton" click="onClickDebugButton(event)" />
-	<s:Panel width="700" height="45%" y="200" x="20" includeIn="BlankState">
-		<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-		<s:Group top="1" width="100%"  height="100%">
-			<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelTimeLine_test">    
-				<s:Group id="panelTimeLine_test"   width="100%"  height="100%">
-					<s:layout>
-						<timeline:TimeSessionLayout/>
-					</s:layout>							
-				</s:Group>
-			</s:Scroller> 
-		</s:Group>
-	</s:Panel>
 </modules:VisuModuleBase>
