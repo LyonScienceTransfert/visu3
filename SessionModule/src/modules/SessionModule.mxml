@@ -81,6 +81,8 @@
 				}
 				// set cursor 
 				CursorManager.removeBusyCursor();
+				// notify that module ready for use
+				notifyReadyForUse();
 			}
 // ACTIVITY
 			private function onDeleteActivity(event:SessionEditEvent):void
@@ -370,6 +372,16 @@
 					sessionManagement.sessionDetailView.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
 					sessionManagement.sessionDetailView.nbrRetroDocumentShare = nbrRetroDocumentShare;
 				}
+			}
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________
+			private function notifyReadyForUse():void
+			{
+				var ev:Event = new Event("readyForUse");
+				this.dispatchEvent(ev);
 			}
 		]]>
 	

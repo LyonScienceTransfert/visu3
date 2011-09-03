@@ -446,7 +446,9 @@
 						tlg.setStyle("bgColor", traceGroup.userColor);
 						tlg.setStyle("icon", traceGroup.userAvatar );	
 					}
-				}		
+				}
+				// notify that module ready for use
+				notifyReadyForUse();
 			}
 					
 			private function removeTimerRetroDocumentSegment():void
@@ -865,15 +867,16 @@
 			
 			protected function visio_clickButtonCommentHandler(event:VisuVisioAdvancedEvent):void
 			{
-				var panelEditComment:PanelEditComment = new PanelEditComment();
+				/* var panelEditComment:PanelEditComment = new PanelEditComment();
 				this.groupeVideo.addElement(panelEditComment);
 				panelEditComment.x = 25;
 				panelEditComment.y = 25;
 				
-				panelEditComment.user = event.user;
+				panelEditComment.user = event.user; 
 				panelEditComment.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 				panelEditComment.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditCommentClickButtonOk);
 				panelEditComment.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditCommentClickButtonCancel);
+				*/
 			}
 			
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
@@ -1147,6 +1150,16 @@
 				panelVideo.buttonModeMaxEnabled = true;
 				panelVideo.buttonModeZoomEnabled = false;
 				visio.zoomMax = false;
+			}
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________	
+			private function notifyReadyForUse():void
+			{
+				var ev:Event = new Event("readyForUse");
+				this.dispatchEvent(ev);
 			}
 		]]>
 	</fx:Script>

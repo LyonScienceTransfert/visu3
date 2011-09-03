@@ -13,11 +13,13 @@ package com.ithaca.visu.core
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.modules.ModuleInfo;
 	import com.ithaca.visu.modules.ModuleNavigator;
+	import com.ithaca.visu.ui.utils.IconEnum;
 	
 	import flash.events.Event;
 	
 	import mx.controls.ProgressBar;
 	import mx.controls.ProgressBarLabelPlacement;
+	import mx.controls.SWFLoader;
 	import mx.events.FlexEvent;
 	import mx.events.ModuleEvent;
 	import mx.logging.ILogger;
@@ -47,6 +49,7 @@ package com.ithaca.visu.core
 		public var moduleNavigator:ModuleNavigator;
 		
 		protected var _progressBar:ProgressBar; 
+		protected var _progressBarBlueLine:SWFLoader
 		
 		protected var defaultModule:String; 
 
@@ -71,6 +74,7 @@ package com.ithaca.visu.core
 			moduleNavigator.addEventListener(VisuModuleEvent.LOAD, onModuleLoad);
 			moduleNavigator.addEventListener(ModuleEvent.READY,onModuleReady);
 			moduleNavigator.addEventListener(ModuleEvent.UNLOAD,onModuleUnload);
+			moduleNavigator.addEventListener("readyForUse", onReadyForUseModule);
 		}
 		
 		
@@ -87,6 +91,13 @@ package com.ithaca.visu.core
 				_progressBar.source = moduleNavigator;
 				_progressBar.label="";
 				_progressBar.labelPlacement=ProgressBarLabelPlacement.CENTER;
+			} 
+			if( _progressBarBlueLine == null )
+			{
+				_progressBarBlueLine = new SWFLoader()
+				_progressBarBlueLine.setStyle("verticalCenter",0);
+				_progressBarBlueLine.setStyle("horizontalCenter",0);
+				_progressBarBlueLine.source = IconEnum.getIconByName("loaderBlueLine");
 			} 
 			 
 		}
@@ -234,12 +245,18 @@ package com.ithaca.visu.core
 			//Add the preloader on top of display list
 			trace("VISU APP : start loading module " + event.module)
 			 
-			addElement( _progressBar );
+			addElement( _progressBarBlueLine );
 		} 
 		private function onModuleReady(event:ModuleEvent):void
 		{
-			removeElement( _progressBar );
+			/*removeElement( _progressBarBlueLine );*/
 		}
+		private function onReadyForUseModule(event:Event):void
+		{
+			
+			removeElement( _progressBarBlueLine );
+		}
+		
 		private function onModuleUnload(event:ModuleEvent):void
 		{
 			trace("VISU APP unload module:  " + event)
