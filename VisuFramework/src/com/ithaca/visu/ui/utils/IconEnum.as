@@ -309,6 +309,12 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/iconInfo_16x16.png")]
 		static private var iconInfo_16x16:Class;
+		[Bindable]
+		[Embed("images/RetroDocumentAddSegmentWithArrow_16x16.png")]
+		static private var RetroDocumentAddSegmentWithArrow_16x16:Class;
+		[Bindable]
+		[Embed("images/loaderBlueLine.swf")]
+		static private var loaderBlueLine:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -534,6 +540,12 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "iconInfo_16x16" : 
 					icon = iconInfo_16x16;
+					break;
+				case "RetroDocumentAddSegmentWithArrow_16x16" : 
+					icon = RetroDocumentAddSegmentWithArrow_16x16;
+					break;
+				case "loaderBlueLine" : 
+					icon = loaderBlueLine;
 					break;
 				default :
 					break;				
