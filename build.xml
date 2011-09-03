@@ -235,7 +235,9 @@ or by setting the following environment variable:
 	  		  	<include-file name="images/save_edit.png" path="${framework.images}/save_edit.png"/>
 	  		  	<include-file name="images/RetroDocumentAddVer1.png" path="${framework.images}/RetroDocumentAddVer1.png"/>
 	  		  	<include-file name="images/Attention_yellow.png" path="${framework.images}/Attention_yellow.png"/>
-	  		  	
+	  		  	<include-file name="images/loaderBlueLine.swf" path="${framework.images}/loaderBlueLine.swf"/>
+	  		  	<include-file name="images/RetroDocumentAddSegmentWithArrow_16x16.png" path="${framework.images}/RetroDocumentAddSegmentWithArrow_16x16.png"/>
+
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 	  		  	
 	  		  	<!-- TimeLine LC from com/ithaca/timeline/images/-->
