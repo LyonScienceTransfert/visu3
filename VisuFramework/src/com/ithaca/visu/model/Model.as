@@ -976,7 +976,21 @@ package  com.ithaca.visu.model
 		 */
 		private function hasTraceLineByUserId(userId:int):Boolean
 		{
-			if(this.listTraceLine != null)
+			if(this.listTraceGroup != null)
+			{
+				var nbrTraceGroup:int = this.listTraceGroup.length;
+				for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup; nTraceGroup++)
+				{
+					var traceGroup:Object = this.listTraceGroup[nTraceGroup] as Object;
+					var id:int = traceGroup.userId;
+					if(id == userId)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+/*			if(this.listTraceLine != null)
 			{
 				var nbrTraceLines:int = this.listTraceLine.length;
 				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLines; nTraceLine++)
@@ -989,7 +1003,9 @@ package  com.ithaca.visu.model
 					}
 				}
 				return false;
-			}
+			}*/
+			
+			
 			// FIXME : it's hapen when user in Accuiel , and other user start recording
 			this.initListTraceLine();
 			return false;
