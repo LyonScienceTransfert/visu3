@@ -55,6 +55,8 @@
 					outSession.userId = loggedUser.id_user;
 					this.dispatchEvent(outSession);
 				}
+				// notify thac can use module
+				notifyReadyForUse();
 			}
 			
 			public function setModeEditUpdatedUser(userVOUpdated:UserVO):void{
@@ -117,7 +119,17 @@
 			{
 				//dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
 			}
-
+			
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________		
+			private function notifyReadyForUse():void
+			{
+				var ev:Event = new Event("readyForUse");
+				this.dispatchEvent(ev);
+			}
 		]]>
 	</fx:Script>
 

@@ -4,6 +4,7 @@ package com.ithaca.visu.modules
 	import com.ithaca.visu.events.VisuModuleEvent;
 	
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.system.ApplicationDomain;
 	import flash.utils.Dictionary;
@@ -47,6 +48,12 @@ package com.ithaca.visu.modules
 			_moduleMap = new Dictionary();
 			_container = container;
 			_containerStyleManager = container.styleManager;
+			
+		}
+		
+		private function onReadyForUseModule(event:Event):void
+		{
+			dispatchEvent( event.clone() );
 		}
 		
 		public function initModuleNavigation(value:Array):void
@@ -225,6 +232,7 @@ package com.ithaca.visu.modules
 			module.moduleName = currentModule.name ;
 			
 			module.handle_parameter( moduleParameters ); 
+			module.addEventListener("readyForUse", onReadyForUseModule);
 		}
 
 		private function onModuleSetup(event:ModuleEvent):void
@@ -238,6 +246,5 @@ package com.ithaca.visu.modules
 			dispatchEvent( event.clone() );
 			removeModuleListenner();
 		}
-		
 	}
 }

@@ -122,7 +122,8 @@
 				Model.getInstance().setCurrentBilanModule(null);
 			}
 			
-			private function showRetrievedBilanList(event:BilanEvent):void {
+			private function showRetrievedBilanList(event:BilanEvent):void 
+			{
 				
 				if(Model.getInstance().getCurrentBilanModule() == this)
 				{
@@ -157,6 +158,8 @@
 						}
 					} else 
 						logger.warn("showRetrievedBilanList. bilanComp NULL");
+				// notify that module ready for use
+				notifyReadyForUse();
 				}
 			}
 
@@ -226,8 +229,17 @@
 				switchModuleEvent.idRetroDocument = bilan.id;
 				this.dispatchEvent(switchModuleEvent);
 			}
-
-
+			
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________		
+			private function notifyReadyForUse():void
+			{
+				var ev:Event = new Event("readyForUse");
+				this.dispatchEvent(ev);
+			}
 		]]>
 	</fx:Script>
 

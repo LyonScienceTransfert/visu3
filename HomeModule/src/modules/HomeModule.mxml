@@ -352,6 +352,8 @@
 						sessionEventLoad.sessionDate = labelDate;
 						dispatchEvent(sessionEventLoad);
 					}
+					// notify that module ready for use
+					notifyReadyForUse();
 				}
 			}
 			
@@ -876,6 +878,14 @@
 				{
 					listFluxActivity.ensureIndexIsVisible(fluxActivity.length-1);					
 				}
+			}
+////////////////////
+////// UTILS
+///////////////////			
+			private function notifyReadyForUse():void
+			{
+				var ev:Event = new Event("readyForUse");
+				this.dispatchEvent(ev);
 			}
 
 		]]>
