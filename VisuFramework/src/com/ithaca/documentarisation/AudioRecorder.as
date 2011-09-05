@@ -4,6 +4,7 @@ import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.visu.model.Model;
+import com.lyon2.controls.utils.TimeUtils;
 
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
@@ -540,14 +541,10 @@ public class AudioRecorder extends SkinnableComponent
 		var result:String;
 		var minutes:int = value/60000;
 		var seconds:int = (value - minutes*60000)/1000;
-		var secondsString:String = seconds.toString();
-		if(seconds < 10)
-		{
-			secondsString = "0"+secondsString;
-		}
-		result = minutes.toString() + ":"+ secondsString.toString();
-		return result;
+		
+		return TimeUtils.formatTimeString(seconds);
 	}
+	
 	private function initSimpleSkinVars():void
 	
 	{
