@@ -41,9 +41,9 @@
 			iconDelete.visible = false;
 		]]>
 		</s:mouseOut.edit>
-		<s:HGroup width="100%" gap="1" paddingTop="0" height="16" verticalAlign="middle">
+		<s:HGroup width="100%" gap="1" paddingTop="0" verticalAlign="top">
 			<!-- ICON SEGMENT -->
-			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected"/>
+			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
 			<!-- TEXTAREA -->
 			<s:RichEditableText editable.normal="false" id="textSegment" width="100%" 
 				textAlign="center" backgroundColor.edit="#FFFFFF"/>		
@@ -51,7 +51,8 @@
 			<components:IconDelete id="iconDelete"
 				visible.edit="false"
 				buttonMode="true"
- 				includeIn=" edit, editSelected">
+ 				includeIn=" edit, editSelected"
+				height="16">
 				<components:toolTip>Suprimer ce segment</components:toolTip>
 			</components:IconDelete>
 		</s:HGroup>

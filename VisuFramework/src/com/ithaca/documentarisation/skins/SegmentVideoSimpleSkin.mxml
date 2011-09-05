@@ -97,16 +97,16 @@
 			</components:IconDelete>
 		</s:HGroup>
 		<s:HGroup width="100%" gap="0"
-			paddingLeft.edit="5"
-			paddingLeft.editOver="5"
-			paddingLeft.editPause="5"
-			paddingLeft.editPlay="5"
-			paddingLeft.editSelected="5"
-			paddingRight.edit="5"
-			paddingRight.editOver="5"
-			paddingRight.editPause="5"
-			paddingRight.editPlay="5"
-			paddingRight.editSelected="5"
+			paddingLeft.edit="16"
+			paddingLeft.editOver="16"
+			paddingLeft.editPause="16"
+			paddingLeft.editPlay="16"
+			paddingLeft.editSelected="16"
+			paddingRight.edit="16"
+			paddingRight.editOver="16"
+			paddingRight.editPause="16"
+			paddingRight.editPlay="16"
+			paddingRight.editSelected="16"
 			paddingTop="0"
 			paddingBottom="0">
 			<!-- TEXT -->
