@@ -4,6 +4,7 @@ import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.utils.components.IconDelete;
+import com.lyon2.controls.utils.TimeUtils;
 
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
@@ -436,22 +437,6 @@ public class SegmentCommentAudio extends SkinnableComponent
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
 		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
-	}
-	/**
-	 * params: value - time in ms
-	 */
-	private function getTimeInMinSec(value:int):String
-	{
-		var result:String;
-		var minutes:int = value/60000;
-		var seconds:int = (value - minutes*60000)/1000;
-		var secondsString:String = seconds.toString();
-		if(seconds < 10)
-		{
-			secondsString = "0"+secondsString;
-		}
-		result = minutes.toString() + ":"+ secondsString.toString();
-		return result;
 	}
 	
 	private function initSkinVars():void
