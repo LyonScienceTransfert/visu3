@@ -26,8 +26,9 @@
 			<s:Label text="balbla" id="titleDocument" minWidth="100" width="100%" includeIn="normal" fontWeight="bold" paddingLeft="5"/>
 			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited" fontSize="12"/>
 			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited"/>
-			<mx:PopUpButton icon="{IconEnum.getIconByName('retroDocumentSegemntAdd')}" id="addPopUpButton"  width="50" includeIn="edited" buttonMode="true"/>
-			<mx:Button icon="{IconEnum.getIconByName('iconMinimaze_16x16')}" id="buttonSwitch" enabled="true" width="22" includeIn="edited" visible="true" buttonMode="true"/>
+			<!--<mx:PopUpButton  icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}" id="addPopUpButton" width="41" includeIn="edited" buttonMode="true"/>-->
+			<components:IconButton id="buttonMenuAddSegment" icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}"  width="29"/>
+			<mx:Button icon="{IconEnum.getIconByName('iconEye_16x16')}" id="buttonSwitch" enabled="true" width="22" includeIn="edited" visible="true" buttonMode="true"/>
 		</s:HGroup>
 		<!-- LIST THE SEGMENTS/BLOC -->
 		<s:List width="100%" height="100%" id="groupSegment"/>
