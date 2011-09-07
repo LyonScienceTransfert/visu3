@@ -7,6 +7,7 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.renderer.SegmentTitleRenderer;
 	import com.ithaca.documentarisation.renderer.SegmentVideoRenderer;
 	import com.ithaca.utils.ShareUserTitleWindow;
+	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
@@ -15,6 +16,7 @@ package com.ithaca.documentarisation
 	
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.geom.Point;
 	import flash.utils.Timer;
 	
 	import gnu.as3.gettext.FxGettext;
@@ -61,6 +63,9 @@ package com.ithaca.documentarisation
 		public var addPopUpButton:PopUpButton;
 		
 		[SkinPart("true")]
+		public var buttonMenuAddSegment:IconButton;
+		
+		[SkinPart("true")]
 		public var groupSegment:List;
 		
 		private var _labelRetroDocument:String;
@@ -80,6 +85,8 @@ package com.ithaca.documentarisation
 		private var removingSegment:Segment;
 		private var removingSegementView:RetroDocumentSegment;
 		private var TIME_UPDATE_RETRODOCUMENT:Number = 1000;
+		private var DELTA_X_MENU_ADD_SEGMENT:Number = -150;
+		private var DELTA_Y_MENU_ADD_SEGMENT:Number = 22;
 		
 		private var _currentTime:Number;
 		
@@ -165,6 +172,12 @@ package com.ithaca.documentarisation
 				addPopUpButton.toolTip = fxgt.gettext("Ajouter un nouveau segment");
 				addPopUpButton.addEventListener(MouseEvent.CLICK, onClickButtonAddSegment);
 			}
+			if(instance == buttonMenuAddSegment)
+			{
+				buttonMenuAddSegment.addEventListener(MouseEvent.CLICK, onClickButtonMenuAddSegment);
+				buttonMenuAddSegment.toolTip = fxgt.gettext("Ajouter un nouveau block");
+			}
+			
 			if(instance == titleDocument)
 			{
 				titleDocument.text = _labelRetroDocument;
@@ -286,6 +299,26 @@ package com.ithaca.documentarisation
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
 		}
 		
+		private function onClickButtonMenuAddSegment(event:MouseEvent):void
+		{
+			var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
+				{label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment" , iconName : "iconLettre_t_16x16"}, 
+				{label: fxgt.gettext("Bloc vidéo + texte"), typeSegment: "VideoSegment", iconName : "iconVideo_16x16"},        
+				{label: fxgt.gettext("Bloc commentaire audio"), typeSegment: "AudioSegment", iconName: "iconAudio_16x16"}];  
+			var str:String = '<root><menuitem label="Bloc titre" iconName="iconLettre_T_16x16" typeSegment="TitleSegment"/><menuitem label="Bloc texte" iconName="iconLettre_t_16x16" typeSegment="TexteSegment"/><menuitem label="Bloc vidéo + texte" iconName="iconVideo_16x16" typeSegment="VideoSegment"/><menuitem label="Bloc commentaire audio" iconName="iconAudio_16x16" typeSegment="AudioSegment"/></root>'
+			var xml:XML = new XML(str);
+			
+			var menuAddSegment:Menu = Menu.createMenu(null, xml, false);
+			menuAddSegment.iconFunction = setIconMenuAddSegmentFunction;
+			menuAddSegment.labelFunction= setLabelMenuAddSegmentFunction;
+			menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
+			var iconButton:IconButton = event.target as IconButton;
+			var pt:Point = new Point(iconButton.x, iconButton.y);
+			pt = iconButton.localToGlobal(pt);
+			var pointShowMenu:Point = new Point(pt.x - iconButton.x, pt.y - iconButton.y);
+			menuAddSegment.show(pointShowMenu.x + DELTA_X_MENU_ADD_SEGMENT, pointShowMenu.y + DELTA_Y_MENU_ADD_SEGMENT);
+		}
+		
 		/**
 		 * init Pop-up button add segment
 		 */
@@ -304,8 +337,13 @@ package com.ithaca.documentarisation
 		}
 		private function setIconMenuAddSegmentFunction(item:Object):Class
 		{
-			var iconName:String = item.iconName;
+			var iconName:String = item.@iconName;
 			return IconEnum.getIconByName(iconName);
+		}
+		private function setLabelMenuAddSegmentFunction(item:Object):String
+		{
+			var label:String = "        "+ item.@label;
+			return label;
 		}
 		/**
 		 *  listener the PopUp button
@@ -313,7 +351,7 @@ package com.ithaca.documentarisation
 		private function onClickMenuAddSegment(event:MenuEvent):void
 		{
 			var segment:Segment;
-			var typeSegment:String = event.item.typeSegment;
+			var typeSegment:String = event.item.@typeSegment;
 			switch (typeSegment)
 			{
 			case "TitleSegment" :
