@@ -315,6 +315,9 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/loaderBlueLine.swf")]
 		static private var loaderBlueLine:Class;
+		[Bindable]
+		[Embed("images/iconEye_16x16.png")]
+		static private var iconEye_16x16:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -546,6 +549,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "loaderBlueLine" : 
 					icon = loaderBlueLine;
+					break;
+				case "iconEye_16x16" : 
+					icon = iconEye_16x16;
 					break;
 				default :
 					break;				
