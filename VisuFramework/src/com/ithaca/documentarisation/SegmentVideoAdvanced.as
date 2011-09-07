@@ -171,9 +171,15 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}	
 	}
 	
-	public function set startDateSession(value:Number):void{_startDateSession = value;};
+	public function set startDateSession(value:Number):void
+	{
+		_startDateSession = value;
+	};
 	public function get startDateSession():Number{return _startDateSession;};
-	public function set durationSession(value:Number):void{_durationSession = value;};
+	public function set durationSession(value:Number):void
+	{
+		_durationSession = value;
+	};
 	public function get durationSession():Number{return _durationSession;};
 	
 	public function set currentTime(value:Number):void{
@@ -477,7 +483,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		labelDuration.text = TimeUtils.formatTimeString(duration); 
 		
 		this.currentTime = this._timeBegin;
-
+		
+		var playSegmentVideoEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.STOP_RETRO_SEGMENT);
+		dispatchEvent(playSegmentVideoEvent);
 	}
 	private function onClickIconDelete(event:MouseEvent):void
 	{
