@@ -1,6 +1,7 @@
 package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.AudioRecorderEvent;
+import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.visu.model.Model;
@@ -371,7 +372,9 @@ public class AudioRecorder extends SkinnableComponent
 		// TODO modeEdit
 		play = true;
 		invalidateSkinState();
-		
+		// dispatche that click on butoon play
+		var playSegmentAudioEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
+		dispatchEvent(playSegmentAudioEvent);
 	}
 	private function onClickImageStop(even:*=null):void
 	{
