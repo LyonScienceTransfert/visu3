@@ -10,7 +10,7 @@
     <fx:Script>
         <![CDATA[
 			import com.ithaca.documentarisation.RetroDocumentConst;
-			import com.ithaca.documentarisation.events.RetroDocumentEvent;
+			import com.ithaca.documentarisation.SegmentVideoAdvanced;
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.documentarisation.model.Segment;
 			import com.ithaca.documentarisation.renderer.BlocCommentAudioBilanRenderer;
@@ -18,7 +18,6 @@
 			import com.ithaca.documentarisation.renderer.BlocVideoBilanRenderer;
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			
 			import mx.collections.ArrayCollection;
@@ -31,12 +30,15 @@
 			[Bindable]
 			private var timer:Timer;
 			
+			
 			[Bindable]
 			public var bilan:RetroDocument = null;
 			
 			// start session in ms from 1970 year
 			// for calculate seekSession, beginSegment has time ms from 1970
 			private var sessionStart:Number;
+			private var currentRetroDocumentSegmentPlaying:SegmentVideoAdvanced = null;
+
 			
 			public function stop():void {
 				if(this.visio) {
@@ -90,65 +92,7 @@
 					this.dispatchEvent(event);
 				}
 			}
-						
-			private function initVisio(event:Event):void {
-				this.visio.connection = Model.getInstance().getNetConnection();
-				this.visio.addVideoStream("void",null, 0.0, true);
-				// add listener play/pause video by click on component
-				this.visio.addEventListener(VisuVisioAdvancedEvent.CLICK_PANEL_VIDEO, onClickPanelVideoVisuVisioAdvanced);
-			}
-	
-			private function playVideoSegment(segment:Segment):void {
-				var segmentTime:Number = segment.beginTimeVideo;
-				logger.info("Ask for playing the video of segment {0} (current time: {2})", segment.comment, segmentTime);
-				// jump to begin the segment
-				this.visio.seekSession = segmentTime;
-				
-				var durationInMillis:Number = segment.endTimeVideo - segment.beginTimeVideo;
-				// check NaN duration of segment
-				if (isNaN(durationInMillis))
-				{
-					durationInMillis = 0;
-				}
-				logger.debug("Setting up a new timer for the segment video playing. Duration in sec: {0}", int(durationInMillis/1000));
-				if(this.timer != null && this.timer.running)
-				{
-					this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
-					this.timer.stop();
-					this.timer = null;
-				}
-				this.timer = new Timer(durationInMillis,1);
-				this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
-				this.timer.start();
-			}
 			
-			private function timerCompleteHandler(e:TimerEvent):void {
-				logger.debug("Timer complete for the segment video playing. Removing all streams from the video component.");
-				this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
-				this.visio.pauseStreams();
-				buttonPlay.enabled = false;
-				buttonPlay.label = "Pause";
-				this.visio.status = VisuVisioAdvanced.STATUS_NONE;
-				// Clear the selection
-				this.segmentList.selectedItems = new Vector.<Object>();
-	        }
-	        
-			private function onSegmentSelectionClick(e:MouseEvent):void {
-				if(segmentList && segmentList.selectedItems && segmentList.selectedItems.length==1 && !(e.target is mx.controls.Button) ) {
-					var segment:Segment = segmentList.selectedItems[0] as Segment;
-					logger.debug("Ask for playing the video at session time {0}", int((segment.beginTimeVideo - sessionStart)/1000));
-					this.visio.autoPlay = true;
-					this.buttonPlay.enabled = true;
-					playVideoSegment(segment);
-					// enabled button play/pause
-					buttonPlay.enabled = true;
-					buttonPlay.label = "Pause";
-					// set status play 
-					this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
-				} else
-					logger.debug("Selection changed on segmentList but nothing is selected now");
-			}
-	
 			protected function buttonPlay_clickHandler(event:* = null):void
 			{
 				if( buttonPlay.label == "Play")
@@ -156,19 +100,11 @@
 					buttonPlay.label = "Pause";
 					this.visio.resumeStreams();
 					this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
-					if(this.timer != null)
-					{
-						this.timer.start();
-					}
 				}else
 				{
 					buttonPlay.label = "Play";
 					this.visio.pauseStreams();
 					this.visio.status = VisuVisioAdvanced.STATUS_PAUSE;
-					if(this.timer != null)
-					{
-						this.timer.stop();
-					}
 				}
 			}
 			protected function buttonMute_clickHandler(event:* = null):void
@@ -197,14 +133,7 @@
 				buttonPlay.label = "Pause";
 				buttonPlay_clickHandler();
 			}
-			/**
-			 * Play/pause video by click on component
-			 */
-			private function onClickPanelVideoVisuVisioAdvanced(event:VisuVisioAdvancedEvent):void
-			{
-				buttonPlay_clickHandler();
-			}
-
+			
 			private function setRendererSegmentFunction(item:Object):ClassFactory
 			{
 				var className:Class = BlocTitleBilanRenderer;
@@ -219,19 +148,162 @@
 					}
 				return new ClassFactory( className);
 			}
+
+			////////////
+			// Handlers videoSegment
+			//////////
+			public function playRetroSegment(value:Object, beginTime:Number, endTime:Number):void
+			{
+				var segmentVideo:SegmentVideoAdvanced = value as SegmentVideoAdvanced;
+				if(segmentVideo)
+				{
+					// set status play 
+					visio.status = VisuVisioAdvanced.STATUS_REPLAY;
+					
+					// set timer
+					var durationVideoSegment:Number = endTime - beginTime;
+					if(durationVideoSegment < 0)
+					{
+						durationVideoSegment = 0;
+					}
+					// init timer
+					startTimerRetroDocumentSegment(durationVideoSegment);
+					
+					if(currentRetroDocumentSegmentPlaying == null)
+					{
+						// set current video segment
+						currentRetroDocumentSegmentPlaying = segmentVideo;
+						visio.autoPlay = true;
+						visio.seekSession = beginTime;
+					}
+					else if(currentRetroDocumentSegmentPlaying == segmentVideo)
+					{
+						this.timer.start();
+						visio.resumeStreams();
+					}
+					else
+					{
+						// set current video segment
+						currentRetroDocumentSegmentPlaying = segmentVideo;
+						visio.autoPlay = true;
+						visio.seekSession = beginTime;
+					}
+					// enabled button play/pause
+					buttonPlay.enabled = true;
+					buttonPlay.label = "Pause";
+				}else
+				{
+					// click on button "play" the AudioRecorder
+					stopRetroSegment();
+				}
+			}
+			public function pauseRetroSegment():void
+			{
+				if(currentRetroDocumentSegmentPlaying)
+				{
+					currentRetroDocumentSegmentPlaying.setPause();
+				}
+				// set status play 
+				visio.status = VisuVisioAdvanced.STATUS_PAUSE;
+				// do plause segment
+				visio.pauseStreams();
+				timer.stop();
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				buttonPlay.label = "Play";
+			}
+			
+			public function stopRetroSegment():void
+			{
+				endTimerRetroDocumentSegment();
+
+				// set status play 
+				if(visio.status != VisuVisioAdvanced.STATUS_NONE)
+				{
+					visio.status = VisuVisioAdvanced.STATUS_PAUSE;
+				}
+				// do plause segment
+				visio.pauseStreams();
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				buttonPlay.label = "Play";
+			}
+			/**
+			 * set timer for video segment
+			 */
+			private function startTimerRetroDocumentSegment(value:Number):void
+			{
+				if(timer != null)
+				{
+					timer.removeEventListener(TimerEvent.TIMER, endTimerRetroDocumentSegment);
+					timer = null;
+				}
+				timer = new Timer(value,0);
+				timer.addEventListener(TimerEvent.TIMER, endTimerRetroDocumentSegment);
+				timer.start();
+			}
+			
+			/**
+			 * remove timer video segment
+			 */
+			private function endTimerRetroDocumentSegment(event:TimerEvent = null):void
+			{
+				// set time to current video segment 
+				if(currentRetroDocumentSegmentPlaying != null)
+				{
+					currentRetroDocumentSegmentPlaying.setBeginEndTime();
+					// set curentRetroDocumentSegment to null
+					currentRetroDocumentSegmentPlaying = null;
+				}
+				if(timer)
+				{
+					timer.stop();
+					timer.removeEventListener(TimerEvent.TIMER, endTimerRetroDocumentSegment);
+					timer = null;
+				}
+				// do plause segment
+				visio.pauseStreams();
+				// set status play 
+				visio.status = VisuVisioAdvanced.STATUS_NONE;
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				buttonPlay.label = "Play";
+			}
+			//////////////
+			/// Handlers VisuVisioAdvanced
+			/////////////
+			protected function visio_updateTimeHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var beginTime:Number = event.beginTime;
+				if( currentRetroDocumentSegmentPlaying != null)
+				{
+					currentRetroDocumentSegmentPlaying.currentTime = beginTime;
+				}
+			}
+
+			protected function visio_clickPanelVideoHandler(event:VisuVisioAdvancedEvent):void
+			{
+				buttonPlay_clickHandler();
+			}
+
+			protected function visio_creationCompleteHandler(event:FlexEvent):void
+			{
+				visio.connection = Model.getInstance().getNetConnection();
+				visio.addVideoStream("void",null, 0.0, true);
+			}
+
         ]]>
     </fx:Script>
     <s:states>
         <s:State name="normal"/>
     </s:states>
-
+	
 	<s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
 			<s:Label text="Aucun bilan sélectionné" fontSize="14" fontStyle="italic"/>
 	</s:VGroup>
  
 	<s:VGroup includeInLayout="{bilan}" visible="{bilan}" width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 				<s:HGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="100%">
-
 						<s:VGroup 
 							minWidth="150"
 							width="50%"
@@ -256,7 +328,8 @@
 								<s:List id="segmentList" 
 									borderVisible="false" width="100%" height="100%"  
 									dataProvider="{bilan.listSegment}" 
-									itemRendererFunction="setRendererSegmentFunction">
+									itemRendererFunction="setRendererSegmentFunction"
+									>
 								</s:List>
 						</s:VGroup>
 						<s:VGroup 
@@ -266,7 +339,10 @@
 							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
 							<video:VisuVisioAdvanced id="visio" width="100%" height="100%"
 										quality="80"
-										bandwidth="15000" autoPlay="false" creationComplete="initVisio(event)"/>
+										bandwidth="15000" autoPlay="false" 
+										creationComplete="visio_creationCompleteHandler(event)"
+										updateTime="visio_updateTimeHandler(event)"
+								        clickPanelVideo="visio_clickPanelVideoHandler(event)"/>
 							<mx:Spacer height="5"/>
 							<s:HGroup width="100%" horizontalAlign="center">
 								<s:Button id="buttonPlay" click="buttonPlay_clickHandler(event)" enabled="false">

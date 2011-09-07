@@ -36,7 +36,6 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
-			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
 			import mx.managers.CursorManager;
@@ -44,8 +43,7 @@
 			private var logger : ILogger = Log.getLogger('modules.BilanModule');
 			
 			private var selectedSessionIdWhenInit:Number = -1;
-			private var selectedRetroDocumentIdWhenInit:Number = -1;
-			
+			private var selectedRetroDocumentIdWhenInit:Number = -1;			
 			
 			private function showRetroDocument(event:RetroDocumentEvent):void {
 				if(Model.getInstance().getCurrentBilanModule() == this)
@@ -72,6 +70,11 @@
 							doc.session = retroDoc.session;
 						}
 					}
+					
+					// set current session
+					var currentSession:Session = doc.session;
+					Model.getInstance().setCurrentSession(currentSession);
+					
 					bilanViewer.setNewBilan(doc);
 					// set enabled edit bilan if logged user owner of the bilan
 					var canEditBilan:Boolean = false;
@@ -230,6 +233,26 @@
 				this.dispatchEvent(switchModuleEvent);
 			}
 			
+			/////////
+			// Listeners the segments
+			////////
+			private function onPlayRetroSegment(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					bilanViewer.playRetroSegment(event.target, event.beginTime, event.endTime);
+				}
+				
+			}
+			private function onPauseRetroSegment(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					bilanViewer.pauseRetroSegment();
+				}
+				
+			}
+
 			//_____________________________________________________________________
 			//
 			// Utils
@@ -242,7 +265,10 @@
 			}
 		]]>
 	</fx:Script>
-
+	<fx:Declarations>
+		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="onPlayRetroSegment" />
+		<mate:Listener type="{RetroDocumentEvent.PAUSE_RETRO_SEGMENT}"  method="onPauseRetroSegment" />
+	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
 	  	<s:Panel title="Explorateur" width="30%" minWidth="400" height="100%">
 			<s:VGroup width="100%" height="100%">
