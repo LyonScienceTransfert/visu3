@@ -779,25 +779,28 @@
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					var segmentVideoAdvanced : SegmentVideoAdvanced = event.target as SegmentVideoAdvanced;
-					var deltaTimePause:Number = 0;
-					var beginTime:Number = event.beginTime;
-					var endTime:Number   = event.endTime;
-					// pause on button play/pause in the segment
-					// set current retroDocumentSegment playing
-					setCurrentRetroDocumentSegmentPlaying(segmentVideoAdvanced);
-					
-					this.beginTimeCurrentSegment = beginTime;
-					var dt:Number = beginTime 
-						//- this.testTimeLine.startTimeSession;
-					
-					prePlayVideoFlux(dt+deltaTimePause);
-					// set timer
-					var durationVideoSegment:Number = endTime - beginTime;
-					if(durationVideoSegment < 0)
+					if(segmentVideoAdvanced)
 					{
-						durationVideoSegment = 0;
+						var deltaTimePause:Number = 0;
+						var beginTime:Number = event.beginTime;
+						var endTime:Number   = event.endTime;
+						// pause on button play/pause in the segment
+						// set current retroDocumentSegment playing
+						setCurrentRetroDocumentSegmentPlaying(segmentVideoAdvanced);
+						
+						this.beginTimeCurrentSegment = beginTime;
+						var dt:Number = beginTime 
+							//- this.testTimeLine.startTimeSession;
+						
+						prePlayVideoFlux(dt+deltaTimePause);
+						// set timer
+						var durationVideoSegment:Number = endTime - beginTime;
+						if(durationVideoSegment < 0)
+						{
+							durationVideoSegment = 0;
+						}
+						this.startTimerRetroDocumentSegment(durationVideoSegment);
 					}
-					this.startTimerRetroDocumentSegment(durationVideoSegment);
 				}
 			}
 			
