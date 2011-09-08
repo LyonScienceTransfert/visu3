@@ -28,8 +28,8 @@ timeline|TraceLineGroup
 {
 	skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupVisu2Skin");
 	fillColors : #FFA6A8, #C6FFC9, #AED7FF, #FAFFB7, #FFDFB0, #E1B7F9 ;
-	headerHeight : 5;
-	bottom 		 : 5;
+	headerHeight : 1;
+	bottom 		 : 1;
 	bgColor		:#FFA6A8;
 }
 
@@ -42,13 +42,14 @@ timeline|TraceLineGroupTitle
 timeline|TraceLineGroupTitle.comments
 {
 	skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupTitleCommentsVisu2Skin");
+	icon 		: Embed("images/CommentAddVer1.png");	
 	bgColor		:#FFA6A8;
 }
 
 timeline|TraceLine
 {
-	rendererHeight : 25;
-	rendererGap	   : 2;
+	rendererHeight : 22;
+	rendererGap	   : 1;
 	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");
 }
 
@@ -62,12 +63,26 @@ timeline|TraceLineTitle
 	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineTitleVisu2Skin");
 }
 
+timeline|TraceLine.comments
+{
+	rendererHeight : 30;
+	rendererGap	   : 2;
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");
+}
+
+timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
+{
+	skin-class		: ClassReference("com.ithaca.timeline.skins.IconTextSkin");
+	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
+	backgroundColor 	: #FFFFB3;
+}
+
 timeline|ZoomContext
 {
 	skin-class			: ClassReference("com.ithaca.timeline.skins.ZoomContextSkin2");
 	backgroundColor 	: #F5F5F5;
-	allowZoom            : true;
-	allowCut                : false;
+	allowZoom           : true;
+	allowCut            : false;
 }
 
 timeline|ObselSkin
@@ -83,12 +98,6 @@ timeline|ObselSkin.Message
 	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
 }
 
-timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
-{
-	skin-class		: ClassReference("com.ithaca.timeline.skins.IconTextSkin");
-	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
-	backgroundColor 	: #FFFFB3;
-}
 
 timeline|ObselSkin.Message mx|Label
 {
@@ -104,8 +113,8 @@ timeline|ObselSkin.Document
 
 timeline|ObselSkin.Instructions
 {
-skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
-icon :Embed("images/consigneVisu2_20x20.png");
+	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	icon: Embed("images/consigneVisu2_20x20.png");
 }
 
 timeline|ObselSkin.Keyword
@@ -124,76 +133,6 @@ timeline|ObselSkin.Comment
 {
 skin-class: ClassReference("com.ithaca.timeline.skins.CommentSkin");	
 icon :Embed("images/consigneVisu2_20x20.png");
-}
-
-timeline|Timeline
-{
-skin-class: ClassReference("com.ithaca.timeline.skins.TimelineSkin");
-}
-
-timeline|TraceLineGroup
-{
-skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupVisu2Skin");
-fillColors : #FFA6A8, #C6FFC9, #AED7FF, #FAFFB7, #FFDFB0, #E1B7F9 ;
-headerHeight : 5;
-bottom 		 : 5;
-bgColor		:#FFA6A8;
-}
-
-timeline|TraceLineGroupTitle
-{
-skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupTitleVisu2Skin");
-bgColor		:#FFA6A8;
-}
-
-timeline|TraceLineGroupTitle.comments
-{
-skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupTitleCommentsVisu2Skin");
-icon 		: Embed("images/CommentAddVer1.png");	
-bgColor		:#FFA6A8;
-}
-
-timeline|TraceLine.comments
-{
-rendererHeight : 30;
-rendererGap	   : 2;
-skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");
-}
-
-timeline|TraceLine
-{
-rendererHeight : 25;
-rendererGap	   : 2;
-skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");
-}
-
-
-timeline|TraceLine.background
-{
-skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineBackgroundSkin");
-}
-
-timeline|TraceLineTitle
-{
-skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineTitleVisu2Skin");
-}
-
-timeline|ZoomContext
-{
-skin-class			: ClassReference("com.ithaca.timeline.skins.ZoomContextSkin2");
-backgroundColor 	: #F5F5F5;
-}
-
-timeline|ObselSkin
-{
-skin-class		: ClassReference("com.ithaca.timeline.skins.IconSkin");
-icon 			: Embed("images/iconInfo_16x16.png");	
-}
-
-
-timeline|ObselSkin.Message mx|Label
-{
-fontSize : 11;
 }
 
 timeline|ObselSkin.Activity
