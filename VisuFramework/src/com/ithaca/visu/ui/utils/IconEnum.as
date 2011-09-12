@@ -318,6 +318,12 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/iconEye_16x16.png")]
 		static private var iconEye_16x16:Class;
+		[Bindable]
+		[Embed("images/iconAnnuler_16x16.png")]
+		static private var iconAnnuler_16x16:Class;
+		[Bindable]
+		[Embed("images/iconValider_16x16.png")]
+		static private var iconValider_16x16:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -552,6 +558,12 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "iconEye_16x16" : 
 					icon = iconEye_16x16;
+					break;
+				case "iconAnnuler_16x16" : 
+					icon = iconAnnuler_16x16;
+					break;
+				case "iconValider_16x16" : 
+					icon = iconValider_16x16;
 					break;
 				default :
 					break;				
