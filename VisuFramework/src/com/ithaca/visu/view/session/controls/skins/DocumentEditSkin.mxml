@@ -279,7 +279,8 @@
 					</s:stroke>
 				</s:Line>
 				<!--<s:Label text=" éditer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
-				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="onClickButtonEdit(event)"/>
+				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}"  
+					 width="16" height="16"  click="onClickButtonEdit(event)"/>
 				
 			</s:HGroup>
 			<s:Panel includeIn="normal,close"  id="panelContent"  title="Video Youtube"

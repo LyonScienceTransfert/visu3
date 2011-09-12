@@ -2,7 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		  maxWidth="140">
+		  maxWidth="140" xmlns:components="com.ithaca.utils.components.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.KeywordEdit")]
@@ -111,22 +111,27 @@
 					 maxDisplayedLines="1"
 					 top="1" left.close="10" left="42" right="10"
 								   paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" bottom="2"/>
-			<s:TextInput id="editableContent"  includeIn="open" text="..." top="1" left="10" right="10" bottom="1"
-						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
-						focusIn="editableContent_focusInHandler(event)"/>
+			<s:HGroup width="100%" includeIn="open" gap="2" x="12" verticalAlign="middle">
+				<s:TextInput id="editableContent" text="..."
+							focusIn="editableContent_focusInHandler(event)"
+					        width="88"/>
+				<mx:Image width="16" height="16" source="{IconEnum.getIconByName('iconValider_16x16')}" click="onClickButtonValider(event)">
+					<mx:buttonMode>true</mx:buttonMode>
+					<mx:toolTip>Valider</mx:toolTip>
+				</mx:Image>
+				<mx:Image width="16" height="16" source="{IconEnum.getIconByName('iconAnnuler_16x16')}" click="onClickButtonCancel(event)">
+					<mx:buttonMode>true</mx:buttonMode>
+					<mx:toolTip>Annuler</mx:toolTip>
+				</mx:Image>
+				<mx:Spacer width="4"/>
+			</s:HGroup>
 <!-- BOUTTONS -->
-			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16" left="10" top="3"
+			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16" height="16" left="10" top="3"
 					    click="buttonDelete_clickHandler(event)"/>
-			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  
-					    click="buttonEdit_clickHandler(event)" height="14" width="14" left="26" top="5"/>
+			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}"  
+					    click="buttonEdit_clickHandler(event)" height="16" width="16" left="26" top="3"
+				        />
 		</s:Group>
-		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
-			<s:Button includeIn="open" click="onClickButtonValider(event)">
-				<s:label>Valider</s:label>
-			</s:Button>
-			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
-				<s:label>Annuler</s:label>
-			</s:Button>
-		</s:HGroup>
+		
 	</s:Group>
 </s:Skin>
