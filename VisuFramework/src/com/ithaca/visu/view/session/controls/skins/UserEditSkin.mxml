@@ -61,7 +61,7 @@
 			<!-- BOUTTONS -->
 			<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  visible.editable="false" width="16"
 					   right="20" top="10" height="32"/>
-			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}" visible.editable="false" right="5"  width="14" top="10" height="32"/>
+			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}" visible.editable="false" right="5"  width="16" height="16" top="10"/>
 		</s:Group>
 	</s:Group>
 </s:Skin>

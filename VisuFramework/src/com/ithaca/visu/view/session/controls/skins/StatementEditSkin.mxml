@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx"
-		>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	>
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.StatementEdit")]
@@ -15,75 +15,68 @@
 	</s:states>
 	
 	<fx:Script>
-		<![CDATA[
-			import com.ithaca.visu.ui.utils.IconEnum;
-			
-			import mx.controls.Alert;
-			import mx.events.CloseEvent;
-			import mx.events.FlexEvent;
-			
-			[Bindable]
-			private var widthAppendix:int = 70;
-			private var currentMouseCursor:String;
-			
-			// click on label edit
-			protected function label1_clickHandler(event:MouseEvent):void
-			{
-				this.currentState = "open";
-				this.editableContent.text = this.textContent.text;
-				stage.focus = this.editableContent;
+	<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+		import mx.controls.Alert;
+		import mx.events.CloseEvent;
+		import mx.events.FlexEvent;
+		[Bindable]
+		private var widthAppendix:int = 70;
+		private var currentMouseCursor:String;
+		// click on label edit
+		protected function label1_clickHandler(event:MouseEvent):void
+		{
+			this.currentState = "open";
+			this.editableContent.text = this.textContent.text;
+			stage.focus = this.editableContent;
+		}
+		// on click butoon cancel
+		protected function onClickButtonCancel(event:MouseEvent):void
+		{
+			this.currentState = "normal";
+		}
+		// on click butoon valider
+		protected function onClickButtonValider(event:*=null):void
+		{
+			this.currentState = "normal";
+			if(this.textContent.text != this.editableContent.text){
+				this.textContent.text = this.editableContent.text;
+				this.hostComponent.updateStatement(this.textContent.text);
 			}
-			
-			// on click butoon cancel
-			protected function onClickButtonCancel(event:MouseEvent):void
+		}
+		
+		protected function buttonDelete_clickHandler(event:MouseEvent):void
+		{
+			Alert.yesLabel = "Oui";
+			Alert.noLabel = "Non";
+			Alert.show("Voulez-vous supprimer la consigne?",
+				"Confirmation", Alert.YES|Alert.NO, null, deleteStatementConfirmed);
+		}
+		private function deleteStatementConfirmed(event:CloseEvent):void{
+			if( event.detail == Alert.YES)
 			{
-				this.currentState = "normal";
+				this.hostComponent.deleteStatement();
 			}
-			
-			// on click butoon valider
-			protected function onClickButtonValider(event:*=null):void
-			{
-				this.currentState = "normal";
-				if(this.textContent.text != this.editableContent.text){
-					this.textContent.text = this.editableContent.text;
-					this.hostComponent.updateStatement(this.textContent.text);
-				}
-			}
-
-			protected function buttonDelete_clickHandler(event:MouseEvent):void
-			{
-				Alert.yesLabel = "Oui";
-				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer la consigne?",
-					"Confirmation", Alert.YES|Alert.NO, null, deleteStatementConfirmed); 
-				
-			}
-			
-			private function deleteStatementConfirmed(event:CloseEvent):void{
-				if( event.detail == Alert.YES)
+		}
+		
+		protected function editableContent_focusOutHandler(event:FocusEvent):void
+		{
+			editableContent.removeEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+			if (!event.isRelatedObjectInaccessible){
+				this.onClickButtonValider();
+			}else
+				if ((event.relatedObject as Object).id != "buttonCancel")
 				{
-					this.hostComponent.deleteStatement();
-				}
-			}
-
-			protected function editableContent_focusOutHandler(event:FocusEvent):void
-			{
-				editableContent.removeEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
-				if (!event.isRelatedObjectInaccessible){
 					this.onClickButtonValider();
-				}else 
-					if ((event.relatedObject as Object).id != "buttonCancel")
-						{
-						this.onClickButtonValider();
-						}	
-			}
-
-			protected function editableContent_focusInHandler(event:FocusEvent):void
-			{
-				editableContent.addEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
-			}
-
-		]]>
+				}
+		}
+		
+		protected function editableContent_focusInHandler(event:FocusEvent):void
+		{
+			editableContent.addEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+		}
+		
+	]]>
 	</fx:Script>
 	<s:Group width="100%">
 		<s:layout>
@@ -91,7 +84,7 @@
 		</s:layout>
 		<s:Group width="100%">
 			<s:Rect id="fill" radiusX="5"
-					left="2" right="2" top="1" bottom="1" minHeight="25">
+				left="2" right="2" top="1" bottom="1" minHeight="25">
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
@@ -100,19 +93,19 @@
 				</s:fill>
 			</s:Rect>
 			<s:Rect id="border" radiusX="5"
-					left="2" right="2" top="0" bottom="0">
+				left="2" right="2" top="0" bottom="0">
 				<s:stroke>
 					<s:LinearGradientStroke rotation="90" weight="1">
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.5625"/>
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.75" />
+						<s:GradientEntry color="0x000000"
+							alpha="0.5625"/>
+						<s:GradientEntry color="0x000000"
+							alpha="0.75" />
 					</s:LinearGradientStroke>
 				</s:stroke>
 			</s:Rect>
-		<!-- APPENDIX LEFT SIDE -->
-			<s:Rect id="fillOpen" radiusX="5" topRightRadiusX="0"  bottomRightRadiusX="0"
-					left="{-widthAppendix}"  width="{widthAppendix+2}" top="12"  height="16" includeIn="normal">
+			<!-- APPENDIX LEFT SIDE -->
+			<s:Rect id="fillOpen" radiusX="5" topRightRadiusX="0" bottomRightRadiusX="0"
+				left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16" includeIn="normal">
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
@@ -120,19 +113,19 @@
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
-			<s:Rect id="borderOpen" radiusX="5" topRightRadiusX="0"  bottomRightRadiusX="0"
-					left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16"  includeIn="normal">
+			<s:Rect id="borderOpen" radiusX="5" topRightRadiusX="0" bottomRightRadiusX="0"
+				left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16" includeIn="normal">
 				<s:stroke>
 					<s:LinearGradientStroke rotation="90" weight="1">
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.5625"/>
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.75" />
+						<s:GradientEntry color="0x000000"
+							alpha="0.5625"/>
+						<s:GradientEntry color="0x000000"
+							alpha="0.75" />
 					</s:LinearGradientStroke>
 				</s:stroke>
 			</s:Rect>
-		<!-- ALFA VERTICAL LINE APPENDIX -->
-			<s:Line  includeIn="normal"  left="2" top="12" height="16" >
+			<!-- ALFA VERTICAL LINE APPENDIX -->
+			<s:Line includeIn="normal" left="2" top="12" height="16" >
 				<s:stroke>
 					<!--<s:SolidColorStroke color="0xFFFFFF" weight="1" joints="miter"/>-->
 					<s:LinearGradientStroke rotation="90" weight="1">
@@ -141,36 +134,36 @@
 					</s:LinearGradientStroke>
 				</s:stroke>
 			</s:Line>
-
-		<!-- BUTTONS -->
-			<s:HGroup top="13"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
-				<mx:Image  id="buttonUp" source="{IconEnum.getIconByName('up')}"  width="12" height="12"/>
-				<mx:Image  id="buttonDown" source="{IconEnum.getIconByName('down')}"  width="12" height="12"/>
-				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"
-						    click="buttonDelete_clickHandler(event)"/>
+			
+			<!-- BUTTONS -->
+			<s:HGroup top="13" paddingLeft="{-widthAppendix+7}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
+				<mx:Image id="buttonUp" source="{IconEnum.getIconByName('up')}" width="12" height="12"/>
+				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('down')}" width="12" height="12"/>
+				<mx:Image id="buttonDelete" source="{IconEnum.getIconByName('delete')}" width="16"
+					click="buttonDelete_clickHandler(event)"/>
 				<s:Line height="11" >
 					<s:stroke>
 						<s:SolidColorStroke color="#6370D7"/>
 					</s:stroke>
 				</s:Line>
-				<!--<s:Label text=" editer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
-				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('edit')}"  height="14"  click="label1_clickHandler(event)"/>
+				<!--<s:Label text=" editer" color="#6370D7" click="label1_clickHandler(event)"/>-->
+				<mx:Image id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}" height="16" width="16" click="label1_clickHandler(event)"/>
 				
 			</s:HGroup>
-			<s:RichText includeIn="normal,close"  id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
-									paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
-			<s:TextArea id="editableContent"  includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
-															  paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
-									  focusIn="editableContent_focusInHandler(event)"/>
-
+			<s:RichText includeIn="normal,close" id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
+				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+			<s:TextArea id="editableContent" includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
+				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+				focusIn="editableContent_focusInHandler(event)"/>
+			
 		</s:Group>
 		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
-		<s:Button includeIn="open" click="onClickButtonValider(event)">
-			<s:label>Valider</s:label>
-		</s:Button>
-		<s:Button  id="buttonCancel" click="onClickButtonCancel(event)">
-			<s:label>Annuler</s:label>
-		</s:Button>
+			<s:Button includeIn="open" click="onClickButtonValider(event)">
+				<s:label>Valider</s:label>
+			</s:Button>
+			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
+				<s:label>Annuler</s:label>
+			</s:Button>
 		</s:HGroup>
 	</s:Group>
 </s:Skin>
