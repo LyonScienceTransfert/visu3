@@ -25,9 +25,7 @@ package com.ithaca.timeline
 		{						
 			if ( !_timeRange) 
 				return;	
-				
-	//		trace("REDRAW " + _traceline );
-			
+
 			while(numChildren > 0 )
 				removeChildAt(0);		
 
@@ -54,14 +52,15 @@ package com.ithaca.timeline
 				{
 					intervalGroup.graphics.lineStyle( 1 );
 					intervalGroup.graphics.drawRect( 0, 0,(_timeRange._ranges[i+1] - _timeRange._ranges[i])*timeToPositionRatio-1, height -1);
-				}				
+				}
+				else
+					intervalGroup.graphics.clear();
 				
 				//drawing obsels
 				for each (var obselSkin : ObselSkin in obselsSkinsCollection)
 				{	
 					var obsel : Obsel =  obselSkin.obsel;
 					obselSkin.x = (obsel.begin - _timeRange._ranges[i]) * timeToPositionRatio;
-		//			trace("obselSkin.x " + obselSkin.x + " " + _timeRange._ranges[i] +" " + timeToPositionRatio + " " + intervalGroup.horizontalScrollPosition);	
 					intervalGroup.addElement( obselSkin ) ;
 				}	
 				
@@ -74,9 +73,8 @@ package com.ithaca.timeline
 		
 		public function  updateObselPosition( event : Event = null) : void
 		{						
-				
 			var lastIntervalGroup : Group = null;
-			var  timeToPositionRatio : Number = (width - _timeRange.timeHoleWidth*(_timeRange.numIntervals-1)) / _timeRange.duration ;
+			var timeToPositionRatio : Number = (width - _timeRange.timeHoleWidth*(_timeRange.numIntervals-1)) / _timeRange.duration ;
 			var indexIG : Number = 0;				
 			for (var i :int = 0; i < _timeRange._ranges.length; i+=2)
 			{				
@@ -88,18 +86,22 @@ package com.ithaca.timeline
 				var intervalDuration 	: Number = intervalEnd - intervalStart;		
 				
 				var intervalGroup : Group 	= getChildAt( indexIG++) as Group;
-				intervalGroup.width 		= intervalDuration * timeToPositionRatio;		
+				intervalGroup.width 		= intervalDuration * timeToPositionRatio;
+				intervalGroup.height 		= height;	
 				intervalGroup.horizontalScrollPosition = timeToPositionRatio * (intervalStart - _timeRange._ranges[i]);			
 				
 				if (borderVisible)
 				{
+					intervalGroup.graphics.clear();
 					intervalGroup.graphics.lineStyle( 1 );
 					intervalGroup.graphics.drawRect( 0, 0,(_timeRange._ranges[i+1] - _timeRange._ranges[i])*timeToPositionRatio-1, height -1);
-				}				
-				
-				//drawing obsels
-				for each (var obselSkin : ObselSkin in intervalGroup)
+				}		
+				else
+					intervalGroup.graphics.clear();
+
+				for (var obselSkinIndex : int = 0; obselSkinIndex < intervalGroup.numElements;obselSkinIndex++ )
 				{	
+					var obselSkin : ObselSkin = intervalGroup.getElementAt( obselSkinIndex) as ObselSkin;
 					var obsel : Obsel =  obselSkin.obsel;
 					obselSkin.x = (obsel.begin - _timeRange._ranges[i]) * timeToPositionRatio;
 				}	
@@ -112,17 +114,22 @@ package com.ithaca.timeline
 		
 		override public function  onResize( event : ResizeEvent ) : void
 		{
-			redraw();
+			updateObselPosition();
 		}
 		
 		override public function onTimerangeChange( event : TimelineEvent ) : void
 		{
 			_timeRange = event.currentTarget as TimeRange;
 			
-			if ( numChildren > 0 && event.type == TimelineEvent.TIMERANGES_SHIFT)
-				updateViewportPosition();
+			if ( numChildren > 0 )
+			{
+				if ( event.type == TimelineEvent.TIMERANGES_SHIFT)
+					updateViewportPosition();
+				else
+					updateObselPosition() ;
+			}
 			else
-				redraw() ;
+				redraw();
 		}
 		
 		public function  updateViewportPosition( event : Event = null) : void
@@ -161,24 +168,28 @@ package com.ithaca.timeline
 			switch (event.kind)
 			{
 				case CollectionEventKind.ADD :
-				{				
+				{	
+					obselsSkinsCollection.disableAutoUpdate();
 					for each ( obsel in event.items )
 					{
 						obselSkin = _timeline.styleSheet.getParameteredSkin( obsel, _traceline) ;
 						if (obselSkin)
 							obselsSkinsCollection.addItem( obselSkin);
 					}
+					obselsSkinsCollection.enableAutoUpdate();
 					redraw();
 					break;
 				}				
 				case CollectionEventKind.REMOVE :
 				{
+					obselsSkinsCollection.disableAutoUpdate();
 					for each ( obsel in event.items )
 					{					
 						obselIndex  = getObselSkinIndex( obsel );
 						if ( obselIndex >= 0)
 							obselsSkinsCollection.removeItemAt( obselIndex );
 					}
+					obselsSkinsCollection.enableAutoUpdate();
 					redraw();
 					break;
 				}
@@ -188,12 +199,14 @@ package com.ithaca.timeline
 				case CollectionEventKind.RESET :
 				{
 					obselsSkinsCollection.removeAll();
+					obselsSkinsCollection.disableAutoUpdate();
 					for each ( obsel in _obsels )
 					{
 						obselSkin = _timeline.styleSheet.getParameteredSkin( obsel, _traceline) ;
 						if (obselSkin)
 							obselsSkinsCollection.addItem( obselSkin);
 					}
+					obselsSkinsCollection.enableAutoUpdate();
 					redraw();
 					break;
 				}			

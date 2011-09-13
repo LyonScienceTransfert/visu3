@@ -18,6 +18,8 @@ package com.ithaca.timeline
 		public var timelinePreview	: Group;
 		[SkinPart(required="true")]
 		public var inputTimeRuler	: TimeRuler;
+		[SkinPart]
+		public var outputTimeRuler	: TimeRuler;
 
 		public var _timeline	    : Timeline;
 		
@@ -44,7 +46,8 @@ package com.ithaca.timeline
 			_timelineRange.addEventListener( TimelineEvent.TIMERANGES_CHANGE, inputTimeRuler.onTimeRangeChange);
 			_timeline.addEventListener( ElementExistenceEvent.ELEMENT_ADD, onTracelineGroupsChange);				 
 			_timeline.addEventListener( ElementExistenceEvent.ELEMENT_REMOVE, onTracelineGroupsChange);
-			_timeline.addEventListener( TimelineEvent.LAYOUT_CHANGE, onTimelineLayoutChange );						
+			_timeline.addEventListener( TimelineEvent.LAYOUT_CHANGE, onTimelineLayoutChange );			
+			cursor.addEventListener( TimelineEvent.ZOOM_CONTEXT_MANUAL_CHANGE, onManualChange );
 		}
 		public function get timeline( ) : Timeline  { return  _timeline; }
 				
@@ -55,6 +58,20 @@ package com.ithaca.timeline
 				cursor.x 		= timelinePreview.x + _timelineRange.timeToPosition( cursorRange.begin, timelinePreview.width );
 				cursor.width 	= timelinePreview.x + _timelineRange.timeToPosition( cursorRange.end, timelinePreview.width ) - cursor.x ;
 			}
+		}
+		
+		public function set cursorEditable( value : Boolean ) : void
+		{
+			if (value)
+				cursor.setCurrentState('editable');
+			else
+				cursor.setCurrentState('fixed');
+		}
+		
+		protected  function onManualChange(  e: Event = null ) : void
+		{
+			if ( timeline.contextFollowCursor && timeline.getStyle('cursorMode') == 'auto' )
+				timeline.contextFollowCursor = false;
 		}
 		
 		public function updateValuesFromSkinPosition( e: Event = null ) : void
@@ -116,6 +133,16 @@ package com.ithaca.timeline
 		private function onTimelineTimesChange( e : TimelineEvent ) : void
 		{			
 			_timelineRange = e.currentTarget as TimeRange;
+			if ( _timeline.isRelativeTimeMode )
+			{
+				outputTimeRuler.timeOffset = inputTimeRuler.timeOffset = _timelineRange._ranges[0];				
+				outputTimeRuler.useLocaleTime = inputTimeRuler.useLocaleTime = false;
+			}			
+			else
+			{
+				outputTimeRuler.timeOffset = inputTimeRuler.timeOffset = 0;				
+				outputTimeRuler.useLocaleTime = inputTimeRuler.useLocaleTime = true;
+			}
 			
 			var begin : Number;
 			var duration : Number;
@@ -143,15 +170,19 @@ package com.ithaca.timeline
 			updateSkinPositionFromValues();			
 		}
 		
-		public function shiftContext( deltaTime : Number ) : void
+		public function shiftContext( deltaTime : Number ) : Number 
 		{				
 			var delta: Number = 0;
+			
 			if (deltaTime > 0 )
 				delta	=	Math.min(deltaTime, _timelineRange.end - cursorRange.end);
 			else
-				delta	=	Math.max(deltaTime, _timelineRange.begin- cursorRange.begin);
-			cursorRange.shiftLimits( delta );
-			updateSkinPositionFromValues();			
+				delta	=	Math.max(deltaTime, _timelineRange.begin - cursorRange.begin);
+				
+			if ( cursor && _timeline && timelinePreview && !cursorRange.isEmpty())								
+				cursor.x 	= timelinePreview.x + _timelineRange.timeToPosition( cursorRange.begin + delta, timelinePreview.width );			
+			
+			return delta;
 		}
 	}
 }

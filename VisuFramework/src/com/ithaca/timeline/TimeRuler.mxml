@@ -2,7 +2,9 @@
 <s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
                xmlns:s="library://ns.adobe.com/flex/spark" 
                xmlns:mx="library://ns.adobe.com/flex/halo"
-			   creationComplete="creationCompleteHandler()">
+			   xmlns:tl="com.ithaca.timeline.*"
+			   creationComplete="creationCompleteHandler()"
+			   mouseMove="{onToolTipShow(event)}" mouseOut="{tt.visible=false}">
 			   	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -23,16 +25,25 @@
 	
 	<fx:Script>	<![CDATA[
 		import com.ithaca.timeline.events.TimelineEvent;
+		import flash.events.MouseEvent;
 		
 		import mx.events.ResizeEvent;
 		import mx.formatters.DateFormatter;
-		
+		import com.ithaca.timeline.Timeline;
+		import mx.managers.ToolTipManager;
+		import mx.controls.ToolTip;
+		import mx.events.ToolTipEvent;
 		import spark.components.Label;
+		
+		private var myToolTip:ToolTip;
 	
 		private const LABEL_SIZE : Number = 200;
 		
 		public var timeRange : TimeRange;
 		public var dateFormater : DateFormatter = new DateFormatter();
+		
+		public	var timeOffset  	: Number = 0;
+		public	var useLocaleTime   : Boolean = true;
 		
 		[Bindable]
 		public var startPosition		: Number 	= 0;
@@ -44,11 +55,12 @@
 		public var minMarksGap	 		: Number = 4;;
 		public var maxMarksGap	 		: Number = 20;
 		public var minorMarkHeight		: Number = 4;
-		public var majorMarkHeight		: Number = 8;
-		public var limitMarkHeight		: Number = 12;
+		public var majorMarkHeight		: Number = 7;
+		public var limitMarkHeight		: Number = 10;
 		public var validIntervals 		: Array = [1, 10, 100, 1000, 10000, 	60000, 300000, 600000, 3600000 ];
 		public var majorIntervals 		: Array = [5, 50, 500, 5000, 60000, 300000, 1200000, 3600000, 18000000 ];
 		public var labelsIntervals 		: Array = [5, 50, 500, 5000, 60000, 300000, 1200000, 3600000, 18000000 ];
+		[Bindable]
 		public var labelsOnTop			: Boolean = false;
 		[Bindable]
 		public var backgroundColor 		: Number = 0xF5F5F5;
@@ -57,7 +69,7 @@
 		{				
 			dateFormater.formatString = "JJ:NN:SS" ;
 			ruler.addChild(new Shape);
-			
+			  ToolTipManager.showDelay = 0;
 			ruler.height = limitMarkHeight;
 			if ( labelsOnTop)
 				{
@@ -66,6 +78,8 @@
 				}
 			else
 				timeLabels.y = limitMarkHeight + 3;
+				
+			
 		}
 		
 		private function getBestMarkerInterval( duration : Number, nb : Number ) : Object
@@ -160,21 +174,25 @@
 		private function addLabel( time : Number , position : Number, y : Number = 0) : Label
 		{			
 			var label : Label = new Label();
-			var date  : Date  = new Date( time );
+			var date  : Date  = new Date( time - timeOffset );
 			
-			label.text 	= dateFormater.format( date );
+			if (useLocaleTime )
+				label.text 	= dateFormater.format( date );
+			else
+				label.text 	= dateFormater.format( date.toUTCString() );
 			label.x 	= position - LABEL_SIZE / 2;
 			label.y 	= y;
 			label.width = LABEL_SIZE ;
+			label.height = 12;
 			label.setStyle('textAlign', 'center');
 			label.setStyle('fontSize', '10');		
-			timeLabels.addElement( label );			
+			timeLabels.addElement( label );						
 			
 			return label;
 		}
-		
+
 		public function redraw(  event : ResizeEvent=null ) : void
-		{
+		{			
 			if ( timeRange  && timeRange.duration >0)
 			{
 				if ( timeLabels.numElements > 0)
@@ -199,17 +217,44 @@
 		public function onClick( event : MouseEvent ):void
 		{		
 			var tlEvent : TimelineEvent = new TimelineEvent( TimelineEvent.TIMERULER_CLICK, true);
-			trace(event.localX - startPosition);
-			tlEvent.value = timeRange.positionToTime(event.localX - startPosition, rulerWidth );
+			var xPos:Number = this.globalToLocal(new Point(event.stageX, event.stageY)).x;
+			tlEvent.value = timeRange.positionToTime(xPos - startPosition, rulerWidth );
 			dispatchEvent( tlEvent );
+		}
+		 
+		protected function onToolTipShow( event : MouseEvent ) : void
+		{	
+			var dateFormatter : DateFormatter = new DateFormatter();
+			dateFormatter.formatString = "JJ:NN:SS";
+			
+			var point : Point = TimeRulerContainer.globalToLocal(new Point(event.stageX, event.stageY));
+			
+			if ( point.x >= startPosition && point.x <= startPosition + rulerWidth )
+			{
+				tt.visible = true;
+				tt.x =  point.x - tt.width / 2 -1 ;
+				if ( labelsOnTop )
+					tt.y = 0;	
+				else
+					tt.y = - tt.height -8;	
+					
+				var date  : Date  = new Date(  timeRange.positionToTime(point.x - startPosition, rulerWidth ) - timeOffset );
+
+				if (useLocaleTime )
+					tt.text 	= dateFormater.format( date );
+				else
+					tt.text 	= dateFormater.format( date.toUTCString() );			
+			}
+			else
+				tt.visible = false;
 		}
 		
 		]]> 
 	</fx:Script>
 			 
-	<s:BorderContainer id="TimeRulerContainer"  backgroundColor="{backgroundColor}" width="100%" minHeight="10" borderVisible="false" horizontalCenter="true" click="onClick( event )">	
+	<s:BorderContainer id="TimeRulerContainer" backgroundColor="{backgroundColor}" width="100%" minHeight="10" borderAlpha="0"  horizontalCenter="true" click="onClick( event )">	
 			<s:SpriteVisualElement  id="ruler" width="100%"  />
-			<s:Group id="timeLabels" />									
+			<s:Group id="timeLabels" clipAndEnableScrolling="true" />				
 	</s:BorderContainer>
-	
+	<tl:TimeToolTip id="tt"  visible="false" borderColor="0x000000" showBottomArrow="true" showTopArrow="false" mouseMove="{onToolTipShow(event)}"/>
 </s:SkinnableContainer>

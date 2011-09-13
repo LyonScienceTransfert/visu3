@@ -29,8 +29,10 @@
 				hostComponent.traceline._timeline.zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, updateWidth);
 				hostComponent.traceline.addEventListener(Event.RESIZE, updateWidth);
 				updateWidth( null );
-				var fillColors : Array = getStyle( "backgroundColors" ) as Array;	
-				durative.backgroundFill =  new SolidColor( fillColors[ bgColorIndex++ % fillColors.length ]) ;
+					
+				toolTip = "";
+				durative.backgroundFill =  new SolidColor( 0xF0F9FF ) ;
+				
 				hostComponent.percentHeight = 100;		
 				hostComponent.bottom = hostComponent.traceline.getStyle("rendererGap");
 			}
@@ -48,9 +50,7 @@
 			
 		]]>        
     </fx:Script>
-	<s:states>
-		<s:State name="normal" />		
-	</s:states>
+		
 	<s:BorderContainer id="durative" minWidth="1" borderVisible="false" height="100%" />
 
 </s:Skin>
