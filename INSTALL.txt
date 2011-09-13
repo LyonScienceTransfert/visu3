@@ -31,7 +31,7 @@
 		compiled the modules one by one(the list off all projects : ant -p)
 	ant build-framework
 	ant build-visuclient-swf
-		if you has message "Erreur: Probl?me lors de la recherche du fichier externe : ../../.git/refs/remotes/origin/master",
+		if you has message "Erreur: Probléme lors de la recherche du fichier externe : ../../.git/refs/remotes/origin/master",
 		have to create fichier master in folder .git/refs/remotes/origin/
 	ant build-bilan-module 
 	ant build-home-module
@@ -41,8 +41,8 @@
 	ant build-user-module
 	ant html-wrapper
 	ant build-test-page
-	ant  deploy-client 
-	build-and-deploy-server
+	ant deploy-client 
+	ant build-and-deploy-server
 
 * Run server red5
 
