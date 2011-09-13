@@ -48,8 +48,9 @@ timeline|TraceLineGroupTitle.comments
 
 timeline|TraceLine
 {
-	rendererHeight : 22;
-	rendererGap	   : 1;
+	borderVisible  : false;
+	rendererHeight : 25;
+	rendererGap	   : 0;
 	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");
 }
 
@@ -65,9 +66,9 @@ timeline|TraceLineTitle
 
 timeline|TraceLine.comments
 {
-	rendererHeight : 30;
-	rendererGap	   : 2;
-	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");
+	rendererHeight : 45;
+	rendererGap	   : 0;
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineVisu2Skin");	
 }
 
 timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
@@ -123,12 +124,6 @@ skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
 icon : Embed("images/motCleVisu2_20x20.png");
 }
 
-timeline|ObselSkin.Activity
-{
-skin-class: ClassReference("com.ithaca.timeline.skins.DurativeSkin");	
-backgroundColors : #F4FA29, #3355F7, #D134E2, #1CFD81 ;
-}
-
 timeline|ObselSkin.Comment
 {
 skin-class: ClassReference("com.ithaca.timeline.skins.CommentSkin");	
@@ -137,22 +132,15 @@ icon :Embed("images/consigneVisu2_20x20.png");
 
 timeline|ObselSkin.Activity
 {
-skin-class: ClassReference("com.ithaca.timeline.skins.DurativeSkin");	
+skin-class: ClassReference("com.ithaca.timeline.skins.ActivitySkin");	
 backgroundColors : #F4FA29, #3355F7, #D134E2, #1CFD81 ;
-}
-
-timeline|ObselSkin.Comment
-{
-skin-class: ClassReference("com.ithaca.timeline.skins.CommentSkin");	
-icon :Embed("images/CommentVer4.png");
 }
 
 timeline|ObselSkin.Marker
 {
-skin-class	: ClassReference("com.ithaca.timeline.skins.IconTextSkin");	
-icon 		:Embed("images/marqueurBlanc-bas-20px.png");
-textProp	: 'text';
-backgroundColor : #FFFFB3;
+skin-class	: ClassReference("com.ithaca.timeline.skins.MarkerSkin");	
+icon 		: Embed("images/marqueurBlanc-bas-20px.png");
+tooltipProp : 'text';	
 }
 
 
