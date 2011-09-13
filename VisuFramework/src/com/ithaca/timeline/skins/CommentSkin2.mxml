@@ -17,7 +17,6 @@
 		<fx:Script>
         <![CDATA[
 
-			import com.ithaca.traces.Obsel;
 			import com.ithaca.timeline.CursorIcons;
 			import com.ithaca.timeline.ObselSkin;
 			import com.ithaca.timeline.Stylesheet;
@@ -30,8 +29,6 @@
 			import mx.managers.PopUpManager;
 			import spark.components.BorderContainer;
 			import spark.components.Group;
-			import mx.events.PropertyChangeEvent;
-			import mx.events.PropertyChangeEventKind;
 
 			[Bindable]
 			private 	var fxgt : _FxGettext;
@@ -54,7 +51,6 @@
 				toolTip = commentLabel.text;
 				UpdateResizeGripHeight();
 				
-				hostComponent.obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
 			//	if ( hostComponent.editable )				
 				{
 					currentState = 'editable';				
@@ -124,8 +120,7 @@
 				{
 					var currentComment:ObselSkin = (commentsGroup.getElementAt(i) as ObselSkin );
 					var nbCommentsOver:int = GetNbCommentsOver ( currentComment.x, currentComment.width, i );
-					currentComment.rightGrip.y = currentComment.leftGrip.y = cursor.y - 8 - 4 * nbCommentsOver;
-					currentComment.rightGrip.height = currentComment.leftGrip.height = (cursor.y +cursor.height) - currentComment.leftGrip.y;
+					currentComment.y = commentsGroup.y - 8 * nbCommentsOver;
 				}
 			}
 			
@@ -147,11 +142,9 @@
 
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE,zcDragging);
 				stage.removeEventListener(MouseEvent.MOUSE_UP, zcStopDrag);
-			
-				var begin 	: Number = hostComponent.traceline._timeline.zoomContext.cursorRange.positionToTime( hostComponent.x, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
-				var end 	: Number = hostComponent.traceline._timeline.zoomContext.cursorRange.positionToTime( hostComponent.x + cursor.width, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
-				hostComponent.obsel.end    = end;
-				hostComponent.obsel.begin  = begin ;
+				
+				hostComponent.obsel.begin  = hostComponent.traceline._timeline.zoomContext.cursorRange.positionToTime( hostComponent.x, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
+				hostComponent.obsel.end    = hostComponent.traceline._timeline.zoomContext.cursorRange.positionToTime( hostComponent.x + cursor.width, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
 				UpdateResizeGripHeight();
 			}	
 			
@@ -170,12 +163,11 @@
 			private function onRemoveEditDialog(event:Event):void
 			{
 				if (event.currentTarget.confirm)
-				{						
-					hostComponent.obsel.props[ 'text' ] = event.currentTarget.commentTextInput.text;
-					var propChange : PropertyChangeEvent= new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
-					propChange.property = "props";
-					hostComponent.obsel.dispatchEvent( propChange );
-					commentLabel.text = toolTip = event.currentTarget.commentTextInput.text;
+				{
+					//TODO : il faut ecrire dans hostComponent.obsel.prop .... et pas dans le skin
+					commentLabel.text = event.currentTarget.commentTextInput.text;
+					
+					toolTip = event.currentTarget.commentTextInput.text;
 				}
 				this.enabled = true;
 			}
@@ -186,15 +178,6 @@
 				UpdateResizeGripHeight();
 			}
 			
-			protected function onObselChange( event : PropertyChangeEvent ) : void
-			{				
-				var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
-				hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
-				rightGrip.x     = width 	= y - hostComponent.x ;
-				
-				commentLabel.text = toolTip =  hostComponent.obsel.props[ 'text' ];
-			}
-			
         ]]>
     </fx:Script>
 	
@@ -203,27 +186,10 @@
 		<s:State name="editable" />
 	</s:states>
 
-	<s:Group id="leftGrip"	x="{-(gripRadius/2+2)}" y="{-8}"  mouseDown.editable="zcStartDrag(event);" mouseOver.editable="CursorIcons.SetResizeCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)">
-		<s:Rect  height="{gripRadius}" width="{gripRadius}" radiusX="{gripRadius}" radiusY="{gripRadius}" x="1">  
-			<s:stroke> <s:SolidColorStroke color="{gripColor}" weight="2"/> </s:stroke>
-		    <s:fill > <s:SolidColor alpha=".1" color="{gripColor}" /> </s:fill>
-         </s:Rect>
-		 <s:Rect height="100%" width="2" y="{gripRadius}" x="{gripRadius/2}" >  
-          <s:fill> <s:SolidColor color="{gripColor}" /> </s:fill>
-         </s:Rect>
-	</s:Group>
+	<mx:Image id="leftGrip"  x="{-leftGrip.width}"	y="{cursor.y}"	source="@Embed(source='../images/curseurLeftGrip.png')" 	mouseDown.editable="zcStartDrag(event);" mouseOver.editable="CursorIcons.SetResizeCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"/>
+	<mx:Image id="rightGrip" x="{width}"			y="{cursor.y}"	source="@Embed(source='../images/curseurRightGrip.png')" 	mouseDown.editable="zcStartDrag(event);" mouseOver.editable="CursorIcons.SetResizeCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"/>
 	
-	<s:Group id="rightGrip"	x="{width}" y="{-8}" mouseDown.editable="zcStartDrag(event);" mouseOver.editable="CursorIcons.SetResizeCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)">
-		<s:Rect  height="{gripRadius}" width="{gripRadius}" radiusX="{gripRadius}" radiusY="{gripRadius}" x="-2">  
-			<s:stroke> <s:SolidColorStroke color="{gripColor}" weight="2"/> </s:stroke>
-		    <s:fill > <s:SolidColor alpha=".1" color="{gripColor}" /> </s:fill>
-         </s:Rect>
-		 <s:Rect height="100%" width="2" y="{gripRadius}" >  
-			<s:fill><s:SolidColor color="{gripColor}" /> </s:fill>
-         </s:Rect>
-	</s:Group>
-			
-	<s:BorderContainer id="cursor" borderWeight="1"   backgroundColor="#FEFDD6" minWidth="1" minHeight="1" width="100%" >
+	<s:BorderContainer id="cursor" borderWeight="1" height="{leftGrip.height}"  backgroundColor="#FEFDD6" minWidth="1" minHeight="1" width="100%" >
 		<mx:Image id="icon" source="{getStyle('icon')}" height="100%" top="2" left="2" mouseDown.editable="zcStartDrag(event);" mouseOver.editable="CursorIcons.SetHandCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"/>
 		<s:Label id="commentLabel" width="100%" height="10" fontSize="10" x="{icon.width+5}"  y="3"  mouseOver.editable="CursorIcons.SetIBeamCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"    />
 	</s:BorderContainer>

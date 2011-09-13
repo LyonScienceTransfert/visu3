@@ -1,17 +1,31 @@
 package com.ithaca.timeline
 {
 	import com.ithaca.timeline.events.TimelineEvent;
+	import com.ithaca.timeline.PlayPauseButton;
 	import com.ithaca.traces.Trace;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import mx.collections.ArrayCollection;
+	import mx.controls.Label;
+	import mx.core.UIComponent;
 	import spark.components.Group;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.ElementExistenceEvent;	
+	import mx.events.ResizeEvent;
 	
+	
+	[Style(name = "cursorMode",			type = "String", inherit = "no")]
+	[Style(name = "timeMode", 			type = "String", inherit = "no")]
+	[Event(name = "timeRulerClick", 	type = "com.ithaca.timeline.events.TimelineEvent")]
+	[Event(name = "playButtonClick", 	type = "com.ithaca.timeline.events.TimelineEvent")]
+	[Event(name = "pauseButtonClick", 	type = "com.ithaca.timeline.events.TimelineEvent")]
+	[Event(name = "endAlert", 			type = "com.ithaca.timeline.events.TimelineEvent")]
+	[Event(name = "endReached", 		type = "com.ithaca.timeline.events.TimelineEvent")]
 	public class Timeline  extends LayoutNode
 	{
+		static public const  RECORD_MODE_INCREMENT : Number = 10 * 60 * 1000;
+		
 		private var _styleSheet 	: Stylesheet;
 		private var _layout			: Layout;
 		public  var range			: TimeRange;
@@ -23,12 +37,25 @@ package com.ithaca.timeline
 		public  var zoomContext		: ZoomContext;
 				
 		[SkinPart(required="true")]
-		public  var globalCursor	: Cursor;
+		public  var globalCursor	: UIComponent;
 		
 		[SkinPart(required="true")]
-		public  var contextCursor	: Cursor;
+		public  var contextCursor	: UIComponent;
 		
+		private var _currentTime				: Number = 0;
+		public  var endAlertBeforeTime			: Number = 30000;
+		public  var endAlertThreshold			: Number = 90;
+		private var endAlertEventDispatched 	: Boolean = false;
+		private var endReachedEventDispatched 	: Boolean = false;
+		
+		[Bindable]
+		public var	isPlaying : Boolean = false;
+		[Bindable]
+		public var	showPlayButton : Boolean = false;
+
+		[Bindable]
 		public var contextFollowCursor : Boolean = false;
+		public var recordMode		   : Boolean = false;
 		
 		public function Timeline( xmlLayout : XML = null )
 		{
@@ -40,7 +67,36 @@ package com.ithaca.timeline
 			
 			timelineLayout = new Layout( this ) ;				
 			_styleSheet = new Stylesheet();
-			range = new TimeRange( );					
+			range = new TimeRange( );
+			addEventListener(TimelineEvent.CURRENT_TIME_CHANGE, changeCursorValue );
+			range.addEventListener(TimelineEvent.TIMERANGES_CHANGE, function():void { endAlertEventDispatched = false; } );
+		}
+		
+		override public function styleChanged(styleProp:String):void 
+		{
+			super.styleChanged(styleProp);
+			
+			if ( zoomContext)
+				if (!styleProp || styleProp == 'cursorMode')
+				{
+					switch( getStyle('cursorMode') )
+					{
+						case 'auto' :		
+							zoomContext.cursorEditable = true;
+							contextFollowCursor = true;
+							break;
+						case 'follow' :
+							contextFollowCursor = true;
+							zoomContext.cursorEditable = false;
+							break;
+						case 'manual' :
+							zoomContext.cursorEditable = true;
+							contextFollowCursor = false;
+							break;					
+						default :
+							break;						
+					}
+				}
 		}
 		
 		override protected function partAdded(partName:String, instance:Object):void 
@@ -49,6 +105,12 @@ package com.ithaca.timeline
 			if ( partName == "zoomContext" )
 			{
 				zoomContext.timeline = this;
+				styleChanged('cursorMode');
+				zoomContext.addEventListener(ResizeEvent.RESIZE, changeCursorValue);
+				zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, changeCursorValue);
+				zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_SHIFT, changeCursorValue);	
+				zoomContext._timelineRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, changeCursorValue);
+				zoomContext._timelineRange.addEventListener(TimelineEvent.TIMERANGES_SHIFT, changeCursorValue);	
 			}
 			if ( partName == "titleGroup" )
 			{
@@ -150,38 +212,72 @@ package com.ithaca.timeline
 		
 		public function get currentTime( ) : Number
 		{
-			return zoomContext._timelineRange.positionToTime( globalCursor.x - Stylesheet.renderersSidePadding, zoomContext.width - 2 * Stylesheet.renderersSidePadding);
+			return _currentTime;		
+		}
+		
+		public function get currrentRelativeTime() : Number
+		{
+			return currentTime - range._ranges[0];
 		}
 		
 		public function set currentTime(  timeValue : Number ) : void
 		{
-			changeCursorValue( timeValue );
+			var timerangeEnd : Number = range._ranges[ range._ranges.length -1 ];
+			var timerangeBegin : Number = range._ranges[ 0 ];
+			
+			if ( timeValue > timerangeEnd )
+			{
+				dispatchEvent( new TimelineEvent( TimelineEvent.END_REACHED ) );
+				timeValue = timerangeEnd;
+			}
+			
+			if ( timeValue >= timerangeEnd - endAlertBeforeTime )
+			{
+				if ( !endAlertEventDispatched )
+				{
+					endAlertEventDispatched = true;
+					dispatchEvent( new TimelineEvent( TimelineEvent.END_ALERT ) );
+				}
+			}
+			else
+				endAlertEventDispatched = false;
+			
+			_currentTime = timeValue;		
+			dispatchEvent( new TimelineEvent( TimelineEvent.CURRENT_TIME_CHANGE, true) )
 		}
 				
-		public function changeCursorValue( timeValue : Number ) : void
-		{
-			globalCursor.visible = true;
-			globalCursor. x = Stylesheet.renderersSidePadding + zoomContext._timelineRange.timeToPosition(timeValue, zoomContext.width - 2 * Stylesheet.renderersSidePadding);
+		private function changeCursorValue( event : Event ) : void
+		{			
+			var timeValue : Number = currentTime;
 			
-			var minPosition : Number = zoomContext.cursorRange.begin + zoomContext.cursorRange.duration*0.15;
-			var maxPosition : Number = zoomContext.cursorRange.end 	 - zoomContext.cursorRange.duration*0.15;
-			
-			if ( timeValue >= zoomContext.cursorRange.begin && timeValue <= maxPosition ) 
+			if ( timeValue >= begin && timeValue <= end ) 
 			{
-				contextCursor.visible = true;				
+				globalCursor.visible = true;
+				globalCursor.x = Stylesheet.renderersSidePadding + zoomContext._timelineRange.timeToPosition(timeValue, zoomContext.width - 2 * Stylesheet.renderersSidePadding);
+			}
+			else
+				globalCursor.visible = false;			
+			
+			
+			var minPosition : Number = zoomContext.cursorRange.begin;
+			var maxPosition : Number = zoomContext.cursorRange.end 	 - zoomContext.cursorRange.duration*0.15;
+				
+			if ( contextFollowCursor && ( timeValue > maxPosition || timeValue < minPosition  )) 	
+				zoomContext.shiftContext( timeValue - zoomContext.cursorRange.begin );											
+			
+			
+			if ( timeValue >= zoomContext.cursorRange.begin && timeValue <= zoomContext.cursorRange.end +1000 ) 
+			{
+				contextCursor.visible = true;								
 				contextCursor. x = Stylesheet.renderersSidePadding + zoomContext.cursorRange.timeToPosition(timeValue, zoomContext.width - 2 * Stylesheet.renderersSidePadding);
 			}
 			else
-			{
-				if ( contextFollowCursor )
-				{
-					contextCursor.visible = true;					
-					zoomContext.shiftContext( timeValue - zoomContext.cursorRange.begin );
-					contextCursor. x = Stylesheet.renderersSidePadding
-				}
-				else
-					contextCursor.visible = false;
-			}
+				contextCursor.visible = false;
 		}			
+		
+		public function get isRelativeTimeMode( ) : Boolean
+		{
+			return getStyle('timeMode') == 'relative';
+		}
 	}
 }
