@@ -14,12 +14,14 @@
 			import com.ithaca.timeline.Layout;
 			import com.ithaca.timeline.Timeline;
 			import com.ithaca.timeline.TraceLineGroup;
+			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselMarker;
 			import com.ithaca.traces.view.ObselSessionOut;
 			import com.ithaca.traces.view.skins.ObselMarkerSkin;
 			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 			import com.ithaca.visu.controls.sessions.ActivityDetailB;
 			import com.ithaca.visu.controls.sessions.SharedElementChat;
@@ -362,7 +364,8 @@
 			{
 				var currentTimeServeur:Number = Model.getInstance().getTimeServeur();
 				var beginTime:Number =  currentTimeServeur - this.currentSession.date_start_recording.time;			
-				timeLine.changeCursorValue( timeLine.begin + beginTime );
+				//timeLine.changeCursorValue( timeLine.begin + beginTime );
+				timeLine.currentTime = timeLine.begin + beginTime ;
 			}
 
 			/**
@@ -987,6 +990,8 @@
 				var tlg :TraceLineGroup = timeLine.addTrace(traceGroup.userTrace);					
 				tlg.setStyle("bgColor", traceGroup.userColor);
 				tlg.setStyle("icon", traceGroup.userAvatar );	
+				// TODO Nom + prenomof the user
+				//var userName:String = VisuUtils.getUserLabel(traceGroup.user, true);
 				tlg.setStyle("title", traceGroup.userName );					
 			}
 					
@@ -1011,10 +1016,7 @@
 					if( traceGroup != null && !hasUserIdPresentTimeLine( userId ) && isTimeLineAddedOnStage())
 					{																	
 						this.addTraceLineOnViewTraceLineGroup(traceGroup);
-					}/* else
-					{
-						Alert.show("Hasn't time for add new traceline to the model","Bug...");
-					} */
+					}
 				}
 			}
 			
@@ -1038,6 +1040,10 @@
 				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
 				timeLine.percentWidth = 100;
 				timeLine.percentHeight = 100;
+				timeLine.contextFollowCursor = true;
+				timeLine.setStyle("timeMode","relative");
+				timeLine.setStyle("cursorMode","auto");
+				
 				panelTimeLine.addElement(timeLine);
 			}
 			
@@ -1053,13 +1059,14 @@
 					panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 				}
 			}
-					
+			
 			private function onLoadLayoutComplete(event:Event):void 
 			{
 				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 				if(this == currentModule)
 				{
 					//we init the trace object
+
 					var loader:URLLoader=event.target as URLLoader;
 					timeLine.layoutXML 		= new XML( loader.data );
 					timeLine.timelineLayout = new Layout( timeLine );
@@ -1253,7 +1260,7 @@
 		
 			protected function visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
 			{
-				/* var panelEditInfo:PanelEditInfo = new PanelEditInfo();
+				 var panelEditInfo:PanelEditInfo = new PanelEditInfo();
 				this.groupeVideo.addElement(panelEditInfo);
 				panelEditInfo.x = 25;
 				panelEditInfo.y = 25;
@@ -1261,7 +1268,7 @@
 				panelEditInfo.user = event.user;
 				panelEditInfo.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditInfoClickButtonOk);
-				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditInfoClickButtonCancel); */
+				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditInfoClickButtonCancel); 
 			}
 			
 			private function onPanelEditInfoClickButtonOk(event:PanelEditInfoEvent):void
@@ -1465,7 +1472,6 @@
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_VIEW_TRACELINE}"  method="onUpdateViewTimeLine"/>
 		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
-		
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
 		<s:VGroup width="33%" height="100%" minWidth="200">
