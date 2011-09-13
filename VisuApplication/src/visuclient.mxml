@@ -6,10 +6,11 @@
 	xmlns:core="com.ithaca.visu.core.*"
 	xmlns:map = "maps.*"
 	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:vo="com.ithaca.visu.model.vo.*"
+
 	minWidth="1010" minHeight="500"
 	preinitialize="visuapplication1_preinitializeHandler(event)"
 	creationComplete="visuapplication1_creationCompleteHandler(event)"
-	updateComplete="visuapplication1_updateCompleteHandler(event)" xmlns:vo="com.ithaca.visu.model.vo.*"
 	>
 	<fx:Declarations>
 		<map:MainMap id="mainMap"/>
@@ -23,6 +24,8 @@
 		<mate:Listener type="{RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN}"  method="goRetroFromBilan"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
+		<mate:Listener type="{ObselEvent.DELETE_OBSEL}"  method="onDeleteObsel" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.EDIT_OBSEL}"  method="onEditObsel" useWeakReference="true"/>
 	
 		<vo:ProfileDescriptionVO />
 		
@@ -305,19 +308,22 @@
 			/**
 			 * add marker "UpdateMarker" on the serveur
 			 */
-			private function onUpdateCompleteMarker(event:FlexEvent):void
+			private function onEditObsel(event:ObselEvent):void
 			{
-				var richText:RichText = event.currentTarget as RichText;
-				var textObsel:String = richText.text;
+/* 				var richText:RichText = event.currentTarget as RichText;
+				var textObsel:String = richText.text; */
 				// update BD only if new text was edded
-				if(currentTextEdit != textObsel)
-				{
+/* 				if(currentTextEdit != textObsel)
+				{ */
+				var obsel:Obsel = event.obsel;
+				
 					var sessionId:int = 0;
 					var session:Session = Model.getInstance().getCurrentSession();
 					if(session != null)
 					{
 						sessionId = session.id_session;
 					}else return;
+					
 					var listUsersId:Array;
 					if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
 					{
@@ -328,22 +334,23 @@
 					{
 						listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
 					}
+					
 					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
-					var message:String = richText.text;
+					var message:String = obsel.props[TraceModel.TEXT];
 					// check if message empty
 					if(UtilFunction.isEmptyMessage(message))
 					{
 						message = fxgt.gettext("(vide)");
 					}
-					if(this.currentObselEdit != null)
-					{
+/* 					if(this.currentObselEdit != null)
+					{ */
 						sessionSharedEvent.info = message;
-						sessionSharedEvent.timeStamp = this.currentObselEdit.props[TraceModel.TIMESTAMP];
+						sessionSharedEvent.timeStamp = obsel.props[TraceModel.TIMESTAMP];
 						sessionSharedEvent.listUsers = listUsersId;
 						sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
 						dispatchEvent(sessionSharedEvent);			
-					}
-				}
+					//}
+			//	}
 			}			
 			
 			/**
@@ -362,9 +369,11 @@
 				{
 					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
 				}
+				// obsel to delete
+				var obsel:Obsel = event.obsel;
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
 				sessionSharedEvent.info = "";
-				sessionSharedEvent.timeStamp = this.currentObselEdit.props[TraceModel.TIMESTAMP];
+				sessionSharedEvent.timeStamp = obsel.props[TraceModel.TIMESTAMP];
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.action = ActionObselEnum.DELETE_OBSEL;
 				dispatchEvent(sessionSharedEvent);				
@@ -373,20 +382,20 @@
 			/**
 			 *  exclus listener for updating marker when user will change the size of the application
 			 */
-			protected function visuapplication1_resizeHandler(event:ResizeEvent):void
+			/* protected function visuapplication1_resizeHandler(event:ResizeEvent):void
 			{
 				markerEdited.removeEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker);
 				removeEventListener(ResizeEvent.RESIZE , visuapplication1_resizeHandler);
-			}
+			} */
 			
 			/**
 			 *  add listener for updating marker
 			 */
-			protected function visuapplication1_updateCompleteHandler(event:FlexEvent):void
+			/* protected function visuapplication1_updateCompleteHandler(event:FlexEvent):void
 			{
 				markerEdited.addEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker);
 				addEventListener(ResizeEvent.RESIZE , visuapplication1_resizeHandler);
-			}
+			} */
 
 		]]>
 	</fx:Script>
