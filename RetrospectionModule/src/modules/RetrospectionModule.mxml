@@ -24,6 +24,7 @@
 			import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
 			import com.ithaca.timeline.Layout;
 			import com.ithaca.timeline.TraceLineGroup;
+			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.Trace;
 			import com.ithaca.traces.model.TraceModel;
@@ -225,8 +226,8 @@
 				{
 					eventAddCommentObsel.typeAction = TraceModel.RETRO_DOUBLE_CLICK_TRACE_LINE_START_CREATE_COMMENT_EVENT;
 					var localX:Number = event.clickLocalX + deltaXObselTime;
-					var timeStartSession:Number = this.timeline.begin;
-					var duration:Number = this.timeline.duration;
+					var timeStartSession:Number = this.timeLine.begin;
+					var duration:Number = this.timeLine.duration;
 					var wightGroup:Number = commentTimeLine.traceTitleLoggedUser.width;
 					var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
 					var begin :Number = delta + timeStartSession;
@@ -362,7 +363,7 @@
 			{
 				// set current session duration 
 				this.currentSessionDuration = durationSession;
-				timeline.range.addTime(startSession, startSession + durationSession);
+				timeLine.range.addTime(startSession, startSession + durationSession);
 			}
 
 			// creation the resume activity
@@ -375,7 +376,7 @@
 					var durationSession:Number = event.durationSessionRetro;
 					var startRecordingSession:Number = event.dateStartRecording.time;
 					
-					timeline.range.addTime(startRecordingSession, startRecordingSession + durationSession);
+					timeLine.range.addTime(startRecordingSession, startRecordingSession + durationSession);
 
 					// set timeStartSession in VisuVisioAdvaned
 					this.visio.startTimeSession = startRecordingSession;
@@ -407,14 +408,14 @@
 			{
 				//we init the trace object
 				var loader:URLLoader=event.target as URLLoader;
-				timeline.layoutXML 		= new XML( loader.data );
-				timeline.timelineLayout = new Layout( timeline ); 	
+				timeLine.layoutXML 		= new XML( loader.data );
+				timeLine.timelineLayout = new Layout( timeLine ); 	
 				
 				this.setObsels();
 				
 				var traceComment:Trace = Model.getInstance().getTraceComment();				
 				var tlgComment : TraceLineGroup;
-				tlgComment = timeline.addTrace( traceComment, 0, "comments");
+				tlgComment = timeLine.addTrace( traceComment, 0, "comments");
 				tlgComment .setStyle( "title", fxgt.gettext("Comments") );
 
 				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
@@ -429,7 +430,7 @@
 						
 						if(traceGroup.userId == Model.getInstance().getLoggedUser().id_user)
 						{			
-							tlg = timeline.addTrace(traceGroup.userTrace,1);
+							tlg = timeLine.addTrace(traceGroup.userTrace,1);
 							var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
 							// set dataProvider with collection the StreamObsel
 							this.visio.dataProvider = Model.getInstance().getListStreamObsel();
@@ -439,7 +440,7 @@
 						}
 						else
 						{
-							tlg = timeline.addTrace(traceGroup.userTrace);
+							tlg = timeLine.addTrace(traceGroup.userTrace);
 						}
 						
 						tlg.setStyle("title", traceGroup.userName );				
@@ -886,11 +887,11 @@
 			{
 				if(delta != 0)
 				{
-					value = delta + this.timeline.begin;
+					value = delta + this.timeLine.begin;
 				}else
 				{
 					delta = value;
-					value = value +  this.timeline.begin;
+					value = value +  this.timeLine.begin;
 				}
 				trace("prePlayVideoFlux value= "+value.toString());
 				trace("prePlayVideoFlux delta= "+delta.toString());
@@ -1035,7 +1036,8 @@
 			{
 				var beginTime:Number = event.beginTime;
 				
-				timeline.changeCursorValue( timeline.begin + beginTime );
+			//	timeline.changeCursorValue( timeline.begin + beginTime );
+				timeLine.currentTime = timeLine.begin + beginTime ;
 				
 				var currentTime:String = updateLabelTimer(beginTime);
 				if( this.currentRetroDocumentSegmentPlaying != null)
@@ -1044,7 +1046,7 @@
 				}
 				
 				// set current time for drag/drop video to retroDocument
-				this.currentTimeSessionMilliseconds = beginTime + this.timeline.begin;
+				this.currentTimeSessionMilliseconds = beginTime + this.timeLine.begin;
 				
 				this.documentarisation.currentTime = beginTime;
 			}
@@ -1164,6 +1166,43 @@
 				var ev:Event = new Event("readyForUse");
 				this.dispatchEvent(ev);
 			}
+
+			protected function timeLine_timeRulerClickHandler(event:TimelineEvent):void
+			{
+				// stop play RetroDocumentSegment if playing
+				this.clickOnTimeLine = true;
+				// stop play video segment
+				endVideoSegment();
+				// update button play/pause
+		//		sessionTimeLine.setLabelButtonPlayPause(false);
+/* 				var target:Object = event.target as Object;
+				var deltaXObselTime:Number = 0;
+				
+				var localX:Number = event.stageX - event.currentTarget.x;
+				
+				var timeStartSession:Number = this.testTimeLine.startTimeSession;
+				var duration:Number = this.testTimeLine.durationSession;
+				var groupTimeLine:Group = event.currentTarget as Group;
+				var wightGroup:Number = groupTimeLine.width;
+				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
+				// add value start session slider
+				delta = delta + startTimeSessionSlider.value - this.currentSessionDateRecording.time; */
+				// pre play video flux
+				prePlayVideoFlux(event.value);	
+			}
+
+
+			protected function timeLine_playButtonClickHandler(event:TimelineEvent):void
+			{
+				onCheckSeekStream()
+			}
+
+
+			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent):void
+			{
+				onCheckSeekStream()
+			}
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1222,7 +1261,13 @@
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
 					</s:Group>
-					<timeline:Timeline id="timeline" width="100%"  height="100%" />
+					<timeline:Timeline id="timeLine" width="100%"  height="100%" 
+					    playButtonClick="timeLine_playButtonClickHandler(event)"
+						pauseButtonClick="timeLine_pauseButtonClickHandler(event)"
+						timeRulerClick="timeLine_timeRulerClickHandler(event)"
+						timeMode="relative" 
+						contextFollowCursor="false"
+						showPlayButton="true"/>
 				</mx:VDividedBox>
 			</components:PanelButton>
 <!-- DOCUMENTARISATION -->		
