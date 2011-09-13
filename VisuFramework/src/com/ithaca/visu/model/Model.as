@@ -867,58 +867,43 @@ package  com.ithaca.visu.model
 			}	
 		}
 		
-		
 		/**
 		 * update new text and tooltips the obsel marker
 		 */
 		public function updateTextObselMarker(userId:int , timeStampUpdatedObsel:Number , text:String, typeObsel:String):void
 		{
-			var traceLine:Object = this.getTraceLineByUserId(userId);
-			var listTitleObsels:ArrayCollection = traceLine.listTitleObsels;
-			var obselView:ObselMarker = updateTextObsel(listTitleObsels, timeStampUpdatedObsel);
-			if(obselView != null && typeObsel == TraceModel.UPDATE_MARKER)
+			var indexDeletedObsel : Number = -1;
+			// traceLineGroupe 
+			var traceLineGroup:Object = getTraceGroupByUserId(userId);
+			var traceUser:Trace= traceLineGroup.userTrace as Trace;
+			var listObsel:ArrayCollection  = traceUser.obsels;
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
 			{
-				var newObselView:ObselMarker = obselView.cloneMe();
-				newObselView.text = text;
-				newObselView.toolTip = text;
-				var order:int = newObselView.order;
-				listTitleObsels.addItemAt(newObselView, order);
-			}
-			var traceLineElementList:ArrayList = traceLine.listElementTraceLine;
-			var traceLineElement:Object = traceLineElementList.getItemAt(4);
-			var listMarkerObsel:ArrayCollection = traceLineElement.listObsel;
-			var obselViewElement:ObselMarker = updateTextObsel(listMarkerObsel, timeStampUpdatedObsel);
-			if(obselViewElement != null && typeObsel == TraceModel.UPDATE_MARKER)
-			{
-				var newObselView:ObselMarker = obselViewElement.cloneMe();
-				newObselView.text = text;
-				newObselView.toolTip = text;
-				var order:int = newObselView.order;
-				listMarkerObsel.addItemAt(newObselView,order);
-			}
-			
-			function updateTextObsel(listObsels:ArrayCollection, timeStampUpdatedObsel:Number):ObselMarker
-			{
-				var nbrObsel:int = listObsels.length;
-				for(var nObsel:int = 0 ; nObsel < nbrObsel ; nObsel++)
+				var obsel:Obsel = listObsel.getItemAt(nObsel) as Obsel;
+				var timeStamp:Number = new Number(obsel.props[TraceModel.TIMESTAMP]);
+				// same timeStamp
+				if(timeStamp == timeStampUpdatedObsel)
 				{
-					var obselView = listObsels.getItemAt(nObsel);
-					if(obselView is ObselMarker){
-						var obsel:Obsel = obselView.parentObsel;
-						if(obsel != null && (obsel.type == TraceModel.SET_MARKER || obsel.type == TraceModel.RECEIVE_MARKER ))
-						{
-							var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
-							if(timeStamp == timeStampUpdatedObsel)
-							{
-								listObsels.removeItemAt(nObsel);
-								obselView.order = nObsel;
-								return obselView;
-							}
-						}
-					}
+					switch (typeObsel)
+					{
+						case TraceModel.UPDATE_MARKER : 
+							obsel.props[TraceModel.TEXT] == text;
+							var type:String = obsel.type; 
+							obsel.type = "";
+							obsel.type = type;
+							break;
+						case TraceModel.DELETE_MARKER : 
+							indexDeletedObsel = nObsel;
+							break;
+					}				
 				}
-				return null;
-			}	
+			}
+			// deleting obsel
+			if(indexDeletedObsel > -1)
+			{
+				listObsel.removeItemAt(indexDeletedObsel);
+			}
 		}
 		
 		/**
@@ -1803,7 +1788,10 @@ package  com.ithaca.visu.model
 		
 		public function updateUserStatus(userId:int, userStatus:int) : void {
 			var user:User = this.getUserPlateformeByUserId(userId);
-			updateUserStatusByUser(user,userStatus);
+			if(user)
+			{
+				updateUserStatusByUser(user,userStatus);
+			}
 		}
 
 		
@@ -2142,7 +2130,24 @@ package  com.ithaca.visu.model
 			}
 			return null;
 		}
-		
+		/**
+		 * check if can edit obsel
+		 */
+		public function canEditObsel(value:Obsel):Boolean
+		{
+			var result:Boolean = false;
+			if(getCurrentTutoratModule())
+			{
+				// can edit obsel only in Tutorat Module
+				var senderUserId:int = int(value.props[TraceModel.SENDER]);
+				if( senderUserId == this._loggedUser.id_user)
+				{
+					result = true;
+				}
+			}
+			return result;
+		}
+
 		/**
 		 * update client id of the user
 		 */
