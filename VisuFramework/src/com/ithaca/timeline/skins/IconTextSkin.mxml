@@ -38,9 +38,7 @@
 			}
 		]]>        
     </fx:Script>
-	<s:states>
-		<s:State name="normal" />		
-	</s:states>
+
 	<s:BorderContainer id="container" cornerRadius="4"  height="25" >
 		<s:layout><s:HorizontalLayout gap="2" /> </s:layout>
 		<mx:Image id="obselIcon" />

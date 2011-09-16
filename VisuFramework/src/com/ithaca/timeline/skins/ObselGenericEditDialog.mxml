@@ -12,22 +12,18 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.timeline.ObselSkin;
 			import com.ithaca.timeline.SelectorRegexp;
-			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.traces.Obsel;
-			import com.ithaca.visu.events.ObselEvent;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.controls.Alert;
+			import com.ithaca.timeline.ObselSkin;
 			import mx.controls.Label;
 			import mx.controls.TextInput;
 			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
-			
+			import com.ithaca.timeline.TraceLine;
 			import spark.components.HGroup;
+			
+			import gnu.as3.gettext._FxGettext;
+			import gnu.as3.gettext.FxGettext;
 			[Bindable]
 			private var fxgt:_FxGettext;		
 						
@@ -85,7 +81,6 @@
 			{
 				PopUpManager.removePopUp(this);
 			}
-						
 		]]>
 	</fx:Script>
 	<s:VGroup horizontalAlign="right">
@@ -93,8 +88,6 @@
 			<s:VGroup id="labelPropGroup"/>
 			<s:VGroup id="tiPropGroup"/>
 		</s:HGroup>
-		<s:HGroup  paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">  
-			<s:Button label='{fxgt.gettext("Ok")}' click="onValid(event)" /> 
-			<s:Button label='{fxgt.gettext("Cancel")}' click="onCancel(event)" /> </s:HGroup>
+		<s:HGroup  paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">  <s:Button label='{fxgt.gettext("Ok")}' click="onValid(event)" /> <s:Button label='{fxgt.gettext("Cancel")}' click="onCancel(event)" /> </s:HGroup>
 	</s:VGroup>
 </s:TitleWindow>

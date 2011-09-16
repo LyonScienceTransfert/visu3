@@ -32,9 +32,7 @@
 			}
 		]]>        
     </fx:Script>
-	<s:states>
-		<s:State name="normal" />		
-	</s:states>
+
 	<mx:Image id="icon" />
 
 </s:Skin>

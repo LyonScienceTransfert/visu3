@@ -15,18 +15,13 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.traces.Obsel;
-			import com.ithaca.visu.events.ObselEvent;
-			
+
 			import flash.events.KeyboardEvent;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			import gnu.as3.gettext._FxGettext;
+			import gnu.as3.gettext.FxGettext;
 
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -34,17 +29,14 @@
 			[Bindable]
 			public var commentText : String;
 
-			public var confirm : Boolean = false;	
-			public var deleting : Boolean = false;	
-			
-			public var obsel : Obsel;
+			public var confirm : Boolean = false;			
 
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				fxgt = FxGettext;
 	
 				showCloseButton = true;
-				this.title = fxgt.gettext("Votre marquer");
+				this.title = fxgt.gettext("Comment Edit");
 				commentTextInput.setFocus();
 				commentTextInput.selectAll();
 			}
@@ -75,32 +67,14 @@
 				confirm = true;
 				PopUpManager.removePopUp(this);
 			}
-			private function onDelete(event:Event):void
-			{
-				Alert.yesLabel = fxgt.gettext("Oui");
-				Alert.noLabel = fxgt.gettext("Non");
-				Alert.show(fxgt.gettext("Voulez-vous supprimer Marker ?"),
-					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteObselConfirmed); 	
-			}
-			
-			protected function deleteObselConfirmed(event:CloseEvent):void
-			{
-				if( event.detail == Alert.YES )
-				{
-					deleting = true;
-					PopUpManager.removePopUp(this);
-				}
-			}
-
 		]]>
 	</fx:Script>
 	
 	<s:VGroup bottom="5" top="5" right="5" left="5">
-		<s:TextArea id="commentTextInput" text="{commentText}" width="100%"/>		
+		<s:TextArea id="commentTextInput" text="{commentText}"/>		
 		<s:HGroup horizontalAlign="right" width="100%" >
-			<s:Button label='{fxgt.gettext("Supprimer")}' height="20"  click="onDelete(event)"/> 
-			<s:Button id="okButton" 	fontSize="10" label='{fxgt.gettext("Valider")}'  height="20"	click="onValid(event)" />
-			<s:Button id="cancelButton"	fontSize="10" label='{fxgt.gettext("Annuler")}'  height="20"	click="onCancel(event)" /> 
+			<s:Button id="okButton" 	fontSize="10" label='{fxgt.gettext("Ok")}' 		width="60" height="20"	click="onValid(event)" />
+			<s:Button id="cancelButton"	fontSize="10" label='{fxgt.gettext("Cancel")}' 	width="60" height="20"	click="onCancel(event)" /> 
 		</s:HGroup>		
 	</s:VGroup>
 </mx:TitleWindow>
