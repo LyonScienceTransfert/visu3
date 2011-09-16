@@ -1,14 +1,12 @@
 package com.ithaca.timeline
 {
 	import com.ithaca.timeline.ObselSkin;
-	import com.ithaca.timeline.TraceLineGroup;
 	import com.ithaca.timeline.skins.IconSkin;
-	import com.ithaca.traces.Obsel;
-	import com.ithaca.visu.model.Model;
-	
+	import com.ithaca.timeline.TraceLineGroup;
 	import flash.events.Event;
-	
 	import mx.events.FlexEvent;
+	
+	import com.ithaca.traces.Obsel;
 
 	public class Stylesheet
 	{
@@ -30,19 +28,11 @@ package com.ithaca.timeline
 		 		
 		public function getParameteredSkin( obsel : Obsel, traceline : TraceLine ) :  ObselSkin 
 		{ 	
-			var obselSkin : ObselSkin = new ObselSkin( obsel, traceline );	
+			var obselSkin : ObselSkin = new ObselSkin( obsel, traceline );			
 			for each ( var item : Object in obselsSkinsSelectors )
 				if ( (item.selector as ISelector).isObselMatching( obsel ) )
 				{
-					obselSkin.styleName = item.id;	
-					if(item.id == "Marker")
-					{
-						// check if can edit marker
-						if(Model.getInstance().canEditObsel(obsel))
-						{
-							obselSkin.editable = true;
-						}
-					}
+					obselSkin.styleName = item.id;			
 					break;
 				}
 				

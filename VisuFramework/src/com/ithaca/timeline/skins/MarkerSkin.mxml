@@ -13,20 +13,17 @@
 	<fx:Script>
         <![CDATA[ 
 			import com.ithaca.traces.Obsel;
-			import com.ithaca.visu.events.ObselEvent;
-			
 			import flash.filters.BlurFilter;
 			import flash.filters.ColorMatrixFilter;
 			import flash.filters.GlowFilter;
 			import flash.geom.ColorTransform;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
 			import mx.events.PropertyChangeEvent;
 			import mx.events.PropertyChangeEventKind;
-			import mx.events.ToolTipEvent;
 			import mx.managers.PopUpManager;
+			import mx.events.ToolTipEvent;
+			
+			import gnu.as3.gettext._FxGettext;
+			import gnu.as3.gettext.FxGettext;
 			[Bindable]
 			private var fxgt:_FxGettext;	
 			
@@ -41,6 +38,11 @@
 				icon.source = hostComponent.getStyle( "icon" );
 				if ( hostComponent.getStyle( "tooltipProp" ) )
 					icon.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+					
+				//if ( hostComponent.editable )
+				{
+					currentState = 'editable';				
+				}
 			}
 			
 			protected function EditComment( e:MouseEvent ):void
@@ -50,7 +52,7 @@
 				var markerEdit:CommentEditDialog = new CommentEditDialog();			
 				markerEdit.commentText = obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
 				markerEdit.title = fxgt.gettext("Comment Edit");
-				markerEdit.obsel = obsel;
+				
 				PopUpManager.addPopUp(markerEdit, this);
 				PopUpManager.centerPopUp(markerEdit);
 				markerEdit.y -= markerEdit.height;
@@ -67,21 +69,9 @@
 					propChange.property = "props";
 					obsel.dispatchEvent( propChange );
 					icon.toolTip = event.currentTarget.commentTextInput.text;
-					// dispatcher on update obsel
-					var updateObsel:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
-					updateObsel.obsel = obsel;
-					this.dispatchEvent(updateObsel);
-				}
-				if(event.currentTarget.deleting)
-				{
-					// dispatcher on delete obsel
-					var deleteObsel:ObselEvent = new ObselEvent(ObselEvent.DELETE_OBSEL);
-					deleteObsel.obsel = obsel;
-					this.dispatchEvent(deleteObsel);
 				}
 				this.enabled = true;
 			}
-			
 			
 			protected function onObselChange( event : PropertyChangeEvent ) : void
 			{

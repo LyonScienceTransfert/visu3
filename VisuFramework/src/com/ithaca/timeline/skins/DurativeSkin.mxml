@@ -48,9 +48,7 @@
 			
 		]]>        
     </fx:Script>
-	<s:states>
-		<s:State name="normal" />		
-	</s:states>
+		
 	<s:BorderContainer id="durative" minWidth="1" borderVisible="false" height="100%" />
 
 </s:Skin>
