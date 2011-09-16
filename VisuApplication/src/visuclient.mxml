@@ -24,9 +24,8 @@
 		<mate:Listener type="{RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN}"  method="goRetroFromBilan"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
 		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
-		<mate:Listener type="{ObselEvent.DELETE_OBSEL}"  method="onDeleteObsel" useWeakReference="true"/>
-		<mate:Listener type="{ObselEvent.EDIT_OBSEL}"  method="onEditObsel" useWeakReference="true"/>
-	
+		<mate:Listener type="{ObselEvent.DELETE_OBSEL}"  method="onDeleteObselMarker" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.EDIT_OBSEL}"  method="onEditObselMarker" useWeakReference="true"/>
 		<vo:ProfileDescriptionVO />
 		
 		 <mx:TraceTarget level="0" 
@@ -51,9 +50,11 @@
 			import com.ithaca.utils.EditObselMarkerTitleWindow;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+			import com.ithaca.visu.controls.timeline.TraceLineElement;
 			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;
+			import com.ithaca.visu.events.TraceLineEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
@@ -303,60 +304,51 @@
 				// set focus
 				stage.focus = editObselMarker;
 				// set listener delete obsel
-				editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObsel);
+				editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselMarker);
 			}
+			
 			/**
 			 * add marker "UpdateMarker" on the serveur
 			 */
-			private function onEditObsel(event:ObselEvent):void
+			private function onEditObselMarker(event:ObselEvent):void
 			{
-/* 				var richText:RichText = event.currentTarget as RichText;
-				var textObsel:String = richText.text; */
-				// update BD only if new text was edded
-/* 				if(currentTextEdit != textObsel)
-				{ */
 				var obsel:Obsel = event.obsel;
+				var sessionId:int = 0;
+				var listUsersId:Array;
+				var session:Session = Model.getInstance().getCurrentSession();
+				if(session != null)
+				{
+					sessionId = session.id_session;
+				}else return;
 				
-					var sessionId:int = 0;
-					var session:Session = Model.getInstance().getCurrentSession();
-					if(session != null)
-					{
-						sessionId = session.id_session;
-					}else return;
-					
-					var listUsersId:Array;
-					if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
-					{
-						// student will shared markers only with Tuter, Responsable, Admin 
-						// will shared if session paused or recording
-						listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
-					}else
-					{
-						listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
-					}
-					
-					var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
-					var message:String = obsel.props[TraceModel.TEXT];
-					// check if message empty
-					if(UtilFunction.isEmptyMessage(message))
-					{
-						message = fxgt.gettext("(vide)");
-					}
-/* 					if(this.currentObselEdit != null)
-					{ */
-						sessionSharedEvent.info = message;
-						sessionSharedEvent.timeStamp = obsel.props[TraceModel.TIMESTAMP];
-						sessionSharedEvent.listUsers = listUsersId;
-						sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
-						dispatchEvent(sessionSharedEvent);			
-					//}
-			//	}
+				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+				{
+					// student will shared markers only with Tuter, Responsable, Admin 
+					// will shared if session paused or recording
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+				}else
+				{
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+				}
+				
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
+				var message:String = obsel.props[TraceModel.TEXT];
+				// check if message empty
+				if(UtilFunction.isEmptyMessage(message))
+				{
+					message = fxgt.gettext("(vide)");
+				}
+				sessionSharedEvent.info = message;
+				sessionSharedEvent.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
+				dispatchEvent(sessionSharedEvent);
 			}			
 			
 			/**
-			 * shared info "delete obsel"
+			 * delete obsel marker
 			 */
-			protected function onDeleteObsel(event:ObselEvent):void
+			protected function onDeleteObselMarker(event:ObselEvent):void
 			{
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var listUsersId:Array;
@@ -378,24 +370,6 @@
 				sessionSharedEvent.action = ActionObselEnum.DELETE_OBSEL;
 				dispatchEvent(sessionSharedEvent);				
 			}
-			
-			/**
-			 *  exclus listener for updating marker when user will change the size of the application
-			 */
-			/* protected function visuapplication1_resizeHandler(event:ResizeEvent):void
-			{
-				markerEdited.removeEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker);
-				removeEventListener(ResizeEvent.RESIZE , visuapplication1_resizeHandler);
-			} */
-			
-			/**
-			 *  add listener for updating marker
-			 */
-			/* protected function visuapplication1_updateCompleteHandler(event:FlexEvent):void
-			{
-				markerEdited.addEventListener(FlexEvent.UPDATE_COMPLETE , onUpdateCompleteMarker);
-				addEventListener(ResizeEvent.RESIZE , visuapplication1_resizeHandler);
-			} */
 
 		]]>
 	</fx:Script>
