@@ -181,8 +181,8 @@ package com.ithaca.visu.controls.timeline
 			// set current obsel comment
 			var currentObsel:ObselComment = event.currentTarget;
 			var eventActionUserEditObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.PRE_ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT);
-			var obselView:ObselComment = Model.getInstance().getCurrentObselComment();
-			if(obselView != null)
+	//		var obselView:ObselComment = Model.getInstance().getCurrentObselComment();
+		/*	if(obselView != null)
 			{
 				var timeStamp:Number = obselView.parentObsel.props[TraceModel.TIMESTAMP];
 				if(timeStamp == 0)
@@ -193,9 +193,9 @@ package com.ithaca.visu.controls.timeline
 				}else
 				{
 					obselView.setCancelEditObsel();
-				}
-				Model.getInstance().setCurrentObselComment(null,this.traceTitleLoggedUser);
-			}
+				}*/
+	//			Model.getInstance().setCurrentObselComment(null,this.traceTitleLoggedUser);
+	//		}
 
 			var parentObsel:Obsel = null;
 			var text:String ="";
@@ -223,7 +223,7 @@ package com.ithaca.visu.controls.timeline
 					timestamp = parentObsel.props[TraceModel.TIMESTAMP];
 				}
 				
-				Model.getInstance().setCurrentObselComment(null,this.traceTitleLoggedUser);	
+//				Model.getInstance().setCurrentObselComment(null,this.traceTitleLoggedUser);	
 			}else
 				// double click on the obsel
 			{
@@ -231,7 +231,7 @@ package com.ithaca.visu.controls.timeline
 				parentObsel = event.currentTarget.parentObsel;
 				text = parentObsel.props[TraceModel.TEXT];
 				timestamp = parentObsel.props[TraceModel.TIMESTAMP];	
-				Model.getInstance().setCurrentObselComment(currentObsel,this.traceTitleLoggedUser);
+//				Model.getInstance().setCurrentObselComment(currentObsel,this.traceTitleLoggedUser);
 			}			
 			eventActionUserEditObsel.editTypeCancel = editType;
 			eventActionUserEditObsel.text = text;
