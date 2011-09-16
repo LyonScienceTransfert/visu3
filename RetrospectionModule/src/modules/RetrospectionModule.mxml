@@ -15,13 +15,9 @@
 						currentState="State1" > 
 	<fx:Script>
 		<![CDATA[ 
-			import com.ithaca.documentarisation.RetroDocumentSegment;
-			import com.ithaca.documentarisation.RetroDocumentTreeToolTip;
-			import com.ithaca.documentarisation.RetroDocumentView;
 			import com.ithaca.documentarisation.SegmentVideoAdvanced;
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
-			import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
 			import com.ithaca.timeline.Layout;
 			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.timeline.events.TimelineEvent;
@@ -29,15 +25,13 @@
 			import com.ithaca.traces.Trace;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
-			import com.ithaca.traces.view.ObselStich;
+			import com.ithaca.utils.EditCommentDialog;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.controls.timeline.TraceLineComment;
 			import com.ithaca.visu.events.InitMapEvent;
-			import com.ithaca.visu.events.MessageEvent;
 			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.PanelButtonEvent;
-			import com.ithaca.visu.events.PanelEditInfoEvent;
 			import com.ithaca.visu.events.SalonRetroEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
@@ -49,7 +43,6 @@
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.view.video.PanelEditComment;
-			import com.ithaca.visu.view.video.PanelEditInfo;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			
 			import gnu.as3.gettext.FxGettext;
@@ -57,18 +50,15 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.containers.Panel;
-			import mx.controls.Alert;
 			import mx.controls.Image;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.core.DragSource;
 			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
-			import mx.events.ListEvent;
-			import mx.events.ToolTipEvent;
 			import mx.managers.CursorManager;
 			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
 			
-			import spark.events.IndexChangeEvent;
 			import spark.events.TrackBaseEvent;
 			
 			[Bindable]
@@ -113,6 +103,7 @@
 			
 			private var selectedSessionIdWhenInit:Number = -1;
 			private var selectedRetroDocumentIdWhenInit:Number = -1;
+			
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -204,6 +195,7 @@
 				}
 				// set cursor 
 				CursorManager.removeBusyCursor();
+				
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -212,85 +204,6 @@
 				{
 //					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
 				}
-			}
-			
-			private function onAddObselComment(event:ObselEvent):void
-			{
-				//  add obsel action user
-				var eventAddCommentObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_COMMENT_TRACE_LINE);
-				var beginTime:String = (commentTimeLine.startTimeSession + this.testCursor.getBegin()).toString();
-				var deltaXObselTime:Number = 0;
-				// type of creation comment
-				eventAddCommentObsel.typeAction = TraceModel.RETRO_CLICK_BUTTON_START_CREATE_COMMENT_EVENT;
-				if(!event.clickOnButtonAdd)
-				{
-					eventAddCommentObsel.typeAction = TraceModel.RETRO_DOUBLE_CLICK_TRACE_LINE_START_CREATE_COMMENT_EVENT;
-					var localX:Number = event.clickLocalX + deltaXObselTime;
-					var timeStartSession:Number = this.timeLine.begin;
-					var duration:Number = this.timeLine.duration;
-					var wightGroup:Number = commentTimeLine.traceTitleLoggedUser.width;
-					var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
-					var begin :Number = delta + timeStartSession;
-					beginTime = begin.toString();
-				}				
-				var obsel:Obsel = new Obsel(TraceModel.SET_TEXT_COMMENT, 0, null, Number(beginTime));
-				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = Model.getInstance().getLoggedUser().id_user;
-				obsel.props[TraceModel.TIMESTAMP] = 0;
-				obsel.props[TraceModel.TEXT] = "....";
-				Model.getInstance().addObselComment(obsel,true, commentTimeLine.traceTitleLoggedUser);
-				
-				eventAddCommentObsel.timeObselBegin = Number(beginTime);
-				eventAddCommentObsel.timeObselEnd = Number(beginTime);
-				this.dispatchEvent(eventAddCommentObsel);
-			}
-			
-			private function onEditObselComment(event:ObselEvent):void
-			{
- 				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-				addObselComment.typeObsel  = TraceModel.UPDATE_TEXT_COMMENT;
-				var text:String = event.textObsel; 
-				// check if message empty
-				if(UtilFunction.isEmptyMessage(text))
-				{
-					text = fxgt.gettext("(vide)");
-				}
-				addObselComment.textComment = text;
-				addObselComment.beginTime = event.obsel.begin.toString();
-				addObselComment.endTime = event.obsel.end.toString();
-				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
-				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				var timeStamp:Number = event.obsel.props[TraceModel.TIMESTAMP];
-				if(timeStamp == 0)
-				{
-					addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
-				}
-				addObselComment.timeStamp = timeStamp;
-				this.dispatchEvent(addObselComment);	
-				Model.getInstance().setCurrentObselComment(null,commentTimeLine.traceTitleLoggedUser);	
-			}
-			
-			private function onDeleteObselComment(event:ObselEvent):void
-			{
-				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-				addObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
-				var text:String = event.textObsel; 
-				// check if message empty
-				if(UtilFunction.isEmptyMessage(text))
-				{
-					text = fxgt.gettext("(vide)");
-				}
-				addObselComment.textComment = text;
-				addObselComment.beginTime = event.obsel.begin.toString();
-				addObselComment.endTime = event.obsel.begin.toString();
-				addObselComment.forUserId = Model.getInstance().getLoggedUser().id_user;
-				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				addObselComment.timeStamp = event.obsel.props[TraceModel.TIMESTAMP];
-				this.dispatchEvent(addObselComment);
-				Model.getInstance().setCurrentObselComment(null, null);	
 			}
 			
 			private function onPreActionUserObselComment(event:SalonRetroEvent):void
@@ -371,7 +284,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					Model.getInstance().setCurrentObselComment(null, null);
+				//	Model.getInstance().setCurrentObselComment(null, null);
 					this.currentSessionDateRecording = event.dateStartRecording;
 					var durationSession:Number = event.durationSessionRetro;
 					var startRecordingSession:Number = event.dateStartRecording.time;
@@ -561,19 +474,7 @@
 					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
 					{
 						var obsel:Obsel = listObsels[nObsel] as Obsel;
-					//	this.addObsel(obsel);
 						Model.getInstance().addObsel(obsel);
-					}
-				}
-				// add obsels traceLineComment
-				var listObselComment:ArrayCollection = Model.getInstance().getListObselComment();
-				if (listObselComment != null)
-				{	
-					var nbrObselComment:int = listObselComment.length;
-					for(var nObselComment:int = 0 ; nObselComment < nbrObselComment; nObselComment++)
-					{
-						var obselComment:Obsel = listObselComment[nObselComment] as Obsel;
-						Model.getInstance().addObselComment(obselComment,false);
 					}
 				}
 			} 
@@ -813,7 +714,6 @@
 				}
 			}
 			
-			
 			/**
 			 * play/pause of the streams
 			 */
@@ -828,9 +728,11 @@
 					if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
 					{
 						pauseVideo();
+						timeLine.isPlaying = false;
 					}else
 					{
 						this.visio.resumeStreams();
+						timeLine.isPlaying = true;
 					}
 				}
 			}
@@ -854,33 +756,108 @@
 				}
 				onCheckSeekStream();
 			}
-
-			private function  visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
+			
+			//////////////
+			//////   Handlers the create/edit/delete comments
+			/////////////
+			protected function onPreAddCommentBySkinComment(event:ObselEvent):void
 			{
-				var panelEditInfo:PanelEditInfo = new PanelEditInfo();
-				this.groupeVideo.addElement(panelEditInfo);
-				panelEditInfo.x = 25;
-				panelEditInfo.y = 25;
-				
-				panelEditInfo.user = event.user;
-				panelEditInfo.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
-				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditCommentClickButtonOk);
-				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditCommentClickButtonCancel);
-				
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var obsel:Obsel = event.obsel;
+					var userId:int = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
+					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+					var currentCommentObselSkin:Object = event.target;
+					
+					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin);
+				}
+			}
+			
+			protected function onPreAddComment(event:TraceLineEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var user:User = Model.getInstance().getLoggedUser();
+					showDialogAddCommentObsel(user);
+				}
 			}
 			
 			protected function visio_clickButtonCommentHandler(event:VisuVisioAdvancedEvent):void
+			{	
+				var user:User = event.user;
+				showDialogAddCommentObsel(user);
+			}
+			
+			private function showDialogAddCommentObsel(value:User, obsel:Obsel = null, currentObselSkin:Object = null):void
 			{
-				/* var panelEditComment:PanelEditComment = new PanelEditComment();
-				this.groupeVideo.addElement(panelEditComment);
-				panelEditComment.x = 25;
-				panelEditComment.y = 25;
 				
-				panelEditComment.user = event.user; 
-				panelEditComment.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
-				panelEditComment.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditCommentClickButtonOk);
-				panelEditComment.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditCommentClickButtonCancel);
-				*/
+				var editCommentDialog:EditCommentDialog = new EditCommentDialog();
+				editCommentDialog.user = value;
+
+				editCommentDialog.currentObselSkin = currentObselSkin;
+				editCommentDialog.obsel = obsel;
+				
+				PopUpManager.addPopUp(editCommentDialog, this);
+				PopUpManager.centerPopUp(editCommentDialog);
+				editCommentDialog.y -= editCommentDialog.height;
+				editCommentDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveCommentDialog );
+			}
+			private function onRemoveCommentDialog(event:Event):void
+			{
+				if (event.currentTarget.confirm)
+				{						
+					var durationObselCommentMs:Number = 10*1000;
+					var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+					var beginTime:String = currentTime.toString();
+					var endTime:String = (currentTime + durationObselCommentMs).toString();					
+					
+					var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+					addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+					addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+					var text:String = "";
+					
+					var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
+					var timeStamp:Number = 0
+					// set properties for existing obsel
+					var forUserId:int = event.currentTarget.user.id_user;
+					if(event.currentTarget.currentObselSkin)
+					{
+						var obsel:Obsel = event.currentTarget.obsel;
+						beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+						endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+						forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+						timeStamp = obsel.props[TraceModel.TIMESTAMP];
+						typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
+						text = obsel.props[TraceModel.TEXT];
+					}else
+					{
+						text = event.currentTarget.textComment;
+					}
+					// check if message empty
+					if(UtilFunction.isEmptyMessage(text))
+					{
+						text = fxgt.gettext("(vide)");
+					}
+					addObselComment.textComment = text;
+					addObselComment.timeStamp = timeStamp;
+					addObselComment.typeObsel  = typeObsel;
+					addObselComment.beginTime = beginTime;
+					addObselComment.endTime = endTime;
+					addObselComment.forUserId = forUserId
+					addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+					this.dispatchEvent(addObselComment);
+				}
+				if(event.currentTarget.deleting)
+				{
+					var updateObselComment:ObselEvent = new ObselEvent(ObselEvent.DELETE_OBSEL_COMMENT);
+					updateObselComment.obsel = event.currentTarget.obsel;
+					this.dispatchEvent(updateObselComment);
+				}
+				// enabled skin
+				if(event.currentTarget.currentObselSkin)
+				{
+					event.currentTarget.currentObselSkin.enabled = true;
+				}
 			}
 			
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
@@ -1036,7 +1013,6 @@
 			{
 				var beginTime:Number = event.beginTime;
 				
-			//	timeline.changeCursorValue( timeline.begin + beginTime );
 				timeLine.currentTime = timeLine.begin + beginTime ;
 				
 				var currentTime:String = updateLabelTimer(beginTime);
@@ -1051,59 +1027,6 @@
 				this.documentarisation.currentTime = beginTime;
 			}
 
-			//_____________________________________________________________________
-			//
-			// Set comments
-			//
-			//_____________________________________________________________________
-			private function onPanelEditCommentClickButtonOk(event:PanelEditInfoEvent):void
-			{
-				//  add obsel action user
-				var eventAddCommentObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_COMMENT_TRACE_LINE);
-				var beginTime:String = (commentTimeLine.startTimeSession + this.testCursor.getBegin()).toString();
-				var deltaXObselTime:Number = 0;
-				// type of creation comment
-				eventAddCommentObsel.typeAction = TraceModel.RETRO_CLICK_VIDEO_PANEL_CREATE_COMMENT_EVENT;			
-				var obsel:Obsel = new Obsel(TraceModel.SET_TEXT_COMMENT, 0, null, Number(beginTime));
-				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = event.user.id_user;
-				obsel.props[TraceModel.TIMESTAMP] = 0;
-				obsel.props[TraceModel.TEXT] = event.text;
-				// FIXME : now hasn't children of traceLine comment, all comment for every users add to one traceLine
-				Model.getInstance().addObselComment(obsel, false, commentTimeLine.traceTitleLoggedUser);
-				
-				eventAddCommentObsel.timeObselBegin = Number(beginTime);
-				eventAddCommentObsel.timeObselEnd = Number(beginTime);
-				this.dispatchEvent(eventAddCommentObsel);
-				
-				var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-				addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-				addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-				var text:String = event.text; 
-				// check if message empty
-				if(UtilFunction.isEmptyMessage(text))
-				{
-					text = fxgt.gettext("(vide)");
-				}
-				addObselComment.textComment = text;
-				addObselComment.beginTime = beginTime.toString();
-				addObselComment.endTime = beginTime.toString();
-				addObselComment.forUserId =  event.user.id_user;
-				addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				addObselComment.typeObsel  = TraceModel.SET_TEXT_COMMENT;
-				addObselComment.timeStamp = 0;
-				this.dispatchEvent(addObselComment);	
-				
-				Model.getInstance().setCurrentObselComment(null,commentTimeLine.traceTitleLoggedUser);	
-				// remove PanelEditCommenr
-				var panelEditComment:PanelEditComment = event.currentTarget as PanelEditComment;
-				groupeVideo.removeElement(panelEditComment);
-			}
-			
-			private function onPanelEditCommentClickButtonCancel(event:PanelEditInfoEvent):void
-			{
-				var panelEditComment:PanelEditComment = event.currentTarget as PanelEditComment;
-				groupeVideo.removeElement(panelEditComment);
-			}
 			
 			private function mouseMoveHandler(event:MouseEvent):void
 			{
@@ -1156,6 +1079,26 @@
 				panelVideo.buttonModeZoomEnabled = false;
 				visio.zoomMax = false;
 			}
+
+			protected function timeLine_timeRulerClickHandler(event:TimelineEvent):void
+			{
+				// stop play RetroDocumentSegment if playing
+				this.clickOnTimeLine = true;
+				// stop play video segment
+				endVideoSegment();
+				// pre play video flux
+				prePlayVideoFlux(event.value);	
+			}
+
+			protected function timeLine_playButtonClickHandler(event:TimelineEvent):void
+			{
+				onCheckSeekStream()
+			}
+
+			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent):void
+			{
+				onCheckSeekStream()
+			}
 			//_____________________________________________________________________
 			//
 			// Utils
@@ -1165,42 +1108,6 @@
 			{
 				var ev:Event = new Event("readyForUse");
 				this.dispatchEvent(ev);
-			}
-
-			protected function timeLine_timeRulerClickHandler(event:TimelineEvent):void
-			{
-				// stop play RetroDocumentSegment if playing
-				this.clickOnTimeLine = true;
-				// stop play video segment
-				endVideoSegment();
-				// update button play/pause
-		//		sessionTimeLine.setLabelButtonPlayPause(false);
-/* 				var target:Object = event.target as Object;
-				var deltaXObselTime:Number = 0;
-				
-				var localX:Number = event.stageX - event.currentTarget.x;
-				
-				var timeStartSession:Number = this.testTimeLine.startTimeSession;
-				var duration:Number = this.testTimeLine.durationSession;
-				var groupTimeLine:Group = event.currentTarget as Group;
-				var wightGroup:Number = groupTimeLine.width;
-				var delta:Number = Math.round(((localX*duration)/wightGroup)/1);
-				// add value start session slider
-				delta = delta + startTimeSessionSlider.value - this.currentSessionDateRecording.time; */
-				// pre play video flux
-				prePlayVideoFlux(event.value);	
-			}
-
-
-			protected function timeLine_playButtonClickHandler(event:TimelineEvent):void
-			{
-				onCheckSeekStream()
-			}
-
-
-			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent):void
-			{
-				onCheckSeekStream()
 			}
 
 		]]>
@@ -1220,6 +1127,10 @@
 		<mate:Listener type="{RetroDocumentEvent.PAUSE_RETRO_SEGMENT}"  method="pauseRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		
+		<mate:Listener type="{TraceLineEvent.PRE_ADD_COMMENT_OBSEL}"  method="onPreAddComment" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
+		
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -1241,7 +1152,6 @@
 						<video:VisuVisioAdvanced id="visio" width="100%"  height="100%"
 							quality="80"
 							updateTime="visio_updateTimeHandler(event)"
-							clickButtonMarker="visio_clickButtonMarkerHandler(event)"
 							clickPanelVideo="visio_clickPanelVideoHandler(event)"
 							clickButtonComment="visio_clickButtonCommentHandler(event)"
 							clickButtonZoom="panelVideo_clickButtonModeZoomHandler(event)"
