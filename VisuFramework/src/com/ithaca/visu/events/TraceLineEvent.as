@@ -76,6 +76,7 @@ package com.ithaca.visu.events
 		static public const ADD_LIST_OBSEL : String = 'addListObsel';
 		static public const REMOVE_LIST_OBSEL : String = 'removeListObsel';
 		static public const ADD_COMMENT_OBSEL : String = 'addCommentObsel';
+		static public const PRE_ADD_COMMENT_OBSEL : String = 'preAddCommentObsel';
 		static public const UPDATE_COMMENT_OBSEL : String = 'updateCommentObsel';
 		static public const ADDED_COMMENT_OBSEL : String = 'addedCommentObsel';
 		// properties
