@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:s="library://ns.adobe.com/flex/spark" 
+               xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:tl="com.ithaca.timeline.*"
+			   creationComplete="creationCompleteHandler(event)"
+			   close="onCancel(event)"
+			   keyDown="onKeyDown(event)"
+			   fontSize="10"
+			   headerHeight="20">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.traces.Obsel;
+			import com.ithaca.visu.events.ObselEvent;
+			
+			import flash.events.KeyboardEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+
+			[Bindable]
+			private var fxgt:_FxGettext;
+
+			[Bindable]
+			public var commentText : String;
+			public var titleWindow : String;
+
+			public var confirm : Boolean = false;	
+			public var deleting : Boolean = false;	
+			
+			public var obsel : Obsel;
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+	
+				showCloseButton = true;
+				this.title = titleWindow
+				commentTextInput.setFocus();
+				commentTextInput.selectAll();
+			}
+			
+			private function onKeyDown(event:KeyboardEvent):void
+			{
+				switch ( event.charCode )
+				{
+					case Keyboard.ENTER:
+						if ( okButton == getFocus() )
+							onValid(event);
+						if ( cancelButton == getFocus() )
+							onCancel(event);
+						break;
+					case Keyboard.ESCAPE:
+						this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+						break;
+				}				
+			}
+			
+			private function onCancel(event:Event):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function onValid(event:Event):void
+			{
+				confirm = true;
+				PopUpManager.removePopUp(this);
+			}
+			private function onDelete(event:Event):void
+			{
+				Alert.yesLabel = fxgt.gettext("Oui");
+				Alert.noLabel = fxgt.gettext("Non");
+				Alert.show(fxgt.gettext("Voulez-vous supprimer Marker ?"),
+					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteObselConfirmed); 	
+			}
+			
+			protected function deleteObselConfirmed(event:CloseEvent):void
+			{
+				if( event.detail == Alert.YES )
+				{
+					deleting = true;
+					PopUpManager.removePopUp(this);
+				}
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:VGroup bottom="5" top="5" right="5" left="5">
+		<s:TextArea id="commentTextInput" text="{commentText}" width="100%"/>		
+		<s:HGroup horizontalAlign="right" width="100%" >
+			<s:Button label='{fxgt.gettext("Supprimer")}' height="20"  click="onDelete(event)"/> 
+			<s:Button id="okButton" 	fontSize="10" label='{fxgt.gettext("Valider")}'  height="20"	click="onValid(event)" />
+			<s:Button id="cancelButton"	fontSize="10" label='{fxgt.gettext("Annuler")}'  height="20"	click="onCancel(event)" /> 
+		</s:HGroup>		
+	</s:VGroup>
+</mx:TitleWindow>
