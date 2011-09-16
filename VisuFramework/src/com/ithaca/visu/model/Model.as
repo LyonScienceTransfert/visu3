@@ -82,6 +82,7 @@ package  com.ithaca.visu.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.events.PropertyChangeEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	
@@ -127,7 +128,7 @@ package  com.ithaca.visu.model
 		private var _selectedDateLoggedUser:Object = null;
 		
 		private var listObsels:ArrayCollection;
-		private var _listObselsComment:ArrayCollection;
+//		private var _listObselsComment:ArrayCollection;
 		private var _beginTimeSalonSynchrone:Number;
 	
 		private var listTraceLine:ArrayCollection;
@@ -291,7 +292,7 @@ package  com.ithaca.visu.model
 			return _currentCommentTraceId;
 		}
 		
-		public function setCurrentObselComment(value:ObselComment, groupCommentObsel:Group):void
+/*		public function setCurrentObselComment(value:ObselComment, groupCommentObsel:Group):void
 		{
 			var nbrObsel:int;
 			if(value == null)
@@ -334,7 +335,7 @@ package  com.ithaca.visu.model
 		public function getCurrentObselComment():ObselComment
 		{
 			return _currentObselComment;
-		}
+		}*/
 		
 		public function setSelectedRadioButton(value:String):void
 		{
@@ -590,13 +591,6 @@ package  com.ithaca.visu.model
 			return this.listObsels;
 		}
 		
-		/**
-		 * Set list obsels comment
-		 */
-		public function setListObselComment(listObsels:ArrayCollection):void
-		{
-			this._listObselsComment = listObsels;
-		}
 		
 		/**
 		 * add all comment obsel in Trace obsel
@@ -614,10 +608,10 @@ package  com.ithaca.visu.model
 		/**
 		 * Get list obsels comment
 		 */
-		public function getListObselComment():ArrayCollection
+		/*public function getListObselComment():ArrayCollection
 		{
 			return this._listObselsComment;
-		}
+		}*/
 		
 		/**
 		 * check if user enter in the session second time
@@ -773,7 +767,7 @@ package  com.ithaca.visu.model
 		public function initListTraceLine():void
 		{
 			this.listTraceLine = new ArrayCollection();
-			this._listObselsComment = new ArrayCollection();
+//			this._listObselsComment = new ArrayCollection();
 		    this._listViewObselComment = new ArrayCollection();
 			
 			listTraceGroup = new ArrayCollection();
@@ -823,48 +817,47 @@ package  com.ithaca.visu.model
 			return result;
 		}
 		
-		public function updateTextObselComment( timeStampUpdatedObsel:Number , text:String, typeObsel:String):void
-		{
-			var listTitleObsels:ArrayCollection = this._listViewObselComment;
-			var obselView:ObselComment = updateTextObsel(listTitleObsels, timeStampUpdatedObsel);
-			if(obselView != null && (typeObsel == TraceModel.UPDATE_TEXT_COMMENT || typeObsel == TraceModel.SET_TEXT_COMMENT))
-			{
-				var newObselView:ObselComment = obselView.cloneMe();
-				newObselView.text = text;
-				newObselView.toolTip = text;
-				var order:int = newObselView.order;
-				listTitleObsels.addItemAt(newObselView, order);
-			}
+		public function setObselComment(value:Obsel):void
+		{		
+			var indexDeletedObsel : Number = -1;
+			var timeStampUpdatedObsel:Number = value.props[TraceModel.TIMESTAMP];
+			var typeObsel:String = value.type;
+			// add new obsel
 			
-			function updateTextObsel(listObsels:ArrayCollection, timeStampUpdatedObsel:Number):ObselComment
+			if(typeObsel == TraceModel.SET_TEXT_COMMENT)
 			{
-				var nbrObsel:int = listObsels.length;
-				for(var nObsel:int = 0 ; nObsel < nbrObsel ; nObsel++)
-				{
-					var obselView = listObsels.getItemAt(nObsel);
-					if(obselView is ObselComment){
-						var obsel:Obsel = obselView.parentObsel;
-						if(obsel != null && (obsel.type == TraceModel.SET_TEXT_COMMENT ))
-						{
-							var timeStamp:Number = obsel.props[TraceModel.TIMESTAMP];
-							if(timeStamp == timeStampUpdatedObsel)
-							{
-								listObsels.removeItemAt(nObsel);
-								obselView.order = nObsel;
-								return obselView;
-							}else
-								if( timeStamp == 0)
-								{
-									obsel.props[TraceModel.TIMESTAMP] = timeStampUpdatedObsel;
-									listObsels.removeItemAt(nObsel);
-									obselView.order = nObsel;
-									return obselView;
-								}
-						}
-					}
-				}
-				return null;
+				traceComment.addObsel(value);
+				return;
 			}	
+			// traceLineGroupe 
+			var listObsel:ArrayCollection = traceComment.obsels;
+			var nbrObsel:int = listObsel.length;
+			for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+			{
+				var obsel:Obsel = listObsel.getItemAt(nObsel) as Obsel;
+				var timeStamp:Number = new Number(obsel.props[TraceModel.TIMESTAMP]);
+				// same timeStamp
+				if(timeStamp == timeStampUpdatedObsel)
+				{
+					switch (typeObsel)
+					{
+					case TraceModel.UPDATE_TEXT_COMMENT : 
+						obsel.props[TraceModel.TEXT] == value.props[TraceModel.TEXT];
+						var propChange :PropertyChangeEvent= new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
+						propChange.property = "props";
+						obsel.dispatchEvent( propChange );
+						break;
+					case TraceModel.DELETE_TEXT_COMMENT : 
+						indexDeletedObsel = nObsel;
+						break;
+					}				
+				}
+			}
+			// delete obsel
+			if(indexDeletedObsel > -1)
+			{
+				listObsel.removeItemAt(indexDeletedObsel);
+			}
 		}
 		
 		/**
@@ -889,9 +882,9 @@ package  com.ithaca.visu.model
 					{
 						case TraceModel.UPDATE_MARKER : 
 							obsel.props[TraceModel.TEXT] == text;
-							var type:String = obsel.type; 
-							obsel.type = "";
-							obsel.type = type;
+							var propChange :PropertyChangeEvent= new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
+							propChange.property = "props";
+							obsel.dispatchEvent( propChange );
 							break;
 						case TraceModel.DELETE_MARKER : 
 							indexDeletedObsel = nObsel;
@@ -975,22 +968,6 @@ package  com.ithaca.visu.model
 				}
 				return false;
 			}
-/*			if(this.listTraceLine != null)
-			{
-				var nbrTraceLines:int = this.listTraceLine.length;
-				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLines; nTraceLine++)
-				{
-					var traceLine:Object = this.listTraceLine[nTraceLine] as Object;
-					var id:int = traceLine.userId;
-					if(id == userId)
-					{
-						return true;
-					}
-				}
-				return false;
-			}*/
-			
-			
 			// FIXME : it's hapen when user in Accuiel , and other user start recording
 			this.initListTraceLine();
 			return false;
@@ -1078,7 +1055,7 @@ package  com.ithaca.visu.model
 						this._currentObselComment.setCancelEditObsel();
 					}
 				}
-				this.setCurrentObselComment(viewObsel,group)
+//				this.setCurrentObselComment(viewObsel,group)
 			}
 			
 			_listViewObselComment.addItem(viewObsel);
