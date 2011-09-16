@@ -324,6 +324,9 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/iconValider_16x16.png")]
 		static private var iconValider_16x16:Class;
+		[Bindable]
+		[Embed("images/tree.png")]
+		static private var tree:Class;
 		
 		public static function getIconByTypeObsel(code:String):Class
 		{
@@ -564,6 +567,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "iconValider_16x16" : 
 					icon = iconValider_16x16;
+					break;
+				case "tree" : 
+					icon = tree;
 					break;
 				default :
 					break;				
