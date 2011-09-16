@@ -234,5 +234,11 @@ package com.ithaca.utils
 			return monthString;
 		}
 		
+		public static function getNumberEntier(value:Number):Number
+		{
+			var result:String = value.toString();
+			result = result.split(".")[0];
+			return new Number(result);
+		}
 	}
 }
