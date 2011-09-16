@@ -240,7 +240,8 @@ or by setting the following environment variable:
 				<include-file name="images/iconEye_16x16.png" path="${framework.images}/iconEye_16x16.png"/>
 				<include-file name="images/iconAnnuler_16x16.png" path="${framework.images}/iconAnnuler_16x16.png"/>
 				<include-file name="images/iconValider_16x16.png" path="${framework.images}/iconValider_16x16.png"/>
-				
+				<include-file name="images/commentAddVer3_16x16.png" path="${framework.images}/commentAddVer3_16x16.png"/>
+
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 	  		  	
 	  		  	<!-- TimeLine LC from com/ithaca/timeline/images/-->
