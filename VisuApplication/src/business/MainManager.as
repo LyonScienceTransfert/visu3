@@ -599,7 +599,7 @@ public class MainManager
 				deleteObselComment(arr, obselDM);		
 			}
 			
-			Model.getInstance().setListObselComment(arr);
+	//		Model.getInstance().setListObselComment(arr);
 			// set trace obsel comment
 			Model.getInstance().setTraceCommentObsel(arr);
 		}
@@ -1001,7 +1001,11 @@ public class MainManager
 					var timeStampMarker:Number = obselTemp.props[TraceModel.TIMESTAMP];
 					if(timeStamp == timeStampMarker)
 					{
+						// update text
 						obselTemp.props[TraceModel.TEXT] = obsel.props[TraceModel.TEXT];
+						// update duration
+						obselTemp.begin = obsel.begin;
+						obselTemp.end   = obsel.end;
 					}
 				}
 			}
@@ -1459,10 +1463,7 @@ public class MainManager
 	public function onCheckAddObselComment(obselVO:ObselVO, timeBegin:String, timeEnd:String):void
 	{
 		var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
-		var text:String = obsel.props[TraceModel.TEXT];
-		// TODO correction in the function fromRDF, if in the string has \n => simbol "enter" will give NaN !!!
-		Model.getInstance().updateTextObselComment( timeStampObsel, text, obsel.type); 
+		Model.getInstance().setObselComment(obsel);
 	}
 	
 	/**
