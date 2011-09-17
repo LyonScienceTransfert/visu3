@@ -804,6 +804,15 @@
 			}
 			private function onRemoveCommentDialog(event:Event):void
 			{
+				var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+				updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+				updateObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+				updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+				
+				var text:String = "";
+				var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
+				var obsel:Obsel = event.currentTarget.obsel;
+				
 				if (event.currentTarget.confirm)
 				{						
 					var durationObselCommentMs:Number = 10*1000;
@@ -811,18 +820,11 @@
 					var beginTime:String = currentTime.toString();
 					var endTime:String = (currentTime + durationObselCommentMs).toString();					
 					
-					var addObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-					addObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-					addObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-					var text:String = "";
-					
-					var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
 					var timeStamp:Number = 0
 					// set properties for existing obsel
 					var forUserId:int = event.currentTarget.user.id_user;
 					if(event.currentTarget.currentObselSkin)
 					{
-						var obsel:Obsel = event.currentTarget.obsel;
 						beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
 						endTime = UtilFunction.getNumberEntier(obsel.end).toString();
 						forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
@@ -838,26 +840,47 @@
 					{
 						text = fxgt.gettext("(vide)");
 					}
-					addObselComment.textComment = text;
-					addObselComment.timeStamp = timeStamp;
-					addObselComment.typeObsel  = typeObsel;
-					addObselComment.beginTime = beginTime;
-					addObselComment.endTime = endTime;
-					addObselComment.forUserId = forUserId
-					addObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-					this.dispatchEvent(addObselComment);
+					updateObselComment.textComment = text;
+					updateObselComment.timeStamp = timeStamp;
+					updateObselComment.typeObsel  = typeObsel;
+					updateObselComment.beginTime = beginTime;
+					updateObselComment.endTime = endTime;
+					updateObselComment.forUserId = forUserId;
 				}
 				if(event.currentTarget.deleting)
 				{
-					var updateObselComment:ObselEvent = new ObselEvent(ObselEvent.DELETE_OBSEL_COMMENT);
-					updateObselComment.obsel = event.currentTarget.obsel;
-					this.dispatchEvent(updateObselComment);
+					updateObselComment.textComment = obsel.props[TraceModel.TEXT];
+					updateObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+					updateObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
+					updateObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+					updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+					updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
 				}
+				
+				this.dispatchEvent(updateObselComment);
 				// enabled skin
 				if(event.currentTarget.currentObselSkin)
 				{
 					event.currentTarget.currentObselSkin.enabled = true;
 				}
+			}
+			
+			private function onUpdateDurationObselComment(event:ObselEvent):void
+			{
+				var obsel:Obsel = event.obsel;
+				var updateDurationObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+				
+				updateDurationObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+				updateDurationObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+				updateDurationObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+				
+				updateDurationObselComment.textComment = obsel.props[TraceModel.TEXT];
+				updateDurationObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+				updateDurationObselComment.typeObsel  = TraceModel.UPDATE_TEXT_COMMENT;
+				updateDurationObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+				updateDurationObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+				updateDurationObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+				dispatchEvent(updateDurationObselComment);
 			}
 			
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
@@ -1130,6 +1153,7 @@
 		
 		<mate:Listener type="{TraceLineEvent.PRE_ADD_COMMENT_OBSEL}"  method="onPreAddComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.UPDATE_DURTION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
