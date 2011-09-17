@@ -180,7 +180,7 @@
 				obsel.begin  = begin ;
 				UpdateResizeGripHeight();
 				// dispatchEvent
-				onDispatcheEvent(ObselEvent.EDIT_OBSEL_COMMENT);
+				onDispatcheEvent(ObselEvent.UPDATE_DURTION_OBSEL_COMMENT);
 			}	
 			
 			protected function EditComment( e:MouseEvent ):void
@@ -191,7 +191,7 @@
 				dispatchEvent(editCommentEvent);
 			}
 			
-			private function onRemoveEditDialog(event:Event):void
+/* 			private function onRemoveEditDialog(event:Event):void
 			{
 				if (event.currentTarget.confirm)
 				{						
@@ -205,7 +205,7 @@
 					onDispatcheEvent(ObselEvent.DELETE_OBSEL_COMMENT);
 				}
 				this.enabled = true;
-			}
+			} */
 			
 			private function onSelect(event:Event):void
 			{
