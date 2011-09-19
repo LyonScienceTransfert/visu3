@@ -191,22 +191,6 @@
 				dispatchEvent(editCommentEvent);
 			}
 			
-/* 			private function onRemoveEditDialog(event:Event):void
-			{
-				if (event.currentTarget.confirm)
-				{						
- 					obsel.props[TraceModel.TEXT] = event.currentTarget.commentTextInput.text;
-					// dispathe event
-					onDispatcheEvent(ObselEvent.EDIT_OBSEL_COMMENT);
-				}
-				if(event.currentTarget.deleting)
-				{
-					// dispatcher on delete obsel
-					onDispatcheEvent(ObselEvent.DELETE_OBSEL_COMMENT);
-				}
-				this.enabled = true;
-			} */
-			
 			private function onSelect(event:Event):void
 			{
 				(hostComponent.parent as Group).addElementAt( hostComponent, (hostComponent.parent as Group).numElements -1);

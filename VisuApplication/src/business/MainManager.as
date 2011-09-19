@@ -830,14 +830,6 @@ public class MainManager
 				var obselSI:Obsel = listObselSI[nObselSI];
 				listObsel.addItem(obselSI);
 			}
-		}else
-		{
-			if(listObsel != null && listObsel.length != 0)
-			{
-				// add if logged user hasn't timeline
-				var loggedUser:User = Model.getInstance().getLoggedUser();
-				Model.getInstance().addTraceLine(loggedUser.id_user, loggedUser.firstname, loggedUser.avatar, ColorEnum.getColorByCode("0"));
-			}
 		}
 		// get last obsel "SessionIn"
 		var lastObselSessionIn:Obsel;
