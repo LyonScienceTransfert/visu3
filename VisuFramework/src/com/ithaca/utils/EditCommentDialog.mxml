@@ -101,7 +101,7 @@
 			if(obselChange)
 			{
 				obselChange = false;
-				var text:String = "text de marquer ici";
+				var text:String = "texte de commentaire ici";
 				if(obsel)
 				{
 					text = obsel.props[TraceModel.TEXT];
@@ -175,7 +175,7 @@
 		<s:HGroup width="100%" paddingLeft="10" paddingRight="10">
 			<s:TextArea  id="textInfo" width="100%" heightInLines="2"/>
 		</s:HGroup>
-		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5">
+		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
 			<s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
 				<s:label>Supprimer</s:label>
 			</s:Button>
