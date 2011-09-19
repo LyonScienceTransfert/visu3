@@ -284,15 +284,9 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-				//	Model.getInstance().setCurrentObselComment(null, null);
 					this.currentSessionDateRecording = event.dateStartRecording;
-					var durationSession:Number = event.durationSessionRetro;
-					var startRecordingSession:Number = event.dateStartRecording.time;
-					
-					timeLine.range.addTime(startRecordingSession, startRecordingSession + durationSession);
+					this.currentSessionDuration = event.durationSessionRetro;
 
-					// set timeStartSession in VisuVisioAdvaned
-					this.visio.startTimeSession = startRecordingSession;
 					// update label start session recording
 					var dateStartRecording:Date = event.dateStartRecording;
 					// show info the session 
@@ -319,50 +313,55 @@
 			}
 			private function onLoadLayoutComplete(event:Event):void 
 			{
-				//we init the trace object
-				var loader:URLLoader=event.target as URLLoader;
-				timeLine.layoutXML 		= new XML( loader.data );
-				timeLine.timelineLayout = new Layout( timeLine ); 	
-				
-				this.setObsels();
-				
-				var traceComment:Trace = Model.getInstance().getTraceComment();				
-				var tlgComment : TraceLineGroup;
-				tlgComment = timeLine.addTrace( traceComment, 0, "comments");
-				tlgComment .setStyle( "title", fxgt.gettext("Comments") );
-
-				var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
-				if(listTraceGroup != null)
-				{											
-					var nbrTraceGroup:int = listTraceGroup.length;
-					for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
-					{												
-						var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
-						
-						var tlg :TraceLineGroup ;					
-						
-						if(traceGroup.userId == Model.getInstance().getLoggedUser().id_user)
-						{			
-							tlg = timeLine.addTrace(traceGroup.userTrace,1);
-							var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
-							// set dataProvider with collection the StreamObsel
-							this.visio.dataProvider = Model.getInstance().getListStreamObsel();
-							// set pickCherryClick
-							this.pickCheryClick = 0;					
-							this.visio.startTimer();	
-						}
-						else
-						{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					//we init the trace object
+					var loader:URLLoader=event.target as URLLoader;
+					timeLine.layoutXML 		= new XML( loader.data );
+					timeLine.timelineLayout = new Layout( timeLine ); 	
+					
+					this.setObsels();
+					
+					var traceComment:Trace = Model.getInstance().getTraceComment();				
+					var tlgComment : TraceLineGroup;
+					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
+					tlgComment .setStyle( "title", fxgt.gettext("Comments") );
+	
+					var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+					if(listTraceGroup != null)
+					{											
+						var nbrTraceGroup:int = listTraceGroup.length;
+						for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+						{												
+							var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+							
+							var tlg :TraceLineGroup ;					
+							
 							tlg = timeLine.addTrace(traceGroup.userTrace);
+							
+							tlg.setStyle("title", traceGroup.userName );				
+							tlg.setStyle("bgColor", traceGroup.userColor);
+							tlg.setStyle("icon", traceGroup.userAvatar );	
 						}
-						
-						tlg.setStyle("title", traceGroup.userName );				
-						tlg.setStyle("bgColor", traceGroup.userColor);
-						tlg.setStyle("icon", traceGroup.userAvatar );	
 					}
+					
+					var startRecordingSession:Number = this.currentSessionDateRecording.time;
+					timeLine.range.addTime(startRecordingSession, startRecordingSession + this.currentSessionDuration);
+					
+					// set timeStartSession in VisuVisioAdvaned
+					this.visio.startTimeSession = startRecordingSession;
+					
+					// set dataProvider with collection the StreamObsel
+					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
+					// set pickCherryClick
+					this.pickCheryClick = 0;					
+					this.visio.startTimer();
+					
+					
+					// notify that module ready for use
+					notifyReadyForUse();
+					
 				}
-				// notify that module ready for use
-				notifyReadyForUse();
 			}
 					
 			private function removeTimerRetroDocumentSegment():void
@@ -479,7 +478,7 @@
 				}
 			} 
 
-			protected function startTimeSessionSlider_thumbReleaseHandler(event:TrackBaseEvent):void
+			/* protected function startTimeSessionSlider_thumbReleaseHandler(event:TrackBaseEvent):void
 			{
 				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_SLIDER_VIDEO_PLAYER);
 				//actionVideoPlayer
@@ -492,7 +491,7 @@
 				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_SLIDER_VIDEO_PLAYER);
 				//actionVideoPlayer
 				this.dispatchEvent(actionVideoPlayer);
-			}
+			} */
 			
 			
 			//_____________________________________________________________________
@@ -525,43 +524,52 @@
 			//_____________________________________________________________________			
 			private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
 			{
-				var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
-				var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
-				retroDocumentVO.lastModified = dateLastModify;
-				var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
-				updateRetrodocument.retroDocumentVO = retroDocumentVO;
-				updateRetrodocument.listUser = event.listUser;
-				this.dispatchEvent(updateRetrodocument);		
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
+					var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
+					retroDocumentVO.lastModified = dateLastModify;
+					var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
+					updateRetrodocument.retroDocumentVO = retroDocumentVO;
+					updateRetrodocument.listUser = event.listUser;
+					this.dispatchEvent(updateRetrodocument);		
+				}
 			}
 			
 			private function onClickButtonSwitch(event:RetroDocumentEvent):void
 			{
-				var switchModuleEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO);
-				switchModuleEvent.sessionId = event.sessionId;
-				switchModuleEvent.idRetroDocument = event.idRetroDocument;
-				this.dispatchEvent(switchModuleEvent);
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var switchModuleEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO);
+					switchModuleEvent.sessionId = event.sessionId;
+					switchModuleEvent.idRetroDocument = event.idRetroDocument;
+					this.dispatchEvent(switchModuleEvent);
+				}
 			}
 
 			protected function addRetroDocument_clickHandler(event:MouseEvent):void
 			{
-				var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
-				var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
-				retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-				retroDocumentVO.description = "new description here";
-				retroDocumentVO.documentId = 0;
-				retroDocumentVO.lastModified = retroDocumentVO.creationDate;
-				var createurUser:User = Model.getInstance().getLoggedUser();
-				retroDocumentVO.ownerId = createurUser.id_user;
-				retroDocumentVO.sessionId = this.currentSessionId;
-				retroDocumentVO.title = "le nouveau bilan ici";
-
-				var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
-				var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
-				retroDocumentVO.xml = stringXML;
-				var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
-				createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
-				createRetroDocumentVOEvent.sessionId = this.currentSessionId;;
-				this.dispatchEvent(createRetroDocumentVOEvent);
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
+					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+					retroDocumentVO.description = "new description here";
+					retroDocumentVO.documentId = 0;
+					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
+					var createurUser:User = Model.getInstance().getLoggedUser();
+					retroDocumentVO.ownerId = createurUser.id_user;
+					retroDocumentVO.sessionId = this.currentSessionId;
+					retroDocumentVO.title = "le nouveau bilan ici";
+	
+					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
+					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
+					retroDocumentVO.xml = stringXML;
+					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
+					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
+					createRetroDocumentVOEvent.sessionId = this.currentSessionId;;
+					this.dispatchEvent(createRetroDocumentVOEvent);
+				}
 			}
 			//_____________________________________________________________________
 			//
@@ -589,32 +597,35 @@
 			
 			protected function documentarisation_addRetroDocumentHandler(event:RetroDocumentEvent):void
 			{
-				var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
-				var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
-				retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-				retroDocumentVO.description = "new description here";
-				retroDocumentVO.documentId = 0;
-				retroDocumentVO.lastModified = retroDocumentVO.creationDate;
-				var createurUser:User = Model.getInstance().getLoggedUser();
-				retroDocumentVO.ownerId = createurUser.id_user;
-				retroDocumentVO.sessionId = this.currentSessionId;
-				retroDocumentVO.title = "Bilan sur la séance du " + '"'+Model.getInstance().getCurrentSession().theme+'"'; 
-				
-				var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
-				var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
-				retroDocumentVO.xml = stringXML;
-				var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
-				createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
-				this.dispatchEvent(createRetroDocumentVOEvent);
-				
-				// set mouse cursor
-				CursorManager.setBusyCursor();
-				// set new RetroDocument
-				documentarisation.listRetroDocument.dataProvider.addItem(retroDocumentVO);
-				documentarisation.listRetroDocument.selectedItem = retroDocumentVO;
-				var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
-				retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-				setRetroDocument(retroDocument, new Array());
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
+					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+					retroDocumentVO.description = "new description here";
+					retroDocumentVO.documentId = 0;
+					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
+					var createurUser:User = Model.getInstance().getLoggedUser();
+					retroDocumentVO.ownerId = createurUser.id_user;
+					retroDocumentVO.sessionId = this.currentSessionId;
+					retroDocumentVO.title = "Bilan sur la séance du " + '"'+Model.getInstance().getCurrentSession().theme+'"'; 
+					
+					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
+					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
+					retroDocumentVO.xml = stringXML;
+					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
+					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
+					this.dispatchEvent(createRetroDocumentVOEvent);
+					
+					// set mouse cursor
+					CursorManager.setBusyCursor();
+					// set new RetroDocument
+					documentarisation.listRetroDocument.dataProvider.addItem(retroDocumentVO);
+					documentarisation.listRetroDocument.selectedItem = retroDocumentVO;
+					var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
+					retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
+					setRetroDocument(retroDocument, new Array());
+				}
 			}
 			//_____________________________________________________________________
 			//
@@ -624,10 +635,13 @@
 
 			private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
 			{
-				var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
-				loadRetroDocument.idRetroDocument =  value.documentId
-				loadRetroDocument.editabled = true;				
-				this.dispatchEvent(loadRetroDocument);
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
+					loadRetroDocument.idRetroDocument =  value.documentId
+					loadRetroDocument.editabled = true;				
+					this.dispatchEvent(loadRetroDocument);
+				}
 			}
 			
 			private function loadedAllUsers(event:RetroDocumentEvent):void
@@ -790,97 +804,105 @@
 			
 			private function showDialogAddCommentObsel(value:User, obsel:Obsel = null, currentObselSkin:Object = null):void
 			{
-				
-				var editCommentDialog:EditCommentDialog = new EditCommentDialog();
-				editCommentDialog.user = value;
-
-				editCommentDialog.currentObselSkin = currentObselSkin;
-				editCommentDialog.obsel = obsel;
-				
-				PopUpManager.addPopUp(editCommentDialog, this);
-				PopUpManager.centerPopUp(editCommentDialog);
-				editCommentDialog.y -= editCommentDialog.height;
-				editCommentDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveCommentDialog );
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var editCommentDialog:EditCommentDialog = new EditCommentDialog();
+					editCommentDialog.user = value;
+	
+					editCommentDialog.currentObselSkin = currentObselSkin;
+					editCommentDialog.obsel = obsel;
+					
+					PopUpManager.addPopUp(editCommentDialog, this);
+					PopUpManager.centerPopUp(editCommentDialog);
+					editCommentDialog.y -= editCommentDialog.height;
+					editCommentDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveCommentDialog );
+				}
 			}
 			private function onRemoveCommentDialog(event:Event):void
 			{
-				var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-				updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-				updateObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-				updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				
-				var text:String = "";
-				var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
-				var obsel:Obsel = event.currentTarget.obsel;
-				
-				if (event.currentTarget.confirm)
-				{						
-					var durationObselCommentMs:Number = 10*1000;
-					var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
-					var beginTime:String = currentTime.toString();
-					var endTime:String = (currentTime + durationObselCommentMs).toString();					
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+					updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+					updateObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+					updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
 					
-					var timeStamp:Number = 0
-					// set properties for existing obsel
-					var forUserId:int = event.currentTarget.user.id_user;
+					var text:String = "";
+					var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
+					var obsel:Obsel = event.currentTarget.obsel;
+					
+					if (event.currentTarget.confirm)
+					{						
+						var durationObselCommentMs:Number = 10*1000;
+						var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+						var beginTime:String = currentTime.toString();
+						var endTime:String = (currentTime + durationObselCommentMs).toString();					
+						
+						var timeStamp:Number = 0
+						// set properties for existing obsel
+						var forUserId:int = event.currentTarget.user.id_user;
+						if(event.currentTarget.currentObselSkin)
+						{
+							beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+							endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+							forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+							timeStamp = obsel.props[TraceModel.TIMESTAMP];
+							typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
+							text = obsel.props[TraceModel.TEXT];
+						}else
+						{
+							text = event.currentTarget.textComment;
+						}
+						// check if message empty
+						if(UtilFunction.isEmptyMessage(text))
+						{
+							text = fxgt.gettext("(vide)");
+						}
+						updateObselComment.textComment = text;
+						updateObselComment.timeStamp = timeStamp;
+						updateObselComment.typeObsel  = typeObsel;
+						updateObselComment.beginTime = beginTime;
+						updateObselComment.endTime = endTime;
+						updateObselComment.forUserId = forUserId;
+					}
+					if(event.currentTarget.deleting)
+					{
+						updateObselComment.textComment = obsel.props[TraceModel.TEXT];
+						updateObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+						updateObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
+						updateObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+						updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+						updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+					}
+					
+					this.dispatchEvent(updateObselComment);
+					// enabled skin
 					if(event.currentTarget.currentObselSkin)
 					{
-						beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-						endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-						forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
-						timeStamp = obsel.props[TraceModel.TIMESTAMP];
-						typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
-						text = obsel.props[TraceModel.TEXT];
-					}else
-					{
-						text = event.currentTarget.textComment;
+						event.currentTarget.currentObselSkin.enabled = true;
 					}
-					// check if message empty
-					if(UtilFunction.isEmptyMessage(text))
-					{
-						text = fxgt.gettext("(vide)");
-					}
-					updateObselComment.textComment = text;
-					updateObselComment.timeStamp = timeStamp;
-					updateObselComment.typeObsel  = typeObsel;
-					updateObselComment.beginTime = beginTime;
-					updateObselComment.endTime = endTime;
-					updateObselComment.forUserId = forUserId;
-				}
-				if(event.currentTarget.deleting)
-				{
-					updateObselComment.textComment = obsel.props[TraceModel.TEXT];
-					updateObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
-					updateObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
-					updateObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-					updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-					updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
-				}
-				
-				this.dispatchEvent(updateObselComment);
-				// enabled skin
-				if(event.currentTarget.currentObselSkin)
-				{
-					event.currentTarget.currentObselSkin.enabled = true;
 				}
 			}
 			
 			private function onUpdateDurationObselComment(event:ObselEvent):void
 			{
-				var obsel:Obsel = event.obsel;
-				var updateDurationObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-				
-				updateDurationObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-				updateDurationObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-				updateDurationObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-				
-				updateDurationObselComment.textComment = obsel.props[TraceModel.TEXT];
-				updateDurationObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
-				updateDurationObselComment.typeObsel  = TraceModel.UPDATE_TEXT_COMMENT;
-				updateDurationObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-				updateDurationObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-				updateDurationObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
-				dispatchEvent(updateDurationObselComment);
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var obsel:Obsel = event.obsel;
+					var updateDurationObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+					
+					updateDurationObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+					updateDurationObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+					updateDurationObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+					
+					updateDurationObselComment.textComment = obsel.props[TraceModel.TEXT];
+					updateDurationObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+					updateDurationObselComment.typeObsel  = TraceModel.UPDATE_TEXT_COMMENT;
+					updateDurationObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+					updateDurationObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+					updateDurationObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+					dispatchEvent(updateDurationObselComment);
+				}
 			}
 			
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
