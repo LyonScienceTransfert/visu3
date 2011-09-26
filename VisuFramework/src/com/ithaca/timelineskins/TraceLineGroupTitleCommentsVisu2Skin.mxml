@@ -112,7 +112,7 @@
 			
 			protected function addCommentObsel() : void 
 			{				
-			//	hostComponent.tlg.trace.addObsel( new Obsel( "comment",0,null,  hostComponent.tlg._timeline.currentTime ) );
+		//		hostComponent.tlg.trace.addObsel( new Obsel( "comment",0,null,  hostComponent.tlg._timeline.currentTime, hostComponent.tlg._timeline.currentTime + 10000  ) );
 				var addCommentEvent:TraceLineEvent = new TraceLineEvent(TraceLineEvent.PRE_ADD_COMMENT_OBSEL);
 				dispatchEvent(addCommentEvent);
 			}
