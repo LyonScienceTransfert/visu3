@@ -19,6 +19,7 @@
 		import com.ithaca.visu.events.SessionSharedEvent;
 		import com.ithaca.visu.events.SessionUserEvent;
 		import com.ithaca.visu.events.TraceLineEvent;
+		import com.ithaca.visu.model.Model;
 		
 		import mx.events.FlexEvent;
 
@@ -82,16 +83,14 @@
 				<mate:Request action="sessionInfo.getSessionByIdSalonRetro"   arguments="{[event.sessionId]}" />	
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
-		
-<!--		<mate:EventHandlers type="{'testApp'}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}">
-				<mate:Request action="testApp"   arguments="{['Main']}" />
-			</rtmp:RtmpServiceInvoker>	
-		</mate:EventHandlers>-->
 
         <mate:EventHandlers type="{AuthenticationEvent.CONNECT}" debug="true">
-			<mate:MethodInvoker generator="{RtmpService}"   
-								method="connect"  arguments="{[event.rtmpSever,event.params]}"/>
+		<!--	<mate:MethodInvoker generator="{RtmpService}"   
+								method="connect"  arguments="{[event.rtmpSever,event.params]}"/>-->
+			<mate:MethodInvoker generator="{RtmpService}"
+								method="connectByListProtocolAndPort" 
+								arguments="{[Model.getInstance().getListPairProtocolPort(), Model.getInstance().server, Model.getInstance().appName, Model.getInstance().roomName, event.params]}"/>
+			
 			<rtmp:CallbackRegistrator action="joinDeck" target="{MainManager}" method="onJoinDeck"/>
 			<rtmp:CallbackRegistrator action="outDeck" target="{MainManager}" method="onOutDeck"/>
 			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />
