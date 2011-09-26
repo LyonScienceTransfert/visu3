@@ -167,6 +167,7 @@
 			
 				var begin 	: Number = hostComponent.traceline._timeline.zoomContext.cursorRange.positionToTime( hostComponent.x, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
 				var end 	: Number = hostComponent.traceline._timeline.zoomContext.cursorRange.positionToTime( hostComponent.x + cursor.width, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
+			
 				hostComponent.obsel.end    = end;
 				hostComponent.obsel.begin  = begin ;
 				UpdateResizeGripHeight();
