@@ -85,12 +85,8 @@
 		</mate:EventHandlers>
 
         <mate:EventHandlers type="{AuthenticationEvent.CONNECT}" debug="true">
-		<!--	<mate:MethodInvoker generator="{RtmpService}"   
-								method="connect"  arguments="{[event.rtmpSever,event.params]}"/>-->
-			<mate:MethodInvoker generator="{RtmpService}"
-								method="connectByListProtocolAndPort" 
-								arguments="{[Model.getInstance().getListPairProtocolPort(), Model.getInstance().server, Model.getInstance().appName, Model.getInstance().roomName, event.params]}"/>
-			
+			<mate:MethodInvoker generator="{RtmpService}"   
+								method="connect"  arguments="{[event.rtmpSever,event.params]}"/>
 			<rtmp:CallbackRegistrator action="joinDeck" target="{MainManager}" method="onJoinDeck"/>
 			<rtmp:CallbackRegistrator action="outDeck" target="{MainManager}" method="onOutDeck"/>
 			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />
