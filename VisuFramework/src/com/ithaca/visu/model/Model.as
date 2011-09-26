@@ -103,6 +103,7 @@ package  com.ithaca.visu.model
 		public var server : String = "localhost";
 		public var port   : uint = 5080; 
 		public var appName: String = "visu2";
+		public var roomName: String = "monSalon";
 		
 		private var NAME_VISU2: String = "VISU";
 		private var NAME_VISU_VCIEL: String = "VISUVCIEL";
@@ -191,7 +192,7 @@ package  com.ithaca.visu.model
 		
 		public function get rtmpServer(): String
 		{
-			return "rtmp://" + this.server + "/" + this.appName + "/" + "monSalon";
+			return "rtmpt://" + this.server + ":80/" + this.appName + "/" + this.roomName;
 		}
 		
 		public function get urlServeur(): String
@@ -249,6 +250,7 @@ package  com.ithaca.visu.model
 				
 				return name;
 		}
+
 		public function setRemoteVersionGit(value:String):void{_remoteVersionGit = value;}
 		public function getRemoteVersionGit():String{return _remoteVersionGit;}
 		
