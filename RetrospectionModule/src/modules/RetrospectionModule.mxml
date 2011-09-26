@@ -19,6 +19,7 @@
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.timeline.Layout;
+			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
@@ -27,6 +28,7 @@
 			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.utils.EditCommentDialog;
 			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.controls.timeline.TraceLineB;
 			import com.ithaca.visu.controls.timeline.TraceLineComment;
 			import com.ithaca.visu.events.InitMapEvent;
@@ -272,13 +274,6 @@
 				return this.currentRetroDocumentSegmentPlaying;
 			}
 			
-			private function createSessionTimeLine(durationSession:Number,startSession:Number):void
-			{
-				// set current session duration 
-				this.currentSessionDuration = durationSession;
-				timeLine.range.addTime(startSession, startSession + durationSession);
-			}
-
 			// creation the resume activity
 			private function updateTimeLine(event:SessionEvent):void
 			{
@@ -321,6 +316,7 @@
 					timeLine.timelineLayout = new Layout( timeLine ); 	
 					
 					this.setObsels();
+					timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLineCommentFor );
 					
 					var traceComment:Trace = Model.getInstance().getTraceComment();				
 					var tlgComment : TraceLineGroup;
@@ -363,7 +359,22 @@
 					
 				}
 			}
-					
+			/**
+			 * set user name in comment TraceLine
+			 */
+			public function onAddNewTraceLineCommentFor( event : TimelineEvent ) : void
+			{
+				var obsel:Obsel = event.value.obsel;
+				var userId:int = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
+				var nameUser:String = "Comment pour la séance";
+				if(userId != 0)
+				{
+				nameUser = VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+				}
+				var traceLine:TraceLine = event.value.traceline;
+				traceLine.title = nameUser;
+			}
+			
 			private function removeTimerRetroDocumentSegment():void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -780,7 +791,11 @@
 				{
 					var obsel:Obsel = event.obsel;
 					var userId:int = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
-					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+					var user:User = null;
+					if(userId != 0)
+					{
+						user = Model.getInstance().getUserPlateformeByUserId(userId);						
+					}
 					var currentCommentObselSkin:Object = event.target;
 					
 					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin);
@@ -791,18 +806,19 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var user:User = Model.getInstance().getLoggedUser();
-					showDialogAddCommentObsel(user);
+					// add comment for session
+					showDialogAddCommentObsel();
 				}
 			}
 			
 			protected function visio_clickButtonCommentHandler(event:VisuVisioAdvancedEvent):void
 			{	
 				var user:User = event.user;
+				// add comment for user
 				showDialogAddCommentObsel(user);
 			}
 			
-			private function showDialogAddCommentObsel(value:User, obsel:Obsel = null, currentObselSkin:Object = null):void
+			private function showDialogAddCommentObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
@@ -839,8 +855,12 @@
 						var endTime:String = (currentTime + durationObselCommentMs).toString();					
 						
 						var timeStamp:Number = 0
+						var forUserId:int = 0;
 						// set properties for existing obsel
-						var forUserId:int = event.currentTarget.user.id_user;
+						if(event.currentTarget.user)
+						{
+							forUserId = event.currentTarget.user.id_user;
+						}
 						if(event.currentTarget.currentObselSkin)
 						{
 							beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
