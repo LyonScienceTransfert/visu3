@@ -92,6 +92,7 @@ package com.ithaca.visu.controls.users
 			if (instance == editButton)
 			{
 				editButton.addEventListener(MouseEvent.CLICK, editButton_clickHandler);
+				editButton.enabled = false; 
 			}
 			if (instance == saveButton)
 			{
