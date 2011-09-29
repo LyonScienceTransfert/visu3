@@ -604,7 +604,7 @@ package  com.ithaca.visu.model
 			{
 				var obsel:Obsel = value.getItemAt(nObsel) as Obsel;
 				// check if has traceComment, have traceComment only in retrospectionModule, but call this function in BilanModule
-				if(tracCommen)
+				if(traceComment)
 				{
 					traceComment.addObsel(obsel);
 				}
