@@ -242,6 +242,8 @@ or by setting the following environment variable:
 				<include-file name="images/iconValider_16x16.png" path="${framework.images}/iconValider_16x16.png"/>
 				<include-file name="images/commentAddVer3_16x16.png" path="${framework.images}/commentAddVer3_16x16.png"/>
 				<include-file name="images/tree.png" path="${framework.images}/tree.png"/>
+				<include-file name="images/share_icon.png" path="${framework.images}/share_icon.png"/>
+				
 
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 	  		  	
