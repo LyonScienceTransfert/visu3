@@ -172,9 +172,11 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		//[Embed("images/RetroDocumentPartageVer1.png")]
 		//[Embed("images/share_icon.png")]
+		[Bindable]
 		[Embed("images/share_icon20x20.png")]
 		static private var retroDocumentShared:Class;
 		
+		[Bindable]
 		[Embed("images/share_icon.png")]
 		static private var commentForSession:Class;
 
