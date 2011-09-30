@@ -811,7 +811,7 @@ package  com.ithaca.visu.model
 			}
 		}
 		
-		public function getListUserPresentOnTimeLine():Array
+		public function getListUserIdPresentOnTimeLine():Array
 		{
 			var result:Array = new Array();
 			var nbrTraceLine:int = this.listTraceLine.length;
@@ -820,6 +820,19 @@ package  com.ithaca.visu.model
 				var traceLine:Object = this.listTraceLine.getItemAt(nTraceLine) as Object;
 				var userId:int = traceLine.userId;
 				result.push(userId);
+			}
+			return result;
+		}
+		public function getListUserPresentOnTimeLine():ArrayCollection
+		{
+			var result:ArrayCollection = new ArrayCollection();
+			var nbrTraceLine:int = this.listTraceLine.length;
+			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			{
+				var traceLine:Object = this.listTraceLine.getItemAt(nTraceLine) as Object;
+				var userId:int = traceLine.userId;
+				var user:User = Model.instance.getUserPlateformeByUserId(userId);
+				result.addItem(user);
 			}
 			return result;
 		}
