@@ -174,6 +174,9 @@ package com.ithaca.visu.ui.utils
 		//[Embed("images/share_icon.png")]
 		[Embed("images/share_icon20x20.png")]
 		static private var retroDocumentShared:Class;
+		
+		[Embed("images/share_icon.png")]
+		static private var commentForSession:Class;
 
 		[Bindable]
 		[Embed("images/RetroDocumentSegmentAddVer1.png")]
@@ -328,6 +331,20 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/tree.png")]
 		static private var tree:Class;
 		
+		public static function getPathByName(code:String):String
+		{
+			var path:String = "";
+			switch (code)
+			{
+			case "commentForSession" : 
+				path = "images/share_icon.png";
+				break;
+			case "video" : 
+				path = "images/video.jpg";
+				break;
+			}
+			return path;
+		}
 		public static function getIconByTypeObsel(code:String):Class
 		{
 			var icon:Class;
