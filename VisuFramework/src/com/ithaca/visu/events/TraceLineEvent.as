@@ -102,5 +102,27 @@ package com.ithaca.visu.events
 			super(type, bubbles, cancelable);
 			
 		}
+		
+		public function cloneMe():TraceLineEvent 
+		{ 
+			var result:TraceLineEvent = new TraceLineEvent(type, bubbles, cancelable);
+			result.idElement = idElement;
+			result.userId = userId;
+			result.listObsel = listObsel;
+			
+			result.traceComment = traceComment;
+			result.traceParent = traceParent;
+			result.typeObsel = typeObsel;
+			result.textComment = textComment;
+			result.beginTime = beginTime;
+			result.endTime = endTime;
+			result.forUserId = forUserId;
+			result.sessionId = sessionId;
+			result.obsel = obsel;
+			result.obsel = obsel;
+			result.timeStamp = timeStamp;
+			
+			return result;
+		} 
 	}
 }
