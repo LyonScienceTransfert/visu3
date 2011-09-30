@@ -6,6 +6,7 @@ package com.ithaca.visu.controls.sessions
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.ActivityElementType;
+	import com.ithaca.visu.ui.utils.IconEnum;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -179,7 +180,7 @@ package com.ithaca.visu.controls.sessions
 			for each( var el:ActivityElement in list)
 			{
 				var image:ImageActivity = new ImageActivity()
-				var source:String = "images/video.jpg";
+				var source:String = IconEnum.getPathByName("video");
 				if(el.type_element == "image")
 				{
 					source = el.url_element;

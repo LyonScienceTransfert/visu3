@@ -16,21 +16,28 @@
 		import com.ithaca.traces.Obsel;
 		import com.ithaca.traces.model.TraceModel;
 		import com.ithaca.visu.model.User;
+		import com.ithaca.visu.model.vo.UserVO;
 		import com.ithaca.visu.ui.utils.IconEnum;
 		
 		import gnu.as3.gettext.FxGettext;
 		import gnu.as3.gettext._FxGettext;
 		
+		import mx.collections.ArrayCollection;
 		import mx.controls.Alert;
+		import mx.core.INavigatorContent;
 		import mx.events.CloseEvent;
 		import mx.events.FlexEvent;
 		import mx.managers.PopUpManager;
+		
+		import spark.events.IndexChangeEvent;
 		
 		[Bindable]
 		private var fxgt:_FxGettext;
 		
 		private var _user:User;
 		private var userChange:Boolean;
+		private var _listUser:ArrayCollection;
+		private var listUserChange:Boolean;
 		private var _obsel:Obsel;
 		private var obselChange:Boolean;
 		
@@ -51,6 +58,16 @@
 		public function get user():User
 		{
 			return _user;
+		}
+		public function set listUser(value:ArrayCollection):void
+		{
+			_listUser = value;
+			listUserChange = true;
+			invalidateProperties();
+		}
+		public function get listUser():ArrayCollection
+		{
+			return _listUser;
 		}
 		public function set obsel(value:Obsel):void
 		{
@@ -92,16 +109,42 @@
 					{
 						imageUser.source = user.avatar;
 					}
-					if(nameUser != null)
+					/* if(nameUser != null)
 					{
 						nameUser.text = VisuUtils.getUserLabel(user, true);	
+					} */
+				}else
+				{
+					labelCommentFor.text = "Votre commentaire sur la séance : ";
+					imageUser.source = IconEnum.getPathByName("commentForSession");
+				}
+			}
+			if(listUserChange)
+			{
+				listUserChange = false;
+				if(listUser)
+				{
+					
+					
+					
+					dropDownListUser.dataProvider = listUser;
+					dropDownListUser.labelFunction = setNameUserDromDownList;
+					// add virtual user = comment for session
+					var virtualUser:User = addVirtualUser(listUser);
+					if(user)
+					{
+						dropDownListUser.selectedItem = user;
+					}else
+					{
+						dropDownListUser.selectedItem = virtualUser;
 					}
 				}else
 				{
-					labelCommentFor.text = "Votre commentaire pour la séance";
-					groupUser.includeInLayout = groupUser.visible = false;
+					labelCommentFor.text = "Votre commentaire sur la séance :";
+					//groupUser.includeInLayout = groupUser.visible = false;
 				}
 			}
+			
 			if(obselChange)
 			{
 				obselChange = false;
@@ -162,6 +205,48 @@
 			textInfo.setFocus();
 			textInfo.selectAll();
 		}
+		protected function dropDownListUser_changeHandler(event:IndexChangeEvent):void
+		{
+			var index:int = event.newIndex;
+			// update user
+			user = listUser.getItemAt(index) as User;
+			imageUser.source = user.avatar;
+			if(user.id_user == 0)
+			{
+				labelCommentFor.text = "Votre commentaire sur la séance : ";
+			}else
+			{
+				labelCommentFor.text = "Votre commentaire sur : ";
+			}
+			// update comment for user if it's not new comment
+			if(obsel)
+			{
+				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = user.id_user;
+			}
+		}
+		///////////////
+		// Utils
+		//////////////
+		private function setNameUserDromDownList(item:Object):String
+		{
+			var result:String="void";
+			var user:User = item as User;
+			result = VisuUtils.getUserLabel(user, true);
+			return result;
+		}
+		private function addVirtualUser(list:ArrayCollection):User
+		{
+			var userVO:UserVO= new UserVO();
+			userVO.avatar =  IconEnum.getPathByName("commentForSession");
+			userVO.id_user = 0;
+			userVO.firstname = "la séance";
+			userVO.lastname = "";
+			
+			var user:User = new User(userVO);
+			list.addItem(user);
+			return user;
+		}
+
 
 	]]>
 	</fx:Script>
@@ -169,12 +254,14 @@
 		<s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
 			<mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
 			<s:Label  id="labelCommentFor" fontWeight="bold">
-				<s:text>Votre commentaire pour : </s:text>
+				<s:text>Votre commentaire sur :</s:text>
 			</s:Label>				
 		</s:HGroup>
-		<s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle">
+		<s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
 			<mx:Image id="imageUser" width="50" height="50"/>
-			<s:Label  id="nameUser" text="Peta Darvin"/>
+			<!--<s:Label  id="nameUser" text="Peta Darvin"/>-->
+			<!--<s:ComboBox id="comboBoxUser" width="200"/>-->
+			<s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup width="100%" paddingLeft="10" paddingRight="10">
 			<s:TextArea  id="textInfo" width="100%" heightInLines="2"/>

@@ -88,8 +88,6 @@
 				var startPosition 	: Number 	= timeRange.timeToPosition( Math.max( hostComponent.obsel.begin , timeRange.begin ),	traceline.width - 2 * Stylesheet.renderersSidePadding);
 				var endPosition 	: Number 	= timeRange.timeToPosition( Math.min( hostComponent.obsel.end , timeRange.end), 	traceline.width - 2 * Stylesheet.renderersSidePadding);
 				
-				trace( hostComponent.obsel.begin,  hostComponent.obsel.end);
-				
 				width  	= (endPosition - startPosition);
 			}
 			
@@ -109,8 +107,8 @@
 			
 			protected function zcDragging(e:MouseEvent):void
 			{				
-				minX = 0;
-				maxX = (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding );				
+				minX = (hostComponent.parent as Group).horizontalScrollPosition;
+				maxX = (hostComponent.parent as Group).horizontalScrollPosition + (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding );				
 				
 				var parentMouse:Point = hostComponent.parent.globalToLocal(new Point(e.stageX, e.stageY));				
 				var newPos : Number   = parentMouse.x - currentCenterDragingPoint.x;
@@ -146,7 +144,7 @@
 					
 					width = rightGrip.x;				
 				}
-				UpdateResizeGripHeight();
+				UpdateResizeGripHeight();		
 			}
 			
 			protected function UpdateResizeGripHeight(): void
