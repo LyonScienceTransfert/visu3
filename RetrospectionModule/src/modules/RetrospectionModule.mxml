@@ -105,6 +105,8 @@
 			
 			private var selectedSessionIdWhenInit:Number = -1;
 			private var selectedRetroDocumentIdWhenInit:Number = -1;
+			// init EditComentDialog with this userId
+			private var userIdInitEditCommentDialog:int = -1;
 			
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
@@ -185,7 +187,7 @@
 					this.currentSessionDateRecording, 
 					this.currentSessionDuration,
 					Model.getInstance().profiles,
-					Model.getInstance().getListUserPresentOnTimeLine());
+					Model.getInstance().getListUserIdPresentOnTimeLine());
 				// set listeners
 				documentarisation.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch, true);
 				documentarisation.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument, true);
@@ -303,7 +305,7 @@
 						this.currentSessionDateRecording, 
 						this.currentSessionDuration,
 						Model.getInstance().profiles,
-						Model.getInstance().getListUserPresentOnTimeLine());
+						Model.getInstance().getListUserIdPresentOnTimeLine());
 				}
 			}
 			private function onLoadLayoutComplete(event:Event):void 
@@ -797,6 +799,8 @@
 						user = Model.getInstance().getUserPlateformeByUserId(userId);						
 					}
 					var currentCommentObselSkin:Object = event.target;
+					// set init userId 
+					userIdInitEditCommentDialog = userId;
 					
 					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin);
 				}
@@ -827,6 +831,10 @@
 	
 					editCommentDialog.currentObselSkin = currentObselSkin;
 					editCommentDialog.obsel = obsel;
+					
+					editCommentDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+					
+					
 					
 					PopUpManager.addPopUp(editCommentDialog, this);
 					PopUpManager.centerPopUp(editCommentDialog);
@@ -861,6 +869,7 @@
 						{
 							forUserId = event.currentTarget.user.id_user;
 						}
+						// edition the comment obsel
 						if(event.currentTarget.currentObselSkin)
 						{
 							beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
@@ -868,6 +877,7 @@
 							forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
 							timeStamp = obsel.props[TraceModel.TIMESTAMP];
 							typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
+							
 							text = obsel.props[TraceModel.TEXT];
 						}else
 						{
@@ -878,6 +888,13 @@
 						{
 							text = fxgt.gettext("(vide)");
 						}
+						if(userIdInitEditCommentDialog > -1 && userIdInitEditCommentDialog != forUserId)
+						{
+							// suppression old obsel
+							typeObsel = TraceModel.DELETE_TEXT_COMMENT;
+							forUserId = userIdInitEditCommentDialog;
+						}
+						// set property to send to serveur for adding obsel
 						updateObselComment.textComment = text;
 						updateObselComment.timeStamp = timeStamp;
 						updateObselComment.typeObsel  = typeObsel;
@@ -894,13 +911,26 @@
 						updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
 						updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
 					}
+					// send obsel to serveur
+					dispatchEvent(updateObselComment);
 					
-					this.dispatchEvent(updateObselComment);
-					// enabled skin
+					// check if change only COMMENT_FOR_USER_ID
+					if(userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
+					{
+						var setCommentObsel:TraceLineEvent = updateObselComment.cloneMe()
+						setCommentObsel.timeStamp = 0;
+						setCommentObsel.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+						setCommentObsel.typeObsel = TraceModel.SET_TEXT_COMMENT;
+						// send second obsel 
+						dispatchEvent(setCommentObsel);
+					}
+					// enabled skin edited obsel
 					if(event.currentTarget.currentObselSkin)
 					{
 						event.currentTarget.currentObselSkin.enabled = true;
 					}
+					// init var userIdInitEditCommentDialog
+					userIdInitEditCommentDialog = -1;
 				}
 			}
 			
@@ -972,7 +1002,7 @@
 
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
-				var listUser:Array = Model.getInstance().getListUserPresentOnTimeLine();
+				var listUser:Array = Model.getInstance().getListUserIdPresentOnTimeLine();
 				var ar:Array = new Array();
 				var nbrUser:int = listUser.length;
 				for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
