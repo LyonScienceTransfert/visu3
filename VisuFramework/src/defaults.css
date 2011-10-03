@@ -47,7 +47,7 @@ timeline|TraceLineGroupTitle
 timeline|TraceLineGroupTitle.comments
 {
 	skin-class : ClassReference("com.ithaca.timelineskins.TraceLineGroupTitleCommentsVisu2Skin");
-	icon 		: Embed("images/commentAddVer3_16x16.png");	
+	icon 		: Embed("images/CommentAddVer1.png");
 	bgColor		:#FFA6A8;
 }
 
