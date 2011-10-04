@@ -22,13 +22,13 @@
 		
 		#linkCursor
 		{
- 			upIcon: Embed(source='../images/curseurLockOff.png');
+			/* upIcon: Embed(source='../../../../images/curseurLockOff.png');
 			overIcon: Embed(source='../images/curseurLockOff.png');
-			downIcon: Embed(source='../images/curseurLockOff.png');
+			downIcon: Embed(source='images/curseurLockOff.png');
  
 			selectedUpIcon: Embed(source='../images/curseurLockOn.png');
 			selectedOverIcon: Embed(source='../images/curseurLockOn.png');
-			selectedDownIcon: Embed(source='../images/curseurLockOn.png'); 
+			selectedDownIcon: Embed(source='../images/curseurLockOn.png'); */
 		}		
 		
 		#globalCursor #tt
@@ -59,7 +59,7 @@
 			protected function onCursorLinkClick(event:MouseEvent):void
 			{				
 				timeline.contextFollowCursor 		= linkCursor.selected ;
-				timeline.zoomContext.cursorEditable = !linkCursor.selected ;		
+				timeline.zoomContext.cursorEditable = !linkCursor.selected || (timeline.getStyle('cursorMode') == 'auto');		
 			}
 		]]>        
     </fx:Script>
