@@ -48,7 +48,7 @@
 		<s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
 			<mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}"/>
 			<s:Label fontWeight="bold">
-				<s:text>Votre marquer pour : </s:text>
+				<s:text>Votre marquer sur : </s:text>
 			</s:Label>				
 		</s:HGroup>
 		<s:HGroup width="100%" paddingLeft="10" verticalAlign="middle">
