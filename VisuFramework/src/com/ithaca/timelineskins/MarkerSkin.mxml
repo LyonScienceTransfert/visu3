@@ -41,6 +41,10 @@
 				icon.source = hostComponent.getStyle( "icon" );
 				if ( hostComponent.getStyle( "tooltipProp" ) )
 					icon.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+				if ( hostComponent.editable )
+				{
+					currentState = 'editable';				
+				}
 			}
 			
 			protected function EditComment( e:MouseEvent ):void
