@@ -17,11 +17,13 @@ package com.ithaca.timeline
 	
 	[Style(name = "cursorMode",			type = "String", inherit = "no")]
 	[Style(name = "timeMode", 			type = "String", inherit = "no")]
+	[Event(name = "currentTimeChange", 	type = "com.ithaca.timeline.events.TimelineEvent")]
 	[Event(name = "timeRulerClick", 	type = "com.ithaca.timeline.events.TimelineEvent")]
 	[Event(name = "playButtonClick", 	type = "com.ithaca.timeline.events.TimelineEvent")]
 	[Event(name = "pauseButtonClick", 	type = "com.ithaca.timeline.events.TimelineEvent")]
 	[Event(name = "endAlert", 			type = "com.ithaca.timeline.events.TimelineEvent")]
 	[Event(name = "endReached", 		type = "com.ithaca.timeline.events.TimelineEvent")]
+	[Event(name = "generateNewTraceline", 	type = "com.ithaca.timeline.events.TimelineEvent")]	
 	public class Timeline  extends LayoutNode
 	{
 		static public const  RECORD_MODE_INCREMENT : Number = 10 * 60 * 1000;
@@ -65,7 +67,7 @@ package com.ithaca.timeline
 			else 
 				layoutXML = <root> <tlg /> </root>;
 			
-			timelineLayout = new Layout( this ) ;				
+			timelineLayout = new Layout( this ) ;
 			_styleSheet = new Stylesheet();
 			range = new TimeRange( );
 			addEventListener(TimelineEvent.CURRENT_TIME_CHANGE, changeCursorValue );
@@ -136,6 +138,8 @@ package com.ithaca.timeline
 			
 			timelineLayout.addTracelineGroup( tlg, index );	
 			
+			trace( timelineLayout.getCurrentXmlLayout() );
+			
 			return tlg;
 		}
 		
@@ -169,6 +173,8 @@ package com.ithaca.timeline
 		{ 						
 			if (_layout)
 			{
+				_layout.loadObselsSelectors( layoutXML[Layout.OBSELS_SELECTORS] );
+				
 				var traceArray : Array = new Array();
 			 
 				for (var i : uint = 0; i < numElements; i++ )
@@ -184,7 +190,8 @@ package com.ithaca.timeline
 					addTrace( traceArray.shift() as Trace );
 			}
 			else
-				_layout = value;
+				_layout = value;	
+			
 			
 			dispatchEvent( new TimelineEvent( TimelineEvent.LAYOUT_CHANGE  ));
 		}
