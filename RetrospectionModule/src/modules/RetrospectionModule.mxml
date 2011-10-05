@@ -46,12 +46,14 @@
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.view.video.PanelEditComment;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+			import com.ithaca.visu.view.video.model.StreamObsel;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
 			import mx.containers.Panel;
+			import mx.controls.Alert;
 			import mx.controls.Image;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.core.DragSource;
@@ -200,20 +202,6 @@
 				// set cursor 
 				CursorManager.removeBusyCursor();
 				
-				var startRecordingSession:Number = this.currentSessionDateRecording.time;
-				// set timeStartSession in VisuVisioAdvaned
-				this.visio.startTimeSession = startRecordingSession;
-				
-				// set dataProvider with collection the StreamObsel
-				this.visio.dataProvider = Model.getInstance().getListStreamObsel();
-				// set pickCherryClick
-				this.pickCheryClick = 0;					
-				this.visio.startTimer();
-				
-				
-				// notify that module ready for use
-				notifyReadyForUse();
-				
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -359,6 +347,28 @@
 					
 					var startRecordingSession:Number = this.currentSessionDateRecording.time;
 					timeLine.range.addTime(startRecordingSession, startRecordingSession + this.currentSessionDuration);
+					
+					// set timeStartSession in VisuVisioAdvaned
+					this.visio.startTimeSession = startRecordingSession;
+					
+					// set dataProvider with collection the StreamObsel
+					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
+					var nbrStreams:int = visio.dataProvider.length;
+					var result:String = "";
+					for (var nStream:int = 0 ; nStream < nbrStreams; nStream++)
+					{
+						var stObsel:StreamObsel= visio.dataProvider[nStream] as StreamObsel;
+						result = result + stObsel.pathStream + "   ";
+					}
+					Alert.show(result,"info");
+					// set pickCherryClick
+					this.pickCheryClick = 0;					
+					this.visio.startTimer();
+					
+					
+					// notify that module ready for use
+					notifyReadyForUse();
+					
 				}
 			}
 			/**
