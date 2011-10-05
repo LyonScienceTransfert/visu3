@@ -200,6 +200,20 @@
 				// set cursor 
 				CursorManager.removeBusyCursor();
 				
+				var startRecordingSession:Number = this.currentSessionDateRecording.time;
+				// set timeStartSession in VisuVisioAdvaned
+				this.visio.startTimeSession = startRecordingSession;
+				
+				// set dataProvider with collection the StreamObsel
+				this.visio.dataProvider = Model.getInstance().getListStreamObsel();
+				// set pickCherryClick
+				this.pickCheryClick = 0;					
+				this.visio.startTimer();
+				
+				
+				// notify that module ready for use
+				notifyReadyForUse();
+				
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -345,20 +359,6 @@
 					
 					var startRecordingSession:Number = this.currentSessionDateRecording.time;
 					timeLine.range.addTime(startRecordingSession, startRecordingSession + this.currentSessionDuration);
-					
-					// set timeStartSession in VisuVisioAdvaned
-					this.visio.startTimeSession = startRecordingSession;
-					
-					// set dataProvider with collection the StreamObsel
-					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
-					// set pickCherryClick
-					this.pickCheryClick = 0;					
-					this.visio.startTimer();
-					
-					
-					// notify that module ready for use
-					notifyReadyForUse();
-					
 				}
 			}
 			/**
@@ -1273,6 +1273,7 @@
 						timeRulerClick="timeLine_timeRulerClickHandler(event)"
 						timeMode="relative" 
 						contextFollowCursor="false"
+						cursorMode="auto"
 						showPlayButton="true"/>
 				</mx:VDividedBox>
 			</components:PanelButton>
