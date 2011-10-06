@@ -1160,14 +1160,13 @@ public class MainManager
 		var listPathStampedObsel:ArrayCollection = new ArrayCollection();
 		var reversedListUserObselVO:Array = new Array();
 		var isFilterTypeVisuvciel:Boolean = Model.getInstance().checkServeurVisu();
-		
-		if(false){	
-			
-			
+		// was like this :
+		// if(!isFilterTypeVisuvciel){	
+		// NG asc me show all chat messages all users
+		// with this code i have dependencis the with list obsel 
+		// i remove it
+		if(false){		
 			var nbrObsel:int = listObselClosedSessionVO.length;
-			
-			if(Model.getInstance().getModeDebug())
-				Alert.show(nbrObsel.toString(),"nbrObsel, line 1182");
 			
 			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
 			{
