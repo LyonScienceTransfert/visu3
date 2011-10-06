@@ -354,8 +354,6 @@
 					// set dataProvider with collection the StreamObsel
 					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
 					
-					alertListStreamObsel();
-					
 					// set pickCherryClick
 					this.pickCheryClick = 0;					
 					this.visio.startTimer();
@@ -377,6 +375,9 @@
 					result = result + stObsel.pathStream + "   ";
 				}
 				Alert.show(result,"info");
+				var nbrObsel:int = Model.getInstance().getListObsels().length;
+				
+				Alert.show(nbrObsel.toString(), "nbr Obsel");
 			}
 			/**
 			 * set user name in comment TraceLine
