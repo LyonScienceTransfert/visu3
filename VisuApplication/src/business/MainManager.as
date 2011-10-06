@@ -1173,8 +1173,15 @@ public class MainManager
 		var listPathStampedObsel:ArrayCollection = new ArrayCollection();
 		var reversedListUserObselVO:Array = new Array();
 		var isFilterTypeVisuvciel:Boolean = Model.getInstance().checkServeurVisu();
-		if(!isFilterTypeVisuvciel){	
+		
+		if(false){	
+			
+			
 			var nbrObsel:int = listObselClosedSessionVO.length;
+			
+			if(Model.getInstance().getModeDebug())
+				Alert.show(nbrObsel.toString(),"nbrObsel, line 1182");
+			
 			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
 			{
 				var obselVO:ObselVO = listObselClosedSessionVO[nObsel];	
@@ -1220,6 +1227,9 @@ public class MainManager
 			var obselVO:ObselVO = listUserObselVO[nObselUserVO];
 			reversedListUserObselVO.push(obselVO);		
 		}
+		
+		if(Model.getInstance().getModeDebug())
+			Alert.show(reversedListUserObselVO.length.toString(),"reversedListUserObselVO, line 1225");
 		
 		// creation timeLine
 		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, listObselCommentVO, true, false);
