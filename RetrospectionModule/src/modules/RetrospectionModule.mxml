@@ -44,7 +44,6 @@
 			import com.ithaca.visu.model.vo.RetroDocumentVO;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.IconEnum;
-			import com.ithaca.visu.view.video.PanelEditComment;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
 			import com.ithaca.visu.view.video.model.StreamObsel;
 			
@@ -52,18 +51,14 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
-			import mx.containers.Panel;
 			import mx.controls.Alert;
 			import mx.controls.Image;
 			import mx.controls.dataGridClasses.DataGridColumn;
 			import mx.core.DragSource;
-			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.CursorManager;
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
-			
-			import spark.events.TrackBaseEvent;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -1126,39 +1121,6 @@
 				this.documentarisation.currentTime = beginTime;
 			}
 
-			
-			private function mouseMoveHandler(event:MouseEvent):void
-			{
-				var dragInitiator:PanelEditComment = PanelEditComment(event.currentTarget);
-				var dragSource:DragSource = new DragSource();
-				dragSource.addData(dragInitiator, "panelEditComment");
-				DragManager.doDrag(dragInitiator, dragSource, event);
-			}
-			
-			private function dragEnterHandler(event:DragEvent):void 
-			{
-				if (event.dragSource.hasFormat("panelEditComment"))
-				{
-					pointPanelEditComment = new Point(event.dragInitiator.mouseX, event.dragInitiator.mouseY);
-					DragManager.acceptDragDrop(Panel(event.currentTarget));
-				}
-			}
-			
-			private function dragDropHandler(event:DragEvent):void 
-			{
-				var panel:Panel = Panel(event.currentTarget);
-				var panelEditComment:PanelEditComment = PanelEditComment(event.dragInitiator);
-				var delta:int = 35;
-				var pt:Point = new Point(panel.mouseX, panel.mouseY);
-				pt = panel.localToGlobal(pt);
-				pt = panel.globalToLocal(pt);
-				
-				panelEditComment.x =
-					pt.x - pointPanelEditComment.x;
-				panelEditComment.y =
-					pt.y - pointPanelEditComment.y - delta;
-			}
-
 			protected function panelVideo_clickButtonMuteVolumeHandler(event:PanelButtonEvent):void
 			{
 				// update mute volume
@@ -1252,8 +1214,6 @@
 		<mx:HDividedBox width="100%" height="60%">
 <!-- VIDEO -->
 			<components:PanelButton height="100%" width="100%" id="panelVideo" minWidth="450"
-				dragEnter="dragEnterHandler(event);"
-				dragDrop="dragDropHandler(event);"
 				buttonVolumeVisible="true"
 				buttonMuteMicroVisible="false"
 				buttonModeMaxVisible="true"
