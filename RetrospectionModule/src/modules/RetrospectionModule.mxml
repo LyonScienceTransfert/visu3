@@ -364,21 +364,7 @@
 					
 				}
 			}
-			private function alertListStreamObsel():void
-			{
-				var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
-				var nbrStreams:int = listStreamObsel.length;
-				var result:String = "";
-				for (var nStream:int = 0 ; nStream < nbrStreams; nStream++)
-				{
-					var stObsel:StreamObsel= listStreamObsel[nStream] as StreamObsel;
-					result = result + stObsel.pathStream + "   ";
-				}
-				Alert.show(result,"info");
-				var nbrObsel:int = Model.getInstance().getListObsels().length;
-				
-				Alert.show(nbrObsel.toString(), "nbr Obsel");
-			}
+			
 			/**
 			 * set user name in comment TraceLine
 			 */
@@ -1177,7 +1163,6 @@
 			{
 				// update mute volume
 				this.visio.setVolumeMute(event.mute);
-				alertListStreamObsel();
 			}
 
 			protected function panelVideo_clickButtonModeMaxHandler(event:PanelButtonEvent):void
@@ -1222,6 +1207,22 @@
 			{
 				var ev:Event = new Event("readyForUse");
 				this.dispatchEvent(ev);
+			}
+			// For debaging mode
+			private function alertListStreamObsel():void
+			{
+				var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
+				var nbrStreams:int = listStreamObsel.length;
+				var result:String = "";
+				for (var nStream:int = 0 ; nStream < nbrStreams; nStream++)
+				{
+					var stObsel:StreamObsel= listStreamObsel[nStream] as StreamObsel;
+					result = result + stObsel.pathStream + "   ";
+				}
+				Alert.show(result,"info");
+				var nbrObsel:int = Model.getInstance().getListObsels().length;
+				
+				Alert.show(nbrObsel.toString(), "nbr Obsel");
 			}
 
 		]]>
