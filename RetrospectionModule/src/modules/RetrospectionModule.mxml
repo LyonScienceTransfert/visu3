@@ -353,14 +353,9 @@
 					
 					// set dataProvider with collection the StreamObsel
 					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
-					var nbrStreams:int = visio.dataProvider.length;
-					var result:String = "";
-					for (var nStream:int = 0 ; nStream < nbrStreams; nStream++)
-					{
-						var stObsel:StreamObsel= visio.dataProvider[nStream] as StreamObsel;
-						result = result + stObsel.pathStream + "   ";
-					}
-					Alert.show(result,"info");
+					
+					alertListStreamObsel();
+					
 					// set pickCherryClick
 					this.pickCheryClick = 0;					
 					this.visio.startTimer();
@@ -370,6 +365,18 @@
 					notifyReadyForUse();
 					
 				}
+			}
+			private function alertListStreamObsel():void
+			{
+				var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
+				var nbrStreams:int = listStreamObsel.length;
+				var result:String = "";
+				for (var nStream:int = 0 ; nStream < nbrStreams; nStream++)
+				{
+					var stObsel:StreamObsel= listStreamObsel[nStream] as StreamObsel;
+					result = result + stObsel.pathStream + "   ";
+				}
+				Alert.show(result,"info");
 			}
 			/**
 			 * set user name in comment TraceLine
@@ -1169,6 +1176,7 @@
 			{
 				// update mute volume
 				this.visio.setVolumeMute(event.mute);
+				alertListStreamObsel();
 			}
 
 			protected function panelVideo_clickButtonModeMaxHandler(event:PanelButtonEvent):void
