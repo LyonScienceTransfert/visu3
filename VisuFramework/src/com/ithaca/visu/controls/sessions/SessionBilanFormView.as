@@ -136,7 +136,7 @@ package com.ithaca.visu.controls.sessions
 				var str:String = "";
 				for each (var user:User in _listUserPrevu)
 				{
-					str += VisuUtils.getUserLabel(user,true) + " ("+ VisuUtils.getRoleLabel(user.role)+"), "; 
+					str += VisuUtils.getUserLabelLastName(user,true) + " ("+ VisuUtils.getRoleLabel(user.role)+"), "; 
 				}
 				labelListRecordedUser.text = str;
 				setListAbsences(); 
@@ -222,7 +222,7 @@ package com.ithaca.visu.controls.sessions
 			if(listAbsentUser.length < 1){ labelListAbsentUser.text = "Tous les participants attendus ont été présents"; return;};
 			for each (var userAbsent:User in listAbsentUser)
 			{
-				strListAbsentUser += VisuUtils.getUserLabel(userAbsent,true) + " ("+ VisuUtils.getRoleLabel(userAbsent.role)+"), "; 
+				strListAbsentUser += VisuUtils.getUserLabelLastName(userAbsent,true) + " ("+ VisuUtils.getRoleLabel(userAbsent.role)+"), "; 
 			}
 			labelListAbsentUser.text = strListAbsentUser;
 		}

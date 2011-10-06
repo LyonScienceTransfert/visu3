@@ -72,7 +72,7 @@ package com.ithaca.visu.view.video
 			{
 				if(user != null)
 				{
-					nameUser.text = VisuUtils.getUserLabel(user, true);	
+					nameUser.text = VisuUtils.getUserLabelLastName(user, true);	
 				}
 			}
 			if (instance == buttonOk)
@@ -98,7 +98,7 @@ package com.ithaca.visu.view.video
 				}
 				if(nameUser != null)
 				{
-					nameUser.text = VisuUtils.getUserLabel(user, true);	
+					nameUser.text = VisuUtils.getUserLabelLastName(user, true);	
 				}
 			}
 		}
