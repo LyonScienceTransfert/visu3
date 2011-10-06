@@ -196,10 +196,6 @@ video|NameUser
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.NameUserSkin");	
 }
-video|PanelEditComment
-{
-	skin-class:ClassReference("com.ithaca.visu.view.video.skins.PanelEditCommentSkin");	
-}
 video|PanelEditChatMessage
 {
 	skin-class:ClassReference("com.ithaca.visu.view.video.skins.PanelEditChatMessageSkin");	
