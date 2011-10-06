@@ -60,11 +60,11 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>	
 <!-- MY SESSION -->		
-		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL}" debug="true">
+<!--		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="obselInfo.getTraceUser"   arguments="{[event.traceId, event.sessionId]}" />
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>	
+		</mate:EventHandlers>-->	
 <!-- CLOSED SESSION -->		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
