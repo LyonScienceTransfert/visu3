@@ -632,10 +632,7 @@ public class MainManager
 			var tempObselSessionStartSessionEnter:Obsel = null;
 			var activityStartId:int = 0;
 			var nbrObsels:int = listObselVO.length;
-			
-			if(Model.getInstance().getModeDebug())
-			Alert.show(nbrObsels.toString(),"listObselVO, line 636");
-			
+						
 			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 			{
 				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
@@ -705,8 +702,6 @@ public class MainManager
 						var owner:String = obsel.props[TraceModel.UID];
 							var nbrObselSI:int = listObselSI.length;
 							
-							if(Model.getInstance().getModeDebug())
-							Alert.show(listObselSI.length.toString(), "listObselSI , line 707");
 							for(var nObselSI:int = 0 ; nObselSI < nbrObselSI ; nObselSI++)
 							{
 								var obselSI:Obsel = listObselSI[nObselSI];
@@ -739,11 +734,6 @@ public class MainManager
 						{
 							tempSharedSession = true;
 						}
-						
-						if(Model.getInstance().getModeDebug())
-						Alert.show(listObselSI.length.toString(), "listObselSI "); 
-						if(Model.getInstance().getModeDebug())
-						Alert.show(listObselRFN.length.toString(), "listObselRFN "); 
 						
 						if( !tempSharedSession || typeObsel == TraceModel.SESSION_PAUSE )
 						{
@@ -849,9 +839,6 @@ public class MainManager
 		{
 			lastObselSessionIn = this.createListeObselSessionOut(listObsel,listObselTempSessionOut,startSessionBySessionIn);
 		}
-		if(Model.getInstance().getModeDebug())
-		Alert.show(listObsel.length.toString(), "line 852");
-		
 		
 		Model.getInstance().setListObsel(listObsel);
 		
@@ -1227,10 +1214,7 @@ public class MainManager
 			var obselVO:ObselVO = listUserObselVO[nObselUserVO];
 			reversedListUserObselVO.push(obselVO);		
 		}
-		
-		if(Model.getInstance().getModeDebug())
-			Alert.show(reversedListUserObselVO.length.toString(),"reversedListUserObselVO, line 1225");
-		
+				
 		// creation timeLine
 		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, listObselCommentVO, true, false);
 		
