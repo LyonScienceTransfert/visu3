@@ -1,21 +1,22 @@
 #!/bin/sh
 
 DIR=$(dirname $0)
-APPNAME=visu
+APPNAME= ??? 
 BACKUP_DIR=sauvegarde
+RED5_DIR=/home/ithaca/red5
 cd "$DIR"
-echo "Création du repertoire $BACKUP_DIR"
+echo "Cr<C3><A9>ation du repertoire $BACKUP_DIR"
 [ -d "$BACKUP_DIR"/$(date "+%Y-%m-%d") ] || mkdir -p "$BACKUP_DIR"/$(date "+%Y-%m-%d")
 
 
 echo "Backup de la base"
-mysqldump -u php -p ${APPNAME} > "$BACKUP_DIR"/$(date "+%Y-%m-%d")/$(date "+%Y-%m-%d").sql
+mysqldump -u root -p ${APPNAME} > "$BACKUP_DIR"/$(date "+%Y-%m-%d")/$(date "+%Y-%m-%d").sql
 
-echo "backup des vidéos"
-cp -r ../red5/webapps/${APPNAME}/streams/* "$BACKUP_DIR"/$(date "+%Y-%m-%d")
+echo "backup des vid<E9>os"
+cp -r ${RED5_DIR}/webapps/${APPNAME}/streams/* "$BACKUP_DIR"/$(date "+%Y-%m-%d")
 
 echo "Targzip du repertoire"
 tar zcf "$BACKUP_DIR"/$(date "+%Y-%m-%d").tar.gz "$BACKUP_DIR"/$(date "+%Y-%m-%d")
 
 echo "Clean du repertoire"
-rm "$BACKUP_DIR"/$(date "+%Y-%m-%d")/*.flv
+rm -rf "$BACKUP_DIR"/$(date "+%Y-%m-%d")
