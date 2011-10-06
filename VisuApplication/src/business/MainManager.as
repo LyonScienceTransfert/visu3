@@ -633,7 +633,7 @@ public class MainManager
 			var activityStartId:int = 0;
 			var nbrObsels:int = listObselVO.length;
 			
-			//if(Model.getInstance().getModeDebug())
+			if(Model.getInstance().getModeDebug())
 			Alert.show(nbrObsels.toString(),"listObselVO, line 636");
 			
 			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
