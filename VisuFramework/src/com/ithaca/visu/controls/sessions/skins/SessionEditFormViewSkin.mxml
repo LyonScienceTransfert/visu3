@@ -75,7 +75,7 @@
 								<s:State name="normal" />
 							</s:states>
 							<s:HGroup verticalAlign="middle" horizontalAlign="left" paddingLeft="5" paddingBottom="5" paddingRight="5" paddingTop="5">
-								<s:Label id="nameLabel" text="{VisuUtils.getUserLabel(data as User,true)} {' ('+ VisuUtils.getRoleLabel((data as User).role)+')'}" width="100%" />
+								<s:Label id="nameLabel" text="{VisuUtils.getUserLabelLastName(data as User,true)} {' ('+ VisuUtils.getRoleLabel((data as User).role)+')'}" width="100%" />
 							</s:HGroup>	
 						</s:ItemRenderer>
 					</fx:Component>

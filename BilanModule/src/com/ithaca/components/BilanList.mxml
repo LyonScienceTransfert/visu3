@@ -320,7 +320,7 @@
 							     <s:Label fontStyle="italic" fontSize="12" color="0xFF0000" visible="{data.inviteeIds.length > 0}" includeInLayout="{data.inviteeIds.length > 0}"  text="[partagé]"/>
 							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit"  text="{data.title}" toolTip="{data.title}" maxDisplayedLines="2" maxWidth="250"/>
 								 <mx:Spacer width="100%"/>
-							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit" text="- {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.ownerId), true)} -"/>
+							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit" text="- {VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.ownerId), true)} -"/>
 							</s:HGroup>
 							
 							<mx:Form width="100%" paddingLeft="5" paddingRight="5" >
@@ -334,7 +334,7 @@
 									<s:VGroup width="100%">
 										<!-- <s:Label lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"/>-->
 										 <s:RichText lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"  maxWidth="200"/>
-										 <s:Label text="De {VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
+										 <s:Label text="De {VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
 									</s:VGroup>
 								</mx:FormItem>
 							</mx:Form>

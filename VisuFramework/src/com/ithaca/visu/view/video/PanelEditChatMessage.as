@@ -72,7 +72,7 @@ public class PanelEditChatMessage extends SkinnableComponent
 		{
 			if(user != null)
 			{
-				nameUser.text = VisuUtils.getUserLabel(user, true);	
+				nameUser.text = VisuUtils.getUserLabelLastName(user, true);	
 			}
 		}
 		if (instance == buttonOk)
@@ -98,7 +98,7 @@ public class PanelEditChatMessage extends SkinnableComponent
 			}
 			if(nameUser != null)
 			{
-				nameUser.text = VisuUtils.getUserLabel(user, true);	
+				nameUser.text = VisuUtils.getUserLabelLastName(user, true);	
 			}
 		}
 	}

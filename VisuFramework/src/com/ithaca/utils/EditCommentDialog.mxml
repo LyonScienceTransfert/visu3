@@ -231,7 +231,7 @@
 		{
 			var result:String="void";
 			var user:User = item as User;
-			result = VisuUtils.getUserLabel(user, true);
+			result = VisuUtils.getUserLabelLastName(user, true);
 			return result;
 		}
 		private function addVirtualUser(list:ArrayCollection):User

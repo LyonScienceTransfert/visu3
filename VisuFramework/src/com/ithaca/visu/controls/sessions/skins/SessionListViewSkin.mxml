@@ -17,7 +17,7 @@
 
 			private function labelFunctionOwnerSession(item:Object, column:Object):String
 			{
-				var result:String = VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(item.id_user),true);
+				var result:String = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(item.id_user),true);
 				return result;
 			}
 		]]>
@@ -142,7 +142,7 @@
 									<mx:Spacer width="2%"/>
 									<s:HGroup width="48%" right="1">
 										<!-- move Model from here -->
-										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}"/>
+										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}"/>
 										<s:Label  width="45%" visible="{data.share}" text="(partagé)" right="1"/>
 									</s:HGroup>
 								</s:HGroup>
@@ -179,7 +179,7 @@
 									<mx:Spacer width="2%"/>
 									<s:HGroup  width="75%">
 										<s:Label  width="65%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
-										<s:Label width="35%" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" maxDisplayedLines="1"/>
+										<s:Label width="35%" text="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" maxDisplayedLines="1"/>
 									</s:HGroup>
 								</s:HGroup>
 							</s:ItemRenderer>

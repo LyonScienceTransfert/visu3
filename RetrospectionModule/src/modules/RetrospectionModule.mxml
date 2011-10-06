@@ -369,7 +369,7 @@
 				var nameUser:String = "Comment pour la séance";
 				if(userId != 0)
 				{
-				nameUser = VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+				nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 				}
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;

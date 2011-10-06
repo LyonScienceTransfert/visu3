@@ -31,7 +31,7 @@
 	    </mx:FormItem>
 
 	    <mx:FormItem label="Propriétaire:" width="100%">
-			<s:Label width="100%" text="{VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(bilan.ownerId))}"/>
+			<s:Label width="100%" text="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(bilan.ownerId))}"/>
 	    </mx:FormItem>
 
 	    <mx:FormItem label="Création:" width="100%">
@@ -48,7 +48,7 @@
 			<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
 				<s:Label text="{'['+TimeUtils.formatVisuDateTime(bilan.session.date_session)+']'}"/>
 				<s:Label width="100%" lineBreak="toFit" text="{bilan.session.theme}"/>
-				<s:Label text="{'(de ' + VisuUtils.getUserLabel(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user),true) + ')'}"/>
+				<s:Label text="{'(de ' + VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user),true) + ')'}"/>
 			</s:HGroup>
 	    </mx:FormItem>
 

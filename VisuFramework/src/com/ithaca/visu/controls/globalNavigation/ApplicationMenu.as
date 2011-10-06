@@ -157,7 +157,7 @@ package com.ithaca.visu.controls.globalNavigation
 			if (instance == labelLoggedUser)
 			{
 				var user:User = Model.getInstance().getLoggedUser();
-				var nameUser:String = VisuUtils.getUserLabel(user,true);
+				var nameUser:String = VisuUtils.getUserLabelLastName(user,true);
 				labelLoggedUser.text = nameUser;
 			}
 		}
