@@ -98,7 +98,6 @@
 			private var intervalCheckDecalage:Number = 5;
 			// time start session plus time in this session 
 			private var currentTime:Number;
-			private var pointPanelEditComment:Point;
 			
 			private var selectedSessionIdWhenInit:Number = -1;
 			private var selectedRetroDocumentIdWhenInit:Number = -1;
