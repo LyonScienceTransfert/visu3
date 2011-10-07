@@ -13,6 +13,7 @@
 		<![CDATA[
 			import com.ithaca.timeline.Layout;
 			import com.ithaca.timeline.Timeline;
+			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
@@ -1038,6 +1039,7 @@
 				// remove message from panle resume
 				panelTimeLine.removeAllElements();
 				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
+				timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLineMarkerFor);
 				timeLine.percentWidth = 100;
 				timeLine.percentHeight = 100;
 				timeLine.contextFollowCursor = true;
@@ -1059,6 +1061,21 @@
 					// add listener 
 					panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
 				}
+			}
+			/**
+			 * Initialisation Title the TraceLine(name user)
+			 */
+			private function onAddNewTraceLineMarkerFor(event:TimelineEvent):void
+			{
+				var obsel:Obsel = event.value.obsel;
+				var userId:int = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+				var nameUser:String = "Marquer pour la séance";
+				if(userId != 0)
+				{
+					nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+				}
+				var traceLine:TraceLine = event.value.traceline;
+				traceLine.title = nameUser;
 			}
 			
 			private function onLoadLayoutComplete(event:Event):void 
@@ -1570,7 +1587,7 @@
 <!-- TIMELINE -->
 			<s:Panel width="100%" height="35%" id="panelTimeLine">
 				<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-				<s:Label text="Nothing here" horizontalCenter="0" verticalCenter="0"/>
+				<s:Label text="La séance n'est pas encore démarrer " horizontalCenter="0" verticalCenter="0"/>
 			</s:Panel>
 		</mx:VDividedBox>	
 	</mx:HDividedBox>	
