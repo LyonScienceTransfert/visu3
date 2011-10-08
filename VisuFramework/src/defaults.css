@@ -19,6 +19,25 @@
 
 @namespace timeline		"com.ithaca.timeline.*"; 
 
+timeline|ObselSkin.PlayDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	icon : Embed("images/iconPlayGreen_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.PauseDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	icon : Embed("images/iconPauseYellow_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.EndDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	icon : Embed("images/iconStopYellow_16x16.png");
+	tooltipProp : 'currenttime';
+}
+
 timeline|Timeline
 {
 	skin-class: ClassReference("com.ithaca.timeline.skins.TimelineSkin");
