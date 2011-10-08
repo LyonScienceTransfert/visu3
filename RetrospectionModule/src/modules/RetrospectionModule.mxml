@@ -332,8 +332,11 @@
 							var tlg :TraceLineGroup ;					
 							
 							tlg = timeLine.addTrace(traceGroup.userTrace);
+							// get user
+							var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
+							var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
 							
-							tlg.setStyle("title", traceGroup.userName );				
+							tlg.setStyle("title", lastNameUser );				
 							tlg.setStyle("bgColor", traceGroup.userColor);
 							tlg.setStyle("icon", traceGroup.userAvatar );	
 						}
@@ -364,13 +367,38 @@
 			 */
 			public function onAddNewTraceLineCommentFor( event : TimelineEvent ) : void
 			{
+				var generatorName:String = event.value.generator.name;
 				var obsel:Obsel = event.value.obsel;
-				var userId:int = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
-				var nameUser:String = "Comment pour la séance";
-				if(userId != 0)
+				var userId:int = 0;
+				var nameUser:String = "";
+				
+				if ( generatorName == 'commentsGenerator' )
 				{
-				nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					userId = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
+					if(userId != 0)
+					{
+						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					}else
+					{
+						nameUser = "Comment sur la séance";
+					}
 				}
+				else if ( generatorName == 'markersGenerator' )
+				{
+					userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+					if(userId != 0)
+					{
+						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					}else
+					{
+						nameUser = "Marker sur la séance";
+					}
+					
+				}else if( generatorName  == 'videosGenerator')
+				{
+						nameUser = obsel.props[TraceModel.URL]
+				}
+					
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
 			}
