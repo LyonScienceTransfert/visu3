@@ -4,7 +4,9 @@ package com.ithaca.visu.view.video
 	import com.ithaca.visu.events.PanelEditInfoEvent;
 	import com.ithaca.visu.model.User;
 	
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.ui.Keyboard;
 	
 	import mx.controls.Image;
 	
@@ -83,6 +85,10 @@ package com.ithaca.visu.view.video
 			{
 				buttonCancel.addEventListener(MouseEvent.CLICK, onClickButtonCancel);
 			}
+			if (instance == textInfo)
+			{
+				textInfo.addEventListener(KeyboardEvent.KEY_UP, onClickButtonOk)
+			}
 			
 		}
 		
@@ -109,15 +115,34 @@ package com.ithaca.visu.view.video
 		//
 		//_____________________________________________________________________
 
-		private function onClickButtonOk(event:MouseEvent):void
+		private function onClickButtonOk(event:*):void
 		{
-			var clickButtonOkEvent:PanelEditInfoEvent = new PanelEditInfoEvent(PanelEditInfoEvent.CLICK_BUTTON_OK);
-			clickButtonOkEvent.user = user;
-			// TODO : remove text "marker ici"
-			clickButtonOkEvent.text = textInfo.text;
-			this.dispatchEvent(clickButtonOkEvent);
+			var infoText:String = textInfo.text;
+			if(event is MouseEvent){
+				setMyInfo(false, infoText);
+			}else if (event is KeyboardEvent) 
+			{
+				if(event.keyCode == Keyboard.ENTER)
+				{
+					setMyInfo(true, infoText);
+				}
+			}
 		}
 		
+		private function setMyInfo(cutLastCharMessage:Boolean, message:String):void
+		{
+			// cut last char if was click on button "Enter"
+			if(cutLastCharMessage)
+			{
+				message = message.slice(0, message.length-1);
+			}
+			
+			var clickButtonOkEvent:PanelEditInfoEvent = new PanelEditInfoEvent(PanelEditInfoEvent.CLICK_BUTTON_OK);
+			clickButtonOkEvent.user = user;
+			clickButtonOkEvent.text = message;
+			this.dispatchEvent(clickButtonOkEvent);
+		}
+
 		private function onClickButtonCancel(event:MouseEvent):void
 		{
 			var clickButtonCancelEvent:PanelEditInfoEvent = new PanelEditInfoEvent(PanelEditInfoEvent.CLICK_BUTTON_CANCEL);
