@@ -239,6 +239,7 @@ package com.ithaca.visu.controls.globalNavigation
 					//FIXME : enabled module tutorat
 					 if(o.value == "tutorat")
 					 {
+						 bt.enabled = false;
 						 Model.getInstance().setButtonSalonSynchrone(bt);
 						 Model.getInstance().setEnabledButtonSalonSynchrone(false);
 					 }

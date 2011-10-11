@@ -455,7 +455,8 @@ package  com.ithaca.visu.model
 		
 		public function setEnabledButtonSalonSynchrone(value:Boolean):void
 		{
-			this._buttonSalonSynchrone.enabled = value;
+			// FIXME : enale = false, have to set correct the current session
+			//this._buttonSalonSynchrone.enabled = value;
 		}
 		/**
 		 * current tutorat module, only for debugging
