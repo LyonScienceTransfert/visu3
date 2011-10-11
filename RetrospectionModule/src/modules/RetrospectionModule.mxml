@@ -396,7 +396,7 @@
 					
 				}else if( generatorName  == 'videosGenerator')
 				{
-						nameUser = obsel.props[TraceModel.URL]
+					nameUser = '"' + obsel.props[TraceModel.TEXT] + '"';
 				}
 					
 				var traceLine:TraceLine = event.value.traceline;
