@@ -1066,14 +1066,28 @@
 			 * Initialisation Title the TraceLine(name user)
 			 */
 			private function onAddNewTraceLineMarkerFor(event:TimelineEvent):void
-			{
+			{	
+				var generatorName:String = event.value.generator.name;
 				var obsel:Obsel = event.value.obsel;
-				var userId:int = obsel.props[TraceModel.MARKER_FOR_USER_ID];
-				var nameUser:String = "Marquer pour la séance";
-				if(userId != 0)
+				var userId:int = 0;
+				var nameUser:String = "";
+
+				if ( generatorName == 'markersGenerator' )
 				{
-					nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+					if(userId != 0)
+					{
+						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					}else
+					{
+						nameUser = "Marker sur la séance";
+					}
+					
+				}else if( generatorName  == 'videosGenerator')
+				{
+					nameUser = '"' + obsel.props[TraceModel.TEXT] + '"';
 				}
+				
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
 			}
