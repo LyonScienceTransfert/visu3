@@ -14,16 +14,16 @@
 			</tl>
 			<tl title="Messages" selector="SelectorRegexp" selectorParams="type,Instructions|Keyword|Message" autohide="true"/>
 			<tl title="Documents" selector="SelectorRegexp" selectorParams="type,Document" autohide="true">			
-		<!--		<tl title="Images" selector="SelectorRegexp" selectorParams="typedocument,image" autohide="true">
-					<modifier name="imagesGenerator" splitter="iddocument" source="parent" autohide="true" />
+				<tl title="Images" selector="SelectorRegexp" selectorParams="typedocument,image" autohide="true">
+				<!--	<modifier name="imagesGenerator" splitter="iddocument" source="parent" autohide="true" /> -->
 				</tl>
-		-->
 		
-		<!--		<tl title="Videos" selector="SelectorRegexp" selectorParams="typedocument,video" autohide="true">
-					<modifier name="videosGenerator" splitter="iddocument" source="parent" autohide="true" />
+		
+				<tl title="Videos" selector="SelectorRegexp" selectorParams="typedocument,video" autohide="true">
+				<!--	<modifier name="videosGenerator" splitter="iddocument" source="parent" autohide="true" /> -->
 				</tl>
-		-->
-			<modifier name="videosGenerator" splitter="iddocument" source="parent" autohide="true" />
+		
+	   <!--		<modifier name="videosGenerator" splitter="iddocument" source="parent" autohide="true" /> -->
 			</tl>
 		</tlg>
 	</layout>
