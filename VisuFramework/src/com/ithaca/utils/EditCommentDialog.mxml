@@ -164,17 +164,43 @@
 		//
 		//_____________________________________________________________________
 		
-		private function onClickButtonOk(event:MouseEvent):void
+		private function onHandlerButtonOkAndEnterTextArea(event:*):void
 		{
 			confirm = true;
+			// comment text 
+			var commentText:String = textInfo.text;
+			if(event is MouseEvent){
+				setMyComment(false, commentText);
+			}else if (event is KeyboardEvent) 
+			{
+				if(event.keyCode == Keyboard.ENTER)
+				{
+					setMyComment(true, commentText);
+				}
+			}
+		}
+		
+		private function setMyComment(cutLastCharMessage:Boolean, message:String):void
+		{
+			// cut last char if was click on button "Enter"
+			if(cutLastCharMessage)
+			{
+				message = message.slice(0, message.length-1);
+			}
+			// check if message empty
+			if(UtilFunction.isEmptyMessage(message))
+			{
+				message = fxgt.gettext("(vide)");
+			}
+			// check if it's new comment or update existing
 			if(obsel)
 			{
-				obsel.props[TraceModel.TEXT] = textInfo.text;
+				obsel.props[TraceModel.TEXT] = message;
 			}else
 			{
-				textComment = textInfo.text;
+				textComment = message;
 			}
-				
+			
 			PopUpManager.removePopUp(this);
 		}
 		
@@ -224,7 +250,8 @@
 				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = user.id_user;
 			}
 		}
-		///////////////
+		
+		////////
 		// Utils
 		//////////////
 		private function setNameUserDromDownList(item:Object):String
@@ -239,8 +266,8 @@
 			var userVO:UserVO= new UserVO();
 			userVO.avatar =  IconEnum.getPathByName("commentForSession");
 			userVO.id_user = 0;
-			userVO.firstname = "la séance";
-			userVO.lastname = "";
+			userVO.firstname = "";
+			userVO.lastname = "la séance";
 			
 			var user:User = new User(userVO);
 			list.addItem(user);
@@ -264,13 +291,13 @@
 			<s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup width="100%" paddingLeft="10" paddingRight="10">
-			<s:TextArea  id="textInfo" width="100%" heightInLines="2"/>
+			<s:TextArea  id="textInfo" width="100%" heightInLines="2" keyUp="onHandlerButtonOkAndEnterTextArea(event)"/>
 		</s:HGroup>
 		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
 			<s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
 				<s:label>Supprimer</s:label>
 			</s:Button>
-			<s:Button id="buttonOk" click="onClickButtonOk(event)">
+			<s:Button id="buttonOk" click="onHandlerButtonOkAndEnterTextArea(event)">
 				<s:label>Valider</s:label>
 			</s:Button>
 			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
