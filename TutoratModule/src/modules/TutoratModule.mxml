@@ -988,12 +988,18 @@
 				// add userId in the list present traceGroup
 				listUserIdPresentTimeLine.addItem(userId);
 				
-				var tlg :TraceLineGroup = timeLine.addTrace(traceGroup.userTrace);					
+				var tlg :TraceLineGroup = timeLine.addTrace(traceGroup.userTrace);	
+				
+				// get user
+				var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
+				var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+				
+				tlg.setStyle("title", lastNameUser );
 				tlg.setStyle("bgColor", traceGroup.userColor);
 				tlg.setStyle("icon", traceGroup.userAvatar );	
 				// TODO Nom + prenomof the user
 				//var userName:String = VisuUtils.getUserLabel(traceGroup.user, true);
-				tlg.setStyle("title", traceGroup.userName );					
+				//tlg.setStyle("title", traceGroup.userName );					
 			}
 					
 			/**
