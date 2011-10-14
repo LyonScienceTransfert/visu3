@@ -49,43 +49,10 @@
 			
 			protected function EditComment( e:MouseEvent ):void
 			{
-				this.enabled = false;
-
-				var markerEdit:EditMarkerDialog = new EditMarkerDialog();			
-				markerEdit.commentText = obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
-				markerEdit.titleWindow = fxgt.gettext("Votre marker ici");
-				markerEdit.obsel = obsel;
-				PopUpManager.addPopUp(markerEdit, this);
-				PopUpManager.centerPopUp(markerEdit);
-				markerEdit.y -= markerEdit.height;
-				markerEdit.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveEditDialog );
+				var editCommentEvent:ObselEvent = new ObselEvent(ObselEvent.PRE_EDIT_OBSEL_MARKER_BY_SKIN_MARKER);
+				editCommentEvent.obsel = obsel;
+				dispatchEvent(editCommentEvent);
 			}
-			
-			private function onRemoveEditDialog(event:Event):void
-			{
-				if (event.currentTarget.confirm)
-				{
-					//TODO : il faut ecrire dans hostComponent.obsel.prop .... et pas dans le skin
-					obsel.props[ hostComponent.getStyle( "tooltipProp" ) ] = event.currentTarget.commentTextInput.text;
-					var propChange : PropertyChangeEvent= new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
-					propChange.property = "props";
-					obsel.dispatchEvent( propChange );
-					icon.toolTip = event.currentTarget.commentTextInput.text;
-					// dispatcher on update obsel
-					var updateObsel:ObselEvent = new ObselEvent(ObselEvent.EDIT_OBSEL);
-					updateObsel.obsel = obsel;
-					this.dispatchEvent(updateObsel);
-				}
-				if(event.currentTarget.deleting)
-				{
-					// dispatcher on delete obsel
-					var deleteObsel:ObselEvent = new ObselEvent(ObselEvent.DELETE_OBSEL);
-					deleteObsel.obsel = obsel;
-					this.dispatchEvent(deleteObsel);
-				}
-				this.enabled = true;
-			}
-			
 			
 			protected function onObselChange( event : PropertyChangeEvent ) : void
 			{
