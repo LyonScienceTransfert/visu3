@@ -813,6 +813,9 @@
 			//////////////
 			//////   Handlers the create/edit/delete comments
 			/////////////
+			/**
+			 * Show EditCommentDialog when user edit existing comment obsel
+			 */ 
 			protected function onPreAddCommentBySkinComment(event:ObselEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -832,6 +835,9 @@
 				}
 			}
 			
+			/**
+			 * Show EditCommentDialog when user click on boutton the TimeLine
+			 */ 
 			protected function onPreAddComment(event:TraceLineEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -841,6 +847,9 @@
 				}
 			}
 			
+			/**
+			 * Show EditCommentDialog when user click on boutton the VideoPanel
+			 */ 
 			protected function visio_clickButtonCommentHandler(event:VisuVisioAdvancedEvent):void
 			{	
 				var user:User = event.user;
@@ -848,6 +857,9 @@
 				showDialogAddCommentObsel(user);
 			}
 			
+			/**
+			 * Add on stage the EditCommentDialog
+			 */
 			private function showDialogAddCommentObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -859,15 +871,18 @@
 					editCommentDialog.obsel = obsel;
 					
 					editCommentDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
-					
-					
-					
+				
 					PopUpManager.addPopUp(editCommentDialog, this);
 					PopUpManager.centerPopUp(editCommentDialog);
 					editCommentDialog.y -= editCommentDialog.height;
 					editCommentDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveCommentDialog );
+					
 				}
 			}
+			
+			/**
+			 * Remove EditCommentDialog from the stage
+			 */
 			private function onRemoveCommentDialog(event:Event):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
