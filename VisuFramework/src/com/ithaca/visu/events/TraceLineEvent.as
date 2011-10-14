@@ -78,6 +78,7 @@ package com.ithaca.visu.events
 		static public const ADD_COMMENT_OBSEL : String = 'addCommentObsel';
 		static public const PRE_ADD_COMMENT_OBSEL : String = 'preAddCommentObsel';
 		static public const UPDATE_COMMENT_OBSEL : String = 'updateCommentObsel';
+		static public const UPDATE_MARKER_OBSEL : String = 'updateMarkerObsel';
 		static public const ADDED_COMMENT_OBSEL : String = 'addedCommentObsel';
 		// properties
 		public var idElement:int;
@@ -94,6 +95,11 @@ package com.ithaca.visu.events
 		public var sessionId :int;
 		public var obsel:Obsel;
 		public var timeStamp:Number;
+		
+		public var info : String;
+		public var listUsers : Array;
+		public var action:String = "";
+		
 		// constructor
 		public function TraceLineEvent(type : String,
 												 bubbles : Boolean = true,
@@ -121,6 +127,10 @@ package com.ithaca.visu.events
 			result.obsel = obsel;
 			result.obsel = obsel;
 			result.timeStamp = timeStamp;
+			
+			result.info = info;
+			result.listUsers = listUsers;
+			result.action = action;
 			
 			return result;
 		} 
