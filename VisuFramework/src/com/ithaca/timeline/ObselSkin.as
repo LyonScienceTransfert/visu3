@@ -1,12 +1,15 @@
 package com.ithaca.timeline
 {
-	import spark.components.supportClasses.SkinnableComponent;
+	import com.ithaca.timeline.skins.ObselGenericEditDialog;
 	import com.ithaca.traces.Obsel;
+	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import com.ithaca.timeline.skins.ObselGenericEditDialog;
-	import mx.managers.PopUpManager;
+	
 	import mx.core.UIComponent;
+	import mx.managers.PopUpManager;
+	
+	import spark.components.supportClasses.SkinnableComponent;
 	
 	[Style(name = "icon", type = "Class", inherit = "no")]
 	[Style(name = "backgroundColor", type = "Number", format="Color", inherit = "no")]
@@ -30,6 +33,7 @@ package com.ithaca.timeline
 			doubleClickEnabled = true;
 			toolTip = obsel.toString();
 //			addEventListener( MouseEvent.DOUBLE_CLICK, editObsel );
+			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		public function get obsel () : Obsel
@@ -47,5 +51,10 @@ package com.ithaca.timeline
 
 		// Update the obsel values in the trace
 		protected function UpdateObsel () : void {};
+		
+		private function onMouseMove(event:MouseEvent):void
+		{
+			// Dispatcher 
+		}
 	}
 }
