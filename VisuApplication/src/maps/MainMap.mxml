@@ -174,14 +174,14 @@
 		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendSharedInfo"
-							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor]}"/>              
+							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor, event.beginTime, event.endTime]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{SessionSharedEvent.SEND_EDITED_MARKER}" debug="true">
+		<mate:EventHandlers type="{TraceLineEvent.UPDATE_MARKER_OBSEL}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendEditedMarker"
-							  arguments="{[ event.info, event.listUsers, event.timeStamp, event.action]}"/>              
+							  arguments="{[ event.info, event.listUsers, event.timeStamp, event.action, event.forUserId, event.beginTime, event.endTime]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
