@@ -547,7 +547,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		Long timeEndInMilliseconde = timeBeginInMilliseconde;
 		Integer nbrTraceType = traceType.length;
 		if (nbrTraceType > 0) {
-			if (traceType[0].equals("commentObsel")) {
+			if (traceType[0].equals("commentObsel") || traceType[0].equals("markerObsel")) {
 				String timeBeginString = traceType[1];
 				timeBeginInMilliseconde = Long.parseLong(timeBeginString);
 				log.warn("timeBeginInMilliseconde= {}", timeBeginInMilliseconde
