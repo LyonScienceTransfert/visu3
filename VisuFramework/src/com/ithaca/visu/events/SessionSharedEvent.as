@@ -28,6 +28,11 @@ public class SessionSharedEvent extends Event
 	public var currentTimeVideoPlayer:Number = 0;
 	public var action:String = "";
 	public var idUserFor:int = 0;
+
+	public var beginTime:String = "void";
+	public var endTime:String = "void";
+	
+	
 	
 	// constructor
 	public function SessionSharedEvent(type : String,
