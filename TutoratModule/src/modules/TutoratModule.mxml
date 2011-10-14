@@ -21,6 +21,7 @@
 			import com.ithaca.traces.view.ObselMarker;
 			import com.ithaca.traces.view.ObselSessionOut;
 			import com.ithaca.traces.view.skins.ObselMarkerSkin;
+			import com.ithaca.utils.EditMarkerDialog;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
@@ -46,6 +47,7 @@
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
 			import com.ithaca.visu.model.vo.ObselVO;
+			import com.ithaca.visu.ui.utils.ActionObselEnum;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.ui.utils.RoleEnum;
@@ -1142,25 +1144,6 @@
 					timeLine.range.addTime(beginTime, endSession );
 
 					this.startTimer();
-				}
-			}
-			/**
-			 * listener of the obsel type "SetMarqueur"
-			 */
-			private function onEditObsel(event:ObselEvent):void
-			{
-				var obselSkin:ObselMarkerSkin = event.target as ObselMarkerSkin;
-				var obselMarker:ObselMarker = obselSkin.hostComponent;
-				var text:String = obselMarker.text;
-				var obsel:Obsel = obselMarker.parentObsel;
-				var typeObsel:String = obsel.type;
-				var ownerObsel:int = obsel.props[TraceModel.SENDER];
-				if(Model.getInstance().getLoggedUser().id_user == ownerObsel)
-				{
-					var showWindowEditObselMarker:ObselEvent = new ObselEvent(ObselEvent.SHOW_WINDOW_EDIT_OBSEL);
-					showWindowEditObselMarker.obsel = obsel;
-					showWindowEditObselMarker.textObsel = text;					
-					this.dispatchEvent(showWindowEditObselMarker);
 				}
 			}
 			
