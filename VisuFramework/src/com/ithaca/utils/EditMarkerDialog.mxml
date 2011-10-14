@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	creationComplete="titlewindow1_creationCompleteHandler(event)"
+	close="PopUpManager.removePopUp(this);" >
+	<s:title>{fxgt.gettext("Votre marqueur")}</s:title>
+	<s:states>
+		<s:State name="normal"/>
+	</s:states>
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.traces.Obsel;
+		import com.ithaca.traces.model.TraceModel;
+		import com.ithaca.visu.model.User;
+		import com.ithaca.visu.model.vo.UserVO;
+		import com.ithaca.visu.ui.utils.IconEnum;
+		
+		import gnu.as3.gettext.FxGettext;
+		import gnu.as3.gettext._FxGettext;
+		
+		import mx.collections.ArrayCollection;
+		import mx.controls.Alert;
+		import mx.core.INavigatorContent;
+		import mx.events.CloseEvent;
+		import mx.events.FlexEvent;
+		import mx.managers.PopUpManager;
+		
+		import spark.events.IndexChangeEvent;
+		
+		[Bindable]
+		private var fxgt:_FxGettext;
+		
+		private var _user:User;
+		private var userChange:Boolean;
+		private var _listUser:ArrayCollection;
+		private var listUserChange:Boolean;
+		private var _obsel:Obsel;
+		private var obselChange:Boolean;
+		
+		public var confirm : Boolean = false;	
+		public var deleting : Boolean = false;
+		public var textComment:String;
+		private var _currentObselSkin:Object = null;
+		
+		////////////////////
+		////// setters/getters
+		////////////////////
+		public function set user(value:User):void
+		{
+			_user = value;
+			userChange = true;
+			invalidateProperties();
+		}
+		public function get user():User
+		{
+			return _user;
+		}
+		public function set listUser(value:ArrayCollection):void
+		{
+			_listUser = value;
+			listUserChange = true;
+			invalidateProperties();
+		}
+		public function get listUser():ArrayCollection
+		{
+			return _listUser;
+		}
+		public function set obsel(value:Obsel):void
+		{
+			_obsel = value;
+			obselChange = true;
+			invalidateProperties();
+		}
+		public function get obsel():Obsel
+		{
+			return _obsel;
+		}		
+		
+		public function set currentObselSkin(value:Object):void
+		{
+			_currentObselSkin = value;
+		}
+		public function get currentObselSkin():Object
+		{
+			return _currentObselSkin;
+		}		
+		
+		//_____________________________________________________________________
+		//
+		// Overriden Methods
+		//
+		//_____________________________________________________________________
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();	
+			if(userChange)
+			{
+				userChange = false;
+				if(user)
+				{
+					if(imageUser != null)
+					{
+						imageUser.source = user.avatar;
+					}
+				}else
+				{
+					labelMarkerFor.text = "Votre marqueur sur la séance : ";
+					imageUser.source = IconEnum.getPathByName("commentForSession");
+				}
+			}
+			if(listUserChange)
+			{
+				listUserChange = false;
+				if(listUser)
+				{
+					dropDownListUser.dataProvider = listUser;
+					dropDownListUser.labelFunction = setNameUserDromDownList;
+					// add virtual user = comment for session
+					var virtualUser:User = addVirtualUser(listUser);
+					if(user)
+					{
+						var indexSelectedUser:int = getIndexUser(user);
+						dropDownListUser.selectedIndex = indexSelectedUser;
+					}else
+					{
+						dropDownListUser.selectedItem = virtualUser;
+					}
+				}else
+				{
+					labelMarkerFor.text = "Votre marqueur sur la séance :";
+					//groupUser.includeInLayout = groupUser.visible = false;
+				}
+			}
+			
+			if(obselChange)
+			{
+				obselChange = false;
+				var text:String = "texte de marqueur ici";
+				if(obsel)
+				{
+					text = obsel.props[TraceModel.TEXT];
+					buttonDelete.enabled = true;
+				}
+				textInfo.text = text;
+			}
+		}
+		
+		//_____________________________________________________________________
+		//
+		// Listeners
+		//
+		//_____________________________________________________________________
+		
+		private function onHandlerButtonOkAndEnterTextArea(event:*):void
+		{
+			confirm = true;
+			// comment text 
+			var commentText:String = textInfo.text;
+			if(event is MouseEvent){
+				setMyComment(false, commentText);
+			}else if (event is KeyboardEvent) 
+			{
+				if(event.keyCode == Keyboard.ENTER)
+				{
+					setMyComment(true, commentText);
+				}
+			}
+		}
+		
+		private function setMyComment(cutLastCharMessage:Boolean, message:String):void
+		{
+			// cut last char if was click on button "Enter"
+			if(cutLastCharMessage)
+			{
+				message = message.slice(0, message.length-1);
+			}
+			// check if message empty
+			if(UtilFunction.isEmptyMessage(message))
+			{
+				message = fxgt.gettext("(vide)");
+			}
+			// check if it's new comment or update existing
+			if(obsel)
+			{
+				obsel.props[TraceModel.TEXT] = message;
+			}else
+			{
+				textComment = message;
+			}
+			
+			PopUpManager.removePopUp(this);
+		}
+		
+		private function onClickButtonCancel(event:MouseEvent):void
+		{
+			PopUpManager.removePopUp(this);
+		}
+		private function onClickButtonDelete(event:MouseEvent):void
+		{
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer marqueur ?"),
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteObselConfirmed); 	
+		}
+		
+		protected function deleteObselConfirmed(event:CloseEvent):void
+		{
+			if( event.detail == Alert.YES )
+			{
+				deleting = true;
+				PopUpManager.removePopUp(this);
+			}
+		}
+		
+		protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+		{
+			fxgt = FxGettext;
+			textInfo.setFocus();
+			textInfo.selectAll();
+	
+		}
+		protected function dropDownListUser_changeHandler(event:IndexChangeEvent):void
+		{
+			var index:int = event.newIndex;
+			// update user
+			user = listUser.getItemAt(index) as User;
+			imageUser.source = user.avatar;
+			if(user.id_user == 0)
+			{
+				labelMarkerFor.text = "Votre marqueur sur la séance : ";
+			}else
+			{
+				labelMarkerFor.text = "Votre marqueur sur : ";
+			}
+			// update comment for user if it's not new comment
+			if(obsel)
+			{
+				obsel.props[TraceModel.MARKER_FOR_USER_ID] = user.id_user;
+			}
+		}
+		
+		//////////////
+		// Utils
+		//////////////
+		private function setNameUserDromDownList(item:Object):String
+		{
+			var result:String="void";
+			var user:User = item as User;
+			result = VisuUtils.getUserLabelLastName(user, true);
+			return result;
+		}
+		private function addVirtualUser(list:ArrayCollection):User
+		{
+			var userVO:UserVO= new UserVO();
+			userVO.avatar =  IconEnum.getPathByName("commentForSession");
+			userVO.id_user = 0;
+			userVO.firstname = "";
+			userVO.lastname = "la séance";
+			
+			var user:User = new User(userVO);
+			list.addItem(user);
+			return user;
+		}
+		private function getIndexUser(value:User):int
+		{
+			var index:int = -1;
+			var nbrUser:int = listUser.length;
+			for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+			{
+				var user:User = listUser.getItemAt(nUser) as User;
+				if(user.id_user == value.id_user)
+				{
+					index = nUser;
+					break;
+				}
+			}
+			if(index > -1)
+			{
+				return index;
+			}else
+			{
+				return 0;
+			}
+		}
+		
+		
+	]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
+			<mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}"/>
+			<s:Label  id="labelMarkerFor" fontWeight="bold">
+				<s:text>Votre marqueur sur :</s:text>
+			</s:Label>				
+		</s:HGroup>
+		<s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
+			<mx:Image id="imageUser" width="50" height="50"/>
+			<s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup width="100%" paddingLeft="10" paddingRight="10">
+			<s:TextArea  id="textInfo" width="100%" heightInLines="2" keyUp="onHandlerButtonOkAndEnterTextArea(event)"/>
+		</s:HGroup>
+		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
+			<s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
+				<s:label>Supprimer</s:label>
+			</s:Button>
+			<s:Button id="buttonOk" click="onHandlerButtonOkAndEnterTextArea(event)">
+				<s:label>Valider</s:label>
+			</s:Button>
+			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
+				<s:label>Annuler</s:label>
+			</s:Button>
+		</s:HGroup>
+	</s:VGroup>
+</s:TitleWindow>
