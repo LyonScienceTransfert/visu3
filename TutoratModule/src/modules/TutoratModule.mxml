@@ -891,7 +891,7 @@
 			/**
 			 *  Sending marker
 			 */
-			private function sendMarker(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0):void
+			private function sendMarker(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0, beginTime:String = "", endTime:String = "" ):void
 			{
 				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var listUsersId:Array;
@@ -919,6 +919,14 @@
 				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.idUserFor = idUserFor;
+				if(beginTime != "")
+				{
+					sessionSharedEvent.beginTime = beginTime;
+				}
+				if(endTime != "")
+				{
+					sessionSharedEvent.endTime = endTime;
+				}
 				dispatchEvent(sessionSharedEvent);
 				// update text
 				textChatMarker.text = "";
@@ -1289,42 +1297,218 @@
 				this.dispatchEvent(goHomeModuleEvent);
 				
 			}
+			/////////////////
+			//////////////
+			//////   Handlers the create/edit/delete markers
+			/////////////
 			
-			//_____________________________________________________________________
-			//
-			// EvenHandlers : click on button marker
-			//
-			//_____________________________________________________________________
-		
+			/**
+			 * Show EditMarkerDialog when user edit existing comment obsel
+			 */ 
+			protected function onPreAddMarkerBySkinMarker(event:ObselEvent):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+					var obsel:Obsel = event.obsel;
+					var ownerObsel:int = obsel.props[TraceModel.SENDER];
+					if(Model.getInstance().getLoggedUser().id_user == ownerObsel)
+					{
+						var userId:int = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+						var user:User = null;
+						if(userId != 0)
+						{
+							user = Model.getInstance().getUserPlateformeByUserId(userId);						
+						}
+						var currentCommentObselSkin:Object = event.target;
+						// set init userId 
+						userIdInitEditMarkerDialog = userId;
+						
+						showDialogAddMarkerObsel(user, obsel, currentCommentObselSkin);
+					}
+				}
+			}
+			
+			/**
+			 * Show EditMarkerDialog when user click on boutton the VideoPanel
+			 */ 
 			protected function visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
-			{
-				 var panelEditInfo:PanelEditInfo = new PanelEditInfo();
-				this.groupeVideo.addElement(panelEditInfo);
-				panelEditInfo.x = 25;
-				panelEditInfo.y = 25;
-				
-				panelEditInfo.user = event.user;
-				panelEditInfo.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
-				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditInfoClickButtonOk);
-				panelEditInfo.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditInfoClickButtonCancel); 
+			{	
+				var user:User = event.user;
+				// add comment for user
+				showDialogAddMarkerObsel(user);
 			}
 			
-			private function onPanelEditInfoClickButtonOk(event:PanelEditInfoEvent):void
+			/**
+			 * Add on stage the EditMarkerDialog
+			 */
+			private function showDialogAddMarkerObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null):void
 			{
-				var idUserFor:int = event.user.id_user;
-				var message:String = event.text;
-				// send marker to server 
-				sendMarker(false,message,idUserFor);
-				// remove panelEditInfo
-				var panelEditInfo:PanelEditInfo = event.currentTarget as PanelEditInfo;
-				removePanelEditInfo(panelEditInfo);
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+					var editMarkerDialog:EditMarkerDialog = new EditMarkerDialog();
+					editMarkerDialog.user = value;
+					
+					editMarkerDialog.currentObselSkin = currentObselSkin;
+					editMarkerDialog.obsel = obsel;
+					
+					editMarkerDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+					
+					PopUpManager.addPopUp(editMarkerDialog, this);
+					PopUpManager.centerPopUp(editMarkerDialog);
+					editMarkerDialog.y -= editMarkerDialog.height;
+					editMarkerDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveMarkerDialog );
+					// enabled double click on obsel
+					if(currentObselSkin)
+					{
+						editMarkerDialog.currentObselSkin.enabled = false;
+					}
+				}
 			}
 			
-			private function onPanelEditInfoClickButtonCancel(event:PanelEditInfoEvent):void
+			/**
+			 * Remove EditMarkerDialog from the stage
+			 */
+			private function onRemoveMarkerDialog(event:Event):void
 			{
-				// remove panelEditInfo
-				var panelEditInfo:PanelEditInfo = event.currentTarget as PanelEditInfo;
-				removePanelEditInfo(panelEditInfo);
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+					var updateObselMarker:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_MARKER_OBSEL);
+					updateObselMarker.sessionId = Model.getInstance().getCurrentSessionId();
+					
+					var text:String = "";
+					var typeObsel:String = TraceModel.SET_MARKER;
+					var obsel:Obsel = event.currentTarget.obsel;
+					var action: String = ActionObselEnum.EDIT_TEXT_OBSEL;
+						
+					var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+					var beginTime:String = currentTime.toString();
+					var endTime:String = beginTime;		
+					
+					var sessionId:int = 0;
+					var listUsersId:Array;
+					
+					if (event.currentTarget.confirm)
+					{						
+						var timeStamp:Number = 0
+						var forUserId:int = 0;
+						// set properties for existing obsel
+						if(event.currentTarget.user)
+						{
+							forUserId = event.currentTarget.user.id_user;
+						}
+						// edition the comment obsel
+						if(event.currentTarget.currentObselSkin)
+						{
+							beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+							endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+							forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
+							timeStamp = obsel.props[TraceModel.TIMESTAMP];
+							typeObsel = TraceModel.UPDATE_MARKER;
+							
+							text = obsel.props[TraceModel.TEXT];
+						}else
+						{
+							text = event.currentTarget.textComment;
+						}
+						// check if message empty
+						if(UtilFunction.isEmptyMessage(text))
+						{
+							text = fxgt.gettext("(vide)");
+						}
+						if(userIdInitEditMarkerDialog > -1 && userIdInitEditMarkerDialog != forUserId)
+						{
+							// suppression old obsel
+							typeObsel = TraceModel.DELETE_MARKER;
+							action = ActionObselEnum.DELETE_OBSEL;
+							forUserId = userIdInitEditMarkerDialog;
+						}
+						// set property to send to serveur for adding obsel
+						updateObselMarker.textComment = text;
+						updateObselMarker.timeStamp = timeStamp;
+						updateObselMarker.typeObsel  = typeObsel;
+						updateObselMarker.beginTime = beginTime;
+						updateObselMarker.endTime = endTime;
+						updateObselMarker.forUserId = forUserId;
+
+						var session:Session = Model.getInstance().getCurrentSession();
+						if(session != null)
+						{
+							sessionId = session.id_session;
+						}else return;
+						
+						if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+						{
+							// student will shared markers only with Tuter, Responsable, Admin 
+							// will shared if session paused or recording
+							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+						}else
+						{
+							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+						}
+						// check if message empty
+						var message:String = text;
+						if(UtilFunction.isEmptyMessage(message))
+						{
+							message = fxgt.gettext("(vide)");
+						}
+						
+						updateObselMarker.info = message;
+						updateObselMarker.action = action
+						updateObselMarker.listUsers = listUsersId;
+					}
+					// delete marker obsel
+					if(event.currentTarget.deleting)
+					{
+						updateObselMarker.textComment = obsel.props[TraceModel.TEXT];
+						updateObselMarker.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+						updateObselMarker.typeObsel  = TraceModel.DELETE_MARKER;
+						updateObselMarker.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+						updateObselMarker.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+						updateObselMarker.forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
+						
+						var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+						var listUsersId:Array;
+						if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+						{
+							// student will shared markers only with Tuter, Responsable, Admin 
+							// will shared if session paused or recording
+							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+						}else
+						{
+							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+						}
+
+						updateObselMarker.info = obsel.props[TraceModel.TEXT];
+						updateObselMarker.action = ActionObselEnum.DELETE_OBSEL;
+						updateObselMarker.listUsers = listUsersId;
+					}
+					
+					// check if user click on PanelVideo, this case new obsel 
+					if(event.currentTarget.currentObselSkin)
+					{
+						// send updated obsel to serveur
+						dispatchEvent(updateObselMarker);
+					}else
+					{
+						// set new marker, set beginTime, endTime on server side
+						sendMarker(false, text, forUserId)	
+					}
+					
+					// check if change only COMMENT_FOR_USER_ID
+					if(userIdInitEditMarkerDialog > -1 && !event.currentTarget.deleting && userIdInitEditMarkerDialog != new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]) ) 
+					{
+						// set new marker
+						sendMarker(false, text, new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]), beginTime, endTime )
+					}
+					
+					// enabled skin edited obsel
+					if(event.currentTarget.currentObselSkin)
+					{
+						event.currentTarget.currentObselSkin.enabled = true;
+					}
+					// init var userIdInitEditCommentDialog
+					userIdInitEditMarkerDialog = -1;
+				}
 			}
 			
 			//_____________________________________________________________________
@@ -1510,6 +1694,9 @@
 		<mate:Listener type="{SessionEvent.UPDATE_LIST_VIEW_TRACELINE}"  method="onUpdateViewTimeLine"/>
 		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		
+		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_MARKER_BY_SKIN_MARKER}"  method="onPreAddMarkerBySkinMarker" useWeakReference="true"/>
+
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
 		<s:VGroup width="33%" height="100%" minWidth="200">
