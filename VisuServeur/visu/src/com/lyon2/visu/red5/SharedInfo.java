@@ -101,7 +101,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor)
+	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor, String beginTime, String endTime)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
@@ -228,7 +228,7 @@ public class SharedInfo
 			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
 			   		paramsObselSend.add("timestamp");paramsObselSend.add(timeStamp.toString());
 			   		// add idUserFor 
-			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor > 0)
+			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor >= 0)
 			   		{
 			   			paramsObselSend.add(ObselType.ID_USER_FOR);paramsObselSend.add(String.valueOf(idUserFor));
 			   		}
@@ -241,12 +241,19 @@ public class SharedInfo
 			   		}
 					try
 					{
-						app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
+						if((typeInfo == 5 || typeInfo == 6) && !beginTime.equals("void"))
+						{
+							app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend, "markerObsel", beginTime, endTime);
+						}else
+						{
+							app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselSend, paramsObselSend);					
+						}
 					}
 						catch (SQLException sqle)
 					{
 						log.error("=====Errors===== {}", sqle);
 					}
+						
 				}
 				
 				if(typeInfo == 9)
@@ -265,7 +272,7 @@ public class SharedInfo
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
 		   			paramsObselReceive.add("timestamp");paramsObselReceive.add(timeStamp.toString());
 		   			// add idUserFor 
-			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor > 0)
+			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor >= 0)
 			   		{
 			   			paramsObselReceive.add(ObselType.ID_USER_FOR);paramsObselReceive.add(String.valueOf(idUserFor));
 			   		}
@@ -296,7 +303,17 @@ public class SharedInfo
 			   		
 					try
 					{
-						obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);					
+						log.warn("beginTime {}", beginTime);
+						
+						if((typeInfo == 5 || typeInfo == 6) && !beginTime.equals("void"))
+						{
+							log.warn("A");
+							obsel = app.setObsel(senderUserId, (String)sender.getAttribute("trace"), typeObselReceive, paramsObselReceive, "markerObsel",  beginTime, endTime);
+						}else
+						{
+							log.warn("B");
+							obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselReceive, paramsObselReceive);	
+						}
 					}
 						catch (SQLException sqle)
 					{
@@ -332,7 +349,7 @@ public class SharedInfo
 	}
 
 	@SuppressWarnings("unchecked")
-	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp, String action)
+	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp, String action, int idUserFor, String beginTime, String endTime)
 	{
 		log.warn("======== sendEditedMarker ");
 		String typeObselUser="UpdateMarker";
@@ -370,12 +387,19 @@ public class SharedInfo
 		paramsObsel.add("text");paramsObsel.add(info);
 		paramsObsel.add("sender");paramsObsel.add(senderUserId.toString());
 		paramsObsel.add("timestamp");paramsObsel.add(timeStimp.toString());
+		paramsObsel.add(ObselType.ID_USER_FOR);paramsObsel.add(String.valueOf(idUserFor));
 		Obsel obsel = null;
 		for(IClient sharedClient : listSharedUsers)
 		{
 			try
 			{
-				obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselUser, paramsObsel);					
+				if(!beginTime.equals("void"))
+				{
+					obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselUser, paramsObsel, beginTime, endTime);					
+				}else
+				{
+					obsel = app.setObsel((Integer)sharedClient.getAttribute("uid"), (String)sharedClient.getAttribute("trace"), typeObselUser, paramsObsel);					
+				}
 			}
 				catch (SQLException sqle)
 			{
