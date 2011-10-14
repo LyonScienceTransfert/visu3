@@ -72,6 +72,7 @@
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
 			
 			import spark.components.Button;
 			import spark.components.Label;
@@ -106,6 +107,8 @@
 			private var _isTimeLineAddedOnStage:Boolean = false;
 			
 			private var listUserIdPresentTimeLine:ArrayCollection = new ArrayCollection();
+			// init EditComentDialog with this userId
+			private var userIdInitEditMarkerDialog:int = -1;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
