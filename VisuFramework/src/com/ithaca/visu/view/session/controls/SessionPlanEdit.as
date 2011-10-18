@@ -406,6 +406,7 @@ package com.ithaca.visu.view.session.controls
 			var sessionAddEvent:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_ADD_SESSION);
 			sessionAddEvent.theme = event.theme;
 			sessionAddEvent.isModel = true;
+			sessionAddEvent.date = new Date();
 			this.dispatchEvent(sessionAddEvent);
 		}
 		private function onCreationCompletSharePlanByTemplate(event:FlexEvent):void
