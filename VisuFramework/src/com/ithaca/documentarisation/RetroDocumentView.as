@@ -461,7 +461,6 @@ package com.ithaca.documentarisation
 				}else
 				{
 					listSegment.removeItemAt(indexSegment);
-					this._retroDocument.listSegment.removeItemAt(indexSegment);
 					// update the retroDocument
 					this.updateRetroDocument();
 					// notify change list segment
