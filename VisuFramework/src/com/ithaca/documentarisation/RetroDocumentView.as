@@ -29,12 +29,15 @@ package com.ithaca.documentarisation
 	import mx.controls.Menu;
 	import mx.controls.PopUpButton;
 	import mx.core.ClassFactory;
+	import mx.core.DragSource;
 	import mx.events.CloseEvent;
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.events.MenuEvent;
+	import mx.managers.DragManager;
 	import mx.managers.PopUpManager;
 	
+	import spark.components.BorderContainer;
 	import spark.components.Label;
 	import spark.components.List;
 	import spark.components.TextInput;
@@ -45,6 +48,7 @@ package com.ithaca.documentarisation
 	{
 		[SkinState("normal")]
 		[SkinState("edited")]
+		[SkinState("dropped")]
 		
 		
 		[SkinPart("true")]
@@ -68,8 +72,12 @@ package com.ithaca.documentarisation
 		[SkinPart("true")]
 		public var groupSegment:List;
 		
+		[SkinPart("true")]
+		public var dropContainer:BorderContainer;
+		
 		private var _labelRetroDocument:String;
 		private var normal:Boolean = true;
+		private var dropped:Boolean = false;
 		private var retroDocumentChange:Boolean = false; 
 		private var titleChange:Boolean = false; 
 		private var listSegment:IList;
@@ -262,7 +270,18 @@ package com.ithaca.documentarisation
 		}
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled? "disabled" : normal? "normal" : "edited";
+			var result:String = "";
+			if(normal)
+			{
+				result = "normal";
+			}else if(dropped)
+			{
+				result ="dropped";
+			}else
+			{
+				result = "edited";
+			}
+			return result;
 		}
 		
 		override protected function commitProperties():void
