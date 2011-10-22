@@ -11,11 +11,9 @@ import flash.events.MouseEvent;
 
 import mx.collections.ArrayCollection;
 import mx.events.FlexEvent;
-import mx.managers.CursorManager;
 
 import spark.components.List;
 import spark.components.supportClasses.SkinnableComponent;
-import spark.events.IndexChangeEvent;
 
 [Event(name="addRetroDocument", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
 
@@ -265,9 +263,7 @@ public class Documentarisation extends SkinnableComponent
 	}
 	private function onReturnPanelListRetroDocument(event:PanelButtonEvent):void
 	{
-		retroDocumentView.groupSegment.dataProvider.removeAll();
-		retroDocumentView.groupSegment.dataProvider = null;
-		
+	
 		edit = false;		
 		invalidateSkinState();
 	}
