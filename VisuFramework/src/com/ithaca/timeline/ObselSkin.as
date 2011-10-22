@@ -2,6 +2,7 @@ package com.ithaca.timeline
 {
 	import com.ithaca.timeline.skins.ObselGenericEditDialog;
 	import com.ithaca.traces.Obsel;
+	import com.ithaca.visu.events.ObselEvent;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -24,6 +25,9 @@ package com.ithaca.timeline
 		private var _obsel : Obsel;
 		public var editable : Boolean;
 		
+		private var _dragArea:UIComponent = null;
+		private var dragAreaChange:Boolean;
+		
 		public function ObselSkin( o : Obsel, tl : TraceLine )
 		{
 			super();			
@@ -32,8 +36,9 @@ package com.ithaca.timeline
 			_obsel = o;
 			doubleClickEnabled = true;
 			toolTip = obsel.toString();
-//			addEventListener( MouseEvent.DOUBLE_CLICK, editObsel );
-			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+
+			this.setStyle("dragEnabled", "true");
+			this.setStyle("dragMoveEnabled", "true");		
 		}
 		
 		public function get obsel () : Obsel
@@ -52,9 +57,49 @@ package com.ithaca.timeline
 		// Update the obsel values in the trace
 		protected function UpdateObsel () : void {};
 		
-		private function onMouseMove(event:MouseEvent):void
+		/**
+		 * set drag area of the obsels
+		 */
+		public function set dragArea(value:UIComponent):void
+		{
+			dragAreaChange = true;
+			_dragArea = value;
+			invalidateProperties();
+		}
+		public function get dragArea():UIComponent
+		{
+			return _dragArea;
+		}
+		
+		private function onMouseDown(event:MouseEvent):void
 		{
 			// Dispatcher 
+			var moveObselEvent:ObselEvent = new ObselEvent(ObselEvent.MOUSE_DOWN_OBSEL);
+			moveObselEvent.value = this;
+			moveObselEvent.event = event;
+			
+			this.dispatchEvent(moveObselEvent);
 		}
+		
+		//_____________________________________________________________________
+		//
+		// Overriden Methods
+		//
+		//_____________________________________________________________________
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();
+			if(dragAreaChange)
+			{
+				dragAreaChange = false;
+				if(dragArea)
+				{
+					dragArea.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				}
+			}
+		}
+
+		
 	}
 }
