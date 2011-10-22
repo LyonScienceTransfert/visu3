@@ -321,9 +321,13 @@ public class Documentarisation extends SkinnableComponent
 	private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
 	{
 		var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
-		loadRetroDocument.idRetroDocument =  value.documentId;
-		loadRetroDocument.editabled = true;				
-		dispatchEvent(loadRetroDocument);
+		if(value)
+		{
+			loadRetroDocument.idRetroDocument = value.documentId;;  
+			loadRetroDocument.editabled = true;				
+			dispatchEvent(loadRetroDocument);
+			
+		}
 	}
 }
 }
