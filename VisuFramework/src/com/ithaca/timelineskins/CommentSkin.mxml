@@ -79,6 +79,8 @@
 				{
 					currentState = 'editable';				
 				}
+				// set dragArea, drag only by image the comment
+				hostComponent.dragArea = icon;
 			}
 
 			public function updateWidth( event : Event ) :  void
@@ -248,7 +250,9 @@
 	</s:Group>
 			
 	<s:BorderContainer id="cursor" borderWeight="1"   backgroundColor="#FEFDD6" minWidth="1" minHeight="1" width="100%" >
-		<mx:Image id="icon" source="{getStyle('icon')}" height="100%" top="2" left="2" mouseDown.editable="zcStartDrag(event);" mouseOver.editable="CursorIcons.SetHandCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"/>
+		<!-- removed listener for drag-drop comment inside the TL Comment, use drag-drop only for the "Bilan"-->
+		<!-- mouseDown.editable="zcStartDrag(event);" -->
+		<mx:Image id="icon" source="{getStyle('icon')}" height="100%" top="2" left="2" mouseOver.editable="CursorIcons.SetHandCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"/>
 		<s:Label id="commentLabel" width="100%" height="10" fontSize="10" x="{icon.width+5}"  y="3"  mouseOver.editable="CursorIcons.SetIBeamCursor(event)" mouseOut.editable="CursorIcons.SetDefaultCursor(event)"    />
 	</s:BorderContainer>
 			
