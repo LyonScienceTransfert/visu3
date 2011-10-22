@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
+	 	creationComplete="skin1_creationCompleteHandler(event)" xmlns:utils="com.ithaca.utils.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.RetroDocumentView")]
 	</fx:Metadata>
+	<fx:Declarations> 
+
+	</fx:Declarations>
 	<s:states>
 		<s:State name="normal" />
 		<s:State name="edited" />	
+		<s:State name="dropped" />	
 	</s:states>
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
+			
+			[Bindable]
+			private var fxgt:_FxGettext;
+			
+
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fxgt = FxGettext;
+			}
+
 		]]>
 	</fx:Script>
 	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
@@ -24,13 +46,18 @@
 	<s:VGroup width="100%" height="100%">
 		<s:HGroup  width="100%" gap="3" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5">
 			<s:Label text="balbla" id="titleDocument" minWidth="100" width="100%" includeIn="normal" fontWeight="bold" paddingLeft="5"/>
-			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited" fontSize="12"/>
-			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited"/>
+			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited, dropped" fontSize="12"/>
+			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited, dropped"/>
 			<!--<mx:PopUpButton  icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}" id="addPopUpButton" width="41" includeIn="edited" buttonMode="true"/>-->
 			<components:IconButton id="buttonMenuAddSegment" icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}"  width="29"/>
-			<mx:Button icon="{IconEnum.getIconByName('iconEye_16x16')}" id="buttonSwitch" enabled="true" width="22" includeIn="edited" visible="true" buttonMode="true"/>
+			<mx:Button icon="{IconEnum.getIconByName('iconEye_16x16')}" id="buttonSwitch" enabled="true" width="22" includeIn="edited, dropped" visible="true" buttonMode="true"/>
 		</s:HGroup>
 		<!-- LIST THE SEGMENTS/BLOC -->
 		<s:List width="100%" height="100%" id="groupSegment"/>
+		<s:BorderContainer id="dropContainer" includeIn="dropped" width="100%" height="100" backgroundColor="#30C837">
+			<s:RichText maxDisplayedLines="2" width="100%" height="100" horizontalCenter="0" verticalCenter="1" fontSize="14" fontWeight="normal" textAlign="center" verticalAlign="middle" fontStyle="italic">
+				 <s:text>{fxgt.gettext("Drop obsel ici, pour ajouter dans le bilan block vidéo")}</s:text>
+			</s:RichText>
+		</s:BorderContainer>
 	</s:VGroup>
 </s:Skin>

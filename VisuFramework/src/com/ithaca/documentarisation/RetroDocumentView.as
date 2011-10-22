@@ -240,7 +240,10 @@ package com.ithaca.documentarisation
 				dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
 			}
 			
-				
+			if(instance == dropContainer)
+			{
+				dropContainer.addEventListener(DragEvent.DRAG_DROP, onDropObsel);
+				dropContainer.addEventListener(DragEvent.DRAG_ENTER, onDragEnterObsel);
 			}
 		}
 		
@@ -530,11 +533,13 @@ package com.ithaca.documentarisation
 			this.needUpdateRetroDocument = true;
 		}
 		
+		////////////////
+		///// Listeners for drag-drop the segments/bloks
+		///////////////
 		private function onReadyToDragSegment(event:RetroDocumentEvent):void
 		{
 			setDragDropEnabled(true);
 		}
-		
 		private function onDragCompleteSegment(event:DragEvent):void
 		{
 			setDragDropEnabled(false);
@@ -542,6 +547,98 @@ package com.ithaca.documentarisation
 			listSegment = this.groupSegment.dataProvider;
 			_retroDocument.listSegment = listSegment;
 			needUpdateRetroDocument = true;
+		}
+		
+		////////////////
+		///// Listeners for Obsel the TimeLine
+		///////////////
+		private function onReadyToDragObsel(event:RetroDocumentEvent):void
+		{
+			if(event.value is ObselSkin)
+			{
+				var dragInitiator:ObselSkin = ObselSkin(event.value);
+				var ds:DragSource = new DragSource();
+				ds.addData(dragInitiator, "obselSkin");               
+				
+				var objectProxy:Label = new Label(); 
+				objectProxy.maxDisplayedLines = 6;
+				objectProxy.width = 100; 
+				objectProxy.text ="Vous pouver deplacer l'obsel vers la " +
+					"bilan pour ajouter dans la liste des segments block vidéo"
+
+				//objectProxy.obselSkin = dragInitiator;
+				DragManager.doDrag(dragInitiator, ds, event.event as MouseEvent, 
+					objectProxy);
+				// set dropped skin
+				dropped  = true;
+				invalidateSkinState();
+			}
+		}
+		
+		private function onDragEnterObsel(event:DragEvent):void
+		{
+			if (event.dragSource.hasFormat("obselSkin"))
+			{
+				DragManager.acceptDragDrop(BorderContainer(event.currentTarget));
+			}
+		}
+		
+		private function onDropObsel(event:DragEvent):void
+		{
+			var segment:Segment = new Segment(this._retroDocument);
+			segment.order = 3;
+			segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
+			var obselSkin:ObselSkin = event.dragInitiator as ObselSkin;
+			var obsel:Obsel = obselSkin.obsel;
+			// set text obsel
+			var textObsel:String = "";
+			switch (obsel.type)
+			{
+				case TraceModel.RECEIVE_MARKER :
+					textObsel = obsel.props[TraceModel.TEXT];
+					break;
+				case TraceModel.RECEIVE_CHAT_MESSAGE :
+					textObsel = obsel.props[TraceModel.CONTENT];
+					break;
+				case TraceModel.RECEIVE_DOCUMENT :
+					textObsel = obsel.props[TraceModel.TEXT];
+					break;
+				case TraceModel.RECEIVE_INSTRUCTIONS :
+					textObsel = obsel.props[TraceModel.INSTRUCTIONS];
+					break;
+				case TraceModel.RECEIVE_KEYWORD :
+					textObsel = obsel.props[TraceModel.KEYWORD];
+					break;
+				case TraceModel.SET_TEXT_COMMENT :
+					textObsel = obsel.props[TraceModel.TEXT];
+					break;
+				default :
+					textObsel = "void";
+					break;
+			}
+			segment.comment = textObsel;
+	
+			segment.beginTimeVideo = obsel.begin;
+			// check if duration > 0
+			var duration:Number = obsel.end - obsel.begin;
+			if(duration < MIN_DURATION_SEGMENT_VIDEO)
+			{
+				duration = DEFAULT_DURATION_SEGMENT_VIDEO; 
+			}
+			segment.endTimeVideo = segment.beginTimeVideo + duration;
+		
+			// add segment
+			addSegment(segment);
+		}
+		
+		/**
+		 * stop dragging
+		 */
+		private function onStopToDragObsel(event:RetroDocumentEvent):void
+		{
+			// set dropped skin
+			dropped  = false;
+			invalidateSkinState();
 		}
 		//_____________________________________________________________________
 		//
