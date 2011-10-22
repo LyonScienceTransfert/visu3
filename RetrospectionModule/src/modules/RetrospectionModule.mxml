@@ -19,6 +19,7 @@
 			import com.ithaca.documentarisation.events.RetroDocumentEvent;
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.timeline.Layout;
+			import com.ithaca.timeline.ObselSkin;
 			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.timeline.events.TimelineEvent;
@@ -72,6 +73,9 @@
 			private var timerSynchro:Timer;
 			private var timerRetroDocumentSegment:Timer;
 			private var currentTimeSessionMilliseconds:Number;
+			private var timerMouseDownObsel:Timer;
+			// max duratio befor play video in ms.
+			private var MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN:Number = 2*1000;
 			
 			public var listSessionOpen : ArrayCollection;
 			
@@ -103,6 +107,8 @@
 			private var selectedRetroDocumentIdWhenInit:Number = -1;
 			// init EditComentDialog with this userId
 			private var userIdInitEditCommentDialog:int = -1;
+			// current ObselSkin to dragging
+			private var currentObselSkin:ObselSkin = null;
 			
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
@@ -995,7 +1001,84 @@
 					dispatchEvent(updateDurationObselComment);
 				}
 			}
+
+			//////////////////////
+			////// Listeners of the ObselSkin
+			/////////////////////
 			
+			/**
+			 * listener Mouse Down ObselSkin
+			 */
+			private function onMouseDownObsel(event:ObselEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// set current ObselSkin
+					currentObselSkin = event.value as ObselSkin;
+					// set timer play video from obsel
+					timerMouseDownObsel = new Timer(MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN,0);
+					timerMouseDownObsel.addEventListener(TimerEvent.TIMER, endDurationMouseDownObselSkin);
+					timerMouseDownObsel.start();
+					// add Mouse move listener 
+					currentObselSkin.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveObsel); 
+					// add mouse up listener
+					this.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpRetroModuleView);
+				}
+			}
+			
+			private function endDurationMouseDownObselSkin(event:TimerEvent):void
+			{
+				timerMouseDownObsel.stop();
+				trace("will play");
+				// stop play RetroDocumentSegment if playing
+				clickOnTimeLine = true;
+				// stop play video segment
+				endVideoSegment();
+				var begiTimeObsel:Number = currentObselSkin.obsel.begin;
+				// pre play video flux
+				prePlayVideoFlux(begiTimeObsel);	
+			}
+			
+			/**
+			 * listener on the stage Mouse Up 
+			 */
+			private function onMouseUpRetroModuleView(event:MouseEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// remove mouse up listener from the stage
+					this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpRetroModuleView);
+					// remove listenet mouse move
+					currentObselSkin.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveObsel);
+					// update currentObselSkin
+					currentObselSkin = null;
+					// dispatcher stop dragging
+					var mouseUpObsel:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL);
+					mouseUpObsel.event = event;
+					dispatchEvent(mouseUpObsel);
+					// stop timer Mouse down obsel
+					timerMouseDownObsel.stop();
+				}
+			}
+			
+			/**
+			 * listener when start move obsel
+			 */
+			private function onMouseMoveObsel(event:MouseEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var obselSkin:ObselSkin = event.currentTarget as ObselSkin;
+					// dispatcher 
+					var mouseDownObsel:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL);
+					mouseDownObsel.value = obselSkin;
+					mouseDownObsel.event = event;
+					dispatchEvent(mouseDownObsel);
+					// stop timer
+					timerMouseDownObsel.stop();
+				}
+			}
+		
 			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
 			{
 				if(delta != 0)
@@ -1250,7 +1333,7 @@
 		<mate:Listener type="{TraceLineEvent.PRE_ADD_COMMENT_OBSEL}"  method="onPreAddComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.UPDATE_DURTION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
-		
+		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -1302,6 +1385,7 @@
 <!-- DOCUMENTARISATION -->		
 			<documentarisation:Documentarisation height="100%" minWidth="330"
 				 id="documentarisation"
+				 dragOwnerObject="{this}"
 				 addRetroDocument="documentarisation_addRetroDocumentHandler(event)">				 
 			</documentarisation:Documentarisation>
 		</mx:HDividedBox>
