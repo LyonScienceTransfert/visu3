@@ -82,12 +82,19 @@ package  com.ithaca.visu.events
 		static public const DELETE_OBSEL_COMMENT : String = 'deleteObselComment';
 		static public const SHOW_WINDOW_EDIT_OBSEL : String = 'showWindowEditObsel';
 		static public const SHOW_WINDOW_EDIT_COMMENT_OBSEL : String = 'showWindowEditCommentObsel';
+
+		static public const MOUSE_MOVE_OBSEL : String = 'mouseMoveObsel';
+		static public const MOUSE_DOWN_OBSEL : String = 'mouseDownObsel';
+		static public const MOUSE_UP_OBSEL : String = 'mouseUpObsel';
 		
 		// properties
 		public var obsel : Obsel;
 		public var textObsel:String;
 		public var clickOnButtonAdd:Boolean;
 		public var clickLocalX:Number;
+		
+		public var value:Object;
+		public var event:Object;
 		
 		// constructor
 		public function ObselEvent(type : String,
