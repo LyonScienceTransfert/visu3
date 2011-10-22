@@ -6,6 +6,9 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.renderer.SegmentCommentAudioRenderer;
 	import com.ithaca.documentarisation.renderer.SegmentTitleRenderer;
 	import com.ithaca.documentarisation.renderer.SegmentVideoRenderer;
+	import com.ithaca.timeline.ObselSkin;
+	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.ShareUserTitleWindow;
 	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.UserEvent;
@@ -422,7 +425,7 @@ package com.ithaca.documentarisation
 				segment.comment = "";
 				
 				segment.beginTimeVideo = this._startDateSession + _currentTime;
-				segment.endTimeVideo = this._startDateSession + _currentTime + 10000;
+				segment.endTimeVideo = this._startDateSession + _currentTime + DEFAULT_DURATION_SEGMENT_VIDEO;
 				break;
 			}
 			// add segment
@@ -450,13 +453,11 @@ package com.ithaca.documentarisation
 			
 			// update retroDocument
 			updateRetroDocument();
+			
 			// notify change list segment 
 			notifyChangeListSegment();
-			// get index added segment
-			//var indexAddedSegment:int = listSegment.length - 1;
-			//groupSegment.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateGroupeSegmentComplete);
-			//groupSegment.selectedItem = segment;
 		}
+		
 		private function notifyChangeListSegment():void
 		{
 			var xml:String = _retroDocument.getRetroDocumentXMLtoSTRING();
@@ -477,8 +478,6 @@ package com.ithaca.documentarisation
 			
 			Alert.yesLabel = fxgt.gettext("Oui");
 			Alert.noLabel = fxgt.gettext("Non");
-/*			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le segment intitulé "+'"'+removingSegment.title+'"'+"?"),
-				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeSegmentConformed); */
 			Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer ce segment ?"),
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeSegmentConformed); 
 		}
