@@ -29,6 +29,9 @@
 			//	var myColorTransform:ColorTransform = new ColorTransform(1,1,1,1,+128,0,0);
 			//	myColorTransform.color = 0xE6A360;
 //				icon.transform.colorTransform = myColorTransform;
+				
+				// set drag area
+				hostComponent.dragArea = icon;
 			}
 		]]>        
     </fx:Script>

@@ -45,6 +45,8 @@
 				{
 					currentState = 'editable';				
 				}
+				// set drag area
+				hostComponent.dragArea = icon;
 			}
 			
 			protected function EditComment( e:MouseEvent ):void
