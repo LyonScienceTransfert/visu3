@@ -11,7 +11,6 @@ import flash.events.MouseEvent;
 
 import mx.controls.Image;
 import mx.events.FlexEvent;
-import mx.events.StateChangeEvent;
 
 import spark.components.Label;
 import spark.components.RichEditableText;

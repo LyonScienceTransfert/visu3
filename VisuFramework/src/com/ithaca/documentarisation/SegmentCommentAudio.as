@@ -4,7 +4,6 @@ import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.utils.components.IconDelete;
-import com.lyon2.controls.utils.TimeUtils;
 
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
