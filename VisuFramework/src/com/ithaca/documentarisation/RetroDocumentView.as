@@ -87,8 +87,14 @@ package com.ithaca.documentarisation
 		private var TIME_UPDATE_RETRODOCUMENT:Number = 1000;
 		private var DELTA_X_MENU_ADD_SEGMENT:Number = -150;
 		private var DELTA_Y_MENU_ADD_SEGMENT:Number = 22;
+		// default duration segmen/block video in ms.
+		private var DEFAULT_DURATION_SEGMENT_VIDEO:Number = 10*1000;
+		// min. duration segment/block video
+		private var MIN_DURATION_SEGMENT_VIDEO:Number = 1*1000;
 		
 		private var _currentTime:Number;
+		
+		private var _dragOwnerObject:Object;
 		
 		[Bindable]
 		private var fxgt:_FxGettext;
@@ -147,6 +153,15 @@ package com.ithaca.documentarisation
 		{
 			_currentTime = value;
 		};
+		public function set dragOwnerObject(value:Object):void
+		{
+			_dragOwnerObject = value;
+		}
+		public function get dragOwnerObject():Object
+		{
+			return _dragOwnerObject;
+		}
+		
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -212,6 +227,11 @@ package com.ithaca.documentarisation
 				
 				groupSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
 				groupSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
+				// set listener on Tutorat Module
+				dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
+				dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
+			}
+			
 				
 			}
 		}

@@ -47,6 +47,8 @@ public class Documentarisation extends SkinnableComponent
 	private var _currentTime:Number;
 	private var currentTimeChange:Boolean;
 	
+	private var _dragOwnerObject:Object;
+	
 	public function Documentarisation()
 	{
 		super();
@@ -133,6 +135,16 @@ public class Documentarisation extends SkinnableComponent
 		invalidateProperties();
 	};
 	
+	public function set dragOwnerObject(value:Object):void
+	{
+		_dragOwnerObject = value;
+	}
+	
+	public function get dragOwnerObject():Object
+	{
+		return _dragOwnerObject;
+	}
+	
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -173,6 +185,7 @@ public class Documentarisation extends SkinnableComponent
 			retroDocumentView.listShareUser = _listUser;
 			retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine; 
 			retroDocumentView.addEventListener(RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT, onUpdateTitreRetroDocument);
+			retroDocumentView.dragOwnerObject = dragOwnerObject;
 		}
 	}
 	
