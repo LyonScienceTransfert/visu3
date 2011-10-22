@@ -41,6 +41,8 @@ package  com.ithaca.documentarisation.events
 		
 		static public const CHANGE_LIST_RETRO_SEGMENT : String = 'changeListRetroSegment';
 		static public const READY_TO_DRAG_DROP_SEGMENT : String = 'readyToDragDropSegment';
+		static public const READY_TO_DRAG_DROP_OBSEL : String = 'readyToDragDropObsel';
+		static public const STOP_TO_DRAG_DROP_OBSEL : String = 'stopToDragDropObsel';
 		// properties
 		public var segment  :Segment;
 		public var xmlRetrodocument:String;
@@ -57,6 +59,9 @@ package  com.ithaca.documentarisation.events
 		public var titleRetrodocument:String;
 		public var statusPlaySegment:Boolean;
 		public var streamPathAudioCommentSegment:String;
+		
+		public var value:Object;
+		public var event:Object;
 		
 		// constructor
 		public function RetroDocumentEvent(type : String,
