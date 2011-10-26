@@ -139,10 +139,6 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/PressSliderVer5.png")]
 		static private var pressSlider:Class;
-
-		[Bindable]
-		[Embed("images/ReleaseSliderVer5.png")]
-		static private var releaseSlider:Class;
 		// icon Statement composant
 
 		[Bindable]
@@ -344,6 +340,9 @@ package com.ithaca.visu.ui.utils
 			case "video" : 
 				path = "images/video.jpg";
 				break;
+			case "readVideo" : 
+				path = "images/iconReadVideo_20x20.png";
+				break;
 			}
 			return path;
 		}
@@ -387,9 +386,6 @@ package com.ithaca.visu.ui.utils
 					break;
 				case TraceModel.PRESS_SLIDER_VIDEO: 
 					icon = pressSlider;
-					break;
-				case TraceModel.RELEASE_SLIDER_VIDEO: 
-					icon = releaseSlider;
 					break;
 				case TraceModel.SET_TEXT_COMMENT: 
 					icon = comment;
