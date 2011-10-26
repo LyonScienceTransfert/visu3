@@ -81,6 +81,8 @@
 				}
 				// set dragArea, drag only by image the comment
 				hostComponent.dragArea = icon;
+				if ( hostComponent.getStyle( "tooltipProp" )  )
+					hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
 			}
 
 			public function updateWidth( event : Event ) :  void
