@@ -83,7 +83,6 @@ package com.ithaca.documentarisation
 		private var dropped:Boolean = false;
 		private var retroDocumentChange:Boolean = false; 
 		private var titleChange:Boolean = false; 
-		private var listSegment:IList;
 		private var _retroDocument:RetroDocument;
 		private var _startDateSession:Number;
 		private var _durationSession:Number;
@@ -113,7 +112,6 @@ package com.ithaca.documentarisation
 		public function RetroDocumentView()
 		{
 			super();
-			listSegment = new ArrayCollection();
 			_listUser = new Array();
 			fxgt = FxGettext;
 		}
@@ -124,7 +122,6 @@ package com.ithaca.documentarisation
 		public function set retroDocument(value:RetroDocument):void
 		{
 			_retroDocument = value;
-			listSegment = new ArrayCollection();
 			
 			retroDocumentChange = true;
 			invalidateProperties();
@@ -217,7 +214,6 @@ package com.ithaca.documentarisation
 			}	
 			if(instance == groupSegment)
 			{
-				groupSegment.dataProvider = listSegment;
 				groupSegment.itemRendererFunction = function(item:Object):ClassFactory
 				{
 					var className:Class = SegmentTitleRenderer;
@@ -297,8 +293,6 @@ package com.ithaca.documentarisation
 			{
 				retroDocumentChange = false;
 				
-				parseRetroDocument();
-				
 				if(titleDocument != null)
 				{
 					this.titleDocument.text  = this._labelRetroDocument;
@@ -310,19 +304,6 @@ package com.ithaca.documentarisation
 			}
 		}
 		
-		private function parseRetroDocument():void
-		{
-			_labelRetroDocument = this._retroDocument.title;
-			var nbrSegment:int = this._retroDocument.listSegment.length;
-			for(var nSegment:int = 0; nSegment < nbrSegment; nSegment++ )
-			{
-				var segment:Segment = this._retroDocument.listSegment.getItemAt(nSegment) as Segment;
-				this.listSegment.addItem(segment);
-			}	
-			
-			groupSegment.dataProvider = listSegment;
-		}
-
 		//_____________________________________________________________________
 		//
 		// Listeners
@@ -445,11 +426,7 @@ package com.ithaca.documentarisation
 		
 		private function addSegment(value:Segment):void
 		{
-			listSegment.addItem(value);
 			// set updated listSegment
-			_retroDocument.listSegment = listSegment;
-			
-			groupSegment.dataProvider = listSegment;
 			
 			// update retroDocument
 			updateRetroDocument();
@@ -469,7 +446,6 @@ package com.ithaca.documentarisation
 		private function onUpdateGroupeSegmentComplete(event:FlexEvent):void
 		{
 			// get index added segment
-			var indexAddedSegment:int = listSegment.length - 1;
 			groupSegment.selectedIndex = indexAddedSegment;
 		}
 		private function onRmoveSegment(event:RetroDocumentEvent):void
@@ -486,7 +462,6 @@ package com.ithaca.documentarisation
 			if( event.detail == Alert.YES)
 			{
 				var indexSegment:int = -1;
-				var listSegment:ArrayCollection = this.listSegment as ArrayCollection;
 				var nbrSegment:int = listSegment.length;
 				for(var nSegment:int = 0 ; nSegment < nbrSegment ; nSegment++)
 				{
@@ -542,9 +517,6 @@ package com.ithaca.documentarisation
 		private function onDragCompleteSegment(event:DragEvent):void
 		{
 			setDragDropEnabled(false);
-			// set updated listSegment
-			listSegment = this.groupSegment.dataProvider;
-			_retroDocument.listSegment = listSegment;
 			needUpdateRetroDocument = true;
 		}
 		
