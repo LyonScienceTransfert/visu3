@@ -21,20 +21,26 @@
 
 timeline|ObselSkin.PlayDocumentVideo
 {
-	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
 	icon : Embed("images/iconPlayGreen_16x16.png");
 	tooltipProp : 'currenttime';
 }
 timeline|ObselSkin.PauseDocumentVideo
 {
-	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
 	icon : Embed("images/iconPauseYellow_16x16.png");
 	tooltipProp : 'currenttime';
 }
 timeline|ObselSkin.EndDocumentVideo
 {
-	skin-class: ClassReference("com.ithaca.timeline.skins.IconSkin");
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
 	icon : Embed("images/iconStopYellow_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.SliderReleaseDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/iconRealeaseSlider_16x16.png");
 	tooltipProp : 'currenttime';
 }
 
@@ -155,6 +161,7 @@ timeline|ObselSkin.Comment
 {
 skin-class: ClassReference("com.ithaca.timelineskins.CommentSkin");	
 icon :Embed("images/consigneVisu2_20x20.png");
+tooltipProp : 'text';
 }
 
 timeline|ObselSkin.Activity
@@ -264,6 +271,10 @@ sessions|SessionManagerView
 utils|VisuToolTip
 {
 	skin-class: ClassReference("com.ithaca.utils.skins.VisuToolTipSkin");
+}
+utils|DragObselProxyView
+{
+	skin-class: ClassReference("com.ithaca.utils.skins.DragObselProxyViewSkin");
 }
 user|ShareUser
 {
