@@ -214,6 +214,8 @@ package com.ithaca.documentarisation
 			}	
 			if(instance == groupSegment)
 			{
+				//groupSegment.dataProvider = listSegment;
+				groupSegment.dataProvider = this._retroDocument.listSegment;
 				groupSegment.itemRendererFunction = function(item:Object):ClassFactory
 				{
 					var className:Class = SegmentTitleRenderer;
@@ -292,6 +294,8 @@ package com.ithaca.documentarisation
 			if(retroDocumentChange)
 			{
 				retroDocumentChange = false;
+				// set list segments
+				groupSegment.dataProvider = this._retroDocument.listSegment;
 				
 				if(titleDocument != null)
 				{
@@ -427,6 +431,8 @@ package com.ithaca.documentarisation
 		private function addSegment(value:Segment):void
 		{
 			// set updated listSegment
+			_retroDocument.listSegment.addItem(value);
+			groupSegment.dataProvider = _retroDocument.listSegment;
 			
 			// update retroDocument
 			updateRetroDocument();
@@ -446,6 +452,7 @@ package com.ithaca.documentarisation
 		private function onUpdateGroupeSegmentComplete(event:FlexEvent):void
 		{
 			// get index added segment
+			var indexAddedSegment:int = this._retroDocument.listSegment.length - 1;
 			groupSegment.selectedIndex = indexAddedSegment;
 		}
 		private function onRmoveSegment(event:RetroDocumentEvent):void
@@ -462,6 +469,7 @@ package com.ithaca.documentarisation
 			if( event.detail == Alert.YES)
 			{
 				var indexSegment:int = -1;
+				var listSegment:ArrayCollection = this.retroDocument.listSegment as ArrayCollection;
 				var nbrSegment:int = listSegment.length;
 				for(var nSegment:int = 0 ; nSegment < nbrSegment ; nSegment++)
 				{
