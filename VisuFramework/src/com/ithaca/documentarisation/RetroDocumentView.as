@@ -569,34 +569,9 @@ package com.ithaca.documentarisation
 			segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
 			var obselSkin:ObselSkin = event.dragInitiator as ObselSkin;
 			var obsel:Obsel = obselSkin.obsel;
-			// set text obsel
-			var textObsel:String = "";
-			switch (obsel.type)
-			{
-				case TraceModel.RECEIVE_MARKER :
-					textObsel = obsel.props[TraceModel.TEXT];
-					break;
-				case TraceModel.RECEIVE_CHAT_MESSAGE :
-					textObsel = obsel.props[TraceModel.CONTENT];
-					break;
-				case TraceModel.RECEIVE_DOCUMENT :
-					textObsel = obsel.props[TraceModel.TEXT];
-					break;
-				case TraceModel.RECEIVE_INSTRUCTIONS :
-					textObsel = obsel.props[TraceModel.INSTRUCTIONS];
-					break;
-				case TraceModel.RECEIVE_KEYWORD :
-					textObsel = obsel.props[TraceModel.KEYWORD];
-					break;
-				case TraceModel.SET_TEXT_COMMENT :
-					textObsel = obsel.props[TraceModel.TEXT];
-					break;
-				default :
-					textObsel = "void";
-					break;
-			}
+			// set text obselSkin, toolTips
+			var textObsel:String = obselSkin.toolTip;
 			segment.comment = textObsel;
-	
 			segment.beginTimeVideo = obsel.begin;
 			// check if duration > 0
 			var duration:Number = obsel.end - obsel.begin;
