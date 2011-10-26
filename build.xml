@@ -183,7 +183,6 @@ or by setting the following environment variable:
 	  		  	<include-file name="images/PlayWalkOutVer5.png" path="${framework.images}/PlayWalkOutVer5.png"/>
 	  		  	<include-file name="images/PressSliderVer5.png" path="${framework.images}/PressSliderVer5.png"/>
 	  		  	<include-file name="images/Poubelle.png" path="${framework.images}/Poubelle.png"/>
-	  		  	<include-file name="images/ReleaseSliderVer5.png" path="${framework.images}/ReleaseSliderVer5.png"/>
 		  	  	<include-file name="images/SharedOtherToThisRedVer1.png" path="${framework.images}/SharedOtherToThisRedVer1.png"/>
 	  		  	<include-file name="images/SharedOtherToThisVer1.png" path="${framework.images}/SharedOtherToThisVer1.png"/>
 	  		  	<include-file name="images/SharedThisToOtherRedVer1.png" path="${framework.images}/SharedThisToOtherRedVer1.png"/>
