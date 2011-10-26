@@ -12,24 +12,59 @@
 	<fx:Script>
         <![CDATA[ 
 			import com.ithaca.traces.Obsel;
-			import flash.filters.BlurFilter;
-			import flash.filters.ColorMatrixFilter;
-			import flash.filters.GlowFilter;
-			import flash.geom.ColorTransform;
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			public var obsel : Obsel;
+			
+			[Bindable]
+			private 	var fxgt : _FxGettext;
 		
 			protected function creationCompleteHandler(event:Event):void
 			{
+				fxgt = FxGettext;
+				
 				obsel = hostComponent.obsel;
-				icon.source = hostComponent.getStyle( "icon" );
+				
 				if ( hostComponent.getStyle( "tooltipProp" )  )
 					hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
-				// (hostComponent.getStyle( "toolTip" ) as String).valueOf();					
-			//	var myColorTransform:ColorTransform = new ColorTransform(1,1,1,1,+128,0,0);
-			//	myColorTransform.color = 0xE6A360;
-//				icon.transform.colorTransform = myColorTransform;
+
+				var pathIcon = hostComponent.getStyle( "icon" );
+				switch (obsel.type)
+				{
+					case TraceModel.READ_DOCUMENT :
+						pathIcon = IconEnum.getPathByName('readVideo');
+						if (obsel.props[TraceModel.TYPE_DOCUMENT] == TraceModel.IMAGE)
+						{
+							pathIcon = obsel.props[TraceModel.URL];
+						}
+						icon.width = 20;
+						hostComponent.toolTip = fxgt.gettext("afficher le document :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("chez l'apprenant");
+						break;
+					case TraceModel.PLAY_VIDEO :
+						hostComponent.toolTip = fxgt.gettext("jouer la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à partir de")+ " "+ hostComponent.toolTip + " " + fxgt.gettext("seconde");
+						break;
+					case TraceModel.PAUSE_VIDEO :
+						hostComponent.toolTip = fxgt.gettext("pause la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("sur la")+ " "+ hostComponent.toolTip + " " +fxgt.gettext("seconde");
+						break;
+					case TraceModel.END_VIDEO :
+						hostComponent.toolTip = fxgt.gettext("arrêt la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("sur la")+ " "+ hostComponent.toolTip + " " +fxgt.gettext("seconde");
+						break;
+					case TraceModel.RELEASE_SLIDER_VIDEO :
+						hostComponent.toolTip = fxgt.gettext("déplacer la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("vers") + " "+ hostComponent.toolTip + " " +fxgt.gettext("seconde");
+						break;
+					case TraceModel.RECEIVE_DOCUMENT :
+						hostComponent.toolTip = fxgt.gettext("envoyer le document :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
+						break;
+					default :
+						
+						break;
+				}
 				
+				icon.source = pathIcon;
 				// set drag area
 				hostComponent.dragArea = icon;
 			}
