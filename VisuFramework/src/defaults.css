@@ -272,10 +272,6 @@ utils|VisuToolTip
 {
 	skin-class: ClassReference("com.ithaca.utils.skins.VisuToolTipSkin");
 }
-utils|DragObselProxyView
-{
-	skin-class: ClassReference("com.ithaca.utils.skins.DragObselProxyViewSkin");
-}
 user|ShareUser
 {
 	skin-class: ClassReference("com.ithaca.visu.view.user.skins.ShareUserSkin");
