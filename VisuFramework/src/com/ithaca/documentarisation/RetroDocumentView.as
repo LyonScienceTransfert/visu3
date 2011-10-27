@@ -16,10 +16,12 @@ package com.ithaca.documentarisation
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.visu.view.video.VisuVisioAdvanced;
 	
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	import gnu.as3.gettext.FxGettext;
@@ -37,6 +39,7 @@ package com.ithaca.documentarisation
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.events.MenuEvent;
+	import mx.graphics.ImageSnapshot;
 	import mx.managers.DragManager;
 	import mx.managers.PopUpManager;
 	
@@ -580,7 +583,13 @@ package com.ithaca.documentarisation
 				duration = DEFAULT_DURATION_SEGMENT_VIDEO; 
 			}
 			segment.endTimeVideo = segment.beginTimeVideo + duration;
-		
+			// screen-shot VideoPanel
+			var visuVisioAdvansed:VisuVisioAdvanced = dragOwnerObject.visio as VisuVisioAdvanced;
+			var imageSnap:ImageSnapshot = ImageSnapshot.captureImage(visuVisioAdvansed);
+			var imageByteArray:ByteArray = imageSnap.data as ByteArray;
+			
+			segment.byteArray = imageByteArray;
+			
 			// add segment
 			addSegment(segment);
 		}
