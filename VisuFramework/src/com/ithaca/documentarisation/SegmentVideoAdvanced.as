@@ -3,6 +3,7 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.visu.ui.utils.IconEnum;
 import com.lyon2.controls.utils.TimeUtils;
 
 import flash.events.Event;
@@ -51,6 +52,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	
 	[SkinPart("true")]
 	public var richEditableText:RichEditableText;
+
+	[SkinPart("true")]
+	public var screenShot:Image;
 
 	private var shared:Boolean = false;
 	private var sharedOver:Boolean = false;
@@ -278,7 +282,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			updateLabelCurrentTime();
 		}
 		
+		if(instance == screenShot)
+		{
+			if(segment.byteArray != null)
+			{
+				screenShot.source = segment.byteArray;
+			}else
+			{
+				screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
+			}
+		}
 	}
+	
 	override protected function partRemoved(partName:String, instance:Object):void
 	{
 		super.partRemoved(partName,instance);
@@ -337,6 +352,19 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 				labelDuration.text = TimeUtils.formatTimeString(duration); 
 			}
 			
+			if(segment.byteArray != null)
+			{
+				if(screenShot)
+				{
+					screenShot.source = segment.byteArray;
+				}
+			}else
+			{
+				if(screenShot)
+				{
+					screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
+				}
+			}
 		}
 		if(currentTimeChange)
 		{
