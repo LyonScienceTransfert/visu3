@@ -62,11 +62,11 @@
 			<mx:Spacer width="100%"/>
 			<s:HGroup right="5">
 				<s:Button id="sharePlanButton" >
-					<s:label>Partager ce plan</s:label>
+					<s:label>Publier ce plan</s:label>
 					<s:toolTip>Ajoute ce plan de séance à la liste des plans de séances</s:toolTip>
 				</s:Button>
 				<s:Button id="createSessionButton" >
-					<s:label>Nouvelle séance</s:label>
+					<s:label>Réutiliser ce plan</s:label>
 					<s:toolTip>Crée une nouvelle séance à partir de ce plan</s:toolTip>
 				</s:Button>
 			<mx:Spacer width="2"/>
