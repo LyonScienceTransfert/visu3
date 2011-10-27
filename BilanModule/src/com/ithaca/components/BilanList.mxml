@@ -303,7 +303,7 @@
 		</s:Group>
 		
 			<s:Button visible="{showNewButton}" includeInLayout="{showNewButton}"
-				label="Nouveau Bilan" toolTip="Crée un nouveau bilan vide"/>
+				label="Nouveau bilan" toolTip="Crée un nouveau bilan vide"/>
 			<s:List id="bilanListComponent" creationComplete="initBilanPane(event)" width="100%" height="100%" dataProvider="{bilanCollection}" change="onChangeListener(event)">
 				<s:itemRenderer>
 	   
