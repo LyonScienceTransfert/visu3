@@ -39,8 +39,8 @@
 				obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
 				icon.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipShow);
 				icon.source = hostComponent.getStyle( "icon" );
-				if ( hostComponent.getStyle( "tooltipProp" ) )
-					icon.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+				if ( hostComponent.getStyle( "tooltipProp" )  )
+					hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
 				if ( hostComponent.editable )
 				{
 					currentState = 'editable';				
