@@ -610,7 +610,7 @@ package com.ithaca.visu.view.session.controls
 		{
 			Alert.yesLabel = "Oui";
 			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer cet séance ?",
+			Alert.show("Voulez-vous supprimer cette séance ?",
 				"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);
 		}
 		
