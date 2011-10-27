@@ -27,7 +27,7 @@
 	</s:states>
 	<s:VGroup width="100%" gap="1">
 		<s:HGroup width="100%" gap="1" verticalAlign="middle" 
-			height="32" 
+			height="47" 
 			height.shared="16" height.sharedOver="16" height.sharedPause="16" height.sharedPlay="16">
 			<!-- SPACER FOR BILAN MODULE-->
 			<mx:Spacer width="35" includeIn="shared,sharedOver,sharedPause,sharedPlay"/>
@@ -65,7 +65,7 @@
 			</s:HGroup>
 			
 			<!-- SCREEN SHOT -->
-			<mx:Image source="{IconEnum.getIconByName('ScreenShot80x60')}" width="40" height="30" excludeFrom="shared, sharedOver, sharedPause, sharedPlay">
+			<mx:Image  id="screenShot" width="60"  height="45" excludeFrom="shared, sharedOver, sharedPause, sharedPlay">
 				<mx:toolTip>Screen shot: Under construction</mx:toolTip>
 			</mx:Image>
 			<!-- LABELS START END -->
