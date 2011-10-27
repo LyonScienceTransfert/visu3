@@ -6,6 +6,7 @@ package com.ithaca.documentarisation.model
 	
 	import flash.events.TextEvent;
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	
 	import spark.components.Label;
 
@@ -34,6 +35,8 @@ package com.ithaca.documentarisation.model
 
 		[Bindable]
 		public var pathCommentAudio:String="";
+		
+		public var byteArray:ByteArray = null;
 
 		public function Segment(parentRetroDocument:RetroDocument)
 		{
