@@ -414,6 +414,9 @@ package com.ithaca.documentarisation
 				
 				segment.beginTimeVideo = this._startDateSession + _currentTime;
 				segment.endTimeVideo = this._startDateSession + _currentTime + DEFAULT_DURATION_SEGMENT_VIDEO;
+				// screen-shot the video
+				segment.byteArray = screenShotVisuVideo();
+				
 				break;
 			}
 			// add segment
@@ -584,12 +587,7 @@ package com.ithaca.documentarisation
 			}
 			segment.endTimeVideo = segment.beginTimeVideo + duration;
 			// screen-shot VideoPanel
-			var visuVisioAdvansed:VisuVisioAdvanced = dragOwnerObject.visio as VisuVisioAdvanced;
-			var imageSnap:ImageSnapshot = ImageSnapshot.captureImage(visuVisioAdvansed);
-			var imageByteArray:ByteArray = imageSnap.data as ByteArray;
-			
-			segment.byteArray = imageByteArray;
-			
+			segment.byteArray = screenShotVisuVideo()
 			// add segment
 			addSegment(segment);
 		}
@@ -694,5 +692,17 @@ package com.ithaca.documentarisation
 			groupSegment.dragMoveEnabled = value;
 			groupSegment.dropEnabled = value;
 		}
+		
+		/**
+		 * screen-shot le visuVideo
+		 */
+		private function screenShotVisuVideo():ByteArray
+		{
+			var visuVisioAdvansed:VisuVisioAdvanced = dragOwnerObject.visio as VisuVisioAdvanced;
+			var imageSnap:ImageSnapshot = ImageSnapshot.captureImage(visuVisioAdvansed);
+			var imageByteArray:ByteArray = imageSnap.data as ByteArray;
+			return imageByteArray;
+		}
+		
 	}
 }
