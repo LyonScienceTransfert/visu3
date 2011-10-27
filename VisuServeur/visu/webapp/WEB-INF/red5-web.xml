@@ -4,9 +4,9 @@
     <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="/WEB-INF/red5-web.properties"/>
     </bean>
-    
+    <!--
     <import resource="classpath:ktbs4j-context.xml"/>
-    
+    -->
     <!--
     Defines a properties file for dereferencing variables
     IMPORTANT : this override the default properties set in ktbs4j.properties
@@ -46,7 +46,7 @@
 <!--
         Defines the web handler which acts as an applications endpoint
     -->
-    
+<!--   
     <bean id="ktbsHelper" 
     	class="com.lyon2.visu.ktbs.KtbsApplicationHelper" 
     	lazy-init="true" destroy-method="destroy">
@@ -56,12 +56,13 @@
         <property name="visuTraceModelName" value="${ktbs.model.visu}"/>
         <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
     </bean>
-
+-->
     <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
         <property name="sqlMapClient" ref="sqlMap"/>
         <property name="smtpServer" value="${visu.smtpServer}" />
-        <property name="ktbsService" ref="ktbs.service" />
-       
+     <!--
+     <property name="ktbsService" ref="ktbs.service" />
+      -->
     </bean>
 
 <!--  DAO Definitions  -->
@@ -107,10 +108,12 @@
         <property name="application" ref="web.handler"/>
     </bean>
  <!-- Obsel by ktbs -->
+ <!--
      <bean id="ktbsObselInfo.service" class="com.lyon2.visu.ktbs.KtbsObselInfo">
         <property name="application" ref="web.handler"/>
         <property name="ktbsService" ref="ktbs.service"/>
     </bean>
+-->
 <!--  RetroRoomActiv -->
      <bean id="retroRoom.service" class="com.lyon2.visu.red5.RetroRoomUserAction">
         <property name="application" ref="web.handler"/>
@@ -124,13 +127,12 @@
         <property name="application" ref="web.handler"/>
     </bean>
 <!-- BDD -->
-
+<!--
     <bean id="ktbs.service" class="com.lyon2.visu.ktbs.KtbsService">
  		<property name="pluggedToKtbs" value="${visu.ktbs.plug}"/>
         <property name="ktbsHelper" ref="ktbsHelper"/>
     </bean>
-    
-    
+-->       
     <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
     </bean>
@@ -187,4 +189,9 @@
             </map>
         </property>
     </bean>
+<!-- security sandbox violation -->    
+    <bean id="rtmpSampleAccess" class="org.red5.server.stream.RtmpSampleAccess">
+   		<property name="audioAllowed" value="true"/>
+    	<property name="videoAllowed" value="true"/>
+	</bean>    
 </beans>
