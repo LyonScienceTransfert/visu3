@@ -292,11 +292,13 @@ package com.ithaca.visu.core
 			}
 			// initialisation list the modules
 			menu.moduleList = moduleList;
+			menu.initModule = "home";
 			// initialisation the modules
 			moduleNavigator.initModuleNavigation(listModulesInfo);
 			moduleNavigator.defaultModule = "home";
 			moduleNavigator.browserTitleBase = "VISU"
-			moduleNavigator.navigateToModule( "home" );
+			// replace by menu.initModule = "home";
+		//	moduleNavigator.navigateToModule( "home" );
 		}
 		protected function userLoggedOUT():void
 		{

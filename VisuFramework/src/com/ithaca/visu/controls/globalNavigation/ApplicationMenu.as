@@ -15,6 +15,7 @@ package com.ithaca.visu.controls.globalNavigation
 	import mx.events.ToolTipEvent;
 	
 	import spark.components.Button;
+	import spark.components.ButtonBar;
 	import spark.components.DropDownList;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
@@ -55,6 +56,11 @@ package com.ithaca.visu.controls.globalNavigation
 		 * @private 
 		 */
 		private var _listModulesButton:Array = new Array();
+		private var buttonBar:ButtonBar = new ButtonBar();
+		private var buttonsModule:ArrayCollection = new ArrayCollection();
+		// initial module
+		private var _initModule:String;
+		private var initModuleChange:Boolean;
 		
 		public function get listModulesButton():Array
 		{
@@ -104,7 +110,16 @@ package com.ithaca.visu.controls.globalNavigation
 			invalidateProperties();
 		}
 
-		
+		public function set initModule(value:String):void
+		{
+			_initModule = value;
+			initModuleChange = true;
+			invalidateProperties();
+		}
+		public function get initModule():String
+		{
+			return  _initModule;
+		}
 		 
 		
 		public function ApplicationMenu()
@@ -205,6 +220,24 @@ package com.ithaca.visu.controls.globalNavigation
 				moduleListChanged = false;
 				addModuleButton();
 			}
+			if(initModuleChange)
+			{
+				initModuleChange = false;
+				var labelModule:String;
+				var nbrModule:int = _moduleList.length;
+				for(var nModule:int = 0 ; nModule < nbrModule ; nModule++)
+				{
+					var item:Object = _moduleList[nModule];
+					if(item.value == this._initModule)
+					{
+						labelModule = item.label;
+						break;
+					}
+				}
+				buttonBar.selectedItem = labelModule;
+				// load module
+				onChangeModule();
+			}
 		}
 		/*----------------------------------------
 					Protected Methods
@@ -244,15 +277,31 @@ package com.ithaca.visu.controls.globalNavigation
 						 Model.getInstance().setEnabledButtonSalonSynchrone(false);
 					 }
 					// FIXME : enabled module retrospection
-					if(o.value == "retrospection"){bt.enabled = false; bt.visible = false; bt.includeInLayout = false;}
+					if(o.value == "retrospection")
+					{
+						bt.enabled = false; bt.visible = false; bt.includeInLayout = false;
+					}
 					// FIXME : enabled module session
 					if(o.value == "session"){bt.enabled = true;}
 					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
-					addElement( bt );
-					// list buttons for translate the labels
+				//	addElement( bt );
+					
 					_listModulesButton[o.value]=bt;
+					// don't show tutorat and retrospection module
+					if(!(o.value == "tutorat"  ||  o.value == "retrospection"))
+					{
+						// TODO : translate the labels of the buttons
+						buttonsModule.addItem(o.label);
+					}
+					
 				}
 			}
+			// set buttonBar
+			buttonBar.dataProvider = buttonsModule;
+			buttonBar.requireSelection = true;
+			buttonBar.addEventListener(IndexChangeEvent.CHANGE, onChangeModule);
+			addElement(buttonBar);
+						
 			bt=null;
 		}
 
@@ -289,6 +338,24 @@ package com.ithaca.visu.controls.globalNavigation
 		protected function navigateToModule(event:MouseEvent):void
 		{
 			navigate(event.target.name);
+		}
+		/**
+		 * event handler the switche the modules
+		 */
+		protected function onChangeModule(event:IndexChangeEvent = null):void
+		{
+			var selectedLabel:String = buttonBar.selectedItem;
+			var nbrModule:int = _moduleList.length;
+			for(var nModule:int = 0 ; nModule < nbrModule ; nModule++)
+			{
+				var item:Object = _moduleList[nModule];
+				if(item.label == selectedLabel)
+				{
+					var name:String = item.value;
+					navigate(name);
+					return;
+				}
+			}
 		}
 		/**
 		 * disconnect event handler
