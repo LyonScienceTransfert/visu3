@@ -305,7 +305,7 @@
 				stage.focus = editObselMarker;
 				// set listener delete obsel
 				editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselMarker);
-			}
+			} 
 			
 			/**
 			 * add marker "UpdateMarker" on the serveur
@@ -343,7 +343,7 @@
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
 				dispatchEvent(sessionSharedEvent);
-			}			
+			}			 
 			
 			/**
 			 * delete obsel marker
@@ -370,7 +370,7 @@
 				sessionSharedEvent.action = ActionObselEnum.DELETE_OBSEL;
 				dispatchEvent(sessionSharedEvent);				
 			}
-
+ 
 		]]>
 	</fx:Script>
 	

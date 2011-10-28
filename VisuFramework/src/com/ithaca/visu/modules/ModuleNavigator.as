@@ -231,8 +231,13 @@ package com.ithaca.visu.modules
 			
 			module.moduleName = currentModule.name ;
 			
-			module.handle_parameter( moduleParameters ); 
+			if(module.hasEventListener("readyForUse"))
+			{
+				module.removeEventListener("readyForUse", onReadyForUseModule);	
+			}
 			module.addEventListener("readyForUse", onReadyForUseModule);
+			
+			module.handle_parameter( moduleParameters ); 
 		}
 
 		private function onModuleSetup(event:ModuleEvent):void

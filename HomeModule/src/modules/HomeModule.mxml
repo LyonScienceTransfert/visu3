@@ -189,6 +189,9 @@
 				
 				// set cursor 
 				CursorManager.removeBusyCursor();
+				
+				// notify that module ready for use
+				notifyReadyForUse();
 			}
 			
 			/**
@@ -353,8 +356,6 @@
 							sessionEventLoad.sessionDate = labelDate;
 							dispatchEvent(sessionEventLoad);
 						}
-						// notify that module ready for use
-						notifyReadyForUse();
 					}
 				}
 			}

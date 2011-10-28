@@ -255,6 +255,8 @@ package com.ithaca.visu.core
 		{
 			
 			removeElement( _progressBarBlueLine );
+			// enabled buttonBar the modules
+			menu.enabledButtonBarModules(true);
 		}
 		
 		private function onModuleUnload(event:ModuleEvent):void
