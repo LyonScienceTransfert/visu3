@@ -352,6 +352,8 @@ package com.ithaca.visu.controls.globalNavigation
 				if(item.label == selectedLabel)
 				{
 					var name:String = item.value;
+					// enabled buttonBar the modules
+					enabledButtonBarModules(false);
 					navigate(name);
 					return;
 				}
@@ -381,6 +383,12 @@ package com.ithaca.visu.controls.globalNavigation
 			
 			event.toolTip = visuToolTip;
 		}
-		
+		///////////////
+		/// Utils
+		//////////////
+		public function enabledButtonBarModules(value:Boolean):void
+		{
+			buttonBar.enabled = value;
+		}
 	}
 }
