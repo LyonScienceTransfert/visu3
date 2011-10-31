@@ -658,7 +658,7 @@ package com.ithaca.visu.controls.sessions
 		private function onCreateEmptySession(event:FlexEvent):void
 		{
 			var addEmptySession:CreateSessionByTemplate = event.currentTarget as CreateSessionByTemplate;
-			addEmptySession.setThemeSession("nouvelle titre séance ici");
+			addEmptySession.setThemeSession("Nouveau titre de séance");
 		}
 		public function selectAllPlan():void
 		{
