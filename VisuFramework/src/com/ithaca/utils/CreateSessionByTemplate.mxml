@@ -102,7 +102,7 @@
 		<s:HGroup width="100%">
 			<mx:Spacer width="10"/>
 			<s:Label  paddingTop="5">
-				<s:text>Titre : </s:text>
+				<s:text>{fxgt.gettext("Titre")} : </s:text>
 			</s:Label>
 			<s:TextInput id="themeSession" width="100%" text="azazazaz"/>
 			<mx:Spacer width="10"/>
@@ -110,11 +110,11 @@
 		<s:HGroup width="100%">
 			<mx:Spacer width="10"/>
 			<s:Label paddingTop="5">
-				<s:text>Date de séance : </s:text>
+				<s:text>{fxgt.gettext("Date de séance")} :</s:text>
 			</s:Label>
 			<mx:DateField id="dateSession" formatString="DD-MM-YYYY"/>
 			<s:Label paddingTop="5">
-				<s:text> le : </s:text>
+				<s:text>{fxgt.gettext(" à")} :</s:text>
 			</s:Label>
 			<s:DropDownList id="startDDL" 
 							width="100"

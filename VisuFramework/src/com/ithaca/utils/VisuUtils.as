@@ -80,7 +80,7 @@ package com.ithaca.utils
 						recordingMessage = "La séance est ouverte";
 						break;
 					case SessionStatusEnum.SESSION_CLOSE:
-						recordingMessage = "La séance est fermé";
+						recordingMessage = "La séance est fermée";
 						break;
 					case SessionStatusEnum.SESSION_RECORDING:
 						recordingMessage = "La séance est démarrée depuis " + dateRecording.getHours().toString()+"h "+dateRecording.getMinutes().toString()+"m";

@@ -397,7 +397,7 @@
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					}else
 					{
-						nameUser = "Marker sur la séance";
+						nameUser = "Marqueur sur la séance";
 					}
 					
 				}else if( generatorName  == 'videosGenerator')

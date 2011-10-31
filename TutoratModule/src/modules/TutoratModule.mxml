@@ -1099,7 +1099,7 @@
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					}else
 					{
-						nameUser = "Marker sur la séance";
+						nameUser = "Marqueur sur la séance";
 					}
 					
 				}else if( generatorName  == 'videosGenerator')
@@ -1541,6 +1541,13 @@
 				removePanelEditInfo(panelEditChatMessage);
 			}
 			
+			
+			private function removePanelEditInfo(panelEditInfo:*):void
+			{
+				groupeVideo.removeElement(panelEditInfo);
+			}
+			
+			
 			//_____________________________________________________________________
 			//
 			// EvenHandlers of the video panel
@@ -1592,10 +1599,10 @@
 				}
 			}
 			
-			private function removePanelEditInfo(panelEditInfo:*):void
-			{
-				groupeVideo.removeElement(panelEditInfo);
-			}
+			
+			
+			
+			
 			
 			//_____________________________________________________________________
 			//
@@ -1780,7 +1787,7 @@
 <!-- TIMELINE -->
 			<s:Panel width="100%" height="35%" id="panelTimeLine">
 				<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
-				<s:Label text="La séance n'est pas encore démarrer " horizontalCenter="0" verticalCenter="0"/>
+				<s:Label text="La séance n'est pas encore démarrée " horizontalCenter="0" verticalCenter="0"/>
 			</s:Panel>
 		</mx:VDividedBox>	
 	</mx:HDividedBox>	
