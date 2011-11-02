@@ -41,12 +41,12 @@
 			iconDelete.visible = false;
 		]]>
 		</s:mouseOut.edit>
-		<s:HGroup width="100%" gap="1" paddingTop="0" verticalAlign="top">
+		<s:HGroup width="100%" gap="1" verticalAlign="top"  paddingTop="3" paddingBottom="2">
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
 			<!-- TEXTAREA -->
 			<s:RichEditableText editable.normal="false" id="textSegment" width="100%" 
-				textAlign="center" backgroundColor.edit="#FFFFFF"/>		
+				backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"/>		
 			<!-- DELETE ICON -->
 			<components:IconDelete id="iconDelete"
 				visible.edit="false"
