@@ -88,6 +88,7 @@ package  com.ithaca.visu.model
 	
 	import spark.components.Button;
 	import spark.components.Group;
+	import spark.components.ToggleButton;
 
 
 	public final class Model
@@ -119,6 +120,9 @@ package  com.ithaca.visu.model
 		private var _netConnection:NetConnection;
 		private var _userIdClient:String;
 		private var _currentSession:Session = null;
+		private var _currentSessionRetroModule:Session = null;
+		private var _currentSessionTutoratModule:Session = null;
+		
 		private var _tutoratModule:VisuModuleBase;
 		private var _sessionModule:VisuModuleBase;
 		private var _retroModule:VisuModuleBase;
@@ -136,7 +140,9 @@ package  com.ithaca.visu.model
 		private var listTraceGroup:ArrayCollection;
 		private var traceComment:Trace;
 
-		private var _buttonSalonSynchrone:Button; 
+		private var _buttonSalonTutorat:ToggleButton; 
+		private var _buttonSalonRetro:ToggleButton; 
+		
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
 		private var _listViewObselComment:ArrayCollection = new ArrayCollection();
 		private var _listFrameSplit:ArrayCollection = new ArrayCollection();
@@ -433,7 +439,7 @@ package  com.ithaca.visu.model
 		}
 		
 		/**
-		 * current session for tutorat module, only for debugging
+		 * current session 
 		 */ 
 		public function setCurrentSession(value:Session):void
 		{
@@ -444,20 +450,64 @@ package  com.ithaca.visu.model
 		{
 			return _currentSession;
 		}
+		/**
+		 * current session salon retro
+		 */ 
+		public function setCurrentSessionRetroModule(value:Session):void
+		{
+			_currentSessionRetroModule = value;
+		}
+		
+		public function getCurrentSessionRetroModule():Session
+		{
+			return _currentSessionRetroModule;
+		}
+		/**
+		 * current session salon tutorat
+		 */ 
+		public function setCurrentSessionTutoratModule(value:Session):void
+		{
+			_currentSessionTutoratModule = value;
+		}
+		
+		public function getCurrentSessionTutoratModule():Session
+		{
+			return _currentSessionTutoratModule;
+		}
 		
 		/**
-		 * 
+		 * set the button salon Tutorat
 		 */
-		public function setButtonSalonSynchrone(value:Button):void
+		public function setButtonSalonTutorat(value:ToggleButton):void
 		{
-			this._buttonSalonSynchrone = value;
+			this._buttonSalonTutorat = value;
 		}
-		
-		public function setEnabledButtonSalonSynchrone(value:Boolean):void
+		/**
+		 * set enabled button salon Tutorat
+		 */
+		public function setEnabledButtonSalonTutorat(value:Boolean):void
 		{
 			// FIXME : enale = false, have to set correct the current session
-			//this._buttonSalonSynchrone.enabled = value;
+			this._buttonSalonTutorat.enabled = value;
 		}
+		
+		/**
+		 * set the button salon Retro
+		 */
+		public function setButtonSalonRetro(value:ToggleButton):void
+		{
+			this._buttonSalonRetro = value;
+		}
+		/**
+		 * set enabled button salon Retro
+		 */
+		public function setEnabledButtonSalonRetro(value:Boolean):void
+		{
+			this._buttonSalonRetro.enabled = value;
+		}
+		
+		
+		
 		/**
 		 * current tutorat module, only for debugging
 		 */
@@ -595,7 +645,15 @@ package  com.ithaca.visu.model
 			return this.listObsels;
 		}
 		
-		
+		public function hasObsels():Boolean
+		{
+			var result:Boolean = false;
+			if(listObsels && listObsels.length > 0)
+			{
+				result = true;
+			}
+			return result;
+		}
 		/**
 		 * add all comment obsel in Trace obsel
 		 */
@@ -1016,6 +1074,10 @@ package  com.ithaca.visu.model
 		 */
 		public function getTraceLineByUserId(userId:int):Object
 		{
+			if(!listTraceLine)
+			{
+				return null;
+			}
 			var nbrTraceLines:int = this.listTraceLine.length;
 			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLines; nTraceLine++)
 			{
@@ -1230,13 +1292,21 @@ package  com.ithaca.visu.model
 					viewObsel.toolTip = obsel.props[TraceModel.SENDER_DOCUMENT] + ":" + textObsel;
 					break;
 				//case TraceModel.SESSION_IN :
-				case TraceModel.SESSION_OUT :		
+				case TraceModel.SESSION_OUT :	
+					// FIXME : don't add obsel SessionOut, 
+					// TODO : have to find the BUG
+					return result;
+					
 					viewObsel = new ObselSessionOut()
 					viewObsel.setBegin(obsel.begin);
 					viewObsel.setEnd(obsel.end);
 					ownerObsel = obsel.props[TraceModel.UID];
 					break;
 				case TraceModel.SESSION_OUT_VOID_DURATION :
+					// FIXME : don't add obsel SessionOut, 
+					// TODO : have to find the BUG
+					return result;
+					
 					ownerObsel = obsel.props[TraceModel.UID];
 					viewObsel = new ObselSessionOut()
 					viewObsel.setBegin(obsel.begin);
@@ -1796,7 +1866,11 @@ package  com.ithaca.visu.model
 		public function updateSessionStatus(userId:int, sessionId:int):void
 		{
 			var user:User = this.getUserPlateformeByUserId(userId);
-			updateSessionIdByUser(user,sessionId);		
+			// FIXME : sometime hasn't user => bug
+			if(user)
+			{
+				updateSessionIdByUser(user,sessionId);		
+			}
 		}
 		
 		
@@ -1891,18 +1965,21 @@ package  com.ithaca.visu.model
 		
 		public function removeObselSessionOutCurrentUser(sessionId:int):void
 		{
-			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
-			var listTraceLine:ArrayCollection = this.getListTraceLines();
-			var nbrTraceLine:int = listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			if(listTraceLine)
 			{
-				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
-				// id of the user having traceLine
-				var userId:int = traceLine.userId;
-				if(hasUserInSession(listUserId,userId))
+				var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
+				var listTraceLine:ArrayCollection = this.getListTraceLines();
+				var nbrTraceLine:int = listTraceLine.length;
+				for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
 				{
-					// stop MAJ duration of the obsel "SessionOut"
-					this.removeViewObselSessionOut(userId);
+					var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+					// id of the user having traceLine
+					var userId:int = traceLine.userId;
+					if(hasUserInSession(listUserId,userId))
+					{
+						// stop MAJ duration of the obsel "SessionOut"
+						this.removeViewObselSessionOut(userId);
+					}
 				}
 			}
 		}
@@ -1977,7 +2054,13 @@ package  com.ithaca.visu.model
 					obselSessionOut.props[TraceModel.UID] = userId.toString();
 					obselSessionOut.end = obselSessionOut.begin + 100;
 					// add obsel to collection the obsel for show in TimeLine
-					this.listObsels.addItem(obselSessionOut);
+					
+					
+					
+			//		this.listObsels.addItem(obselSessionOut);
+					
+					
+					
 				}
 			}		
 		}

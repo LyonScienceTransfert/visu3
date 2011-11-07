@@ -400,9 +400,9 @@ public class MainManager
 			if(sessionStatus != SessionStatusEnum.SESSION_CLOSE)
 			{
 				// set current session
-				Model.getInstance().setCurrentSession(session);
+				Model.getInstance().setCurrentSessionTutoratModule(session);
 				// set button enabled true;
-				Model.getInstance().setEnabledButtonSalonSynchrone(true);
+				Model.getInstance().setEnabledButtonSalonTutorat(true);
 			}
 		}
 		
@@ -845,7 +845,7 @@ public class MainManager
 		if(salonTutorat)
 		{
 			// check if all users in the session
-			var session:Session = Model.getInstance().getCurrentSession();
+			var session:Session = Model.getInstance().getCurrentSessionTutoratModule();
 			if(session == null)
 			{ 
 				Alert.show("The problem with current session ","Bug....");
@@ -1402,8 +1402,8 @@ public class MainManager
 						var currentSessionId:int = currentSession.id_session;
 						if(currentSessionId == sessionId)
 						{
-							Model.getInstance().setCurrentSession(null);
-							Model.getInstance().setEnabledButtonSalonSynchrone(false);
+							Model.getInstance().setCurrentSessionTutoratModule(null);
+							Model.getInstance().setEnabledButtonSalonTutorat(false);
 						}
 					}
 				}
