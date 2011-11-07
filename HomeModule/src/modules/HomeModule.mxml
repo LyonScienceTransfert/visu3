@@ -885,10 +885,14 @@
 ////////////////////
 ////// UTILS
 ///////////////////			
+			/**
+			 * notify , ready for use
+			 */
 			private function notifyReadyForUse():void
 			{
-				var ev:Event = new Event("readyForUse");
-				this.dispatchEvent(ev);
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.HOME_MODULE;
+				this.dispatchEvent(event);
 			}
 
 		]]>

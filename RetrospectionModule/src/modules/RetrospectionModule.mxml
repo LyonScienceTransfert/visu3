@@ -20,6 +20,7 @@
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.timeline.Layout;
 			import com.ithaca.timeline.ObselSkin;
+			import com.ithaca.timeline.Timeline;
 			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.timeline.events.TimelineEvent;
@@ -30,8 +31,6 @@
 			import com.ithaca.utils.EditCommentDialog;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.utils.VisuUtils;
-			import com.ithaca.visu.controls.timeline.TraceLineB;
-			import com.ithaca.visu.controls.timeline.TraceLineComment;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.PanelButtonEvent;
@@ -65,7 +64,8 @@
 			private var fxgt:_FxGettext;
 			
 			private var testCursor:ObselLine;
-			private var testTimeLine:TraceLineB;
+			// TimeLine
+			private var timeLine:Timeline;
 			
 			[Bindable]
 		//	private var timer:Timer;
@@ -83,7 +83,6 @@
 			public var listSessionClose : ArrayCollection;
 			
 			private var pickCheryClick:Number = 0;
-			private var commentTimeLine:TraceLineComment;
 			private var currentSessionDateRecording:Date = null;
 			private var currentSessionDuration:Number;
 			private var currentSessionId:int;
@@ -131,8 +130,12 @@
 					}
 					// set selected sessionId
 					var session:Session = param[1];
-					Model.getInstance().setCurrentSession(session);
+					Model.getInstance().setCurrentSessionRetroModule(session);
 					this.selectedSessionIdWhenInit = session.id_session;
+				}else
+				{
+					var currentSessionRetroModule:Session = Model.getInstance().getCurrentSessionRetroModule();
+					this.selectedSessionIdWhenInit = currentSessionRetroModule.id_session;
 				}
 				
 				fxgt = FxGettext;
@@ -141,18 +144,16 @@
 				
 				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
 				this.dispatchEvent(initMapEvent); 
-				
 
-				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
-				getListObselEvent.sessionId = selectedSessionIdWhenInit;
 				// set current sessionId
-				this.currentSessionId = session.id_session;
-				this.dispatchEvent(getListObselEvent);
+				this.currentSessionId = this.selectedSessionIdWhenInit
+				
+				// enabled button salon retro
+				Model.getInstance().setEnabledButtonSalonRetro(true);
 			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
-
 				// check status logged user
 				var loggedUser:User =  Model.getInstance().getLoggedUser();
 				var statusLoggedUser:int =loggedUser.status; 
@@ -201,7 +202,14 @@
 				}
 				// set cursor 
 				CursorManager.removeBusyCursor();
-				
+				if(Model.getInstance().getCurrentRetroModule() as RetrospectionModule == this)
+				{
+					// create TimeLine
+					createTimeLine();
+					// get the obsels 
+					getObsels();
+				}
+	
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -289,7 +297,7 @@
 					// update label start session recording
 					var dateStartRecording:Date = event.dateStartRecording;
 					// show info the session 
-					panelVideo.title = '"' + Model.getInstance().getCurrentSession().theme + '",' +
+					panelVideo.title = '"' + Model.getInstance().getCurrentSessionRetroModule().theme + '",' +
 						fxgt.gettext(" enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
 						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
 						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
@@ -316,6 +324,7 @@
 				{
 					//we init the trace object
 					var loader:URLLoader=event.target as URLLoader;
+					// create TImeLine
 					timeLine.layoutXML 		= new XML( loader.data );
 					timeLine.timelineLayout = new Layout( timeLine ); 	
 					
@@ -349,8 +358,8 @@
 					}
 					
 					var startRecordingSession:Number = this.currentSessionDateRecording.time;
+					timeLine.range.reset();
 					timeLine.range.addTime(startRecordingSession, startRecordingSession + this.currentSessionDuration);
-					
 					// set timeStartSession in VisuVisioAdvaned
 					this.visio.startTimeSession = startRecordingSession;
 					
@@ -494,20 +503,6 @@
 				return  hourString+":"+minString+":"+secString;
 				
 			}
-			
-			private function onAddListObsel(event:TraceLineEvent):void{
-				var listObsel:ArrayCollection = event.listObsel;
-				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
-				Model.getInstance().addListObselTitleTraceLine(userTraceLineId, listObsel);
-			}
-			/**
-			 * remove list obsel to Model 
-			 */	
-			private function onRemoveListObsel(event:TraceLineEvent):void{
-				var listObsel:ArrayCollection = event.listObsel;
-				var userTraceLineId:int = (event.currentTarget as TraceLineB).idUserTraceLine;
-				Model.getInstance().removeListObselTitleTraceLine(userTraceLineId, listObsel);
-			}
 
 			private function setObsels():void{
 				// add obsels traceLine 
@@ -612,7 +607,7 @@
 					retroDocumentVO.xml = stringXML;
 					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
 					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
-					createRetroDocumentVOEvent.sessionId = this.currentSessionId;;
+					createRetroDocumentVOEvent.sessionId = this.currentSessionId;
 					this.dispatchEvent(createRetroDocumentVOEvent);
 				}
 			}
@@ -653,7 +648,7 @@
 					var createurUser:User = Model.getInstance().getLoggedUser();
 					retroDocumentVO.ownerId = createurUser.id_user;
 					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = "Bilan sur la séance du " + '"'+Model.getInstance().getCurrentSession().theme+'"'; 
+					retroDocumentVO.title = "Bilan sur la séance du " + '"'+Model.getInstance().getCurrentSessionRetroModule().theme+'"'; 
 					
 					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
 					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
@@ -1113,7 +1108,7 @@
 					if(Model.getInstance().getCurrentSession() != null && Model.getInstance().getCurrentSession().id_session == sessionId)
 					{
 						Model.getInstance().setCurrentSession(null);
-						Model.getInstance().setEnabledButtonSalonSynchrone(false);
+						Model.getInstance().setEnabledButtonSalonTutorat(false);
 					}
 				}
 			}
@@ -1290,10 +1285,14 @@
 			// Utils
 			//
 			//_____________________________________________________________________	
+			/**
+			 * notify , ready for use
+			 */
 			private function notifyReadyForUse():void
 			{
-				var ev:Event = new Event("readyForUse");
-				this.dispatchEvent(ev);
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.RETROSPECTION_MODULE;
+				this.dispatchEvent(event);
 			}
 			// For debaging mode
 			private function alertListStreamObsel():void
@@ -1310,6 +1309,32 @@
 				var nbrObsel:int = Model.getInstance().getListObsels().length;
 				
 				Alert.show(nbrObsel.toString(), "nbr Obsel");
+			}
+			
+			private function createTimeLine():void
+			{
+				timeLine = new Timeline();
+				timeLineGroup.removeAllElements();
+				// set property the TimeLine
+				timeLine.percentHeight = 100;
+				timeLine.percentWidth = 100;
+				timeLine.setStyle("timeMode","relative");
+				timeLine.contextFollowCursor = false;
+				timeLine.setStyle("cursorMode","auto");
+				timeLine.showPlayButton = true;
+				// listeners
+				timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
+				timeLine.addEventListener(TimelineEvent.PAUSE, timeLine_pauseButtonClickHandler);
+				timeLine.addEventListener(TimelineEvent.TIMERULER_CLICK, timeLine_timeRulerClickHandler);
+				
+				timeLineGroup.addElement(timeLine);
+			}
+			
+			private function getObsels():void
+			{
+				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
+				getListObselEvent.sessionId = selectedSessionIdWhenInit;
+				dispatchEvent(getListObselEvent);
 			}
 
 		]]>
@@ -1372,14 +1397,18 @@
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
 					</s:Group>
-					<timeline:Timeline id="timeLine" width="100%"  height="100%" 
+					<s:Group id="timeLineGroup" width="100%" height="100%">
+						
+					</s:Group>
+					<!--<timeline:Timeline id="timeLine" width="100%"  height="100%" 
 					    playButtonClick="timeLine_playButtonClickHandler(event)"
 						pauseButtonClick="timeLine_pauseButtonClickHandler(event)"
 						timeRulerClick="timeLine_timeRulerClickHandler(event)"
+						 playButtonClick="timeLine_playButtonClickHandler(event)"
 						timeMode="relative" 
 						contextFollowCursor="false"
 						cursorMode="auto"
-						showPlayButton="true"/>
+						showPlayButton="true"/>-->
 				</mx:VDividedBox>
 			</components:PanelButton>
 <!-- DOCUMENTARISATION -->		

@@ -105,7 +105,7 @@
 			
 			private var muteVolume:Boolean = false;
 			
-			private var timeLine:Timeline = new Timeline();
+			private var timeLine:Timeline;
 			private var _isTimeLineAddedOnStage:Boolean = false;
 			
 			private var listUserIdPresentTimeLine:ArrayCollection = new ArrayCollection();
@@ -114,18 +114,20 @@
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
-				if((event.currentTarget as TutoratModule).parameters != null  || Model.getInstance().getCurrentSession() != null )
+				//if((event.currentTarget as TutoratModule).parameters != null  || Model.getInstance().getCurrentSession() != null )
+				if(Model.getInstance().getCurrentSessionTutoratModule() != null )
 				{
-					var session:Session = (event.currentTarget as TutoratModule).parameters as Session;
+					/* var session:Session = (event.currentTarget as TutoratModule).parameters as Session;
 					if(session == null)
 					{
 						session = Model.getInstance().getCurrentSession(); 
-					}
-					this.currentSession = session;
+					} */
+				//	this.currentSession = session;
+					this.currentSession = Model.getInstance().getCurrentSessionTutoratModule();
 					// set current session in the model for checking if new use join this session  
-					Model.getInstance().setCurrentSession(session);
+					Model.getInstance().setCurrentSession(this.currentSession);
 					// update button "salon synchrone"
-					Model.getInstance().setEnabledButtonSalonSynchrone(true);
+					Model.getInstance().setEnabledButtonSalonTutorat(true);
 					// FIXME many instance of TutoratModul
 					Model.getInstance().setCurrentTutoratModule(this);
 					// init list traceLines
@@ -143,13 +145,15 @@
 					}		
 				}
 				else{
+					// TODO : Alert error d'entre ici
 					this.setCurrentState("BlankState");
 				}
 			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
-				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
+				//if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
+				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSessionTutoratModule() != null) ){
 					
 					fxgt = FxGettext;
 					// set group setMarker enabled for all users
@@ -173,7 +177,8 @@
 					
 					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.CONNECTED);
 					var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
-					visuActivityEvent.sessionId = Model.getInstance().getCurrentSession().id_session;					
+				//	visuActivityEvent.sessionId = Model.getInstance().getCurrentSession().id_session;					
+					visuActivityEvent.sessionId = this.currentSession.id_session;					
 					dispatchEvent(visuActivityEvent);
 					
 					this.visio.connection = Model.getInstance().getNetConnection();
@@ -183,10 +188,12 @@
 					this.visio.addLocalDevice(user);
 					if(panelPlanSession != null)
 					{
-						panelPlanSession.title = panelPlanSession.title +' : '+ Model.getInstance().getCurrentSession().theme;
+//						panelPlanSession.title = panelPlanSession.title +' : '+ Model.getInstance().getCurrentSession().theme;
+						panelPlanSession.title = panelPlanSession.title +' : '+ this.currentSession.theme;
 					}
 					// add streams of other users from this session
-					var listIdClient:Array = Model.getInstance().getListIdClient(Model.getInstance().getCurrentSession().id_session);
+				//	var listIdClient:Array = Model.getInstance().getListIdClient(Model.getInstance().getCurrentSession().id_session);
+					var listIdClient:Array = Model.getInstance().getListIdClient(this.currentSession.id_session);
 					if(listIdClient != null)
 					{
 						// FIXME : if session end recording and for logged user status = 0 , this status by default add to all streams, it's no good!!!
@@ -223,7 +230,8 @@
 						if(isPlaying)
 						{
 							// shared info : student walk out from session  
-							var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+							//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+							var sessionId:int = this.currentSession.id_session;
 							var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
 							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 							sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
@@ -245,6 +253,12 @@
 					}
 					this.panelMediaSession.removeAllElements();
 				}
+				// stop timer
+				if(this.timer)
+				{
+					this.timer.stop();		
+					this.timer = null;
+				}
 			}
 			
 			/**
@@ -252,7 +266,8 @@
 			 */
 			private function onNewUserJoinSession(event:SessionEvent):void{	
 				// check if user in current session
-				var currentSession:Session = Model.getInstance().getCurrentSession();
+			//	var currentSession:Session = Model.getInstance().getCurrentSession();
+				var currentSession:Session = this.currentSession;
 				if(currentSession != null)
 				{
 					if(currentSession.id_session == event.sessionId)
@@ -328,29 +343,32 @@
 			 */
 			private function onStartRecordingSession(event:SessionEvent):void
 			{
-				if(this.visio != null)
+				if(Model.getInstance().getCurrentTutoratModule() as TutoratModule == this)
 				{
-					this.visio.status = VisuVisioAdvanced.STATUS_RECORD;
-					// set group setMarker enabled for all users
-					this.setEnabledGroupSetMarker(true);
-					// update label button on view tutorat
-					if(buttonStartRecording != null){			
-						buttonStartRecording.label = fxgt.gettext("Suspendre la séance");	
-						buttonCloseSession.enabled = false;
-						// set buttons startActivity enabled = true
-						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_RECORD);							
-					}
-					// current session
-					var session:Session = Model.getInstance().getCurrentSession();
-					// remove all user paused presentred in the session
-					Model.getInstance().removeObselSessionOutCurrentUser(session.id_session);
-					
-					// update time start recording
-					this.currentSession.date_start_recording = new Date(null,null,null,null,null,null,event.timeStartStop);
-					// create timeLine
-					if(!isTimeLineAddedOnStage())
+					if(this.visio != null)
 					{
-						createTimeLine();
+						this.visio.status = VisuVisioAdvanced.STATUS_RECORD;
+						// set group setMarker enabled for all users
+						this.setEnabledGroupSetMarker(true);
+						// update label button on view tutorat
+						if(buttonStartRecording != null){			
+							buttonStartRecording.label = fxgt.gettext("Suspendre la séance");	
+							buttonCloseSession.enabled = false;
+							// set buttons startActivity enabled = true
+							this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_RECORD);							
+						}
+						// current session
+						var session:Session = this.currentSession;
+						// remove all user paused presentred in the session
+						Model.getInstance().removeObselSessionOutCurrentUser(session.id_session);
+						
+						// update time start recording
+						this.currentSession.date_start_recording = new Date(null,null,null,null,null,null,event.timeStartStop);
+						// create timeLine
+						if(!Model.getInstance().hasObsels())
+						{
+							createTimeLine();
+						}
 					}
 				}
 			}
@@ -396,7 +414,8 @@
 						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_NONE);
 					}
 					// current session
-					var session:Session = Model.getInstance().getCurrentSession();
+					//var session:Session = Model.getInstance().getCurrentSession();
+					var session:Session = this.currentSession;
 					if (session != null)
 					{
 						// add obsel "SessionOut" for user in the session
@@ -541,7 +560,8 @@
 				var currentTime:Number = event.currentTime;
 				var idDocument:Number = player.getIdDocument();
 				this.panelPlanSession.title = action+ " "+ int(currentTime).toString();
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+//				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int =this.currentSession.id_session;
 				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
@@ -640,7 +660,8 @@
 			
 			private function doShareActivityElement(value:ActivityElement):void
 			{
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
 				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(value.type_element);
@@ -705,7 +726,8 @@
 			
 			private function shareStartActivity(value:Activity):void
 			{
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
 				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY);
@@ -747,7 +769,8 @@
 				var sessionStatus:int = -1;
 				if( event.detail == Alert.YES )
 				{				
-					var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+					//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+					var sessionId:int = this.currentSession.id_session;
 					// shared stop activity
 					if(this.sessionPlan != null)
 					{
@@ -789,14 +812,15 @@
 					buttonStartRecording.enabled = false;
 					buttonCloseSession.enabled = false;
 					var sessionId:int = event.sessionId;
-					var currentSession:Session = Model.getInstance().getCurrentSession();
+					//var currentSession:Session = Model.getInstance().getCurrentSession();
+					var currentSession:Session = this.currentSession;
 					if(currentSession != null)
 					{
 						var currentSessionId:int = currentSession.id_session;
 						if(currentSessionId == sessionId)
 						{
 							Model.getInstance().setCurrentSession(null);
-							Model.getInstance().setEnabledButtonSalonSynchrone(false);						
+							Model.getInstance().setEnabledButtonSalonTutorat(false);						
 						}
 						
 					}
@@ -843,7 +867,8 @@
 				// TODO send message to one user by click on his video
 				var listUsersId:Array;
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
 				if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
 				{
 					// all connected users
@@ -898,7 +923,8 @@
 			 */
 			private function sendMarker(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0, beginTime:String = "", endTime:String = "" ):void
 			{
-				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
 				var listUsersId:Array;
 				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
 				{
@@ -1053,8 +1079,10 @@
 					}
 				}
 			}
+			
 			private function createTimeLine():void
 			{
+				timeLine = new Timeline();
 				// remove message from panle resume
 				panelTimeLine.removeAllElements();
 				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
@@ -1277,7 +1305,7 @@
 			private function goHomeModule(evet:Event):void
 			{
 				Model.getInstance().setCurrentSession(null);
-				Model.getInstance().setEnabledButtonSalonSynchrone(false);	
+				Model.getInstance().setEnabledButtonSalonTutorat(false);	
 				
 				var goHomeModuleEvent:SessionEvent = new SessionEvent(SessionEvent.GO_HOME_MODULE);
 				this.dispatchEvent(goHomeModuleEvent);
@@ -1359,6 +1387,7 @@
 				if(Model.getInstance().getCurrentTutoratModule() == this)
 				{
 					var updateObselMarker:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_MARKER_OBSEL);
+					// FIXME : can change this line by this.currentSession
 					updateObselMarker.sessionId = Model.getInstance().getCurrentSessionId();
 					
 					var text:String = "";
@@ -1416,7 +1445,8 @@
 						updateObselMarker.endTime = endTime;
 						updateObselMarker.forUserId = forUserId;
 
-						var session:Session = Model.getInstance().getCurrentSession();
+					//	var session:Session = Model.getInstance().getCurrentSession();
+						var session:Session = this.currentSession;
 						if(session != null)
 						{
 							sessionId = session.id_session;
@@ -1452,7 +1482,8 @@
 						updateObselMarker.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
 						updateObselMarker.forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
 						
-						var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+						//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+						var sessionId:int = this.currentSession.id_session;
 						var listUsersId:Array;
 						if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
 						{
@@ -1663,10 +1694,15 @@
 			{
 				return _isTimeLineAddedOnStage;
 			}
+			
+			/**
+			 * notify , ready for use
+			 */
 			private function notifyReadyForUse():void
 			{
-				var ev:Event = new Event("readyForUse");
-				this.dispatchEvent(ev);
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.TUTORAT_MODULE;
+				this.dispatchEvent(event);
 			}
 		]]>
 	</fx:Script>

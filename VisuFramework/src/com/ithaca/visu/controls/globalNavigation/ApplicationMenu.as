@@ -17,8 +17,10 @@ package com.ithaca.visu.controls.globalNavigation
 	import spark.components.Button;
 	import spark.components.ButtonBar;
 	import spark.components.DropDownList;
+	import spark.components.HGroup;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
+	import spark.components.ToggleButton;
 	import spark.events.IndexChangeEvent;
 	
 	[SkinState(name="normal")]
@@ -56,14 +58,22 @@ package com.ithaca.visu.controls.globalNavigation
 		 * @private 
 		 */
 		private var _listModulesButton:Array = new Array();
-		private var buttonBar:ButtonBar = new ButtonBar();
+		private var buttonBarModules:ButtonBar = new ButtonBar();
+		/*private var buttonBarTutoratSynchrone:ButtonBar = new ButtonBar();
+		*/
+		private var buttonSalonTutorat:ToggleButton = new ToggleButton();
+		private var buttonSalonRetro:ToggleButton = new ToggleButton();
+		private var buttonSalonRetroState:Boolean;
+		private var buttonSalonTutoratState:Boolean;
 		private var buttonsModule:ArrayCollection = new ArrayCollection();
+		//private var buttonsModuleTutoratSynchrone:ArrayCollection = new ArrayCollection();
 		// initial module
 		private var _initModule:String;
 		private var initModuleChange:Boolean;
 		
 		public function get listModulesButton():Array
 		{
+			// FIXME : TODO : change the algo update the labes of the modules
 			return 	_listModulesButton;
 		}
 		/**
@@ -234,7 +244,7 @@ package com.ithaca.visu.controls.globalNavigation
 						break;
 					}
 				}
-				buttonBar.selectedItem = labelModule;
+				buttonBarModules.selectedItem = labelModule;
 				// load module
 				onChangeModule();
 			}
@@ -265,44 +275,67 @@ package com.ithaca.visu.controls.globalNavigation
 				else
 				{
 					// general case
-					bt = new Button();
+					/*bt = new Button();
 					bt.label = o.label;
-					bt.name = o.value;
+					bt.name = o.value;*/
 					// 
 					//FIXME : enabled module tutorat
-					 if(o.value == "tutorat")
+					 /*if(o.value == "tutorat")
 					 {
 						 bt.enabled = false;
-						 Model.getInstance().setButtonSalonSynchrone(bt);
+						Model.getInstance().setButtonSalonSynchrone(bt);
 						 Model.getInstance().setEnabledButtonSalonSynchrone(false);
-					 }
+					 }*/
 					// FIXME : enabled module retrospection
-					if(o.value == "retrospection")
+					/*if(o.value == "retrospection")
 					{
 						bt.enabled = false; bt.visible = false; bt.includeInLayout = false;
-					}
+					}*/
 					// FIXME : enabled module session
-					if(o.value == "session"){bt.enabled = true;}
-					bt.addEventListener(MouseEvent.CLICK, navigateToModule);
+					/*if(o.value == "session"){bt.enabled = true;}
+					bt.addEventListener(MouseEvent.CLICK, navigateToModule);*/
 				//	addElement( bt );
 					
-					_listModulesButton[o.value]=bt;
-					// don't show tutorat and retrospection module
-					if(!(o.value == "tutorat"  ||  o.value == "retrospection"))
+				//	_listModulesButton[o.value]=bt;
+					
+					switch(o.value)
 					{
-						// TODO : translate the labels of the buttons
-						buttonsModule.addItem(o.label);
+						case "tutorat" :
+							buttonSalonTutorat.label = o.label;
+							buttonSalonTutorat.addEventListener(MouseEvent.CLICK, onClickButtonSalonTutorat);
+							Model.getInstance().setButtonSalonTutorat(buttonSalonTutorat);
+							Model.getInstance().setEnabledButtonSalonTutorat(false);
+							break;
+						case "retrospection" :
+							buttonSalonRetro.label = o.label;
+							buttonSalonRetro.selected = false;
+							buttonSalonRetro.addEventListener(MouseEvent.CLICK, onClickButtonSalonRetro);
+							Model.getInstance().setButtonSalonRetro(buttonSalonRetro);
+							Model.getInstance().setEnabledButtonSalonRetro(false);
+							break;
+						default :
+							// TODO : translate the labels of the buttons
+							buttonsModule.addItem(o.label);
+							break;
 					}
+					
 					
 				}
 			}
 			// set buttonBar
-			buttonBar.dataProvider = buttonsModule;
-			buttonBar.requireSelection = true;
-			buttonBar.addEventListener(IndexChangeEvent.CHANGE, onChangeModule);
-			addElement(buttonBar);
-						
-			bt=null;
+			buttonBarModules.dataProvider = buttonsModule;
+			buttonBarModules.requireSelection = true;
+			buttonBarModules.addEventListener(IndexChangeEvent.CHANGE, onChangeModule);
+			addElement(buttonBarModules);
+			
+			// add group the too buttons : salon synchro and salon retro
+			var groupTutoratRetroButtons:HGroup = new HGroup();
+			groupTutoratRetroButtons.gap = 2;
+			groupTutoratRetroButtons.addElement(buttonSalonTutorat);
+			groupTutoratRetroButtons.addElement(buttonSalonRetro);
+			addElement(groupTutoratRetroButtons);
+			
+			//bt=null;
 		}
 
 		/*----------------------------------------
@@ -342,18 +375,94 @@ package com.ithaca.visu.controls.globalNavigation
 		/**
 		 * event handler the switche the modules
 		 */
-		protected function onChangeModule(event:IndexChangeEvent = null):void
+		public function onChangeModule(event:IndexChangeEvent = null, nameModule:String = null):void
 		{
-			var selectedLabel:String = buttonBar.selectedItem;
+			var label:String="";
+			if(event != null)
+			{
+				var buttonBar:ButtonBar = event.currentTarget as ButtonBar;
+				label = buttonBar.selectedItem;
+			}else
+			{
+				label = buttonBarModules.selectedItem;
+			}
+			
+			if(nameModule)
+			{
+				var nbrModule:int = _moduleList.length;
+				for(var nModule:int = 0 ; nModule < nbrModule ; nModule++)
+				{
+					var item:Object = _moduleList[nModule];
+					if(item.value == nameModule)
+					{
+						var labelModule:String = item.label;
+						buttonBarModules.selectedItem = labelModule;
+						return;
+					}
+				}
+			}else
+			{
+				var selectedLabel:String = label;
+				var nbrModule:int = _moduleList.length;
+				for(var nModule:int = 0 ; nModule < nbrModule ; nModule++)
+				{
+					var item:Object = _moduleList[nModule];
+					if(item.label == selectedLabel)
+					{
+						var name:String = item.value;
+						// enabled buttonBar the modules
+						enabledButtonBarModules(false);
+						navigate(name);
+						return;
+					}
+				}
+			}
+			
+		}
+		/**
+		 * event handler the button salon Tutorat
+		 */
+		private function onClickButtonSalonTutorat(even:MouseEvent):void
+		{
+			// check if button selected
+			if(buttonSalonTutoratState)
+			{
+				buttonSalonTutorat.selected = true;
+			}else
+			{
+				navigateByLabelButton(buttonSalonTutorat.label)
+			}
+		}
+		
+		/**
+		 * event handler the button salon Retrospection
+		 */
+		private function onClickButtonSalonRetro(even:MouseEvent):void
+		{
+			// check if button selected
+			if(buttonSalonRetroState)
+			{
+				buttonSalonRetro.selected = true;
+			}else
+			{
+				navigateByLabelButton(buttonSalonRetro.label)
+			}
+		}
+		/**
+		 * navigate by label the button
+		 * FIXME : when will change the languge, can't identifate le label
+		 * TODO : othe algo 
+		 */
+		private function navigateByLabelButton(label:String):void
+		{
+			// get name module by label the button
 			var nbrModule:int = _moduleList.length;
 			for(var nModule:int = 0 ; nModule < nbrModule ; nModule++)
 			{
 				var item:Object = _moduleList[nModule];
-				if(item.label == selectedLabel)
+				if(item.label == label)
 				{
 					var name:String = item.value;
-					// enabled buttonBar the modules
-					enabledButtonBarModules(false);
 					navigate(name);
 					return;
 				}
@@ -388,7 +497,43 @@ package com.ithaca.visu.controls.globalNavigation
 		//////////////
 		public function enabledButtonBarModules(value:Boolean):void
 		{
-			buttonBar.enabled = value;
+			buttonBarModules.enabled = value;
 		}
+		/**
+		 * deselection the buttonBar
+		 */
+		public function deselectButtonBarModules():void
+		{
+			buttonBarModules.requireSelection = false;
+			buttonBarModules.selectedIndex = -1;
+		}
+		/**
+		 * 
+		 */
+		public function requireSelectionButtonBarModules():void
+		{
+			buttonBarModules.requireSelection = true;
+		}
+		
+		/**
+	 	* 
+		*/
+		public function selectButtonRetroModule(value:Boolean):void
+		{
+			buttonSalonRetro.selected = value;
+			buttonSalonRetroState = value;
+		}
+		
+		/**
+	 	* 
+		*/
+		public function selectButtonTutoratModule(value:Boolean):void
+		{
+			buttonSalonTutorat.selected = value;
+			buttonSalonTutoratState = value;
+		}
+	
+		
+	
 	}
 }
