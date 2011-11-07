@@ -365,11 +365,6 @@ trace|TraceLine
 	skin-class: ClassReference("com.ithaca.visu.controls.timeline.skins.TraceLineSkin");
 }
 
-trace|TraceLineComment
-{
-	skin-class: ClassReference("com.ithaca.visu.controls.timeline.skins.TraceLineCommentSkin");
-}
-
 trace|TraceLineB
 {
 	skin-class: ClassReference("com.ithaca.visu.controls.timeline.skins.TraceLineSkinB");
