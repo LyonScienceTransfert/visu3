@@ -51,7 +51,7 @@ package com.ithaca.visu.modules
 			
 		}
 		
-		private function onReadyForUseModule(event:Event):void
+		private function onReadyForUseModule(event:VisuModuleEvent):void
 		{
 			dispatchEvent( event.clone() );
 		}
@@ -231,11 +231,11 @@ package com.ithaca.visu.modules
 			
 			module.moduleName = currentModule.name ;
 			
-			if(module.hasEventListener("readyForUse"))
+			if(module.hasEventListener(VisuModuleEvent.READY_FOR_USE))
 			{
-				module.removeEventListener("readyForUse", onReadyForUseModule);	
+				module.removeEventListener(VisuModuleEvent.READY_FOR_USE, onReadyForUseModule);	
 			}
-			module.addEventListener("readyForUse", onReadyForUseModule);
+			module.addEventListener(VisuModuleEvent.READY_FOR_USE, onReadyForUseModule);
 			
 			module.handle_parameter( moduleParameters ); 
 		}

@@ -50,7 +50,6 @@
 			import com.ithaca.utils.EditObselMarkerTitleWindow;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
-			import com.ithaca.visu.controls.timeline.TraceLineElement;
 			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;

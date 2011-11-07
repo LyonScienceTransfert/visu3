@@ -74,7 +74,7 @@ package com.ithaca.visu.core
 			moduleNavigator.addEventListener(VisuModuleEvent.LOAD, onModuleLoad);
 			moduleNavigator.addEventListener(ModuleEvent.READY,onModuleReady);
 			moduleNavigator.addEventListener(ModuleEvent.UNLOAD,onModuleUnload);
-			moduleNavigator.addEventListener("readyForUse", onReadyForUseModule);
+			moduleNavigator.addEventListener(VisuModuleEvent.READY_FOR_USE, onReadyForUseModule);
 		}
 		
 		
@@ -186,12 +186,15 @@ package com.ithaca.visu.core
 		
 		protected function joinSession(event:SessionEvent):void{
 			logger.debug("The application is requested to join the session {0}", event.session.id_session);
+			// set currentSession for Tutorat module
+			Model.getInstance().setCurrentSessionTutoratModule(event.session);
 			moduleNavigator.navigateToModule( "tutorat", event.session);
 		}
 		
 		protected function editSession(event:SessionEvent):void{
 			logger.debug("The application is requested to edit the session {0}", event.session.id_session);
 			moduleNavigator.navigateToModule( "session", event.session);
+			menu.onChangeModule(null, "session");
 		}
 		
 
@@ -215,6 +218,7 @@ package com.ithaca.visu.core
 			obj[0] = "CameFromHomeModule";
 			obj[1] = event.session.id_session;
 			moduleNavigator.navigateToModule( "bilan", obj );
+			menu.onChangeModule(null, "bilan");
 		}
 		
 		protected function goBilanFromRetrospection(event:RetroDocumentEvent):void{
@@ -224,6 +228,7 @@ package com.ithaca.visu.core
 			obj[1] = event.sessionId;
 			obj[2] = event.idRetroDocument;
 			moduleNavigator.navigateToModule( "bilan", obj );
+			menu.onChangeModule(null, "bilan");
 		}
 		
 		protected function goRetroFromBilan(event:RetroDocumentEvent):void{
@@ -251,12 +256,39 @@ package com.ithaca.visu.core
 		{
 			/*removeElement( _progressBarBlueLine );*/
 		}
-		private function onReadyForUseModule(event:Event):void
+		private function onReadyForUseModule(event:VisuModuleEvent):void
 		{
 			
 			removeElement( _progressBarBlueLine );
 			// enabled buttonBar the modules
 			menu.enabledButtonBarModules(true);
+			
+			switch(event.moduleName)
+			{
+				case VisuModuleEvent.RETROSPECTION_MODULE:
+					menu.deselectButtonBarModules();
+					menu.selectButtonRetroModule(true);
+					menu.selectButtonTutoratModule(false);
+					break;
+				case VisuModuleEvent.TUTORAT_MODULE:
+					menu.deselectButtonBarModules();
+					menu.selectButtonRetroModule(false);
+					menu.selectButtonTutoratModule(true);
+					break;
+				default:
+					menu.requireSelectionButtonBarModules();
+					menu.selectButtonRetroModule(false);
+					menu.selectButtonTutoratModule(false);
+				break;
+			}
+			
+			/*if(event.moduleName == VisuModuleEvent.RETROSPECTION_MODULE || event.moduleName == VisuModuleEvent.TUTORAT_MODULE)
+			{
+				menu.deselectButtonBarModules();
+			}else
+			{
+				menu.requireSelectionButtonBarModules();
+			}*/
 		}
 		
 		private function onModuleUnload(event:ModuleEvent):void

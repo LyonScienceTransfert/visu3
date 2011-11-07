@@ -38,8 +38,8 @@
 	<documentarisation:SegmentVideoAdvanced 
 		width="100%" 
 		id="segmentVideo"
-		durationSession="{Model.getInstance().getCurrentSession().duration_session}"
-		startDateSession="{Model.getInstance().getCurrentSession().date_start_recording.time}"
+		durationSession="{Model.getInstance().getCurrentSessionRetroModule().duration_session}"
+		startDateSession="{Model.getInstance().getCurrentSessionRetroModule().date_start_recording.time}"
 		modeEdit="true" 
 		segment="{data}"
 		skinClass="com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin"/>

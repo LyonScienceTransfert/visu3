@@ -380,7 +380,6 @@
 			//_____________________________________________________________________
 			private function notifyReadyForUse():void
 			{
-				var ev:Event = new Event("readyForUse");
 				this.dispatchEvent(ev);
 			}
 		]]>
