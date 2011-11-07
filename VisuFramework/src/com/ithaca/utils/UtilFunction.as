@@ -76,16 +76,19 @@ package com.ithaca.utils
 		
 		public static function isEmptyMessage(value:String):Boolean
 		{
-			var nbrChar:int = value.length;
-			for(var nChar:int = 0; nChar < nbrChar ; nChar++)
+			if(value)
 			{
-				var char:String = value.charAt(nChar);
-				if(char != " ")
+				var nbrChar:int = value.length;
+				for(var nChar:int = 0; nChar < nbrChar ; nChar++)
 				{
-					return false;
+					var char:String = value.charAt(nChar);
+					if(char != " ")
+					{
+						return false;
+					}
 				}
-			}
-			return true;
+				return true;
+			}else return true;
 		}
 		
 		public static function getLabelDate(date:Date,separateur:String):String
