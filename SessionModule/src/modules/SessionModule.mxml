@@ -95,7 +95,7 @@
 			private function onUpdateActivity(event:SessionEditEvent):void
 			{	
 				var activityVO:ActivityVO = this.setActivityVO(event.activity);
-				var updateActivity:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY);
+				var updateActivity:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY_SESSION);
 				updateActivity.activityVO = activityVO;
 				this.dispatchEvent(updateActivity);
 				
@@ -144,7 +144,7 @@
 				var activity:Activity = event.activity;
 				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
 				
-				var updateActivityElement:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY_ELEMENT);
+				var updateActivityElement:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY_ELEMENT_SESSION);
 				updateActivityElement.activityElementVO = activityElementVO;
 				this.dispatchEvent(updateActivityElement);		
 			}
@@ -340,7 +340,7 @@
 					if(Model.getInstance().getCurrentSession() != null &&  Model.getInstance().getCurrentSession().id_session == sessionId)
 					{
 						Model.getInstance().setCurrentSession(null);
-						Model.getInstance().setEnabledButtonSalonSynchrone(false);
+						Model.getInstance().setEnabledButtonSalonTutorat(false);
 					}
 				}
 			}
@@ -378,9 +378,14 @@
 			// Utils
 			//
 			//_____________________________________________________________________
+			/**
+			 * notify , ready for use
+			 */
 			private function notifyReadyForUse():void
 			{
-				this.dispatchEvent(ev);
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.SESSION_MODULE;
+				this.dispatchEvent(event);
 			}
 		]]>
 	

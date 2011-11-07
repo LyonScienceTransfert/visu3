@@ -190,7 +190,7 @@
 		</mate:EventHandlers>
 		
 <!-- ACTIVITY -->
-		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY}" debug="true">
+		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_SESSION}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="updateActivity" arguments="{event.activityVO}">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}" method="onUpdateActivity" arguments="{[resultObject]}"/>
@@ -227,7 +227,7 @@
 		</mate:EventHandlers>
 		
 <!-- ACTIVITY ELEMENT -->
-		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_ELEMENT}" debug="true">
+		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_ELEMENT_SESSION}" debug="true">
 			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="updateActivityElement" arguments="{event.activityElementVO}">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}" method="onUpdateActivityElement" arguments="{[resultObject]}"/>

@@ -38,8 +38,8 @@ public class SessionEvent extends Event
 	static public const UPDATE_LIST_VIEW_TRACELINE : String = 'updateListViewTraceline';
 	static public const UPDATE_DELETED_SESSION : String = 'updateDeletedSession';
 	static public const UPDATE_SESSION : String = 'updateSession';
-	static public const UPDATE_ACTIVITY : String = 'updateActivity';
-	static public const UPDATE_ACTIVITY_ELEMENT : String = 'updateActivityElement';
+	static public const UPDATE_ACTIVITY_SESSION : String = 'updateActivitySession';
+	static public const UPDATE_ACTIVITY_ELEMENT_SESSION : String = 'updateActivityElementSession';
 	static public const EDIT_SESSION : String = 'editSession';
 	static public const CANCEL_SESSION : String = 'cancelSession';
 	static public const JOIN_SESSION : String = 'joinSession';
