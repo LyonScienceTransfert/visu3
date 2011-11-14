@@ -66,39 +66,7 @@ package com.ithaca.traces.model
 
     /* Generated code, see below */
     public final class TraceModel
-    {
-       /* public static const PresenceStart: String = "PresenceStart";
-        public static const PresenceEnd: String = "PresenceEnd";
-        public static const RoomEnter: String = "RoomEnter";
-        public static const RoomExit: String = "RoomExit";
-        public static const SessionStart: String = "SessionStart";
-        public static const SessionEnd: String = "SessionEnd";
-        public static const ActivityStart: String = "ActivityStart";
-        public static const ActivityEnd: String = "ActivityEnd";
-        public static const SendKeyword: String = "SendKeyword";
-        public static const ReceiveKeyword: String = "ReceiveKeyword";
-        public static const SendInstructions: String = "SendInstructions";
-        public static const ReceiveInstructions: String = "ReceiveInstructions";
-        public static const SendDocument: String = "SendDocument";
-        public static const ShowDocument: String = "ShowDocument";
-        public static const ReceiveDocument: String = "ReceiveDocument";
-        public static const ReadDocument: String = "ReadDocument";
-        public static const StartVideo: String = "StartVideo";
-        public static const PauseVideo: String = "PauseVideo";
-        public static const StopVideo: String = "StopVideo";
-        public static const StartWritingChatMessage: String = "StartWritingChatMessage";
-        public static const SendChatMessage: String = "SendChatMessage";
-        public static const ReceiveChatMessage: String = "ReceiveChatMessage";
-        public static const SetMark: String = "SetMark";
-        public static const DeleteMark: String = "DeleteMark";
-        public static const ReceiveMark: String = "ReceiveMark";
-        public static const RecordFilename: String = "RecordFilename";
-        public static const ClipboardCopy: String = "ClipboardCopy";
-        public static const ClipboardPaste: String = "ClipboardPaste";
-        public static const LoseFocus: String = "LoseFocus";
-        public static const TakeFocus: String = "TakeFocus";
-        public static const TextComment: String = "TextComment";*/
-		
+    {	
         public static const SET_MARKER: String = "SetMarker";
         public static const RECEIVE_MARKER: String = "ReceiveMarker";
         public static const UPDATE_MARKER: String = "UpdateMarker";
@@ -176,52 +144,6 @@ package com.ithaca.traces.model
         public static const RETRO_START_EDIT_EVENT: String = "RetroStartEditEvent";
         public static const RETRO_CANCEL_EDIT_EVENT: String = "RetroCancelEditEvent";
         public static const RETRO_EDIT_TYPE_CANCEL_CREATE: String = "CREATE";
-        public static const RETRO_EDIT_TYPE_CANCEL_EDIT: String = "EDIT";
-		
-		
+        public static const RETRO_EDIT_TYPE_CANCEL_EDIT: String = "EDIT";	
     }
-
 }
-
-    /*
-Generate above code from comment below:
-perl -lne 'if (/ACTIVITIES_START/ .. /ACTIVITIES_END/) { next if /==/; if (/^(.+)\s\(/) { $n=$label=$1; $name=uc($1); $name =~ s/ /_/g; $label =~ s/\b(\w)/\U$1/g; $label =~ s/ //g; print "        public static const $label: String = \"$label\";" } }' TraceModel.as
-
-Test coverage:
-perl -lne 'print $1 if /VisuTrace.trace\("(.+?)"/' ** | sort -u
-
-== ACTIVITIES_START ==
-PresenceStart (int uid, string email, string surname, string name)
-PresenceEnd ()
-RoomEnter (int uid, string room, string label)
-RoomExit (int uid, string room)
-SessionStart (int sessionid, string label, int duration, list<string> usernames, list<int> userids, list<int> presentids, list<string> usercolors)
-SessionEnd (int sessionid)
-ActivityStart (int id, string label, int duration)
-ActivityEnd (int id)
-SendKeyword (string keyword, string room)
-ReceiveKeyword (string keyword, string room, int sender)
-SendInstructions (string instructions, string room)
-ReceiveInstructions (string instructions, string room, int sender)
-SendDocument (string url, string room)
-ReceiveDocument (string url, string room, int sender)
-ReadDocument (string url)
-StartVideo (string url, int timestamp)
-PauseVideo (string url, int timestamp)
-StopVideo (string url, int timestamp)
-StartWritingChatMessage ()
-SendChatMessage (string message, string room)
-ReceiveChatMessage (string message, string room, int sender)
-SetMark (int sender, string text, int timestamp)
-DeleteMark (int sender, int timestamp)
-ReceiveMark (int sender, string text, int timestamp)
-RecordFilename (string path, int sender)
-// TODO
-ClipboardCopy (string text, string origin)
-ClipboardPaste (string text, string destination)
-LoseFocus ()
-TakeFocus ()
-
-== ACTIVITIES_END ==
-
-    */
