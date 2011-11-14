@@ -415,7 +415,8 @@ package com.ithaca.documentarisation
 				segment.beginTimeVideo = this._startDateSession + _currentTime;
 				segment.endTimeVideo = this._startDateSession + _currentTime + DEFAULT_DURATION_SEGMENT_VIDEO;
 				// screen-shot the video
-				segment.byteArray = screenShotVisuVideo();
+				// FIXME : have to add bean on server side => lost key-frame in flv, look at https://github.com/ithaca/visu/issues/163
+				// segment.byteArray = screenShotVisuVideo();
 				
 				break;
 			}
@@ -587,7 +588,8 @@ package com.ithaca.documentarisation
 			}
 			segment.endTimeVideo = segment.beginTimeVideo + duration;
 			// screen-shot VideoPanel
-			segment.byteArray = screenShotVisuVideo()
+			// FIXME : have to add bean on server side => lost key-frame in flv, look at https://github.com/ithaca/visu/issues/163
+			// segment.byteArray = screenShotVisuVideo()
 			// add segment
 			addSegment(segment);
 		}
@@ -694,7 +696,7 @@ package com.ithaca.documentarisation
 		}
 		
 		/**
-		 * screen-shot le visuVideo
+		 * screen-shot the VisuVideo
 		 */
 		private function screenShotVisuVideo():ByteArray
 		{
