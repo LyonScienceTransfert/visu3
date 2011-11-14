@@ -51,7 +51,16 @@ package com.ithaca.timeline
 				if (borderVisible)
 				{
 					intervalGroup.graphics.lineStyle( 1 );
-					intervalGroup.graphics.drawRect( 0, 0,(_timeRange._ranges[i+1] - _timeRange._ranges[i])*timeToPositionRatio-1, height -1);
+					if(!isNaN(timeToPositionRatio))
+					{
+						intervalGroup.graphics.drawRect( 0, 0,(_timeRange._ranges[i+1] - _timeRange._ranges[i])*timeToPositionRatio-1, height -1);
+					}
+					else
+					{
+						timeToPositionRatio = 0;
+						intervalGroup.graphics.drawRect( 0, 0,(_timeRange._ranges[i+1] - _timeRange._ranges[i])*timeToPositionRatio-1, height -1);
+						
+					}
 				}
 				else
 					intervalGroup.graphics.clear();
