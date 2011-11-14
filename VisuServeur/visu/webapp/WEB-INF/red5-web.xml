@@ -189,9 +189,12 @@
             </map>
         </property>
     </bean>
-<!-- security sandbox violation -->    
+<!-- security sandbox violation --> 
+<!-- inactive bean, destroy add key-frame in FVL file -->   
+<!--  
     <bean id="rtmpSampleAccess" class="org.red5.server.stream.RtmpSampleAccess">
    		<property name="audioAllowed" value="true"/>
     	<property name="videoAllowed" value="true"/>
-	</bean>    
+	</bean>
+-->     
 </beans>
