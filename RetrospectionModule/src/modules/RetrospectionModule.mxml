@@ -185,6 +185,12 @@
 					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
 					timerSynchro.start();
 				}
+				
+				/* timerSynchro = new Timer(intervalCheckDecalage*1000,0);
+				timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
+				timerSynchro.start(); */
+				
+				
 				// set the data of the session
 				documentarisation.initDataRetroDocument(
 					this.currentSessionDateRecording, 
@@ -216,7 +222,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-//					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
+				//	this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
 				}
 			}
 			
@@ -358,7 +364,8 @@
 					}
 					
 					var startRecordingSession:Number = this.currentSessionDateRecording.time;
-					timeLine.range.reset();
+					// FIXME : bug here
+				//	timeLine.range.reset();
 					timeLine.range.addTime(startRecordingSession, startRecordingSession + this.currentSessionDuration);
 					// set timeStartSession in VisuVisioAdvaned
 					this.visio.startTimeSession = startRecordingSession;
