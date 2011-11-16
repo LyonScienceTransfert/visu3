@@ -74,8 +74,16 @@
 			private var timerRetroDocumentSegment:Timer;
 			private var currentTimeSessionMilliseconds:Number;
 			private var timerMouseDownObsel:Timer;
+
+            // Memorize x,y mouse position on MouseDown, to be able to 
+            // check how far the mouse has moved from the click position
+            private var click_x_position: float;
+            private var click_y_position: float;
+
 			// max duratio befor play video in ms.
 			private var MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN:Number = 2*1000;
+            // Maximum squared distance (4pixels here) of mouse move to take into account the MAX_DURATION
+            private var MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN: Number = 4 * 4;
 			
 			public var listSessionOpen : ArrayCollection;
 			
@@ -1017,6 +1025,8 @@
 				{
 					// set current ObselSkin
 					currentObselSkin = event.value as ObselSkin;
+                    click_x_position = mouseX;
+                    click_y_position = mouseY;
 					// set timer play video from obsel
 					timerMouseDownObsel = new Timer(MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN,0);
 					timerMouseDownObsel.addEventListener(TimerEvent.TIMER, endDurationMouseDownObselSkin);
@@ -1030,6 +1040,9 @@
 			
 			private function endDurationMouseDownObselSkin(event:TimerEvent):void
 			{
+                var dist: float = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
+                if (dist > MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN)
+                   return;
 				timerMouseDownObsel.stop();
 				trace("will play");
 				// stop play RetroDocumentSegment if playing
@@ -1070,6 +1083,9 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
+                    var dist: float = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
+                    if (dist <= MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN)
+                       return;
 					var obselSkin:ObselSkin = event.currentTarget as ObselSkin;
 					// dispatcher 
 					var mouseDownObsel:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL);
