@@ -105,7 +105,7 @@ public class ObselInfo {
 		Integer userId = (Integer) client.getAttribute("uid");
 		List<Obsel> listObselSessionExitSessionPause = null;
 		try {
-			String traceParam = "%-" + userId.toString() + "%";
+			String traceParam = "%-" + userId.toString();
 			String refParam = "void";
 			// log.warn("====refParam {}",refParam);
 			ObselStringParams osp = new ObselStringParams(traceParam, refParam);
