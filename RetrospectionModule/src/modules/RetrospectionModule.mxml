@@ -26,13 +26,13 @@
 			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.Trace;
+			import com.ithaca.traces.events.ObselEvent;
 			import com.ithaca.traces.model.TraceModel;
 			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.utils.EditCommentDialog;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.events.InitMapEvent;
-			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.PanelButtonEvent;
 			import com.ithaca.visu.events.SalonRetroEvent;
 			import com.ithaca.visu.events.SessionEvent;
