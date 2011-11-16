@@ -77,8 +77,8 @@
 
             // Memorize x,y mouse position on MouseDown, to be able to 
             // check how far the mouse has moved from the click position
-            private var click_x_position: float;
-            private var click_y_position: float;
+            private var click_x_position:Number;
+            private var click_y_position:Number;
 
 			// max duratio befor play video in ms.
 			private var MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN:Number = 2*1000;
@@ -1040,7 +1040,7 @@
 			
 			private function endDurationMouseDownObselSkin(event:TimerEvent):void
 			{
-                var dist: float = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
+                var dist: Number = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
                 if (dist > MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN)
                    return;
 				timerMouseDownObsel.stop();
@@ -1083,7 +1083,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-                    var dist: float = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
+                    var dist:Number = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
                     if (dist <= MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN)
                        return;
 					var obselSkin:ObselSkin = event.currentTarget as ObselSkin;
