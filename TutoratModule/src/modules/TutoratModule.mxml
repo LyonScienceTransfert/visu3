@@ -17,10 +17,8 @@
 			import com.ithaca.timeline.TraceLineGroup;
 			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
+			import com.ithaca.traces.events.ObselEvent;
 			import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.traces.view.ObselMarker;
-			import com.ithaca.traces.view.ObselSessionOut;
-			import com.ithaca.traces.view.skins.ObselMarkerSkin;
 			import com.ithaca.utils.EditMarkerDialog;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.utils.VisuUtils;
@@ -30,7 +28,6 @@
 			import com.ithaca.visu.events.ActivityElementEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.MessageEvent;
-			import com.ithaca.visu.events.ObselEvent;
 			import com.ithaca.visu.events.PanelButtonEvent;
 			import com.ithaca.visu.events.PanelEditInfoEvent;
 			import com.ithaca.visu.events.SessionEvent;
@@ -261,60 +258,59 @@
 				}
 			}
 			
-			/**
-			 * New user join to the session
-			 */
-			private function onNewUserJoinSession(event:SessionEvent):void{	
-				// check if user in current session
-			//	var currentSession:Session = Model.getInstance().getCurrentSession();
-				var currentSession:Session = this.currentSession;
-				if(currentSession != null)
-				{
-					if(currentSession.id_session == event.sessionId)
-					{
-						var module:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
-						if(module == this && module.visio != null)
-						{
-							var user:User = Model.getInstance().getUserPlateformeByUserId(event.userId);
-							module.visio.addVideoStream(event.userIdClient, user, 1.0, muteVolume);
-							// FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
-							if(event.status == ConnectionStatus.RECORDING)
-							{
-								module.visio.status = VisuVisioAdvanced.STATUS_RECORD;
-							}
-							// status session
-							var statusSession:int = currentSession.statusSession;
-							if(statusSession != SessionStatusEnum.SESSION_OPEN )
-							{								
-								if(statusSession == SessionStatusEnum.SESSION_PAUSE)
-								{
-									var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.userId)
-									// TODO gestion currentTime
-									Model.getInstance().addViewObselSessionOut(new Date().time , event.userId);
-									
-								}else
-								{
-									// remove viwSessionOut
-									var isUserSecondTimeEnterSession:Boolean = Model.getInstance().removeViewObselSessionOut(event.userId);
-									// will false when user enter first time in the session
-									if(!isUserSecondTimeEnterSession)
-									{
-										var viewObsel:ObselSessionOut = new ObselSessionOut();
-										viewObsel.setOwner(event.userId);
-										viewObsel.setBegin(currentSession.date_start_recording.time);
-										// TODO gestion currentTime
-										viewObsel.setEnd(new Date().time);
-										// add viewObsel in temp list before adding to traceLine, traveLine don't ready now
-										this._listTempViewObselSessionOut.addItem(viewObsel);
-									}																
-								}
-							}	
-						}
-					}							
-				}
-			}
-			
-			/**
+            /**
+            * New user join to the session
+            */
+            private function onNewUserJoinSession(event:SessionEvent):void{	
+            // check if user in current session
+                var currentSession:Session = this.currentSession;
+                if(currentSession != null)
+                {
+                    if(currentSession.id_session == event.sessionId)
+                    {
+                        var module:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                        if(module == this && module.visio != null)
+                        {
+                            var user:User = Model.getInstance().getUserPlateformeByUserId(event.userId);
+                            module.visio.addVideoStream(event.userIdClient, user, 1.0, muteVolume);
+                            // FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
+                            if(event.status == ConnectionStatus.RECORDING)
+                            {
+                                module.visio.status = VisuVisioAdvanced.STATUS_RECORD;
+                            }
+                            // status session
+                            var statusSession:int = currentSession.statusSession;
+                            if(statusSession != SessionStatusEnum.SESSION_OPEN )
+                            {								
+                                if(statusSession == SessionStatusEnum.SESSION_PAUSE)
+                                {   
+                                    var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.userId)
+                                    // TODO gestion currentTime
+                                    Model.getInstance().addViewObselSessionOut(new Date().time , event.userId);
+                                }else
+                                {   
+                                    // remove viwSessionOut
+                                    var isUserSecondTimeEnterSession:Boolean = Model.getInstance().removeViewObselSessionOut(event.userId);
+                                    // will false when user enter first time in the session
+                                    if(!isUserSecondTimeEnterSession)
+                                    {
+                                        // FIXME : remove gestion "SessionOut"
+                                        /* var viewObsel:ObselSessionOut = new ObselSessionOut();
+                                        viewObsel.setOwner(event.userId);
+                                        viewObsel.setBegin(currentSession.date_start_recording.time);
+                                        // TODO gestion currentTime
+                                        viewObsel.setEnd(new Date().time);
+                                        // add viewObsel in temp list before adding to traceLine, traveLine don't ready now
+                                        this._listTempViewObselSessionOut.addItem(viewObsel); */
+                                    }																
+                                }
+                            }	
+                        }
+                    }							
+                }
+            }
+
+            /**
 			 * Old user walk out from the session
 			 */
 			private function onOldUserOutSession(event:SessionEvent):void
