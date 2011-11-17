@@ -16,7 +16,7 @@
 			import com.ithaca.timeline.LayoutNode;
 			import com.ithaca.timeline.ObselsRenderer;
 			import com.ithaca.timeline.SelectorRegexp;
-			import com.ithaca.timeline.Stylesheet;
+			import com.ithaca.timelineskins.Stylesheet;
 			import com.ithaca.timeline.Timeline;
 			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.TraceLineGroup;

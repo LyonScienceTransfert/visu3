@@ -20,7 +20,7 @@
 			import com.ithaca.timeline.LayoutNode;
 			import com.ithaca.timeline.ObselsRenderer;
 			import com.ithaca.timeline.SelectorRegexp;
-			import com.ithaca.timeline.Stylesheet;
+			import com.ithaca.timelineskins.Stylesheet;
 			import com.ithaca.timeline.Timeline;
 			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.TraceLineGroup;
@@ -65,6 +65,7 @@
 				obselsRenderer 					= new ObselsRenderer( hostComponent._timeline.zoomContext.cursorRange, hostComponent );			
 				obselsRenderer.percentWidth 	= 100;
 				obselsRenderer.right			= obselsRenderer.left			= renderersSidePadding;
+				// FIXME : if hasn't obsels
 				obselsRenderer.obselsCollection = hostComponent._obsels;
 				obselsRenderer.styleName = hostComponent.styleName;	
 				rendererGroup.addElement( obselsRenderer );
