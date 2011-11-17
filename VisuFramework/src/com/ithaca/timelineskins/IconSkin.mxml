@@ -12,7 +12,7 @@
 	<fx:Script>
         <![CDATA[ 
 			import com.ithaca.traces.Obsel;
-			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.visu.traces.TraceModel;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
 			import gnu.as3.gettext.FxGettext;
