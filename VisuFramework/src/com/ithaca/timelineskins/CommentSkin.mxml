@@ -18,14 +18,13 @@
         <![CDATA[
 			import com.ithaca.timeline.CursorIcons;
 			import com.ithaca.timeline.ObselSkin;
-			import com.ithaca.timeline.Stylesheet;
+			import com.ithaca.timelineskins.Stylesheet;
 			import com.ithaca.timeline.TimeRange;
 			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
 			import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.traces.view.ObselComment;
-			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.traces.events.ObselEvent;
 			
 			import flash.events.MouseEvent;
 			
@@ -189,7 +188,7 @@
 				obsel.begin  = begin ;
 				UpdateResizeGripHeight();
 				// dispatchEvent
-				onDispatcheEvent(ObselEvent.UPDATE_DURTION_OBSEL_COMMENT);
+				onDispatcheEvent(ObselEvent.UPDATE_DURATION_OBSEL_COMMENT);
 			}	
 			
 			protected function EditComment( e:MouseEvent ):void
