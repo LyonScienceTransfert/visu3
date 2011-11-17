@@ -28,7 +28,6 @@
 			import com.ithaca.traces.Trace;
 			import com.ithaca.traces.events.ObselEvent;
 			import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.traces.view.ObselLine;
 			import com.ithaca.utils.EditCommentDialog;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.utils.VisuUtils;
@@ -63,7 +62,6 @@
 			[Bindable]
 			private var fxgt:_FxGettext;
 			
-			private var testCursor:ObselLine;
 			// TimeLine
 			private var timeLine:Timeline;
 			
@@ -1380,7 +1378,7 @@
 		
 		<mate:Listener type="{TraceLineEvent.PRE_ADD_COMMENT_OBSEL}"  method="onPreAddComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
-		<mate:Listener type="{ObselEvent.UPDATE_DURTION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
