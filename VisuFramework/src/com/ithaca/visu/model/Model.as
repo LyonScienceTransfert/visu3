@@ -154,7 +154,6 @@ package  com.ithaca.visu.model
 		private var _currentSessionId:int;
 		private var _currentCommentTraceId:String="void";
 		private var _currentTraceId:String="void";
-		private var _currentObselComment:ObselComment=null;
 		private var _selectedRadioButtonHomeModule:String = "";
 		private var _localeVersionGit:String;
 		private var _remoteVersionGit:String;  
@@ -300,51 +299,6 @@ package  com.ithaca.visu.model
 		{
 			return _currentCommentTraceId;
 		}
-		
-/*		public function setCurrentObselComment(value:ObselComment, groupCommentObsel:Group):void
-		{
-			var nbrObsel:int;
-			if(value == null)
-			{
-				if(_currentObselComment != null && groupCommentObsel != null)
-				{
-					nbrObsel = groupCommentObsel.numElements;
-					if(nbrObsel > 0)
-					{
-						// with last order obsel
-						groupCommentObsel.removeElementAt(nbrObsel-1);
-						groupCommentObsel.addElementAt(_currentObselComment, _currentObselComment.order);
-					}
-				}			
-			}else
-			{
-				// set on top deep
-				nbrObsel = groupCommentObsel.numElements;
-				var element:ObselComment;
-				var obsel:Obsel;
-				var indexObsel:int = 0;
-				for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
-				{
-					element =  groupCommentObsel.getElementAt(nObsel) as ObselComment;
-					obsel = element.parentObsel;
-					if(obsel.props[TraceModel.TIMESTAMP] == value.parentObsel.props[TraceModel.TIMESTAMP])
-					{
-						indexObsel = nObsel;
-					}
-				}
-				if(indexObsel > 0)
-				{
-					value.order = indexObsel;
-					groupCommentObsel.removeElementAt(indexObsel);
-					groupCommentObsel.addElementAt(value, nbrObsel-1);				
-				}
-			}
-			_currentObselComment = value;
-		}
-		public function getCurrentObselComment():ObselComment
-		{
-			return _currentObselComment;
-		}*/
 		
 		public function setSelectedRadioButton(value:String):void
 		{
@@ -1089,62 +1043,6 @@ package  com.ithaca.visu.model
 				}
 			}
 			return null;
-		}
-		/**
-		 * create view obsel and add on traceLineComment
-		 */
-		public function addObselComment(obsel:Obsel, editabled:Boolean, group:Group = null):void
-		{
-			var textObsel:String;
-			var commentForUser:int;
-			var viewObsel:ObselComment = new ObselComment()
-			viewObsel.parentObsel = obsel;
-			var typeObsel:String = obsel.type;
-			switch (typeObsel)	
-			{
-				case TraceModel.SET_TEXT_COMMENT :
-				viewObsel.setBegin(obsel.begin);
-				viewObsel.setEnd(obsel.end);
-/*				viewObsel.parentObsel = obsel;
-				ownerObsel = obsel.uid;*/
-				commentForUser = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
-				textObsel = obsel.props[TraceModel.TEXT];
-				viewObsel.text = textObsel;
-				viewObsel.setEditabled(editabled);
-				var obj:Object =  Model.getInstance().getTraceLineByUserId(commentForUser);
-				if(obj == null)
-				{
-					obj =  Model.getInstance().getTraceLineByUserId(0);
-				}
-				var backGroundColorObsel:uint = obj.userColor;
-				viewObsel.backGroundColor = backGroundColorObsel;
-				break;	
-			}
-			// only for add new comment obsel
-			if(group != null)
-			{
-				if(this._currentObselComment != null)
-				{
-					if(this._currentObselComment.parentObsel.props[TraceModel.TIMESTAMP] == 0)
-					{
-						var index:int = _listViewObselComment.getItemIndex(this._currentObselComment);
-						// if hasn't obsel 
-						if(index != -1)
-						{
-							_listViewObselComment.removeItemAt(index);
-						}
-					}else
-					{
-						this._currentObselComment.setCancelEditObsel();
-					}
-				}
-//				this.setCurrentObselComment(viewObsel,group)
-			}
-			
-			_listViewObselComment.addItem(viewObsel);
-			
-			traceComment.addObsel(obsel);
-
 		}
 		
 		/**
