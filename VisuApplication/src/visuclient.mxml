@@ -23,7 +23,6 @@
 		<mate:Listener type="{RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO}"  method="goBilanFromRetrospection"/>
 		<mate:Listener type="{RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN}"  method="goRetroFromBilan"/>
 		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
-		<mate:Listener type="{ObselEvent.SHOW_WINDOW_EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
 		<mate:Listener type="{ObselEvent.DELETE_OBSEL}"  method="onDeleteObselMarker" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.EDIT_OBSEL}"  method="onEditObselMarker" useWeakReference="true"/>
 		<vo:ProfileDescriptionVO />
@@ -50,7 +49,7 @@
 			import com.ithaca.utils.EditObselMarkerTitleWindow;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
-			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.traces.events.ObselEvent;
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
@@ -283,28 +282,6 @@
 					}
 				}
 			}
-			
-			private function onShowWindowEditObsel(event:ObselEvent):void
-			{
-				// set current edit obsel 
-				currentObselEdit = event.obsel;
-				currentTextEdit = event.textObsel;
-				var editObselMarker:EditObselMarkerTitleWindow = EditObselMarkerTitleWindow(PopUpManager.createPopUp( 
-				this, EditObselMarkerTitleWindow , true) as spark.components.TitleWindow);
-				// Calculate position of TitleWindow in Application's coordinates. 
-				var point1:Point = new Point();
-				point1.x=this.width/2;
-				point1.y=this.height/2;             
-				editObselMarker.x=point1.x+25;
-				editObselMarker.y=point1.y+25;
-				
-				editObselMarker.textMarker.text = event.textObsel;
-				editObselMarker.tempRichText = markerEdited;
-				// set focus
-				stage.focus = editObselMarker;
-				// set listener delete obsel
-				editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselMarker);
-			} 
 			
 			/**
 			 * add marker "UpdateMarker" on the serveur
