@@ -65,7 +65,7 @@ package  com.ithaca.visu.model
 	import com.ithaca.timelineskins.ObselSessionOut;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.Trace;
-	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.visu.traces.TraceModel;
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;

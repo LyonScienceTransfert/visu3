@@ -23,7 +23,7 @@
 			import com.ithaca.timeline.TraceLine;
 			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
-			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.visu.traces.TraceModel;
 			import com.ithaca.traces.events.ObselEvent;
 			
 			import flash.events.MouseEvent;
