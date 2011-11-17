@@ -62,13 +62,10 @@
  */
 package  com.ithaca.visu.model
 {
+	import com.ithaca.timelineskins.ObselSessionOut;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.Trace;
 	import com.ithaca.traces.model.TraceModel;
-	import com.ithaca.traces.view.ObselComment;
-	import com.ithaca.traces.view.ObselImage;
-	import com.ithaca.traces.view.ObselMarker;
-	import com.ithaca.traces.view.ObselSessionOut;
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
@@ -1045,186 +1042,117 @@ package  com.ithaca.visu.model
 			return null;
 		}
 		
-		/**
-		 * create view obsel and add on the traceLine
-		 */
-		public function addObsel(obsel:Obsel):Array
-		{
-			var result:Array = new Array();
-			var typeObsel:String = obsel.type;
-			var viewObsel = new ObselImage();
-			viewObsel.parentObsel = obsel;
-			viewObsel.setBegin(obsel.begin);
-			viewObsel.setEnd(obsel.end);
-			var textObsel:String;
-			var ownerObsel:int;
-			switch (typeObsel)
-			{
-				case TraceModel.STOP_VIDEO:
-				case TraceModel.PRESS_SLIDER_VIDEO:
-				case TraceModel.RELEASE_SLIDER_VIDEO:
-				case TraceModel.PLAY_VIDEO:
-				case TraceModel.PAUSE_VIDEO:
-				case TraceModel.END_VIDEO:
-					ownerObsel = obsel.props[TraceModel.SENDER];
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.TEXT];
-					var currentTimePlayer:String = obsel.props[TraceModel.CURRENT_TIME_PLAYER];
-					viewObsel.toolTip = textObsel+"("+currentTimePlayer+"s.)";
-					break;
-				case TraceModel.SET_MARKER :
-					viewObsel = new ObselMarker()
-					viewObsel.setBegin(obsel.begin);
-					viewObsel.setEnd(obsel.end);
-					viewObsel.parentObsel = obsel;
-					ownerObsel = obsel.uid;
-					viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.TEXT];
-					viewObsel.text = textObsel;
-					viewObsel.toolTip = textObsel;
-					var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
-					viewObsel.backGroundColor = backGroundColorObsel;
-					break;
-				case TraceModel.RECEIVE_MARKER :
-					viewObsel = new ObselMarker();
-					viewObsel.setBegin(obsel.begin);
-					viewObsel.setEnd(obsel.end);
-					viewObsel.parentObsel = obsel;
-					ownerObsel = obsel.props[TraceModel.SENDER];
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.TEXT];
-					viewObsel.text = textObsel;
-					viewObsel.toolTip = textObsel;
-					var backGroundColorObsel:uint = Model.getInstance().getTraceLineByUserId(ownerObsel).userColor;
-					viewObsel.backGroundColor = backGroundColorObsel;
-					break;
-				case TraceModel.SEND_CHAT_MESSAGE :
-					ownerObsel = obsel.uid;
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.CONTENT];
-					viewObsel.toolTip = textObsel;
-					break;
-				case TraceModel.RECEIVE_CHAT_MESSAGE :
-					ownerObsel = obsel.uid;
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.CONTENT];
-					var labelSender:String ="";
-					if(!checkServeurVisuVciel())
-					{
-						labelSender = obsel.props[TraceModel.SENDER]+":"; 
-					}
-					viewObsel.toolTip =  labelSender + textObsel;
-					var senderObsel:int = obsel.props[TraceModel.SENDER];
-					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
-					break;
-				case TraceModel.SEND_KEYWORD :
-					ownerObsel = obsel.uid;
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.KEYWORD];
-					viewObsel.toolTip = textObsel;
-					break;
-				case TraceModel.RECEIVE_KEYWORD :
-					ownerObsel = obsel.uid;
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.KEYWORD];
-					viewObsel.toolTip = textObsel;
-					var senderObsel:int = obsel.props[TraceModel.SENDER];
-					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
-				//	initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
-					break;
-				case TraceModel.SEND_INSTRUCTIONS :
-					ownerObsel = obsel.uid;
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.INSTRUCTIONS];
-					viewObsel.toolTip = textObsel;
-					break;
-				case TraceModel.RECEIVE_INSTRUCTIONS :
-					ownerObsel = obsel.uid;
-					viewObsel.source =  IconEnum.getIconByTypeObsel(typeObsel);
-					textObsel = obsel.props[TraceModel.INSTRUCTIONS];
-					viewObsel.toolTip = textObsel;
-					var senderObsel:int = obsel.props[TraceModel.SENDER];
-					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
-			//		initChatPanel(senderObsel, textObsel, viewObsel.source as Class, sessionReadyInit);
-					break;
-				case TraceModel.SEND_DOCUMENT :
-					ownerObsel = obsel.uid;
-					var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
-					if(typeDocument == ActivityElementType.IMAGE)
-					{
-						viewObsel.source =  obsel.props[TraceModel.URL];  
-					}else
-					{
-						viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
-					}
-					textObsel = obsel.props[TraceModel.TEXT];
-					viewObsel.toolTip = textObsel;
-					break;
-				case TraceModel.RECEIVE_DOCUMENT :
-					ownerObsel = obsel.uid;
-					var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
-					if(typeDocument == ActivityElementType.IMAGE)
-					{
-						viewObsel.source =  obsel.props[TraceModel.URL];  
-					}else
-					{
-						viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
-					}
-					textObsel = obsel.props[TraceModel.TEXT];
-					viewObsel.toolTip = textObsel;
-					var senderObsel:int = obsel.props[TraceModel.SENDER];
-					result.push({senderId:senderObsel, textObsel:textObsel, source:viewObsel.source});
-				//	initChatPanel(senderObsel, textObsel, fichierIconVisu1 , sessionReadyInit);
-					break;
-				case TraceModel.READ_DOCUMENT :
-					ownerObsel = obsel.props[TraceModel.SENDER];
-					var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
-					if(typeDocument == ActivityElementType.IMAGE)
-					{
-						viewObsel.source =  obsel.props[TraceModel.URL];  
-					}else
-					{
-						viewObsel.source = IconEnum.getIconByTypeObsel(typeObsel);
-					} 			
-					textObsel = obsel.props[TraceModel.TEXT];
-					viewObsel.toolTip = obsel.props[TraceModel.SENDER_DOCUMENT] + ":" + textObsel;
-					break;
-				//case TraceModel.SESSION_IN :
-				case TraceModel.SESSION_OUT :	
-					// FIXME : don't add obsel SessionOut, 
-					// TODO : have to find the BUG
-					return result;
+        /**
+        ** create view obsel and add on the traceLine
+        */
+        public function addObsel(obsel:Obsel):Array
+        {
+            // return the liste the objets for init the chat panel
+            var result:Array = new Array();
+            // property of the obsel
+            var ownerObsel:int;
+            var textObsel:String;
+            // source of the icon the obsel class/string
+            var source:Object;
+            var senderObsel:int;
+            // type of the obsel
+            var typeObsel:String = obsel.type;
+            switch (typeObsel)
+            {
+                case TraceModel.STOP_VIDEO:
+                case TraceModel.PRESS_SLIDER_VIDEO:
+                case TraceModel.RELEASE_SLIDER_VIDEO:
+                case TraceModel.PLAY_VIDEO:
+                case TraceModel.PAUSE_VIDEO:
+                case TraceModel.END_VIDEO:
+                case TraceModel.RECEIVE_MARKER :
+                case TraceModel.READ_DOCUMENT :
+                    ownerObsel = obsel.props[TraceModel.SENDER];
+                    break;
+                
+                case TraceModel.SET_MARKER :
+                case TraceModel.SEND_CHAT_MESSAGE :
+                case TraceModel.SEND_KEYWORD :
+                case TraceModel.SEND_INSTRUCTIONS :
+                case TraceModel.SEND_DOCUMENT :
+                    ownerObsel = obsel.uid;
+                    break;
+                
+                case TraceModel.RECEIVE_CHAT_MESSAGE :
+                    ownerObsel = obsel.uid;
+                    source =  IconEnum.getIconByTypeObsel(typeObsel);
+                    textObsel = obsel.props[TraceModel.CONTENT];
+                    senderObsel = obsel.props[TraceModel.SENDER];
+                    result.push({senderId:senderObsel, textObsel:textObsel, source:source});
+                    break;
+                
+                case TraceModel.RECEIVE_KEYWORD :
+                    ownerObsel = obsel.uid;
+                    source =  IconEnum.getIconByTypeObsel(typeObsel);
+                    textObsel = obsel.props[TraceModel.KEYWORD];
+                    senderObsel = obsel.props[TraceModel.SENDER];
+                    result.push({senderId:senderObsel, textObsel:textObsel, source:source});
+                    break;
+                
+                case TraceModel.RECEIVE_INSTRUCTIONS :
+                    ownerObsel = obsel.uid;
+                    source =  IconEnum.getIconByTypeObsel(typeObsel);
+                    textObsel = obsel.props[TraceModel.INSTRUCTIONS];
+                    senderObsel = obsel.props[TraceModel.SENDER];
+                    result.push({senderId:senderObsel, textObsel:textObsel, source:source});
+                    break;
+                
+                case TraceModel.RECEIVE_DOCUMENT :
+                    ownerObsel = obsel.uid;
+                    var typeDocument:String = obsel.props[TraceModel.TYPE_DOCUMENT]; 
+                    if(typeDocument == ActivityElementType.IMAGE)
+                    {
+                        source =  obsel.props[TraceModel.URL];  
+                    }else
+                    {
+                        source = IconEnum.getIconByTypeObsel(typeObsel);
+                    }
+                    textObsel = obsel.props[TraceModel.TEXT];
+                    senderObsel = obsel.props[TraceModel.SENDER];
+                    result.push({senderId:senderObsel, textObsel:textObsel, source:source});
+                    break;
+                //  case TraceModel.SESSION_IN :
+                //	case TraceModel.SESSION_OUT :	
+                    // FIXME : don't add obsel SessionOut, 
+                    // TODO : have to find the BUG
+                    //	return result;
 					
-					viewObsel = new ObselSessionOut()
-					viewObsel.setBegin(obsel.begin);
-					viewObsel.setEnd(obsel.end);
-					ownerObsel = obsel.props[TraceModel.UID];
-					break;
-				case TraceModel.SESSION_OUT_VOID_DURATION :
-					// FIXME : don't add obsel SessionOut, 
-					// TODO : have to find the BUG
-					return result;
+                    /*viewObsel = new ObselSessionOut()
+                    viewObsel.setBegin(obsel.begin);
+                    viewObsel.setEnd(obsel.end);*/
+                    //	ownerObsel = obsel.props[TraceModel.UID];
+                    //	break;
+               //	case TraceModel.SESSION_OUT_VOID_DURATION :
+                // FIXME : don't add obsel SessionOut, 
+                // TODO : have to find the BUG
+                //		return result;
 					
-					ownerObsel = obsel.props[TraceModel.UID];
-					viewObsel = new ObselSessionOut()
-					viewObsel.setBegin(obsel.begin);
-					viewObsel.setEnd(obsel.end);
-					viewObsel.setOwner(ownerObsel);
-					// add viewObsel for updating his duration
-					this._listViewObselSessionOut.addItem(viewObsel);
-					// add viewObsel like "SessionOut"
-					typeObsel = TraceModel.SESSION_OUT;
-					break;
-			}
+                //		ownerObsel = obsel.props[TraceModel.UID];
+                    /*viewObsel = new ObselSessionOut()
+                    viewObsel.setBegin(obsel.begin);
+                    viewObsel.setEnd(obsel.end);
+                    viewObsel.setOwner(ownerObsel);
+                    // add viewObsel for updating his duration
+                    this._listViewObselSessionOut.addItem(viewObsel);
+                    // add viewObsel like "SessionOut"
+                    typeObsel = TraceModel.SESSION_OUT;*/
+             //		break;
+            }
 			
-			Model.getInstance().setObsel(viewObsel,ownerObsel,typeObsel,obsel)
-			return result;
-		}
-		
+            Model.getInstance().setObsel(null,ownerObsel,typeObsel,obsel)
+            return result;
+        }
+        
+		/**
+        * add obsel to the Trace 
+        */
 		public function setObsel(obsel:*, userId:int, typeObsel:String, obselOrigin:Obsel = null):void
 		{
-			
-			// 
 			var traceGroup:Object = getTraceGroupByUserId(userId);
 			if(traceGroup == null)
 			{
@@ -1236,77 +1164,6 @@ package  com.ithaca.visu.model
 			{
 				trace.addObsel(obselOrigin);
 			}
-				
-			var traceLine:Object = getTraceLineByUserId(userId);
-			if(traceLine == null)
-			{
-				// TODO message
-				return;
-			}
-			var listElementTraceLine:ArrayList = traceLine.listElementTraceLine as ArrayList;
-			var traceLineElement:Object;
-			var tempTitleListObsel:ArrayCollection =  traceLine.listTitleObsels as ArrayCollection;
-				// set traceLineElements: instruction, keyword, document, messages, marker
-				switch (typeObsel)
-				{
-					case TraceModel.SEND_INSTRUCTIONS:
-					case TraceModel.RECEIVE_INSTRUCTIONS:
-						traceLineElement = listElementTraceLine.getItemAt(0) as Object;	
-						break;
-					case TraceModel.SEND_KEYWORD:
-					case TraceModel.RECEIVE_KEYWORD:
-						traceLineElement = listElementTraceLine.getItemAt(1) as Object;	
-						break;
-					case TraceModel.SEND_DOCUMENT:
-					case TraceModel.RECEIVE_DOCUMENT:
-					case TraceModel.READ_DOCUMENT:
-					case TraceModel.STOP_VIDEO:
-					case TraceModel.PRESS_SLIDER_VIDEO:
-					case TraceModel.RELEASE_SLIDER_VIDEO:
-					case TraceModel.PLAY_VIDEO:
-					case TraceModel.PAUSE_VIDEO:
-					case TraceModel.END_VIDEO:
-						traceLineElement = listElementTraceLine.getItemAt(2) as Object;	
-						break;
-					case TraceModel.SEND_CHAT_MESSAGE:
-					case TraceModel.RECEIVE_CHAT_MESSAGE:
-						traceLineElement = listElementTraceLine.getItemAt(3) as Object;	
-						break;
-					case TraceModel.SET_MARKER:
-					case TraceModel.RECEIVE_MARKER:
-					case TraceModel.SESSION_IN:
-						traceLineElement = listElementTraceLine.getItemAt(4) as Object;	
-						break;
-					case TraceModel.SESSION_OUT:
-						// add obsel "SessionOut" only in thaceLineTitle
-						tempTitleListObsel.addItem(obsel);
-						return;
-						break;
-/*					case TraceModel.SET_TEXT_COMMENT:
-						_listViewObselComment.addItem(obsel);
-						return;
-						break;*/
-					default:		
-				}
-				// add obsel on the traceLineElement
-				var lObsel:ArrayCollection =  traceLineElement.listObsel as ArrayCollection;
-				if(lObsel == null)
-				{
-					lObsel = new ArrayCollection();
-					lObsel.addItem(obsel);
-					traceLineElement.listObsel = lObsel;
-				}else
-				{
-					lObsel.addItem(obsel);
-				}
-				
-				// check if need add obsel to titleTrcaLine
-				var addedTraceLine:Boolean = traceLineElement.added;
-				if(addedTraceLine)
-				{
-					var newObsel = obsel.cloneMe();
-					tempTitleListObsel.addItem(newObsel);
-				}	
 		}
 		
 		public function getListElementsTraceLineByUserId(userId:int):ArrayList
