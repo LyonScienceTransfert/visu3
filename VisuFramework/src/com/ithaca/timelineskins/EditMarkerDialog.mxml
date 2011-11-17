@@ -16,7 +16,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.traces.Obsel;
-			import com.ithaca.visu.events.ObselEvent;
+			import com.ithaca.traces.events.ObselEvent;
 			
 			import flash.events.KeyboardEvent;
 			

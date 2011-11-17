@@ -12,14 +12,16 @@
 	
 	<fx:Script>
         <![CDATA[ 
-			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.timeline.TimeRange;
 			import com.ithaca.timeline.TraceLine;
+			import com.ithaca.timeline.events.TimelineEvent;
 			import com.ithaca.traces.Obsel;
+			
 			import flash.events.Event;
+			
 			import mx.graphics.SolidColor;
 			
-			public var obsel : Obsel;
+			public var obsel :Obsel;
 		
 			private static var bgColorIndex : uint = 0;
 			

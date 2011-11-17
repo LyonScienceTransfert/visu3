@@ -91,7 +91,7 @@ timeline|TraceLine.background
 
 timeline|TraceLineTitle
 {
-	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineTitleVisu2Skin");
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineTitleSkin");
 }
 
 timeline|TraceLine.comments
@@ -110,7 +110,7 @@ timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
 
 timeline|ZoomContext
 {
-	skin-class			: ClassReference("com.ithaca.timeline.skins.ZoomContextSkin2");
+	skin-class			: ClassReference("com.ithaca.timeline.skins.ZoomContextSkin");
 	backgroundColor 	: #F5F5F5; 
 	allowZoom           : false;
 	allowCut            : false;

@@ -21,9 +21,9 @@
 			import com.ithaca.timeline.Timeline;
 			import com.ithaca.timeline.TraceLine;
 			import mx.events.FlexEvent;
-			import com.ithaca.timeline.Stylesheet;
+			import com.ithaca.timelineskins.Stylesheet;
 			import com.ithaca.timeline.ObselsRenderer;
-				import mx.graphics.SolidColor;
+			import mx.graphics.SolidColor;
 			
 			[Bindable]
 			public var backgroundColor : uint;
