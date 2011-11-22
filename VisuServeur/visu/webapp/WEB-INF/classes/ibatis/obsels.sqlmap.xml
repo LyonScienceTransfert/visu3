@@ -56,6 +56,17 @@
 	  	SELECT * FROM obsels WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') and trace like #traceParam#	
 	  ]]>	
 	</select>
+	
+	<select id="getTracesBySessionIdAndUserId" cacheModel="cache" parameterClass="obselStringParam" resultClass="String" >
+	  <![CDATA[  
+	  	SELECT DISTINCT trace
+	  	FROM obsels 
+	  	WHERE trace LIKE #traceParam# and rdf LIKE #refParam# 
+	  	AND (type_obsel = 'SessionStart' OR type_obsel = 'SessionEnter')
+	  ]]>	
+	</select>
+	
+	
 	<select id="getObselsSessionStartSessionEnterByTraceId"  resultMap="obselResult" cacheModel="cache" parameterClass="String">
 	<![CDATA[  
         SELECT *
