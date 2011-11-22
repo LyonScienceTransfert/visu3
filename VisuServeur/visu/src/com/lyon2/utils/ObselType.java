@@ -22,11 +22,17 @@ public class ObselType {
 	public static final String PREFICS_RETRO_ROOM = "Retro";
 	public static final String PREFICS_PARAM_OBSEL = "has";
 	// name the parametres of the obsel
+	public static final String REFERER = "referer";
+	public static final String SESSION_START_RECORD_DATE = "sessionStartRecordDate";
+	public static final String SESSION_OWNER_ID = "sessionOwnerId";
+
 	public static final String SYNC_ROOM_TRACE_ID = "syncRoomTraceId";
 	public static final String PARENT_TRACE_ID = "parentTrace";
 	
+	
 	public static final String CAUSE = "cause";
-	public static final String UNKNOWN = "UNKNOWN";
+	public static final String UNKNOWN = "unknown";
+	public static final String LEAVE_ROOM = "leave_room";
 	public static final String LOAD_ANOTHER_SESSION = "LOAD_ANOTHER_SESSION";
 	public static final String VIDEO_TIME = "videoTime";
 	public static final String OBSEL_ID = "obselId";
@@ -34,6 +40,7 @@ public class ObselType {
 	public static final String SESSION = "session";
 	public static final String SESSION_ID = "sessionId";
 	public static final String SESSION_TITLE = "sessionTitle";
+	public static final String SESSION_DESCRIPTION = "sessionDescription";
 	public static final String TRACE_SUBJECT_ID = "traceSubjectId";
 	public static final String USER_NAME = "userName";
 	public static final String USER_AVATAR = "userAvatar";
