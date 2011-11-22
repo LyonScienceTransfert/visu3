@@ -365,40 +365,7 @@ public class RetroRoomUserAction {
 		log.warn("USER : {} IS JOIN SALON RETRO", nameUser);
 	}
 
-	public void walkOutSalonRetro(IConnection conn) {
-		IClient client = conn.getClient();
-		User user = (User) client.getAttribute("user");
-		String nameUser = user.getLastname() + " " + user.getFirstname();
-		log.warn("USER : {} IS WALK OUT SALON RETRO", nameUser);
-		Integer userId = user.getId_user();
-		Obsel obsel = null;
-		if (client.hasAttribute("traceRetroId")) {
-			String traceRetroIdOutSession = (String) client
-					.getAttribute("traceRetroId");
-			String traceParentRetroId = (String) client
-					.getAttribute("traceParentRetroId");
-			List<Object> paramsObsel = new ArrayList<Object>();
-			paramsObsel.add("parentTrace");
-			paramsObsel.add(traceParentRetroId);
-			paramsObsel.add("cause");
-			paramsObsel.add("LEAVE_ROOM");
-			try {
-				obsel = app.setObsel(userId, traceRetroIdOutSession,
-						ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION,
-						paramsObsel);
-			} catch (SQLException sqle) {
-				log.error("=====Errors===== {}", sqle);
-			}
-			log
-					.debug("------------- OBSEL SalonRetroSessionOut when out from salon retro  START---------------------");
-			log.warn(obsel.toString());
-			log
-					.debug("------------- OBSEL SalonRetroSessionOut xhen out from salon retro END---------------------");
-			// remove attribute
-			client.removeAttribute("traceRetroId");
-			client.removeAttribute("traceParentRetroId");
-		}
-	}
+	
 
 	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId,
@@ -524,6 +491,50 @@ public class RetroRoomUserAction {
 	public void setApplication(Application app) {
 		this.app = app;
 		log.debug("set application " + app);
+	}
+	
+	
+	/**********************************************************************************/
+	/**********************************************************************************/
+	/**********************************************************************************/
+	/**
+	 * UNUSER 
+	 * 
+	 * @param conn
+	 */
+	public void walkOutSalonRetro(IConnection conn) {
+		IClient client = conn.getClient();
+		User user = (User) client.getAttribute("user");
+		String nameUser = user.getLastname() + " " + user.getFirstname();
+		log.warn("USER : {} IS WALK OUT SALON RETRO", nameUser);
+		Integer userId = user.getId_user();
+		Obsel obsel = null;
+		if (client.hasAttribute("traceRetroId")) {
+			String traceRetroIdOutSession = (String) client
+					.getAttribute("traceRetroId");
+			String traceParentRetroId = (String) client
+					.getAttribute("traceParentRetroId");
+			List<Object> paramsObsel = new ArrayList<Object>();
+			paramsObsel.add("parentTrace");
+			paramsObsel.add(traceParentRetroId);
+			paramsObsel.add("cause");
+			paramsObsel.add("LEAVE_ROOM");
+			try {
+				obsel = app.setObsel(userId, traceRetroIdOutSession,
+						ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION,
+						paramsObsel);
+			} catch (SQLException sqle) {
+				log.error("=====Errors===== {}", sqle);
+			}
+			log
+					.debug("------------- OBSEL SalonRetroSessionOut when out from salon retro  START---------------------");
+			log.warn(obsel.toString());
+			log
+					.debug("------------- OBSEL SalonRetroSessionOut xhen out from salon retro END---------------------");
+			// remove attribute
+			client.removeAttribute("traceRetroId");
+			client.removeAttribute("traceParentRetroId");
+		}
 	}
 
 }
