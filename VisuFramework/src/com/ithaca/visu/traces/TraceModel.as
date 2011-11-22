@@ -60,7 +60,7 @@
  * 
  * -- End of licenses
  */
-package com.ithaca.traces.model
+package com.ithaca.visu.traces
 {
 
 /* Generated code, see below */
