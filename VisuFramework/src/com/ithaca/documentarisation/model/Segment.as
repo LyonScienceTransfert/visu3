@@ -8,6 +8,8 @@ package com.ithaca.documentarisation.model
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
 	
+	import mx.utils.UIDUtil;
+	
 	import spark.components.Label;
 
 	public class Segment
@@ -37,14 +39,18 @@ package com.ithaca.documentarisation.model
 		public var pathCommentAudio:String="";
 		
 		public var byteArray:ByteArray = null;
+        
+        public var segmentId:String = "";
 
 		public function Segment(parentRetroDocument:RetroDocument)
 		{
 			this.parentRetroDocument = parentRetroDocument;
+            segmentId = UIDUtil.createUID();
 		}
 		
 		public function setSegmentXML(segment:XML):void
 		{
+            segmentId = segment.attribute(RetroDocumentConst.TAG_ID).toString();
 			beginTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_FROM_TIME).toString()); 
 			endTimeVideo = new Number(segment.child(RetroDocumentConst.TAG_TO_TIME).toString()); 
 			comment = segment.child(RetroDocumentConst.TAG_COMMENT).toString(); 

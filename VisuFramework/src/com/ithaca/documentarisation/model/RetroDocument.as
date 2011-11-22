@@ -92,7 +92,7 @@ package com.ithaca.documentarisation.model
 		{
 			listSegment.removeAll();
 			var xml:XML = new XML(value);
-			var listSegmentXML:XMLList = xml.segment;
+			var listSegmentXML:XMLList = xml.block;
 			var nbrSegment:int = listSegmentXML.length();
 			for(var nSegment:int = 0 ; nSegment < nbrSegment; nSegment++)
 			{
@@ -132,7 +132,7 @@ package com.ithaca.documentarisation.model
 			for(var nSegment:int = 0; nSegment < nbrSegment ; nSegment++ )
 			{
 				var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
-				var segmentXML:XML = new XML("<"+RetroDocumentConst.TAG_SEGMENT+"/>");
+				var segmentXML:XML = new XML("<"+RetroDocumentConst.TAG_SEGMENT + " " +RetroDocumentConst.TAG_ID + "=" + "'" +segment.segmentId + "'" +"/>");
 				var stringBeginTimeVideo:String = "<"+RetroDocumentConst.TAG_FROM_TIME+">"+segment.beginTimeVideo.toString()+"</"+RetroDocumentConst.TAG_FROM_TIME+">";
 				var beginTimeVideo:XML = new XML(stringBeginTimeVideo);
 				segmentXML.appendChild(beginTimeVideo);
