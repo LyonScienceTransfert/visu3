@@ -251,6 +251,101 @@ public class ObselInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
+	private void checkTraceIdRetro(IClient client, Session session){
+		User user = (User) client.getAttribute("user");
+		int userId = user.getId_user();
+		// check user was in the recorded session 
+		List<String> listTraceId = null;
+		// list obsels activity in the salon retrospection
+		List<Obsel> retro = null;
+		String traceRetroId = "";
+		String traceId = "";
+		
+		String traceParam = "%-" + userId;
+		String refParam = "%:hasSession " + "\"" + String.valueOf(session.getId_session()) + "\""
+				+ "%";
+		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+		log.warn("OSP = {}",osp.toString());
+		try {
+			listTraceId = (List<String>) app.getSqlMapClient().queryForList(
+					"obsels.getTracesBySessionIdAndUserId", osp);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing de list traceId" + e);
+		}
+		// user name
+		String nameUser = user.getLastname() + " " + user.getFirstname();
+		if(listTraceId.size() == 0)
+		{
+			log.warn(nameUser + " hasn't trace for retrospection module. ");
+			return;
+		}else
+		{
+			log.warn(nameUser + " has trace, was recorded.");
+			// Initialization trace id of the salon retrospection 
+			// get trace id 
+			traceId = listTraceId.get(0);
+			// set traceId parent
+			client.setAttribute("traceParentRetroId", traceId);
+			
+			String refParamTypeObsel = "%"+ObselType.PREFICS_RETRO_ROOM +"%";
+			String refParamParentTraceId = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SYNC_ROOM_TRACE_ID)+" "+"\"" + traceId + "\"" + "%";
+			ObselStringParams ospRetro = new ObselStringParams(refParamTypeObsel, refParamParentTraceId);
+			log.warn(ospRetro.toString());
+			try {
+				retro = (List<Obsel>) app.getSqlMapClient().queryForList(
+						"obsels.getTraceRetro", ospRetro);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des obsels retro" + e);
+			}
+			
+			if(retro.size() < 1)
+			{
+				// create new traceId for trace activity in retrospection module
+				traceRetroId = app.makeTraceId(userId);
+				log.warn("do new traceRetroId = " + traceRetroId);
+			}else
+			{
+				for(Obsel obsel : retro)
+					{
+						log.warn("== obsel retro, trace id = {}, obsel id in BDD = {}",obsel.getTrace(),obsel.getId());
+					}
+				Obsel obsel = retro.get(0);
+				traceRetroId = obsel.getTrace();
+			}
+			log.warn("traceRetroId = {}",traceRetroId );
+			// set traceId retrospection module
+			client.setAttribute("traceRetroId", traceRetroId);		
+		}
+				
+		// add obsel "RetroRoomEnter"
+		List<Object> paramsObsel= new ArrayList<Object>();
+		paramsObsel.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObsel.add(traceId);
+		paramsObsel.add(ObselType.REFERER);paramsObsel.add("void");
+		paramsObsel.add(ObselType.SESSION_ID);paramsObsel.add(String.valueOf(session.getId_session()));
+		paramsObsel.add(ObselType.SESSION_TITLE);paramsObsel.add(session.getTheme());
+		paramsObsel.add(ObselType.SESSION_DESCRIPTION);paramsObsel.add(session.getDescription());
+		paramsObsel.add(ObselType.SESSION_START_RECORD_DATE);paramsObsel.add(Long.toString(session.getStart_recording().getTime()));
+		paramsObsel.add(ObselType.SESSION_OWNER_ID);paramsObsel.add(String.valueOf(session.getId_user()));
+		
+		Obsel obsel = null;
+		try
+		{
+			obsel = app.setObsel(userId, traceRetroId, ObselType.RETRO_ROOM_ENTER , paramsObsel);					
+		}
+		catch (SQLException sqle)
+		{
+			log.error("=====Errors===== {}", sqle);
+		}
+		log.debug("------------- OBSEL SalonRetroSESSIONin START---------------------");
+		log.warn(obsel.toString());
+		log.debug("------------- OBSEL SalonRetroSESSIONin END---------------------");
+
+		
+		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
 		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
 
@@ -259,6 +354,7 @@ public class ObselInfo {
 		Integer userId = user.getId_user();
 		List<Obsel> result = null;
 		Session session = null;
+		
 		String traceParam = "%-" + "void" + "%";
 		String refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
 				+ "%";
@@ -308,7 +404,7 @@ public class ObselInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des session" + e);
 		}
-
+		
 		traceParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SUBJECT)+" "+"\"" + userId.toString() + "\"" + "%";
 		refParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SESSION)+" "+"\"" + sessionId.toString() + "\"" + "%";
 		osp = new ObselStringParams(traceParam, refParam);
@@ -367,6 +463,9 @@ public class ObselInfo {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListRetroDocument", argsRetroDocument);
 		}
+		
+		// check traceId Retrospection room
+		checkTraceIdRetro(client, session);
 	}
 	
 	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, Long timeStamp )
