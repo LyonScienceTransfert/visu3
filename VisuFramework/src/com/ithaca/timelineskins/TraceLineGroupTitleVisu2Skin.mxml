@@ -99,6 +99,7 @@
 				contentGroup.bottom = hostComponent.tlg.getStyle("bottom");
 				//traceLineGroupTitle.text = hostComponent.tlg.title;
 				backgroundColor = hostComponent.tlg.backgroundColor;
+				// FIXME : bug, hesn't stage !!!
 				stage.addEventListener( MouseEvent.MOUSE_UP,	zcStopDrag);
 
                 filterSynthesisMenu = new Menu();
@@ -178,7 +179,7 @@
 							selector += "|" + filter.regexpFilter;
 					}
 				}
-				(hostComponent.tlg.getElementAt(0) as TraceLine).selector = new SelectorRegexp( ["type", selector]);
+				(hostComponent.tlg.getElementAt(0) as TraceLine).selector = new SelectorRegexp( "type," + selector );
             }
 			
             private function filterTreeChange(evt:MenuEvent):void
