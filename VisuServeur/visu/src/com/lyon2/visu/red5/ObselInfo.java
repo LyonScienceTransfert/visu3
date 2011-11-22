@@ -159,7 +159,7 @@ public class ObselInfo {
 		IClient client = conn.getClient();
 		User user = (User) client.getAttribute("user");
 		String nameUser = user.getLastname() + " " + user.getFirstname();
-		log.warn("USER : {} IS WALK OUT SALON RETRO",nameUser);
+		log.warn("ObselInfo : walkOutSalonRetro :  USER : {} IS WALK OUT SALON RETRO",nameUser);
 		Integer userId = user.getId_user();
 		Obsel obsel = null;
 		if(client.hasAttribute("traceRetroId"))
@@ -168,10 +168,10 @@ public class ObselInfo {
 			String traceParentRetroId = (String)client.getAttribute("traceParentRetroId");
 			List<Object> paramsObsel= new ArrayList<Object>();
 			paramsObsel.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObsel.add(traceParentRetroId);
-			paramsObsel.add(ObselType.CAUSE);paramsObsel.add("LEAVE_ROOM");
+			paramsObsel.add(ObselType.CAUSE);paramsObsel.add(ObselType.LEAVE_ROOM);
 			try
 			{
-				obsel = app.setObsel(userId, traceRetroIdOutSession, ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION, paramsObsel);					
+				obsel = app.setObsel(userId, traceRetroIdOutSession, ObselType.RETRO_ROOM_EXIT, paramsObsel);					
 			}
 			catch (SQLException sqle)
 			{

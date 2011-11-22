@@ -2,7 +2,10 @@ package com.lyon2.utils;
 
 public class ObselType {
 	
-	// type the obsels
+	// type the obsels	
+	public static final String RETRO_ROOM_ENTER = "RetroRoomEnter";
+	public static final String RETRO_ROOM_EXIT = "RetroRoomExit";
+	
 	public static final String RETRO_ROOM_LOAD_RETROSPECTED_SESSION = "RetroLoadRetrospectedSessionEvent";
 	public static final String RETRO_ROOM_EXIT_RETROSPECTED_SESSION = "RetroExitRetrospectedSessionEvent";
 	public static final String RETRO_EXPAND_TRACE_LINE = "RetroExpandTraceLineEvent";

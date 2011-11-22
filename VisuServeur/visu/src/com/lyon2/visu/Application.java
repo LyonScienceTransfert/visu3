@@ -395,7 +395,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			Obsel obsel = null;
 			try {
 				obsel = setObsel(userId, traceRetroIdOutSession,
-						ObselType.RETRO_ROOM_EXIT_RETROSPECTED_SESSION,
+						ObselType.RETRO_ROOM_EXIT,
 						paramsObselRetroRoom);
 			} catch (SQLException sqle) {
 				log.error("=====Errors===== {}", sqle);
