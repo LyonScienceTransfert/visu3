@@ -12,26 +12,29 @@
 	
 	<fx:Script>
         <![CDATA[ 
-			import com.ithaca.traces.Obsel;
-			import com.ithaca.traces.events.ObselEvent;
-			
-			import flash.filters.BlurFilter;
-			import flash.filters.ColorMatrixFilter;
-			import flash.filters.GlowFilter;
-			import flash.geom.ColorTransform;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.events.PropertyChangeEvent;
-			import mx.events.PropertyChangeEventKind;
-			import mx.events.ToolTipEvent;
-			import mx.managers.PopUpManager;
+            import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.visu.model.Model;
+            
+            import flash.filters.BlurFilter;
+            import flash.filters.ColorMatrixFilter;
+            import flash.filters.GlowFilter;
+            import flash.geom.ColorTransform;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.events.PropertyChangeEvent;
+            import mx.events.PropertyChangeEventKind;
+            import mx.events.ToolTipEvent;
+            import mx.managers.PopUpManager;
 			[Bindable]
 			private var fxgt:_FxGettext;	
 			
 			public var obsel : Obsel;
 		
+            private var toolTipText:String = "";
+            
 			protected function creationCompleteHandler(event:Event):void
 			{
 				fxgt = FxGettext;
@@ -40,8 +43,14 @@
 				icon.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipShow);
 				icon.source = hostComponent.getStyle( "icon" );
 				if ( hostComponent.getStyle( "tooltipProp" )  )
-					hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
-				if ( hostComponent.editable )
+                {
+                    toolTipText = obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+                    if(obsel.props[ hostComponent.getStyle( "tooltipProp" ) ] == "")
+                    {
+                        toolTipText = "le marqueur est vide"; 
+                    }
+                    hostComponent.toolTip =  toolTipText;
+                }
 				{
 					currentState = 'editable';				
 				}
@@ -60,12 +69,24 @@
 			{
 				icon.source = hostComponent.getStyle( "icon" );
 				if ( hostComponent.getStyle( "tooltipProp" ) )
-					icon.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+                {
+                    toolTipText = obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+                    if(obsel.props[ hostComponent.getStyle( "tooltipProp" ) ] == "")
+                    {
+                        toolTipText = "le marqueur est vide"; 
+                    }
+                }
+					icon.toolTip =  toolTipText;
 			}
 			
 			protected function onToolTipShow( event : ToolTipEvent ) : void
 			{	
-				event.toolTip.text 	=  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];					
+                toolTipText = obsel.props[ hostComponent.getStyle( "tooltipProp" ) ];
+                if(obsel.props[ hostComponent.getStyle( "tooltipProp" ) ] == "")
+                {
+                    toolTipText = "le marqueur est vide"; 
+                }
+				event.toolTip.text 	=  toolTipText;		
 			}
 		]]>        
     </fx:Script>
