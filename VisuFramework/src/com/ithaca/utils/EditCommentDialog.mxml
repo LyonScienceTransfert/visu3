@@ -151,7 +151,11 @@
 				var text:String = "texte de commentaire ici";
 				if(obsel)
 				{
-					text = obsel.props[TraceModel.TEXT];
+                    // check if text the obsel is empty
+                    if(obsel.props[TraceModel.TEXT] != "" )
+                    {
+    					text = obsel.props[TraceModel.TEXT];
+                    }
 					buttonDelete.enabled = true;
 				}
 				textInfo.text = text;
@@ -225,12 +229,12 @@
 			}
 		}
 
-		protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
-		{
-			fxgt = FxGettext;
-			textInfo.setFocus();
-			textInfo.selectAll();
-		}
+        protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+            textInfo.setFocus();    
+            textInfo.selectAll();
+        }
 		protected function dropDownListUser_changeHandler(event:IndexChangeEvent):void
 		{
 			var index:int = event.newIndex;

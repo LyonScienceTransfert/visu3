@@ -54,35 +54,38 @@
 			public		var maxX  : Number;
 			public      var obsel : Obsel;
 		
-			protected function creationCompleteHandler(event:Event):void
-			{
-				fxgt = FxGettext;
-				obsel = hostComponent.obsel;
-				y = hostComponent.traceline.getStyle('rendererHeight') - cursor.height - 2;
-				var text:String = obsel.props[TraceModel.TEXT];
-				if(text == null)
-				{
-					text = fxgt.gettext("Poser votre commentaire ici");
-				}
-				commentLabel.text = text;
-				toolTip = commentLabel.text;
-				
-				UpdateResizeGripHeight();
-				
-				hostComponent.traceline._timeline.zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, updateWidth);
-				
-				updateWidth( null );
-
-				obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
-			//	if ( hostComponent.editable )				
-				{
-					currentState = 'editable';				
-				}
-				// set dragArea, drag only by image the comment
-				hostComponent.dragArea = icon;
-				if ( hostComponent.getStyle( "tooltipProp" )  )
-					hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
-			}
+            protected function creationCompleteHandler(event:Event):void
+            {
+                fxgt = FxGettext;
+                obsel = hostComponent.obsel;
+                y = hostComponent.traceline.getStyle('rendererHeight') - cursor.height - 2;
+                var text:String = obsel.props[TraceModel.TEXT];
+                if(text == null)
+                {
+                    text = fxgt.gettext("Poser votre commentaire ici");
+                }
+                commentLabel.text = toolTip = text;
+                if(text == "")
+                {
+                    toolTip = fxgt.gettext("le commentaire est vide");
+                }
+                
+                UpdateResizeGripHeight();
+                
+                hostComponent.traceline._timeline.zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, updateWidth);
+                
+                updateWidth( null );
+                
+                obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
+                //	if ( hostComponent.editable )				
+                {
+                    currentState = 'editable';				
+                }
+                // set dragArea, drag only by image the comment
+                hostComponent.dragArea = icon;
+                if ( hostComponent.getStyle( "tooltipProp" )  )
+                    hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
+            }
 
 			public function updateWidth( event : Event ) :  void
 			{
@@ -205,14 +208,18 @@
 				UpdateResizeGripHeight();
 			}
 			
-			protected function onObselChange( event : PropertyChangeEvent ) : void
-			{				
-				var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
-				hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
-				rightGrip.x     = width 	= y - hostComponent.x ;
-							
-				commentLabel.text = toolTip =  hostComponent.obsel.props[TraceModel.TEXT];
-			}
+            protected function onObselChange( event : PropertyChangeEvent ) : void
+            {				
+                var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
+                hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
+                rightGrip.x     = width 	= y - hostComponent.x ;
+                			
+                commentLabel.text = toolTip = hostComponent.obsel.props[TraceModel.TEXT];
+                if(commentLabel.text == "")
+                {
+                    toolTip = fxgt.gettext("le commentaire est vide");
+                }
+            }
 			//////////////////
 			// Utils
 			/////////////////
