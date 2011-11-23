@@ -49,8 +49,10 @@
                     {
                         toolTipText = "le marqueur est vide"; 
                     }
+                       
                     hostComponent.toolTip =  toolTipText;
                 }
+				if ( Model.getInstance().canEditObsel(obsel))
 				{
 					currentState = 'editable';				
 				}
