@@ -1413,11 +1413,7 @@
 						{
 							text = event.currentTarget.textComment;
 						}
-						// check if message empty
-						if(UtilFunction.isEmptyMessage(text))
-						{
-							text = fxgt.gettext("(vide)");
-						}
+
 						if(userIdInitEditMarkerDialog > -1 && userIdInitEditMarkerDialog != forUserId)
 						{
 							// suppression old obsel
@@ -1449,14 +1445,8 @@
 						{
 							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
 						}
-						// check if message empty
-						var message:String = text;
-						if(UtilFunction.isEmptyMessage(message))
-						{
-							message = fxgt.gettext("(vide)");
-						}
 						
-						updateObselMarker.info = message;
+						updateObselMarker.info = text;
 						updateObselMarker.action = action
 						updateObselMarker.listUsers = listUsersId;
 					}

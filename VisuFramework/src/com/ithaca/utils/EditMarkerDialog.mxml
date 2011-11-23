@@ -176,11 +176,11 @@
 			{
                 message = message.split("\n").join("");
 			}
-			// check if message empty
-			if(UtilFunction.isEmptyMessage(message))
-			{
-				message = fxgt.gettext("(vide)");
-			}
+            // check if text with promt message
+            if(message == "texte de marqueur ici")
+            {
+                message = "";
+            }
 			// check if it's new comment or update existing
 			if(obsel)
 			{
