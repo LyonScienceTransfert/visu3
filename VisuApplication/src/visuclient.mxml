@@ -305,6 +305,8 @@
 				
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
 				var message:String = obsel.props[TraceModel.TEXT];
+                // remove all char new line
+                message = message.split("\n").join("");
 				// check if message empty
 				if(UtilFunction.isEmptyMessage(message))
 				{

@@ -878,11 +878,8 @@
 				}
 				
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
-				if(cutLastCharMessage)
-				{
-					// remove last character from the message if was click on button "Enter"
-					message = message.slice(0, message.length-1);
-				}
+                // remove all char new line
+                message = message.split("\n").join("");
 				// check if message empty
 				if(UtilFunction.isEmptyMessage(message))
 				{
@@ -932,17 +929,12 @@
 				}
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
-				// cut last char if was click on button "Enter"
-				if(cutLastCharMessage)
-				{
-					message = message.slice(0, message.length-1);
-				}
-				// check if message empty
-				if(UtilFunction.isEmptyMessage(message))
-				{
-					message = fxgt.gettext("(vide)");
-				}
-				sessionSharedEvent.info = message;
+                
+                // cut char new line if was click on button "Enter"
+                message = message.split("\n").join("");
+                message = message.split("\r").join("");
+
+                sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.idUserFor = idUserFor;

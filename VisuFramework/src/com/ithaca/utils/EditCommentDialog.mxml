@@ -182,10 +182,10 @@
 		
 		private function setMyComment(cutLastCharMessage:Boolean, message:String):void
 		{
-			// cut last char if was click on button "Enter"
+			// cut char new line if was click on button "Enter"
 			if(cutLastCharMessage)
 			{
-				message = message.slice(0, message.length-1);
+                message = message.split("\n").join("");
 			}
 			// check if message empty
 			if(UtilFunction.isEmptyMessage(message))
