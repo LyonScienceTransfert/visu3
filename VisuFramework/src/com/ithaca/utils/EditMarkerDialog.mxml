@@ -7,6 +7,7 @@
 	<s:title>{fxgt.gettext("Votre marqueur")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
+        <s:State name="enabled"/>
 	</s:states>
 	<fx:Script>
 	<![CDATA[
@@ -299,9 +300,9 @@
 			<mx:Image id="imageUser" width="50" height="50"/>
 			<s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
 		</s:HGroup>
-		<s:HGroup width="100%" paddingLeft="10" paddingRight="10">
-			<s:TextArea  id="textInfo" width="100%" heightInLines="2" keyUp="onHandlerButtonOkAndEnterTextArea(event)"/>
-		</s:HGroup>
+        <s:HGroup width="100%" paddingLeft="10" paddingRight="10">
+            <s:RichEditableText  id="textInfo" width="100%" keyUp="onHandlerButtonOkAndEnterTextArea(event)" height="45"/>
+        </s:HGroup>
 		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
 			<s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
 				<s:label>Supprimer</s:label>

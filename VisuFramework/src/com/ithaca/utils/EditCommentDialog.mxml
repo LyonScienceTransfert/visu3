@@ -7,6 +7,7 @@
 	<s:title>{fxgt.gettext("Votre commentaire")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
+		<s:State name="enabled"/>
 	</s:states>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -277,36 +278,32 @@
 			list.addItem(user);
 			return user;
 		}
-
-
 	]]>
-	</fx:Script>
-	<s:VGroup width="100%" height="100%">
-		<s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
-			<mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
-			<s:Label  id="labelCommentFor" fontWeight="bold">
-				<s:text>Votre commentaire sur :</s:text>
-			</s:Label>				
-		</s:HGroup>
-		<s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
-			<mx:Image id="imageUser" width="50" height="50"/>
-			<!--<s:Label  id="nameUser" text="Peta Darvin"/>-->
-			<!--<s:ComboBox id="comboBoxUser" width="200"/>-->
-			<s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
-		</s:HGroup>
-		<s:HGroup width="100%" paddingLeft="10" paddingRight="10">
-			<s:TextArea  id="textInfo" width="100%" heightInLines="2" keyUp="onHandlerButtonOkAndEnterTextArea(event)"/>
-		</s:HGroup>
-		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
-			<s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
-				<s:label>Supprimer</s:label>
-			</s:Button>
-			<s:Button id="buttonOk" click="onHandlerButtonOkAndEnterTextArea(event)">
-				<s:label>Valider</s:label>
-			</s:Button>
-			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
-				<s:label>Annuler</s:label>
-			</s:Button>
-		</s:HGroup>
-	</s:VGroup>
+    </fx:Script>
+    <s:VGroup width="100%" height="100%">
+        <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
+            <mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
+            <s:Label  id="labelCommentFor" fontWeight="bold">
+                <s:text>Votre commentaire sur :</s:text>
+            </s:Label>				
+        </s:HGroup>
+        <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
+            <mx:Image id="imageUser" width="50" height="50"/>
+            <s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
+        </s:HGroup>
+        <s:HGroup width="100%" paddingLeft="10" paddingRight="10">
+		    <s:RichEditableText  id="textInfo" width="100%" keyUp="onHandlerButtonOkAndEnterTextArea(event)" height="45"/>
+        </s:HGroup>
+        <s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10" paddingTop.normal="3" paddingBottom.normal="3">
+            <s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
+                <s:label>Supprimer</s:label>
+            </s:Button>
+            <s:Button id="buttonOk" click="onHandlerButtonOkAndEnterTextArea(event)">
+                <s:label>Valider</s:label>
+            </s:Button>
+            <s:Button id="buttonCancel" click="onClickButtonCancel(event)">
+                <s:label>Annuler</s:label>
+            </s:Button>
+        </s:HGroup>
+    </s:VGroup>
 </s:TitleWindow>
