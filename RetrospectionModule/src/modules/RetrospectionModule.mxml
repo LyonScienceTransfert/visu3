@@ -103,8 +103,9 @@
 			// interval the contol of the decalage im microseconds 
 			private var INTERVAL_CONTROL_DECALAGE:Number = 10000;
 			// interval the check the decalage in seconds
-			[Bindable]
-			private var intervalCheckDecalage:Number = 5;
+            [Bindable]
+            // interval check decalage in seconds
+            private var intervalCheckDecalage:Number = 5;
 			// time start session plus time in this session 
 			private var currentTime:Number;
 			
@@ -192,9 +193,9 @@
 					timerSynchro.start();
 				}
 				
-				/* timerSynchro = new Timer(intervalCheckDecalage*1000,0);
+				timerSynchro = new Timer(intervalCheckDecalage*1000,0);
 				timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
-				timerSynchro.start(); */
+				timerSynchro.start(); 
 				
 				
 				// set the data of the session
@@ -228,7 +229,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-				//	this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
+					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
 				}
 			}
 			
