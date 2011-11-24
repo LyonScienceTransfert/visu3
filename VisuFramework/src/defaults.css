@@ -7,7 +7,6 @@
 @namespace login	"com.ithaca.visu.controls.login.*";
 @namespace sessions	"com.ithaca.visu.controls.sessions.*";
 @namespace trace	"com.ithaca.visu.controls.timeline.*";
-@namespace obsel	"com.ithaca.traces.view.*";
 @namespace plan 	"com.ithaca.visu.view.session.controls.*";
 @namespace sessionView 	"com.ithaca.visu.view.session.*";
 @namespace user 	"com.ithaca.visu.view.user.*";
@@ -16,7 +15,6 @@
 @namespace utils 		"com.ithaca.utils.*";
 @namespace video 		"com.ithaca.visu.view.video.*";
 @namespace components 		"com.ithaca.utils.components.*";
-
 @namespace timeline		"com.ithaca.timeline.*"; 
 
 timeline|ObselSkin.PlayDocumentVideo
@@ -277,10 +275,6 @@ user|ShareUser
 	skin-class: ClassReference("com.ithaca.visu.view.user.skins.ShareUserSkin");
 }
 
-obsel|ObselStich
-{
-	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselStichSkin");
-}
 
 documentarisation|RetroDocumentTreeToolTip
 {
@@ -358,26 +352,6 @@ sessions|ActivityElementDetail
 sessions|SharedElementChat
 {
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SharedElementChatSkin");	
-}
-
-obsel|ObselLine
-{
-	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselLineSkin");
-}
-
-obsel|ObselMarker
-{
-	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselMarkerSkin");
-}
-
-obsel|ObselComment
-{
-	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselCommentSkin");
-}
-
-obsel|ObselSessionOut
-{
-	skin-class: ClassReference("com.ithaca.traces.view.skins.ObselSessionOutSkin");
 }
 
 plan|SessionDetail
