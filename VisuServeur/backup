@@ -2,7 +2,7 @@
 
 DIR=$(dirname $0)
 APPNAME= ??? 
-BACKUP_DIR=sauvegarde
+BACKUP_DIR=sauvegarde_$APPNAME
 RED5_DIR=/home/ithaca/red5
 cd "$DIR"
 echo "Cr<C3><A9>ation du repertoire $BACKUP_DIR"
