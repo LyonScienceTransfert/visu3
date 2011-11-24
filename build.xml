@@ -80,7 +80,9 @@ or by setting the following environment variable:
    <property name="lib.mate" value="Mate_08_9.swc" />
    <property name="lib.rmtp" value="rtmp-service-1.0.swc" />
    <property name="lib.as3gettext" value="as3-gettext-0.4.1.swc" />
-
+   <property name="lib.traces" value="Traces.swc"/>
+   <property name="lib.timeline" value="Timeline.swc" />
+   
 	<!--  Pathes to User Module sources -->	
    <property name="usermodule.src" location="${visu.dev.path}/UserModule/src" />
    <property name="usermodule.name" value="UserModule" />
@@ -303,6 +305,8 @@ or by setting the following environment variable:
 	            <include name="${lib.mate}" />
 	            <include name="${lib.rmtp}" />
 	            <include name="${lib.as3gettext}" />
+	            <include name="${lib.traces}" />
+	            <include name="${lib.timeline}" />
 	         </library-path>
 	         
 	  	  	<include-file name="defaults.css" path="${framework.src}/defaults.css"/>
