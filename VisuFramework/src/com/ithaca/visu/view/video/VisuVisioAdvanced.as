@@ -1076,5 +1076,36 @@ public class VisuVisioAdvanced extends SkinnableComponent
 		updateTime.beginTime = beginTime;
 		this.dispatchEvent(updateTime);
 	}
+    
+    /**
+    * Synchronisation the streems by decalage
+    */ 
+    public function synchroStreamsByValue(value:Number):void
+    {
+        logger.debug("Check decalage by function ==synchroStreamsByValue== "); 
+        var firstStream:Boolean = true;
+        var currentTime:Number= 0;
+        var delta:Number;
+        for (var n: String in streams)
+        {
+            var stream:NetStream = streams[n];
+            if (firstStream)
+            {
+                firstStream = false;
+                currentTime = stream.time;
+                logger.debug("SynchroStreamsByValue(value); value = "+ value.toString()); 
+                logger.debug("CurrentTime for base stream = "+currentTime.toString()+ " for the flux = "+n);
+            }else
+            {
+                delta =  Math.abs(stream.time - currentTime);
+                logger.debug("Décalage est = "+ delta.toString()+ " for the flux = "+ n);
+                if(delta > value)
+                {
+                    stream.seek(currentTime);
+                    logger.debug("Time after synchronisation = "+stream.time.toString());
+                }
+            }
+        }
+    }
 }
 }
