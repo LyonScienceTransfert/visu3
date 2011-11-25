@@ -91,29 +91,32 @@
 					tl.moveTraceLineGroup( tl.getElementIndex( (event.dragInitiator as TraceLineGroupTitle).tlg), tl.getElementIndex(hostComponent.tlg));
             }			
 			
-			protected function creationCompleteHandler(event:FlexEvent):void
-			{
-				fxgt = FxGettext;
-				hostComponent.percentWidth = 100;
-				contentGroup.top 	= hostComponent.tlg.getStyle("headerHeight");
-				contentGroup.bottom = hostComponent.tlg.getStyle("bottom");
-				//traceLineGroupTitle.text = hostComponent.tlg.title;
-				backgroundColor = hostComponent.tlg.backgroundColor;
-				// FIXME : bug, hesn't stage !!!
-				stage.addEventListener( MouseEvent.MOUSE_UP,	zcStopDrag);
-
+            protected function creationCompleteHandler(event:FlexEvent):void
+            {
+                fxgt = FxGettext;
+                hostComponent.percentWidth = 100;
+                contentGroup.top 	= hostComponent.tlg.getStyle("headerHeight");
+                contentGroup.bottom = hostComponent.tlg.getStyle("bottom");
+                //traceLineGroupTitle.text = hostComponent.tlg.title;
+                backgroundColor = hostComponent.tlg.backgroundColor;
+                // FIXME : bug, hasn't stage !!!
+                if(stage)
+                {
+                    stage.addEventListener( MouseEvent.MOUSE_UP,	zcStopDrag);
+                }
+                
                 filterSynthesisMenu = new Menu();
                 filterSynthesisMenu.variableRowHeight = true;
                 filterSynthesisMenu.dataProvider = filtersSynthesisArray;
                 filterSynthesisMenu.addEventListener(MenuEvent.CHANGE, filterSynthesisChange);
-               // filterSynthesisButton.popUp = filterSynthesisMenu;
-				
+                // filterSynthesisButton.popUp = filterSynthesisMenu;
+                
                 filterTreeMenu = new Menu();
                 filterTreeMenu.variableRowHeight = true;
                 filterTreeMenu.dataProvider = filtersTreeArray;
                 filterTreeMenu.addEventListener(MenuEvent.CHANGE, filterTreeChange);
                 //filterTreeButton.popUp = filterTreeMenu;
-			}
+            }
 			
 			protected function closeTracelineGroup( ) : void
 			{
