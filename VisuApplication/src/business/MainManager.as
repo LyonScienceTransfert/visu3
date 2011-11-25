@@ -276,18 +276,19 @@ public class MainManager
 		Alert.show(fxgt.gettext("Un utilisateur ayant le même identifiant est déjà connecté sur la plate-forme"),fxgt.gettext("Information"));
 	}
 	
-	/**
-	 * notification when start recording session
-	 */
-	public function onStartRecording(timeStart:Number):void
-	{
-		var eventRecordingSession:SessionEvent = new SessionEvent(SessionEvent.START_RECORDING_SESSION);
-		eventRecordingSession.timeStartStop = timeStart;
-		dispatcher.dispatchEvent(eventRecordingSession);
-	}
+    /**
+     * notification when start recording session
+     **/
+    public function onStartRecording(timeStart:Number, typeRecording:String):void
+    {
+        var eventRecordingSession:SessionEvent = new SessionEvent(SessionEvent.START_RECORDING_SESSION);
+        eventRecordingSession.timeStartStop = timeStart;
+        eventRecordingSession.typeRecording = typeRecording;
+        dispatcher.dispatchEvent(eventRecordingSession);
+    }
 	
 	/**
-	 * notification when start recording session
+	 * notification when stop recording session
 	 */
 	public function onStopRecording(timeStop:Number):void
 	{
