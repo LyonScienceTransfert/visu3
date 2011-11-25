@@ -746,11 +746,13 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 			// get time start recording for sending this to client flex(for
 			// creation the obsel "SessionOut")
+			// "joinRecordingSession", signature the type of recording, can see too types: "start"/"join" 
 			Object[] timeStartRecording = { Calendar.getInstance()
-					.getTimeInMillis() };
+					.getTimeInMillis(), "joinRecordingSession" };
 			// call client that start recording
 			IConnection connectionClient = (IConnection) clientRecording
 					.getAttribute("connection");
+			log.warn("startRecording-from Application");
 			if (connectionClient instanceof IServiceCapableConnection) {
 				IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
 				sc.invoke("startRecording", timeStartRecording);

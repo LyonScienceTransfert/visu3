@@ -361,7 +361,7 @@
 						// update time start recording
 						this.currentSession.date_start_recording = new Date(null,null,null,null,null,null,event.timeStartStop);
 						// create timeLine
-						if(!Model.getInstance().hasObsels())
+						if(event.typeRecording == "startRecordingSession")
 						{
 							createTimeLine();
 						}

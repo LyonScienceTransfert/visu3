@@ -334,10 +334,12 @@ log.warn("refParam = {}",refParam);
 				client.setAttribute("status", SessionStatus.RECORDING);
 				// set status User
 				client.setAttribute("userStatus", UserStatus.RECORDING);
-				Object[] timeStartRecording = {startRecording.getTime()};
+				// "startRecordingSession", signature the type of recording, can see too types: "start"/"join" 
+				Object[] timeStartRecording = {startRecording.getTime(), "startRecordingSession"};
 				// call client that start recording
 				// send time for creation the obsel "SesionOut" on client side(Flex)
 				IConnection connectionClient = (IConnection)client.getAttribute("connection");
+				log.warn("startRecording-from StreamRecorder");
 				if (connectionClient instanceof IServiceCapableConnection) {
 					IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
 					sc.invoke("startRecording",timeStartRecording);
