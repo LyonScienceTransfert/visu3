@@ -8,7 +8,7 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.renderer.SegmentVideoRenderer;
 	import com.ithaca.timeline.ObselSkin;
 	import com.ithaca.traces.Obsel;
-	import com.ithaca.visu.traces.TraceModel;
+    import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.ShareUserTitleWindow;
 	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.UserEvent;

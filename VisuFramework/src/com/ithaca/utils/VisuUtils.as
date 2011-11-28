@@ -1,7 +1,7 @@
 package com.ithaca.utils
 {
 	import com.ithaca.traces.Obsel;
-	import com.ithaca.visu.traces.TraceModel;
+    import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.StringUtils;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;

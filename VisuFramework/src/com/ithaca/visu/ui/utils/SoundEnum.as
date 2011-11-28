@@ -5,7 +5,7 @@ import mx.core.SoundAsset;
 
 public class SoundEnum
 {	
-	import com.ithaca.visu.traces.TraceModel;
+    import com.ithaca.traces.model.TraceModel;
 	
 	[Bindable]
 	[Embed("images/marqueurBlanc-bas-20px.png")]

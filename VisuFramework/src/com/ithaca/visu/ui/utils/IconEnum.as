@@ -66,7 +66,7 @@ package com.ithaca.visu.ui.utils
 
 	public class IconEnum
 	{	
-		import com.ithaca.visu.traces.TraceModel;
+        import com.ithaca.traces.model.TraceModel;
 		
 		[Bindable]
 		[Embed("images/marqueurBlanc-bas-20px.png")]
