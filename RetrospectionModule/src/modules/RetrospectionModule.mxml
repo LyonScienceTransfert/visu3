@@ -15,49 +15,56 @@
 						currentState="State1" > 
 	<fx:Script>
 		<![CDATA[ 
-			import com.ithaca.documentarisation.SegmentVideoAdvanced;
-			import com.ithaca.documentarisation.events.RetroDocumentEvent;
-			import com.ithaca.documentarisation.model.RetroDocument;
-			import com.ithaca.timeline.Layout;
-			import com.ithaca.timeline.ObselSkin;
-			import com.ithaca.timeline.Timeline;
-			import com.ithaca.timeline.TraceLine;
-			import com.ithaca.timeline.TraceLineGroup;
-			import com.ithaca.timeline.events.TimelineEvent;
-			import com.ithaca.traces.Obsel;
-			import com.ithaca.traces.Trace;
-			import com.ithaca.traces.events.ObselEvent;
-			import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.utils.EditCommentDialog;
-			import com.ithaca.utils.UtilFunction;
-			import com.ithaca.utils.VisuUtils;
-			import com.ithaca.visu.events.InitMapEvent;
-			import com.ithaca.visu.events.PanelButtonEvent;
-			import com.ithaca.visu.events.SalonRetroEvent;
-			import com.ithaca.visu.events.SessionEvent;
-			import com.ithaca.visu.events.TraceLineEvent;
-			import com.ithaca.visu.events.VisuModuleEvent;
-			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.model.Session;
-			import com.ithaca.visu.model.User;
-			import com.ithaca.visu.model.vo.RetroDocumentVO;
-			import com.ithaca.visu.ui.utils.ConnectionStatus;
-			import com.ithaca.visu.ui.utils.IconEnum;
-			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
-			import com.ithaca.visu.view.video.model.StreamObsel;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
-			import mx.controls.Image;
-			import mx.controls.dataGridClasses.DataGridColumn;
-			import mx.core.DragSource;
-			import mx.events.FlexEvent;
-			import mx.managers.CursorManager;
-			import mx.managers.DragManager;
-			import mx.managers.PopUpManager;
+            import com.ithaca.documentarisation.SegmentVideoAdvanced;
+            import com.ithaca.documentarisation.events.RetroDocumentEvent;
+            import com.ithaca.documentarisation.model.RetroDocument;
+            import com.ithaca.timeline.Layout;
+            import com.ithaca.timeline.ObselSkin;
+            import com.ithaca.timeline.Timeline;
+            import com.ithaca.timeline.TraceLine;
+            import com.ithaca.timeline.TraceLineGroup;
+            import com.ithaca.timeline.events.TimelineEvent;
+            import com.ithaca.tracage.TracageEventDispatcherFactory;
+            import com.ithaca.tracage.TracageManager;
+            import com.ithaca.tracage.events.TracageEvent;
+            import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.Trace;
+            import com.ithaca.traces.TraceManager;
+            import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.model.TraceModel;
+            import com.ithaca.utils.EditCommentDialog;
+            import com.ithaca.utils.UtilFunction;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.PanelButtonEvent;
+            import com.ithaca.visu.events.SalonRetroEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.TraceLineEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.RetroDocumentVO;
+            import com.ithaca.visu.ui.utils.ConnectionStatus;
+            import com.ithaca.visu.ui.utils.IconEnum;
+            import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+            import com.ithaca.visu.view.video.model.StreamObsel;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.controls.Image;
+            import mx.controls.dataGridClasses.DataGridColumn;
+            import mx.core.DragSource;
+            import mx.events.CollectionEvent;
+            import mx.events.CollectionEventKind;
+            import mx.events.FlexEvent;
+            import mx.managers.CursorManager;
+            import mx.managers.DragManager;
+            import mx.managers.PopUpManager;
+            import mx.rpc.remoting.RemoteObject;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -115,7 +122,6 @@
 			private var userIdInitEditCommentDialog:int = -1;
 			// current ObselSkin to dragging
 			private var currentObselSkin:ObselSkin = null;
-			
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -222,7 +228,11 @@
 					// get the obsels 
 					getObsels();
 				}
-	
+                
+                // init listener, activity on Timeline
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity user video
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -826,6 +836,47 @@
 			}
 			
 			//////////////
+			//////   Timeline handlers
+			/////////////
+            /**
+             * Timeline create handler
+             * @event
+             */
+            protected function timeLine_creationCompleteHandler(event:FlexEvent):void
+            {
+                // trace the Timeline
+                var traceTimeLine:Trace = TraceManager.getTrace("timeline"); 
+                // do not automatically synchronize with the KTBS/BDD
+                traceTimeLine.autosync = false;
+                
+                var listObselTimeLine:ArrayCollection = traceTimeLine.obsels;
+                // add listener adding new obsel
+                listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
+            }
+
+            /**
+             * Obsel collection Timeline handler
+             */
+            protected function timeLine_obselChangeHandler(event:CollectionEvent):void
+            {
+                switch (event.kind)
+                {
+                case CollectionEventKind.ADD :
+                {
+                    var timeLineTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_TIME_LINE);
+                    // get new obsel
+                    timeLineTracageEvent.obsel = event.items[0];
+                    // dispatche event
+                    TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(timeLineTracageEvent);
+                    break;
+                }
+                    
+                default:
+                }
+            }
+
+            
+			//////////////
 			//////   Handlers the create/edit/delete comments
 			/////////////
 			/**
@@ -1297,7 +1348,9 @@
 			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent):void
 			{
 				onCheckSeekStream()
-			}
+			} 
+            
+            
 			//_____________________________________________________________________
 			//
 			// Utils
@@ -1344,6 +1397,7 @@
 				timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
 				timeLine.addEventListener(TimelineEvent.PAUSE, timeLine_pauseButtonClickHandler);
 				timeLine.addEventListener(TimelineEvent.TIMERULER_CLICK, timeLine_timeRulerClickHandler);
+				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, timeLine_creationCompleteHandler);
 				
 				timeLineGroup.addElement(timeLine);
 			}
