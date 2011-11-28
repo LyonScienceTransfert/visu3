@@ -1,5 +1,9 @@
 package com.ithaca.visu.view.video
 {
+	import com.ithaca.tracage.TracageEventDispatcherFactory;
+	import com.ithaca.tracage.events.TracageEvent;
+	import com.ithaca.traces.model.TracageModel;
+	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.VideoPanelEvent;
@@ -466,6 +470,12 @@ package com.ithaca.visu.view.video
 		{
 			var zoomEvent:VideoPanelEvent = new VideoPanelEvent(VideoPanelEvent.VIDEO_PANEL_ZOOM);
 			dispatchEvent(zoomEvent);
+            
+            // tracage button zoom
+            var videoPanelTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
+            videoPanelTracageEvent.typeActivity = TracageModel.USER_VIDEO_ZOOM_MAX;
+            videoPanelTracageEvent.userId = ownerFluxVideo.id_user;
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelTracageEvent);
 		}
 		private function onCreationComplete(event:FlexEvent):void
 		{
@@ -536,6 +546,11 @@ package com.ithaca.visu.view.video
 			volumeUpdateEvent.userId = ownerFluxVideo.id_user;
 			volumeUpdateEvent.volume = volume;
 			this.dispatchEvent(volumeUpdateEvent);
+            // tracage volume the video
+            var videoPanelTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
+            videoPanelTracageEvent.typeActivity = TracageModel.USER_VIDEO_VOLUME;
+            videoPanelTracageEvent.volume = volume;
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelTracageEvent);
 		}
 	}
 }
