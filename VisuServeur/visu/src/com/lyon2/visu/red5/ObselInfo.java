@@ -251,7 +251,7 @@ public class ObselInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void checkTraceIdRetro(IClient client, Session session){
+	private void checkTraceIdRetro(IConnection conn, IClient client, Session session){
 		User user = (User) client.getAttribute("user");
 		int userId = user.getId_user();
 		// check user was in the recorded session 
@@ -340,7 +340,13 @@ public class ObselInfo {
 		log.warn(obsel.toString());
 		log.debug("------------- OBSEL SalonRetroSESSIONin END---------------------");
 
-		
+		Object[] args = { traceRetroId, traceId };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkTracesIdRetroRoom", args);
+		}
 		
 		
 	}
@@ -465,7 +471,7 @@ public class ObselInfo {
 		}
 		
 		// check traceId Retrospection room
-		checkTraceIdRetro(client, session);
+		checkTraceIdRetro( conn, client, session);
 	}
 	
 	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, Long timeStamp )

@@ -1257,7 +1257,15 @@ public class MainManager
 			return false;
 		}
 	}
-	
+    
+	/**
+    * set trace id Retrospection Room and trace id Syncro Room
+    */
+    public function onCheckTracesIdRetroRoom(traceIdRetroRoom:String, parentTraceId:String):void
+    {
+        Model.getInstance().setTraceIdRetroRoom( traceIdRetroRoom) ;
+        Model.getInstance().setParentTraceId( parentTraceId) ;
+    }
 	/**
 	 * Add TraceLines to Model
 	 */
