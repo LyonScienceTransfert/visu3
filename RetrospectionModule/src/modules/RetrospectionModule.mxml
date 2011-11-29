@@ -31,6 +31,7 @@
             import com.ithaca.traces.Trace;
             import com.ithaca.traces.TraceManager;
             import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.model.TracageModel;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.utils.EditCommentDialog;
             import com.ithaca.utils.UtilFunction;
@@ -64,7 +65,6 @@
             import mx.managers.CursorManager;
             import mx.managers.DragManager;
             import mx.managers.PopUpManager;
-            import mx.rpc.remoting.RemoteObject;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -122,7 +122,7 @@
 			private var userIdInitEditCommentDialog:int = -1;
 			// current ObselSkin to dragging
 			private var currentObselSkin:ObselSkin = null;
-			
+            
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
 				// init list trace lines
@@ -849,6 +849,13 @@
                 // do not automatically synchronize with the KTBS/BDD
                 traceTimeLine.autosync = false;
                 
+                var traceVisu:Trace = TraceManager.initTrace("visu");
+                // traceId Retro room
+                traceVisu.uri = Model.getInstance().getTraceIdRetroRoom();
+                // set subject
+                traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
+                Trace.init_remote( Model.getInstance().AMFServer);
+                
                 var listObselTimeLine:ArrayCollection = traceTimeLine.obsels;
                 // add listener adding new obsel
                 listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
@@ -897,7 +904,7 @@
 					// set init userId 
 					userIdInitEditCommentDialog = userId;
 					
-					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin);
+					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin, TracageModel.OBSEL);
 				}
 			}
 			
@@ -909,7 +916,7 @@
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					// add comment for session
-					showDialogAddCommentObsel();
+					showDialogAddCommentObsel(null, null, null, TracageModel.TIMELINE);
 				}
 			}
 			
@@ -920,13 +927,13 @@
 			{	
 				var user:User = event.user;
 				// add comment for user
-				showDialogAddCommentObsel(user);
+				showDialogAddCommentObsel(user, null, null, TracageModel.BUTTON);
 			}
 			
             /**
              * Add on stage the EditCommentDialog
              */
-            private function showDialogAddCommentObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null):void
+            private function showDialogAddCommentObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null, initBy:String = null):void
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
@@ -937,6 +944,8 @@
                     editCommentDialog.obsel = obsel;
                     
                     editCommentDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+                    // init by 
+                    editCommentDialog.origin = initBy;
                     
                     PopUpManager.addPopUp(editCommentDialog, this);
                     PopUpManager.centerPopUp(editCommentDialog);
