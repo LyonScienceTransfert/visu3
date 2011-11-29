@@ -64,6 +64,12 @@ package com.ithaca.tracage
 {
 
 import com.ithaca.tracage.events.TracageEvent;
+import com.ithaca.traces.Obsel;
+import com.ithaca.traces.Trace;
+import com.ithaca.traces.TraceManager;
+import com.ithaca.traces.model.TracageModel;
+import com.ithaca.traces.model.TraceModel;
+import com.ithaca.visu.model.Model;
 
 import mx.logging.ILogger;
 import mx.logging.Log;
@@ -93,17 +99,53 @@ public class TracageManager
     
     public function addTracageActivity(event:TracageEvent):void
     {
-        switch (event)
+        // get current time the serveur
+        var currentTime:Number = Model.getInstance().getTimeServeur();
+        // traceId salon Synchro room
+        var parentTraceId:String = Model.getInstance().getParentTraceId();
+        // obsel the TimeLine
+        var obselTimeLine:Obsel = event.obsel;
+        // type activity
+        var typeActivity:String = event.type;
+        switch (typeActivity)
         {
         // activity on Timeline
         case TracageEvent.ACTIVITY_TIME_LINE :
+            var obselRetroRoom:Obsel = Obsel.fromRDF(obselTimeLine.rdf);
+            obselRetroRoom.begin = currentTime;
+            // TODO : duration obsel 
+            obselRetroRoom.end = currentTime;
+            obselRetroRoom.props[TracageModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
+            
+            TraceManager.trace("visu",obselRetroRoom.type, obselRetroRoom.props);
+            
             break;
         // activity on user video
         case TracageEvent.ACTIVITY_USER_VIDEO :
+            // property the obsel for saving
+            var propsActivityUserVideo:Object = new Object();
+            // type obsel activity
+            var typeObsel:String = event.typeActivity;
+            // user id video 
+            propsActivityUserVideo[TracageModel.USER_ID]=event.userId;
+            propsActivityUserVideo[TracageModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
+            
+            switch (typeObsel)
+            {
+                case TracageModel.USER_VIDEO_ZOOM_MAX:
+                    break;
+                case TracageModel.USER_VIDEO_VOLUME:
+                    propsActivityUserVideo[TracageModel.VOLUME]=event.volume;
+                    break;
+            }
+            
+            TraceManager.trace("visu",typeObsel, propsActivityUserVideo);
+            
             break;
         default :
             break;
         }
+        
     }
     
 }

@@ -65,7 +65,7 @@ package  com.ithaca.visu.model
 	import com.ithaca.timelineskins.ObselSessionOut;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.Trace;
-    import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
@@ -159,6 +159,9 @@ package  com.ithaca.visu.model
 		private var _modeDebug:Boolean = false;
 		private var _frameRateSplit:Number = 2000;
 		private var _currentSessionSalonSession:Session;
+        
+		private var _traceIdRetroRoom:String;
+		private var _parentTraceId:String;
 			
 		public function Model(access:Private)
 		{
@@ -596,6 +599,36 @@ package  com.ithaca.visu.model
 			return this.listObsels;
 		}
 		
+        /**
+        * Set trace id Retro room
+        */
+        public function setTraceIdRetroRoom(value:String):void
+        {
+            this._traceIdRetroRoom = value;
+        }
+        /**
+        * Get trace id Retro room
+        */
+        public function getTraceIdRetroRoom():String
+        {
+            return this._traceIdRetroRoom;
+        }
+
+        /**
+        * Set trace id Synchro room
+        */
+        public function setParentTraceId(value:String):void
+        {
+            this._parentTraceId = value;
+        }
+        /**
+        * Get trace id Synchro room
+        */
+        public function getParentTraceId():String
+        {
+            return this._parentTraceId;
+        }
+        
 		public function hasObsels():Boolean
 		{
 			var result:Boolean = false;

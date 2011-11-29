@@ -69,7 +69,7 @@ public final class TracageModel
     public static const USER_VIDEO_VOLUME: String = "UserVideoVolume";
     // ** UserVideoZoomMax();
     public static const USER_VIDEO_ZOOM_MAX: String = "UserVideoZoomMax";
-    // UserVideoAddComment(xsd:string  text; xsd:int forUserId; xsd:string closeDialog["save", "delete",  "cancel", "close_window"]);
+    //** UserVideoAddComment(xsd:string  text; xsd:int forUserId; xsd:string closeDialog["save", "delete",  "cancel", "close_window"], xsd:string origin["timeline", "button", "obsel"])); 
     public static const USER_VIDEO_ADD_COMMENT: String = "UserVideoAddComment";
     
     public static const VOLUME: String = "volume";
@@ -80,5 +80,11 @@ public final class TracageModel
     public static const DELETE: String = "delete";
     public static const CANCEL: String = "cancel";
     public static const CLOSE_WINDOW: String = "close_window";
+    public static const TIMELINE: String = "timeline";
+    public static const BUTTON: String = "button";
+    public static const OBSEL: String = "obsel";
+    public static const SYNC_ROOM_TRACE_ID: String = "syncRoomTraceId";
+    public static const USER_ID: String = "userId";
+    
 }
 }
