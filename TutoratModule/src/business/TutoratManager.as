@@ -2,11 +2,11 @@ package business
 {
 
 	import com.ithaca.traces.Obsel;
+	import com.ithaca.traces.model.vo.SGBDObsel;
 	import com.ithaca.visu.events.VisuActivityElementEvent;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.Model;
-	import com.ithaca.visu.model.vo.ObselVO;
 	
 	import flash.events.IEventDispatcher;
 	
@@ -83,7 +83,7 @@ package business
 			var nbrObsel:Number = listObsel.length;
 			for(var nObsel:Number = 0; nObsel < nbrObsel; nObsel++)
 			{
-				var obselVO:ObselVO = listObsel[nObsel];
+				var obselVO:SGBDObsel = listObsel[nObsel];
 				
 				addObsel(obselVO);
 				if(nObsel == 100)
@@ -136,7 +136,7 @@ package business
 		
 		
 		
-		private function addObsel(value:ObselVO):void{
+		private function addObsel(value:SGBDObsel):void{
 			var obsel:Obsel = Obsel.fromRDF(value.rdf);
 			var text:String = obsel.props["text"];
 			if(true)
