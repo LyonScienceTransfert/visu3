@@ -1,11 +1,11 @@
 package com.ithaca.utils
 {
 	import com.ithaca.traces.Obsel;
-    import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.model.vo.SGBDObsel;
 	import com.ithaca.utils.StringUtils;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
-	import com.ithaca.visu.model.vo.ObselVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
@@ -139,7 +139,7 @@ package com.ithaca.utils
 		{
 			var entriesPerUser:Dictionary = new Dictionary();
 			
-			for each (var obselVO:ObselVO in obselList) {
+			for each (var obselVO:SGBDObsel in obselList) {
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				if (obsel.type == TraceModel.RECORD_FILE_NAME) {
 						
@@ -187,7 +187,7 @@ package com.ithaca.utils
 		{
 			var sessionStart:Number;
 			
-			for each (var obselVO:ObselVO in obselList) {
+			for each (var obselVO:SGBDObsel in obselList) {
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				if (obsel.type == TraceModel.SESSION_START) 
 						return obsel.begin;

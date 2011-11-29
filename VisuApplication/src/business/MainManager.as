@@ -5,6 +5,7 @@ import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.events.SelectionEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
+import com.ithaca.traces.model.vo.SGBDObsel;
 import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.XMLUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
@@ -17,7 +18,6 @@ import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.User;
-import com.ithaca.visu.model.vo.ObselVO;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.model.vo.SessionUserVO;
 import com.ithaca.visu.model.vo.SessionVO;
@@ -226,7 +226,7 @@ public class MainManager
 			var nbrObsels:int = listObselVO.length;
 			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 			{
-				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
+				var obselVO:SGBDObsel = listObselVO[nObsel] as SGBDObsel;
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				var typeObsel:String = obsel.type;
 				switch (typeObsel)
@@ -360,7 +360,7 @@ public class MainManager
 		var nbrObsel:int = listObselVO.length;
 		if(nbrObsel > 0)
 		{
-			var lastObselVO:ObselVO = listObselVO[nbrObsel-1];
+			var lastObselVO:SGBDObsel = listObselVO[nbrObsel-1];
 			var lastObsel:Obsel = Obsel.fromRDF(lastObselVO.rdf);
 			// last sessionId
 			var sessionId:int = lastObsel.props[TraceModel.SESSION_ID];
@@ -497,7 +497,7 @@ public class MainManager
 			var nbrObsels:int = listObselVO.length;
 			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 			{
-				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
+				var obselVO:SGBDObsel = listObselVO[nObsel] as SGBDObsel;
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				var typeObsel:String = obsel.type;
 				switch (typeObsel){
@@ -536,7 +536,7 @@ public class MainManager
 		var listSession:ArrayCollection = new ArrayCollection();
 		for(var nObsel:int ; nObsel  < nbrObsel ; nObsel++)
 		{
-			var obselVO:ObselVO = listObselVO[nObsel];
+			var obselVO:SGBDObsel = listObselVO[nObsel];
 			var traceId:String = obselVO.trace;
 			var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var sessionTheme:String = obsel.props[TraceModel.SESSION_THEME];
@@ -562,7 +562,7 @@ public class MainManager
 		
 		if(listObselCommentVO != null && listObselCommentVO.length != 0)
 		{
-			var firstObselVO:ObselVO = listObselCommentVO[0];
+			var firstObselVO:SGBDObsel = listObselCommentVO[0];
 			Model.getInstance().setCurrentCommentTraceId(firstObselVO.trace);
 			var arr:ArrayCollection = new ArrayCollection();
 			var listObselUM:ArrayCollection = new ArrayCollection();
@@ -571,7 +571,7 @@ public class MainManager
 			var nbrObselCommentVO:int = listObselCommentVO.length;
 			for(var nObselCommentVO:int = 0 ; nObselCommentVO < nbrObselCommentVO; nObselCommentVO++)
 			{
-				var obselVO:ObselVO = listObselCommentVO[nObselCommentVO];
+				var obselVO:SGBDObsel = listObselCommentVO[nObselCommentVO];
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				var typeObsel:String = obsel.type;
 				switch (typeObsel){
@@ -617,7 +617,7 @@ public class MainManager
 		if(!(listObselVO == null || listObselVO.length == 0))
 		{
 			// set current sessionId for setting commentObsel
-			var obselVO:ObselVO = listObselVO[0];
+			var obselVO:SGBDObsel = listObselVO[0];
 			var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var sessionId:int = obsel.props[TraceModel.SESSION_ID];
 			Model.getInstance().setCurrentSessionId(sessionId);
@@ -636,7 +636,7 @@ public class MainManager
 						
 			for(var nObsel:int = 0;nObsel < nbrObsels; nObsel++)
 			{
-				var obselVO:ObselVO = listObselVO[nObsel] as ObselVO;
+				var obselVO:SGBDObsel = listObselVO[nObsel] as SGBDObsel;
 				var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 				var ow:String = obsel.props[TraceModel.UID] 
 				var typeObsel:String = obsel.type;
@@ -1171,7 +1171,7 @@ public class MainManager
 			
 			for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++ )
 			{
-				var obselVO:ObselVO = listObselClosedSessionVO[nObsel];	
+				var obselVO:SGBDObsel = listObselClosedSessionVO[nObsel];	
 				var typeObsel:String = obselVO.type;
 				if(typeObsel == TraceModel.RECORD_FILE_NAME)
 				{
@@ -1211,7 +1211,7 @@ public class MainManager
 		var nbrObselUserVO:int = listUserObselVO.length;
 		for(var nObselUserVO:int = 0; nObselUserVO < nbrObselUserVO; nObselUserVO++ )
 		{
-			var obselVO:ObselVO = listUserObselVO[nObselUserVO];
+			var obselVO:SGBDObsel = listUserObselVO[nObselUserVO];
 			reversedListUserObselVO.push(obselVO);		
 		}
 				
@@ -1219,7 +1219,7 @@ public class MainManager
 		this.onCheckListUserObsel(reversedListUserObselVO, dateStartRecordingSession, listObselCommentVO, true, false);
 		
 		
-		function hasObselWithTimeStamp(obselVO:ObselVO):Boolean
+		function hasObselWithTimeStamp(obselVO:SGBDObsel):Boolean
 		{
 			var obselChecking:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var timeStampChecking:Number = obselChecking.props[TraceModel.TIMESTAMP];
@@ -1238,7 +1238,7 @@ public class MainManager
 			return false;
 		}
 		
-		function hasObselWithSamePathFile(obselVO:ObselVO):Boolean
+		function hasObselWithSamePathFile(obselVO:SGBDObsel):Boolean
 		{
 			var obselChecking:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var path:String = obselChecking.props[TraceModel.PATH];
@@ -1326,7 +1326,7 @@ public class MainManager
 	 * userVO
 	 * userIdClient 
 	 */
-	public function onSetStatusRecording(userId:int, userStatus:int, sessionId:int, startRecording:Date, obselVO:ObselVO):void{
+	public function onSetStatusRecording(userId:int, userStatus:int, sessionId:int, startRecording:Date, obselVO:SGBDObsel):void{
 			// FIXME : have to fine other solution
 			var userVO:UserVO = new UserVO();
 			userVO.id_user = userId;
@@ -1442,7 +1442,7 @@ public class MainManager
 	/**
 	 *  call when user receive shared info
 	 */
-	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String, obselVO:ObselVO, idUserFor:int):void
+	public function onCheckSharedInfo(typeInfo:int, info:String, senderUserId:int, urlElement:String, obselVO:SGBDObsel, idUserFor:int):void
 	{	
 		var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.RECEIVE_SHARED_INFO);	
 		sessionSharedEvent.typeInfo = typeInfo;
@@ -1455,14 +1455,14 @@ public class MainManager
 		this.dispatcher.dispatchEvent(sessionSharedEvent);	
 	}
 	
-	public function onCheckUpdatedMarker(text:String ,senderUserId:int , obselVO:ObselVO):void
+	public function onCheckUpdatedMarker(text:String ,senderUserId:int , obselVO:SGBDObsel):void
 	{
 		var obsel:Obsel =  Obsel.fromRDF(obselVO.rdf);
 		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
 		Model.getInstance().updateTextObselMarker(senderUserId, timeStampObsel, text, obsel.type);
 	}
 	
-	public function onCheckAddObselComment(obselVO:ObselVO, timeBegin:String, timeEnd:String):void
+	public function onCheckAddObselComment(obselVO:SGBDObsel, timeBegin:String, timeEnd:String):void
 	{
 		var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 		Model.getInstance().setObselComment(obsel);
