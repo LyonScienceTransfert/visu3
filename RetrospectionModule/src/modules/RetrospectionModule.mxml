@@ -24,14 +24,11 @@
             import com.ithaca.timeline.TraceLine;
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
-            import com.ithaca.visu.traces.TracageEventDispatcherFactory;
-            import com.ithaca.visu.traces.TracageManager;
-            import com.ithaca.visu.traces.events.TracageEvent;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.Trace;
             import com.ithaca.traces.TraceManager;
             import com.ithaca.traces.events.ObselEvent;
-            import com.ithaca.traces.model.TracageModel;
+            import com.ithaca.traces.model.RetroTraceModel;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.utils.EditCommentDialog;
             import com.ithaca.utils.UtilFunction;
@@ -46,6 +43,9 @@
             import com.ithaca.visu.model.Session;
             import com.ithaca.visu.model.User;
             import com.ithaca.visu.model.vo.RetroDocumentVO;
+            import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+            import com.ithaca.visu.traces.TracageManager;
+            import com.ithaca.visu.traces.events.TracageEvent;
             import com.ithaca.visu.ui.utils.ConnectionStatus;
             import com.ithaca.visu.ui.utils.IconEnum;
             import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
@@ -846,6 +846,7 @@
             {
                 // trace the Timeline
                 var traceTimeLine:Trace = TraceManager.getTrace("timeline"); 
+                
                 // do not automatically synchronize with the KTBS/BDD
                 traceTimeLine.autosync = false;
                 
@@ -904,7 +905,7 @@
 					// set init userId 
 					userIdInitEditCommentDialog = userId;
 					
-					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin, TracageModel.OBSEL);
+					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin, RetroTraceModel.OBSEL);
 				}
 			}
 			
@@ -916,7 +917,7 @@
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					// add comment for session
-					showDialogAddCommentObsel(null, null, null, TracageModel.TIMELINE);
+					showDialogAddCommentObsel(null, null, null, RetroTraceModel.TIMELINE);
 				}
 			}
 			
@@ -927,7 +928,7 @@
 			{	
 				var user:User = event.user;
 				// add comment for user
-				showDialogAddCommentObsel(user, null, null, TracageModel.BUTTON);
+				showDialogAddCommentObsel(user, null, null, RetroTraceModel.BUTTON);
 			}
 			
             /**
@@ -947,7 +948,7 @@
                     // set origin the init dialog
                     editCommentDialog.origin = initBy;
                     // set userId the video panel where was clicked button add comments
-                    if(initBy == TracageModel.BUTTON)
+                    if(initBy == RetroTraceModel.BUTTON)
                     {
                         editCommentDialog.userIdVideoPanel = value.id_user
                     }
@@ -1140,13 +1141,13 @@
                 
                 // tracage add/edit comments
                 var editCommentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
-                editCommentTracageEvent.typeActivity = TracageModel.USER_VIDEO_ADD_COMMENT;
+                editCommentTracageEvent.typeActivity = RetroTraceModel.USER_VIDEO_ADD_COMMENT;
                 editCommentTracageEvent.text = text;
                 editCommentTracageEvent.forUserId = forUserId;
                 // can close dialog by buttons : close window, save, cancel, delete
                 editCommentTracageEvent.closeDialog = event.currentTarget.closeDialog;
                 editCommentTracageEvent.origin = event.currentTarget.origin;
-                if(event.currentTarget.origin == TracageModel.BUTTON)
+                if(event.currentTarget.origin == RetroTraceModel.BUTTON)
                 {
                     editCommentTracageEvent.userId =  event.currentTarget.userIdVideoPanel;
                 }
