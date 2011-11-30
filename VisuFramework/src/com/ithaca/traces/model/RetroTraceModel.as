@@ -62,7 +62,7 @@
  */
 package com.ithaca.traces.model
 {
-public final class TracageModel
+public final class RetroTraceModel
 {
     
     // ** UserVideoVolume(xsd:int volume);

@@ -67,7 +67,7 @@ import com.ithaca.tracage.events.TracageEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.Trace;
 import com.ithaca.traces.TraceManager;
-import com.ithaca.traces.model.TracageModel;
+import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.visu.model.Model;
 
@@ -115,7 +115,7 @@ public class TracageManager
             obselRetroRoom.begin = currentTime;
             // TODO : duration obsel 
             obselRetroRoom.end = currentTime;
-            obselRetroRoom.props[TracageModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
+            obselRetroRoom.props[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
             
             TraceManager.trace("visu",obselRetroRoom.type, obselRetroRoom.props);
             
@@ -129,25 +129,25 @@ public class TracageManager
             // user id video only action on video panel, addcomment on TimeLine and obsel hasn't userId 
             if(event.userId)
             {
-                propsActivityUserVideo[TracageModel.USER_ID] = event.userId;
+                propsActivityUserVideo[RetroTraceModel.USER_ID] = event.userId;
             }
-            propsActivityUserVideo[TracageModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
+            propsActivityUserVideo[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
             
             switch (typeObsel)
             {
-                case TracageModel.USER_VIDEO_ZOOM_MAX:
+                case RetroTraceModel.USER_VIDEO_ZOOM_MAX:
                     break;
-                case TracageModel.USER_VIDEO_VOLUME:
+                case RetroTraceModel.USER_VIDEO_VOLUME:
                     
-                    propsActivityUserVideo[TracageModel.VOLUME]=event.volume;
+                    propsActivityUserVideo[RetroTraceModel.VOLUME]=event.volume;
                     break;
                 
-                case TracageModel.USER_VIDEO_ADD_COMMENT:
+                case RetroTraceModel.USER_VIDEO_ADD_COMMENT:
 
-                    propsActivityUserVideo[TracageModel.TEXT] = event.text;
-                    propsActivityUserVideo[TracageModel.FOR_USER_ID] = event.forUserId;
-                    propsActivityUserVideo[TracageModel.CLOSE_DIALOG] = event.closeDialog;
-                    propsActivityUserVideo[TracageModel.ORIGIN] = event.origin;
+                    propsActivityUserVideo[RetroTraceModel.TEXT] = event.text;
+                    propsActivityUserVideo[RetroTraceModel.FOR_USER_ID] = event.forUserId;
+                    propsActivityUserVideo[RetroTraceModel.CLOSE_DIALOG] = event.closeDialog;
+                    propsActivityUserVideo[RetroTraceModel.ORIGIN] = event.origin;
                     break;
                 
             }

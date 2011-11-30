@@ -15,7 +15,7 @@
 	<fx:Script>
 	<![CDATA[
         import com.ithaca.traces.Obsel;
-        import com.ithaca.traces.model.TracageModel;
+        import com.ithaca.traces.model.RetroTraceModel;
         import com.ithaca.traces.model.TraceModel;
         import com.ithaca.visu.model.User;
         import com.ithaca.visu.model.vo.UserVO;
@@ -200,7 +200,7 @@
 		
 		private function onHandlerButtonOkAndEnterTextArea(event:*):void
 		{
-            closeDialog = TracageModel.SAVE;
+            closeDialog = RetroTraceModel.SAVE;
 			confirm = true;
 			// comment text 
 			var commentText:String = textInfo.text;
@@ -242,7 +242,7 @@
 		private function onClickButtonCancel(event:MouseEvent):void
 		{
           
-            closeDialog = TracageModel.CANCEL;
+            closeDialog = RetroTraceModel.CANCEL;
 			textComment = textInfo.text;
 			PopUpManager.removePopUp(this);
 		}
@@ -258,7 +258,7 @@
 		{
 			if( event.detail == Alert.YES )
 			{
-                closeDialog = TracageModel.DELETE;
+                closeDialog = RetroTraceModel.DELETE;
 				deleting = true;
                 textComment = textInfo.text;
 				PopUpManager.removePopUp(this);
@@ -292,7 +292,7 @@
 		}
         protected function titlewindow1_closeHandler(event:CloseEvent):void
         {
-            closeDialog = TracageModel.CLOSE_WINDOW;
+            closeDialog = RetroTraceModel.CLOSE_WINDOW;
             textComment = textInfo.text;
             PopUpManager.removePopUp(this);
         }
