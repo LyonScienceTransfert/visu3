@@ -73,6 +73,8 @@ public final class RetroTraceModel
     public static const USER_VIDEO_ADD_COMMENT: String = "UserVideoAddComment";
     //*SessionVideoZoomMode(xsd:string mode ["max", "optimized"]);
     public static const SESSION_VIDEO_ZOOM_MODE: String = "SessionVideoZoomMode";
+    // *SessionVideoMute(xsd:string modeMute["true","false"]):
+    public static const SESSION_VIDEO_MUTE: String = "SessionVideoMute";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -90,6 +92,8 @@ public final class RetroTraceModel
     public static const USER_ID: String = "userId";
     public static const MAX: String = "max";
     public static const OPTIMIZED: String = "optimized";
+    public static const MODE_MUTE: String = "modeMute";
+    public static const MODE: String = "mode";
     
 }
 }

@@ -63,13 +63,13 @@
 package com.ithaca.visu.traces
 {
 
-import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.Trace;
 import com.ithaca.traces.TraceManager;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.visu.model.Model;
+import com.ithaca.visu.traces.events.TracageEvent;
 
 import mx.logging.ILogger;
 import mx.logging.Log;
@@ -105,10 +105,40 @@ public class TracageManager
         var parentTraceId:String = Model.getInstance().getParentTraceId();
         // obsel the TimeLine
         var obselTimeLine:Obsel = event.obsel;
+        // type obsel activity
+        var typeObsel:String = event.typeActivity;
         // type activity
         var typeActivity:String = event.type;
         switch (typeActivity)
         {
+        // activity on Timeline
+        case TracageEvent.ACTIVITY_SESSION_VIDEO :
+           
+            // property the obsel for saving
+            var propsActivitySessionVideo:Object = new Object(); 
+            
+            switch (typeObsel)
+            {
+            case RetroTraceModel.SESSION_VIDEO_MUTE:
+                
+                propsActivitySessionVideo[RetroTraceModel.MODE_MUTE] = event.modeMute;
+                break;
+            
+            case RetroTraceModel.SESSION_VIDEO_ZOOM_MODE:
+                
+                var modeZoom:String = RetroTraceModel.MAX;
+                if(!event.modeZoomMax)
+                {
+                    modeZoom = RetroTraceModel.OPTIMIZED;
+                }
+                propsActivitySessionVideo[RetroTraceModel.MODE] = modeZoom;
+                
+                break;
+            }
+
+            TraceManager.trace("visu", typeObsel, propsActivitySessionVideo);
+            
+            break;
         // activity on Timeline
         case TracageEvent.ACTIVITY_TIME_LINE :
             var obselRetroRoom:Obsel = obselTimeLine.clone();
@@ -124,8 +154,7 @@ public class TracageManager
         case TracageEvent.ACTIVITY_USER_VIDEO :
             // property the obsel for saving
             var propsActivityUserVideo:Object = new Object();
-            // type obsel activity
-            var typeObsel:String = event.typeActivity;
+
             // user id video only action on video panel, addcomment on TimeLine and obsel hasn't userId 
             if(event.userId)
             {
@@ -149,7 +178,6 @@ public class TracageManager
                     propsActivityUserVideo[RetroTraceModel.CLOSE_DIALOG] = event.closeDialog;
                     propsActivityUserVideo[RetroTraceModel.ORIGIN] = event.origin;
                     break;
-                
             }
             
             TraceManager.trace("visu", typeObsel, propsActivityUserVideo);
