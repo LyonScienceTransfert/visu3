@@ -231,8 +231,10 @@
                 
                 // init listener, activity on Timeline
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
-                // init listener, activity user video
+                // init listener, activity on user video
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on session video
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -1345,6 +1347,12 @@
 			{
 				// update mute volume
 				this.visio.setVolumeMute(event.mute);
+                
+                // tracage mode mute
+                var videoPanelSessionTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_SESSION_VIDEO);
+                videoPanelSessionTracageEvent.typeActivity = RetroTraceModel.SESSION_VIDEO_MUTE;
+                videoPanelSessionTracageEvent.modeMute = event.mute.toString();
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelSessionTracageEvent);
 			}
 
 			protected function panelVideo_clickButtonModeMaxHandler(event:PanelButtonEvent):void
@@ -1352,6 +1360,7 @@
 				panelVideo.buttonModeMaxEnabled = false;
 				panelVideo.buttonModeZoomEnabled = true;
 				visio.zoomMax = true;
+                traceButtonModeZoom(visio.zoomMax);
 			}
 
 			protected function panelVideo_clickButtonModeZoomHandler(event:*):void
@@ -1359,8 +1368,20 @@
 				panelVideo.buttonModeMaxEnabled = true;
 				panelVideo.buttonModeZoomEnabled = false;
 				visio.zoomMax = false;
+                traceButtonModeZoom(visio.zoomMax);
 			}
-
+            /**
+            * tracage activity on the buttons zoom max/optimized
+            */ 
+            protected function traceButtonModeZoom(value:Boolean):void
+            {
+                // tracage button zoom max/opimazed
+                var videoPanelSessionTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_SESSION_VIDEO);
+                videoPanelSessionTracageEvent.typeActivity = RetroTraceModel.SESSION_VIDEO_ZOOM_MODE;
+                videoPanelSessionTracageEvent.modeZoomMax = value;
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelSessionTracageEvent);
+            }
+            
 			protected function timeLine_timeRulerClickHandler(event:TimelineEvent):void
 			{
 				// stop play RetroDocumentSegment if playing

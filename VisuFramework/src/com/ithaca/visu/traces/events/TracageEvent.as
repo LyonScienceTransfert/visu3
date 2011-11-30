@@ -72,6 +72,7 @@ public class TracageEvent extends Event
     // constants
     static public const ACTIVITY_TIME_LINE : String = 'activityTimeLine';
     static public const ACTIVITY_USER_VIDEO : String = 'activityUserVideo';
+    static public const ACTIVITY_SESSION_VIDEO : String = 'activitySessionVideo';
     
     // properties
     public var typeActivity:String;
@@ -81,6 +82,8 @@ public class TracageEvent extends Event
     public var text:String;
     public var closeDialog:String;
     public var origin:String;
+    public var modeMute:String;
+    public var modeZoomMax:Boolean;
     
     
     public var obsel:Obsel;
