@@ -126,8 +126,11 @@ public class TracageManager
             var propsActivityUserVideo:Object = new Object();
             // type obsel activity
             var typeObsel:String = event.typeActivity;
-            // user id video 
-            propsActivityUserVideo[TracageModel.USER_ID]=event.userId;
+            // user id video only action on video panel, addcomment on TimeLine and obsel hasn't userId 
+            if(event.userId)
+            {
+                propsActivityUserVideo[TracageModel.USER_ID] = event.userId;
+            }
             propsActivityUserVideo[TracageModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
             
             switch (typeObsel)
@@ -135,11 +138,21 @@ public class TracageManager
                 case TracageModel.USER_VIDEO_ZOOM_MAX:
                     break;
                 case TracageModel.USER_VIDEO_VOLUME:
+                    
                     propsActivityUserVideo[TracageModel.VOLUME]=event.volume;
                     break;
+                
+                case TracageModel.USER_VIDEO_ADD_COMMENT:
+
+                    propsActivityUserVideo[TracageModel.TEXT] = event.text;
+                    propsActivityUserVideo[TracageModel.FOR_USER_ID] = event.forUserId;
+                    propsActivityUserVideo[TracageModel.CLOSE_DIALOG] = event.closeDialog;
+                    propsActivityUserVideo[TracageModel.ORIGIN] = event.origin;
+                    break;
+                
             }
             
-            TraceManager.trace("visu",typeObsel, propsActivityUserVideo);
+            TraceManager.trace("visu", typeObsel, propsActivityUserVideo);
             
             break;
         default :

@@ -77,6 +77,10 @@ public class TracageEvent extends Event
     public var typeActivity:String;
     public var volume:Number;
     public var userId:int;
+    public var forUserId:int;
+    public var text:String;
+    public var closeDialog:String;
+    public var origin:String;
     
     
     public var obsel:Obsel;

@@ -944,8 +944,13 @@
                     editCommentDialog.obsel = obsel;
                     
                     editCommentDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
-                    // init by 
+                    // set origin the init dialog
                     editCommentDialog.origin = initBy;
+                    // set userId the video panel where was clicked button add comments
+                    if(initBy == TracageModel.BUTTON)
+                    {
+                        editCommentDialog.userIdVideoPanel = value.id_user
+                    }
                     
                     PopUpManager.addPopUp(editCommentDialog, this);
                     PopUpManager.centerPopUp(editCommentDialog);
@@ -1054,6 +1059,11 @@
                     updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
                     
                     var text:String = "";
+                    if(event.currentTarget.textComment)
+                    {
+                        text = event.currentTarget.textComment;
+                    }
+                    
                     var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
                     var obsel:Obsel = event.currentTarget.obsel;
                     
@@ -1081,9 +1091,6 @@
                             typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
                             
                             text = obsel.props[TraceModel.TEXT];
-                        }else
-                        {
-                            text = event.currentTarget.textComment;
                         }
                         
                         if(userIdInitEditCommentDialog > -1 && userIdInitEditCommentDialog != forUserId)
@@ -1130,6 +1137,20 @@
                     // init var userIdInitEditCommentDialog
                     userIdInitEditCommentDialog = -1;
                 }
+                
+                // tracage add/edit comments
+                var editCommentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
+                editCommentTracageEvent.typeActivity = TracageModel.USER_VIDEO_ADD_COMMENT;
+                editCommentTracageEvent.text = text;
+                editCommentTracageEvent.forUserId = forUserId;
+                // can close dialog by buttons : close window, save, cancel, delete
+                editCommentTracageEvent.closeDialog = event.currentTarget.closeDialog;
+                editCommentTracageEvent.origin = event.currentTarget.origin;
+                if(event.currentTarget.origin == TracageModel.BUTTON)
+                {
+                    editCommentTracageEvent.userId =  event.currentTarget.userIdVideoPanel;
+                }
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(editCommentTracageEvent);
             }		
 			/**
 			 * listener when start move obsel
