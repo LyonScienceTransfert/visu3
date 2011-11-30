@@ -60,7 +60,7 @@
  * 
  * -- End of licenses
  */
-package  com.ithaca.tracage.events
+package  com.ithaca.visu.traces.events
 {	
 
 import com.ithaca.traces.Obsel;

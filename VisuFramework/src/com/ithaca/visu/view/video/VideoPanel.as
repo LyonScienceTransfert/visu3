@@ -1,7 +1,7 @@
 package com.ithaca.visu.view.video
 {
-	import com.ithaca.tracage.TracageEventDispatcherFactory;
-	import com.ithaca.tracage.events.TracageEvent;
+	import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+	import com.ithaca.visu.traces.events.TracageEvent;
 	import com.ithaca.traces.model.RetroTraceModel;
 	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.VisuUtils;
