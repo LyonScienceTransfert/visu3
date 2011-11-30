@@ -24,9 +24,9 @@
             import com.ithaca.timeline.TraceLine;
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
-            import com.ithaca.tracage.TracageEventDispatcherFactory;
-            import com.ithaca.tracage.TracageManager;
-            import com.ithaca.tracage.events.TracageEvent;
+            import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+            import com.ithaca.visu.traces.TracageManager;
+            import com.ithaca.visu.traces.events.TracageEvent;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.Trace;
             import com.ithaca.traces.TraceManager;

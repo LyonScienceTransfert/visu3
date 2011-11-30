@@ -1,4 +1,4 @@
-package com.ithaca.tracage
+package com.ithaca.visu.traces
 {
 import flash.events.Event;
 import flash.events.EventDispatcher;

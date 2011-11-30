@@ -60,10 +60,10 @@
  *
  * -- End of licenses
  */
-package com.ithaca.tracage
+package com.ithaca.visu.traces
 {
 
-import com.ithaca.tracage.events.TracageEvent;
+import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.Trace;
 import com.ithaca.traces.TraceManager;
