@@ -3,7 +3,7 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
-	close="PopUpManager.removePopUp(this);" >
+    close="titlewindow1_closeHandler(event)">
 	<s:title>{fxgt.gettext("Votre commentaire")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
@@ -14,23 +14,24 @@
 	</fx:Declarations>
 	<fx:Script>
 	<![CDATA[
-		import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.TracageModel;
         import com.ithaca.traces.model.TraceModel;
-		import com.ithaca.visu.model.User;
-		import com.ithaca.visu.model.vo.UserVO;
-		import com.ithaca.visu.ui.utils.IconEnum;
-		
-		import gnu.as3.gettext.FxGettext;
-		import gnu.as3.gettext._FxGettext;
-		
-		import mx.collections.ArrayCollection;
-		import mx.controls.Alert;
-		import mx.core.INavigatorContent;
-		import mx.events.CloseEvent;
-		import mx.events.FlexEvent;
-		import mx.managers.PopUpManager;
-		
-		import spark.events.IndexChangeEvent;
+        import com.ithaca.visu.model.User;
+        import com.ithaca.visu.model.vo.UserVO;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.controls.Alert;
+        import mx.core.INavigatorContent;
+        import mx.events.CloseEvent;
+        import mx.events.FlexEvent;
+        import mx.managers.PopUpManager;
+        
+        import spark.events.IndexChangeEvent;
 		
 		[Bindable]
 		private var fxgt:_FxGettext;
@@ -46,7 +47,11 @@
 		public var deleting : Boolean = false;
 		public var textComment:String;
 		private var _currentObselSkin:Object = null;
-		
+        
+        private var _origin:String = "";
+        private var _closeDialog:String = "";
+        private var _userIdVideoPanel:int;
+        
 		////////////////////
 		////// setters/getters
 		////////////////////
@@ -85,10 +90,34 @@
 		{
 			_currentObselSkin = value;
 		}
-		public function get currentObselSkin():Object
-		{
+        public function get currentObselSkin():Object
+        {
 			return _currentObselSkin;
 		}		
+		public function set origin(value:String):void
+        {
+            _origin = value;
+        }
+        public function get origin():String
+        {
+            return _origin;
+        }	
+        public function set closeDialog(value:String):void
+        {
+            _closeDialog = value;
+        }
+        public function get closeDialog():String
+        {
+            return _closeDialog;
+        }		
+        public function set userIdVideoPanel(value:int):void
+        {
+            _userIdVideoPanel = value;
+        }
+        public function get userIdVideoPanel():int
+        {
+            return _userIdVideoPanel;
+        }		
 		
 		
 		
@@ -171,6 +200,7 @@
 		
 		private function onHandlerButtonOkAndEnterTextArea(event:*):void
 		{
+            closeDialog = TracageModel.SAVE;
 			confirm = true;
 			// comment text 
 			var commentText:String = textInfo.text;
@@ -211,6 +241,9 @@
 		
 		private function onClickButtonCancel(event:MouseEvent):void
 		{
+          
+            closeDialog = TracageModel.CANCEL;
+			textComment = textInfo.text;
 			PopUpManager.removePopUp(this);
 		}
 		private function onClickButtonDelete(event:MouseEvent):void
@@ -225,7 +258,9 @@
 		{
 			if( event.detail == Alert.YES )
 			{
+                closeDialog = TracageModel.DELETE;
 				deleting = true;
+                textComment = textInfo.text;
 				PopUpManager.removePopUp(this);
 			}
 		}
@@ -255,7 +290,12 @@
 				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = user.id_user;
 			}
 		}
-		
+        protected function titlewindow1_closeHandler(event:CloseEvent):void
+        {
+            closeDialog = TracageModel.CLOSE_WINDOW;
+            textComment = textInfo.text;
+            PopUpManager.removePopUp(this);
+        }
 		////////
 		// Utils
 		//////////////
@@ -278,6 +318,8 @@
 			list.addItem(user);
 			return user;
 		}
+
+
 	]]>
     </fx:Script>
     <s:VGroup width="100%" height="100%">

@@ -550,6 +550,7 @@ package com.ithaca.visu.view.video
             var videoPanelTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
             videoPanelTracageEvent.typeActivity = TracageModel.USER_VIDEO_VOLUME;
             videoPanelTracageEvent.volume = volume;
+            videoPanelTracageEvent.userId = ownerFluxVideo.id_user;
             TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelTracageEvent);
 		}
 	}
