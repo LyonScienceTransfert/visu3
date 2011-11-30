@@ -2,7 +2,7 @@ package com.ithaca.visu.view.video
 {
 	import com.ithaca.tracage.TracageEventDispatcherFactory;
 	import com.ithaca.tracage.events.TracageEvent;
-	import com.ithaca.traces.model.TracageModel;
+	import com.ithaca.traces.model.RetroTraceModel;
 	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.utils.components.IconButton;
@@ -473,7 +473,7 @@ package com.ithaca.visu.view.video
             
             // tracage button zoom
             var videoPanelTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
-            videoPanelTracageEvent.typeActivity = TracageModel.USER_VIDEO_ZOOM_MAX;
+            videoPanelTracageEvent.typeActivity = RetroTraceModel.USER_VIDEO_ZOOM_MAX;
             videoPanelTracageEvent.userId = ownerFluxVideo.id_user;
             TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelTracageEvent);
 		}
@@ -548,7 +548,7 @@ package com.ithaca.visu.view.video
 			this.dispatchEvent(volumeUpdateEvent);
             // tracage volume the video
             var videoPanelTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
-            videoPanelTracageEvent.typeActivity = TracageModel.USER_VIDEO_VOLUME;
+            videoPanelTracageEvent.typeActivity = RetroTraceModel.USER_VIDEO_VOLUME;
             videoPanelTracageEvent.volume = volume;
             videoPanelTracageEvent.userId = ownerFluxVideo.id_user;
             TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelTracageEvent);
