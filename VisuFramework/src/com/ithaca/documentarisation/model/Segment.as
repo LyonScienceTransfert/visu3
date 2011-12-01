@@ -58,5 +58,39 @@ package com.ithaca.documentarisation.model
 			durationCommentAudio = segment.child(RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO).toString(); 
 			pathCommentAudio = segment.child(RetroDocumentConst.TAG_PATH_COMMENT_AUDIO).toString(); 
 		}
+        
+        public function getSegmentXML():XML
+        {
+            var segmentXML:XML = new XML("<"+RetroDocumentConst.TAG_SEGMENT + " " +RetroDocumentConst.TAG_ID + "=" + "'" + segmentId + "'" +"/>");
+            var stringBeginTimeVideo:String = "<"+RetroDocumentConst.TAG_FROM_TIME+">"+beginTimeVideo.toString()+"</"+RetroDocumentConst.TAG_FROM_TIME+">";
+            var beginTimeVideo:XML = new XML(stringBeginTimeVideo);
+            segmentXML.appendChild(beginTimeVideo);
+            var stringEndTimeVideo:String = "<"+RetroDocumentConst.TAG_TO_TIME+">"+ endTimeVideo.toString()+"</"+RetroDocumentConst.TAG_TO_TIME+">";
+            var endTimeVideo:XML = new XML(stringEndTimeVideo);
+            segmentXML.appendChild(endTimeVideo);
+            // comment
+            var commentText:String = comment;
+            if(commentText == "Cliquer ici pour ajouter du texte")
+            {
+                commentText = "";
+            }
+            var stringComment:String = "<"+RetroDocumentConst.TAG_COMMENT+"><![CDATA["+commentText+"]]></"+RetroDocumentConst.TAG_COMMENT+">";
+            var comment:XML = new XML(stringComment);
+            segmentXML.appendChild(comment);
+            // type source 
+            var stringTypeSource:String = "<"+RetroDocumentConst.TAG_TYPE_SOURCE+">"+typeSource+"</"+RetroDocumentConst.TAG_TYPE_SOURCE+">";
+            var typeSource:XML = new XML(stringTypeSource);
+            segmentXML.appendChild(typeSource);
+            // duration audio
+            var stringDurationCommentAudio:String = "<"+RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+">"+durationCommentAudio.toString()+"</"+RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+">";
+            var durationCommentAudio:XML = new XML(stringDurationCommentAudio);
+            segmentXML.appendChild(durationCommentAudio);
+            // path stream audio
+            var stringPathCommentAudio:String = "<"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">"+pathCommentAudio+"</"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">";
+            var pathCommentAudio:XML = new XML(stringPathCommentAudio);
+            segmentXML.appendChild(pathCommentAudio);
+            return segmentXML;
+        }
+        
 	}
 }

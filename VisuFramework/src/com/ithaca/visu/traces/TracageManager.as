@@ -111,6 +111,33 @@ public class TracageManager
         var typeActivity:String = event.type;
         switch (typeActivity)
         {
+        // activity on retro document blocks
+        case TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK :
+           
+            // property the obsel for saving
+            var propsActivityRetroDocumentBlock:Object = new Object(); 
+            propsActivityRetroDocumentBlock[RetroTraceModel.ID] = event.id;
+            
+            switch (typeObsel)
+            {
+            case RetroTraceModel.RETRO_DOCUMENT_BLOCK_DELETE:
+                
+                propsActivityRetroDocumentBlock[RetroTraceModel.SERIALISATION] = event.serialisation;
+                break;
+            
+            case RetroTraceModel.SESSION_VIDEO_ZOOM_MODE:
+                
+
+                
+                break;
+            }
+
+            TraceManager.trace("visu", typeObsel, propsActivityRetroDocumentBlock);
+            
+            break;
+        
+        
+        
         // activity on Timeline
         case TracageEvent.ACTIVITY_SESSION_VIDEO :
            
