@@ -109,46 +109,49 @@ public class TracageManager
         var typeObsel:String = event.typeActivity;
         // type activity
         var typeActivity:String = event.type;
+        // property the obsel for saving
+        var props:Object = new Object();
+        // set parent trace id 
+        props[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
+
         switch (typeActivity)
         {
         // activity on retro document blocks
         case TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK :
-           
-            // property the obsel for saving
-            var propsActivityRetroDocumentBlock:Object = new Object(); 
-            propsActivityRetroDocumentBlock[RetroTraceModel.ID] = event.id;
+
+            props[RetroTraceModel.ID] = event.id;
             
             switch (typeObsel)
             {
             case RetroTraceModel.RETRO_DOCUMENT_BLOCK_DELETE:
                 
-                propsActivityRetroDocumentBlock[RetroTraceModel.SERIALISATION] = event.serialisation;
+                props[RetroTraceModel.SERIALISATION] = event.serialisation;
                 break;
             
-            case RetroTraceModel.SESSION_VIDEO_ZOOM_MODE:
+            case RetroTraceModel.RETRO_DOCUMENT_BLOCK_CREATE:
                 
+                props[RetroTraceModel.CREATE_TYPE] = event.createType;
+                props[RetroTraceModel.SOURCE_TYPE] = event.sourceType;
+                if(event.obsel != null)
+                {
+                    props[RetroTraceModel.OBSEL] = event.obsel.toRDF();
+                }
 
-                
                 break;
             }
 
-            TraceManager.trace("visu", typeObsel, propsActivityRetroDocumentBlock);
+            TraceManager.trace("visu", typeObsel, props);
             
             break;
         
-        
-        
         // activity on Timeline
         case TracageEvent.ACTIVITY_SESSION_VIDEO :
-           
-            // property the obsel for saving
-            var propsActivitySessionVideo:Object = new Object(); 
             
             switch (typeObsel)
             {
             case RetroTraceModel.SESSION_VIDEO_MUTE:
                 
-                propsActivitySessionVideo[RetroTraceModel.MODE_MUTE] = event.modeMute;
+                props[RetroTraceModel.MODE_MUTE] = event.modeMute;
                 break;
             
             case RetroTraceModel.SESSION_VIDEO_ZOOM_MODE:
@@ -158,14 +161,46 @@ public class TracageManager
                 {
                     modeZoom = RetroTraceModel.OPTIMIZED;
                 }
-                propsActivitySessionVideo[RetroTraceModel.MODE] = modeZoom;
+                props[RetroTraceModel.MODE] = modeZoom;
                 
                 break;
             }
 
-            TraceManager.trace("visu", typeObsel, propsActivitySessionVideo);
+            TraceManager.trace("visu", typeObsel, props);
             
             break;
+        
+        // activity on user video
+        case TracageEvent.ACTIVITY_USER_VIDEO :
+           
+            // user id video only action on video panel, addcomment on TimeLine and obsel hasn't userId 
+            if(event.userId)
+            {
+                props[RetroTraceModel.USER_ID] = event.userId;
+            }
+            
+            switch (typeObsel)
+            {
+                case RetroTraceModel.USER_VIDEO_ZOOM_MAX:
+                    break;
+                case RetroTraceModel.USER_VIDEO_VOLUME:
+                    
+                    props[RetroTraceModel.VOLUME]=event.volume;
+                    break;
+                
+                case RetroTraceModel.USER_VIDEO_ADD_COMMENT:
+
+                    props[RetroTraceModel.TEXT] = event.text;
+                    props[RetroTraceModel.FOR_USER_ID] = event.forUserId;
+                    props[RetroTraceModel.CLOSE_DIALOG] = event.closeDialog;
+                    props[RetroTraceModel.ORIGIN] = event.origin;
+                    break;
+            }
+            
+            TraceManager.trace("visu", typeObsel, props);
+            
+            break;
+        
         // activity on Timeline
         case TracageEvent.ACTIVITY_TIME_LINE :
             var obselRetroRoom:Obsel = obselTimeLine.clone();
@@ -175,39 +210,6 @@ public class TracageManager
             obselRetroRoom.props[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
             
             TraceManager.trace("visu",obselRetroRoom.type, obselRetroRoom.props);
-            
-            break;
-        // activity on user video
-        case TracageEvent.ACTIVITY_USER_VIDEO :
-            // property the obsel for saving
-            var propsActivityUserVideo:Object = new Object();
-
-            // user id video only action on video panel, addcomment on TimeLine and obsel hasn't userId 
-            if(event.userId)
-            {
-                propsActivityUserVideo[RetroTraceModel.USER_ID] = event.userId;
-            }
-            propsActivityUserVideo[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
-            
-            switch (typeObsel)
-            {
-                case RetroTraceModel.USER_VIDEO_ZOOM_MAX:
-                    break;
-                case RetroTraceModel.USER_VIDEO_VOLUME:
-                    
-                    propsActivityUserVideo[RetroTraceModel.VOLUME]=event.volume;
-                    break;
-                
-                case RetroTraceModel.USER_VIDEO_ADD_COMMENT:
-
-                    propsActivityUserVideo[RetroTraceModel.TEXT] = event.text;
-                    propsActivityUserVideo[RetroTraceModel.FOR_USER_ID] = event.forUserId;
-                    propsActivityUserVideo[RetroTraceModel.CLOSE_DIALOG] = event.closeDialog;
-                    propsActivityUserVideo[RetroTraceModel.ORIGIN] = event.origin;
-                    break;
-            }
-            
-            TraceManager.trace("visu", typeObsel, propsActivityUserVideo);
             
             break;
         default :

@@ -77,6 +77,8 @@ public final class RetroTraceModel
     public static const SESSION_VIDEO_MUTE: String = "SessionVideoMute";
     // ** RetroDocumentBlockDelete(xsd:string serialisation ) // serialisation ancienne valuer
     public static const RETRO_DOCUMENT_BLOCK_DELETE: String = "RetroDocumentBlockDelete";
+    // ** RetroDocumentBlockCreate(xsd:string createType : ["menu", "drag-drop"], xsd:string sourceType : ["title", "text", "video", "audio"],  xsd:string  sourceObsel // L'URI de l'obsel source, '' si c'est par menu)
+    public static const RETRO_DOCUMENT_BLOCK_CREATE: String = "RetroDocumentBlockCreate";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -98,6 +100,14 @@ public final class RetroTraceModel
     public static const MODE: String = "mode";
     public static const ID: String = "id";
     public static const SERIALISATION: String = "serialisation";
+    public static const CREATE_TYPE: String = "createType";
+    public static const MENU: String = "menu";
+    public static const DRAG_DROP: String = "drag-drop";
+    public static const SOURCE_OBSEL: String = "sourceObsel";
+    public static const SOURCE_TYPE: String = "sourceType";
+    public static const TITLE: String = "title";
+    public static const VIDEO: String = "video";
+    public static const AUDIO: String = "audio";
     
 }
 }

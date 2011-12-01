@@ -388,6 +388,7 @@ package com.ithaca.documentarisation
 		{
 			var segment:Segment;
 			var typeSegment:String = event.item.@typeSegment;
+            var sourceType:String;
 			switch (typeSegment)
 			{
 			case "TitleSegment" :
@@ -395,23 +396,27 @@ package com.ithaca.documentarisation
 				segment.order = 2;
 				segment.comment = "";
 				segment.typeSource = RetroDocumentConst.TITLE_SEGMENT;
+                sourceType = RetroTraceModel.TITLE;
 				break;
 			case "TexteSegment" :
 				segment = new Segment(this._retroDocument);
 				segment.order = 2;
 				segment.comment = "";
 				segment.typeSource = RetroDocumentConst.TEXT_SEGMENT;
+                sourceType = RetroTraceModel.TEXT;
 				break;
 			case "AudioSegment" :
 				segment = new Segment(this._retroDocument);
 				segment.order = 1;
 				segment.typeSource = RetroDocumentConst.COMMENT_AUDIO_SEGMENT;
+                sourceType = RetroTraceModel.AUDIO;
 				segment.comment = "";
 				segment.durationCommentAudio = 0;
 				break;
 			case "VideoSegment" :
 				segment = new Segment(this._retroDocument);
 				segment.order = 3;
+                sourceType = RetroTraceModel.VIDEO;
 				segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
 				segment.comment = "";
 				
@@ -424,7 +429,7 @@ package com.ithaca.documentarisation
 				break;
 			}
 			// add segment
-			addSegment(segment);
+			addSegment(segment , RetroTraceModel.MENU, null, sourceType);
 		}
 		
 		// by default add text segment
@@ -435,10 +440,10 @@ package com.ithaca.documentarisation
 			segment.comment = "";
 			segment.typeSource = RetroDocumentConst.TEXT_SEGMENT;
 			// add segment
-			addSegment(segment);
+			addSegment(segment, null, null, null);
 		}
 		
-		private function addSegment(value:Segment):void
+		private function addSegment(value:Segment, createType:String, obsel:Obsel, sourceType:String):void
 		{
 			// set updated listSegment
 			_retroDocument.listSegment.addItem(value);
@@ -449,6 +454,16 @@ package com.ithaca.documentarisation
 			
 			// notify change list segment 
 			notifyChangeListSegment();
+            
+            // tracage add block
+            var retroDocumentAddBlockTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+            retroDocumentAddBlockTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_CREATE;
+            retroDocumentAddBlockTracageEvent.id = value.segmentId;
+            retroDocumentAddBlockTracageEvent.createType = createType;
+            retroDocumentAddBlockTracageEvent.sourceType = sourceType;
+            retroDocumentAddBlockTracageEvent.obsel = obsel;
+            
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentAddBlockTracageEvent);
 		}
 		
 		private function notifyChangeListSegment():void
@@ -602,7 +617,7 @@ package com.ithaca.documentarisation
 			// FIXME : have to add bean on server side => lost key-frame in flv, look at https://github.com/ithaca/visu/issues/163
 			// segment.byteArray = screenShotVisuVideo()
 			// add segment
-			addSegment(segment);
+			addSegment(segment, RetroTraceModel.DRAG_DROP, obsel, RetroTraceModel.VIDEO);
 		}
 		
 		/**
