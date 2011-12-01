@@ -87,9 +87,11 @@ public class TracageEvent extends Event
     public var modeZoomMax:Boolean;
     public var serialisation:String;
     public var id:String;
-    
-    
+    public var createType:String;
+    public var sourceType:String;
     public var obsel:Obsel;
+    
+    
     public var value:Object;
     public var event:Object;
     
