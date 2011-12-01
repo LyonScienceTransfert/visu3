@@ -75,6 +75,8 @@ public final class RetroTraceModel
     public static const SESSION_VIDEO_ZOOM_MODE: String = "SessionVideoZoomMode";
     // *SessionVideoMute(xsd:string modeMute["true","false"]):
     public static const SESSION_VIDEO_MUTE: String = "SessionVideoMute";
+    // ** RetroDocumentBlockDelete(xsd:string serialisation ) // serialisation ancienne valuer
+    public static const RETRO_DOCUMENT_BLOCK_DELETE: String = "RetroDocumentBlockDelete";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -94,6 +96,8 @@ public final class RetroTraceModel
     public static const OPTIMIZED: String = "optimized";
     public static const MODE_MUTE: String = "modeMute";
     public static const MODE: String = "mode";
+    public static const ID: String = "id";
+    public static const SERIALISATION: String = "serialisation";
     
 }
 }

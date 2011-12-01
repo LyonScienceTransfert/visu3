@@ -8,12 +8,15 @@ package com.ithaca.documentarisation
 	import com.ithaca.documentarisation.renderer.SegmentVideoRenderer;
 	import com.ithaca.timeline.ObselSkin;
 	import com.ithaca.traces.Obsel;
-    import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.traces.model.RetroTraceModel;
+	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.ShareUserTitleWindow;
 	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
+	import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+	import com.ithaca.visu.traces.events.TracageEvent;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.view.video.VisuVisioAdvanced;
@@ -497,6 +500,14 @@ package com.ithaca.documentarisation
 					// notify change list segment
 					notifyChangeListSegment();
 				}
+                
+                // tracage removing segment
+                var retroDocumentDeleteTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+                retroDocumentDeleteTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_DELETE;
+                retroDocumentDeleteTracageEvent.id = removingSegment.segmentId;
+                retroDocumentDeleteTracageEvent.serialisation = removingSegment.getSegmentXML();
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentDeleteTracageEvent);
+                
 			}
 		}
 		protected function titleDocumentTextInput_changeHandler(event:TextOperationEvent):void

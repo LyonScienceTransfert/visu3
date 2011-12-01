@@ -235,6 +235,8 @@
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
                 // init listener, activity on session video
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on retro document blocks
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
