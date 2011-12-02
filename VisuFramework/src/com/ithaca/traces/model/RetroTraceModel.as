@@ -79,6 +79,8 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_BLOCK_DELETE: String = "RetroDocumentBlockDelete";
     // ** RetroDocumentBlockCreate(xsd:string createType : ["menu", "drag-drop"], xsd:string sourceType : ["title", "text", "video", "audio"],  xsd:string  sourceObsel // L'URI de l'obsel source, '' si c'est par menu)
     public static const RETRO_DOCUMENT_BLOCK_CREATE: String = "RetroDocumentBlockCreate";
+    // ** RetroDocumentBlockEdit( xsd:string serialisation, // serialisation nouvelle valeur (représentation XML du bloc) xsd:string diff // diff avec l'ancienne, sous forme d'un dictionnaire   JSON { cle1: ancienne_valeur1 }, cf exemple plus bas)
+    public static const RETRO_DOCUMENT_BLOCK_EDIT: String = "RetroDocumentBlockEdit";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -108,6 +110,7 @@ public final class RetroTraceModel
     public static const TITLE: String = "title";
     public static const VIDEO: String = "video";
     public static const AUDIO: String = "audio";
+    public static const DIFF: String = "diff";
     
 }
 }

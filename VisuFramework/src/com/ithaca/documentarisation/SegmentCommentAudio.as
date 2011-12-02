@@ -3,15 +3,22 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+import com.ithaca.visu.traces.events.TracageEvent;
 
+import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
+import flash.events.TimerEvent;
 import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.utils.Timer;
 
+import mx.collections.ArrayCollection;
 import mx.controls.Image;
+import mx.events.FlexEvent;
 
 import spark.components.HGroup;
 import spark.components.RichEditableText;
@@ -73,6 +80,12 @@ public class SegmentCommentAudio extends SkinnableComponent
 	private var _backGroundColorRichEditableText:String = "#FFFFFF";
 	// selected backgroundColor
 	private var colorBackGround:String = "#FFEBCC";
+    // current segment 
+    private var _tracedSegment:Segment;
+    // tracege interval in ms
+    private var TRACAGE_INTERVAL:Number = 10*1000;
+    // timer the trasage
+    private var _tracageTimer:Timer;    
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -202,6 +215,9 @@ public class SegmentCommentAudio extends SkinnableComponent
 	public function SegmentCommentAudio()
 	{
 		super();
+        this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
+        // check tracage when block remove from the stage
+        this.addEventListener(Event.REMOVED_FROM_STAGE, checkTracage);
 	}
 	//_____________________________________________________________________
 	//
@@ -335,12 +351,16 @@ public class SegmentCommentAudio extends SkinnableComponent
 		}else if(edit)
 		{
 			skinName = "edit";
+            // stop tracage timer
+            stopTracageTimer();
 		}else if(editOver)
 		{
 			skinName = "editOver";
 		}else if(selected)
 		{
 			skinName = "editSelected"
+            // start tracage timer
+            startTracageTimer();
 		}
 		return skinName;
 	}
@@ -410,6 +430,59 @@ public class SegmentCommentAudio extends SkinnableComponent
 		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
 		dispatchEvent(mouseDownIconSegment);
 	}
+
+    // creation the segment
+	private function onCreationComplete(event:FlexEvent = null):void
+	{
+        // save clone the segment for tracage the modifications
+        _tracedSegment = new Segment(segment.parentRetroDocument);
+        _tracedSegment.setSegmentXML(segment.getSegmentXML());
+	}
+    // check tracage modification the segment
+    private function checkTracage(event:* = null):void
+    {
+        trace("check tracage block audio => "+segment.segmentId);
+        // list modifications
+        var arr:ArrayCollection = new ArrayCollection();
+        var tempString:String;
+        // save modifications in format JSON
+        var diff:String = "{ ";
+        
+        // check modifications the comment
+        if(segment.comment != _tracedSegment.comment)
+        {
+            tempString = "'"+ RetroDocumentConst.TAG_COMMENT+"': '"+segment.comment+"'";
+            arr.addItem(tempString);
+        }
+        // check modification the duration audio
+        if(segment.durationCommentAudio != _tracedSegment.durationCommentAudio)
+        {
+            tempString = "'"+ RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+"': "+segment.durationCommentAudio.toString();
+            arr.addItem(tempString);
+        }
+        // nbr property of the segment was modified
+        var nbrElm:int = arr.length;
+        // tracage the modification
+        if(nbrElm > 0)
+        {
+            for(var nElm:int = 0; nElm < nbrElm-1; nElm++ )
+            {
+                diff = diff+arr.getItemAt(nElm) +",\n\t\t";
+            }
+            diff = diff + arr.getItemAt(nbrElm-1) + " }"; 
+            trace("tracage =>"+ diff);
+            // tracage modifications the audio block
+            var audioBlockTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+            audioBlockTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EDIT;
+            audioBlockTracageEvent.id = segment.segmentId;
+            audioBlockTracageEvent.serialisation = this._tracedSegment.getSegmentXML();
+            audioBlockTracageEvent.diff = diff
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(audioBlockTracageEvent);
+            
+            // save modifications of the segment 
+            onCreationComplete();
+        }
+    }
 		
 	//_____________________________________________________________________
 	//
@@ -428,6 +501,25 @@ public class SegmentCommentAudio extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 	
+    private function startTracageTimer():void
+    {
+        if(!_tracageTimer)
+        {
+            _tracageTimer = new Timer(this.TRACAGE_INTERVAL,0);
+            _tracageTimer.addEventListener(TimerEvent.TIMER, checkTracage);
+        }
+        _tracageTimer.start();
+    }
+    private function stopTracageTimer():void
+    {
+        if(_tracageTimer)
+        {
+            // check tracage if user deselected segment
+            checkTracage();
+            _tracageTimer.stop();
+        }
+    }
+    
 	private function setRichEditText():void
 	{
 		richEditableText.text = "Cliquer ici pour enregistrer un commentaire";
