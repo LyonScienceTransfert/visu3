@@ -342,7 +342,7 @@
                     // loader fro tracage activity TL
                     var loaderTracage:URLLoader=new URLLoader();			
                     loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
-                    loaderTracage.load(new URLRequest("layouts/layout.xml"));	
+                    loaderTracage.load(new URLRequest("layout.xml"));	
                                        
 				}
 				// add drag listener
