@@ -878,14 +878,8 @@
              */
             protected function timeLine_creationCompleteHandler(event:FlexEvent):void
             {
-                
-                // start tracage activity on TimeLine
-                timeLine.startActivityTracing();
-
-                // trace the Timeline
-              //  var traceTimeline:Trace = TraceManager.getTrace("timeline"); 
-                
-                var traceTimeline: Trace = timeLine.activity;
+                // start activity tracing on TimeLine
+                var traceTimeline: Trace = timeLine.startActivityTracing();
                 // do not automatically synchronize with the KTBS/BDD
                 traceTimeline.autosync = false;
                               
@@ -900,7 +894,10 @@
                 // add listener adding new obsel
                 listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
                 
-                timeLineTracage.addTrace(traceVisu);	
+                var tlg : TraceLineGroup = timeLineTracage.addTrace(traceVisu);
+                tlg.setStyle( "title", "Timeline" );
+                /* Assume a default session time of 5 minutes, so that the initial display is meaningful */                
+                timelineTracage.range.addTime(tlg.traceBegin, tlg.traceBegin + 5 * 60 * 1000);
             }
 
             /**
