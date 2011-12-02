@@ -138,6 +138,13 @@ public class TracageManager
                 }
 
                 break;
+            
+            case RetroTraceModel.RETRO_DOCUMENT_BLOCK_EDIT:
+                
+                props[RetroTraceModel.SERIALISATION] = event.serialisation;
+                props[RetroTraceModel.DIFF] = event.diff;
+
+                break;
             }
 
             TraceManager.trace("visu", typeObsel, props);
@@ -203,7 +210,7 @@ public class TracageManager
         
         // activity on Timeline
         case TracageEvent.ACTIVITY_TIME_LINE :
-            var obselRetroRoom:Obsel = obselTimeLine.clone();
+            var obselRetroRoom:Obsel = Obsel.fromRDF(obselTimeLine.rdf)
             obselRetroRoom.begin = currentTime;
             // TODO : duration obsel 
             obselRetroRoom.end = currentTime;

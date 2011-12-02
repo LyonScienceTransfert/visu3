@@ -90,6 +90,7 @@ public class TracageEvent extends Event
     public var createType:String;
     public var sourceType:String;
     public var obsel:Obsel;
+    public var diff:String;
     
     
     public var value:Object;
