@@ -210,7 +210,7 @@ public class TracageManager
         
         // activity on Timeline
         case TracageEvent.ACTIVITY_TIME_LINE :
-            var obselRetroRoom:Obsel = Obsel.fromRDF(obselTimeLine.rdf)
+            var obselRetroRoom:Obsel = obselTimeLine.clone();
             obselRetroRoom.begin = currentTime;
             // TODO : duration obsel 
             obselRetroRoom.end = currentTime;
