@@ -512,7 +512,7 @@ public class SegmentCommentAudio extends SkinnableComponent
     }
     private function stopTracageTimer():void
     {
-        if(_tracageTimer)
+        if(_tracageTimer && _tracageTimer.running)
         {
             // check tracage if user deselected segment
             checkTracage();
