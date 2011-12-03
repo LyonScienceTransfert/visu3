@@ -338,12 +338,6 @@
 					var loader:URLLoader=new URLLoader();			
 					loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
 					loader.load(new URLRequest("layoutVisu2.xml"));	
-                    
-                    // loader fro tracage activity TL
-                    var loaderTracage:URLLoader=new URLLoader();			
-                    loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
-                    loaderTracage.load(new URLRequest("layout.xml"));	
-                                       
 				}
 				// add drag listener
 				setListenerDragVideo();
@@ -431,6 +425,9 @@
                 var currentTime:Number = Model.getInstance().getTimeServeur();
                 // duration 10 minutes
                 timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
+                
+                var traceVisu:Trace = TraceManager.getTrace("visu");
+                timeLineTracage.addTrace(traceVisu);
                 
             }
                        
@@ -894,10 +891,21 @@
                 // add listener adding new obsel
                 listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
                 
-                var tlg : TraceLineGroup = timeLineTracage.addTrace(traceVisu);
-                tlg.setStyle( "title", "Timeline" );
+               /*  var tlg : TraceLineGroup = timeLineTracage.addTrace(traceVisu);
+                tlg.setStyle( "title", "Timeline" ); */
                 /* Assume a default session time of 5 minutes, so that the initial display is meaningful */                
-                timelineTracage.range.addTime(tlg.traceBegin, tlg.traceBegin + 5 * 60 * 1000);
+              //  timelineTracage.range.addTime(tlg.traceBegin, tlg.traceBegin + 5 * 60 * 1000);
+            }
+            /**
+             * TimelineTracage create handler
+             * @event
+             */
+            protected function timeLineTracage_creationCompleteHandler(event:FlexEvent):void
+            {
+                // loader for tracage activity TL
+                var loaderTracage:URLLoader=new URLLoader();			
+                loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
+                loaderTracage.load(new URLRequest("layout.xml"));	
             }
 
             /**
@@ -1489,18 +1497,7 @@
 				
 				timeLineGroup.addElement(timeLine);
                 
-                // timelina activity
-                timeLineTracage = new Timeline();
-                
-                timeLineTracage.percentHeight = 100;
-                timeLineTracage.percentWidth = 100;
-                timeLineTracage.setStyle("timeMode","relative");
-                timeLineTracage.contextFollowCursor = false;
-                timeLineTracage.setStyle("cursorMode","auto");
-                timeLineTracage.showPlayButton = false;
-                
-       //         tracageTimeLineGroup = new Group();
-                tracageTimeLineGroup.addElement(timeLineTracage);
+               
 			}
 			
 			private function getObsels():void
@@ -1511,15 +1508,27 @@
 			}
 
 
-           /*  protected function tnTimeline_changeHandler(event:IndexChangedEvent):void
+            protected function tnTimeline_changeHandler(event:IndexChangedEvent):void
             {
-               if(!timeLineTracageAddedOnStage)
+               if(!timeLineTracage)
                {
-                   ncTracage.addElement(tracageTimeLineGroup);
-                   timeLineTracageAddedOnStage = true;
+                   // timelina activity
+                   timeLineTracage = new Timeline();
+                   
+                   timeLineTracage.percentHeight = 100;
+                   timeLineTracage.percentWidth = 100;
+                   timeLineTracage.setStyle("timeMode","relative");
+                   timeLineTracage.contextFollowCursor = false;
+                   timeLineTracage.setStyle("cursorMode","auto");
+                   timeLineTracage.showPlayButton = false;
+                   
+                   timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
+                   
+                   tracageTimeLineGroup.addElement(timeLineTracage);
                }
             }
- */
+            
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1580,17 +1589,18 @@
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
 					</s:Group>
-                   <!-- <mx:TabNavigator id="tnTimeline" width="100%" height="100%" change="tnTimeline_changeHandler(event)">
+                   <mx:TabNavigator id="tnTimeline" width="100%" height="100%" change="tnTimeline_changeHandler(event)">
                         <s:NavigatorContent label="Synchro TL">
     					    <s:Group id="timeLineGroup" width="100%" height="100%"/>
                         </s:NavigatorContent>
                         <s:NavigatorContent label="Activities TL" id="ncTracage">
+                            <s:Group id="tracageTimeLineGroup" width="100%" height="100%"/>
                         </s:NavigatorContent>
-                    </mx:TabNavigator>-->
-					<s:HGroup width="100%" height="100%">
+                    </mx:TabNavigator>
+<!--					<s:HGroup width="100%" height="100%">
                         <s:Group id="timeLineGroup" width="100%" height="100%"/>
                         <s:Group id="tracageTimeLineGroup" width="100%" height="100%"/>
-                    </s:HGroup>
+                    </s:HGroup>-->
 					<!--<timeline:Timeline id="timeLine" width="100%"  height="100%" 
 					    playButtonClick="timeLine_playButtonClickHandler(event)"
 						pauseButtonClick="timeLine_pauseButtonClickHandler(event)"
