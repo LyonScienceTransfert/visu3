@@ -61,7 +61,9 @@
 				for(var nSegment:int = 0; nSegment < nbrSegment; nSegment++)
 				{
 					var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
-					if(!(segment.comment == "" && segment.durationCommentAudio == 0))
+                    var typeSegment:String = segment.typeSource;
+					if(!(segment.comment == "" && segment.durationCommentAudio == 0) ||
+                        (typeSegment == RetroDocumentConst.VIDEO_SEGMENT))
 					{
 						listSegmentClean.addItem(segment);
 					}
