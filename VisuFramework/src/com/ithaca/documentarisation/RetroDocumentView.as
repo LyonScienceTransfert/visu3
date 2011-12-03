@@ -9,7 +9,6 @@ package com.ithaca.documentarisation
 	import com.ithaca.timeline.ObselSkin;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.model.RetroTraceModel;
-	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.utils.ShareUserTitleWindow;
 	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.UserEvent;
@@ -31,7 +30,6 @@ package com.ithaca.documentarisation
 	import gnu.as3.gettext._FxGettext;
 	
 	import mx.collections.ArrayCollection;
-	import mx.collections.IList;
 	import mx.controls.Alert;
 	import mx.controls.Button;
 	import mx.controls.Menu;
@@ -325,6 +323,12 @@ package com.ithaca.documentarisation
 			clickButtonSwitchEvent.idRetroDocument = retroDocument.id;
 			clickButtonSwitchEvent.sessionId = retroDocument.sessionId;
 			dispatchEvent(clickButtonSwitchEvent);
+            
+            // tracage view retrodocument
+            var retroDocumentViewTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+            retroDocumentViewTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_VIEW;
+            retroDocumentViewTracageEvent.retroDocumentId = _retroDocument.id;
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentViewTracageEvent);
 		}
 		
 		private function onRemoveDocument(event:MouseEvent):void
@@ -659,6 +663,8 @@ package com.ithaca.documentarisation
 				removeRetroDocumentEvent.idRetroDocument = this._retroDocument.id;
 				removeRetroDocumentEvent.sessionId = this._retroDocument.sessionId;
 				this.dispatchEvent(removeRetroDocumentEvent);
+
+
 			}
 		}
 
