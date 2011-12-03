@@ -83,6 +83,10 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_BLOCK_EDIT: String = "RetroDocumentBlockEdit";
     // ** RetroDocumentCreate()
     public static const RETRO_DOCUMENT_CREATE: String = "RetroDocumentCreate";
+    // ** RetroDocumentDelete()
+    public static const RETRO_DOCUMENT_DELETE: String = "RetroDocumentDelete";
+    // ** RetroDocumentView() // passage à la visualisation du bilan, aller vers Bilan module
+    public static const RETRO_DOCUMENT_VIEW: String = "RetroDocumentView";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -113,6 +117,7 @@ public final class RetroTraceModel
     public static const VIDEO: String = "video";
     public static const AUDIO: String = "audio";
     public static const DIFF: String = "diff";
+    public static const RETRO_DOCUMENT_ID: String = "retroDocumentId";
     
 }
 }
