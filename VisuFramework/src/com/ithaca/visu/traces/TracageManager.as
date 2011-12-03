@@ -116,6 +116,30 @@ public class TracageManager
 
         switch (typeActivity)
         {
+        
+        
+        // activity on retro document 
+        case TracageEvent.ACTIVITY_RETRO_DOCUMENT :
+
+            props[RetroTraceModel.RETRO_DOCUMENT_ID] = event.retroDocumentId;
+            
+            switch (typeObsel)
+            {
+            case RetroTraceModel.RETRO_DOCUMENT_CREATE:
+                
+                break;
+            case RetroTraceModel.RETRO_DOCUMENT_DELETE:
+                
+                break;
+            case RetroTraceModel.RETRO_DOCUMENT_VIEW:
+                
+                break;
+            
+            }
+
+            TraceManager.trace("visu", typeObsel, props);
+            
+            break;
         // activity on retro document blocks
         case TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK :
 

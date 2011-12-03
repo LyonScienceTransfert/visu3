@@ -74,6 +74,7 @@ public class TracageEvent extends Event
     static public const ACTIVITY_USER_VIDEO : String = 'activityUserVideo';
     static public const ACTIVITY_SESSION_VIDEO : String = 'activitySessionVideo';
     static public const ACTIVITY_RETRO_DOCUMENT_BLOCK : String = 'activityRetroDocumentBlock';
+    static public const ACTIVITY_RETRO_DOCUMENT : String = 'activityRetroDocument';
     
     // properties
     public var typeActivity:String;
@@ -91,6 +92,7 @@ public class TracageEvent extends Event
     public var sourceType:String;
     public var obsel:Obsel;
     public var diff:String;
+    public var retroDocumentId:int;
     
     
     public var value:Object;

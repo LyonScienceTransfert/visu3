@@ -81,6 +81,8 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_BLOCK_CREATE: String = "RetroDocumentBlockCreate";
     // ** RetroDocumentBlockEdit( xsd:string serialisation, // serialisation nouvelle valeur (représentation XML du bloc) xsd:string diff // diff avec l'ancienne, sous forme d'un dictionnaire   JSON { cle1: ancienne_valeur1 }, cf exemple plus bas)
     public static const RETRO_DOCUMENT_BLOCK_EDIT: String = "RetroDocumentBlockEdit";
+    // ** RetroDocumentCreate()
+    public static const RETRO_DOCUMENT_CREATE: String = "RetroDocumentCreate";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
