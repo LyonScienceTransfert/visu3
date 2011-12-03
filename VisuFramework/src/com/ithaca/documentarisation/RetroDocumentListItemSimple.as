@@ -1,9 +1,12 @@
 package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
+import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.utils.components.IconInfoSegment;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
+import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.IconEnum;
 
 import flash.events.MouseEvent;
@@ -13,9 +16,7 @@ import gnu.as3.gettext._FxGettext;
 
 import mx.controls.Alert;
 import mx.controls.Menu;
-import mx.controls.PopUpButton;
 import mx.events.CloseEvent;
-import mx.events.MenuEvent;
 
 import spark.components.Label;
 import spark.components.supportClasses.SkinnableComponent;
@@ -208,10 +209,17 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	{
 		if( event.detail == Alert.YES)
 		{
+            // tracage delete retrodocument
+            var retroDocumentDeleteTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+            retroDocumentDeleteTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_DELETE;
+            retroDocumentDeleteTracageEvent.retroDocumentId = retroDocumentVO.documentId;
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentDeleteTracageEvent);
+            
 			var removeRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.DELETE_RETRO_DOCUMENT);
 			removeRetroDocumentEvent.idRetroDocument = retroDocumentVO.documentId;
 			removeRetroDocumentEvent.sessionId = retroDocumentVO.sessionId;
 			this.dispatchEvent(removeRetroDocumentEvent);
+            
 		}
 	}
 	//_____________________________________________________________________
