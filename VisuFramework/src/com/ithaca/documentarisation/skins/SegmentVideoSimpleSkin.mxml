@@ -96,7 +96,7 @@
 				<components:toolTip>Suprimer ce segment</components:toolTip>
 			</components:IconDelete>
 		</s:HGroup>
-		<s:HGroup width="100%" gap="0"
+		<s:HGroup id="groupText" width="100%" gap="0"
 			paddingLeft.edit="16"
 			paddingLeft.editOver="16"
 			paddingLeft.editPause="16"

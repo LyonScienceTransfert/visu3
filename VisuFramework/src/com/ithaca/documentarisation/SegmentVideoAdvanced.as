@@ -19,6 +19,7 @@ import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
 
+import spark.components.HGroup;
 import spark.components.Label;
 import spark.components.RichEditableText;
 import spark.components.Spinner;
@@ -60,6 +61,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	[SkinPart("true")]
 	public var richEditableText:RichEditableText;
 
+    [SkinPart("true")]
+    public var groupText:HGroup;
+    
 	[SkinPart("true")]
 	public var screenShot:Image;
 
@@ -381,6 +385,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 					screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
 				}
 			}
+            
+            // check text
+            if(!modeEdit && text == "")
+            {
+                groupText.includeInLayout = groupText.visible = false;
+            }
 		}
 		if(currentTimeChange)
 		{
