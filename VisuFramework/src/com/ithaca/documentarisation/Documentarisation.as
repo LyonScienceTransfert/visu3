@@ -2,10 +2,13 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
+import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.utils.components.PanelButton;
 import com.ithaca.visu.events.PanelButtonEvent;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
+import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+import com.ithaca.visu.traces.events.TracageEvent;
 
 import flash.events.MouseEvent;
 
@@ -84,6 +87,12 @@ public class Documentarisation extends SkinnableComponent
 				break;
 			}
 		}
+        
+        // tracage add retrodocument
+        var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+        retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_CREATE;
+        retroDocumentTracageEvent.retroDocumentId = value;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
 	}
 	public function updateListSegment(value:String):void
 	{
