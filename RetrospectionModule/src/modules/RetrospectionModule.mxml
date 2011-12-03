@@ -243,6 +243,8 @@
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
                 // init listener, activity on retro document blocks
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on retro document 
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -367,7 +369,7 @@
 					var traceComment:Trace = Model.getInstance().getTraceComment();				
 					var tlgComment : TraceLineGroup;
 					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
-					tlgComment .setStyle( "title", fxgt.gettext("Comments") );
+					tlgComment.setStyle( "title", fxgt.gettext("Comments") );
 	
 					var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
 					if(listTraceGroup != null)
@@ -427,7 +429,7 @@
                 timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
                 
                 var traceVisu:Trace = TraceManager.getTrace("visu");
-                timeLineTracage.addTrace(traceVisu);
+                var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities");
                 
             }
                        
