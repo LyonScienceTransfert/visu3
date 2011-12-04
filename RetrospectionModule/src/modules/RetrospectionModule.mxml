@@ -48,6 +48,7 @@
             import com.ithaca.visu.traces.events.TracageEvent;
             import com.ithaca.visu.ui.utils.ConnectionStatus;
             import com.ithaca.visu.ui.utils.IconEnum;
+            import com.ithaca.visu.ui.utils.RoleEnum;
             import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
             import com.ithaca.visu.view.video.model.StreamObsel;
             
@@ -245,6 +246,12 @@
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
                 // init listener, activity on retro document 
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
+                
+                // show timeline activity only for responsable and admin
+                if(Model.getInstance().getLoggedUser().role < RoleEnum.RESPONSABLE)
+                {
+                    tnTimeline.removeElement(ncTracage);
+                }
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -1514,19 +1521,30 @@
             {
                if(!timeLineTracage)
                {
-                   // timelina activity
-                   timeLineTracage = new Timeline();
-                   
-                   timeLineTracage.percentHeight = 100;
-                   timeLineTracage.percentWidth = 100;
-                   timeLineTracage.setStyle("timeMode","relative");
-                   timeLineTracage.contextFollowCursor = false;
-                   timeLineTracage.setStyle("cursorMode","auto");
-                   timeLineTracage.showPlayButton = false;
-                   
-                   timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
-                   
-                   tracageTimeLineGroup.addElement(timeLineTracage);
+                   // check if user was presented in selected session, has trace salon synchrone
+                   var retroTraciId:String = Model.getInstance().getTraceIdRetroRoom();
+                   if(retroTraciId == null)
+                   {
+                       tracageTimeLineGroup.removeAllElements();
+                       var label:Label = new Label();
+                       label.text = "   vous n'aves pas de trace de salon synchrone pour cette séance";
+                       tracageTimeLineGroup.addElement(label);
+                   }else
+                   {
+                       // timelina activity
+                       timeLineTracage = new Timeline();
+                       
+                       timeLineTracage.percentHeight = 100;
+                       timeLineTracage.percentWidth = 100;
+                       timeLineTracage.setStyle("timeMode","relative");
+                       timeLineTracage.contextFollowCursor = false;
+                       timeLineTracage.setStyle("cursorMode","auto");
+                       timeLineTracage.showPlayButton = false;
+                       
+                       timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
+                       
+                       tracageTimeLineGroup.addElement(timeLineTracage);
+                   }
                }
             }
             
@@ -1592,7 +1610,7 @@
 						</s:HGroup>
 					</s:Group>
                    <mx:TabNavigator id="tnTimeline" width="100%" height="100%" change="tnTimeline_changeHandler(event)">
-                        <s:NavigatorContent label="Synchro TL">
+                        <s:NavigatorContent label="Synchro TL" id="ncTimeline">
     					    <s:Group id="timeLineGroup" width="100%" height="100%"/>
                         </s:NavigatorContent>
                         <s:NavigatorContent label="Activities TL" id="ncTracage">
