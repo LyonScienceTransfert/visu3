@@ -277,7 +277,8 @@ public class ObselInfo {
 		if(listTraceId.size() == 0)
 		{
 			log.warn(nameUser + " hasn't trace for retrospection module. ");
-			return;
+			traceRetroId = null;
+			traceId = null;
 		}else
 		{
 			log.warn(nameUser + " has trace, was recorded.");
@@ -314,31 +315,31 @@ public class ObselInfo {
 			}
 			log.warn("traceRetroId = {}",traceRetroId );
 			// set traceId retrospection module
-			client.setAttribute("traceRetroId", traceRetroId);		
+			client.setAttribute("traceRetroId", traceRetroId);	
+			
+			// add obsel "RetroRoomEnter"
+			List<Object> paramsObsel= new ArrayList<Object>();
+			paramsObsel.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObsel.add(traceId);
+			paramsObsel.add(ObselType.REFERER);paramsObsel.add("void");
+			paramsObsel.add(ObselType.SESSION_ID);paramsObsel.add(String.valueOf(session.getId_session()));
+			paramsObsel.add(ObselType.SESSION_TITLE);paramsObsel.add(session.getTheme());
+			paramsObsel.add(ObselType.SESSION_DESCRIPTION);paramsObsel.add(session.getDescription());
+			paramsObsel.add(ObselType.SESSION_START_RECORD_DATE);paramsObsel.add(Long.toString(session.getStart_recording().getTime()));
+			paramsObsel.add(ObselType.SESSION_OWNER_ID);paramsObsel.add(String.valueOf(session.getId_user()));
+			
+			Obsel obsel = null;
+			try
+			{
+				obsel = app.setObsel(userId, traceRetroId, ObselType.RETRO_ROOM_ENTER , paramsObsel);					
+			}
+			catch (SQLException sqle)
+			{
+				log.error("=====Errors===== {}", sqle);
+			}
+			log.debug("------------- OBSEL SalonRetroSESSIONin START---------------------");
+			log.warn(obsel.toString());
+			log.debug("------------- OBSEL SalonRetroSESSIONin END---------------------");
 		}
-				
-		// add obsel "RetroRoomEnter"
-		List<Object> paramsObsel= new ArrayList<Object>();
-		paramsObsel.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObsel.add(traceId);
-		paramsObsel.add(ObselType.REFERER);paramsObsel.add("void");
-		paramsObsel.add(ObselType.SESSION_ID);paramsObsel.add(String.valueOf(session.getId_session()));
-		paramsObsel.add(ObselType.SESSION_TITLE);paramsObsel.add(session.getTheme());
-		paramsObsel.add(ObselType.SESSION_DESCRIPTION);paramsObsel.add(session.getDescription());
-		paramsObsel.add(ObselType.SESSION_START_RECORD_DATE);paramsObsel.add(Long.toString(session.getStart_recording().getTime()));
-		paramsObsel.add(ObselType.SESSION_OWNER_ID);paramsObsel.add(String.valueOf(session.getId_user()));
-		
-		Obsel obsel = null;
-		try
-		{
-			obsel = app.setObsel(userId, traceRetroId, ObselType.RETRO_ROOM_ENTER , paramsObsel);					
-		}
-		catch (SQLException sqle)
-		{
-			log.error("=====Errors===== {}", sqle);
-		}
-		log.debug("------------- OBSEL SalonRetroSESSIONin START---------------------");
-		log.warn(obsel.toString());
-		log.debug("------------- OBSEL SalonRetroSESSIONin END---------------------");
 
 		Object[] args = { traceRetroId, traceId };
 		IConnection connClient = (IConnection) client
