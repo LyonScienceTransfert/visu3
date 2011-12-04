@@ -248,7 +248,7 @@ public class SegmentTitle extends SkinnableComponent
 			setRichEditText();
 		}else
 		{
-			segment.comment = textSegment.text;
+            _text = textSegment.text;
 		}
 		textSegment.removeEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
