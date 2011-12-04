@@ -428,15 +428,14 @@
                     // create timeLineTracage
                     timeLineTracage.layoutXML 		= new XML( loader.data );
                     timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 	
-                    
-                    
-                }
-                var currentTime:Number = Model.getInstance().getTimeServeur();
-                // duration 10 minutes
-                timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
                 
-                var traceVisu:Trace = TraceManager.getTrace("visu");
-                var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities");
+                    var currentTime:Number = Model.getInstance().getTimeServeur();
+                    // duration 10 minutes
+                    timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
+                    
+                    var traceVisu:Trace = TraceManager.getTrace("visu");
+                    var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities");
+                }
                 
             }
                        
@@ -883,27 +882,29 @@
              * @event
              */
             protected function timeLine_creationCompleteHandler(event:FlexEvent):void
-            {
-                // start activity tracing on TimeLine
-                var traceTimeline: Trace = timeLine.startActivityTracing();
-                // do not automatically synchronize with the KTBS/BDD
-                traceTimeline.autosync = false;
-                              
-                var traceVisu:Trace = TraceManager.initTrace("visu");
-                // traceId Retro room
-                traceVisu.uri = Model.getInstance().getTraceIdRetroRoom();
-                // set subject
-                traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
-                Trace.init_remote( Model.getInstance().AMFServer);
+            {           
+                // do tracage if has trace id retro room
+                if(Model.getInstance().getTraceIdRetroRoom())
+                {
+                    var traceVisu:Trace = TraceManager.initTrace("visu");
+                    // traceId Retro room
+                    traceVisu.uri = Model.getInstance().getTraceIdRetroRoom();
+                    // set subject
+                    traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
+                    Trace.init_remote( Model.getInstance().AMFServer);
+                    
+                    // FIXME : before tracing have to add listener 
+                    // TODO : initActivityTracing => startTracing
+                    // start activity tracing on TimeLine
+                    var traceTimeline: Trace = timeLine.startActivityTracing();
+                    // do not automatically synchronize with the KTBS/BDD
+                    traceTimeline.autosync = false;
+                    
+                    var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
+                    // add listener adding new obsel
+                    listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
+                }
                 
-                var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
-                // add listener adding new obsel
-                listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
-                
-               /*  var tlg : TraceLineGroup = timeLineTracage.addTrace(traceVisu);
-                tlg.setStyle( "title", "Timeline" ); */
-                /* Assume a default session time of 5 minutes, so that the initial display is meaningful */                
-              //  timelineTracage.range.addTime(tlg.traceBegin, tlg.traceBegin + 5 * 60 * 1000);
             }
             /**
              * TimelineTracage create handler

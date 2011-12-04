@@ -64,10 +64,8 @@ package com.ithaca.visu.traces
 {
 
 import com.ithaca.traces.Obsel;
-import com.ithaca.traces.Trace;
 import com.ithaca.traces.TraceManager;
 import com.ithaca.traces.model.RetroTraceModel;
-import com.ithaca.traces.model.TraceModel;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.traces.events.TracageEvent;
 
@@ -103,6 +101,8 @@ public class TracageManager
         var currentTime:Number = Model.getInstance().getTimeServeur();
         // traceId salon Synchro room
         var parentTraceId:String = Model.getInstance().getParentTraceId();
+        // traceId salon retro
+        var retroTraceId:String = Model.getInstance().getTraceIdRetroRoom();
         // obsel the TimeLine
         var obselTimeLine:Obsel = event.obsel;
         // type obsel activity
@@ -239,6 +239,7 @@ public class TracageManager
             // TODO : duration obsel 
             obselRetroRoom.end = currentTime;
             obselRetroRoom.props[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
+            obselRetroRoom.uri = retroTraceId;
             
             TraceManager.trace("visu",obselRetroRoom.type, obselRetroRoom.props);
             
