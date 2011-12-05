@@ -128,15 +128,23 @@ public class TracageManager
             case RetroTraceModel.RETRO_DOCUMENT_CREATE:
                 
                 break;
+            
             case RetroTraceModel.RETRO_DOCUMENT_DELETE:
                 
                 break;
+            
             case RetroTraceModel.RETRO_DOCUMENT_VIEW:
                 
                 break;
+            
             case RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE:
                 
                 props[RetroTraceModel.TITLE] = event.title;
+                break;
+            
+            case RetroTraceModel.RETRO_DOCUMENT_EDIT_SHARE:
+                
+                props[RetroTraceModel.USER_LIST] = event.userList;
                 break;
             
             }

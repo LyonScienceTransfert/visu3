@@ -91,6 +91,8 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_VIEW: String = "RetroDocumentView";
     // *** RetroDocumentEditTitle(xsd:string title)
     public static const RETRO_DOCUMENT_EDIT_TITLE: String = "RetroDocumentEditTitle";
+    // *** RetroDocumentEditShare(... userList) // modification du partage du bilan
+    public static const RETRO_DOCUMENT_EDIT_SHARE: String = "RetroDocumentEditShare";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -131,6 +133,7 @@ public final class RetroTraceModel
     public static const WATCH_BLOCK_VIDEO: String = "watch_block_video";
     public static const PAUSE_BLOCK_VIDEO: String = "pause_block_video";
     public static const STOP_BLOCK_VIDEO: String = "stop_block_video";
+    public static const USER_LIST: String = "userList";
     
 }
 }
