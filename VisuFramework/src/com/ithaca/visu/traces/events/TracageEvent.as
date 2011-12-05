@@ -96,6 +96,7 @@ public class TracageEvent extends Event
     public var exploreType:String;
     public var title:String;
     public var userList:Array;
+    public var newOrder:Array;
     
     
     public var value:Object;
