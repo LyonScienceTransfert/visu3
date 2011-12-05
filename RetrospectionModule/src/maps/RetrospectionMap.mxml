@@ -7,8 +7,6 @@
 	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 	
 	<fx:Script><![CDATA[
-		import business.RetrospectionManager;
-		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
 		import com.ithaca.documentarisation.events.AudioRecorderEvent;
@@ -22,13 +20,15 @@
 		import com.ithaca.visu.model.Model;
 		
 		import mx.events.FlexEvent;
+        
+        import business.RetrospectionManager;
+        
 		private var ALL_INFO:int = 777;
 		
 	]]></fx:Script>
-	
+    
 	<fx:Declarations>
 		<mate:Debugger level="{Debugger.ALL}"/>
-		
 		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->
 		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
 			<mate:ObjectBuilder generator="{RetrospectionManager}" constructorArguments="{scope.dispatcher}"/>
@@ -47,12 +47,12 @@
 			makeObjectsBindable="true"
 			showBusyCursor="true">
 		</s:RemoteObject>	
-		
-		<mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="sessionInfo.getListClosedSessionByUser"   arguments="{[]}" />
-			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
+
+        <mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION}" debug="true">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+                <mate:Request action="sessionInfo.getListClosedSessionByUser"   arguments="{[]}" />
+            </rtmp:RtmpServiceInvoker>
+        </mate:EventHandlers>
 		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION_ALL}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
@@ -93,7 +93,7 @@
 				<mate:Request action="obselInfo.goInSalonRetro"   arguments="{[]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-		
+<!--		
 		<mate:EventHandlers type="{SalonRetroEvent.ACTION_ON_VIDEO_PLAYER}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroRoom.retroRoomVideoEvent"   arguments="{[event.typeAction, event.timePlayer]}" />
@@ -129,7 +129,7 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroRoom.retroStartCancelEditCommentEvent"   arguments="{[ event.typeAction, event.timeObselBegin, event.timeObselEnd, event.timeStamp, event.text, event.editTypeCancel ]}" />
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
+		</mate:EventHandlers>-->
 <!-- DOCUMENTARISATION -->
 		<mate:EventHandlers type="{RetroDocumentEvent.LOAD_RETRO_DOCUMENT}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
