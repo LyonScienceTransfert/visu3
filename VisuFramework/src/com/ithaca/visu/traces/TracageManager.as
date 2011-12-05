@@ -169,6 +169,12 @@ public class TracageManager
                 props[RetroTraceModel.DIFF] = event.diff;
 
                 break;
+            
+            case RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE:
+                
+                props[RetroTraceModel.EXPLORE_TYPE] = event.exploreType;
+
+                break;
             }
 
             TraceManager.trace("visu", typeObsel, props);

@@ -460,11 +460,15 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}else if(editOver)
 		{
 			skinName = "editOver";
+            // tracage over block
+            traceBlockOver();
 		}else if(editSelected)
 		{
 			skinName = "editSelected";
             // start tracage timer
             startTracageTimer();
+            // tracage selected block
+            traceSelectedBlock();
 		}else if(editPlay)
 		{
 			skinName = "editPlay";
@@ -512,6 +516,13 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		
 		var endTimeS:Number = Math.floor(_timeEnd / 1000); 
 		labelDuration.text = TimeUtils.formatTimeString(endTimeS); 
+        
+        // tracage block video
+        var blockVideoTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockVideoTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockVideoTracageEvent.exploreType = RetroTraceModel.WATCH_BLOCK_VIDEO;
+        blockVideoTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockVideoTracageEvent);
 	}
 	
 	private function onClickImagePause(event:MouseEvent):void
@@ -521,6 +532,13 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		
 		var playSegmentVideoEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PAUSE_RETRO_SEGMENT);
 		dispatchEvent(playSegmentVideoEvent);
+        
+        // tracage block video
+        var blockVideoTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockVideoTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockVideoTracageEvent.exploreType = RetroTraceModel.PAUSE_BLOCK_VIDEO;
+        blockVideoTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockVideoTracageEvent);
 	}
 	
 	private function onClickImageJumpStart(event:*=null):void
@@ -543,7 +561,15 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		
 		var playSegmentVideoEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.STOP_RETRO_SEGMENT);
 		dispatchEvent(playSegmentVideoEvent);
+        
+        // tracage block video
+        var blockVideoTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockVideoTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockVideoTracageEvent.exploreType = RetroTraceModel.STOP_BLOCK_VIDEO;
+        blockVideoTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockVideoTracageEvent);
 	}
+    
 	private function onClickIconDelete(event:MouseEvent):void
 	{
 		var removeSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_REMOVE_SEGMENT);
@@ -665,13 +691,13 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             }
             diff = diff + arr.getItemAt(nbrElm-1) + " }"; 
             trace("tracage =>"+ diff);
-            // tracage modifications the audio block
-            var audioBlockTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
-            audioBlockTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EDIT;
-            audioBlockTracageEvent.id = segment.segmentId;
-            audioBlockTracageEvent.serialisation = this._tracedSegment.getSegmentXML();
-            audioBlockTracageEvent.diff = diff
-            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(audioBlockTracageEvent);
+            // tracage modifications the video block
+            var videoBlockTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+            videoBlockTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EDIT;
+            videoBlockTracageEvent.id = segment.segmentId;
+            videoBlockTracageEvent.serialisation = this._tracedSegment.getSegmentXML();
+            videoBlockTracageEvent.diff = diff
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoBlockTracageEvent);
             
             // save modifications of the segment 
             onCreationComplete();
@@ -695,6 +721,30 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 	
+    /**
+     * tracage over block
+     */
+    private function traceBlockOver():void
+    {
+        // tracage block audio
+        var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockAudioTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockAudioTracageEvent.exploreType = RetroTraceModel.OVER;
+        blockAudioTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+    }
+    /**
+     * tracage selected block
+     */
+    private function traceSelectedBlock():void
+    {
+        // tracage block audio
+        var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockAudioTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockAudioTracageEvent.exploreType = RetroTraceModel.SELECTED;
+        blockAudioTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+    }
     private function startTracageTimer():void
     {
         if(!_tracageTimer)

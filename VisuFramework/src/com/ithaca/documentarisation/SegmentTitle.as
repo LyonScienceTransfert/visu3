@@ -197,11 +197,15 @@ public class SegmentTitle extends SkinnableComponent
 				skinName = "editSelected";
                 // start tracage timer
                 startTracageTimer();
+                // tracage selected block
+                traceSelectedBlock();
 			}else
 			{
 				skinName = "edit";
                 // stop tracage timer
                 stopTracageTimer();
+                // tracage over block
+                traceBlockOver();
 			}
 		}
 		else {
@@ -334,6 +338,31 @@ public class SegmentTitle extends SkinnableComponent
 	// Utils
 	//
 	//_____________________________________________________________________
+    /**
+     * tracage over block
+     */
+    private function traceBlockOver():void
+    {
+        // tracage block audio
+        var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockAudioTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockAudioTracageEvent.exploreType = RetroTraceModel.OVER;
+        blockAudioTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+    }
+    /**
+     * tracage selected block
+     */
+    private function traceSelectedBlock():void
+    {
+        // tracage block audio
+        var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockAudioTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockAudioTracageEvent.exploreType = RetroTraceModel.SELECTED;
+        blockAudioTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+    }
+    
     private function startTracageTimer():void
     {
         if(!_tracageTimer)
