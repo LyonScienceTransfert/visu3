@@ -131,7 +131,7 @@
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>-->
 <!-- DOCUMENTARISATION -->
-		<mate:EventHandlers type="{RetroDocumentEvent.LOAD_RETRO_DOCUMENT}" debug="true">
+<!--		<mate:EventHandlers type="{RetroDocumentEvent.LOAD_RETRO_DOCUMENT}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[ event.idRetroDocument, event.editabled]}" />
 			</rtmp:RtmpServiceInvoker>
@@ -152,7 +152,7 @@
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
+		</mate:EventHandlers>-->
 <!-- RECORD AUDIO -->
 		<mate:EventHandlers type="{AudioRecorderEvent.RECORD_AUDIO}" debug="true" useCapture="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
