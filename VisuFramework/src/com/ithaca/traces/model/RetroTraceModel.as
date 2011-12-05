@@ -81,6 +81,8 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_BLOCK_CREATE: String = "RetroDocumentBlockCreate";
     // ** RetroDocumentBlockEdit( xsd:string serialisation, // serialisation nouvelle valeur (représentation XML du bloc) xsd:string diff // diff avec l'ancienne, sous forme d'un dictionnaire   JSON { cle1: ancienne_valeur1 }, cf exemple plus bas)
     public static const RETRO_DOCUMENT_BLOCK_EDIT: String = "RetroDocumentBlockEdit";
+    // ** RetroDocumentBlockExplore( xsd:string exploreType : le type d'explore[ "over",   "selected","listen_block_audio", "stop_block_audio",  "record_block_audio", "watch_block_video", "pause_block_video", "stop_block_video" ])
+    public static const RETRO_DOCUMENT_BLOCK_EXPLORE: String = "RetroDocumentBlockExplore";
     // ** RetroDocumentCreate()
     public static const RETRO_DOCUMENT_CREATE: String = "RetroDocumentCreate";
     // ** RetroDocumentDelete()
@@ -118,6 +120,15 @@ public final class RetroTraceModel
     public static const AUDIO: String = "audio";
     public static const DIFF: String = "diff";
     public static const RETRO_DOCUMENT_ID: String = "retroDocumentId";
+    public static const EXPLORE_TYPE: String = "exploreType";
+    public static const OVER: String = "over";
+    public static const SELECTED: String = "selected";
+    public static const LISTEN_BLOCK_AUDIO: String = "listen_block_audio";
+    public static const STOP_BLOCK_AUDIO: String = "stop_block_audio";
+    public static const RECORD_BLOCK_AUDIO: String = "record_block_audio";
+    public static const WATCH_BLOCK_VIDEO: String = "watch_block_video";
+    public static const PAUSE_BLOCK_VIDEO: String = "pause_block_video";
+    public static const STOP_BLOCK_VIDEO: String = "stop_block_video";
     
 }
 }

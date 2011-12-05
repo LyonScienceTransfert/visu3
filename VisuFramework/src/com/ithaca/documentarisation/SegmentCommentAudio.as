@@ -322,6 +322,9 @@ public class SegmentCommentAudio extends SkinnableComponent
 
 				audioRecorder.streamPath = streamPath;
 				audioRecorder.durationAudio = durationAudio;
+                
+                // set segment id for tracage audioRecorder
+                audioRecorder.parentSegmentId = segment.segmentId;
 			}
 			
 			// check duration audio 
@@ -356,11 +359,15 @@ public class SegmentCommentAudio extends SkinnableComponent
 		}else if(editOver)
 		{
 			skinName = "editOver";
+            // tracage over block
+            traceBlockOver();
 		}else if(selected)
 		{
 			skinName = "editSelected"
             // start tracage timer
             startTracageTimer();
+            // tracage selected block
+            traceSelectedBlock();
 		}
 		return skinName;
 	}
@@ -438,7 +445,10 @@ public class SegmentCommentAudio extends SkinnableComponent
         _tracedSegment = new Segment(segment.parentRetroDocument);
         _tracedSegment.setSegmentXML(segment.getSegmentXML());
 	}
-    // check tracage modification the segment
+    
+    /**
+    * check tracage modification the segment
+    */
     private function checkTracage(event:* = null):void
     {
         trace("check tracage block audio => "+segment.segmentId);
@@ -484,6 +494,30 @@ public class SegmentCommentAudio extends SkinnableComponent
         }
     }
 		
+    /**
+    * tracage over block
+    */
+    private function traceBlockOver():void
+    {
+        // tracage block audio
+        var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockAudioTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockAudioTracageEvent.exploreType = RetroTraceModel.OVER;
+        blockAudioTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+    }
+    /**
+    * tracage selected block
+    */
+    private function traceSelectedBlock():void
+    {
+        // tracage block audio
+        var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        blockAudioTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        blockAudioTracageEvent.exploreType = RetroTraceModel.SELECTED;
+        blockAudioTracageEvent.id = segment.segmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+    }
 	//_____________________________________________________________________
 	//
 	// Dispatchers

@@ -2,9 +2,16 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
+import com.ithaca.traces.model.RetroTraceModel;
+import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconButton;
+import com.ithaca.visu.events.VideoPanelEvent;
 import com.ithaca.visu.model.Model;
+import com.ithaca.visu.model.User;
+import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+import com.ithaca.visu.traces.events.TracageEvent;
+import com.lyon2.controls.VideoComponent;
 import com.lyon2.controls.utils.TimeUtils;
 
 import flash.events.MouseEvent;
@@ -82,6 +89,8 @@ public class AudioRecorder extends SkinnableComponent
 	private var _updateTimeInterval:int;
 	private var mouseOver:Boolean;
 	private var _modeShare:Boolean;
+    // parent segment id
+    private var _parentSegmentId:String;
 	
 	public function AudioRecorder()
 	{
@@ -119,6 +128,14 @@ public class AudioRecorder extends SkinnableComponent
 	public function get streamPath():String
 	{
 		return _streamPath;
+	}
+	public function set parentSegmentId(value:String):void
+	{
+        _parentSegmentId = value;
+	}
+	public function get parentSegmentId():String
+	{
+		return _parentSegmentId;
 	}
 	public function set durationAudio(value:int):void
 	{
@@ -375,6 +392,13 @@ public class AudioRecorder extends SkinnableComponent
 		// dispatche that click on butoon play
 		var playSegmentAudioEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
 		dispatchEvent(playSegmentAudioEvent);
+        
+        // tracage play audio block
+        var audioRecorderTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        audioRecorderTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        audioRecorderTracageEvent.exploreType = RetroTraceModel.LISTEN_BLOCK_AUDIO;
+        audioRecorderTracageEvent.id = parentSegmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(audioRecorderTracageEvent);
 	}
 	private function onClickImageStop(even:*=null):void
 	{
@@ -386,6 +410,13 @@ public class AudioRecorder extends SkinnableComponent
 			_durationAudio = currentTimeAudio;
 		}
 		stopPlayAudio();
+        
+        // tracage play audio block
+        var audioRecorderTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        audioRecorderTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        audioRecorderTracageEvent.exploreType = RetroTraceModel.STOP_BLOCK_AUDIO;
+        audioRecorderTracageEvent.id = parentSegmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(audioRecorderTracageEvent);
 		
 	}
 	private function onClickImageRecord(even:*=null):void
@@ -425,7 +456,13 @@ public class AudioRecorder extends SkinnableComponent
 		timer = new Timer(updateTimeInterval,0);
 		timer.addEventListener(TimerEvent.TIMER, updateRecordTimeAudio);
 		timer.start();
-		
+        
+        // tracage play audio block
+        var audioRecorderTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
+        audioRecorderTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_BLOCK_EXPLORE;
+        audioRecorderTracageEvent.exploreType = RetroTraceModel.RECORD_BLOCK_AUDIO;
+        audioRecorderTracageEvent.id = parentSegmentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(audioRecorderTracageEvent);
 	}
 
 	private function updateCurrentTimeAudio(event:*=null):void
