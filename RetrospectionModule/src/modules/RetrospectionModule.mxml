@@ -1532,6 +1532,13 @@
                        tracageTimeLineGroup.addElement(label);
                    }else
                    {
+                       tracageTimeLineGroup.removeAllElements();
+                       var label:Label = new Label();
+                       label.text = "   bientôt disponible";
+                       tracageTimeLineGroup.addElement(label);
+                       
+                       return;
+                       
                        // timelina activity
                        timeLineTracage = new Timeline();
                        
