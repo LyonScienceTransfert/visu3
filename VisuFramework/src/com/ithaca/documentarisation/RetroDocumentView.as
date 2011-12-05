@@ -1,6 +1,5 @@
 package com.ithaca.documentarisation
 {
-import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.documentarisation.model.Segment;
@@ -12,7 +11,6 @@ import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.ShareUserTitleWindow;
 import com.ithaca.utils.components.IconButton;
-import com.ithaca.utils.components.IconDelete;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.model.User;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
@@ -23,12 +21,9 @@ import com.ithaca.visu.ui.utils.RoleEnum;
 import com.ithaca.visu.view.video.VisuVisioAdvanced;
 
 import flash.events.Event;
-import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
-import flash.net.NetConnection;
-import flash.net.NetStream;
 import flash.utils.ByteArray;
 import flash.utils.Timer;
 
@@ -795,6 +790,22 @@ public class RetroDocumentView extends SkinnableComponent
     private function onSelectUser(event:UserEvent):void
     {
         this._listUser = event.listUser;
+        // tracage list shared users
+        var retroDocumentSharedTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+        retroDocumentSharedTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_SHARE;
+        retroDocumentSharedTracageEvent.retroDocumentId = retroDocument.id;
+        
+        var arr:Array = new Array();
+        var nbrUser:int = _listUser.length;
+        for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+        {
+            var user:Object = _listUser[nUser];
+            arr.push(user.toString());
+        }
+        
+        retroDocumentSharedTracageEvent.userList = arr;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentSharedTracageEvent);
+        
         // update retroDocument
         updateRetroDocument();
     }
