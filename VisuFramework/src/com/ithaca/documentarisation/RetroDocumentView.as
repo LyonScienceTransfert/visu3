@@ -21,6 +21,7 @@ import com.ithaca.visu.ui.utils.RoleEnum;
 import com.ithaca.visu.view.video.VisuVisioAdvanced;
 
 import flash.events.Event;
+import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
@@ -31,6 +32,7 @@ import gnu.as3.gettext.FxGettext;
 import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
+import mx.collections.IList;
 import mx.controls.Alert;
 import mx.controls.Button;
 import mx.controls.Menu;
@@ -128,6 +130,7 @@ public class RetroDocumentView extends SkinnableComponent
         fxgt = FxGettext;
 
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+      //  this.addEventListener(FocusEvent.FOCUS_OUT, onRemoveFromStage);
     }
     public function get retroDocument():RetroDocument
     {
@@ -336,7 +339,7 @@ public class RetroDocumentView extends SkinnableComponent
     //
     //_____________________________________________________________________	
   
-    private function onRemoveFromStage(event:Event):void
+    private function onRemoveFromStage(event:Event = null):void
     {
         checkTracage();
         // stop tracage timer
@@ -618,6 +621,24 @@ public class RetroDocumentView extends SkinnableComponent
     {
         setDragDropEnabled(false);
         needUpdateRetroDocument = true;
+        
+        // tracage order the blocks
+        var retroDocumentOrderTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+        retroDocumentOrderTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_BLOCK_ORDER;
+        retroDocumentOrderTracageEvent.retroDocumentId = retroDocument.id;
+        
+        var arr:Array = new Array();
+        var listSegment:IList = retroDocument.listSegment;
+        var nbrSegment:int = listSegment.length;
+        for(var nSegment:int = 0 ; nSegment < nbrSegment; nSegment++)
+        {
+            var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
+            arr[nSegment] = segment.segmentId;
+        }
+        
+        retroDocumentOrderTracageEvent.newOrder = arr;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentOrderTracageEvent);
+        
     }
     
     ////////////////

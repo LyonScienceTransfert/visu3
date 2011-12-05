@@ -147,6 +147,11 @@ public class TracageManager
                 props[RetroTraceModel.USER_LIST] = event.userList;
                 break;
             
+            case RetroTraceModel.RETRO_DOCUMENT_EDIT_BLOCK_ORDER:
+                
+                props[RetroTraceModel.NEW_ORDER] = event.newOrder;
+                break;
+            
             }
 
             TraceManager.trace("visu", typeObsel, props);

@@ -93,6 +93,8 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_EDIT_TITLE: String = "RetroDocumentEditTitle";
     // *** RetroDocumentEditShare(... userList) // modification du partage du bilan
     public static const RETRO_DOCUMENT_EDIT_SHARE: String = "RetroDocumentEditShare";
+    // *** RetroDocumentEditBlockOrder(xsd:string newOrder // Sérialisation sous forme de liste de block_id)
+    public static const RETRO_DOCUMENT_EDIT_BLOCK_ORDER: String = "RetroDocumentEditBlockOrder";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";
@@ -134,6 +136,7 @@ public final class RetroTraceModel
     public static const PAUSE_BLOCK_VIDEO: String = "pause_block_video";
     public static const STOP_BLOCK_VIDEO: String = "stop_block_video";
     public static const USER_LIST: String = "userList";
+    public static const NEW_ORDER: String = "newOrder";
     
 }
 }
