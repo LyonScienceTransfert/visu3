@@ -89,6 +89,8 @@ public final class RetroTraceModel
     public static const RETRO_DOCUMENT_DELETE: String = "RetroDocumentDelete";
     // ** RetroDocumentView() // passage à la visualisation du bilan, aller vers Bilan module
     public static const RETRO_DOCUMENT_VIEW: String = "RetroDocumentView";
+    // *** RetroDocumentEditTitle(xsd:string title)
+    public static const RETRO_DOCUMENT_EDIT_TITLE: String = "RetroDocumentEditTitle";
     
     public static const VOLUME: String = "volume";
     public static const TEXT: String = "text";

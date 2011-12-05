@@ -134,6 +134,10 @@ public class TracageManager
             case RetroTraceModel.RETRO_DOCUMENT_VIEW:
                 
                 break;
+            case RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE:
+                
+                props[RetroTraceModel.TITLE] = event.title;
+                break;
             
             }
 

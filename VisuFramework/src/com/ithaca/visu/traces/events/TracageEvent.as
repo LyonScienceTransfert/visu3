@@ -94,6 +94,7 @@ public class TracageEvent extends Event
     public var diff:String;
     public var retroDocumentId:int;
     public var exploreType:String;
+    public var title:String;
     
     
     public var value:Object;
