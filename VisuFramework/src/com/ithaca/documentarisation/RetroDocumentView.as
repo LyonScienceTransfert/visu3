@@ -1,5 +1,6 @@
 package com.ithaca.documentarisation
 {
+import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.documentarisation.model.Segment;
@@ -11,6 +12,7 @@ import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.ShareUserTitleWindow;
 import com.ithaca.utils.components.IconButton;
+import com.ithaca.utils.components.IconDelete;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.model.User;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
@@ -20,9 +22,13 @@ import com.ithaca.visu.ui.utils.IconEnum;
 import com.ithaca.visu.ui.utils.RoleEnum;
 import com.ithaca.visu.view.video.VisuVisioAdvanced;
 
+import flash.events.Event;
+import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
+import flash.net.NetConnection;
+import flash.net.NetStream;
 import flash.utils.ByteArray;
 import flash.utils.Timer;
 
@@ -110,6 +116,13 @@ public class RetroDocumentView extends SkinnableComponent
     
     private var _dragOwnerObject:Object;
     
+    // tracege interval in ms
+    private var TRACAGE_INTERVAL:Number = 10*1000;
+    // timer the trasage
+    private var _tracageTimer:Timer;   
+    // init title retro document
+    private var _tracedTitle:String;
+    
     [Bindable]
     private var fxgt:_FxGettext;
     
@@ -118,6 +131,8 @@ public class RetroDocumentView extends SkinnableComponent
         super();
         _listUser = new Array();
         fxgt = FxGettext;
+
+        this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
     }
     public function get retroDocument():RetroDocument
     {
@@ -282,12 +297,16 @@ public class RetroDocumentView extends SkinnableComponent
         if(normal)
         {
             result = "normal";
+            // stop tracage timer
+            stopTracageTimer();
         }else if(dropped)
         {
             result ="dropped";
         }else
         {
             result = "edited";
+            // start tracage timer
+            startTracageTimer();
         }
         return result;
     }
@@ -298,6 +317,8 @@ public class RetroDocumentView extends SkinnableComponent
         if(retroDocumentChange)
         {
             retroDocumentChange = false;
+            // init raced Title
+            _tracedTitle = this._retroDocument.title;
             // set label retro document
             _labelRetroDocument = this._retroDocument.title;
             // set list segments
@@ -319,8 +340,39 @@ public class RetroDocumentView extends SkinnableComponent
     // Listeners
     //
     //_____________________________________________________________________	
+  
+    private function onRemoveFromStage(event:Event):void
+    {
+        checkTracage();
+        // stop tracage timer
+        stopTracageTimer();
+    }
+    
+    /**
+     * check tracage modification the retro document
+     */
+    private function checkTracage(event:* = null):void
+    {
+        trace("check tracage retro document => "+this.retroDocument.id);
+        
+        // check modifications the comment
+        if(retroDocument.title != _tracedTitle)
+        {
+            // tracage modifications the audio block
+            var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+            retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE;
+            retroDocumentTracageEvent.retroDocumentId = retroDocument.id;
+            retroDocumentTracageEvent.title= retroDocument.title;
+            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
+            
+            _tracedTitle = retroDocument.title;
+        }
+    }
+    
     private function onClickButtonSwitch(event:MouseEvent):void
     {	
+        checkTracage();
+        
         var clickButtonSwitchEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CLICK_BUTTON_SWITCH);
         clickButtonSwitchEvent.idRetroDocument = retroDocument.id;
         clickButtonSwitchEvent.sessionId = retroDocument.sessionId;
@@ -335,6 +387,8 @@ public class RetroDocumentView extends SkinnableComponent
     
     private function onRemoveDocument(event:MouseEvent):void
     {
+        checkTracage();
+        
         Alert.yesLabel = fxgt.gettext("Oui");
         Alert.noLabel = fxgt.gettext("Non");
         Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+this.retroDocument.title+'"'+" ?"),
@@ -343,6 +397,8 @@ public class RetroDocumentView extends SkinnableComponent
     
     private function onClickButtonMenuAddSegment(event:MouseEvent):void
     {
+        checkTracage();
+        
         var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
             {label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment" , iconName : "iconLettre_t_16x16"}, 
             {label: fxgt.gettext("Bloc vidéo + texte"), typeSegment: "VideoSegment", iconName : "iconVideo_16x16"},        
@@ -366,6 +422,8 @@ public class RetroDocumentView extends SkinnableComponent
      */
     private function onCreationCompleteAddSegmentPopUpButton(event:FlexEvent):void
     {
+        checkTracage();
+        
         var menuAddSegment:Menu = new Menu();
         var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
             {label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment" , iconName : "iconLettre_t_16x16"}, 
@@ -675,6 +733,25 @@ public class RetroDocumentView extends SkinnableComponent
     //  Utils
     //
     //_____________________________________________________________________	
+    
+    private function startTracageTimer():void
+    {
+        if(!_tracageTimer)
+        {
+            _tracageTimer = new Timer(this.TRACAGE_INTERVAL,0);
+            _tracageTimer.addEventListener(TimerEvent.TIMER, checkTracage);
+        }
+        _tracageTimer.start();
+    }
+    private function stopTracageTimer():void
+    {
+        if(_tracageTimer && _tracageTimer.running)
+        {
+            // check tracage if user deselected segment
+            checkTracage();
+            _tracageTimer.stop();
+        }
+    }
     private function getListUserShow(value:Array):Array
     {
         var result:Array = new Array();
