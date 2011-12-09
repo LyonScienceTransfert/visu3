@@ -950,15 +950,12 @@
                         timeLineTracage.setStyle("timeMode","relative");
                         timeLineTracage.contextFollowCursor = false;
                         timeLineTracage.setStyle("cursorMode","auto");
-                        timeLineTracage.setStyle("adminMode","true");
+                        timeLineTracage.setStyle("adminMode","false");
                         timeLineTracage.showPlayButton = false;
                         
                         timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
                         timeLineTracage.name = userIdString;
                         
-                        // create timeLineTracage
-                        timeLineTracage.layoutXML 		= new XML( loaderTracage.data );
-                        timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 
                         
                         navigatorContent.removeElement( _progressBarBlueLine );
                         
@@ -996,6 +993,13 @@
                     var beginTimeLine:Number = (listObselTracage.getItemAt(0) as Obsel).begin;
                     var endTimeLine:Number = (listObselTracage.getItemAt(listObselTracage.length -1 ) as Obsel).begin;
                     
+                    // create timeLineTracage
+                    timeLineTracage.layoutXML 		= new XML( loaderTracage.data );
+                    timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 
+                    
+                    
+                    timeLineTracage.range.addTime(beginTimeLine, endTimeLine);
+                    
                     // trace tracage activity retro room
                     var traceRetroRoom:Trace = new Trace(new int(timeLineTracage.name), "");
                     traceRetroRoom.obsels = listObselTracage;
@@ -1008,7 +1012,6 @@
                     traceLineGroup.setStyle("bgColor", "#cedbef");
                     traceLineGroup.setStyle("icon", user.avatar );	
                     
-                    timeLineTracage.range.addTime(beginTimeLine, endTimeLine);
                     
                   
                 }
@@ -1031,9 +1034,7 @@
                     
                     // start activity tracing on TimeLine
                     var traceTimeline: Trace = timeLine.startActivityTracing();
-
-                    
-                    
+  
                     // init trace activity on retro room
                  //   var traceTimeline: Trace = new Trace();
                     // do not automatically synchronize with the KTBS/BDD
