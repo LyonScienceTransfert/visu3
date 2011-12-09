@@ -30,6 +30,7 @@
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.RetroTraceModel;
             import com.ithaca.traces.model.TraceModel;
+            import com.ithaca.traces.model.vo.SGBDObsel;
             import com.ithaca.utils.EditCommentDialog;
             import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
@@ -58,6 +59,7 @@
             import mx.collections.ArrayCollection;
             import mx.controls.Alert;
             import mx.controls.Image;
+            import mx.controls.SWFLoader;
             import mx.controls.dataGridClasses.DataGridColumn;
             import mx.core.DragSource;
             import mx.events.CollectionEvent;
@@ -129,6 +131,12 @@
 			private var userIdInitEditCommentDialog:int = -1;
 			// current ObselSkin to dragging
 			private var currentObselSkin:ObselSkin = null;
+            // loader layout.xml for timeline the tracage
+            private var loaderTracage:URLLoader;
+            // 
+            private var timeLineStorage:Object;
+            // progresse bar
+            private var _progressBarBlueLine:SWFLoader;
             
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -170,6 +178,17 @@
 				
 				// enabled button salon retro
 				Model.getInstance().setEnabledButtonSalonRetro(true);
+                
+                // load layout xml file 
+                loaderTracage = new URLLoader();
+                loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
+                loaderTracage.load(new URLRequest("layout.xml"));	
+                
+                // init loader for timeline retro
+                _progressBarBlueLine = new SWFLoader()
+                _progressBarBlueLine.setStyle("verticalCenter",0);
+                _progressBarBlueLine.setStyle("horizontalCenter",0);
+                _progressBarBlueLine.source = IconEnum.getIconByName("loaderBlueLine");
 			}
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
@@ -246,12 +265,7 @@
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
                 // init listener, activity on retro document 
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
-                
-                // show timeline activity only for responsable and admin
-                if(Model.getInstance().getLoggedUser().role < RoleEnum.RESPONSABLE)
-                {
-                    tnTimeline.removeElement(ncTracage);
-                }
+
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -388,7 +402,7 @@
 							
 							var tlg :TraceLineGroup ;					
 							
-							tlg = timeLine.addTrace(traceGroup.userTrace);
+							tlg = timeLine.addTrace(traceGroup.userTrace,-1, "user");
 							// get user
 							var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
 							var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
@@ -396,7 +410,21 @@
 							tlg.setStyle("title", lastNameUser );				
 							tlg.setStyle("bgColor", traceGroup.userColor);
 							tlg.setStyle("icon", traceGroup.userAvatar );	
-						}
+                            
+                            
+                            // show timeline activity only for responsable and admin
+                            if(RoleEnum.hasAdminRight(user.role) || RoleEnum.hasResponsableRight(user.role))
+                            {
+                                // add NavigatorContent for each user presents in session
+                                var navigatorContent:NavigatorContent = new NavigatorContent();
+                                navigatorContent.percentHeight =  navigatorContent.height = 100;
+                                navigatorContent.label =  lastNameUser;
+                                // set id user like name
+                                navigatorContent.name = user.id_user.toString();
+                                // add navigator content
+                                tnTimeline.addElement(navigatorContent);
+                            } 
+                        }
 					}
 					
 					var startRecordingSession:Number = this.currentSessionDateRecording.time;
@@ -423,7 +451,11 @@
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
-                    //we init the trace object
+                    // set enabled timeline tracage
+                    
+                    
+                    
+                   /*  //we init the trace object
                     var loader:URLLoader=event.target as URLLoader;
                     // create timeLineTracage
                     timeLineTracage.layoutXML 		= new XML( loader.data );
@@ -434,7 +466,7 @@
                     timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
                     
                     var traceVisu:Trace = TraceManager.getTrace("visu");
-                    var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities");
+                    var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities"); */
                 }
                 
             }
@@ -878,6 +910,110 @@
 			//////   Timeline handlers
 			/////////////
             /**
+             * Listener the tab navigator
+             */
+            protected function tnTimeline_changeHandler(event:IndexChangedEvent):void
+            {
+                var index:int = event.newIndex;
+                var navigatorContent:NavigatorContent = event.relatedObject as NavigatorContent;
+                var timeline:Timeline = navigatorContent.getChildAt(0) as Timeline;
+                if(index > 0 &&  timeline == null)
+                {
+                    navigatorContent.removeAllElements();
+                    navigatorContent.addElement( _progressBarBlueLine );
+                    // dispatcher for getting list obsel the retro room
+                    var getObselRetroRoomEvent:TracageEvent = new TracageEvent(TracageEvent.GET_LIST_OBSEL_RETRO_ROOM);
+                    getObselRetroRoomEvent.sessionId = Model.getInstance().getCurrentSessionRetroModule().id_session;
+                    getObselRetroRoomEvent.userId = new int(navigatorContent.name);
+                    dispatchEvent(getObselRetroRoomEvent);
+                }
+            }
+            /**
+             * Resiving the obsels retro trace line handler
+             */
+            private function onReciveListObselRetroRoom(event:TracageEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // check if has obsels
+                    var listObselVO:Array = event.listObselRetroRoom;
+                    if(listObselVO)
+                    {
+                        var userIdString:String = event.userId.toString();
+                        var navigatorContent:NavigatorContent =  tnTimeline.getChildByName(userIdString) as NavigatorContent;
+                        
+                        // timelina activity
+                        var timeLineTracage:Timeline = new Timeline();
+                        
+                        timeLineTracage.percentHeight = 100;
+                        timeLineTracage.percentWidth = 100;
+                        timeLineTracage.setStyle("timeMode","relative");
+                        timeLineTracage.contextFollowCursor = false;
+                        timeLineTracage.setStyle("cursorMode","auto");
+                        timeLineTracage.setStyle("adminMode","true");
+                        timeLineTracage.showPlayButton = false;
+                        
+                        timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
+                        timeLineTracage.name = userIdString;
+                        
+                        // create timeLineTracage
+                        timeLineTracage.layoutXML 		= new XML( loaderTracage.data );
+                        timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 
+                        
+                        navigatorContent.removeElement( _progressBarBlueLine );
+                        
+                        navigatorContent.addElement(timeLineTracage);
+                        
+                        // set timeLine and list obsels
+                        if(timeLineStorage == null)
+                        {
+                            timeLineStorage = new Object();
+                        }
+                        
+                        timeLineStorage[userIdString] = listObselVO;
+                    }
+                }
+            }
+            
+            /**
+             * Timeline retro create handler
+             */
+            private function timeLineTracage_creationCompleteHandler(event:FlexEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    var timeLineTracage:Timeline = event.currentTarget as Timeline;
+                    var listObselVO:Array = timeLineStorage[timeLineTracage.name];
+                    
+                    var listObselTracage:ArrayCollection = new ArrayCollection(); 
+                    var nbrObsel:int = listObselVO.length;
+                    for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                    {
+                        var obselVO : SGBDObsel = listObselVO[nObsel];
+                        var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+                        listObselTracage.addItem(obsel);
+                    }
+                    var beginTimeLine:Number = (listObselTracage.getItemAt(0) as Obsel).begin;
+                    var endTimeLine:Number = (listObselTracage.getItemAt(listObselTracage.length -1 ) as Obsel).begin;
+                    
+                    // trace tracage activity retro room
+                    var traceRetroRoom:Trace = new Trace(new int(timeLineTracage.name), "");
+                    traceRetroRoom.obsels = listObselTracage;
+                    var traceLineGroup:TraceLineGroup = timeLineTracage.addTrace(traceRetroRoom);
+                    
+                    var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineTracage.name));
+                    var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+                    
+                    traceLineGroup.setStyle("title", lastNameUser );				
+                    traceLineGroup.setStyle("bgColor", "#cedbef");
+                    traceLineGroup.setStyle("icon", user.avatar );	
+                    
+                    timeLineTracage.range.addTime(beginTimeLine, endTimeLine);
+                    
+                  
+                }
+            }
+            /**
              * Timeline create handler
              * @event
              */
@@ -893,29 +1029,23 @@
                     traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
                     Trace.init_remote( Model.getInstance().AMFServer);
                     
-                    // FIXME : before tracing have to add listener 
-                    // TODO : initActivityTracing => startTracing
                     // start activity tracing on TimeLine
                     var traceTimeline: Trace = timeLine.startActivityTracing();
+
+                    
+                    
+                    // init trace activity on retro room
+                 //   var traceTimeline: Trace = new Trace();
                     // do not automatically synchronize with the KTBS/BDD
                     traceTimeline.autosync = false;
-                    
+                    // collection the obsels of trace activity on retro room
                     var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
                     // add listener adding new obsel
                     listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
+                    // start activity tracing on TimeLine
+                   // timeLine.startActivityTracing(traceTimeline);
                 }
                 
-            }
-            /**
-             * TimelineTracage create handler
-             * @event
-             */
-            protected function timeLineTracage_creationCompleteHandler(event:FlexEvent):void
-            {
-                // loader for tracage activity TL
-                var loaderTracage:URLLoader=new URLLoader();			
-                loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
-                loaderTracage.load(new URLRequest("layout.xml"));	
             }
 
             /**
@@ -1514,48 +1644,8 @@
 			{
 				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
 				getListObselEvent.sessionId = selectedSessionIdWhenInit;
-				dispatchEvent(getListObselEvent);
+				dispatchEvent(getListObselEvent); 
 			}
-
-
-            protected function tnTimeline_changeHandler(event:IndexChangedEvent):void
-            {
-               if(!timeLineTracage)
-               {
-                   // check if user was presented in selected session, has trace salon synchrone
-                   var retroTraciId:String = Model.getInstance().getTraceIdRetroRoom();
-                   if(retroTraciId == null)
-                   {
-                       tracageTimeLineGroup.removeAllElements();
-                       var label:Label = new Label();
-                       label.text = "   vous n'aves pas de trace de salon synchrone pour cette séance";
-                       tracageTimeLineGroup.addElement(label);
-                   }else
-                   {
-                       tracageTimeLineGroup.removeAllElements();
-                       var label:Label = new Label();
-                       label.text = "   bientôt disponible";
-                       tracageTimeLineGroup.addElement(label);
-                       
-                       return;
-                       
-                       // timelina activity
-                       timeLineTracage = new Timeline();
-                       
-                       timeLineTracage.percentHeight = 100;
-                       timeLineTracage.percentWidth = 100;
-                       timeLineTracage.setStyle("timeMode","relative");
-                       timeLineTracage.contextFollowCursor = false;
-                       timeLineTracage.setStyle("cursorMode","auto");
-                       timeLineTracage.showPlayButton = false;
-                       
-                       timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
-                       
-                       tracageTimeLineGroup.addElement(timeLineTracage);
-                   }
-               }
-            }
-            
 
 		]]>
 	</fx:Script>
@@ -1579,6 +1669,7 @@
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
+		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -1621,9 +1712,9 @@
                         <s:NavigatorContent label="Synchro TL" id="ncTimeline">
     					    <s:Group id="timeLineGroup" width="100%" height="100%"/>
                         </s:NavigatorContent>
-                        <s:NavigatorContent label="Activities TL" id="ncTracage">
+                        <!--<s:NavigatorContent label="Activities TL" id="ncTracage">
                             <s:Group id="tracageTimeLineGroup" width="100%" height="100%"/>
-                        </s:NavigatorContent>
+                        </s:NavigatorContent>-->
                     </mx:TabNavigator>
 <!--					<s:HGroup width="100%" height="100%">
                         <s:Group id="timeLineGroup" width="100%" height="100%"/>

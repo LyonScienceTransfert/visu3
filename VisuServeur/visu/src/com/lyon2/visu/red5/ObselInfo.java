@@ -249,6 +249,57 @@ public class ObselInfo {
 			sc.invoke("checkListObselSessioExitSessionPause", args);
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public void getObselRetroRoomByUserIdSession(IConnection conn, int userId, int sessionId){
+		IClient client = conn.getClient();
+		// check user was in the recorded session 
+		List<String> listTraceId = null;
+		// list obsels activity in the salon retrospection
+		List<Obsel> listObselRetro = null;
+		String traceRetroId = "";
+		
+		String traceParam = "%-" + userId;
+		String refParam = "%:hasSession " + "\"" + String.valueOf(sessionId) + "\""
+				+ "%";
+		ObselStringParams osp = new ObselStringParams(traceParam, refParam);
+		log.warn("OSP = {}",osp.toString());
+		try {
+			listTraceId = (List<String>) app.getSqlMapClient().queryForList(
+					"obsels.getTracesBySessionIdAndUserId", osp);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing de list traceId" + e);
+			// TODO return message error
+		}
+		if(listTraceId.size() > 1)
+		{
+			// TODO message error, can't be more than one trace for one user in salon synchrone
+			log.warn("Probleme, peut pas avoir plus que une trace pour utilisateur dans salon synchrone");
+		}else
+		{
+			traceRetroId = listTraceId.get(0);
+			log.warn("Trace id salon retro pour user id = "+String.valueOf(userId)+"est "+traceRetroId);
+			
+			// get list retro room
+			String paramTraceIdSynchroRoom = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SYNC_ROOM_TRACE_ID)+" "+"\"" + traceRetroId + "\"" + "%";
+
+			try {
+				listObselRetro = (List<Obsel>) app.getSqlMapClient().queryForList(
+						"obsels.getTraceComment", paramTraceIdSynchroRoom);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des obsels retro room" + e);
+			}
+		}
+		// send list obsels retro room to client
+		Object[] args = { listObselRetro, userId };
+		IConnection connClient = (IConnection) client
+				.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkListObselRetroRoom", args);
+		}
+		
+	}
 	
 	@SuppressWarnings("unchecked")
 	private void checkTraceIdRetro(IConnection conn, IClient client, Session session){
