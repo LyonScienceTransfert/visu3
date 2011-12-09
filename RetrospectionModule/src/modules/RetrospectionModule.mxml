@@ -411,9 +411,10 @@
 							tlg.setStyle("bgColor", traceGroup.userColor);
 							tlg.setStyle("icon", traceGroup.userAvatar );	
                             
+                            var loggedUser:User = Model.getInstance().getLoggedUser();
                             
                             // show timeline activity only for responsable and admin
-                            if(RoleEnum.hasAdminRight(user.role) || RoleEnum.hasResponsableRight(user.role))
+                            if(RoleEnum.hasAdminRight(loggedUser.role) || RoleEnum.hasResponsableRight(loggedUser.role))
                             {
                                 // add NavigatorContent for each user presents in session
                                 var navigatorContent:NavigatorContent = new NavigatorContent();
@@ -944,21 +945,16 @@
                         
                         // timelina activity
                         var timeLineTracage:Timeline = new Timeline();
-                        
                         timeLineTracage.percentHeight = 100;
                         timeLineTracage.percentWidth = 100;
                         timeLineTracage.setStyle("timeMode","relative");
                         timeLineTracage.contextFollowCursor = false;
                         timeLineTracage.setStyle("cursorMode","auto");
-                        timeLineTracage.setStyle("adminMode","false");
+                       // timeLineTracage.setStyle("adminMode","false");
                         timeLineTracage.showPlayButton = false;
-                        
                         timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
                         timeLineTracage.name = userIdString;
-                        
-                        
-                        navigatorContent.removeElement( _progressBarBlueLine );
-                        
+                        // add timeline tracage
                         navigatorContent.addElement(timeLineTracage);
                         
                         // set timeLine and list obsels
@@ -997,7 +993,7 @@
                     timeLineTracage.layoutXML 		= new XML( loaderTracage.data );
                     timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 
                     
-                    
+                    // add range
                     timeLineTracage.range.addTime(beginTimeLine, endTimeLine);
                     
                     // trace tracage activity retro room
@@ -1011,8 +1007,8 @@
                     traceLineGroup.setStyle("title", lastNameUser );				
                     traceLineGroup.setStyle("bgColor", "#cedbef");
                     traceLineGroup.setStyle("icon", user.avatar );	
-                    
-                    
+                    // remove progress bar
+                    (_progressBarBlueLine.owner as NavigatorContent).removeElement( _progressBarBlueLine );
                   
                 }
             }
