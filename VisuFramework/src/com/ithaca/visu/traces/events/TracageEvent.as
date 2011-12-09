@@ -64,6 +64,7 @@ package  com.ithaca.visu.traces.events
 {	
 
 import com.ithaca.traces.Obsel;
+import com.ithaca.visu.model.Session;
 
 import flash.events.Event;
 
@@ -75,6 +76,8 @@ public class TracageEvent extends Event
     static public const ACTIVITY_SESSION_VIDEO : String = 'activitySessionVideo';
     static public const ACTIVITY_RETRO_DOCUMENT_BLOCK : String = 'activityRetroDocumentBlock';
     static public const ACTIVITY_RETRO_DOCUMENT : String = 'activityRetroDocument';
+    static public const GET_LIST_OBSEL_RETRO_ROOM : String = 'getListObselRetroRoom';
+    static public const RECIVE_LIST_OBSEL_RETRO_ROOM : String = 'reciveListObselRetroRoom';
     
     // properties
     public var typeActivity:String;
@@ -97,6 +100,9 @@ public class TracageEvent extends Event
     public var title:String;
     public var userList:Array;
     public var newOrder:Array;
+    public var sessionId:int;
+    public var listObselRetroRoom:Array;
+    
     
     
     public var value:Object;

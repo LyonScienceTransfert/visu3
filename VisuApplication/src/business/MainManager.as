@@ -22,6 +22,7 @@ import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.model.vo.SessionUserVO;
 import com.ithaca.visu.model.vo.SessionVO;
 import com.ithaca.visu.model.vo.UserVO;
+import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.ColorEnum;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
@@ -1266,6 +1267,18 @@ public class MainManager
         Model.getInstance().setTraceIdRetroRoom( traceIdRetroRoom) ;
         Model.getInstance().setParentTraceId( parentTraceId) ;
     }
+    
+    /**
+    * get list obsel retro room
+    */
+    public function onCheckListObselRetroRoom(listObsel:Array, userId:int):void
+    {
+        var obselRetroRoomEvent:TracageEvent = new TracageEvent(TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM);
+        obselRetroRoomEvent.listObselRetroRoom = listObsel;
+        obselRetroRoomEvent.userId = userId;
+        this.dispatcher.dispatchEvent(obselRetroRoomEvent);
+    }
+    
 	/**
 	 * Add TraceLines to Model
 	 */

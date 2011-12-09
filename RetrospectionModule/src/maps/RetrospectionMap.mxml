@@ -18,6 +18,7 @@
 		import com.ithaca.visu.events.TraceLineEvent;
 		import com.ithaca.visu.events.VisuModuleEvent;
 		import com.ithaca.visu.model.Model;
+        import com.ithaca.visu.traces.events.TracageEvent;
 		
 		import mx.events.FlexEvent;
         
@@ -91,6 +92,12 @@
 		<mate:EventHandlers type="{VisuModuleEvent.GO_IN_MODULE}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="obselInfo.goInSalonRetro"   arguments="{[]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+
+        <mate:EventHandlers type="{TracageEvent.GET_LIST_OBSEL_RETRO_ROOM}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselRetroRoomByUserIdSession"   arguments="{[event.userId, event.sessionId]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 <!--		

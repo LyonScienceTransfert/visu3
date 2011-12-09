@@ -129,6 +129,7 @@
 			<rtmp:CallbackRegistrator action="bilanListRetrieved" target="{MainManager}" method="onBilanListRetrieved"/>
 			<rtmp:CallbackRegistrator action="checkUpdateAddedRetrodocument" target="{MainManager}" method="onCheckUpdateAddedRetrodocument"/>
 			<rtmp:CallbackRegistrator action="checkTracesIdRetroRoom" target="{MainManager}" method="onCheckTracesIdRetroRoom"/>
+			<rtmp:CallbackRegistrator action="checkListObselRetroRoom" target="{MainManager}" method="onCheckListObselRetroRoom"/>
 			<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
         </mate:EventHandlers>
 
