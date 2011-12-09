@@ -264,7 +264,7 @@ public class TracageManager
             obselRetroRoom.props[RetroTraceModel.SYNC_ROOM_TRACE_ID] = parentTraceId;
             obselRetroRoom.uri = retroTraceId;
             
-            TraceManager.trace("visu",obselRetroRoom.type, obselRetroRoom.props);
+            TraceManager.trace("visu",obselRetroRoom.type, obselRetroRoom.props, currentTime, currentTime);
             
             break;
         default :
