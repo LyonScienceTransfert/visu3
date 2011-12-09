@@ -271,25 +271,30 @@ public class ObselInfo {
 			log.error("Probleme lors du listing de list traceId" + e);
 			// TODO return message error
 		}
-		if(listTraceId.size() > 1)
+		log.warn("listTraceId");
+		if(listTraceId.size() != 0)
 		{
-			// TODO message error, can't be more than one trace for one user in salon synchrone
-			log.warn("Probleme, peut pas avoir plus que une trace pour utilisateur dans salon synchrone");
-		}else
-		{
-			traceRetroId = listTraceId.get(0);
-			log.warn("Trace id salon retro pour user id = "+String.valueOf(userId)+"est "+traceRetroId);
-			
-			// get list retro room
-			String paramTraceIdSynchroRoom = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SYNC_ROOM_TRACE_ID)+" "+"\"" + traceRetroId + "\"" + "%";
+			if(listTraceId.size() > 1 )
+			{
+				// TODO message error, can't be more than one trace for one user in salon synchrone
+				log.warn("Probleme, peut pas avoir plus que une trace pour utilisateur dans salon synchrone");
+			}else
+			{
+				traceRetroId = listTraceId.get(0);
+				log.warn("Trace id salon retro pour user id = "+String.valueOf(userId)+"est "+traceRetroId);
+				
+				// get list retro room
+				String paramTraceIdSynchroRoom = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SYNC_ROOM_TRACE_ID)+" "+"\"" + traceRetroId + "\"" + "%";
 
-			try {
-				listObselRetro = (List<Obsel>) app.getSqlMapClient().queryForList(
-						"obsels.getTraceComment", paramTraceIdSynchroRoom);
-			} catch (Exception e) {
-				log.error("Probleme lors du listing des obsels retro room" + e);
+				try {
+					listObselRetro = (List<Obsel>) app.getSqlMapClient().queryForList(
+							"obsels.getTraceComment", paramTraceIdSynchroRoom);
+				} catch (Exception e) {
+					log.error("Probleme lors du listing des obsels retro room" + e);
+				}
 			}
 		}
+		
 		// send list obsels retro room to client
 		Object[] args = { listObselRetro, userId };
 		IConnection connClient = (IConnection) client

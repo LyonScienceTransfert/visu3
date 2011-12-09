@@ -964,7 +964,18 @@
                         }
                         
                         timeLineStorage[userIdString] = listObselVO;
+                    }else
+                    {
+                        var navigatorContent:NavigatorContent = _progressBarBlueLine.owner as NavigatorContent;
+                        // remove progress bar
+                        navigatorContent.removeElement( _progressBarBlueLine );
+                        var label:Label = new Label();
+                        label.setStyle("verticalCenter",0);
+                        label.setStyle("horizontalCenter",0);
+                        label.text = "il n'y a pas d'activité dans salon retrospection";
+                        navigatorContent.addElement(label);
                     }
+                    
                 }
             }
             
