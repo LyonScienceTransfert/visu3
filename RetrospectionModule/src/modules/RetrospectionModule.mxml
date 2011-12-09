@@ -938,7 +938,7 @@
                 {
                     // check if has obsels
                     var listObselVO:Array = event.listObselRetroRoom;
-                    if(listObselVO)
+                    if(listObselVO && listObselVO.length > 0)
                     {
                         var userIdString:String = event.userId.toString();
                         var navigatorContent:NavigatorContent =  tnTimeline.getChildByName(userIdString) as NavigatorContent;
