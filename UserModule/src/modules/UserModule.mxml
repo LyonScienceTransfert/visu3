@@ -8,6 +8,7 @@
 		   xmlns:controls="com.ithaca.visu.controls.*"
 		   configure="configureHandler(event)"
 		   creationComplete="creationCompleteHandler(event)"
+           currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
 		   top="0" bottom="0" left="0" right="0" 
 		   xmlns:vo="com.ithaca.visu.model.vo.*" 
 		   xmlns:user="com.ithaca.visu.view.user.*" 
@@ -18,20 +19,23 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.visu.events.InitMapEvent;
-			import com.ithaca.visu.events.SessionEvent;
-			import com.ithaca.visu.events.VisuModuleEvent;
-			import com.ithaca.visu.ui.utils.ConnectionStatus;
-			import com.ithaca.visu.view.user.skins.UserManagementSkin;
-			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.model.User;
-			import com.ithaca.visu.model.vo.UserVO;
-			
-			import mx.events.FlexEvent;			
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.UserVO;
+            import com.ithaca.visu.ui.utils.ConnectionStatus;
+            import com.ithaca.visu.view.user.skins.UserManagementSkin;
+            
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;			
 
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
+                // set focus
+                this.setFocus();
 				trace("InitMapEvent.INIT_MAP_USER");
 				dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
 			}
@@ -134,6 +138,15 @@
 				event.moduleName = VisuModuleEvent.USER_MODULE;
 				this.dispatchEvent(event);
 			}
+            
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+               this.setFocus();
+            }
+
 		]]>
 	</fx:Script>
 
