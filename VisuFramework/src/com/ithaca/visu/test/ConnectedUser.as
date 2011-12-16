@@ -89,10 +89,11 @@ package com.ithaca.visu.test
 			if( userChanged )
 			{ 
 				userChanged = false;
-				if( _user.role > 32) 
+                // TODO : find other solution for setting style, havn't in SDK 4.5
+				/*if( _user.role > 32) 
 					labelDisplay.setStyle("fontWeight","bold");
 				else
-					labelDisplay.setStyle("fontWeight","normal");
+					labelDisplay.setStyle("fontWeight","normal");*/
 				statusIcon.status = _user.status;
 			}
 		}
