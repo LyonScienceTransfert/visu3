@@ -196,7 +196,7 @@
               verticalAlign="middle"
               widthInChars="10"
               left="1" right="20" top="1" bottom="1" />
-	<s:Label id="promptDisplay" includeIn="prompt" 
+	<s:Label id="_promptDisplay" includeIn="prompt" 
 			 verticalAlign="middle" color="{getStyle('promptColor')}" 
 			 fontStyle="italic" 
 			 left="5" right="20" top="1" bottom="1" />
