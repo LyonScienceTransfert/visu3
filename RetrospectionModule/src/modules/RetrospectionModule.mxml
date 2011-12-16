@@ -276,7 +276,11 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
+                    // check decalage only if play video
+                    if(this.visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+                    {
+    					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
+                    }
 				}
 			}
 			
