@@ -23,7 +23,7 @@ import spark.events.TextOperationEvent;
 public class AdvancedTextInput extends TextInput
 {
 	
-	[Bindable] public var prompt:String=""; 
+	[Bindable] public override var  prompt:String=""; 
 	
 	
 	[SkinPart("false")]
