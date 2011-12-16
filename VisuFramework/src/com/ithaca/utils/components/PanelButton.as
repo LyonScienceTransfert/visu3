@@ -513,7 +513,8 @@ package com.ithaca.utils.components
 			if (titleDisplay)
 			{
 				titleDisplay.text = value;
-				titleDisplay.toolTip = value;
+                // TODO : find other solution , havn't toolTip for SDK 4.5
+				// titleDisplay.toolTip = value;
 			}
 		}
 
