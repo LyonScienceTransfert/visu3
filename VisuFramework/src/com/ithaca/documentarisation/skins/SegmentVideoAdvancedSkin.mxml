@@ -78,11 +78,11 @@
 		<s:VGroup width="100%" excludeFrom="normal, normalOver, shared">
 			<!-- BEGIN END -->
 			<s:HGroup  verticalAlign="middle" width="100%" horizontalAlign="center">
-				<mx:Label text="Début:"/>
-				<mx:Label id="labelStartSpinner" text="11:11"/>
+				<s:Label text="Début:"/>
+				<s:Label id="labelStartSpinner" text="11:11"/>
 				<s:Spinner  id="startSpinner" minimum="0" skinClass="spark.skins.spark.SpinnerSkin"/>               
-				<mx:Label text="Fin:"/>
-				<mx:Label id="labelEndSpinner" text="14:14"/>
+				<s:Label text="Fin:"/>
+				<s:Label id="labelEndSpinner" text="14:14"/>
 				<s:Spinner id="endSpinner"  maximum="{24*60*60}" skinClass="spark.skins.spark.SpinnerSkin"/>                    
 			</s:HGroup> 
 			<s:HGroup width="100%" verticalAlign="middle">
