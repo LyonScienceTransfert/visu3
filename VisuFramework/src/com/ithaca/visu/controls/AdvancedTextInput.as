@@ -30,7 +30,7 @@ public class AdvancedTextInput extends TextInput
 	public var clearIcon:InteractiveObject;
 	
 	[SkinPart("false")]
-	public var promptDisplay:Label;
+	public var _promptDisplay:Label;
 	
 	protected var showPrompt:Boolean=true;
 	
@@ -61,10 +61,10 @@ public class AdvancedTextInput extends TextInput
 		{
 			clearIcon.addEventListener(MouseEvent.CLICK, clearButton_clickHandler);	
 		}
-		if (instance == promptDisplay)
+		if (instance == _promptDisplay)
 		{
 			if (prompt.length > 0) 
-				promptDisplay.text = prompt;
+				_promptDisplay.text = prompt;
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class AdvancedTextInput extends TextInput
 	 */
 	protected function textDisplay_focusInHandler(event:FocusEvent):void
 	{
-		if( promptDisplay && prompt.length > 0 )
+		if( _promptDisplay && prompt.length > 0 )
 		{
 			showPrompt = false;
 			invalidateSkinState();
@@ -125,7 +125,7 @@ public class AdvancedTextInput extends TextInput
 	 */
 	protected function textDisplay_focusOutHandler(event:FocusEvent):void
 	{
-		if( promptDisplay && prompt.length > 0 
+		if( _promptDisplay && prompt.length > 0 
 			&& text.length==0)
 		{
 			showPrompt = true;
