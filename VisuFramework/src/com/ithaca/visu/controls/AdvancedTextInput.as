@@ -11,10 +11,6 @@ import spark.components.TextInput;
 import spark.events.TextOperationEvent;
 
 
-[SkinState("normal")]
-[SkinState("prompt")]
-[SkinState("disabled")]
-
 /**
  *  The alpha of the focus ring for this component.
  */
