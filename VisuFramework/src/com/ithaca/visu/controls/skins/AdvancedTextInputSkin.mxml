@@ -160,8 +160,9 @@
     
     <s:states>
         <s:State name="normal"/>
-        <s:State name="prompt"/> 
-        <s:State name="disabled"/>
+        <s:State name="disabled" stateGroups="disabledStates"/>
+        <s:State name="normalWithPrompt"/>
+        <s:State name="disabledWithPrompt" stateGroups="disabledStates"/>
     </s:states>
     
     <!-- border --> 
@@ -196,7 +197,7 @@
               verticalAlign="middle"
               widthInChars="10"
               left="1" right="20" top="1" bottom="1" />
-	<s:Label id="_promptDisplay" includeIn="prompt" 
+	<s:Label id="_promptDisplay"  includeIn="normalWithPrompt,disabledWithPrompt"
 			 verticalAlign="middle" color="{getStyle('promptColor')}" 
 			 fontStyle="italic" 
 			 left="5" right="20" top="1" bottom="1" />
