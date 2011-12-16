@@ -7,35 +7,37 @@
 		width="100%" height="100%" 
 		configure="visumodulebase1_configureHandler(event)" 
 		creationComplete="visumodulebase1_creationCompleteHandler(event)"
+        currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
 		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*" xmlns:mate="http://mate.asfusion.com/" xmlns:sessions="com.ithaca.visu.controls.sessions.*"> 
 	<fx:Script>
 		<![CDATA[ 
-			import com.ithaca.visu.controls.sessions.SessionDetailView;
-			import com.ithaca.visu.events.SelectionEvent;
-			import com.ithaca.visu.events.SessionEvent;
-			import com.ithaca.visu.events.SessionUserEvent;
-			import com.ithaca.visu.events.UserEvent;
-			import com.ithaca.visu.events.VisuModuleEvent;
-			import com.ithaca.visu.model.Activity;
-			import com.ithaca.visu.model.ActivityElement;
-			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.model.Session;
-			import com.ithaca.visu.model.User;
-			import com.ithaca.visu.model.vo.ActivityElementVO;
-			import com.ithaca.visu.model.vo.ActivityVO;
-			import com.ithaca.visu.model.vo.SessionVO;
-			import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
-			import com.ithaca.visu.model.vo.UserVO;
-			import com.ithaca.visu.ui.utils.SessionStatusEnum;
-			import com.ithaca.visu.view.session.controls.SessionDetail;
-			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-			import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
-			
-			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
-			import mx.events.FlexEvent;
-			import mx.events.IndexChangedEvent;
-			import mx.managers.CursorManager;
+            import com.ithaca.visu.controls.sessions.SessionDetailView;
+            import com.ithaca.visu.events.SelectionEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.SessionUserEvent;
+            import com.ithaca.visu.events.UserEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Activity;
+            import com.ithaca.visu.model.ActivityElement;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.ActivityElementVO;
+            import com.ithaca.visu.model.vo.ActivityVO;
+            import com.ithaca.visu.model.vo.SessionVO;
+            import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
+            import com.ithaca.visu.model.vo.UserVO;
+            import com.ithaca.visu.ui.utils.SessionStatusEnum;
+            import com.ithaca.visu.view.session.controls.SessionDetail;
+            import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+            import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.events.FlexEvent;
+            import mx.events.IndexChangedEvent;
+            import mx.events.StateChangeEvent;
+            import mx.managers.CursorManager;
 			
 			private var currentSession:Session = null;
 			
@@ -56,6 +58,9 @@
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
+                // set focus
+                this.setFocus();
+                
 				sessionManagement.filterSession = Model.getInstance().getCurrentFilterSession();
 				sessionManagement.addEventListener(SessionFilterEvent.CHANGE_FILTER, onChangeFilterSession);
 				
@@ -387,6 +392,15 @@
 				event.moduleName = VisuModuleEvent.SESSION_MODULE;
 				this.dispatchEvent(event);
 			}
+            
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
+
 		]]>
 	
 	</fx:Script>

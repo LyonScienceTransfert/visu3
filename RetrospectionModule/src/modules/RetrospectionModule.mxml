@@ -12,7 +12,8 @@
 						xmlns:video="com.ithaca.visu.view.video.*" 
 						xmlns:components="com.ithaca.utils.components.*" 
 						xmlns:documentarisation="com.ithaca.documentarisation.*"
-						currentState="State1" > 
+						currentState="State1" 
+                        currentStateChange="visumodulebase1_currentStateChangeHandler(event)"> 
 	<fx:Script>
 		<![CDATA[ 
             import com.ithaca.documentarisation.SegmentVideoAdvanced;
@@ -66,6 +67,7 @@
             import mx.events.CollectionEventKind;
             import mx.events.FlexEvent;
             import mx.events.IndexChangedEvent;
+            import mx.events.StateChangeEvent;
             import mx.managers.CursorManager;
             import mx.managers.DragManager;
             import mx.managers.PopUpManager;
@@ -193,6 +195,8 @@
 			
 			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
 			{
+                // set focus, runtime error SDK 4.5
+                this.setFocus();
 				// check status logged user
 				var loggedUser:User =  Model.getInstance().getLoggedUser();
 				var statusLoggedUser:int =loggedUser.status; 
@@ -1654,6 +1658,14 @@
 				getListObselEvent.sessionId = selectedSessionIdWhenInit;
 				dispatchEvent(getListObselEvent); 
 			}
+
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
 
 		]]>
 	</fx:Script>
