@@ -546,6 +546,7 @@
 					timerRetroDocumentSegment = new Timer(value,0);
 					timerRetroDocumentSegment.addEventListener(TimerEvent.TIMER, endVideoSegment);
 					timerRetroDocumentSegment.start();
+                    onUpdatePlayerStatus(true);
 				}
 			}
 			
@@ -564,7 +565,8 @@
 						if(!clickOnTimeLine)
 						{
 							// pause video if end playing video segment only
-							this.pauseVideo();
+						//	this.pauseVideo();
+                            onUpdatePlayerStatus(false);
 						}
 					}
 					// check if timerRetroDocumentSegment not null, can be null if user see the VidoSegment => click on tileLine
@@ -883,7 +885,7 @@
 					setCurrentRetroDocumentSegmentPlaying(null);
 					// remove timer RetroDocumentSegment
 					removeTimerRetroDocumentSegment();
-					if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+					/* if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
 					{
 						pauseVideo();
 						timeLine.isPlaying = false;
@@ -891,7 +893,7 @@
 					{
 						this.visio.resumeStreams();
 						timeLine.isPlaying = true;
-					}
+					} */
 				}
 			}
 			
@@ -913,6 +915,13 @@
 					this.currentRetroDocumentSegmentPlaying.setPause();
 				}
 				onCheckSeekStream();
+                
+                var isPlaying:Boolean = true;
+                if(visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+                {
+                    isPlaying = false;
+                }
+                onUpdatePlayerStatus(isPlaying);
 			}
 			
 			//////////////
@@ -1414,6 +1423,22 @@
 					}
 				}
 			}
+            
+            /**
+            * update status video player
+            */
+            private function onUpdatePlayerStatus(value:Boolean):void
+            {
+                if (value)
+                {
+                    timeLine.isPlaying = true;
+                    this.visio.resumeStreams();
+                }else
+                {
+                    timeLine.isPlaying = false;
+                    pauseVideo();
+                }
+            }
 
 			//_____________________________________________________________________
 			//
@@ -1594,12 +1619,14 @@
 
 			protected function timeLine_playButtonClickHandler(event:TimelineEvent):void
 			{
-				onCheckSeekStream()
+				onCheckSeekStream();
+                onUpdatePlayerStatus(true)
 			}
 
 			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent):void
 			{
-				onCheckSeekStream()
+				onCheckSeekStream();
+                onUpdatePlayerStatus(false);
 			} 
             
             
@@ -1645,6 +1672,7 @@
 				timeLine.contextFollowCursor = false;
 				timeLine.setStyle("cursorMode","auto");
 				timeLine.showPlayButton = true;
+
 				// listeners
 				timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
 				timeLine.addEventListener(TimelineEvent.PAUSE, timeLine_pauseButtonClickHandler);
@@ -1694,6 +1722,7 @@
 		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
+		<mate:Listener type="{SalonRetroEvent.PLAYER_STATUS_UPDATE}"  method="onUpdatePlayerStatus"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
