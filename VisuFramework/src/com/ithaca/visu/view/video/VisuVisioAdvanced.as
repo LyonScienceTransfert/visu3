@@ -930,6 +930,7 @@ public class VisuVisioAdvanced extends SkinnableComponent
 		{
 			streams[n].resume();
 		}
+        this.status = VisuVisioAdvanced.STATUS_REPLAY;
 	}
 	
 	public function playStreams(): void
