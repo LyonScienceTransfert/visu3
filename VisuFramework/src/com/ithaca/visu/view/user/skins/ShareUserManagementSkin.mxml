@@ -4,7 +4,11 @@
 		xmlns:mx="library://ns.adobe.com/flex/mx" 
 		xmlns:controls="com.ithaca.controls.*" 
 		xmlns:users="com.ithaca.visu.controls.users.*"
-		creationComplete="skin1_creationCompleteHandler(event)" xmlns:user="com.ithaca.visu.view.user.*" xmlns:controls1="com.ithaca.visu.controls.controls.*" xmlns:controls2="com.ithaca.visu.controls.*">
+        xmlns:user="com.ithaca.visu.view.user.*" 
+        xmlns:controls1="com.ithaca.visu.controls.controls.*" 
+        xmlns:controls2="com.ithaca.visu.controls.*"
+		creationComplete="skin1_creationCompleteHandler(event)" 
+        currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.user.ShareUserManagement")]
@@ -12,19 +16,31 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.events.FlexEvent;
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
+                // set focus, runtime error SDK 4.5
+                this.setFocus();
+                
 				fxgt = FxGettext;
 			}
 			
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
+
 		]]>
 	</fx:Script>
 	<!-- SkinParts
