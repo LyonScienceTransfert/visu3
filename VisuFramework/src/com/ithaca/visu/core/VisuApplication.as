@@ -20,6 +20,7 @@ package com.ithaca.visu.core
 	import mx.controls.ProgressBar;
 	import mx.controls.ProgressBarLabelPlacement;
 	import mx.controls.SWFLoader;
+	import mx.core.INavigatorContent;
 	import mx.events.FlexEvent;
 	import mx.events.ModuleEvent;
 	import mx.logging.ILogger;
@@ -313,6 +314,10 @@ package com.ithaca.visu.core
 		/* TEMP */
 		protected function userLoggedIN(event:VisuModuleEvent):void
 		{		
+            // defauld module name 
+            var loadModuleName:String = null;
+            var moduleNameSetByParam:String = Model.getInstance().getInitModule();
+            
 			authentified = true;
 			menu.authentified = true;
 			var listModules:Array = event.listModules as Array;
@@ -322,18 +327,42 @@ package com.ithaca.visu.core
 			for(var nModule:uint = 0; nModule < nbrModules; nModule++){
 				var moduleInfo:ModuleInfo = listModules[nModule] as ModuleInfo;
 				listModulesInfo.push(moduleInfo);
+                // check name module set by param
+                if(moduleNameSetByParam == moduleInfo.name )
+                {
+                    loadModuleName = moduleNameSetByParam;
+                }
 				moduleList.push({label:moduleInfo.label, value:moduleInfo.name});				
 			}
+            
 			// initialisation list the modules
 			menu.moduleList = moduleList;
-			menu.initModule = "home";
 			// initialisation the modules
 			moduleNavigator.initModuleNavigation(listModulesInfo);
-			moduleNavigator.defaultModule = "home";
 			moduleNavigator.browserTitleBase = "VISU"
-			// replace by menu.initModule = "home";
-		//	moduleNavigator.navigateToModule( "home" );
+            
+            // check load module name
+            // FIXME : will limited load only bilan module
+            if(loadModuleName && loadModuleName == "bilan")
+            {
+                var obj:Array = new Array();
+                obj[0] = "CameOnInitApplication";
+                // session id
+                obj[1] = Model.getInstance().getInitSessionId();
+                // bilan id
+                obj[2] = Model.getInstance().getInitBilanId();
+                
+                moduleNavigator.navigateToModule( loadModuleName, obj );
+                menu.onChangeModule(null, loadModuleName);
+                return;
+            }
+            
+            loadModuleName = "home";
+            menu.initModule = loadModuleName;
+            moduleNavigator.defaultModule = loadModuleName;
 		}
+        
+        
 		protected function userLoggedOUT():void
 		{
 			authentified = false;

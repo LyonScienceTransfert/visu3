@@ -82,9 +82,12 @@
 				logger.debug("modification date (str): {0}",bilan.modifyDate);
 				logger.debug("title: {0}",bilan.title);
 				logger.debug("description: {0}",bilan.description);
-				logger.debug("session id: {0}",bilan.session.id_session);	
-				logger.debug("session theme: {0}",bilan.session.theme);
-				logger.debug("session owner id: {0}",bilan.session.id_user);
+                if(bilan.session)
+                {
+    				logger.debug("session id: {0}",bilan.session.id_session);	
+    				logger.debug("session theme: {0}",bilan.session.theme);
+    				logger.debug("session owner id: {0}",bilan.session.id_user);
+                }
 				
 				if(bilan != null) {
 					var event:BilanEvent = new BilanEvent(BilanEvent.BILAN_LOADED);

@@ -215,7 +215,15 @@
 									if( frameRateSplit > 100 )
 										Model.getInstance().setFrameRateSplit(frameRateSplit);
 								}
-							}
+                                if(params.hasOwnProperty('module'))
+                                {
+                                    // set init module
+                                    Model.getInstance().setInitModule(params['module']);
+                                    // set init session id
+                                    Model.getInstance().setInitSessionId(params['sessionId']);
+                                    // set init bilan id
+                                    Model.getInstance().setInitBilanId(params['bilanId']);
+                                }							}
 						}
 					}
 				}else
