@@ -186,6 +186,10 @@
 						case "CameFromRetroModule" :
 							this.selectedRetroDocumentIdWhenInit = param[2];
 							break;
+                        // came on init application 
+                        case "CameOnInitApplication" :
+                            this.selectedRetroDocumentIdWhenInit = param[2];
+                            break;
 					}
 					// set selected sessionId
 					this.selectedSessionIdWhenInit = param[1];
