@@ -1722,7 +1722,6 @@
 		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
-		<mate:Listener type="{SalonRetroEvent.PLAYER_STATUS_UPDATE}"  method="onUpdatePlayerStatus"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
