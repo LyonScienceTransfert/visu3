@@ -162,7 +162,13 @@ package  com.ithaca.visu.model
         
 		private var _traceIdRetroRoom:String;
 		private var _parentTraceId:String;
-			
+   
+        // init module
+        private var _initModule:String;
+        // init session id
+        private var _initSessionId:Number;
+        // init bilan id
+        private var _initBilanId:Number;        
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -256,7 +262,16 @@ package  com.ithaca.visu.model
 				
 				return name;
 		}
-
+        // init module 
+        public function setInitModule(value:String):void{_initModule = value;}
+        public function getInitModule():String{return _initModule;}
+        // init session id
+        public function setInitSessionId(value:Number):void{_initSessionId = value;}
+        public function getInitSessionId():Number{return _initSessionId;}
+        // init bilan id
+        public function setInitBilanId(value:Number):void{_initBilanId = value;}
+        public function getInitBilanId():Number{return _initBilanId;}
+        
 		public function setRemoteVersionGit(value:String):void{_remoteVersionGit = value;}
 		public function getRemoteVersionGit():String{return _remoteVersionGit;}
 		
