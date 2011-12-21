@@ -84,7 +84,7 @@ timeline|TraceLine
 
 timeline|TraceLine.background
 {
-	skin-class: ClassReference("com.ithaca.timelineskins.TraceLineBackgroundSkin");
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineBackgroundSkin");
 }
 
 timeline|TraceLineTitle
