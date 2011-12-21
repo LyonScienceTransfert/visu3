@@ -101,7 +101,7 @@ timeline|TraceLine.comments
 
 timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
 {
-	skin-class		: ClassReference("com.ithaca.timelineskins.IconTextSkin");
+	skin-class		: ClassReference("com.ithaca.timeline.skins.IconTextSkin");
 	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
 	backgroundColor 	: #FFFFB3;
 }
