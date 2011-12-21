@@ -164,7 +164,7 @@ tooltipProp : 'text';
 
 timeline|ObselSkin.Activity
 {
-skin-class: ClassReference("com.ithaca.timelineskins.ActivitySkin");	
+skin-class: ClassReference("com.ithaca.timeline.skins.ActivitySkin");	
 backgroundColors : #F4FA29, #3355F7, #D134E2, #1CFD81 ;
 }
 
