@@ -17,6 +17,8 @@ public interface RetroDocumentService {
 
 	public RetroDocument getRetroDocument(int docId);
 	
+	public Collection<RetroDocument> findAllRetroDocuments(boolean withXmlContent);
+
 	public boolean save(RetroDocument document);
 	
 	public boolean deleteDocument(RetroDocument document);
