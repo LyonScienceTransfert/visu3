@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
-	 	creationComplete="skin1_creationCompleteHandler(event)" xmlns:utils="com.ithaca.utils.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+        xmlns:components="com.ithaca.utils.components.*"
+        xmlns:utils="com.ithaca.utils.*"
+        creationComplete="skin1_creationCompleteHandler(event)" 
+        currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.RetroDocumentView")]
@@ -17,14 +20,15 @@
 	</s:states>
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.visu.ui.utils.IconEnum;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.events.DragEvent;
-			import mx.events.FlexEvent;
-			import mx.managers.DragManager;
+            import com.ithaca.visu.ui.utils.IconEnum;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.events.DragEvent;
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;
+            import mx.managers.DragManager;
 			
 			[Bindable]
 			private var fxgt:_FxGettext;
@@ -32,9 +36,19 @@
 
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
+                // set focus, runtime error SDK 4.5
+                this.setFocus();
+                
 				fxgt = FxGettext;
 			}
 
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
 		]]>
 	</fx:Script>
 	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
