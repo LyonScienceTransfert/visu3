@@ -34,5 +34,7 @@ public interface RetroDocumentDAO {
 	public Collection<RetroDocument> getRetroDocumentsByInviteeWithoutXML(Integer inviteeId) throws SQLException;
 	
 	public Collection<RetroDocument> getRetroDocumentsByOwnerWithoutXML(Integer ownerId) throws SQLException;
+
+	public Collection<RetroDocument> getAllRetroDocuments() throws SQLException;
 	
 }

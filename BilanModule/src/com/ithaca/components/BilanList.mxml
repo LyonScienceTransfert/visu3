@@ -14,24 +14,25 @@
  
     <fx:Script>
     	<![CDATA[
-		import com.ithaca.documentarisation.model.RetroDocument;
-		import com.ithaca.events.SelectionEvent;
-		import com.ithaca.utils.VisuUtils;
-		import com.ithaca.visu.events.SessionListViewEvent;
-		import com.ithaca.visu.model.Model;
-		import com.ithaca.visu.model.Session;
-		import com.ithaca.visu.model.User;
-		import com.lyon2.controls.utils.TimeUtils;
-		
-		import mx.collections.ArrayCollection;
-		import mx.collections.ArrayList;
-		import mx.collections.ListCollectionView;
-		import mx.collections.Sort;
-		import mx.events.ItemClickEvent;
-		import mx.logging.ILogger;
-		import mx.logging.Log;
-		
-		import spark.events.IndexChangeEvent;
+            import com.ithaca.documentarisation.model.RetroDocument;
+            import com.ithaca.events.SelectionEvent;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.events.SessionListViewEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.lyon2.controls.utils.TimeUtils;
+            
+            import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
+            import mx.collections.IList;
+            import mx.collections.ListCollectionView;
+            import mx.collections.Sort;
+            import mx.events.ItemClickEvent;
+            import mx.logging.ILogger;
+            import mx.logging.Log;
+            
+            import spark.events.IndexChangeEvent;
 
 			
 		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
@@ -90,14 +91,21 @@
 			if(seanceFilterButton.selected && selectedFilterSessionId && selectedFilterSessionId!=d.sessionId)
 				passSelectedSessionFilter = false;
 
-			var passButtonFilter:Boolean = true;
+			var passButtonFilter:Boolean = false;
 			if (filterType.selectedValue == "all")
 				passButtonFilter = true;
 			else if (filterType.selectedValue == "mine") 
-				passButtonFilter = d.inviteeIds.length==0;
+            {
+                if(d.ownerId == me.id_user)
+                {
+                    passButtonFilter = true;
+                }
+            }
 			else if (filterType.selectedValue == "shared") 
-				passButtonFilter = d.inviteeIds.length>0 && me.getId() != d.ownerId;
-
+                if(isBilanShareWithMe(d.inviteeIds, me.id_user))
+                {
+                    passButtonFilter = true;
+                }
 			var passTextFilter:Boolean = false;
 			passTextFilter = d.title.match(filterText.text)
 								|| d.description.match(filterText.text)
@@ -218,6 +226,23 @@
 					);
 		}
 		
+
+        /////////
+        // Utils
+        ////////
+        private function isBilanShareWithMe(list:IList, userId:int):Boolean
+        {
+            var result:Boolean = false;
+            for(var i:int = 0; i < list.length ; i++ )
+            {
+                var id:int = list.getItemAt(i) as int;
+                if(id == userId)
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
 	]]>
     </fx:Script>
  
