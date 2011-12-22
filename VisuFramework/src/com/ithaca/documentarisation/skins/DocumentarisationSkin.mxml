@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*">
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+    xmlns:components="com.ithaca.utils.components.*" 
+    xmlns:documentarisation="com.ithaca.documentarisation.*"
+    creationComplete="skin1_creationCompleteHandler(event)"
+     currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.Documentarisation")]
@@ -9,7 +13,25 @@
 
 	<fx:Script>
 	<![CDATA[
-		import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
+        import com.ithaca.documentarisation.renderer.RetroDocumentRenderer;
+        
+        import mx.events.FlexEvent;
+        import mx.events.StateChangeEvent;
+
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            // set focus, runtime error SDK 4.5
+            this.setFocus();
+        }
+
+        ////////////////////////////////////////////////////////
+        // INFO : have to set focus, runtime error SDK 4.5    //
+        ////////////////////////////////////////////////////////
+        protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+        {
+            this.setFocus();
+        }
+
 	]]>
 	</fx:Script>
 	<s:states>

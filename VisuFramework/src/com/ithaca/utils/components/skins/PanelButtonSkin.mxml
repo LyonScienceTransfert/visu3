@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:fb="http://ns.adobe.com/flashbuilder/2009" blendMode="normal" mouseEnabled="false" 
-    minWidth="131" minHeight="127" alpha.disabled="0.5" alpha.disabledWithControlBar="0.5" xmlns:components="com.ithaca.utils.components.*" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:video="com.ithaca.visu.view.video.*">
+    minWidth="131" minHeight="127" alpha.disabled="0.5" alpha.disabledWithControlBar="0.5" 
+    xmlns:components="com.ithaca.utils.components.*" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    xmlns:video="com.ithaca.visu.view.video.*"
+    creationComplete="sparkskin1_creationCompleteHandler(event)"
+    currentStateChange="sparkskin1_currentStateChangeHandler(event)">
     <fx:Metadata>[HostComponent("com.ithaca.utils.components.PanelButton")]</fx:Metadata>
     
     <fx:Script fb:purpose="styling">
 		import com.ithaca.visu.ui.utils.IconEnum;
+        import mx.events.FlexEvent;
+        import mx.events.StateChangeEvent;
 		
         /* Define the skin elements that should not be colorized. 
         For panel, border and title background are skinned, but the content area and title text are not. */
@@ -86,6 +93,21 @@
         }
         
         private var cornerRadius:Number;
+       
+        protected function sparkskin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            // set focus, runtime error SDK 4.5
+            this.setFocus();
+        }
+        
+        ////////////////////////////////////////////////////////
+        // INFO : have to set focus, runtime error SDK 4.5    //
+        ////////////////////////////////////////////////////////
+        protected function sparkskin1_currentStateChangeHandler(event:StateChangeEvent):void
+        {
+            this.setFocus();
+        }
+
     </fx:Script>
     
     <s:states>
