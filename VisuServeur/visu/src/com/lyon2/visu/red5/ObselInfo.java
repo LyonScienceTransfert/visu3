@@ -574,33 +574,6 @@ public class ObselInfo {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkAddObselComment", args);
 		}
-		
-		// add obsel action user
-		String typeObselActionUser = ObselType.RETRO_SAVE_COMMENT_EVENT;
-		if(typeObsel.equals(ObselType.DELETE_TEXT_COMMENT))
-		{
-			typeObselActionUser = ObselType.RETRO_DELETE_COMMENT_EVENT;
-		}
-		
-		String traceRetroId = (String)client.getAttribute("traceRetroId");
-		String traceParentRetroId = (String)client.getAttribute("traceParentRetroId");
-
-		List<Object> paramsObselActionUser = new ArrayList<Object>();
-		paramsObselActionUser.add(ObselType.SYNC_ROOM_TRACE_ID);paramsObselActionUser.add(traceParentRetroId);
-		paramsObselActionUser.add(ObselType.COMMENT_VALUE);paramsObselActionUser.add(textComment);
-		paramsObselActionUser.add(ObselType.COMMENT_ID);paramsObselActionUser.add(timeStamp.toString());
-		paramsObselActionUser.add(ObselType.COMMENT_BEGIN_DATE);paramsObselActionUser.add(beginTime);
-		paramsObselActionUser.add(ObselType.COMMENT_END_DATE);paramsObselActionUser.add(endTime);
-
-		Obsel obselActionUser = null;
-		try
-		{
-			obselActionUser = app.setObsel(userId, traceRetroId, typeObselActionUser, paramsObselActionUser);					
-		}
-		catch (SQLException sqle)
-		{
-			log.error("=====Errors===== {}", sqle);
-		}	
 	}
 
 	
