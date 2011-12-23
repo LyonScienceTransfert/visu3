@@ -111,7 +111,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		super();
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
-        this.addEventListener(Event.REMOVED_FROM_STAGE, checkTracage);
+        this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 	}
 	//_____________________________________________________________________
 	//
@@ -651,6 +651,13 @@ public class SegmentVideoAdvanced extends SkinnableComponent
         // save clone the segment for tracage the modifications
         _tracedSegment = new Segment(segment.parentRetroDocument);
         _tracedSegment.setSegmentXML(segment.getSegmentXML());
+    }
+    // remove from stage 
+    private function onRemoveFromStage(event:Event):void
+    {
+        checkTracage();
+        // stop tracage timer
+        stopTracageTimer();
     }
     // check tracage modification the segment
     private function checkTracage(event:* = null):void
