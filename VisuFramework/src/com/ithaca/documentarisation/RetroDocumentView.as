@@ -71,6 +71,9 @@ public class RetroDocumentView extends SkinnableComponent
     public var buttonSwitch:Button;
     
     [SkinPart("true")]
+    public var buttonShare:IconButton;
+    
+    [SkinPart("true")]
     public var removeButton:Button;
     
     [SkinPart("true")]
@@ -199,6 +202,12 @@ public class RetroDocumentView extends SkinnableComponent
         {
             buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);	
             buttonSwitch.toolTip = fxgt.gettext("Visualiser ce bilan");
+        }
+        if (instance == buttonShare)
+        {
+            buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
+            buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
+            buttonShare.toolTip = "Partager ce bilan";
         }
         if(instance == removeButton)
         {
@@ -381,6 +390,12 @@ public class RetroDocumentView extends SkinnableComponent
         retroDocumentViewTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_VIEW;
         retroDocumentViewTracageEvent.retroDocumentId = _retroDocument.id;
         TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentViewTracageEvent);
+    }
+    
+    private function onClickButtonShare(event:MouseEvent):void
+    {
+        var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
+        this.dispatchEvent(loadListUsers);
     }
     
     private function onRemoveDocument(event:MouseEvent):void

@@ -18,6 +18,7 @@ import mx.controls.Alert;
 import mx.controls.Menu;
 import mx.events.CloseEvent;
 
+import spark.components.Button;
 import spark.components.Label;
 import spark.components.supportClasses.SkinnableComponent;
 
@@ -33,6 +34,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	public var buttonDelete:IconButton;
 	[SkinPart("true")]
 	public var buttonShare:IconButton;
+	[SkinPart("true")]
+	public var buttonSwitch:IconButton;
 	
 	private var _retroDocumentVO:RetroDocumentVO;
 	private var retroDocumentVOChange:Boolean;
@@ -130,6 +133,12 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
 			buttonShare.toolTip = "Partager ce bilan";
 		}
+		if (instance == buttonSwitch)
+		{
+            buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
+            buttonSwitch.icon =  IconEnum.getIconByName('iconEye_16x16');
+            buttonSwitch.toolTip = "Visualiser ce bilan";
+		}
 	}
 
 	override protected function partRemoved(partName:String, instance:Object):void
@@ -203,6 +212,20 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	{
 		var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
 		this.dispatchEvent(loadListUsers);
+	}
+	private function onClickButtonSwitch(event:MouseEvent):void
+	{
+        var clickButtonSwitchEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CLICK_BUTTON_SWITCH);
+        clickButtonSwitchEvent.idRetroDocument = retroDocumentVO.documentId;
+        clickButtonSwitchEvent.sessionId = retroDocumentVO.sessionId;
+        dispatchEvent(clickButtonSwitchEvent);
+       
+        // FIXME : add property click on button switch on retroDocumentlist ?
+        // tracage view retrodocument
+        var retroDocumentViewTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+        retroDocumentViewTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_VIEW;
+        retroDocumentViewTracageEvent.retroDocumentId = retroDocumentVO.documentId;
+        TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentViewTracageEvent);
 	}
 	// remove retroDocument
 	private function removeRetroDocumentConformed(event:CloseEvent):void
