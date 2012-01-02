@@ -260,7 +260,7 @@ public class Documentarisation extends SkinnableComponent
 		{
 			var iconButton:IconButton = event.target as IconButton;
 			var id:String = iconButton.id;
-			if(id == "buttonDelete")
+			if(id == "buttonDelete"  || id == "buttonSwitch")
 			{
 				return;
 			}
