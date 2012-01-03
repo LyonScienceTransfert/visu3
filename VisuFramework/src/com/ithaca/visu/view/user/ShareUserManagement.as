@@ -68,6 +68,7 @@ package com.ithaca.visu.view.user
 	import com.ithaca.visu.model.User;
 	import com.lyon2.controls.utils.LemmeFormatter;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -77,6 +78,8 @@ package com.ithaca.visu.view.user
 	
 	import spark.components.Button;
 	import spark.components.Group;
+	import spark.components.TextArea;
+	import spark.components.VGroup;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
@@ -86,28 +89,24 @@ package com.ithaca.visu.view.user
 	{
 		protected static var log:ILogger = Log.getLogger("views.user.ShareUserManagement");
 		
-		[SkinPart("true")]
-		public var addUserButton:Button;
 		
 		[SkinPart("true")]
 		public var usersList:Group;
-		
-		[SkinPart("false")]
-		public var searchDisplay:AdvancedTextInput;
-		
+
 		[SkinPart("true")]
-		public var addUserDetail:AddUserDetail;
-		
+		public var mailList:TextArea;
+        
+		[SkinPart("true")]
+		public var urlBilanTextArea:TextArea;
+        
 		private var _profiles:Array;
 		private var _listShareUser:Array;
-		private var profilesChange:Boolean;
+		private var _urlBilan:String;
+		
+        private var profilesChange:Boolean;
 		private var listUsersChange:Boolean;
-		
-		
-		[Bindable] public var selectedUser:User;
-		[Bindable] public var filterProfileMax:int = -1;
-		[Bindable] public var filterProfileMin:int = -1;
-		[Bindable] public var sessions:Session;
+		private var urlBilanChange:Boolean;
+        
 		
 		public function ShareUserManagement()
 		{
@@ -126,7 +125,6 @@ package com.ithaca.visu.view.user
 			{
 				_users = value;
 				userCollection = new ArrayCollection( _users);
-				userCollection.filterFunction = userFilterFunction;
 				listUsersChange = true;
 				this.invalidateProperties();
 			}
@@ -157,6 +155,16 @@ package com.ithaca.visu.view.user
 			}
 			return result;
 		}
+        public function set urlBilan(value:String):void
+        {
+            _urlBilan = value; 
+            urlBilanChange = true;
+            invalidateProperties();
+        }
+        public function get urlBilan():String
+        {
+            return _urlBilan;
+        }
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -166,37 +174,11 @@ package com.ithaca.visu.view.user
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == usersList)
+			if (instance == urlBilanTextArea)
 			{
-				usersList.addEventListener(IndexChangeEvent.CHANGE, userList_indexChangeHandler);
+                urlBilanTextArea.text = urlBilan;
 			}
-			if (instance == searchDisplay)
-			{
-				searchDisplay.addEventListener(TextOperationEvent.CHANGE,searchDisplay_changeHandler);
-				searchDisplay.addEventListener(FlexEvent.VALUE_COMMIT,searchDisplay_mxchangeHandler);
-			}
-			if (instance == addUserButton)
-			{
-				addUserButton.addEventListener(MouseEvent.CLICK, addButton_clickHandler);
-			}
-		}
-		override protected function partRemoved(partName:String, instance:Object):void
-		{
-			super.partRemoved(partName,instance);
-			if (instance == usersList)
-			{
-				usersList.removeEventListener(IndexChangeEvent.CHANGE, userList_indexChangeHandler);
-			}
-			if (instance == searchDisplay)
-			{
-				searchDisplay.removeEventListener(TextOperationEvent.CHANGE,searchDisplay_changeHandler);
-			}
-			if (instance == addUserButton)
-			{
-				addUserButton.removeEventListener(MouseEvent.CLICK, addButton_clickHandler);
-			}
-			
-			
+
 		}
 		
 		override protected function commitProperties():void
@@ -211,6 +193,16 @@ package com.ithaca.visu.view.user
 			{
 				listUsersChange = false;
 				addShareUsers();
+                onCheckListSharedUser();
+			}
+            
+			if(urlBilanChange)
+			{
+                urlBilanChange = false;
+                if(urlBilanTextArea)
+                {
+                    urlBilanTextArea.text = urlBilan;
+                }
 			}
 			
 		}
@@ -225,82 +217,7 @@ package com.ithaca.visu.view.user
 		// Event Handlers
 		//
 		//_____________________________________________________________________
-		
-		/**
-		 * @private
-		 */
-		protected function addButton_clickHandler(event:MouseEvent):void
-		{
-//			usersList.selectedIndex = -1;
-			
-		}
-		
-		/**
-		 * @private
-		 */
-		protected function userList_indexChangeHandler(event:IndexChangeEvent):void
-		{
-			//addUserDetail.user = User(usersList.dataProvider.getItemAt(event.newIndex));
-		}
-		
-		protected function filter_viewAllHandler(event:UserFilterEvent):void
-		{
-			log.debug("filter change : view all users");
-			filterProfileMax = -1;
-			
-			userCollection.refresh();
-			
-		}
-		protected function filter_viewProfileHandler(event:UserFilterEvent):void
-		{
-			log.debug("filter users with profile " + event.profile_max.toString(2) +" - "+ event.profile_min.toString(2) );
-			
-			filterProfileMax = event.profile_max;
-			filterProfileMin = event.profile_min;
-			userCollection.refresh();
-		}
-		protected function filter_viewUngroupHandler(event:UserFilterEvent):void
-		{
-			log.debug("filter change view ungroup users");
-			filterProfileMax = -1;
-			
-			userCollection.refresh();
-		}
-		protected function searchDisplay_changeHandler(event:TextOperationEvent):void
-		{
-			log.debug("searchDisplay change"); 
-			
-			userCollection.refresh();
-		}
-		protected function searchDisplay_mxchangeHandler(event:FlexEvent):void
-		{
-			log.debug("searchDisplay clear"); 
-			
-			userCollection.refresh();
-		}
-		
-		
-		
-		protected function userFilterFunction(item:Object):Boolean
-		{
-			var u :User = item as User;
-			if (filterProfileMax != -1)
-			{
-				if (u.role > filterProfileMax || u.role < filterProfileMin) return false;
-			}
-			
-			var dict :String = LemmeFormatter.format( u.lastname + "|" + u.firstname+"|"+u.mail);
-			
-			if (dict.indexOf( searchDisplay.text ) == -1  )
-			{
-				return false
-			}
-			else
-			{
-				return true;
-			}	
-		}
-		
+	
 		private function addShareUsers():void
 		{
 			var nbrUser:int = userCollection.length;
@@ -308,6 +225,8 @@ package com.ithaca.visu.view.user
 			{	
 				var user:User = userCollection.getItemAt(nUser) as User;
 				var shareUser:ShareUser = new ShareUser();
+                // add listener the checkbox
+                shareUser.addEventListener("selectedSharedUser", onCheckListSharedUser);
 				shareUser.user = user;
 				shareUser.percentWidth = 100;
 				var share:Boolean = isUserShare(user.id_user, _listShareUser);
@@ -332,6 +251,24 @@ package com.ithaca.visu.view.user
 			}
 		}
 		
-		
+        private function onCheckListSharedUser(event:Event = null):void
+        {
+            var result:String="";
+            mailList.text = "";
+            var nbrShareUser:int = this.usersList.numElements;
+            for(var nShareUser:int = 0; nShareUser < nbrShareUser ; nShareUser++ )
+            {
+                var shareUser:ShareUser = this.usersList.getElementAt(nShareUser) as ShareUser;
+                var shared:Boolean = shareUser.share;
+                if(shared)
+                {
+                    if(mailList.text.length > 0)
+                    {
+                        mailList.text = mailList.text + ", ";
+                    }
+                    mailList.text =  mailList.text + shareUser.user.mail;
+                }
+            }
+        }
 	}
 }

@@ -9,7 +9,6 @@
         xmlns:controls2="com.ithaca.visu.controls.*"
 		creationComplete="skin1_creationCompleteHandler(event)" 
         currentStateChange="skin1_currentStateChangeHandler(event)">
-	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.user.ShareUserManagement")]
 	</fx:Metadata>
@@ -43,37 +42,44 @@
 
 		]]>
 	</fx:Script>
-	<!-- SkinParts
-	name=addUserButton, type=spark.components.Button, required=false
-	name=filter, type=components.UserFilters, required=false
-	name=userDetail, type=components.UserDetail, required=false
-	name=usersList, type=com.ithaca.controls.FilteredList, required=false
-	-->
 	<s:states>
 		<s:State name="normal" />
 		<s:State name="disabled" />
 	</s:states>
-		
-	<s:Group top="0" left="0" right="0" bottom="0">
-		<s:layout>
-			<s:HorizontalLayout  />
-		</s:layout>
-		<s:Group height="100%" width="100%">
-			<s:Label left="5" right="5" top="5" height="45" fontWeight="bold" verticalAlign="middle" textAlign="center" textAlign.normal="left">
-				<s:text>{fxgt.gettext("Veuillez sélectionner les utilisateurs avec qui vous désirez partager ce bilan (en lecture seulement).")}</s:text>
-			</s:Label>
-						
-				<s:Group top="50" left="5" right="5" bottom="5">
-					<s:Scroller left="2" right="2" top="2" bottom="2">
-						<s:Group	
-							id="usersList"
-							top="25" bottom="0" left="0" right="0">	
-							<s:layout>
-								<s:VerticalLayout gap="2"/>
-							</s:layout>
-						</s:Group>	
-					</s:Scroller>
-				</s:Group>	
-		</s:Group>
-	</s:Group> 
+    <s:VGroup height="100%" width="100%" paddingTop="10" paddingRight="10" paddingLeft="10" paddingBottom="10">
+        <s:HGroup width="100%" height="100%" gap.disabled="6">
+            <!-- LIST SHARED USER -->
+            <s:VGroup height="100%" width="100%">
+                <s:Label height="45" fontWeight="bold" verticalAlign="middle" textAlign="center" width="100%">
+                    <s:text>{fxgt.gettext("Veuillez sélectionner les utilisateurs avec qui vous désirez partager ce bilan (en lecture seulement):")}</s:text>
+                </s:Label>
+               
+               <s:Group top="55" left="5" right="5" bottom="5" width="100%" height="100%" >
+                    <s:Scroller  top="0" bottom="0" left="0" right="0">
+                        <s:Group id="usersList" top="5" bottom="5" left="5" right="5">
+                            <s:layout>
+                                <s:VerticalLayout gap="5"/>
+                            </s:layout>
+                        </s:Group>
+                    </s:Scroller>
+              </s:Group>
+            </s:VGroup>	
+            <s:VGroup width="100%" height="100%">
+                <s:Label height="45" width="100%" fontWeight="bold" verticalAlign="middle" textAlign="center">
+                    <s:text>{fxgt.gettext("Liste des adresses mail des utilisateurs sélectionnée: ")}</s:text>
+                </s:Label>
+                <!-- MAIL LIST SHARED USER -->
+                <s:TextArea id="mailList" width="100%" minHeight="22" maxHeight="60">
+                    <s:text>serg@hjhj.com</s:text>
+                </s:TextArea>
+                <s:Label height="45" width="100%" fontWeight="bold" verticalAlign="middle" textAlign="center">
+                    <s:text>{fxgt.gettext("URL sur le bilan: ")}</s:text>
+                </s:Label>
+                <!-- URL BILAN -->
+                <s:TextArea id="urlBilanTextArea" width="100%" maxHeight="40">
+                    <s:text>http://visu-tutorat.org/visudev/visuclient.html</s:text>
+                </s:TextArea>
+            </s:VGroup>
+        </s:HGroup>		
+    </s:VGroup>
 </s:Skin>

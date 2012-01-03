@@ -4,6 +4,7 @@ package com.ithaca.visu.view.user
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import spark.components.CheckBox;
 	import spark.components.Label;
@@ -71,14 +72,37 @@ package com.ithaca.visu.view.user
 				{
 					fistLastNameUser.setStyle("color","0xe34545");					
 				}
-				
+                
+                fistLastNameUser.buttonMode = true;
+                // listener click on label 
+                fistLastNameUser.addEventListener(MouseEvent.CLICK, onClickFistLastNameUser);
 			}
 		}
 		
+        private function onClickFistLastNameUser(event:MouseEvent):void
+        {
+            if(checkBoxUser.selected)
+            {
+                checkBoxUser.selected = false;
+            }else
+            {
+                checkBoxUser.selected = true;
+            }
+            
+            _share = checkBoxUser.selected;
+            dispatcherChangeShare();
+        }
+        
 		private function onChangeShare(event:Event):void
 		{
-			var t:uint = 1;
 			_share = checkBoxUser.selected;
+            dispatcherChangeShare();
 		}
+        
+        private function dispatcherChangeShare():void
+        {
+            var changeCheckBox:Event = new Event("selectedSharedUser");
+            this.dispatchEvent(changeCheckBox);
+        }
 	}
 }

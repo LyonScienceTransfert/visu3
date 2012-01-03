@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" width="310"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:user="com.ithaca.visu.view.user.*"
-			   close="PopUpManager.removePopUp(this);" 
+			   close="button1_clickHandler()" 
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
-               currentStateChange="titlewindow1_currentStateChangeHandler(event)">
+               currentStateChange="titlewindow1_currentStateChangeHandler(event)"
+               height="260" width="550">
 	<s:title>{fxgt.gettext("Selection d'utilisateur...")}</s:title>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -32,12 +33,13 @@
 				fxgt = FxGettext;
 			}
 			
-			protected function button1_clickHandler(event:MouseEvent):void
+			protected function button1_clickHandler():void
 			{
 				var listShareUser:Array = shareUserManagement.listShareUser;
 				var selectedUser:UserEvent = new UserEvent(UserEvent.SELECTED_USER);
 				selectedUser.listUser = listShareUser;
 				this.dispatchEvent(selectedUser);
+                this.setFocus();
 				PopUpManager.removePopUp(this);	
 			}
 			
@@ -51,7 +53,7 @@
 
 		]]>
 	</fx:Script>
-	<user:ShareUserManagement  id="shareUserManagement" top="0" left="0" right="0" bottom="40"
+	<user:ShareUserManagement  id="shareUserManagement"  height="100%" width="100%"
 							 skinClass="com.ithaca.visu.view.user.skins.ShareUserManagementSkin"
 							 />
 </s:TitleWindow>
