@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx">
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+        creationComplete="skin1_creationCompleteHandler(event)" 
+        currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.user.ShareUser")]
 	</fx:Metadata>
-	
-	<!-- SkinParts
-	name=fistNameUser, type=spark.components.Label, required=false
-	name=lastNameUser, type=spark.components.Label, required=false
-	name=checkBoxUser, type=spark.components.CheckBox, required=false
-	-->
+    <fx:Script>
+    <![CDATA[
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.events.FlexEvent;
+        import mx.events.StateChangeEvent;
+        
+        [Bindable]
+        private var fxgt:_FxGettext;
+        
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            // set focus, runtime error SDK 4.5
+            this.setFocus();
+            
+            fxgt = FxGettext;
+        }
+        
+        ////////////////////////////////////////////////////////
+        // INFO : have to set focus, runtime error SDK 4.5    //
+        ////////////////////////////////////////////////////////
+        protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+        {
+            this.setFocus();
+        }
+    ]]>
+    </fx:Script>
 	<s:Group width="100%">
 		<s:layout>
 			<s:VerticalLayout gap="4"/>
 		</s:layout>
 			<s:Group width="100%" height="26">
-				<!--<s:Rect id="fill" radiusX="10"
-					left="2" right="2" top="1" bottom="1">
-				<s:fill>
-					<s:LinearGradient rotation="90">
-						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
-					</s:LinearGradient>
-				</s:fill>
-			</s:Rect>
-			<s:Rect id="border" radiusX="10"
-					left="2" right="2" top="0" bottom="0">
-				<s:stroke>
-					<s:LinearGradientStroke rotation="90" weight="1">
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.5625"/>
-						<s:GradientEntry color="0x000000" 
-										 alpha="0.75" />
-					</s:LinearGradientStroke>
-				</s:stroke>
-			</s:Rect>-->
+
 			<s:CheckBox id="checkBoxUser" left="7"  verticalCenter="0"/>
 			<s:Label id="fistLastNameUser" left="25" right="7" maxDisplayedLines="1" verticalCenter="2"/>
 		</s:Group>
