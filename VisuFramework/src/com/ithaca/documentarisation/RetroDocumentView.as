@@ -12,6 +12,7 @@ import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.ShareUserTitleWindow;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.visu.events.UserEvent;
+import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.User;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
@@ -176,6 +177,9 @@ public class RetroDocumentView extends SkinnableComponent
         shareUser.shareUserManagement.listShareUser = listShareUser;
         shareUser.shareUserManagement.users = listUserShow;
         shareUser.shareUserManagement.profiles = _profiles;
+        // http://visu-tutorat.org/visudev/visuclient.html?module=bilan&sessionId=393&bilanId=135
+        var urlBilan:String = Model.getInstance().urlServeur+"/visuclient.html?module=bilan&sessionId="+this.retroDocument.sessionId.toString()+"&bilanId="+this.retroDocument.id.toString();
+        shareUser.shareUserManagement.urlBilan = urlBilan;
     }
     public function set currentTime(value:Number):void
     {
