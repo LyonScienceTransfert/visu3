@@ -175,6 +175,8 @@
 			protected function configureHandler(event:VisuModuleEvent):void
 			{	
 				logger.debug("BilanModule.configureHandler");
+                // set label 
+                bilanViewer.showBilanByInitApplication = false;
 				if((event.currentTarget as BilanModule).parameters != null)
 				{
 					logger.debug("There are parameters passed to BilanModule");
@@ -192,6 +194,8 @@
                         // came on init application 
                         case "CameOnInitApplication" :
                             this.selectedRetroDocumentIdWhenInit = param[2];
+                            // set flag came by init application
+                            bilanViewer.showBilanByInitApplication = true;
                             break;
 					}
 					// set selected sessionId
