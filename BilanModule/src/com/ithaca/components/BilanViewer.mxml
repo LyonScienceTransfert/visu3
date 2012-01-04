@@ -33,13 +33,23 @@
 			
 			[Bindable]
 			public var bilan:RetroDocument = null;
-			
+            
 			// start session in ms from 1970 year
 			// for calculate seekSession, beginSegment has time ms from 1970
 			private var sessionStart:Number;
 			private var currentRetroDocumentSegmentPlaying:SegmentVideoAdvanced = null;
 
-			
+            public function set showBilanByInitApplication(value:Boolean):void
+            {
+                if(value)
+                {
+                    infoLabel.text = "Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits";
+                }else
+                {
+                    infoLabel.text = "Aucun bilan sélectionné";
+                }
+            }
+            
 			public function stop():void {
 				if(this.visio) {
 					logger.debug("Removing all streams from the video player in bilan module");
@@ -302,10 +312,9 @@
     <s:states>
         <s:State name="normal"/>
     </s:states>
-	
-	<s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
-			<s:Label text="Aucun bilan sélectionné" fontSize="14" fontStyle="italic"/>
-	</s:VGroup>
+    <s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+    	<s:Label id="infoLabel" fontSize="14" fontStyle="italic"/>
+    </s:VGroup>
  
 	<s:VGroup includeInLayout="{bilan}" visible="{bilan}" width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 				<s:HGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="100%">
