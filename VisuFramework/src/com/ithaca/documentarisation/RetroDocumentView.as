@@ -185,8 +185,8 @@ public class RetroDocumentView extends SkinnableComponent
         shareUser.shareUserManagement.listShareUser = listShareUser;
         shareUser.shareUserManagement.users = listUserShow;
         shareUser.shareUserManagement.profiles = _profiles;
-        // http://visu-tutorat.org/visudev/visuclient.html?module=bilan&sessionId=393&bilanId=135
-        var urlBilan:String = Model.getInstance().urlServeur+"/visuclient.html?module=bilan&sessionId="+this.retroDocument.sessionId.toString()+"&bilanId="+this.retroDocument.id.toString();
+        // exemple of the link : http://visu-tutorat.org/visudev/visuclient.html?module=bilan&bilanId=135
+        var urlBilan:String = Model.getInstance().urlServeur+"/visuclient.html?module=bilan&bilanId="+this.retroDocument.id.toString();
         shareUser.shareUserManagement.urlBilan = urlBilan;
     }
     public function set currentTime(value:Number):void
