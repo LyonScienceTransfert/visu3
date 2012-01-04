@@ -47,6 +47,9 @@ public class Documentarisation extends SkinnableComponent
 	
 	private var _currentTime:Number;
 	private var currentTimeChange:Boolean;
+    
+    private var _listAllUsers:Array;
+    private var listAllUsersChange:Boolean;
 	
 	private var _dragOwnerObject:Object;
 	
@@ -151,6 +154,13 @@ public class Documentarisation extends SkinnableComponent
 	{
 		return _dragOwnerObject;
 	}
+    
+    public function set listAllUsers(value:Array):void
+    {
+        _listAllUsers = value;
+        listAllUsersChange = true;
+        this.invalidateProperties();
+    }
 	
 	//_____________________________________________________________________
 	//
@@ -224,9 +234,20 @@ public class Documentarisation extends SkinnableComponent
 				retroDocumentView.profiles = _listProfil;
 				retroDocumentView.listShareUser = _listUser;
 				retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
+                if(listAllUsersChange)
+                {
+                    listAllUsersChange = false;
+                    retroDocumentView.allUsers = _listAllUsers;
+                }
 			}
 		}
-		
+        
+        if(listAllUsersChange)
+        {
+            listAllUsersChange = false;
+            retroDocumentView.allUsers = _listAllUsers;
+        }
+
 		if(currentTimeChange)
 		{
 			currentTimeChange = true;
