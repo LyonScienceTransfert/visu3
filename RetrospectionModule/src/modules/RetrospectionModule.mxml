@@ -794,7 +794,7 @@
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					this.documentarisation.retroDocumentView.allUsers = event.listUser;
+					this.documentarisation.listAllUsers = event.listUser;
 				}
 			}
 			
