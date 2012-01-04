@@ -78,9 +78,6 @@ public class RetroDocumentView extends SkinnableComponent
     public var removeButton:Button;
     
     [SkinPart("true")]
-    public var addPopUpButton:PopUpButton;
-    
-    [SkinPart("true")]
     public var buttonMenuAddSegment:IconButton;
     
     [SkinPart("true")]
@@ -102,6 +99,9 @@ public class RetroDocumentView extends SkinnableComponent
     private var _profiles:Array;
     private var _listUser:Array;
     private var _listUsersPresentOnTimeLine:Array;
+    private var _buttonEnabled:Boolean = true;
+    private var idRetroDocumentChange:Boolean;
+    private var _updatedIdRetroDocument:int = 0;
     
     private var removingSegment:Segment;
     private var removingSegementView:RetroDocumentSegment;
@@ -136,6 +136,15 @@ public class RetroDocumentView extends SkinnableComponent
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
       //  this.addEventListener(FocusEvent.FOCUS_OUT, onRemoveFromStage);
     }
+    public function updateIdRetroDocument(value:int):void
+    {
+        // change id retro document, id was 0
+        _updatedIdRetroDocument = value;
+        _buttonEnabled = true;
+        idRetroDocumentChange = true;
+        invalidateProperties();
+    }
+    
     public function get retroDocument():RetroDocument
     {
         return _retroDocument;
@@ -143,7 +152,6 @@ public class RetroDocumentView extends SkinnableComponent
     public function set retroDocument(value:RetroDocument):void
     {
         _retroDocument = value;
-        
         retroDocumentChange = true;
         invalidateProperties();
     }
@@ -206,29 +214,27 @@ public class RetroDocumentView extends SkinnableComponent
         {
             buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);	
             buttonSwitch.toolTip = fxgt.gettext("Visualiser ce bilan");
+            buttonSwitch.enabled =  this._buttonEnabled;
         }
         if (instance == buttonShare)
         {
             buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
             buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
             buttonShare.toolTip = "Partager ce bilan";
+            buttonShare.enabled =  this._buttonEnabled;
         }
         if(instance == removeButton)
         {
             removeButton.addEventListener(MouseEvent.CLICK, onRemoveDocument);	
             removeButton.toolTip = fxgt.gettext("Supprimer ce bilan");
             removeButton.includeInLayout = removeButton.visible = false;
-        }
-        if(instance == addPopUpButton)
-        {
-            addPopUpButton.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteAddSegmentPopUpButton);
-            addPopUpButton.toolTip = fxgt.gettext("Ajouter un nouveau segment");
-            addPopUpButton.addEventListener(MouseEvent.CLICK, onClickButtonAddSegment);
+            removeButton.enabled =  this._buttonEnabled;
         }
         if(instance == buttonMenuAddSegment)
         {
             buttonMenuAddSegment.addEventListener(MouseEvent.CLICK, onClickButtonMenuAddSegment);
             buttonMenuAddSegment.toolTip = fxgt.gettext("Ajouter un nouveau block");
+            buttonMenuAddSegment.enabled =  this._buttonEnabled;
         }
         
         if(instance == titleDocument)
@@ -343,6 +349,46 @@ public class RetroDocumentView extends SkinnableComponent
             {
                 this.titleDocumentTextInput.text  = this._labelRetroDocument;
             }
+            // set buttons disabled for new retro document
+            if(this._retroDocument.id == 0)
+            {
+                this._buttonEnabled = false;
+                if(_updatedIdRetroDocument > 0)
+                {
+                    this._retroDocument.id = _updatedIdRetroDocument;
+                    this._buttonEnabled = true;
+                    _updatedIdRetroDocument = 0;
+                }
+            }else
+            {
+                _updatedIdRetroDocument = 0;
+            }
+        }
+        
+        if(idRetroDocumentChange)
+        {
+            idRetroDocumentChange = false;
+            if(buttonSwitch)
+            {
+                buttonSwitch.enabled = this._buttonEnabled;
+            }
+            if(buttonShare)
+            {
+                buttonShare.enabled = this._buttonEnabled;
+            }
+            if(removeButton)
+            {
+                removeButton.enabled = this._buttonEnabled;
+            }
+            if(buttonMenuAddSegment)
+            {
+                buttonMenuAddSegment.enabled = this._buttonEnabled;
+            }   
+            if(_retroDocument.id == 0)
+            {
+                _retroDocument.id = _updatedIdRetroDocument;
+                this._buttonEnabled = true;
+            }
         }
     }
     
@@ -434,24 +480,6 @@ public class RetroDocumentView extends SkinnableComponent
         menuAddSegment.show(pointShowMenu.x + DELTA_X_MENU_ADD_SEGMENT, pointShowMenu.y + DELTA_Y_MENU_ADD_SEGMENT);
     }
     
-    /**
-     * init Pop-up button add segment
-     */
-    private function onCreationCompleteAddSegmentPopUpButton(event:FlexEvent):void
-    {
-        checkTracage();
-        
-        var menuAddSegment:Menu = new Menu();
-        var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
-            {label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment" , iconName : "iconLettre_t_16x16"}, 
-            {label: fxgt.gettext("Bloc vidéo + texte"), typeSegment: "VideoSegment", iconName : "iconVideo_16x16"},        
-            {label: fxgt.gettext("Bloc commentaire audio"), typeSegment: "AudioSegment", iconName: "iconAudio_16x16"}];        
-        menuAddSegment.dataProvider = dp;
-        menuAddSegment.selectedIndex = 0;
-        menuAddSegment.iconFunction = setIconMenuAddSegmentFunction;
-        menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
-        addPopUpButton.popUp = menuAddSegment;
-    }
     private function setIconMenuAddSegmentFunction(item:Object):Class
     {
         var iconName:String = item.@iconName;
