@@ -78,7 +78,7 @@ public class Documentarisation extends SkinnableComponent
 		// update id retroDocument 
 		if(retroDocumentView)
 		{
-			retroDocumentView.retroDocument.id = value;
+			retroDocumentView.updateIdRetroDocument(value);
 		}
 		var nbrRetroDocumentVO:int = listRetroDocumentVO.length;
 		for(var nRetroDocumentVO:int = 0; nRetroDocumentVO < nbrRetroDocumentVO; nRetroDocumentVO++)
@@ -281,7 +281,7 @@ public class Documentarisation extends SkinnableComponent
 		{
 			var iconButton:IconButton = event.target as IconButton;
 			var id:String = iconButton.id;
-			if(id == "buttonDelete"  || id == "buttonSwitch")
+			if(id == "buttonDelete"  || id == "buttonSwitch" )
 			{
 				return;
 			}
