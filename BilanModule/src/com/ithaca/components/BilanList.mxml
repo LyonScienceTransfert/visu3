@@ -28,6 +28,8 @@
             import mx.collections.IList;
             import mx.collections.ListCollectionView;
             import mx.collections.Sort;
+            import mx.core.INavigatorContent;
+            import mx.events.FlexEvent;
             import mx.events.ItemClickEvent;
             import mx.logging.ILogger;
             import mx.logging.Log;
@@ -170,22 +172,35 @@
 		private function onSeanceFilterButtonChange(event:*):void {
 			   bilanCollection.refresh();
 		}
-		public function selectRetroDocument(retroDocumentId:Number):void
-		{
-			if(retroDocumentId)
-			{
-				var nbrRetroDocument:int = bilanCollection.length;
-				for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
-				{
-					var retroDocument:RetroDocument = bilanCollection.getItemAt(nRetroDocument) as RetroDocument;
-					if(retroDocument.id == retroDocumentId)
-					{
-						dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
-						this.bilanListComponent.selectedItem = retroDocument;
-					}
-				}
-			}
-		}
+        
+        public function selectRetroDocument(retroDocumentId:Number):void
+        {
+            if(retroDocumentId)
+            {
+                var nbrRetroDocument:int = bilanCollection.length;
+                for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
+                {
+                    var retroDocument:RetroDocument = bilanCollection.getItemAt(nRetroDocument) as RetroDocument;
+                    if(retroDocument.id == retroDocumentId)
+                    {
+                        dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
+                        // add listener
+                        bilanListComponent.addEventListener(FlexEvent.UPDATE_COMPLETE, updateListComplete);
+                        bilanListComponent.selectedItem = retroDocument;
+                        return;
+                    }
+                }
+            }
+        }
+            
+        private function updateListComplete(event:FlexEvent):void
+        {
+            // remove listener
+            bilanListComponent.removeEventListener(FlexEvent.UPDATE_COMPLETE, updateListComplete);
+            // scrolling selected item
+            bilanListComponent.ensureIndexIsVisible(bilanListComponent.selectedIndex);
+        }
+            
 		public function selectSession(sessionId:Number):void {
 			logger.debug("Select the session {0} in the session filter list", sessionId);
 			if(sessionId) {
