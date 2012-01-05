@@ -36,7 +36,7 @@
 				this.hostComponent.titleDisplay_clickHandler(event);
 			}
 		}
-		// STATEMANT
+		// STATEMENT
 		protected function addStatement_focusInHandler(event:FocusEvent):void
 		{
 			if(addStatement.text == "ajoutez une nouvelle consigne ici"){
@@ -205,7 +205,7 @@
 		}
 		private function setMessageKeyword():void
 		{
-			addKeyword.text = "entrez un nouveau mot-clé";
+			addKeyword.text = "Entrez un nouveau mot-clé";
 			addKeyword.setStyle("fontStyle","italic");
 			addKeyword.setStyle("color","#BBBBBB");
 		}
@@ -219,7 +219,7 @@
 		{
 			Alert.yesLabel = "Oui";
 			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer l'activity?",
+			Alert.show("Voulez-vous supprimer l'activité ?",
 				"Confirmation", Alert.YES|Alert.NO, null, deleteActivityConfirmed);
 		}
 		private function deleteActivityConfirmed(event:CloseEvent):void{
