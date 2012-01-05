@@ -2,7 +2,7 @@
 <root>
 	<layout>
 		<tlg style="comments" > 	
-			<tl title="" style="comments" preview="true" >		
+			<tl title="Comments" style="comments" preview="true" >		
 				<modifier name="commentsGenerator" style="comments" splitter="commentforuserid" source="parent" autohide="true" />
 			</tl>						
 		</tlg> 	
@@ -12,7 +12,10 @@
 			<tl title="Marqueurs" selector="SelectorRegexp" selectorParams="type,Marker" autohide="true">
 				 <modifier name="markersGenerator" splitter="idUserFor" source="parent" autohide="true" />
 			</tl>
-			<tl title="Messages" selector="SelectorRegexp" selectorParams="type,Instructions|Keyword|Message" autohide="true"/>
+			<tl title="Chat" selector="SelectorRegexp" selectorParams="type,ChatMessage" autohide="true">
+				 <modifier name="chatsGenerator" splitter="idUserFor" source="parent" autohide="true" />
+			</tl>
+			<tl title="Messages" selector="SelectorRegexp" selectorParams="type,Instructions|Keyword" autohide="true"/>
 			<tl title="Documents" selector="SelectorRegexp" selectorParams="type,Document" autohide="true">			
 				<tl title="Images" selector="SelectorRegexp" selectorParams="typedocument,image" autohide="true">
 				<!--	<modifier name="imagesGenerator" splitter="iddocument" source="parent" autohide="true" /> -->
