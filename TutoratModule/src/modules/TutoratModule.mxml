@@ -32,7 +32,6 @@
             import com.ithaca.visu.events.InitMapEvent;
             import com.ithaca.visu.events.MessageEvent;
             import com.ithaca.visu.events.PanelButtonEvent;
-            import com.ithaca.visu.events.PanelEditInfoEvent;
             import com.ithaca.visu.events.SessionEvent;
             import com.ithaca.visu.events.SessionSharedEvent;
             import com.ithaca.visu.events.TraceLineEvent;
@@ -46,7 +45,6 @@
             import com.ithaca.visu.model.Model;
             import com.ithaca.visu.model.Session;
             import com.ithaca.visu.model.User;
-            import com.ithaca.visu.model.vo.ObselVO;
             import com.ithaca.visu.ui.utils.ActionObselEnum;
             import com.ithaca.visu.ui.utils.ConnectionStatus;
             import com.ithaca.visu.ui.utils.IconEnum;
@@ -1592,13 +1590,7 @@
 					DragManager.doDrag(dragInitiatorPanelEditInfo, dragSource, event);
 				}
 				
-				if(event.currentTarget is PanelEditChatMessage)
-				{
-					var dragInitiatorPanelEditChatMessage:PanelEditChatMessage = PanelEditChatMessage(event.currentTarget);
-					dragSource = new DragSource(); 
-					dragSource.addData(dragInitiatorPanelEditChatMessage, "panelEditChatMessage");
-					DragManager.doDrag(dragInitiatorPanelEditChatMessage, dragSource, event);
-				}
+				
 			}
 			
 			private function dragDropHandler(event:DragEvent):void 
