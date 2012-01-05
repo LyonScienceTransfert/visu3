@@ -30,7 +30,7 @@
 		<s:State name="editSelected"/>
 		<s:State name="normal"/>
 	</s:states>
-	<s:VGroup width="100%" gap="1" verticalAlign="top">
+	<s:VGroup width="330" gap="1" verticalAlign="top">
 		<s:mouseOver.edit>
 		<![CDATA[
 			iconDelete.visible = true;

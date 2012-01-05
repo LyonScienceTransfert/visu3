@@ -25,7 +25,7 @@
 		<s:State name="editPlay"/>
 		<s:State name="editPause"/>
 	</s:states>
-	<s:VGroup width="100%" gap="1">
+	<s:VGroup width="330" gap="1">
 		<s:HGroup width="100%" gap="1" verticalAlign="middle" 
 			height="47" 
 			height.shared="16" height.sharedOver="16" height.sharedPause="16" height.sharedPlay="16">

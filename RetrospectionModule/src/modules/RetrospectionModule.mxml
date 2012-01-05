@@ -1795,7 +1795,7 @@
 				</mx:VDividedBox>
 			</components:PanelButton>
 <!-- DOCUMENTARISATION -->		
-			<documentarisation:Documentarisation height="100%" minWidth="330"
+			<documentarisation:Documentarisation height="100%" width="335"
 				 id="documentarisation"
 				 dragOwnerObject="{this}"
 				 addRetroDocument="documentarisation_addRetroDocumentHandler(event)">				 
