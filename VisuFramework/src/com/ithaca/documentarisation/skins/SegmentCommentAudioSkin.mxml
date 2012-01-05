@@ -35,7 +35,7 @@
 
 		]]>
 		</fx:Script>
-		<s:VGroup width="100%" gap="1">
+		<s:VGroup width="330" gap="1">
 			<s:HGroup width="100%"  id="groupAudioRecorder" gap="1" horizontalAlign="center" verticalAlign="middle" height="16">
 				<!-- SPACER FOR BILAN MODULE-->
 				<mx:Spacer width="35" includeIn="shared, sharedOver"/>
