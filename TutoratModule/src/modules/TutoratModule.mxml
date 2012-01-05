@@ -51,7 +51,6 @@
             import com.ithaca.visu.ui.utils.RoleEnum;
             import com.ithaca.visu.ui.utils.SessionStatusEnum;
             import com.ithaca.visu.ui.utils.SoundEnum;
-            import com.ithaca.visu.view.video.PanelEditChatMessage;
             import com.ithaca.visu.view.video.PanelEditInfo;
             import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
             import com.lyon2.controls.ImageDocument;
