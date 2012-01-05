@@ -21,6 +21,7 @@
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.traces.model.vo.SGBDObsel;
+            import com.ithaca.utils.EditChatDialog;
             import com.ithaca.utils.EditMarkerDialog;
             import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
@@ -850,21 +851,24 @@
 			protected function onSendMessage(event:*):void
 			{
 				var message:String = textChatMessage.text;
-				if(event is MouseEvent){
-					this.sendMessage(false, message);
-				}else if (event is KeyboardEvent) 
-				{
-					if(event.keyCode == Keyboard.ENTER)
-					{
-						this.sendMessage(true, message);
-					}
-				}
+                message = message.split("\n").join("");
+                message = message.split("\r").join("");
+                if(event is MouseEvent){
+                    sendMessage(message);
+                }else if (event is KeyboardEvent) 
+                {
+                    if(event.keyCode == Keyboard.ENTER)
+                    {
+                        sendMessage(message);
+                    }
+                }
+	            
 			}
 			
 			/**
 			 * Sending message
 			 */
-			private function sendMessage(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0):void
+			private function sendMessage(message:String, idUserFor:int = 0):void
 			{
 				// TODO send message to one user by click on his video
 				var listUsersId:Array;
@@ -884,21 +888,18 @@
 				}
 				
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
-                // remove all char new line
-                message = message.split("\n").join("");
+               
 				// check if message empty
 				if(UtilFunction.isEmptyMessage(message))
 				{
 					// don't send empty message
-					textChatMessage.text = "";
 					return;
 				}
 				sessionSharedEvent.info = message;
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.idUserFor = idUserFor;
 				dispatchEvent(sessionSharedEvent);
-				// update text
-				textChatMessage.text = "";
+
 			}
 			
 			/**
@@ -1127,7 +1128,17 @@
 				}else if( generatorName  == 'videosGenerator')
 				{
 					nameUser = '"' + obsel.props[TraceModel.TEXT] + '"';
-				}
+				} else if(generatorName  == 'chatsGenerator')
+                {
+                    userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = "Message pour tous";
+                    }
+                }
 				
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
@@ -1517,51 +1528,51 @@
 			// EvenHandlers : click on button chat
 			//
 			//_____________________________________________________________________
-
-			protected function visio_clickButtonChatHandler(event:VisuVisioAdvancedEvent):void
-			{
-				var panelEditChatMessage:PanelEditChatMessage = new PanelEditChatMessage();
-				this.groupeVideo.addElement(panelEditChatMessage);
-				panelEditChatMessage.x = 25;
-				panelEditChatMessage.y = 25;
-				
-				panelEditChatMessage.user = event.user;
-				panelEditChatMessage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMovePanelEditChatMessage);
-				panelEditChatMessage.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_OK, onPanelEditChatMessageClickButtonOk);
-				panelEditChatMessage.addEventListener(PanelEditInfoEvent.CLICK_BUTTON_CANCEL, onPanelEditChatMessageButtonCancel);
-			}
-			
-			private function mouseMovePanelEditChatMessage(event:MouseEvent):void
-			{
-				var dragInitiator:PanelEditChatMessage = PanelEditChatMessage(event.currentTarget);
-				var dragSource:DragSource = new DragSource(); 
-				dragSource.addData(dragInitiator, "panelEditChatMessage");
-				DragManager.doDrag(dragInitiator, dragSource, event);
-			}
-			
-			private function onPanelEditChatMessageClickButtonOk(event:PanelEditInfoEvent):void
-			{
-				var idUserFor:int = event.user.id_user;
-				var message:String = event.text;
-				sendMessage(false, message, idUserFor);
-				// remove panelEditChatMessage
-				var panelEditChatMessage:PanelEditChatMessage = event.currentTarget as PanelEditChatMessage;
-				removePanelEditInfo(panelEditChatMessage);
-			}
-			
-			private function onPanelEditChatMessageButtonCancel(event:PanelEditInfoEvent):void
-			{
-				// remove panelEditChatMessage
-				var panelEditChatMessage:PanelEditChatMessage = event.currentTarget as PanelEditChatMessage;
-				removePanelEditInfo(panelEditChatMessage);
-			}
-			
 			
 			private function removePanelEditInfo(panelEditInfo:*):void
 			{
 				groupeVideo.removeElement(panelEditInfo);
 			}
-			
+			//////////////////////////////////
+            
+            protected function visio_clickButtonChatHandler(event:VisuVisioAdvancedEvent):void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    var editChatDialog:EditChatDialog = new EditChatDialog();
+                    editChatDialog.user = event.user;
+                    
+                    editChatDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+                    
+                    PopUpManager.addPopUp(editChatDialog, this);
+                    PopUpManager.centerPopUp(editChatDialog);
+                    editChatDialog.y -= editChatDialog.height;
+                    editChatDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveChatDialog );
+                }
+            }
+ 
+            /**
+             * Remove onRemoveChatDialog from the stage
+             */
+            private function onRemoveChatDialog(event:Event):void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    var text:String = "";
+                    if (event.currentTarget.confirm)
+                    {						
+                        var forUserId:int = 0;
+                        if(event.currentTarget.user)
+                        {
+                            forUserId = event.currentTarget.user.id_user;
+                        }
+
+                        text = event.currentTarget.textComment;
+                        // send message
+                        sendMessage( text, forUserId);
+                    }
+                }
+            }            
 			
 			//_____________________________________________________________________
 			//
@@ -1806,7 +1817,7 @@
 						<s:Group width="100%" bottom="3" height="30">
 							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="185">				
 							</mx:TextArea>
-							<mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE)}" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
+							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
 								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
 							</mx:Button>
 						</s:Group>	
