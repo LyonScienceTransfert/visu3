@@ -517,6 +517,17 @@
 				{
 					nameUser = '"' + obsel.props[TraceModel.TEXT] + '"';
 				}
+                else if(generatorName  == 'chatsGenerator')
+                {
+                    userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = "Message pour tous";
+                    }
+                }
 					
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
