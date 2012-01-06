@@ -870,7 +870,6 @@
 				// TODO send message to one user by click on his video
 				var listUsersId:Array;
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
-				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var sessionId:int = this.currentSession.id_session;
 				if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
 				{
@@ -896,7 +895,8 @@
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.idUserFor = idUserFor;
 				dispatchEvent(sessionSharedEvent);
-
+                // empty text message
+                textChatMessage.text = "";
 			}
 			
 			/**
