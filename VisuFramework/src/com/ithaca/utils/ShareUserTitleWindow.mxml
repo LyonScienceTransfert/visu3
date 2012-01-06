@@ -7,7 +7,7 @@
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
                currentStateChange="titlewindow1_currentStateChangeHandler(event)"
                height="260" width="550">
-	<s:title>{fxgt.gettext("Selection d'utilisateur...")}</s:title>
+	<s:title>{fxgt.gettext("Partage de bilan")}</s:title>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
