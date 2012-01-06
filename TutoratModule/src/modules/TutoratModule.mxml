@@ -859,7 +859,6 @@
                         sendMessage(message);
                     }
                 }
-	            
 			}
 			
 			/**
@@ -867,8 +866,7 @@
 			 */
 			private function sendMessage(message:String, idUserFor:int = 0):void
 			{
-				// TODO send message to one user by click on his video
-				var listUsersId:Array;
+				var listUsersId:Array = new Array();
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				var sessionId:int = this.currentSession.id_session;
 				if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
@@ -878,8 +876,15 @@
 					sessionSharedEvent.status = -1;	
 				}else
 				{
-					// all connected users with status recording
-					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+                    // send message to all recording users
+                    if(idUserFor == 0)
+                    {
+                        listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+                    }else
+                    {
+                        // send message to one user, message private
+                        listUsersId.push(idUserFor);
+                    }
 					sessionSharedEvent.status = this.visio.status;
 				}
 				
