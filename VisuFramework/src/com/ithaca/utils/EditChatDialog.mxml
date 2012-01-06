@@ -231,7 +231,7 @@
     </fx:Script>
     <s:VGroup width="100%" height="100%">
         <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
-            <mx:Image  source="{IconEnum.getIconByName('chat')"/>
+            <mx:Image  source="{IconEnum.getIconByName('chat')}"/>
             <s:Label  id="labelMarkerFor" fontWeight="bold">
                 <s:text>Votre message pour :</s:text>
             </s:Label>				
