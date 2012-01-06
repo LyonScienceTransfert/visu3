@@ -16,6 +16,8 @@
 			import managers.BilanManager;
 			
 			import mx.events.FlexEvent;	
+            
+            import com.ithaca.documentarisation.events.RetroDocumentEvent;
 
 			private var ALL_INFO:int = 777;
 		]]>
@@ -56,13 +58,31 @@
 				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[event.bilanId, false]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-
 				
 		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
 			<!-- BilanManager creation -->
 			<mate:ObjectBuilder generator="{BilanManager}" constructorArguments="{[scope.dispatcher]}"/>
 		</mate:EventHandlers>
 		
+        <!-- USERS -->
+        <mate:EventHandlers type="{RetroDocumentEvent.LOAD_LIST_USERS}" debug="true">
+            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
+                <mate:resultHandlers>
+                    <mate:MethodInvoker generator="{BilanManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
+                </mate:resultHandlers>
+                <mate:faultHandlers>
+                    <mate:MethodInvoker generator="{BilanManager}"
+                        method="error" arguments="{[currentEvent]}"/>
+                </mate:faultHandlers>
+            </mate:RemoteObjectInvoker>
+        </mate:EventHandlers>
+        
+        <!-- Update shared users the bilan -->
+        <mate:EventHandlers type="{RetroDocumentEvent.UPDATE_RETRO_DOCUMENT}" debug="true">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+                <mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
+            </rtmp:RtmpServiceInvoker>
+        </mate:EventHandlers>
 		
 		<!-- Application complete start-->
 		
@@ -81,5 +101,13 @@
 			makeObjectsBindable="true"
 			showBusyCursor="true">
 		</s:RemoteObject>	
+        
+        <s:RemoteObject
+            id="remoteUser"
+            endpoint="{Model.getInstance().AMFServer}"
+            destination="UserService"
+            makeObjectsBindable="true"
+            showBusyCursor="true">
+        </s:RemoteObject>
     </fx:Declarations>
 </mate:LocalEventMap>

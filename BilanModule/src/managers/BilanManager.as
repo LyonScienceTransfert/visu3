@@ -1,5 +1,10 @@
 package managers
 {
+	import com.ithaca.documentarisation.events.RetroDocumentEvent;
+	import com.ithaca.documentarisation.model.RetroDocument;
+	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.model.vo.UserVO;
+	
 	import flash.events.Event;
 	
 	import managers.BilanManager;
@@ -41,5 +46,21 @@ package managers
 		{
 			log.info("Shared bilan list retrieved");
 		}
+        
+        /**
+        * Load list users for share dialog
+        */
+        public function onLoadListUsers(value:Array):void
+        {
+            var ar:Array = []
+            for each (var vo:UserVO in value)
+            {
+                ar.push(new User(vo)) ;
+            }
+            
+            var onLoadedAllUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOADED_ALL_USERS);
+            onLoadedAllUsers.listUser = ar;
+            this.dispatcher.dispatchEvent(onLoadedAllUsers);
+        }
 	}
 }
