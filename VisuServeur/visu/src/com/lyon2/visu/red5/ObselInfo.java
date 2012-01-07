@@ -468,21 +468,30 @@ public class ObselInfo {
 			log.error("Probleme lors du listing des session" + e);
 		}
 		
+		// get system trace id, will parent trace for comment trace and for trace the tracage salon retro
+		String systemTraceId = "";
+		String refParamSystemTraceId = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SESSION)+" "+"\"" + sessionId.toString() + "\"" + "%";
+		try {
+			systemTraceId = (String) app.getSqlMapClient().queryForObject(
+					"obsels.getTraceSystemIdBySessionId", refParamSystemTraceId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing de trace system id" + e);
+		}
+		log.warn("=========== systemTraceId =>"+systemTraceId);
+	
 		traceParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SUBJECT)+" "+"\"" + userId.toString() + "\"" + "%";
-		refParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.SESSION)+" "+"\"" + sessionId.toString() + "\"" + "%";
+		refParam = "%:"+ObselType.PREFICS_PARAM_OBSEL+UtilFunction.changeFirstCharUpper(ObselType.PARENT_TRACE_ID)+" "+"\"" + systemTraceId + "\"" + "%";
 		osp = new ObselStringParams(traceParam, refParam);
-		log.warn(osp.toString());
-		// get list comments
 		List<Obsel> comment = null;
 		try {
 			comment = (List<Obsel>) app.getSqlMapClient().queryForList(
-					"obsels.getTraceCommentBySujetAndSession", osp);
+					"obsels.getTraceCommentBySujetAndParentTraceId", osp);
 		} catch (Exception e) {
-			log.error("Probleme lors du listing des obsels comment" + e);
+			log.error("Probleme lors du listing des obsels retro room" + e);
 		}
-
+		
 		Date sessionStartRecordingDate = session.getStart_recording();
-		Object[] args = { result, sessionStartRecordingDate , comment};
+		Object[] args = { result, sessionStartRecordingDate , comment, systemTraceId};
 		IConnection connClient = (IConnection) client
 				.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
