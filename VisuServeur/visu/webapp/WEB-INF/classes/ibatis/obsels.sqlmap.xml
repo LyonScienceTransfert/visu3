@@ -99,6 +99,12 @@
 		 FROM  obsels
 		 WHERE rdf LIKE #traceParam# and rdf LIKE #refParam# 
 	</select>
+	
+	<select id="getTraceCommentBySujetAndParentTraceId" parameterClass="obselStringParam" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		 FROM  obsels
+		 WHERE rdf LIKE #traceParam# and rdf LIKE #refParam# 
+	</select>
 
 	<select id="getTraceRetro" parameterClass="obselStringParam" resultMap="obselResult" cacheModel="cache">
 		<include refid="selectBase" />
@@ -155,7 +161,14 @@
 		FROM obsels
 		WHERE (type_obsel = 'SessionExit' or type_obsel = 'SessionPause') and rdf like #refParam#	
 	</select>
-
+	
+	<select id="getTraceSystemIdBySessionId" parameterClass="String" resultClass="String" cacheModel="cache">
+	<![CDATA[  
+        SELECT DISTINCT trace 
+        FROM obsels WHERE type_obsel='SystemSessionStart' and rdf like #value# 
+	]]>	
+	</select>
+	
 	<insert id="insert" parameterClass="obsel">
 		INSERT INTO obsels
 		SET 

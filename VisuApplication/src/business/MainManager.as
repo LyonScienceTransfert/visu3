@@ -622,7 +622,6 @@ public class MainManager
 			var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
 			var sessionId:int = obsel.props[TraceModel.SESSION_ID];
 			Model.getInstance().setCurrentSessionId(sessionId);
-			Model.getInstance().setCurrentTraceId(obselVO.trace);
 			// begin session
 			var timeSessionStart:Number = 0;
 			var timeSessionEnd:Number = 0;
@@ -1154,13 +1153,16 @@ public class MainManager
 	{
 		return;
 	}
-	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array):void
+	public function onCheckListObselClosedSession(listObselClosedSessionVO:Array, dateStartRecordingSession:Date, listObselCommentVO:Array, systemTraceId:String):void
 	{
 		// creation trace for logged user
 		var listUserObselVO:Array = new Array();
 		var listTimeStampedObsel:ArrayCollection = new ArrayCollection();
 		var listPathStampedObsel:ArrayCollection = new ArrayCollection();
 		var reversedListUserObselVO:Array = new Array();
+        // set systemTraceId
+        Model.getInstance().setCurrentTraceId(systemTraceId);
+        
 		var isFilterTypeVisuvciel:Boolean = Model.getInstance().checkServeurVisu();
 		// was like this :
 		// if(!isFilterTypeVisuvciel){	
