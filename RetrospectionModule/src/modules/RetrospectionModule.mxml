@@ -846,7 +846,10 @@
 //					this.visio.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverVisuVideo);
 				}
 			}
-			
+            
+            /**
+            * play current block video
+            */
 			private function playRetroDocument(event:RetroDocumentEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -876,37 +879,32 @@
 					}
 				}
 			}
-			
-			private function pauseRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					onCheckSeekStream();
-				}
-			}
-			
 			/**
-			 * play/pause of the streams
-			 */
-			private function onCheckSeekStream(event:* = null):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					// set currentRetrocumentSegmentPlaying to null
-					setCurrentRetroDocumentSegmentPlaying(null);
-					// remove timer RetroDocumentSegment
-					removeTimerRetroDocumentSegment();
-					/* if (visio.status == VisuVisioAdvanced.STATUS_REPLAY)
-					{
-						pauseVideo();
-						timeLine.isPlaying = false;
-					}else
-					{
-						this.visio.resumeStreams();
-						timeLine.isPlaying = true;
-					} */
-				}
-			}
+            * Pause current block video
+            */
+            private function pauseRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    onCheckSeekStream();
+                    // set status pause 
+                    onUpdatePlayerStatus(false);
+                }
+            }
+			
+            /**
+             * play/pause of the streams
+             */
+            private function onCheckSeekStream(event:* = null):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // set currentRetrocumentSegmentPlaying to null
+                    setCurrentRetroDocumentSegmentPlaying(null);
+                    // remove timer RetroDocumentSegment
+                    removeTimerRetroDocumentSegment();
+                }
+            }
 			
 			private function pauseVideo():void
 			{
@@ -1056,7 +1054,10 @@
              * @event
              */
             protected function timeLine_creationCompleteHandler(event:FlexEvent):void
-            {           
+            {      
+                // set image pused on timeLine 
+                onUpdatePlayerStatus(true);
+                
                 // do tracage if has trace id retro room
                 if(Model.getInstance().getTraceIdRetroRoom())
                 {
@@ -1628,13 +1629,13 @@
 				prePlayVideoFlux(event.value);	
 			}
 
-			protected function timeLine_playButtonClickHandler(event:TimelineEvent):void
+			protected function timeLine_playButtonClickHandler(event:TimelineEvent = null):void
 			{
 				onCheckSeekStream();
                 onUpdatePlayerStatus(true)
 			}
 
-			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent):void
+			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent = null):void
 			{
 				onCheckSeekStream();
                 onUpdatePlayerStatus(false);
@@ -1691,8 +1692,8 @@
 				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, timeLine_creationCompleteHandler);
 				
 				timeLineGroup.addElement(timeLine);
+
                 
-               
 			}
 			
 			private function getObsels():void
