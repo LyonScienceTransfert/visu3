@@ -641,7 +641,7 @@ package com.ithaca.visu.view.session
 				var session:Session = sessionDetail.session;
 				if(session.id_session == value)
 				{
-					Alert.show('La Séance "'+session.theme+'" a été supprimer par '+ nameUserDeleteSession, "Information");
+					Alert.show('La Séance "'+session.theme+'" a été supprimée par '+ nameUserDeleteSession, "Information");
 					this.filterChange = true;
 					this.invalidateProperties();
 				}else

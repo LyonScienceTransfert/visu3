@@ -233,7 +233,7 @@ public class RetroDocumentView extends SkinnableComponent
         if(instance == buttonMenuAddSegment)
         {
             buttonMenuAddSegment.addEventListener(MouseEvent.CLICK, onClickButtonMenuAddSegment);
-            buttonMenuAddSegment.toolTip = fxgt.gettext("Ajouter un nouveau block");
+            buttonMenuAddSegment.toolTip = fxgt.gettext("Ajouter un nouveau bloc");
             buttonMenuAddSegment.enabled =  this._buttonEnabled;
         }
         
