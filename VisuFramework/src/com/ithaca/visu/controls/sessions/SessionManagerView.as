@@ -339,7 +339,7 @@ package com.ithaca.visu.controls.sessions
 			{
 				if(session.id_session == value)
 				{
-					Alert.show('La Séance "'+session.theme+'" a été supprimer par '+ nameUserDeleteSession, "Information");
+					Alert.show('La Séance "'+session.theme+'" a été supprimée par '+ nameUserDeleteSession, "Information");
 					sessionDetailView.session = null;
 					filterChange = true;
 					this.invalidateProperties();
@@ -349,7 +349,7 @@ package com.ithaca.visu.controls.sessions
 			{
 				if(session.id_session == value)
 				{
-					Alert.show('Le plan de la séance "'+session.theme+'" a été supprimer par '+ nameUserDeleteSession, "Information");
+					Alert.show('Le plan de la séance "'+session.theme+'" a été supprimée par '+ nameUserDeleteSession, "Information");
 					sessionDetailView.session = null;
 					filterChange = true;
 					this.invalidateProperties();
