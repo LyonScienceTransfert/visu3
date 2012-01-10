@@ -519,7 +519,7 @@
 				}
                 else if(generatorName  == 'chatsGenerator')
                 {
-                    userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+                    userId = obsel.props[TraceModel.SENDER];
                     if(userId != 0)
                     {
                         nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
