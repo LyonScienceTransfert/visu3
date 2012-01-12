@@ -18,6 +18,7 @@
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
             import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.Trace;
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.traces.model.vo.SGBDObsel;
@@ -1160,41 +1161,48 @@
 				traceLine.title = nameUser;
 			}
 			
-			private function onLoadLayoutComplete(event:Event):void 
-			{
-				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
-				if(this == currentModule)
-				{
-					//we init the trace object
-
-					var loader:URLLoader=event.target as URLLoader;
-					timeLine.layoutXML 		= new XML( loader.data );
-					timeLine.timelineLayout = new Layout( timeLine );
-					_isTimeLineAddedOnStage = true;
-					
-					var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
-					if(listTraceGroup != null)
-					{											
-						var nbrTraceGroup:int = listTraceGroup.length;
-						for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
-						{												
-							var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
-							var userId:int  = traceGroup.userId;
-							if( traceGroup != null && !hasUserIdPresentTimeLine(userId))
-							{																	
-								this.addTraceLineOnViewTraceLineGroup(traceGroup);
-							}
-						}
-					}	
-					// set star and end session
-					var beginTime:Number = this.currentSession.date_start_recording.time;
-					var duration: Number = this.currentSession.duration_session;
-					var endSession:Number = beginTime + duration;
-					timeLine.range.addTime(beginTime, endSession );
-
-					this.startTimer();
-				}
-			}
+            private function onLoadLayoutComplete(event:Event):void 
+            {
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                    //we init the trace object
+                    
+                    var loader:URLLoader=event.target as URLLoader;
+                    timeLine.layoutXML 		= new XML( loader.data );
+                    timeLine.timelineLayout = new Layout( timeLine );
+                    _isTimeLineAddedOnStage = true;
+                    var loggedUser:User = Model.getInstance().getLoggedUser();
+                    
+                    var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+                    if(listTraceGroup != null)
+                    {											
+                        var nbrTraceGroup:int = listTraceGroup.length;
+                        for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+                        {												
+                            var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+                            var userId:int  = traceGroup.userId;
+                            if( traceGroup != null && !hasUserIdPresentTimeLine(userId))
+                            {				
+                                // user can add to time line
+                                var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+                                // check if user can be on time line
+                                if(VisuUtils.isAddTraceSalonSynchrone(loggedUser, user))
+                                {
+                                    this.addTraceLineOnViewTraceLineGroup(traceGroup);
+                                } 
+                            }
+                        }
+                    }	
+                    // set star and end session
+                    var beginTime:Number = this.currentSession.date_start_recording.time;
+                    var duration: Number = this.currentSession.duration_session;
+                    var endSession:Number = beginTime + duration;
+                    timeLine.range.addTime(beginTime, endSession );
+                    
+                    this.startTimer();
+                }
+            }
 			
 			private function setObsels():Boolean
 			{
