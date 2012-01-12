@@ -2,7 +2,7 @@
 <root>
 	<layout>
 		<tlg style="comments" > 	
-			<tl title="Comments" style="comments" preview="true" >		
+			<tl title="Commentaires" style="comments" preview="true" >		
 				<modifier name="commentsGenerator" style="comments" splitter="commentforuserid" source="parent" autohide="true" />
 			</tl>						
 		</tlg> 
