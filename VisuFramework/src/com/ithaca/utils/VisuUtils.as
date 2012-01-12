@@ -25,6 +25,17 @@ package com.ithaca.utils
 		
 		private static var logger:ILogger = Log.getLogger("com.ithaca.utils.VisuUtils");
 		
+        public static function isAddTraceSalonSynchrone(loggedUser:User, checkUser:User):Boolean
+        {
+            if(loggedUser.id_user == checkUser.id_user || isResponsable(loggedUser) || isAdmin(loggedUser))
+            {
+                return true;
+            }else if(isTuteur(loggedUser) && isStudent(checkUser))
+            {
+              return true;
+            }else return false;
+        }
+        
 		public static function isStudent(user:User) : Boolean {
 			return getRoleConstantValue(user.role) == RoleEnum.STUDENT;
 		}
