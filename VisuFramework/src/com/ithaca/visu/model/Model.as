@@ -66,6 +66,8 @@ package  com.ithaca.visu.model
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.Trace;
 	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.utils.VisuUtils;
+	import com.ithaca.visu.events.VisuModuleEvent;
 	import com.ithaca.visu.model.vo.SessionVO;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.modules.VisuModuleBase;
@@ -105,6 +107,13 @@ package  com.ithaca.visu.model
 		
 		private var NAME_VISU2: String = "VISU";
 		private var NAME_VISU_VCIEL: String = "VISUVCIEL";
+        
+        private var LAYOUT_SALON_RETRO_ETUDIANT:String = "layoutSalonRetrospectionEtudiant.xml";
+        private var LAYOUT_SALON_RETRO_TUTEUR:String = "layoutSalonRetrospectionTuteur.xml";
+        private var LAYOUT_SALON_SYNCHRONE_ETUDIANT:String = "layoutSalonSynchroneEtudiant.xml";
+        private var LAYOUT_SALON_SYNCHRONE_TUTEUR:String = "layoutSalonSynchroneTuteur.xml";
+        private var LAYOUT_ADMIN:String = "layoutVisu2.xml";	
+        private var FOLDER_NAME_LAYOUT_FILES:String = "xml";     
 		
 		private var listSessions:ArrayCollection = new ArrayCollection();
 		private var listFluxActivity:ArrayCollection = new ArrayCollection();
@@ -372,7 +381,35 @@ package  com.ithaca.visu.model
 		{
 			return _loggedUser;
 		}
-		
+        
+		/**
+        * check layout logged user by salon
+        */
+        public function getPathLayoutXml(value:String):String
+        {
+            var result:String = "";
+            if(value == VisuModuleEvent.RETROSPECTION_MODULE)
+            {
+                if(VisuUtils.isAdmin(_loggedUser) || VisuUtils.isResponsable(_loggedUser))
+                {
+                    result =  LAYOUT_ADMIN;
+                }else if(VisuUtils.isTuteur(_loggedUser))
+                    {
+                    result = LAYOUT_SALON_RETRO_TUTEUR;
+                    }else result = LAYOUT_SALON_RETRO_ETUDIANT;
+            }else if(value == VisuModuleEvent.TUTORAT_MODULE)
+            {
+                if(VisuUtils.isAdmin(_loggedUser) || VisuUtils.isResponsable(_loggedUser))
+                {
+                    result = LAYOUT_ADMIN;
+                }else if(VisuUtils.isTuteur(_loggedUser))
+                    {
+                    result = LAYOUT_SALON_SYNCHRONE_TUTEUR;
+                    }else result = LAYOUT_SALON_SYNCHRONE_ETUDIANT;
+            }
+            return FOLDER_NAME_LAYOUT_FILES + "/" + result;
+        }
+
 		/**
 		 * Update status of logged User 
 		 */
@@ -856,14 +893,6 @@ package  com.ithaca.visu.model
 			// check if this user include in listTraceLines
 			if(!hasTraceLineByUserId(userId))
 			{
-				var listElementsTraceLine:ArrayList = new ArrayList();
-				listElementsTraceLine.addItem({id: 0, titleTraceLine: "Instructions", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 1, titleTraceLine: "Mots-Clés", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 2, titleTraceLine: "Documents", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 3, titleTraceLine: "Messages", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : false});
-				listElementsTraceLine.addItem({id: 4, titleTraceLine: "Marqueurs", colorTraceLine : 454545, visible : false, listObsel: new ArrayCollection(), added : true});
-				this.listTraceLine.addItem({userId: userId, show: false, userName:userName, userAvatar: userAvatar, userColor: userColor, listTitleObsels: new ArrayCollection(), listElementTraceLine : listElementsTraceLine });
-				
 				var userTrace:Trace = new Trace(userId, "" );
 				this.listTraceGroup.addItem({userId: userId, userColor: userColor, userAvatar : userAvatar, userName : userName, userTrace : userTrace});
 			}
