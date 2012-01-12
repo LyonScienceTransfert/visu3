@@ -401,27 +401,33 @@
 					var tlgComment : TraceLineGroup;
 					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
 					tlgComment.setStyle( "title", fxgt.gettext("Comments") );
-	
-					var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
-					if(listTraceGroup != null)
-					{											
-						var nbrTraceGroup:int = listTraceGroup.length;
-						for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
-						{												
-							var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
-							
-							var tlg :TraceLineGroup ;					
-							
-							tlg = timeLine.addTrace(traceGroup.userTrace,-1, "user");
-							// get user
-							var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
-							var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
-							
-							tlg.setStyle("title", lastNameUser );				
-							tlg.setStyle("bgColor", traceGroup.userColor);
-							tlg.setStyle("icon", traceGroup.userAvatar );	
+                    // logged user 
+                    var loggedUser:User = Model.getInstance().getLoggedUser();
+                    var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+                    if(listTraceGroup != null)
+                    {											
+                        var nbrTraceGroup:int = listTraceGroup.length;
+                        for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+                        {												
+                            var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
                             
-                            var loggedUser:User = Model.getInstance().getLoggedUser();
+                            // trace of user 
+                            var trace:Trace = traceGroup.userTrace as Trace;
+                            /// don't show trace if any obsels in the trace
+                            var nbrObsels:Number = trace.obsels.length;
+                            if(nbrObsels > 0)
+                            {
+                                var tlg :TraceLineGroup ;		
+                                tlg = timeLine.addTrace(trace,-1, "user");
+                                // get user
+                                var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
+                                var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+                                
+                                tlg.setStyle("title", lastNameUser );				
+                                tlg.setStyle("bgColor", traceGroup.userColor);
+                                tlg.setStyle("icon", traceGroup.userAvatar );	                                
+                            }
+                            
                             
                             // show timeline activity only for responsable and admin
                             if(RoleEnum.hasAdminRight(loggedUser.role) || RoleEnum.hasResponsableRight(loggedUser.role))
