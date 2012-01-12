@@ -1094,18 +1094,21 @@
 				panelTimeLine.addElement(timeLine);
 			}
 			
-			private function onCreationCompleteTimeLine(event:FlexEvent):void
-			{
-				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
-				if(this == currentModule)
-				{
-					var loader:URLLoader=new URLLoader();			
-					loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
-					loader.load(new URLRequest("layoutVisu2.xml"));	
-					// add listener 
-					panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
-				}
-			}
+            private function onCreationCompleteTimeLine(event:FlexEvent):void
+            {
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                    var loader:URLLoader=new URLLoader();			
+                    loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
+                    // check xml layout for logged user
+                    var pathLayoutXml:String = Model.getInstance().getPathLayoutXml(VisuModuleEvent.TUTORAT_MODULE);
+                    loader.load(new URLRequest(pathLayoutXml));	
+                    // add listener 
+                    panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+                }
+            }
+            
 			/**
 			 * Initialisation Title the TraceLine(name user)
 			 */

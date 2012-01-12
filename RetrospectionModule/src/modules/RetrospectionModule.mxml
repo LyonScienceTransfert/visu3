@@ -184,7 +184,7 @@
                 // load layout xml file 
                 loaderTracage = new URLLoader();
                 loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
-                loaderTracage.load(new URLRequest("layout.xml"));	
+                loaderTracage.load(new URLRequest("xml/layoutAdvanced.xml"));	
                 
                 // init loader for timeline retro
                 _progressBarBlueLine = new SWFLoader()
@@ -366,9 +366,11 @@
 						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
 						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
 					
-					var loader:URLLoader=new URLLoader();			
-					loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
-					loader.load(new URLRequest("layoutVisu2.xml"));	
+                    var loader:URLLoader=new URLLoader();			
+                    loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
+                    // check xml layout for logged user
+                    var pathLayoutXml:String = Model.getInstance().getPathLayoutXml(VisuModuleEvent.RETROSPECTION_MODULE);
+                    loader.load(new URLRequest(pathLayoutXml));	
 				}
 				// add drag listener
 				setListenerDragVideo();
