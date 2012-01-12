@@ -536,6 +536,17 @@
                         nameUser = "Message pour tous";
                     }
                 }
+                else if(generatorName  == 'documentGenerator')
+                {
+                    userId = obsel.props[TraceModel.SENDER];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = "???";
+                    }
+                }
 					
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
