@@ -429,9 +429,11 @@ public class ObselInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des obsels" + e);
 		}
-		/// 777 => ALL_INFO
+		// get role of logged user
 		List<String> listTraceId = null;
-		if (statusLoggedUser == 777)
+		int roleUser = app.getRoleUser(user.getProfil());
+		// admin and responsable has role 1 and 2
+		if (roleUser == 1 || roleUser == 2 )
 		{
 			traceParam = "%-" + "void" + "%";
 			refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
@@ -444,7 +446,21 @@ public class ObselInfo {
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des traceId" + e);
 			}
-
+		}else
+		{
+			traceParam = "%-" + userId;
+			refParam = "%:hasSession " + "\"" + String.valueOf(sessionId) + "\""
+					+ "%";
+			osp = new ObselStringParams(traceParam, refParam);
+			log.warn("OSP = {}",osp.toString());
+			try {
+				listTraceId = (List<String>) app.getSqlMapClient().queryForList(
+						"obsels.getTracesBySessionIdAndUserId", osp);
+			} catch (Exception e) {
+				log.error("Probleme lors du listing de list traceId" + e);
+			}
+		}
+			
 			List<Obsel> listObselUser = null;
 			List<Obsel> listObselSession = new ArrayList<Obsel>();
 			for (String traceId : listTraceId) {
@@ -457,7 +473,7 @@ public class ObselInfo {
 				log.warn("listObselSession size = {}", listObselSession.size());
 			}
 			result = listObselSession;
-		}
+		
 
 		// get session
 		log.warn("result = {}",result.size());
