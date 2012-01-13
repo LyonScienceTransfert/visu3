@@ -21,10 +21,12 @@
             import com.ithaca.documentarisation.model.RetroDocument;
             import com.ithaca.timeline.Layout;
             import com.ithaca.timeline.ObselSkin;
+            import com.ithaca.timeline.SelectorRegexp;
             import com.ithaca.timeline.Timeline;
             import com.ithaca.timeline.TraceLine;
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
+            import com.ithaca.timeline.skins.TraceLineTitleSkin;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.Trace;
             import com.ithaca.traces.TraceManager;
@@ -394,8 +396,10 @@
 					timeLine.layoutXML 		= new XML( loader.data );
 					timeLine.timelineLayout = new Layout( timeLine ); 	
 					
-					this.setObsels();
-					timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLineCommentFor );
+                    this.setObsels();
+                    timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLineCommentFor );
+                    // add listener added TraceLineTitle on the stage
+                    timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
 					
 					var traceComment:Trace = Model.getInstance().getTraceComment();				
 					var tlgComment : TraceLineGroup;
@@ -487,7 +491,40 @@
                 }
                 
             }
-                       
+            
+            /**
+            ** Event handler added TraceLineTitre on the stage
+            */
+            private function onAddedTraceLineOnStage(event:TimelineEvent):void
+            {
+                // logged user
+                var loggedUser:User = Model.getInstance().getLoggedUser();
+                // trace line title skin
+                var traceLineTitleSkin:TraceLineTitleSkin = event.value as TraceLineTitleSkin;
+                var traceLine:TraceLine = traceLineTitleSkin.hostComponent.tl;
+                // check has property owner, only for TraceLineGroup
+                if(traceLine.owner && traceLine.owner is TraceLineGroup )
+                {
+                    var traceLineGroup:TraceLineGroup = traceLine.owner as TraceLineGroup;
+                    // id user trace
+                    var idUserTrace:int = traceLineGroup.trace.uid;
+                    if(traceLine.selector)
+                    {
+                        // check traceline "Marker" by regexp 
+                        if((traceLine.selector as SelectorRegexp).regexp == "Marker") 
+                        {
+                            if(idUserTrace == loggedUser.id_user)
+                            {
+                                // set titre for logged user
+                                traceLineTitleSkin.setStyle("title", fxgt.gettext("Mes marqueurs"));
+                            }else
+                            {
+                                traceLineTitleSkin.setStyle("title", fxgt.gettext("Marqueurs"));
+                            }
+                        }   
+                    }
+                }
+            }
 			
 			/**
 			 * set user name in comment TraceLine
