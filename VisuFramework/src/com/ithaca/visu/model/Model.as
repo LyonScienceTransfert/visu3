@@ -142,7 +142,6 @@ package  com.ithaca.visu.model
 //		private var _listObselsComment:ArrayCollection;
 		private var _beginTimeSalonSynchrone:Number;
 	
-		private var listTraceLine:ArrayCollection;
 		private var listTraceGroup:ArrayCollection;
 		private var traceComment:Trace;
 
@@ -848,19 +847,13 @@ package  com.ithaca.visu.model
 		{
 			return this._beginTimeSalonSynchrone;
 		}
-		public function setSS(value:ArrayCollection):void
-		{
-			var listElementsTraceLine:ArrayList = this.listTraceLine[0] as ArrayList;
-			var obj:Object = listElementsTraceLine.getItemAt(0);
-			obj.listObsel = value;
-		}
 		
 		public function getListTraceLines():ArrayCollection
 		{
-			return this.listTraceLine;
+            // FIXME : refactoring show obsels "SessionOut", "SessionIn"
+			return null;
 		}
 	
-		// getter the liste the TraceGroup [ userId, userColor, userAvatar, userName, userTrace, uri ?]
 		public function getListTraceGroup():ArrayCollection
 		{
 			return this.listTraceGroup;
@@ -868,8 +861,6 @@ package  com.ithaca.visu.model
 		
 		public function initListTraceLine():void
 		{
-			this.listTraceLine = new ArrayCollection();
-//			this._listObselsComment = new ArrayCollection();
 		    this._listViewObselComment = new ArrayCollection();
 			
 			listTraceGroup = new ArrayCollection();
@@ -901,10 +892,10 @@ package  com.ithaca.visu.model
 		public function getListUserIdPresentOnTimeLine():Array
 		{
 			var result:Array = new Array();
-			var nbrTraceLine:int = this.listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+			var nbrTraceGroup:int = this.listTraceGroup.length;
+			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
 			{
-				var traceLine:Object = this.listTraceLine.getItemAt(nTraceLine) as Object;
+				var traceLine:Object = this.listTraceGroup.getItemAt(nTraceGroup) as Object;
 				var userId:int = traceLine.userId;
 				result.push(userId);
 			}
@@ -912,12 +903,12 @@ package  com.ithaca.visu.model
 		}
 		public function getListUserPresentOnTimeLine():ArrayCollection
 		{
-			var result:ArrayCollection = new ArrayCollection();
-			var nbrTraceLine:int = this.listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+            var result:ArrayCollection = new ArrayCollection();
+			var nbrTraceGroup:int = this.listTraceGroup.length;
+			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
 			{
-				var traceLine:Object = this.listTraceLine.getItemAt(nTraceLine) as Object;
-				var userId:int = traceLine.userId;
+				var traceGroup:Object = this.listTraceGroup.getItemAt(nTraceGroup) as Object;
+				var userId:int = traceGroup.userId;
 				var user:User = Model.instance.getUserPlateformeByUserId(userId);
 				result.addItem(user);
 			}
@@ -1102,18 +1093,18 @@ package  com.ithaca.visu.model
 		 */
 		public function getTraceLineByUserId(userId:int):Object
 		{
-			if(!listTraceLine)
+			if(!listTraceGroup)
 			{
 				return null;
 			}
-			var nbrTraceLines:int = this.listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLines; nTraceLine++)
+			var nbrTraceGroup:int = this.listTraceGroup.length;
+			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup; nTraceGroup++)
 			{
-				var traceLine:Object = this.listTraceLine[nTraceLine] as Object;
-				var id:int = traceLine.userId;
+				var traceGroup:Object = this.listTraceGroup[nTraceGroup] as Object;
+				var id:int = traceGroup.userId;
 				if(id == userId)
 				{
-					return traceLine;
+					return traceGroup;
 				}
 			}
 			return null;
@@ -1822,19 +1813,22 @@ package  com.ithaca.visu.model
 		{
 			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
 			var listTraceLine:ArrayCollection = this.getListTraceLines();
-			var nbrTraceLine:int = listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
-			{
-				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
-				// id of the user having traceLine
-				var userId:int = traceLine.userId;
-				var viewObsel:ObselSessionOut = new ObselSessionOut();
-				viewObsel.setOwner(userId);
-				viewObsel.setBegin(new Date().time);
-				// TODO gestion currentTime
-				viewObsel.setEnd(new Date().time + 100);
-				this.addViewObselSessionOut(viewObsel.getBegin(), userId);
-			}			
+            if(listTraceLine)
+            {
+    			var nbrTraceLine:int = listTraceLine.length;
+    			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+    			{
+    				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+    				// id of the user having traceLine
+    				var userId:int = traceLine.userId;
+    				var viewObsel:ObselSessionOut = new ObselSessionOut();
+    				viewObsel.setOwner(userId);
+    				viewObsel.setBegin(new Date().time);
+    				// TODO gestion currentTime
+    				viewObsel.setEnd(new Date().time + 100);
+    				this.addViewObselSessionOut(viewObsel.getBegin(), userId);
+    			}			
+            }
 		}
 		/**
 		 * add obsel "SessionOut for user presents in the session, after click on boutton "stop recording"
@@ -1843,25 +1837,28 @@ package  com.ithaca.visu.model
 		{
 			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
 			var listTraceLine:ArrayCollection = this.getListTraceLines();
-			var nbrTraceLine:int = listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
-			{
-				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
-				// id of the user having traceLine
-				var userId:int = traceLine.userId;
-				if(hasUserInSession(listUserId,userId))
-				{
-					var viewObsel:ObselSessionOut = new ObselSessionOut();
-					viewObsel.setOwner(userId);
-					viewObsel.setBegin(new Date().time);
-					// TODO gestion currentTime
-					viewObsel.setEnd(new Date().time + 100);
-					// show obsel on traceLine
-	//				this.setObsel(viewObsel,userId,TraceModel.SESSION_OUT);
-					// add obsel in the list for update duration
-					this.addViewObselSessionOut(viewObsel.getBegin(), userId);
-				}
-			}		
+            if(listTraceLine)
+            {
+    			var nbrTraceLine:int = listTraceLine.length;
+    			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+    			{
+    				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+    				// id of the user having traceLine
+    				var userId:int = traceLine.userId;
+    				if(hasUserInSession(listUserId,userId))
+    				{
+    					var viewObsel:ObselSessionOut = new ObselSessionOut();
+    					viewObsel.setOwner(userId);
+    					viewObsel.setBegin(new Date().time);
+    					// TODO gestion currentTime
+    					viewObsel.setEnd(new Date().time + 100);
+    					// show obsel on traceLine
+    	//				this.setObsel(viewObsel,userId,TraceModel.SESSION_OUT);
+    					// add obsel in the list for update duration
+    					this.addViewObselSessionOut(viewObsel.getBegin(), userId);
+    				}
+    			}		
+            }
 		}
 		/**
 		 * set obsels "SessionOut" for users had walk out from TutoratModule 
@@ -1872,29 +1869,32 @@ package  com.ithaca.visu.model
 			var sessionId:int = session.id_session;
 			var listUserId:Array = this.getListUsersIdByConnectedSession(sessionId);
 			var listTraceLine:ArrayCollection = this.getListTraceLines();
-			var nbrTraceLine:int = listTraceLine.length;
-			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
-			{
-				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
-				// id of the user having traceLine
-				var userId:int = traceLine.userId;
-				if(!hasUserInSession(listUserId,userId) && obsel != null)
-				{
-					// user walk out from session
-					var obselSessionOut:Obsel = Obsel.fromRDF((obsel.toRDF()));
-					obselSessionOut.type = TraceModel.SESSION_OUT_VOID_DURATION;
-					obselSessionOut.props[TraceModel.UID] = userId.toString();
-					obselSessionOut.end = obselSessionOut.begin + 100;
-					// add obsel to collection the obsel for show in TimeLine
-					
-					
-					
-			//		this.listObsels.addItem(obselSessionOut);
-					
-					
-					
-				}
-			}		
+            if(listTraceLine)
+            {
+    			var nbrTraceLine:int = listTraceLine.length;
+    			for(var nTraceLine:int = 0; nTraceLine < nbrTraceLine ; nTraceLine++)
+    			{
+    				var traceLine:Object =  listTraceLine.getItemAt(nTraceLine) as Object;
+    				// id of the user having traceLine
+    				var userId:int = traceLine.userId;
+    				if(!hasUserInSession(listUserId,userId) && obsel != null)
+    				{
+    					// user walk out from session
+    					var obselSessionOut:Obsel = Obsel.fromRDF((obsel.toRDF()));
+    					obselSessionOut.type = TraceModel.SESSION_OUT_VOID_DURATION;
+    					obselSessionOut.props[TraceModel.UID] = userId.toString();
+    					obselSessionOut.end = obselSessionOut.begin + 100;
+    					// add obsel to collection the obsel for show in TimeLine
+    					
+    					
+    					
+    			//		this.listObsels.addItem(obselSessionOut);
+    					
+    					
+    					
+    				}
+    			}		
+            }
 		}
 		
 		private function hasUserInSession(listUserId:Array, value:int):Boolean
