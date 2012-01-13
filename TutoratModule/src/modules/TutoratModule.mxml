@@ -1085,7 +1085,7 @@
 				// remove message from panle resume
 				panelTimeLine.removeAllElements();
 				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
-				timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLineMarkerFor);
+				timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
                 // add listener added TraceLineTitle on the stage
                 timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
 				timeLine.percentWidth = 100;
@@ -1116,7 +1116,7 @@
 			/**
 			 * Initialisation Title the TraceLine(name user)
 			 */
-			private function onAddNewTraceLineMarkerFor(event:TimelineEvent):void
+			private function onAddNewTraceLine(event:TimelineEvent):void
 			{	
 				var generatorName:String = event.value.generator.name;
 				var obsel:Obsel = event.value.obsel;
