@@ -397,7 +397,7 @@
 					timeLine.timelineLayout = new Layout( timeLine ); 	
 					
                     this.setObsels();
-                    timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLineCommentFor );
+                    timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine );
                     // add listener added TraceLineTitle on the stage
                     timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
 					
@@ -529,7 +529,7 @@
 			/**
 			 * set user name in comment TraceLine
 			 */
-			public function onAddNewTraceLineCommentFor( event : TimelineEvent ) : void
+			public function onAddNewTraceLine( event : TimelineEvent ) : void
 			{
 				var generatorName:String = event.value.generator.name;
 				var obsel:Obsel = event.value.obsel;
