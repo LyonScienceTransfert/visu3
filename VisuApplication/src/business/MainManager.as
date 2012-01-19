@@ -2,12 +2,9 @@ package business
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
-import com.ithaca.events.SelectionEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.traces.model.vo.SGBDObsel;
-import com.ithaca.utils.UtilFunction;
-import com.ithaca.utils.XMLUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.BilanEvent;
 import com.ithaca.visu.events.SessionEvent;
@@ -28,7 +25,6 @@ import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
 
-import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.net.NetConnection;
@@ -38,7 +34,6 @@ import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
-import mx.core.INavigatorContent;
 import mx.logging.ILogger;
 import mx.logging.Log;
 
@@ -1484,13 +1479,19 @@ public class MainManager
 		var timeStampObsel:Number = obsel.props[TraceModel.TIMESTAMP];
 		Model.getInstance().updateTextObselMarker(senderUserId, timeStampObsel, text, obsel.type);
 	}
-	
-	public function onCheckAddObselComment(obselVO:SGBDObsel, timeBegin:String, timeEnd:String):void
-	{
-		var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-		Model.getInstance().setObselComment(obsel);
-	}
-	
+    
+    /**
+    * Set resived comment obsel
+    */
+    public function onCheckAddObselComment(obselVO:SGBDObsel, timeBegin:String, timeEnd:String):void
+    {
+        var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+        // set comment trace id 
+        var traceCommentId:String = obselVO.trace;
+        Model.getInstance().setCurrentCommentTraceId(traceCommentId);
+        Model.getInstance().setObselComment(obsel);
+    }
+    
 	/**
 	 * Call when user on the plateforme delete session or plan the session
 	*/

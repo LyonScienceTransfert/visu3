@@ -314,14 +314,26 @@ package  com.ithaca.visu.model
 		{
 			return _currentSessionSalonSession;
 		}
-		public function setCurrentCommentTraceId(value:String):void
-		{
-			_currentCommentTraceId = value;
-		}
-		public function getCurrentCommentTraceId():String
-		{
-			return _currentCommentTraceId;
-		}
+        
+        /**
+         * Set current comment trace id
+         */
+        public function setCurrentCommentTraceId(value:String):void
+        {
+            // check if has comment trace id 
+            if(_currentCommentTraceId == "void" )
+            {
+                _currentCommentTraceId = value;
+            }
+        }
+        
+        /**
+         * Get current comment trace id
+         */
+        public function getCurrentCommentTraceId():String
+        {
+            return _currentCommentTraceId;
+        }
 		
 		public function setSelectedRadioButton(value:String):void
 		{
