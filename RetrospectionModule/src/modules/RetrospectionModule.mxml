@@ -417,14 +417,14 @@
                             
                             // trace of user 
                             var trace:Trace = traceGroup.userTrace as Trace;
+                            // get user
+                            var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
                             /// don't show trace if any obsels in the trace
                             var nbrObsels:Number = trace.obsels.length;
                             if(nbrObsels > 0)
                             {
                                 var tlg :TraceLineGroup ;		
                                 tlg = timeLine.addTrace(trace,-1, "user");
-                                // get user
-                                var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
                                 var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
                                 
                                 tlg.setStyle("title", lastNameUser );				
