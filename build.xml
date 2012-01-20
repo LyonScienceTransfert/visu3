@@ -167,6 +167,13 @@ or by setting the following environment variable:
 	  	  	
 	  	  		<!--	Put the images that are referenced by [Embed('images/{imagename}.{ext}')] 
 	  	  				in actionscript file into the library -->
+	  	  		
+	  	  		
+	  		  	<include-file name="images/motCleVisu2_20x20.png" path="${framework.images}/motCleVisu2_20x20.png"/>
+	  		  	<include-file name="images/chatMessageVisu2_20x20.png" path="${framework.images}/chatMessageVisu2_20x20.png"/>
+	  		  	<include-file name="images/consigneVisu2_20x20.png" path="${framework.images}/consigneVisu2_20x20.png"/>
+	  		  	<include-file name="images/fichierVisu2_20x20.png" path="${framework.images}/fichierVisu2_20x20.png"/>
+	  		  	
 	  		  	<include-file name="images/ArrowDown.png" path="${framework.images}/ArrowDown.png"/>
 	  			<include-file name="images/ArrowUp.png" path="${framework.images}/ArrowUp.png"/>
 	  		  	<include-file name="images/CommentAddVer1.png" path="${framework.images}/CommentAddVer1.png"/>
