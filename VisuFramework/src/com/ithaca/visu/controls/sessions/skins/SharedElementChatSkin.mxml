@@ -44,7 +44,7 @@
 		</s:Rect>
 		<mx:Image id="avatar"  left="3" top="1" width="30" height="30"/>
 		<s:Label id="nameUser"  maxDisplayedLines="1" visible.vciel="true" visible.normal="false" top="5" left="40"  width="90"/>
-		<mx:Image id="imageInfo" left.normal="44"  left.vciel="135" top="5"  width="25" height="25"/>
+		<mx:Image id="imageInfo" left.normal="44"  left.vciel="135" top="5" maxWidth="25" maxHeight="25"/>
 		<s:RichText id="titleDisplay" left.normal="72" left.vciel="40" top.normal="5" top.vciel="30" right="10" color="#121212"
 				 fontSize="12" fontWeight="normal" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
 			
