@@ -443,7 +443,8 @@
                                 // set id user like name
                                 navigatorContent.name = user.id_user.toString();
                                 // add navigator content
-                                tnTimeline.addElement(navigatorContent);
+                                // FIXME : desactivate create time line activity
+                                //tnTimeline.addElement(navigatorContent);
                             } 
                         }
 					}
