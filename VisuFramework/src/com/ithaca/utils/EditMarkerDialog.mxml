@@ -301,7 +301,7 @@
 			<s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
 		</s:HGroup>
         <s:HGroup width="100%" paddingLeft="10" paddingRight="10">
-            <s:RichEditableText  id="textInfo" width="100%" keyUp="onHandlerButtonOkAndEnterTextArea(event)" height="45"/>
+            <s:RichEditableText  id="textInfo" keyUp="onHandlerButtonOkAndEnterTextArea(event)" height="45" paddingRight.normal="0" width.normal="230"/>
         </s:HGroup>
 		<s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
 			<s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
