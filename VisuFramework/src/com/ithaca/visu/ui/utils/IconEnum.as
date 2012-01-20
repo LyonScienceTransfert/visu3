@@ -77,7 +77,7 @@ package com.ithaca.visu.ui.utils
 		static private var messageChatIcon:Class;
 		
 		[Bindable]
-		[Embed("images/motCleVisu1.png")]
+		[Embed("images/motCleVisu2_20x20.png")]
 		static private var keywordIcon:Class;
 		
 		[Bindable]
@@ -85,15 +85,15 @@ package com.ithaca.visu.ui.utils
 		static private var videoIcon:Class;
 		
 		[Bindable]
-		[Embed("images/chatMessageVisu1.png")]
+		[Embed("images/chatMessageVisu2_20x20.png")]
 		static private var messageChatIconVisu1:Class;
 		
 		[Bindable]
-		[Embed("images/consigneVisu1.png")]
+		[Embed("images/consigneVisu2_20x20.png")]
 		static private var consigneIconVisu1:Class;
 		
 		[Bindable]
-		[Embed("images/fichierVisu1.png")]
+		[Embed("images/fichierVisu2_20x20.png")]
 		static private var fichierIconVisu1:Class;
 		
 		[Bindable]
