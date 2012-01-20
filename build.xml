@@ -169,17 +169,13 @@ or by setting the following environment variable:
 	  	  				in actionscript file into the library -->
 	  		  	<include-file name="images/ArrowDown.png" path="${framework.images}/ArrowDown.png"/>
 	  			<include-file name="images/ArrowUp.png" path="${framework.images}/ArrowUp.png"/>
-	  		  	<include-file name="images/chatMessageVisu1.png" path="${framework.images}/chatMessageVisu1.png"/>
 	  		  	<include-file name="images/CommentAddVer1.png" path="${framework.images}/CommentAddVer1.png"/>
 	  		  	<include-file name="images/CommentVer4.png" path="${framework.images}/CommentVer4.png"/>
-	  		  	<include-file name="images/consigneVisu1.png" path="${framework.images}/consigneVisu1.png"/>
 	  		  	<include-file name="images/Editer.png" path="${framework.images}/Editer.png"/>
-	  	  	    <include-file name="images/fichierVisu1.png" path="${framework.images}/fichierVisu1.png"/>
-	  	  	    <include-file name="images/iconPlus.png" path="${framework.images}/iconPlus.png"/>
-	  	  	    <include-file name="images/iconMinus.png" path="${framework.images}/iconMinus.png"/>
-	  		  	<include-file name="images/marqueurBlanc-bas-20px.png" path="${framework.images}/marqueurBlanc-bas-20px.png"/>
+	  		  	<include-file name="images/iconPlus.png" path="${framework.images}/iconPlus.png"/>
+	  		  	<include-file name="images/iconMinus.png" path="${framework.images}/iconMinus.png"/>
+	  		 	<include-file name="images/marqueurBlanc-bas-20px.png" path="${framework.images}/marqueurBlanc-bas-20px.png"/>
 	  		  	<include-file name="images/messageChat.png" path="${framework.images}/messageChat.png"/>
-	  		  	<include-file name="images/motCleVisu1.png" path="${framework.images}/motCleVisu1.png"/>
 	  		  	<include-file name="images/PauseVer4.png" path="${framework.images}/PauseVer4.png"/>
 	  		  	<include-file name="images/PlayVer4.png" path="${framework.images}/PlayVer4.png"/>
 	  		  	<include-file name="images/PlayWalkOutVer5.png" path="${framework.images}/PlayWalkOutVer5.png"/>
