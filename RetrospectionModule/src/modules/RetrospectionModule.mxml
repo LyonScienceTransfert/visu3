@@ -1117,26 +1117,24 @@
                 // do tracage if has trace id retro room
                 if(Model.getInstance().getTraceIdRetroRoom())
                 {
-                    var traceVisu:Trace = TraceManager.initTrace("visu");
+                    // FIXME : disactivated collect 
+                    
+                    //var traceVisu:Trace = TraceManager.initTrace("visu");
                     // traceId Retro room
-                    traceVisu.uri = Model.getInstance().getTraceIdRetroRoom();
+                    //traceVisu.uri = Model.getInstance().getTraceIdRetroRoom();
                     // set subject
-                    traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
-                    Trace.init_remote( Model.getInstance().AMFServer);
+                    //traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
+                    //Trace.init_remote( Model.getInstance().AMFServer);
                     
                     // start activity tracing on TimeLine
-                    var traceTimeline: Trace = timeLine.startActivityTracing();
-  
-                    // init trace activity on retro room
-                 //   var traceTimeline: Trace = new Trace();
+                    // var traceTimeline: Trace = timeLine.startActivityTracing(traceVisu);
+
                     // do not automatically synchronize with the KTBS/BDD
-                    traceTimeline.autosync = false;
+                    //traceTimeline.autosync = false;
                     // collection the obsels of trace activity on retro room
-                    var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
+                    //var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
                     // add listener adding new obsel
-                    listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
-                    // start activity tracing on TimeLine
-                   // timeLine.startActivityTracing(traceTimeline);
+                    //listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
                 }
                 
             }
