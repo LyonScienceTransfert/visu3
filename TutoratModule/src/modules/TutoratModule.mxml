@@ -111,6 +111,8 @@
 			private var listUserIdPresentTimeLine:ArrayCollection = new ArrayCollection();
 			// init EditComentDialog with this userId
 			private var userIdInitEditMarkerDialog:int = -1;
+            // loged user
+            var loggedUser:User;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -132,7 +134,9 @@
 					Model.getInstance().setCurrentTutoratModule(this);
 					// init list traceLines
 					Model.getInstance().initListTraceLine();
-					
+                    // set logged user
+                    loggedUser = Model.getInstance().getLoggedUser();
+                    
 					var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_TUTORAT);
 					this.dispatchEvent(initMapEvent);
 					// set current state
@@ -1062,7 +1066,13 @@
 					var traceGroup : Object = Model.getInstance().getTraceGroupByUserId( userId );
 					if( traceGroup != null && !hasUserIdPresentTimeLine( userId ) && isTimeLineAddedOnStage())
 					{																	
-						this.addTraceLineOnViewTraceLineGroup(traceGroup);
+                        // user can add to time line
+                        var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+                        // check if user can be on time line
+                        if(VisuUtils.isAddTraceSalonSynchrone(loggedUser, user))
+                        {
+                            this.addTraceLineOnViewTraceLineGroup(traceGroup);
+                        } 
 					}
 				}
 			}
@@ -1210,7 +1220,6 @@
                     timeLine.layoutXML 		= new XML( loader.data );
                     timeLine.timelineLayout = new Layout( timeLine );
                     _isTimeLineAddedOnStage = true;
-                    var loggedUser:User = Model.getInstance().getLoggedUser();
                     
                     var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
                     if(listTraceGroup != null)
