@@ -1681,7 +1681,10 @@
 				// stop play video segment
 				endVideoSegment();
 				// pre play video flux
-				prePlayVideoFlux(event.value);	
+				prePlayVideoFlux(event.value);
+                // update stats button, video
+                onCheckSeekStream();
+                onUpdatePlayerStatus(true)
 			}
 
 			protected function timeLine_playButtonClickHandler(event:TimelineEvent = null):void
