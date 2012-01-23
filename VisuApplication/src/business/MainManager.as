@@ -1259,10 +1259,10 @@ public class MainManager
 	/**
     * set trace id Retrospection Room and trace id Syncro Room
     */
-    public function onCheckTracesIdRetroRoom(traceIdRetroRoom:String, parentTraceId:String):void
+    public function onCheckTracesIdRetroRoom(traceIdRetrospectionActivity:String, raceIdSynchronousActivity:String):void
     {
-        Model.getInstance().setTraceIdRetroRoom( traceIdRetroRoom) ;
-        Model.getInstance().setParentTraceId( parentTraceId) ;
+        Model.getInstance().setTraceIdRetrospectionActivity( traceIdRetrospectionActivity) ;
+        Model.getInstance().setTraceIdSynchronousActivity( raceIdSynchronousActivity) ;
     }
     
     /**

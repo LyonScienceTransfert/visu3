@@ -142,7 +142,7 @@ package  com.ithaca.visu.model
 //		private var _listObselsComment:ArrayCollection;
 		private var _beginTimeSalonSynchrone:Number;
 	
-		private var listTraceGroup:ArrayCollection;
+		private var listSynchroRoomObsels:ArrayCollection;
 		private var traceComment:Trace;
 
 		private var _buttonSalonTutorat:ToggleButton; 
@@ -168,8 +168,8 @@ package  com.ithaca.visu.model
 		private var _frameRateSplit:Number = 2000;
 		private var _currentSessionSalonSession:Session;
         
-		private var _traceIdRetroRoom:String;
-		private var _parentTraceId:String;
+		private var _traceIdRetrospectionActivity:String;
+		private var _traceIdSynchronousActivity:String;
    
         // init module
         private var _initModule:String;
@@ -665,31 +665,31 @@ package  com.ithaca.visu.model
         /**
         * Set trace id Retro room
         */
-        public function setTraceIdRetroRoom(value:String):void
+        public function setTraceIdRetrospectionActivity(value:String):void
         {
-            this._traceIdRetroRoom = value;
+            this._traceIdRetrospectionActivity = value;
         }
         /**
         * Get trace id Retro room
         */
-        public function getTraceIdRetroRoom():String
+        public function getTraceIdRetrospectionActivity():String
         {
-            return this._traceIdRetroRoom;
+            return this._traceIdRetrospectionActivity;
         }
 
         /**
         * Set trace id Synchro room
         */
-        public function setParentTraceId(value:String):void
+        public function setTraceIdSynchronousActivity(value:String):void
         {
-            this._parentTraceId = value;
+            this._traceIdSynchronousActivity = value;
         }
         /**
         * Get trace id Synchro room
         */
-        public function getParentTraceId():String
+        public function getTraceIdSynchronousActivity():String
         {
-            return this._parentTraceId;
+            return this._traceIdSynchronousActivity;
         }
         
 		public function hasObsels():Boolean
@@ -866,16 +866,16 @@ package  com.ithaca.visu.model
 			return null;
 		}
 	
-		public function getListTraceGroup():ArrayCollection
+		public function getListSynchroRoomObsels():ArrayCollection
 		{
-			return this.listTraceGroup;
+			return this.listSynchroRoomObsels;
 		}
 		
 		public function initListTraceLine():void
 		{
 		    this._listViewObselComment = new ArrayCollection();
 			
-			listTraceGroup = new ArrayCollection();
+			listSynchroRoomObsels = new ArrayCollection();
 			// init trace comment
 			var loggedUserId:int = _loggedUser.id_user;
 			traceComment = new Trace(loggedUserId, "" );
@@ -897,17 +897,17 @@ package  com.ithaca.visu.model
 			if(!hasTraceLineByUserId(userId))
 			{
 				var userTrace:Trace = new Trace(userId, "" );
-				this.listTraceGroup.addItem({userId: userId, userColor: userColor, userAvatar : userAvatar, userName : userName, userTrace : userTrace});
+				this.listSynchroRoomObsels.addItem({userId: userId, userColor: userColor, userAvatar : userAvatar, userName : userName, userTrace : userTrace});
 			}
 		}
 		
 		public function getListUserIdPresentOnTimeLine():Array
 		{
 			var result:Array = new Array();
-			var nbrTraceGroup:int = this.listTraceGroup.length;
+			var nbrTraceGroup:int = this.listSynchroRoomObsels.length;
 			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
 			{
-				var traceLine:Object = this.listTraceGroup.getItemAt(nTraceGroup) as Object;
+				var traceLine:Object = this.listSynchroRoomObsels.getItemAt(nTraceGroup) as Object;
 				var userId:int = traceLine.userId;
 				result.push(userId);
 			}
@@ -916,10 +916,10 @@ package  com.ithaca.visu.model
 		public function getListUserPresentOnTimeLine():ArrayCollection
 		{
             var result:ArrayCollection = new ArrayCollection();
-			var nbrTraceGroup:int = this.listTraceGroup.length;
+			var nbrTraceGroup:int = this.listSynchroRoomObsels.length;
 			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
 			{
-				var traceGroup:Object = this.listTraceGroup.getItemAt(nTraceGroup) as Object;
+				var traceGroup:Object = this.listSynchroRoomObsels.getItemAt(nTraceGroup) as Object;
 				var userId:int = traceGroup.userId;
 				var user:User = Model.instance.getUserPlateformeByUserId(userId);
 				result.addItem(user);
@@ -1064,12 +1064,12 @@ package  com.ithaca.visu.model
 		 */
 		private function hasTraceLineByUserId(userId:int):Boolean
 		{
-			if(this.listTraceGroup != null)
+			if(this.listSynchroRoomObsels != null)
 			{
-				var nbrTraceGroup:int = this.listTraceGroup.length;
+				var nbrTraceGroup:int = this.listSynchroRoomObsels.length;
 				for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup; nTraceGroup++)
 				{
-					var traceGroup:Object = this.listTraceGroup[nTraceGroup] as Object;
+					var traceGroup:Object = this.listSynchroRoomObsels[nTraceGroup] as Object;
 					var id:int = traceGroup.userId;
 					if(id == userId)
 					{
@@ -1088,10 +1088,10 @@ package  com.ithaca.visu.model
 		 */
 		public function getTraceGroupByUserId(userId:int):Object
 		{
-			var nbrTraceGroup:int = this.listTraceGroup.length;
+			var nbrTraceGroup:int = this.listSynchroRoomObsels.length;
 			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup; nTraceGroup++)
 			{
-				var traceGroup:Object = this.listTraceGroup[nTraceGroup] as Object;
+				var traceGroup:Object = this.listSynchroRoomObsels[nTraceGroup] as Object;
 				var id:int = traceGroup.userId;
 				if(id == userId)
 				{
@@ -1105,14 +1105,14 @@ package  com.ithaca.visu.model
 		 */
 		public function getTraceLineByUserId(userId:int):Object
 		{
-			if(!listTraceGroup)
+			if(!listSynchroRoomObsels)
 			{
 				return null;
 			}
-			var nbrTraceGroup:int = this.listTraceGroup.length;
+			var nbrTraceGroup:int = this.listSynchroRoomObsels.length;
 			for(var nTraceGroup:int = 0; nTraceGroup < nbrTraceGroup; nTraceGroup++)
 			{
-				var traceGroup:Object = this.listTraceGroup[nTraceGroup] as Object;
+				var traceGroup:Object = this.listSynchroRoomObsels[nTraceGroup] as Object;
 				var id:int = traceGroup.userId;
 				if(id == userId)
 				{

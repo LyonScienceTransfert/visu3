@@ -407,7 +407,7 @@
 					tlgComment.setStyle( "title", fxgt.gettext("Comments") );
                     // logged user 
                     var loggedUser:User = Model.getInstance().getLoggedUser();
-                    var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+                    var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
                     if(listTraceGroup != null)
                     {											
                         var nbrTraceGroup:int = listTraceGroup.length;
@@ -1069,8 +1069,8 @@
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
-                    var timeLineTracage:Timeline = event.currentTarget as Timeline;
-                    var listObselVO:Array = timeLineStorage[timeLineTracage.name];
+                    var timeLineRetrospectionActivity:Timeline = event.currentTarget as Timeline;
+                    var listObselVO:Array = timeLineStorage[timeLineRetrospectionActivity.name];
                     
                     var listObselTracage:ArrayCollection = new ArrayCollection(); 
                     var nbrObsel:int = listObselVO.length;
@@ -1084,18 +1084,18 @@
                     var endTimeLine:Number = (listObselTracage.getItemAt(listObselTracage.length -1 ) as Obsel).begin;
                     
                     // create timeLineTracage
-                    timeLineTracage.layoutXML 		= new XML( loaderTracage.data );
-                    timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 
+                    timeLineRetrospectionActivity.layoutXML 		= new XML( loaderTracage.data );
+                    timeLineRetrospectionActivity.timelineLayout = new Layout( timeLineRetrospectionActivity ); 
                     
                     // add range
-                    timeLineTracage.range.addTime(beginTimeLine, endTimeLine);
+                    timeLineRetrospectionActivity.range.addTime(beginTimeLine, endTimeLine);
                     
                     // trace tracage activity retro room
-                    var traceRetroRoom:Trace = new Trace(new int(timeLineTracage.name), "");
-                    traceRetroRoom.obsels = listObselTracage;
-                    var traceLineGroup:TraceLineGroup = timeLineTracage.addTrace(traceRetroRoom);
+                    var traceRetrospectionActivity:Trace = new Trace(new int(timeLineRetrospectionActivity.name), "");
+                    traceRetrospectionActivity.obsels = listObselTracage;
+                    var traceLineGroup:TraceLineGroup = timeLineRetrospectionActivity.addTrace(traceRetrospectionActivity);
                     
-                    var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineTracage.name));
+                    var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineRetrospectionActivity.name));
                     var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
                     
                     traceLineGroup.setStyle("title", lastNameUser );				
@@ -1116,26 +1116,26 @@
                 onUpdatePlayerStatus(true);
                 
                 // do tracage if has trace id retro room
-                if(Model.getInstance().getTraceIdRetroRoom())
+                if(Model.getInstance().getTraceIdRetrospectionActivity())
                 {
                     // FIXME : disactivated collect 
                     
-                    //var traceVisu:Trace = TraceManager.initTrace("visu");
+                    var traceVisu:Trace = TraceManager.initTrace("visu");
                     // traceId Retro room
-                    //traceVisu.uri = Model.getInstance().getTraceIdRetroRoom();
+                    traceVisu.uri = Model.getInstance().getTraceIdRetrospectionActivity();
                     // set subject
-                    //traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
-                    //Trace.init_remote( Model.getInstance().AMFServer);
+                    traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
+                    Trace.init_remote( Model.getInstance().AMFServer);
                     
                     // start activity tracing on TimeLine
-                    // var traceTimeline: Trace = timeLine.startActivityTracing(traceVisu);
+                    var traceTimeline: Trace = timeLine.startActivityTracing(traceVisu);
 
                     // do not automatically synchronize with the KTBS/BDD
-                    //traceTimeline.autosync = false;
+                    traceTimeline.autosync = false;
                     // collection the obsels of trace activity on retro room
-                    //var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
+                    var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
                     // add listener adding new obsel
-                    //listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
+                    listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
                 }
                 
             }

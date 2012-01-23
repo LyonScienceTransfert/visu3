@@ -100,9 +100,9 @@ public class TracageManager
         // get current time the serveur
         var currentTime:Number = Model.getInstance().getTimeServeur();
         // traceId salon Synchro room
-        var parentTraceId:String = Model.getInstance().getParentTraceId();
+        var parentTraceId:String = Model.getInstance().getTraceIdSynchronousActivity();
         // traceId salon retro
-        var retroTraceId:String = Model.getInstance().getTraceIdRetroRoom();
+        var retroTraceId:String = Model.getInstance().getTraceIdRetrospectionActivity();
         // obsel the TimeLine
         var obselTimeLine:Obsel = event.obsel;
         // type obsel activity

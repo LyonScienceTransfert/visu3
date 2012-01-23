@@ -1221,7 +1221,7 @@
                     timeLine.timelineLayout = new Layout( timeLine );
                     _isTimeLineAddedOnStage = true;
                     
-                    var listTraceGroup:ArrayCollection = Model.getInstance().getListTraceGroup()
+                    var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
                     if(listTraceGroup != null)
                     {											
                         var nbrTraceGroup:int = listTraceGroup.length;
