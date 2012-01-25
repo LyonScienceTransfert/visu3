@@ -298,7 +298,7 @@ public class SegmentTitle extends SkinnableComponent
         var diff:String = "{ ";
         
         // check modifications the comment
-        if(segment.comment != _tracedSegment.comment)
+        if(_tracedSegment && segment.comment != _tracedSegment.comment)
         {
             tempString = "'"+ RetroDocumentConst.TAG_COMMENT+"': '"+segment.comment+"'";
             arr.addItem(tempString);
