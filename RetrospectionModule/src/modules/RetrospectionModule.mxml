@@ -1120,7 +1120,8 @@
                 onUpdatePlayerStatus(true);
                 
                 // do tracage if it has retro room trace id 
-                if(Model.getInstance().getTraceIdRetrospectionActivity())
+                if(false)
+//                if(Model.getInstance().getTraceIdRetrospectionActivity())
                 {
                     var traceVisu: Trace = TraceManager.initTrace("visu");
                     // do not automatically synchronize with the KTBS/BDD
@@ -1158,7 +1159,6 @@
                     // get new obsel
                     // FIXME: will break if more than 1 obsel is added at a time.
                     timeLineTracageEvent.obsel = event.items[0];
-                    // dispatch event
                     TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(timeLineTracageEvent);
                     break;
                 }
