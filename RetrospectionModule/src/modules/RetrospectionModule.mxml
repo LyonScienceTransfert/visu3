@@ -416,6 +416,7 @@
                             var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
                             
                             // trace of user 
+                            // FIXME: which trace ? synchronous trace ? retrospection activity trace ?
                             var trace:Trace = traceGroup.userTrace as Trace;
                             // get user
                             var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
@@ -1076,6 +1077,9 @@
                     var nbrObsel:int = listObselVO.length;
                     for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
                     {
+                        // FIXME: the ObselVO should not be used in
+                        // the application, it is an internal
+                        // mechanism of the Traces API.
                         var obselVO : SGBDObsel = listObselVO[nObsel];
                         var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
                         listObselTracage.addItem(obsel);
@@ -1112,30 +1116,31 @@
              */
             protected function timeLine_creationCompleteHandler(event:FlexEvent):void
             {      
-                // set image pused on timeLine 
+                // set image on timeLine 
                 onUpdatePlayerStatus(true);
                 
-                // do tracage if has trace id retro room
+                // do tracage if it has retro room trace id 
                 if(Model.getInstance().getTraceIdRetrospectionActivity())
                 {
-                    // FIXME : disactivated collect 
-                    
-                    var traceVisu:Trace = TraceManager.initTrace("visu");
+                    var traceVisu: Trace = TraceManager.initTrace("visu");
+                    // do not automatically synchronize with the KTBS/BDD
+                    traceVisu.autosync = false;
                     // traceId Retro room
                     traceVisu.uri = Model.getInstance().getTraceIdRetrospectionActivity();
                     // set subject
                     traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
-                    Trace.init_remote( Model.getInstance().AMFServer);
-                    
-                    // start activity tracing on TimeLine
-                    var traceTimeline: Trace = timeLine.startActivityTracing(traceVisu);
 
-                    // do not automatically synchronize with the KTBS/BDD
-                    traceTimeline.autosync = false;
-                    // collection the obsels of trace activity on retro room
-                    var listObselTimeLine:ArrayCollection = traceTimeline.obsels;
+                    // FIXME: should be done only once at the application initialization.
+                    Trace.init_remote(Model.getInstance().AMFServer);
+                    
+                    //  retro room activity trace collection 
+                    var listObselTimeLine: ArrayCollection = traceVisu.obsels;
+
                     // add listener adding new obsel
-                    listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, timeLine_obselChangeHandler);
+                    listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
+
+                    // start activity tracing on TimeLine
+                    timeLine.startActivityTracing(traceVisu);
                 }
                 
             }
@@ -1143,16 +1148,17 @@
             /**
              * Obsel collection Timeline handler
              */
-            protected function timeLine_obselChangeHandler(event:CollectionEvent):void
+            protected function tracageTimeline_obselChangeHandler(event: CollectionEvent):void
             {
                 switch (event.kind)
                 {
                 case CollectionEventKind.ADD :
                 {
-                    var timeLineTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_TIME_LINE);
+                    var timeLineTracageEvent: TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_TIME_LINE);
                     // get new obsel
+                    // FIXME: will break if more than 1 obsel is added at a time.
                     timeLineTracageEvent.obsel = event.items[0];
-                    // dispatche event
+                    // dispatch event
                     TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(timeLineTracageEvent);
                     break;
                 }
