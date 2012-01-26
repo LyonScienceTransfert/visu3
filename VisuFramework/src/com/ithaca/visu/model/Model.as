@@ -371,6 +371,9 @@ package  com.ithaca.visu.model
 			this._timeServeur = value;
 			// start synchronisation the time with serveur red5
 			this._timeJoinDECK = new Date().time;
+            
+            // init remote for Trace
+            Trace.init_remote(AMFServer);
 		}
 		
 		/**
