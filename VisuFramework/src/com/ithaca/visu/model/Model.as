@@ -882,6 +882,8 @@ package  com.ithaca.visu.model
 			// init trace comment
 			var loggedUserId:int = _loggedUser.id_user;
 			traceComment = new Trace(loggedUserId, "" );
+            // don't save obsel on server side by function "addObsel" 
+            traceComment.autosync = false;
 		}
 		
 		public function getTraceComment():Trace
