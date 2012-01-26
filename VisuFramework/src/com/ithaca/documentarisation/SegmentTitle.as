@@ -62,6 +62,8 @@ public class SegmentTitle extends SkinnableComponent
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+        // add tracage mouse over the block
+        this.addEventListener(MouseEvent.MOUSE_OVER, traceBlockOver)
 	}
 	//_____________________________________________________________________
 	//
@@ -204,8 +206,6 @@ public class SegmentTitle extends SkinnableComponent
 				skinName = "edit";
                 // stop tracage timer
                 stopTracageTimer();
-                // tracage over block
-                traceBlockOver();
 			}
 		}
 		else {
@@ -347,7 +347,7 @@ public class SegmentTitle extends SkinnableComponent
     /**
      * tracage over block
      */
-    private function traceBlockOver():void
+    private function traceBlockOver(event:MouseEvent):void
     {
         // tracage block audio
         var blockAudioTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
@@ -355,6 +355,8 @@ public class SegmentTitle extends SkinnableComponent
         blockAudioTracageEvent.exploreType = RetroTraceModel.OVER;
         blockAudioTracageEvent.id = segment.segmentId;
         TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(blockAudioTracageEvent);
+        
+        trace("over title block");
     }
     /**
      * tracage selected block
