@@ -1130,12 +1130,15 @@
                     // set subject
                     traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
 
-                    // start activity tracing on TimeLine, init new trace
-                    timeLine.startActivityTracing();
+                    var traceTimeline: Trace = new Trace();
+                    traceTimeline.uid = Model.getInstance().getLoggedUser().id_user;
                     // do not automatically synchronize with the KTBS/BDD
-                    timeLine.activity.autosync = false;
+                    traceTimeline.autosync = false;
                     // add listener on collection obsels 
-                    timeLine.activity.obsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
+                    traceTimeline.obsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
+                    
+                    // start activity tracing on TimeLine, store in traceTimeline
+                    timeLine.startActivityTracing(traceTimeline);
                 }
             }
 
