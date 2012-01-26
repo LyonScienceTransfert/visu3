@@ -465,17 +465,21 @@ public class SegmentCommentAudio extends SkinnableComponent
         // save modifications in format JSON
         var diff:String = "{ ";
         
-        // check modifications the comment
-        if(_tracedSegment && segment.comment != _tracedSegment.comment)
+        // check if has _tracedSegment
+        if(_tracedSegment)
         {
-            tempString = "'"+ RetroDocumentConst.TAG_COMMENT+"': '"+segment.comment+"'";
-            arr.addItem(tempString);
-        }
-        // check modification the duration audio
-        if(segment.durationCommentAudio != _tracedSegment.durationCommentAudio)
-        {
-            tempString = "'"+ RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+"': "+segment.durationCommentAudio.toString();
-            arr.addItem(tempString);
+            // check modifications the comment
+            if( segment.comment != _tracedSegment.comment)
+            {
+                tempString = "'"+ RetroDocumentConst.TAG_COMMENT+"': '"+segment.comment+"'";
+                arr.addItem(tempString);
+            }
+            // check modification the duration audio
+            if(segment.durationCommentAudio != _tracedSegment.durationCommentAudio)
+            {
+                tempString = "'"+ RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO+"': "+segment.durationCommentAudio.toString();
+                arr.addItem(tempString);
+            }
         }
         // nbr property of the segment was modified
         var nbrElm:int = arr.length;
