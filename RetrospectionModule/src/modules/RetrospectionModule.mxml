@@ -1120,8 +1120,7 @@
                 onUpdatePlayerStatus(true);
                 
                 // do tracage if it has retro room trace id 
-                if(false)
-//                if(Model.getInstance().getTraceIdRetrospectionActivity())
+                if(Model.getInstance().getTraceIdRetrospectionActivity())
                 {
                     var traceVisu: Trace = TraceManager.initTrace("visu");
                     // automatically synchronize with the KTBS/BDD
@@ -1131,19 +1130,13 @@
                     // set subject
                     traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
 
-                    // FIXME: should be done only once at the application initialization.
-                    Trace.init_remote(Model.getInstance().AMFServer);
-                    
-                    //  retro room activity trace collection 
-                    var listObselTimeLine: ArrayCollection = traceVisu.obsels;
-
-                    // add listener adding new obsel
-                    listObselTimeLine.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
-
-                    // start activity tracing on TimeLine
-                    timeLine.startActivityTracing(traceVisu);
+                    // start activity tracing on TimeLine, init new trace
+                    timeLine.startActivityTracing();
+                    // do not automatically synchronize with the KTBS/BDD
+                    timeLine.activity.autosync = false;
+                    // add listener on collection obsels 
+                    timeLine.activity.obsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
                 }
-                
             }
 
             /**
