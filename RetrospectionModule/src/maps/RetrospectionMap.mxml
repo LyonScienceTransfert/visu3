@@ -69,7 +69,7 @@
 <!-- CLOSED SESSION -->		
 		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId, ALL_INFO]}" />
+				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId, VisuModuleEvent.RETROSPECTION_MODULE]}" />
 			</rtmp:RtmpServiceInvoker>
 			<!--<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="ktbsObselInfo.getObselByClosedSession"   arguments="{[event.sessionId, ALL_INFO]}" />
