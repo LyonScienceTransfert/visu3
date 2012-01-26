@@ -1124,8 +1124,8 @@
 //                if(Model.getInstance().getTraceIdRetrospectionActivity())
                 {
                     var traceVisu: Trace = TraceManager.initTrace("visu");
-                    // do not automatically synchronize with the KTBS/BDD
-                    traceVisu.autosync = false;
+                    // automatically synchronize with the KTBS/BDD
+                    traceVisu.autosync = true;
                     // traceId Retro room
                     traceVisu.uri = Model.getInstance().getTraceIdRetrospectionActivity();
                     // set subject
