@@ -668,24 +668,27 @@ public class SegmentVideoAdvanced extends SkinnableComponent
         var tempString:String;
         // save modifications in format JSON
         var diff:String = "{ ";
-        
-        // check modifications the comment
-        if(_tracedSegment && segment.comment != _tracedSegment.comment)
+        // check if has _tracedSegment
+        if(_tracedSegment)
         {
-            tempString = "'"+ RetroDocumentConst.TAG_COMMENT+"': '"+segment.comment+"'";
-            arr.addItem(tempString);
-        }
-        // check modification the begin time video
-        if(segment.beginTimeVideo != _tracedSegment.beginTimeVideo)
-        {
-            tempString = "'"+ RetroDocumentConst.TAG_FROM_TIME+"': "+segment.beginTimeVideo.toString();
-            arr.addItem(tempString);
-        }
-        // check modification the end time video
-        if(segment.endTimeVideo != _tracedSegment.endTimeVideo)
-        {
-            tempString = "'"+ RetroDocumentConst.TAG_TO_TIME+"': "+segment.endTimeVideo.toString();
-            arr.addItem(tempString);
+            // check modifications the comment
+            if( segment.comment != _tracedSegment.comment)
+            {
+                tempString = "'"+ RetroDocumentConst.TAG_COMMENT+"': '"+segment.comment+"'";
+                arr.addItem(tempString);
+            }
+            // check modification the begin time video
+            if(segment.beginTimeVideo != _tracedSegment.beginTimeVideo)
+            {
+                tempString = "'"+ RetroDocumentConst.TAG_FROM_TIME+"': "+segment.beginTimeVideo.toString();
+                arr.addItem(tempString);
+            }
+            // check modification the end time video
+            if(segment.endTimeVideo != _tracedSegment.endTimeVideo)
+            {
+                tempString = "'"+ RetroDocumentConst.TAG_TO_TIME+"': "+segment.endTimeVideo.toString();
+                arr.addItem(tempString);
+            }
         }
         // nbr property of the segment was modified
         var nbrElm:int = arr.length;
