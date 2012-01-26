@@ -409,7 +409,7 @@ public class ObselInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void getObselByClosedSession(IConnection conn, Integer sessionId, int statusLoggedUser) {
+	public void getObselByClosedSession(IConnection conn, Integer sessionId, String labelModule) {
 		log.warn("======== getObselByClosedSession = {}",sessionId.toString());
 
 		IClient client = conn.getClient();
@@ -552,8 +552,12 @@ public class ObselInfo {
 			sc.invoke("checkListRetroDocument", argsRetroDocument);
 		}
 		
-		// check traceId Retrospection room
-		checkTraceIdRetro( conn, client, session);
+		// check traceId only for Retrospection module
+		if(labelModule.equals("retrospectionModule"))
+		{
+			// check traceId Retrospection room
+			checkTraceIdRetro( conn, client, session);
+		}
 	}
 	
 	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, Long timeStamp )
