@@ -1245,6 +1245,8 @@ package  com.ithaca.visu.model
 				return;
 			}
 			var trace:Trace = traceGroup.userTrace;
+            // don't save obsel on server side by function "addObsl"
+            trace.autosync = false;
 			if(obselOrigin)
 			{
 				trace.addObsel(obselOrigin);
