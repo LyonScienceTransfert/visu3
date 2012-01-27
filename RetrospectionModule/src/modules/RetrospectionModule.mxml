@@ -1081,7 +1081,10 @@
                         // the application, it is an internal
                         // mechanism of the Traces API.
                         var obselVO : SGBDObsel = listObselVO[nObsel];
-                        var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+                       // var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+                        // FIXME : replace static metod fromRDF by constructor Obsel, only for show obsels, not for parsing, 
+                        //         hasn't parametr "props"
+                        var obsel:Obsel = new Obsel(obselVO.type, 0, null, obselVO.begin.time, obselVO.begin.time);
                         listObselTracage.addItem(obsel);
                     }
                     var beginTimeLine:Number = (listObselTracage.getItemAt(0) as Obsel).begin;
