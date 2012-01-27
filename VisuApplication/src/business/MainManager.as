@@ -2,11 +2,13 @@ package business
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
+import com.ithaca.timeline.events.TimelineEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.traces.model.vo.SGBDObsel;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.events.BilanEvent;
+import com.ithaca.visu.events.SalonRetroEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.UserEvent;
@@ -1261,8 +1263,10 @@ public class MainManager
     */
     public function onCheckTracesIdRetroRoom(traceIdRetrospectionActivity:String, raceIdSynchronousActivity:String):void
     {
-        Model.getInstance().setTraceIdRetrospectionActivity( traceIdRetrospectionActivity) ;
-        Model.getInstance().setTraceIdSynchronousActivity( raceIdSynchronousActivity) ;
+        Model.getInstance().setTraceIdRetrospectionActivity(traceIdRetrospectionActivity);
+        Model.getInstance().setTraceIdSynchronousActivity(raceIdSynchronousActivity);
+        // notify load trace id retro room
+        this.dispatcher.dispatchEvent(new SalonRetroEvent(SalonRetroEvent.LOAD_TRACE_ID_RETRO_ROOM));
     }
     
     /**
