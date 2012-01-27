@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    autoDrawBackground="true" xmlns:messagerie="com.ithaca.messagerie.*" creationComplete="itemrenderer1_creationCompleteHandler(event)">
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.messagerie.skins.MessageItemSkin;
+        
+        import mx.events.FlexEvent;
+
+        protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+        {
+            var t:int = 1;
+           return;
+        }
+
+    ]]>
+    </fx:Script>
+    <messagerie:MessageItem width="100%"  textMessage="{data.text()}" time="{data.date()}"  messageFromMy="{data.isLoggedUserMessage()}" skinClass="com.ithaca.messagerie.skins.MessageItemSkin"/>
+</s:ItemRenderer>
