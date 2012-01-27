@@ -165,6 +165,7 @@ package  com.ithaca.visu.model
 		private var _dateCompiled:String;
 		private var _currentFilterSession:int = SessionFilterEnum.SESSION_MY;
 		private var _modeDebug:Boolean = false;
+		private var _modeExpert:Boolean = false;
 		private var _frameRateSplit:Number = 2000;
 		private var _currentSessionSalonSession:Session;
         
@@ -294,7 +295,10 @@ package  com.ithaca.visu.model
 
 		public function setModeDebug(value:Boolean):void{_modeDebug = value;}
 		public function getModeDebug():Boolean{return _modeDebug;}
-		
+
+        public function setModeExpert(value:Boolean):void{_modeExpert = value;}
+        public function getModeExpert():Boolean{return _modeExpert;}
+        
 		public function setFrameRateSplit(value:Number):void{_frameRateSplit = value;}
 		public function getFrameRateSplit():Number{return _frameRateSplit;}
 			

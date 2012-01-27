@@ -223,7 +223,16 @@
                                     Model.getInstance().setInitSessionId(params['sessionId']);
                                     // set init bilan id
                                     Model.getInstance().setInitBilanId(params['bilanId']);
-                                }							}
+                                }
+                                // check mode expert
+                                if(params.hasOwnProperty('mode'))
+                                {
+                                    if(params['mode']=='expert')
+                                    {
+                                        Model.getInstance().setModeExpert(true);
+                                    }
+                                }
+                            }
 						}
 					}
 				}else
