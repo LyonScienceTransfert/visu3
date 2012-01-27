@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.messagerie.DialogMessageItem")]
+    </fx:Metadata>
+    <s:VGroup  gap="10">
+        <s:HGroup>
+            <s:VGroup>
+                <s:HGroup verticalAlign="middle">
+                    <mx:Image width="70" height="70"/>
+                    <s:VGroup>
+                        <s:HGroup>
+                            <s:Label >
+                                <s:text>Prenom :</s:text>
+                            </s:Label>
+                            <s:Label  id="lastName">
+                               <s:text>Gosa</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                        <s:HGroup>
+                            <s:Label>
+                                <s:text>Nom :</s:text>
+                            </s:Label>
+                            <s:Label  id="firstName">
+                               <s:text>Petrov</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                        <s:HGroup>
+                            <s:Label >
+                                <s:text>Status :</s:text>
+                            </s:Label>
+                            <s:Label>
+                               <s:text>connected</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                        <s:HGroup>
+                            <s:Label >
+                                <s:text>Where :</s:text>
+                            </s:Label>
+                            <s:Label>
+                               <s:text>Retrospection</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                    </s:VGroup>
+                </s:HGroup>
+                <s:HGroup>
+                    <s:Label >
+                        <s:text>Role :</s:text>
+                    </s:Label>
+                    <s:Label id="roleUser">
+                        <s:text>Administrateur</s:text>
+                    </s:Label>
+                </s:HGroup>
+                
+            </s:VGroup>
+        </s:HGroup>
+        <s:Group >
+            <s:layout>
+                <s:VerticalLayout gap="3"/>
+            </s:layout>
+            <s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelDialogMessage"> 
+                <s:Group id="groupMessageItem" top="0">
+                    <s:layout>
+                        <s:VerticalLayout  gap="10"/>
+                    </s:layout>
+                </s:Group>
+               <!-- <s:VGroup  id="groupMessageItem" width="100%" height="100%" gap="100"/>-->
+            </s:Scroller> 
+        </s:Group>
+    </s:VGroup>
+    
+   <!-- <s:Group height="100%" width="100%">
+        <s:layout>
+            <s:VerticalLayout gap="3"/>
+        </s:layout>
+        <s:Group  width="100%"  height="100%">
+            <s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
+                <s:Group id="panelChatSession"   width="100%"  top="0">
+                    <s:layout>
+                        <s:VerticalLayout  gap="5"/>
+                    </s:layout>
+                </s:Group>
+            </s:Scroller> 
+        </s:Group>
+    </s:Group>-->
+    
+</s:Skin>
