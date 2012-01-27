@@ -20,6 +20,8 @@ package com.ithaca.visu.events
 		static public const ACTION_ON_COMMENT_TRACE_LINE : String = 'actionOnCommentTraceLine';
 		static public const ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT : String = 'actionOnObselCommentStartEditCancelEdit';
 		static public const PRE_ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT : String = 'preActionOnObselCommentStartEditCancelEdit';
+        
+		static public const LOAD_TRACE_ID_RETRO_ROOM : String = 'loadTraceIdRetroRoom';
 			
 		// properties
 		public var userId : int;

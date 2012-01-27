@@ -1118,28 +1118,8 @@
             {      
                 // set image on timeLine 
                 onUpdatePlayerStatus(true);
-                
-                // do tracage if it has retro room trace id 
-                if(Model.getInstance().getTraceIdRetrospectionActivity())
-                {
-                    var traceVisu: Trace = TraceManager.initTrace("visu");
-                    // automatically synchronize with the KTBS/BDD
-                    traceVisu.autosync = true;
-                    // traceId Retro room
-                    traceVisu.uri = Model.getInstance().getTraceIdRetrospectionActivity();
-                    // set subject
-                    traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
-
-                    var traceTimeline: Trace = new Trace();
-                    traceTimeline.uid = Model.getInstance().getLoggedUser().id_user;
-                    // do not automatically synchronize with the KTBS/BDD
-                    traceTimeline.autosync = false;
-                    // add listener on collection obsels 
-                    traceTimeline.obsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
-                    
-                    // start activity tracing on TimeLine, store in traceTimeline
-                    timeLine.startActivityTracing(traceTimeline);
-                }
+                // try start retro room tracing 
+                startRetroRoomTracing();
             }
 
             /**
@@ -1707,6 +1687,40 @@
 			// Utils
 			//
 			//_____________________________________________________________________	
+            
+            /**
+            * start tracing Retrospection room/module
+            */
+            private function startRetroRoomTracing(event:* = null):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // do tracege if has timeline
+                    // do tracage if do not start yet
+                    // do tracage if it has retro room trace id 
+                    if(timeLine && !timeLine.activity && Model.getInstance().getTraceIdRetrospectionActivity())
+                    {
+                        var traceVisu: Trace = TraceManager.initTrace("visu");
+                        // automatically synchronize with the KTBS/BDD
+                        traceVisu.autosync = true;
+                        // traceId Retro room
+                        traceVisu.uri = Model.getInstance().getTraceIdRetrospectionActivity();
+                        // set subject
+                        traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
+                        
+                        var traceTimeline: Trace = new Trace();
+                        traceTimeline.uid = Model.getInstance().getLoggedUser().id_user;
+                        // do not automatically synchronize with the KTBS/BDD
+                        traceTimeline.autosync = false;
+                        // add listener on collection obsels 
+                        traceTimeline.obsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
+                        
+                        // start activity tracing on TimeLine, store in traceTimeline
+                        timeLine.startActivityTracing(traceTimeline);                    
+                    }   
+                }
+            }
+            
 			/**
 			 * notify , ready for use
 			 */
@@ -1794,6 +1808,7 @@
 		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
+		<mate:Listener type="{SalonRetroEvent.LOAD_TRACE_ID_RETRO_ROOM}"  method="startRetroRoomTracing"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
