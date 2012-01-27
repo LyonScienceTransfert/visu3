@@ -444,8 +444,11 @@
                                 // set id user like name
                                 navigatorContent.name = user.id_user.toString();
                                 // add navigator content
-                                // FIXME : desactivate create time line activity
-                                //tnTimeline.addElement(navigatorContent);
+                                // create timeline activity only if mode = expert
+                                if(Model.getInstance().getModeExpert())
+                                {
+                                    tnTimeline.addElement(navigatorContent);
+                                }
                             } 
                         }
 					}
