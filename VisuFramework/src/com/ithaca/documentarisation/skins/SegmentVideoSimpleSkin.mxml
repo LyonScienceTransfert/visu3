@@ -113,7 +113,7 @@
 			<s:RichEditableText id="richEditableText"
 				editable.sharedOver="false" editable.shared="false"
 				width="100%" 
-				color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false">
+				color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false" selectable="true" selectionHighlighting="whenActive">
 				<s:text>votre text ici</s:text>
 			</s:RichEditableText>	
 		</s:HGroup>
