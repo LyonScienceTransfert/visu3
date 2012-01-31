@@ -45,8 +45,9 @@
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
 			<!-- TEXTAREA -->
-			<s:RichEditableText editable.normal="false" id="textSegment" width="100%" 
-				backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"/>		
+			<s:RichEditableText id="textSegment" width="100%" 
+				backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"
+                editable.normal="false" selectable="true" selectionHighlighting="whenActive"/>		
 			<!-- DELETE ICON -->
 			<components:IconDelete id="iconDelete"
 				visible.edit="false"
