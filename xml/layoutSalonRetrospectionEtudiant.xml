@@ -7,7 +7,7 @@
 			</tl>						
 		</tlg> 
 		<tlg> 	
-			<tl style="background" 	selector="SelectorRegexp" selectorParams="type,Activity" />
+			<tl title="" selector="SelectorRegexp" selectorParams="type,Activity" />
 			<tl title="Mes marqueurs" selector="SelectorRegexp" selectorParams="type,Marker" autohide="true"/>
 			<tl title="Activité" selector="SelectorRegexp" selectorParams="type,ChatMessage|Instructions|Keyword" autohide="true">
 				 <modifier name="chatsGenerator" splitter="sender" source="parent" autohide="true" />

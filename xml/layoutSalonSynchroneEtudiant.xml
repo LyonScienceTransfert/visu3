@@ -2,7 +2,7 @@
 <root>
 	<layout>
 		<tlg> 	
-			<tl style="background" 	selector="SelectorRegexp" selectorParams="type,Activity" />
+			<tl title="" selector="SelectorRegexp" selectorParams="type,Activity" />
 			<tl title="Mes marqueurs" selector="SelectorRegexp" selectorParams="type,Marker" autohide="true">
 				 <!--
 				 <modifier name="markersGenerator" splitter="idUserFor" source="parent" autohide="true"/>
