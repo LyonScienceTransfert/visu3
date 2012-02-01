@@ -7,9 +7,8 @@
 			</tl>						
 		</tlg> 	
 		<tlg> 	
-			<tl style="background" 	selector="SelectorRegexp" selectorParams="type,Activity" />
-
-			<tl title="Marqueurs" selector="SelectorRegexp" selectorParams="type,Marker" autohide="true">
+			<tl title="" selector="SelectorRegexp" selectorParams="type,Activity"/>
+			<tl title="Marqueurs" name="markersTitle" selector="SelectorRegexp" selectorParams="type,Marker" autohide="true">
 				 <modifier name="markersGenerator" splitter="idUserFor" source="parent" autohide="true" />
 			</tl>
 			<tl title="Chat" selector="SelectorRegexp" selectorParams="type,ChatMessage" autohide="true">
