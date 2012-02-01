@@ -763,6 +763,8 @@ public class MainManager
 						break;
 					case TraceModel.ACTIVITY_START:
 						activityStartId = int(obsel.props[TraceModel.ACTIVITY_ID]);
+                        // add obsel start activity
+						listObsel.addItem(obsel);
 						break;
 					case TraceModel.ACTIVITY_STOP:
 						activityStartId = 0;
