@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    creationComplete="creationCompleteHandler(event)">
+    
+    <fx:Metadata>[HostComponent("com.ithaca.timeline.ObselSkin")]</fx:Metadata>
+    
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.timeline.ObselSkin;
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.TraceModel;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        [Bindable]
+        private 	var fxgt : _FxGettext;
+                
+        public      var obsel : Obsel;
+        
+        protected function creationCompleteHandler(event:Event):void
+        {
+            fxgt = FxGettext;
+            obsel = hostComponent.obsel;
+            var text:String = obsel.props[TraceModel.TEXT];
+            icon.toolTip = text;
+        }
+    ]]>
+    </fx:Script>
+    <s:states>
+        <s:State name="normal" />		
+    </s:states>
+    <mx:Image id="icon" source="{getStyle('icon')}" height="30" width="26" top="0"/>
+</s:Skin>

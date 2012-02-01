@@ -1205,6 +1205,12 @@ package  com.ithaca.visu.model
                     senderObsel = obsel.props[TraceModel.SENDER];
                     result.push({senderId:senderObsel, textObsel:textObsel, source:source});
                     break;
+                case TraceModel.ACTIVITY_START :
+                    ownerObsel = obsel.uid;
+                    textObsel = obsel.props[TraceModel.TEXT];
+                    senderObsel = obsel.props[TraceModel.SENDER];
+                    result.push({senderId:senderObsel, textObsel:textObsel, source:source});
+                    break;
                 //  case TraceModel.SESSION_IN :
                 //	case TraceModel.SESSION_OUT :	
                     // FIXME : don't add obsel SessionOut, 
