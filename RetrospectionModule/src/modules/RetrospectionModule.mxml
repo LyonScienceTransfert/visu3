@@ -31,6 +31,7 @@
             import com.ithaca.traces.Trace;
             import com.ithaca.traces.TraceManager;
             import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.events.TraceEvent;
             import com.ithaca.traces.model.RetroTraceModel;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.traces.model.vo.SGBDObsel;
@@ -141,6 +142,8 @@
             private var timeLineStorage:Object;
             // progresse bar
             private var _progressBarBlueLine:SWFLoader;
+            
+            private var timeLineRetrospectionActivity:Timeline;
             
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -1050,7 +1053,8 @@
                             timeLineStorage = new Object();
                         }
                         
-                        timeLineStorage[userIdString] = listObselVO;
+                      //  timeLineStorage[userIdString] = listObselVO;
+                        timeLineStorage[userIdString] = event.ttl;
                     }else
                     {
                         var navigatorContent:NavigatorContent = _progressBarBlueLine.owner as NavigatorContent;
@@ -1073,49 +1077,71 @@
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
-                    var timeLineRetrospectionActivity:Timeline = event.currentTarget as Timeline;
-                    var listObselVO:Array = timeLineStorage[timeLineRetrospectionActivity.name];
+                    timeLineRetrospectionActivity = event.currentTarget as Timeline;
+                  //  var listObselVO:Array = timeLineStorage[timeLineRetrospectionActivity.name];
+                    var ttl:String = timeLineStorage[timeLineRetrospectionActivity.name];
                     
-                    var listObselTracage:ArrayCollection = new ArrayCollection(); 
-                    var nbrObsel:int = listObselVO.length;
-                    for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                   
+                    // ttl not empty
+                    if(ttl.length > 10)
                     {
-                        // FIXME: the ObselVO should not be used in
-                        // the application, it is an internal
-                        // mechanism of the Traces API.
-                        var obselVO : SGBDObsel = listObselVO[nObsel];
-                       // var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-                        // FIXME : replace static metod fromRDF by constructor Obsel, only for show obsels, not for parsing, 
-                        //         hasn't parametr "props"
-                        var obsel:Obsel = new Obsel(obselVO.type, 0, null, obselVO.begin.time, obselVO.begin.time);
-                        listObselTracage.addItem(obsel);
+                        var theTrace: Trace = new Trace(421); //Dirty
+                        theTrace.autosync = false; 
+                        
+                        trace("TTL File loaded");
+                        theTrace.addEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
+                        theTrace.addEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
+                        trace("Parsing file");
+                        if (! theTrace.updateFromRDF(ttl))
+                        {
+                            theTrace.removeEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
+                            theTrace.removeEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
+                        }
                     }
-                    var beginTimeLine:Number = (listObselTracage.getItemAt(0) as Obsel).begin;
-                    var endTimeLine:Number = (listObselTracage.getItemAt(listObselTracage.length -1 ) as Obsel).begin;
-                    
-                    // create timeLineTracage
-                    timeLineRetrospectionActivity.layoutXML 		= new XML( loaderTracage.data );
-                    timeLineRetrospectionActivity.timelineLayout = new Layout( timeLineRetrospectionActivity ); 
-                    
-                    // add range
-                    timeLineRetrospectionActivity.range.addTime(beginTimeLine, endTimeLine);
-                    
-                    // trace tracage activity retro room
-                    var traceRetrospectionActivity:Trace = new Trace(new int(timeLineRetrospectionActivity.name), "");
-                    traceRetrospectionActivity.obsels = listObselTracage;
-                    var traceLineGroup:TraceLineGroup = timeLineRetrospectionActivity.addTrace(traceRetrospectionActivity);
-                    
-                    var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineRetrospectionActivity.name));
-                    var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
-                    
-                    traceLineGroup.setStyle("title", lastNameUser );				
-                    traceLineGroup.setStyle("bgColor", "#cedbef");
-                    traceLineGroup.setStyle("icon", user.avatar );	
-                    // remove progress bar
-                    (_progressBarBlueLine.owner as NavigatorContent).removeElement( _progressBarBlueLine );
-                  
                 }
             }
+            
+            private function TTLParsingProgress(event:TraceEvent): void
+            {
+                trace("Parsing progress ", event.value, " ", event.message);
+            }
+            
+            private function TTLParsingDone(event: TraceEvent): void
+            {
+                var theTrace: Trace = event.currentTarget as Trace;
+                theTrace.removeEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
+                theTrace.removeEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
+                
+                var obselRetroRoom:ArrayCollection = theTrace.obsels;
+                var listObselTracage:ArrayCollection = new ArrayCollection(); 
+                listObselTracage.addAll(obselRetroRoom);
+                
+                
+                var beginTimeLine:Number = (listObselTracage.getItemAt(0) as Obsel).begin;
+                var endTimeLine:Number = (listObselTracage.getItemAt(listObselTracage.length -1 ) as Obsel).begin;
+                
+                // create timeLineTracage
+                timeLineRetrospectionActivity.layoutXML 		= new XML( loaderTracage.data );
+                timeLineRetrospectionActivity.timelineLayout = new Layout( timeLineRetrospectionActivity ); 
+                
+                // add range
+                timeLineRetrospectionActivity.range.addTime(beginTimeLine, endTimeLine);
+                
+                // trace tracage activity retro room
+                var traceRetrospectionActivity:Trace = new Trace(new int(timeLineRetrospectionActivity.name), "");
+                traceRetrospectionActivity.obsels = listObselTracage;
+                var traceLineGroup:TraceLineGroup = timeLineRetrospectionActivity.addTrace(traceRetrospectionActivity);
+                
+                var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineRetrospectionActivity.name));
+                var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+                
+                traceLineGroup.setStyle("title", lastNameUser );				
+                traceLineGroup.setStyle("bgColor", "#cedbef");
+                traceLineGroup.setStyle("icon", user.avatar );	
+                // remove progress bar
+                (_progressBarBlueLine.owner as NavigatorContent).removeElement( _progressBarBlueLine );
+            }
+            
             /**
              * Timeline create handler
              * @event

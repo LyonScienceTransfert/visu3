@@ -102,6 +102,7 @@ public class TracageEvent extends Event
     public var newOrder:Array;
     public var sessionId:int;
     public var listObselRetroRoom:Array;
+    public var ttl:String;
     
     
     

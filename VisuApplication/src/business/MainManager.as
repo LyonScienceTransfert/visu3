@@ -1280,7 +1280,7 @@ public class MainManager
     {
         var obselRetroRoomEvent:TracageEvent = new TracageEvent(TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM);
         
-        var theTrace: Trace = new Trace(421); //Dirty
+        /*var theTrace: Trace = new Trace(421); //Dirty
         theTrace.autosync = false;
         
         trace("TTL File loaded");
@@ -1292,10 +1292,11 @@ public class MainManager
         theTrace.removeEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
         theTrace.removeEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
         }
-        
+        */
         
         
         obselRetroRoomEvent.listObselRetroRoom = listObsel;
+        obselRetroRoomEvent.ttl = ttlObsel;
         obselRetroRoomEvent.userId = userId;
         this.dispatcher.dispatchEvent(obselRetroRoomEvent);
     }
