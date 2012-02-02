@@ -1232,9 +1232,11 @@
                             if( traceGroup != null && !hasUserIdPresentTimeLine(userId))
                             {				
                                 // user can add to time line
+                                // FIXME : if user connected after set list user plateform, 
+                                // TODO : update list user plateforme after new user join plateforme
                                 var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
                                 // check if user can be on time line
-                                if(VisuUtils.isAddTraceSalonSynchrone(loggedUser, user))
+                                if(user == null || VisuUtils.isAddTraceSalonSynchrone(loggedUser, user))
                                 {
                                     this.addTraceLineOnViewTraceLineGroup(traceGroup);
                                 } 
