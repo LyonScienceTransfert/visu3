@@ -4,6 +4,8 @@ import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.timeline.events.TimelineEvent;
 import com.ithaca.traces.Obsel;
+import com.ithaca.traces.Trace;
+import com.ithaca.traces.events.TraceEvent;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.traces.model.vo.SGBDObsel;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
@@ -1272,15 +1274,48 @@ public class MainManager
     }
     
     /**
-    * get list obsel retro room
-    */
-    public function onCheckListObselRetroRoom(listObsel:Array, userId:int):void
+     * get list obsel retro room
+     */
+    public function onCheckListObselRetroRoom(listObsel:Array, userId:int, ttlObsel:String):void
     {
         var obselRetroRoomEvent:TracageEvent = new TracageEvent(TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM);
+        
+        var theTrace: Trace = new Trace(421); //Dirty
+        theTrace.autosync = false;
+        
+        trace("TTL File loaded");
+        theTrace.addEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
+        theTrace.addEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
+        trace("Parsing file");
+        if (! theTrace.updateFromRDF(ttlObsel))
+        {
+        theTrace.removeEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
+        theTrace.removeEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
+        }
+        
+        
+        
         obselRetroRoomEvent.listObselRetroRoom = listObsel;
         obselRetroRoomEvent.userId = userId;
         this.dispatcher.dispatchEvent(obselRetroRoomEvent);
     }
+    
+    
+    private function TTLParsingProgress(event:TraceEvent): void
+    {
+        trace("Parsing progress ", event.value, " ", event.message);
+        
+    }
+    
+    private function TTLParsingDone(event: TraceEvent): void
+    {
+        var theTrace: Trace = event.currentTarget as Trace;
+        theTrace.removeEventListener(TraceEvent.PARSING_PROGRESS, TTLParsingProgress);
+        theTrace.removeEventListener(TraceEvent.PARSING_DONE, TTLParsingDone);
+    }
+    
+    
+
     
 	/**
 	 * Add TraceLines to Model
