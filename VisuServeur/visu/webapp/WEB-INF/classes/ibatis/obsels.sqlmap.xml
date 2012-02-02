@@ -169,6 +169,13 @@
 	]]>	
 	</select>
 	
+	<select id="getTTLByTraceId" parameterClass="String" resultClass="String" cacheModel="cache">
+	<![CDATA[  
+        SELECT rdf
+        FROM obsels WHERE rdf like #value# 
+	]]>	
+	</select>
+	
 	<insert id="insert" parameterClass="obsel">
 		INSERT INTO obsels
 		SET 

@@ -257,6 +257,9 @@ public class ObselInfo {
 		List<String> listTraceId = null;
 		// list obsels activity in the salon retrospection
 		List<Obsel> listObselRetro = null;
+		// list obsel activity in the salon retro in format ttl 
+		List<String> listTTLObselRetro = null;
+		String ttl = "";
 		String traceRetroId = "";
 		
 		String traceParam = "%-" + userId;
@@ -292,11 +295,25 @@ public class ObselInfo {
 				} catch (Exception e) {
 					log.error("Probleme lors du listing des obsels retro room" + e);
 				}
+				// get list ttl obsel
+				try {
+					listTTLObselRetro = (List<String>) app.getSqlMapClient().queryForList(
+							"obsels.getTTLByTraceId", paramTraceIdSynchroRoom);
+				} catch (Exception e) {
+					log.error("Probleme lors du listing des obsels retro room en format ttl" + e);
+				}
+				
+				
+				for (String str : listTTLObselRetro) {
+					ttl = ttl + str+ "\n";
+				}
+				log.warn("listTTLObselRetro = "+ttl);
+				
 			}
 		}
 		
 		// send list obsels retro room to client
-		Object[] args = { listObselRetro, userId };
+		Object[] args = { listObselRetro, userId, ttl};
 		IConnection connClient = (IConnection) client
 				.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
