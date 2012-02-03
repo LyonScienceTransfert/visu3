@@ -1178,7 +1178,7 @@
 			/**
 			 * Show EditCommentDialog when user click on boutton the TimeLine
 			 */ 
-			protected function onPreAddComment(event:TraceLineEvent):void
+			protected function onPreAddComment(event:TimelineEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
@@ -1765,11 +1765,13 @@
 				timeLine.setStyle("cursorMode","auto");
 				timeLine.showPlayButton = true;
 
-				// listeners
-				timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
-				timeLine.addEventListener(TimelineEvent.PAUSE, timeLine_pauseButtonClickHandler);
-				timeLine.addEventListener(TimelineEvent.TIMERULER_CLICK, timeLine_timeRulerClickHandler);
-				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, timeLine_creationCompleteHandler);
+                // listeners
+                timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
+                timeLine.addEventListener(TimelineEvent.PAUSE, timeLine_pauseButtonClickHandler);
+                timeLine.addEventListener(TimelineEvent.TIMERULER_CLICK, timeLine_timeRulerClickHandler);
+                timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, timeLine_creationCompleteHandler);
+                // set listener add comment by click on button on timeline
+                timeLine.addEventListener(TimelineEvent.PRE_ADD_COMMENT_OBSEL, onPreAddComment, true);
 				
 				timeLineGroup.addElement(timeLine);
 
@@ -1808,8 +1810,7 @@
 		<mate:Listener type="{RetroDocumentEvent.PAUSE_RETRO_SEGMENT}"  method="pauseRetroDocument" />
 		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
-		
-		<mate:Listener type="{TraceLineEvent.PRE_ADD_COMMENT_OBSEL}"  method="onPreAddComment" useWeakReference="true"/>
+
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
