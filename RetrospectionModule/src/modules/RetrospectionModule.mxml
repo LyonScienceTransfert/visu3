@@ -1320,91 +1320,96 @@
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
-                    var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
-                    updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
-                    updateObselComment.traceParent = Model.getInstance().getCurrentTraceId();
-                    updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
-                    
+                    // get text for tracage the activity user
                     var text:String = "";
                     if(event.currentTarget.textComment)
                     {
                         text = event.currentTarget.textComment;
                     }
-                    
-                    var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
-                    var obsel:Obsel = event.currentTarget.obsel;
-                    
-                    if (event.currentTarget.confirm)
-                    {						
-                        var durationObselCommentMs:Number = 10*1000;
-                        var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
-                        var beginTime:String = currentTime.toString();
-                        var endTime:String = (currentTime + durationObselCommentMs).toString();					
-                        
-                        var timeStamp:Number = 0
-                        var forUserId:int = 0;
-                        // set properties for existing obsel
-                        if(event.currentTarget.user)
-                        {
-                            forUserId = event.currentTarget.user.id_user;
-                        }
-                        // edition the comment obsel
-                        if(event.currentTarget.currentObselSkin)
-                        {
-                            beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-                            endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-                            forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
-                            timeStamp = obsel.props[TraceModel.TIMESTAMP];
-                            typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
-                            
-                            text = obsel.props[TraceModel.TEXT];
-                        }
-                        
-                        if(userIdInitEditCommentDialog > -1 && userIdInitEditCommentDialog != forUserId)
-                        {
-                            // suppression old obsel
-                            typeObsel = TraceModel.DELETE_TEXT_COMMENT;
-                            forUserId = userIdInitEditCommentDialog;
-                        }
-                        // set property to send to serveur for adding obsel
-                        updateObselComment.textComment = text;
-                        updateObselComment.timeStamp = timeStamp;
-                        updateObselComment.typeObsel  = typeObsel;
-                        updateObselComment.beginTime = beginTime;
-                        updateObselComment.endTime = endTime;
-                        updateObselComment.forUserId = forUserId;
-                    }
-                    if(event.currentTarget.deleting)
-                    {
-                        updateObselComment.textComment = obsel.props[TraceModel.TEXT];
-                        updateObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
-                        updateObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
-                        updateObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-                        updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-                        updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
-                    }
-                    // send obsel to serveur
-                    dispatchEvent(updateObselComment);
-                    
-                    // check if change only COMMENT_FOR_USER_ID
-                    if(userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
-                    {
-                        var setCommentObsel:TraceLineEvent = updateObselComment.cloneMe()
-                        setCommentObsel.timeStamp = 0;
-                        setCommentObsel.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
-                        setCommentObsel.typeObsel = TraceModel.SET_TEXT_COMMENT;
-                        // send second obsel 
-                        dispatchEvent(setCommentObsel);
+                   // update obsel only by click on buttons  save, delete
+                   if(event.currentTarget.closeDialog == "save" || event.currentTarget.closeDialog == "delete" || event.currentTarget.closeDialog == "cancel" )
+                   {
+                       var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+                       updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+                       updateObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+                       updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+                       
+                       
+                       var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
+                       var obsel:Obsel = event.currentTarget.obsel;
+                       
+                       if (event.currentTarget.confirm)
+                       {						
+                           var durationObselCommentMs:Number = 10*1000;
+                           var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+                           var beginTime:String = currentTime.toString();
+                           var endTime:String = (currentTime + durationObselCommentMs).toString();					
+                           
+                           var timeStamp:Number = 0
+                           var forUserId:int = 0;
+                           // set properties for existing obsel
+                           if(event.currentTarget.user)
+                           {
+                               forUserId = event.currentTarget.user.id_user;
+                           }
+                           // edition the comment obsel
+                           if(event.currentTarget.currentObselSkin)
+                           {
+                               beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                               endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                               forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+                               timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                               typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
+                               
+                               text = obsel.props[TraceModel.TEXT];
+                           }
+                           
+                           if(userIdInitEditCommentDialog > -1 && userIdInitEditCommentDialog != forUserId)
+                           {
+                               // suppression old obsel
+                               typeObsel = TraceModel.DELETE_TEXT_COMMENT;
+                               forUserId = userIdInitEditCommentDialog;
+                           }
+                           // set property to send to serveur for adding obsel
+                           updateObselComment.textComment = text;
+                           updateObselComment.timeStamp = timeStamp;
+                           updateObselComment.typeObsel  = typeObsel;
+                           updateObselComment.beginTime = beginTime;
+                           updateObselComment.endTime = endTime;
+                           updateObselComment.forUserId = forUserId;
+                       }
+                       if(event.currentTarget.deleting)
+                       {
+                           updateObselComment.textComment = obsel.props[TraceModel.TEXT];
+                           updateObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                           updateObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
+                           updateObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                           updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                           updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+                       }
+                       // send obsel to serveur
+                       dispatchEvent(updateObselComment);
+                       
+                       // check if change only COMMENT_FOR_USER_ID
+                       if(userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
+                       {
+                           var setCommentObsel:TraceLineEvent = updateObselComment.cloneMe()
+                           setCommentObsel.timeStamp = 0;
+                           setCommentObsel.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+                           setCommentObsel.typeObsel = TraceModel.SET_TEXT_COMMENT;
+                           // send second obsel 
+                           dispatchEvent(setCommentObsel);
+                       }
                     }
                     // enabled skin edited obsel
                     if(event.currentTarget.currentObselSkin)
                     {
                         event.currentTarget.currentObselSkin.enabled = true;
                     }
+                   
                     // init var userIdInitEditCommentDialog
-                    userIdInitEditCommentDialog = -1;
+                    userIdInitEditCommentDialog = -1; 
                 }
-                
                 // tracage add/edit comments
                 var editCommentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
                 editCommentTracageEvent.typeActivity = RetroTraceModel.USER_VIDEO_ADD_COMMENT;
