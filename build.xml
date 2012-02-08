@@ -51,7 +51,10 @@ or by setting the following environment variable:
    	<property name="NAME_SESSION_MODULE"  value="session" />
    	<property name="NAME_HOME_MODULE"  value="home" />  
    	<property name="NAME_USER_MODULE"  value="user" />   	
-   	
+   	<property name="NAME_TUTORAT_MODULE"  value="tutorat" />
+   	<property name="NAME_RETROSPECTION_MODULE"  value="retrospection" /> 
+   	<property name="NAME_BILAN_MODULE"  value="bilan" />
+   	   	
 	<!-- The FLEX_HOME variable (with this typo) must be set to the flex sdk repository
 		 for the compc and mxmlc compilers to run properly-->
    <property name="FLEX_HOME" location="${flex.sdk}"/>
@@ -403,36 +406,62 @@ or by setting the following environment variable:
 		This target works exactly as the "build_session_module" target, please refer to it for documentation. 
 	-->
 	<target name="build-tutorat-module"  description="Builds the Tutorat Module">
-	      <echo>Build Tutorat Module</echo>
-	       
-		      <mxmlc 
-		         file="${tutoratmodule.src}/modules/${tutoratmodule.name}.mxml"
-		         output="${app.deploy}/${tutoratmodule.name}.swf"
-		         debug="${debug}"
-		         strict="true" 
-		         optimize="true" 
-		      	incremental="${mxmlc.incremental}"
-		        load-externs="${framework.linkreport}" 
-		         warnings="${warnings}"
-		         headless-server="true">
+		<echo>Build Tutorat Module</echo>
+	      
+		<tstamp>
+	  		<format 
+	  			property="TIMESTAMP_TUTORAT_MODULE"
+	    		pattern="yyyyMMdd-hhmmss"
+	          	locale="fr,FR"/>
+		</tstamp>	
+		
+		<!-- deleting old module -->
+		<delete quiet="true">
+			<fileset dir="${app.deploy}" includes="${tutoratmodule.name}*.swf"/>
+		</delete>
+		
+		<!-- name tutorat module with timestamp -->
+		<property name="tutoratmodule.name.timestamp" value="${tutoratmodule.name}-${TIMESTAMP_TUTORAT_MODULE}.swf" />
+		
+		<!-- update name module -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${tutoratmodule.name.timestamp}" WHERE name="${NAME_TUTORAT_MODULE}";
+		</sql> 
+		      
+		<mxmlc 
+			file="${tutoratmodule.src}/modules/${tutoratmodule.name}.mxml"
+		 	output="${app.deploy}/${tutoratmodule.name.timestamp}"
+		  	debug="${debug}"
+		  	strict="true" 
+		   	optimize="true" 
+		 	incremental="${mxmlc.incremental}"
+		  	load-externs="${framework.linkreport}" 
+		 	warnings="${warnings}"
+			headless-server="true">
 		         
-		         <!-- will include all files with .css, .as, .mxml extensions -->
-		         <source-path path-element="${tutoratmodule.src}"/>
+			<!-- will include all files with .css, .as, .mxml extensions -->
+		  	<source-path path-element="${tutoratmodule.src}"/>
 		      	
-		         <library-path dir="${framework.bin}" append="true">
-		            <include name="${framework.swc}" />
-		         </library-path>
+		   	<library-path dir="${framework.bin}" append="true">
+		      	<include name="${framework.swc}" />
+		   	</library-path>
 
-		        <library-path dir="${thirdparty.dir}" append="true">
-		     		<include name="${lib.swfaddress}" />
-					<include name="${lib.mate}" />
-					<include name="${lib.rmtp}" />
-					<include name="${lib.as3gettext}" />
-				</library-path>
+			<library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+				<include name="${lib.mate}" />
+				<include name="${lib.rmtp}" />
+				<include name="${lib.as3gettext}" />
+			</library-path>
 		     	         
-
-		      </mxmlc>
-		   </target>
+		</mxmlc>
+	</target>
 	
 	<!-- 
 		Build the home module (accueil) and produce a HomeModule.swf file 
@@ -502,36 +531,60 @@ or by setting the following environment variable:
 		This target works exactly as the "build_retrospection_module" target, please refer to it for documentation. 
 	-->
 	<target name="build-retrospection-module"  description="Builds the Retrospection Module">
-	      <echo>Build Retrospection Module</echo>
-	       
-		      <mxmlc 
-		         file="${retrospectionmodule.src}/modules/${retrospectionmodule.name}.mxml"
-		         output="${app.deploy}/${retrospectionmodule.name}.swf"
-		         debug="${debug}"
-		         strict="true" 
-		         load-externs="${framework.linkreport}" 
-		      	 incremental="${mxmlc.incremental}"
-		         optimize="true" 
-		         warnings="${warnings}"
-		         headless-server="true">
+	  	<echo>Build Retrospection Module</echo>
+	   	<tstamp>
+	  		<format 
+	  			property="TIMESTAMP_RETROSPECTION_MODULE"
+	    		pattern="yyyyMMdd-hhmmss"
+	          	locale="fr,FR"/>
+		</tstamp>	
+		
+		<!-- deleting old module -->
+		<delete quiet="true">
+			<fileset dir="${app.deploy}" includes="${retrospectionmodule.name}*.swf"/>
+		</delete>
+		
+		<!-- name retrospection module with timestamp -->
+		<property name="retrospectionmodule.name.timestamp" value="${retrospectionmodule.name}-${TIMESTAMP_RETROSPECTION_MODULE}.swf" />
+		
+		<!-- update name module -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${retrospectionmodule.name.timestamp}" WHERE name="${NAME_RETROSPECTION_MODULE}";
+		</sql> 
+		
+		<mxmlc 
+			file="${retrospectionmodule.src}/modules/${retrospectionmodule.name}.mxml"
+		   	output="${app.deploy}/${retrospectionmodule.name.timestamp}"
+     		debug="${debug}"
+		   	strict="true" 
+		  	load-externs="${framework.linkreport}" 
+		   	incremental="${mxmlc.incremental}"
+		   	optimize="true" 
+		   	warnings="${warnings}"
+		   	headless-server="true">
 		         
-		         <!-- will include all files with .css, .as, .mxml extensions -->
-		         <source-path path-element="${retrospectionmodule.src}"/>
+		   	<!-- will include all files with .css, .as, .mxml extensions -->
+		   	<source-path path-element="${retrospectionmodule.src}"/>
 		      	
-		         <library-path dir="${framework.bin}" append="true">
-		            <include name="${framework.swc}" />
-		         </library-path>
+		 	<library-path dir="${framework.bin}" append="true">
+		    	<include name="${framework.swc}" />
+		   	</library-path>
 		      	
-		        <library-path dir="${thirdparty.dir}" append="true">
-		     	            <include name="${lib.swfaddress}" />
-		     	            <include name="${lib.mate}" />
-		     	            <include name="${lib.rmtp}" />
-		     	            <include name="${lib.as3gettext}" />
-		     	         </library-path>
-		     	         
-		      
-		      </mxmlc>
-		   </target>
+		  	<library-path dir="${thirdparty.dir}" append="true">
+		   		<include name="${lib.swfaddress}" />
+		     	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		     	<include name="${lib.as3gettext}" />
+		 	</library-path>
+		</mxmlc>
+	</target>
 	
 	<!-- 
 		Build the user module (interface de gestion des utilisateurs visu) and produce a UserModule.swf file 
@@ -539,34 +592,61 @@ or by setting the following environment variable:
 		This target works exactly as the "build_session_module" target, please refer to it for documentation. 
 	-->
 	<target name="build-user-module"  description="Builds the Users Module">
-	      <echo>Build User Module</echo>
+	 	<echo>Build User Module</echo>
 	       
-		      <mxmlc 
-		         file="${usermodule.src}/modules/${usermodule.name}.mxml"
-		         output="${app.deploy}/${usermodule.name}.swf"
-		         debug="${debug}"
-		         strict="true" 
-		         optimize="true" 
-		      	incremental="${mxmlc.incremental}"
-		         warnings="${warnings}"
-		        load-externs="${framework.linkreport}" 
-		         headless-server="true">
+		<tstamp>
+	  	<format 
+	  		property="TIMESTAMP_USER_MODULE"
+	    	pattern="yyyyMMdd-hhmmss"
+	       	locale="fr,FR"/>
+		</tstamp>
+		
+		<!-- deleting old module -->
+		<delete quiet="true">
+			<fileset dir="${app.deploy}" includes="${usermodule.name}*.swf"/>
+		</delete>
+		
+		<!-- name user module with timestamp -->
+		<property name="usermodule.name.timestamp" value="${usermodule.name}-${TIMESTAMP_USER_MODULE}.swf" />
+								
+		<!-- update name module -->
+		<sql
+			driver="com.mysql.jdbc.Driver"
+			url="jdbc:mysql://localhost/${webapp.name}"
+ 	 		userid="${mysql.user}"
+	 		password="${mysql.pass}">
+	 		<classpath>
+				<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>     
+	 		</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${usermodule.name.timestamp}" WHERE name="${NAME_USER_MODULE}";
+		</sql> 	
+		
+		<mxmlc 
+			file="${usermodule.src}/modules/${usermodule.name}.mxml"
+		   	output="${app.deploy}/${usermodule.name.timestamp}"
+		    debug="${debug}"
+     		strict="true" 
+     		optimize="true" 
+     		incremental="${mxmlc.incremental}"
+     		warnings="${warnings}"
+     		load-externs="${framework.linkreport}"
+     		headless-server="true">
 		         
-		         <!-- will include all files with .css, .as, .mxml extensions -->
-		         <source-path path-element="${usermodule.src}"/>
+		    <!-- will include all files with .css, .as, .mxml extensions -->
+		    <source-path path-element="${usermodule.src}"/>
 		      	
-		      	<library-path dir="${framework.bin}" append="true">
-					<include name="${framework.swc}" />
-				</library-path>
+		    <library-path dir="${framework.bin}" append="true">
+				<include name="${framework.swc}" />
+			</library-path>
 		      	
-		        <library-path dir="${thirdparty.dir}" append="true">
-		     	            <include name="${lib.swfaddress}" />
-		     	            <include name="${lib.mate}" />
-		     	            <include name="${lib.rmtp}" />
-		     	            <include name="${lib.as3gettext}" />
-		     	</library-path>
-		      </mxmlc>
-		   </target>
+		    <library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+		     	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		     	<include name="${lib.as3gettext}" />
+		    </library-path>
+		</mxmlc>
+	</target>
 
 
 <!-- 
@@ -575,34 +655,60 @@ or by setting the following environment variable:
 		This target works exactly as the "build_bilan_module" target, please refer to it for documentation. 
 	-->
 	<target name="build-bilan-module"  description="Builds the Bilan Module">
-	      <echo>Build Bilan Module</echo>
-	       
-		      <mxmlc 
-		         file="${bilanmodule.src}/modules/${bilanmodule.name}.mxml"
-		         output="${app.deploy}/${bilanmodule.name}.swf"
-		         debug="${debug}"
-		         strict="true" 
-		         optimize="true" 
-		      	incremental="${mxmlc.incremental}"
-		         warnings="${warnings}"
-		        load-externs="${framework.linkreport}" 
-		         headless-server="true">
+	   	<echo>Build Bilan Module</echo>
+	    <tstamp>
+	  		<format 
+	  			property="TIMESTAMP_BILAN_MODULE"
+	    		pattern="yyyyMMdd-hhmmss"
+	          	locale="fr,FR"/>
+		</tstamp>	
+		
+		<!-- deleting old module -->
+		<delete quiet="true">
+			<fileset dir="${app.deploy}" includes="${bilanmodule.name}*.swf"/>
+		</delete>
+		
+		<!-- name bilan module with timestamp -->
+		<property name="bilanmodule.name.timestamp" value="${bilanmodule.name}-${TIMESTAMP_BILAN_MODULE}.swf" />
+		
+		<!-- update name module -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${bilanmodule.name.timestamp}" WHERE name="${NAME_BILAN_MODULE}";
+		</sql> 
+
+		<mxmlc 
+			file="${bilanmodule.src}/modules/${bilanmodule.name}.mxml"
+		   	output="${app.deploy}/${bilanmodule.name.timestamp}"
+		  	debug="${debug}"
+		   	strict="true" 
+		   	optimize="true" 
+		 	incremental="${mxmlc.incremental}"
+		   	warnings="${warnings}"
+		   	load-externs="${framework.linkreport}" 
+		   	headless-server="true">
 		         
-		         <!-- will include all files with .css, .as, .mxml extensions -->
-		         <source-path path-element="${bilanmodule.src}"/>
+		   	<!-- will include all files with .css, .as, .mxml extensions -->
+		    <source-path path-element="${bilanmodule.src}"/>
 		      	
-		      	<library-path dir="${framework.bin}" append="true">
-					<include name="${framework.swc}" />
-				</library-path>
+		    <library-path dir="${framework.bin}" append="true">
+				<include name="${framework.swc}" />
+			</library-path>
 		      	
-		        <library-path dir="${thirdparty.dir}" append="true">
-		     	            <include name="${lib.swfaddress}" />
-		     	            <include name="${lib.mate}" />
-		     	            <include name="${lib.rmtp}" />
-		     	            <include name="${lib.as3gettext}" />
-		     	</library-path>
-		      </mxmlc>
-		   </target>
+		 	<library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+		    	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		    	<include name="${lib.as3gettext}" />
+		  	</library-path>
+		</mxmlc>
+	</target>
 	
 	 <!-- 
 	 	Build the visu client application, i.e. from "visuclient.mxml" to "visuclient.swf"
@@ -773,14 +879,42 @@ or by setting the following environment variable:
     		<fileset dir="${app.deploy}" includes="${homemodule.name}*.swf"/>
   		  </copy>
 	      
-
-
-	      <copy file="${app.deploy}/${retrospectionmodule.name}.swf" todir="${webapp.dir}/modules" />
-	      <copy file="${app.deploy}/${tutoratmodule.name}.swf" todir="${webapp.dir}/modules" />
-	      
+	      <!-- delete old version user module -->
+	      <delete quiet="true">
+			<fileset dir="${webapp.dir}/modules" includes="${usermodule.name}*.swf"/>
+		  </delete>
+		  <!-- copy new version user module -->
+	      <copy todir="${webapp.dir}/modules">
+    		<fileset dir="${app.deploy}" includes="${usermodule.name}*.swf"/>
+  		  </copy>
   		  
-	      <copy file="${app.deploy}/${usermodule.name}.swf" todir="${webapp.dir}/modules" />
-	      <copy file="${app.deploy}/${bilanmodule.name}.swf" todir="${webapp.dir}/modules" />
+  		  <!-- delete old version tutorat module -->
+	      <delete quiet="true">
+			<fileset dir="${webapp.dir}/modules" includes="${tutoratmodule.name}*.swf"/>
+		  </delete>
+		  <!-- copy new version tutorat module -->
+	      <copy todir="${webapp.dir}/modules">
+    		<fileset dir="${app.deploy}" includes="${tutoratmodule.name}*.swf"/>
+  		  </copy>
+
+  		  <!-- delete old version retrospection module -->
+	      <delete quiet="true">
+			<fileset dir="${webapp.dir}/modules" includes="${retrospectionmodule.name}*.swf"/>
+		  </delete>
+		  <!-- copy new version retrospection module -->
+	      <copy todir="${webapp.dir}/modules">
+    		<fileset dir="${app.deploy}" includes="${retrospectionmodule.name}*.swf"/>
+  		  </copy>
+  		  
+  		   <!-- delete old version bilan module -->
+	      <delete quiet="true">
+			<fileset dir="${webapp.dir}/modules" includes="${bilanmodule.name}*.swf"/>
+		  </delete>
+		  <!-- copy new version bilan module -->
+	      <copy todir="${webapp.dir}/modules">
+    		<fileset dir="${app.deploy}" includes="${bilanmodule.name}*.swf"/>
+  		  </copy>
+	      
 	      <!-- copy wrappers -->
 	      <echo>Copy wrappers</echo>
 		  <copy todir="${webapp.dir}">
