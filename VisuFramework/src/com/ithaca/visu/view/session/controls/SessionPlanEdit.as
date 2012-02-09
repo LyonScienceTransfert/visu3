@@ -70,6 +70,9 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
@@ -105,6 +108,9 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var themeLabel:TextInput;
 		
+        [Bindable]
+        private var fxgt:_FxGettext;
+
 		private var editabled:Boolean;
 		private var _activities:ArrayCollection;
 		protected var activitiesChanged:Boolean;
@@ -315,7 +321,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show("You havn't activity with title = "+activityDeleting.title,"message error");
+				Alert.show(fxgt.gettext("You have no activity with title = ") + activityDeleting.title,
+                           fxgt.gettext("message error"));
 			}else{
 				_activities.removeItemAt(index);
 				activitiesChanged = true;
@@ -361,7 +368,7 @@ package com.ithaca.visu.view.session.controls
 		private function onCreateActivity(event:FlexEvent):void
 		{
 			var addActivity:AddActivityTitleWindow = event.currentTarget as AddActivityTitleWindow;
-			addActivity.setTitleActivity("nouvelle titre d'activité ici");
+			addActivity.setTitleActivity(fxgt.gettext("Entrez un nouveau titre d'activité ici"));
 		}
 		
 		private function onChangeTextTheme(event:TextOperationEvent):void
@@ -435,7 +442,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(indexAr == -1)
 			{
-				Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
+				Alert.show(fxgt.gettext("You have no activityElement in activity = ") + activity.title,
+                           fxgt.gettext("message error"));
 			}	
 		}
 // MOVE UP/DOWN ACTIVITY

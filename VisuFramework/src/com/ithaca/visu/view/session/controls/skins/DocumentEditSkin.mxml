@@ -27,6 +27,9 @@
 			import com.lyon2.controls.YoutubePlayer;
 			import com.youtube.player.events.PlayerEvent;
 			
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -40,6 +43,9 @@
 			private var currentUrl:String;
 			private var currentText:String;
 			private var typeDocument:String;
+
+            [Bindable]
+            private var fxgt:_FxGettext;
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
@@ -200,8 +206,8 @@
 			{
 				Alert.yesLabel = "Oui";
 				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer le document?",
-					"Confirmation", Alert.YES|Alert.NO, null, deleteDocumentConfirmed); 
+				Alert.show(fxgt.gettext("Voulez-vous supprimer le document ?"),
+					       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteDocumentConfirmed); 
 				
 			}
 			private function deleteDocumentConfirmed(event:CloseEvent):void{
@@ -278,7 +284,7 @@
 						<s:SolidColorStroke color="#6370D7"/>
 					</s:stroke>
 				</s:Line>
-				<!--<s:Label text=" éditer" color="#6370D7"  click="label1_clickHandler(event)"/>-->
+				<!--<s:Label text="{fxgt.gettext('Éditer')}" color="#6370D7"  click="label1_clickHandler(event)"/>-->
 				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}"  
 					 width="16" height="16"  click="onClickButtonEdit(event)"/>
 				
@@ -289,20 +295,20 @@
 			</s:Panel>
 <!-- STATE EDIT -->
 			<s:Label includeIn="open" top="10" left="10">
-				<s:text>Titre du document : </s:text>
+	        <s:text>{fxgt.gettext('Titre du document :')}</s:text>
 			</s:Label>
 			<s:TextArea id="editableContent"  includeIn="open" maxHeight="24" top="27" left="30" right="10" bottom="56"
 						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 			<s:Label includeIn="open" top="60" left="9" right="6">
-				<s:text>Le lien est :</s:text>
+	        <s:text>{fxgt.gettext('Le lien est :')}</s:text>
 			</s:Label>
 			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
 <!-- STATE ERROR -->
 			<s:RichText  includeIn="error,errorMessage" top="10" horizontalCenter="0" right="10" left="10" top.errorMessage="40" left.errorMessage="10" right.errorMessage="10" horizontalCenter.errorMessage="0" bottom.errorMessage="40">
-				<s:text>Le lien n'est pas correct...</s:text>
+            <s:text>{fxgt.gettext("Le lien n'est pas correct...")}</s:text>
 			</s:RichText>
 			<s:Button includeIn="error" top="35" click="onClickButtonOkPanelError(event)" bottom="10" horizontalCenter="0">
-				<s:label>OK</s:label>
+	        <s:label>{fxgt.gettext("OK")}</s:label>
 			</s:Button>			
 		</s:Group>
 		<s:HGroup width="100%" includeIn="open" horizontalAlign="center">

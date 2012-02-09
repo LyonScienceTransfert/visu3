@@ -220,7 +220,7 @@ public class RetroDocumentView extends SkinnableComponent
         {
             buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
             buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
-            buttonShare.toolTip = "Partager ce bilan";
+            buttonShare.toolTip = fxgt.gettext("Partager ce bilan");
             buttonShare.enabled =  this._buttonEnabled;
         }
         if(instance == removeButton)
@@ -454,7 +454,7 @@ public class RetroDocumentView extends SkinnableComponent
         
         Alert.yesLabel = fxgt.gettext("Oui");
         Alert.noLabel = fxgt.gettext("Non");
-        Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+this.retroDocument.title+'"'+" ?"),
+        Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé ") + '"' + this.retroDocument.title + '"' + " ?",
             fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
     }
     
@@ -702,8 +702,7 @@ public class RetroDocumentView extends SkinnableComponent
             var objectProxy:Label = new Label(); 
             objectProxy.maxDisplayedLines = 6;
             objectProxy.width = 100; 
-            objectProxy.text ="Vous pouver deplacer l'obsel vers la " +
-                "bilan pour ajouter dans la liste des segments block vidéo"
+            objectProxy.text =fxgt.gettext("Vous pouver deplacer l'obsel vers le bilan pour l'ajouter dans la liste des blocs vidéo.");
             
             //objectProxy.obselSkin = dragInitiator;
             DragManager.doDrag(dragInitiator, ds, event.event as MouseEvent, 

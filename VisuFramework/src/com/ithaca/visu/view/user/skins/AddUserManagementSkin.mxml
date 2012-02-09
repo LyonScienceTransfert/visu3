@@ -68,7 +68,7 @@
 				<s:title>{fxgt.gettext("Liste des utilisateurs")}</s:title>
 				<!--<controls:FilteredList-->
 				<controls2:AdvancedTextInput
-					id="searchDisplay" prompt="Filtre de recherche"
+					id="searchDisplay" prompt="{fxgt.gettext('Filtre de recherche')}"
 					top="0" left="0" right="0" height="25" 
 					skinClass="com.ithaca.visu.controls.skins.AdvancedTextInputSkin">
 				</controls2:AdvancedTextInput>
@@ -84,7 +84,7 @@
 		<s:Group width="50%" height="100%" width.normal="50%" height.normal="100%">
 			<s:Panel top="40" 
 					 width="100%" height.disabled="80%" top.normal="40" bottom.normal="0">	
-				<s:title>{fxgt.gettext("Detail d'utilisateure...")}</s:title>
+				<s:title>{fxgt.gettext("Infos utilisateur")}</s:title>
 				<!--<users:UserDetail id="userDetail" 
 								  top="0" bottom="0" left="0" right="0"
 								  skinClass="com.ithaca.visu.controls.users.skins.UserDetailSkin" />-->

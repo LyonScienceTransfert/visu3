@@ -71,6 +71,9 @@ package com.ithaca.visu.view.session.controls
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.collections.Sort;
@@ -121,6 +124,8 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var buttonDown:Image;
 
+        [Bindable]
+        private var fxgt:_FxGettext;
 		
 		private var open:Boolean;
 		private var editabled:Boolean;
@@ -419,7 +424,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show("You havn't activityElement with title = "+deletingStatement.data,"message error");
+				Alert.show(fxgt.gettext("You have no activityElement with title = ") + deletingStatement.data,
+                           fxgt.gettext("message error"));
 			}else{
 				statementList.removeItemAt(index);
 			}
@@ -446,7 +452,7 @@ package com.ithaca.visu.view.session.controls
 // MEMO		
 		public function setMessageMemo():void
 		{
-			memoDisplay.text = "entrez un nouveau mémo ici";
+			memoDisplay.text = fxgt.gettext("entrez un nouveau mémo ici");
 			memoDisplay.setStyle("fontStyle","italic");
 			memoDisplay.setStyle("color","#000000");
 			// add memo if havn't
@@ -527,7 +533,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show("You havn't activityElement with title = "+deletingDocument.data,"message error");
+				Alert.show(fxgt.gettext("You have no activityElement with title = ") + deletingDocument.data,
+                           fxgt.gettext("message error"));
 			}else{
 				documentList.removeItemAt(index);
 			}
@@ -649,7 +656,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(indexAr == -1)
 			{
-				Alert.show("You havn't activityElement in activity = "+activity.title,"message error");
+				Alert.show(fxgt.gettext("You have no activityElement in activity = ") + activity.title,
+                           fxgt.gettext("message error"));
 			}else{
 				arrActivityElement.removeItemAt(indexAr);
 			}	
