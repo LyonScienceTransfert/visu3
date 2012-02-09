@@ -22,14 +22,23 @@
 		import spark.events.TextOperationEvent;
 		[Bindable]
 		private var fxgt:_FxGettext;
-		
+        
+        private var NEW_STATEMENT_STRING: String;
+        private var NEW_DOCUMENT_TITLE_STRING: String;
+        private var NEW_KEYWORD_STRING: String;
+        private var NEW_LINK_STRING: String;
+
 		[Bindable]
 		private var LIFT_EDITABLED_COMPONENT:int = 75;
 		protected function skin1_creationCompleteHandler(event:FlexEvent):void
 		{
 			fxgt = FxGettext;
+		    NEW_STATEMENT_STRING = fxgt.gettext("Ajoutez une nouvelle consigne ici");
+            NEW_DOCUMENT_TITLE_STRING = fxgt.gettext("Entrez un nouveau titre de document ici");
+            NEW_LINK_STRING = fxgt.gettext("Ajoutez un nouveau lien ici");
+            NEW_KEYWORD_STRING = fxgt.gettext("Ajoutez un nouveau mot-clé ici");
 		}
-		protected function group1_clickHandler(event:MouseEvent):void
+		protected function group1_clickHandler(event:MouseEvent): void
 		{
 			if(event.target is Group)
 			{
@@ -39,7 +48,7 @@
 		// STATEMENT
 		protected function addStatement_focusInHandler(event:FocusEvent):void
 		{
-			if(addStatement.text == "ajoutez une nouvelle consigne ici"){
+			if (addStatement.text == NEW_STATEMENT_STRING) {
 				addStatement.text = "";
 				addStatement.setStyle("fontStyle","normal");
 				addStatement.setStyle("color","#000000");
@@ -62,7 +71,7 @@
 		protected function validStatementButton_clickHandler(event:*):void
 		{
 			// add statement
-			if(addStatement.text != "ajoutez une nouvelle consigne ici" && addStatement.text != "")
+			if(addStatement.text != NEW_STATEMENT_STRING && addStatement.text != "")
 			{
 				this.hostComponent.addStatement(addStatement.text);
 				addStatement.text = "";
@@ -72,14 +81,14 @@
 		
 		private function setMessageStatement():void
 		{
-			addStatement.text = "ajoutez une nouvelle consigne ici";
-			addStatement.setStyle("fontStyle","italic");
-			addStatement.setStyle("color","#BBBBBB");
+			addStatement.text = NEW_STATEMENT_STRING;
+			addStatement.setStyle("fontStyle", "italic");
+			addStatement.setStyle("color", "#BBBBBB");
 		}
 		// MEMO
 		protected function memoDisplay_focusInHandler(event:FocusEvent):void
 		{
-			if(memoDisplay.text == "entrez un nouveau mémo ici")
+			if(memoDisplay.text == fxgt.gettext("Entrez un nouveau mémo ici"))
 			{
 				memoDisplay.text = "";
 				memoDisplay.setStyle("fontStyle","normal");
@@ -106,7 +115,7 @@
 		}
 		protected function addTitreDocument_focusInHandler(event:FocusEvent):void
 		{
-			if(addTitreDocument.text == "ajoutez un nouveau titre de document ici"){
+			if (addTitreDocument.text == NEW_DOCUMENT_TITLE_STRING) {
 				addTitreDocument.text = "";
 				addTitreDocument.setStyle("fontStyle","normal");
 				addTitreDocument.setStyle("color","#000000");
@@ -115,7 +124,7 @@
 		
 		protected function addLienDocument_focusInHandler(event:FocusEvent):void
 		{
-			if(addLienDocument.text == "ajoutez un nouveau lien ici"){
+			if (addLienDocument.text == NEW_LINK_STRING) {
 				addLienDocument.text = "";
 				addLienDocument.setStyle("fontStyle","normal");
 				addLienDocument.setStyle("color","#000000");
@@ -143,7 +152,7 @@
 				{
 					type = ActivityElementType.IMAGE;
 				}
-				if(titre =="ajoutez un nouveau titre de document ici")
+				if(titre == NEW_DOCUMENT_TITLE_STRING)
 				{
 					titre = "...document...";
 				}
@@ -153,27 +162,27 @@
 			}else
 			{
 				// set text to addLienDocument
-				addLienDocument.text = "ajoutez un nouveau lien ici";
+				addLienDocument.text = NEW_LINK_STRING;
 				stage.focus = addLienDocument;
 			}
 		}
 		
 		private function setMessageTitreDocument():void
 		{
-			addTitreDocument.text = "ajoutez un nouveau titre de document ici";
+			addTitreDocument.text = NEW_DOCUMENT_TITLE_STRING;
 			addTitreDocument.setStyle("fontStyle","italic");
 			addTitreDocument.setStyle("color","#BBBBBB");
 		}
 		private function setMessageLienDocument():void
 		{
-			addLienDocument.text = "ajoutez un nouveau lien ici";
+			addLienDocument.text = NEW_LINK_STRING;
 			addLienDocument.setStyle("fontStyle","italic");
 			addLienDocument.setStyle("color","#BBBBBB");
 		}
 		// KEYWORD
 		protected function addKeyword_focusInHandler(event:FocusEvent):void
 		{
-			if(addKeyword.text == "entrez un nouveau mot-clé"){
+			if (addKeyword.text == NEW_KEYWORD_STRING) {
 				addKeyword.text = "";
 				addKeyword.setStyle("fontStyle","normal");
 				addKeyword.setStyle("color","#000000");
@@ -196,7 +205,7 @@
 		
 		private function validKeywordButton_clickHandler(event:MouseEvent=null):void
 		{
-			if(addKeyword.text != "entrez un nouveau mot-clé" && addKeyword.text != "")
+			if(addKeyword.text != NEW_KEYWORD_STRING && addKeyword.text != "")
 			{
 				this.hostComponent.addKeyword(addKeyword.text);
 				addKeyword.text = "";
@@ -205,7 +214,7 @@
 		}
 		private function setMessageKeyword():void
 		{
-			addKeyword.text = "Entrez un nouveau mot-clé";
+			addKeyword.text = NEW_KEYWORD_STRING;
 			addKeyword.setStyle("fontStyle","italic");
 			addKeyword.setStyle("color","#BBBBBB");
 		}
@@ -217,10 +226,10 @@
 		// DELETE ACTIVITY
 		protected function buttonDeleteActivity_clickHandler(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer l'activité ?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteActivityConfirmed);
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer l'activité ?"),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteActivityConfirmed);
 		}
 		private function deleteActivityConfirmed(event:CloseEvent):void{
 			if( event.detail == Alert.YES)
@@ -300,7 +309,7 @@
 		<s:HGroup width="100%" top="0" >
 			<mx:Spacer width="25"/>
 			<s:Label paddingTop="10">
-				<s:text>Titre d'activité: </s:text>
+            <s:text>{fxgt.gettext("Titre d'activité:")}</s:text>
 			</s:Label>
 			<!-- LABEL ACTIVITY-->
 			<s:Label id="titleActivityLable" includeIn="normal,open" width="100%" text="AAAAAA" paddingTop="8" fontSize="14" fontWeight="bold" maxDisplayedLines="1"/>
@@ -317,7 +326,7 @@
 			<mx:Button id="buttonDeleteActivity" top="5"
 				icon="{IconEnum.getIconByName('delete')}"
 				click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="120" top.openEditable="5" right.openEditable="120">
-				<mx:toolTip>Supprimer l'acitivité</mx:toolTip>
+				<mx:toolTip>{fxgt.gettext("Supprimer l'activité")}</mx:toolTip>
 			</mx:Button>
 			<!-- MOVE UP/DOWN -->
 			<s:HGroup paddingTop="5" includeIn="normalEditable,openEditable">
@@ -325,7 +334,7 @@
 				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('down')}" width="12" height="12"/>
 			</s:HGroup>
 			<!-- DURATION -->
-			<s:Label id="durationDisplay" paddingTop="10" text="durée" text.normal="durée :" text.normalEditable="durée :" text.open="durée :" text.openEditable="durée :"/>
+			<s:Label id="durationDisplay" paddingTop="10" text="{fxgt.gettext('durée :')}" text.normal="{fxgt.gettext('durée :')}" text.normalEditable="{fxgt.gettext('durée :')}" text.open="{fxgt.gettext('durée :')}" text.openEditable="{fxgt.gettext('durée :')}"/>
 			<s:Label includeIn="normal,open" text="10 " id="durationActivityLabel" width="18" paddingTop="10"/>
 			<s:Label includeIn="normal,open" text="min." paddingTop="10"/>
 			<s:NumericStepper id="durationActivity" width="44"
@@ -341,7 +350,7 @@
 		</s:layout>
 		<!-- STATEMENTS -->
 		<s:Group width="100%">
-			<s:Label paddingLeft="5" text="Consignes : "/>
+			<s:Label paddingLeft="5" text="{fxgt.gettext('Consignes :')}"/>
 			<s:Group id="statementGroup" left="{LIFT_EDITABLED_COMPONENT}" width.openEditable="100%" left.open="{LIFT_EDITABLED_COMPONENT}" right.open="0">
 				<s:layout>
 					<s:VerticalLayout />
@@ -355,7 +364,7 @@
 				focusIn="addStatement_focusInHandler(event)"
 				keyUp="addStatement_keyUpHandler(event)"
 				focusOut="addStatement_focusOutHandler(event)" includeIn="openEditable">
-				<s:text>ajoutez une nouvelle consigne ici</s:text>
+            <s:text>{NEW_STATEMENT_STRING}</s:text>
 			</s:TextArea>
 			<s:Button right="15" top="27" bottom="2" click="validStatementButton_clickHandler(event)" includeIn="openEditable">
 				<s:label>Valider</s:label>
@@ -363,7 +372,7 @@
 		</s:Group>
 		<!-- DOCUMENTS -->
 		<s:Group width="100%">
-			<s:Label left="5" text="Documents : "/>
+			<s:Label left="5" text="{fxgt.gettext('Documents :')}"/>
 			<s:Group id="documentGroup" left="{LIFT_EDITABLED_COMPONENT}" width="100%">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="2" horizontalGap="50"/>
@@ -374,34 +383,34 @@
 		<s:VGroup width="100%" left="10">
 			<s:HGroup width="100%">
 				<mx:Spacer width="100%"/>
-				<s:Label includeIn="openEditable" text="Titre du document :" paddingTop="5"/>
+				<s:Label includeIn="openEditable" text="{fxgt.gettext('Titre du document :')}" paddingTop="5"/>
 				<s:TextArea id="addTitreDocument" top="0" maxHeight="22" minWidth="290" textAlign="left"
 					fontStyle="italic" color="#BBBBBB"
 					focusOut="addTitreDocument_focusOutHandler(event)"
 					focusIn="addTitreDocument_focusInHandler(event)" includeIn="openEditable">
-					<s:text>ajoutez un nouveau titre de document ici</s:text>
+                <s:text>{NEW_DOCUMENT_TITLE_STRING}</s:text>
 				</s:TextArea>
 				<mx:Spacer width="8"/>
 			</s:HGroup>
 			<s:HGroup width="100%" right="5">
 				<mx:Spacer width="100%"/>
-				<s:Label includeIn="openEditable" text="Url du document :" paddingTop="5"/>
+				<s:Label includeIn="openEditable" text="{fxgt.gettext('Url du document :')}" paddingTop="5"/>
 				<s:TextArea id="addLienDocument" right="140" maxHeight="22" minWidth="220"
 					fontStyle="italic" color="#BBBBBB"
 					focusIn="addLienDocument_focusInHandler(event)"
 					focusOut="addLienDocument_focusOutHandler(event)" includeIn="openEditable">
-					<s:text>ajoutez un nouveau lien ici</s:text>
+					<s:text>{NEW_LINK_STRING}</s:text>
 				</s:TextArea>
 				<s:Button id="validButtonDocument"
 					click="validButtonDocument_clickHandler(event)" includeIn="openEditable">
-					<s:label>Ajouter le document</s:label>
+                <s:label>{fxgt.gettext("Ajouter un document")}</s:label>
 				</s:Button>
 				<mx:Spacer width="8"/>
 			</s:HGroup>
 		</s:VGroup>
 		<!-- KEYWORD -->
 		<s:Group width="100%" height="100" height.openEditable="130" right="5">
-			<s:Label left="5" text="Mots-clés : "/>
+			<s:Label left="5" text="{fxgt.gettext('Mots-clés :')}"/>
 			<s:Scroller top="8" left="{LIFT_EDITABLED_COMPONENT}" bottom="0" right="2" bottom.openEditable="60">
 				<s:Group id="keywordGroup" left="0" width="100%" top="0" height="100%">
 					<s:layout>
@@ -415,15 +424,15 @@
 				focusIn="addKeyword_focusInHandler(event)"
 				focusOut="addKeyword_focusOutHandler(event)"
 				keyUp="addKeyword_keyUpHandler(event)" includeIn="openEditable">
-				<s:text>entrez un nouveau mot-clé</s:text>
+	        <s:text>{NEW_KEYWORD_STRING}</s:text>
 			</s:TextInput>
 			<s:Button right="15" bottom="2" click="validKeywordButton_clickHandler(event)" includeIn="openEditable">
-				<s:label>Valider</s:label>
+                <s:label>{fxgt.gettext('Valider')}</s:label>
 			</s:Button>
 		</s:Group>
 		<!-- MEMO -->
 		<s:Group width="100%">
-			<s:Label left="5" text="Mémo : "/>
+			<s:Label left="5" text="{fxgt.gettext('Mémo :')}"/>
 			<s:Group width="100%" left="{LIFT_EDITABLED_COMPONENT}">
 				<s:Rect id="fill" radiusX="5"
 					left="2" right="2" top="1" bottom="1" minHeight="25">

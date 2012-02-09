@@ -12,8 +12,13 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
+			import gnu.as3.gettext._FxGettext;
+            import gnu.as3.gettext.FxGettext;
 			import ws.tink.spark.skins.containers.FormItemSkin;
+
+            [Bindable]
+            private var fxgt:_FxGettext = FxGettext;
+
 		]]>
 	</fx:Script>
 	<!-- states -->
@@ -38,10 +43,10 @@
 	<s:VGroup  width="100%" height="100%" horizontalAlign="center">
 		<s:VGroup  width="100%" includeIn="visudev" gap="10" horizontalAlign="center">
 			<s:Label >
-				<s:text>Comptes étudiants prédéfinis(login/pass): e1/e1 ; e2/e2</s:text>
+	            <s:text>{fxgt.gettext("Comptes étudiants prédéfinis (login/pass): e1/e1 ; e2/e2")}</s:text>
 			</s:Label>
 			<s:Label >
-				<s:text>Comptes tuteurs prédéfinis(login/pass): t1/t1 ; t2/t2</s:text>
+                <s:text>{fxget.gettext("Comptes tuteurs prédéfinis (login/pass): t1/t1 ; t2/t2");</s:text>
 			</s:Label>
 		</s:VGroup>
 		<mx:Spacer height="25" includeIn="visudev"/>

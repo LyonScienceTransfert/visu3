@@ -11,12 +11,18 @@
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
 			private var currentMouseCursor:String;
-			
+
+			[Bindable]
+            private var fxgt:_FxGettext;
+
 			// on click butoon cancel
 			protected function onClickButtonCancel(event:MouseEvent):void
 			{
@@ -36,10 +42,10 @@
 			
 			protected function buttonDelete_clickHandler(event:MouseEvent):void
 			{
-				Alert.yesLabel = "Oui";
-				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer le mot-clé?",
-					"Confirmation", Alert.YES|Alert.NO, null, deleteKeywordConfirmed); 
+				Alert.yesLabel = fxgt.gettext("Oui");
+				Alert.noLabel = fxgt.gettext("Non");
+				Alert.show(fxgt.gettext("Voulez-vous supprimer le mot-clé?"),
+					       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteKeywordConfirmed);
 				
 			}
 			private function deleteKeywordConfirmed(event:CloseEvent):void{
@@ -117,11 +123,11 @@
 					        width="88"/>
 				<mx:Image width="16" height="16" source="{IconEnum.getIconByName('iconValider_16x16')}" click="onClickButtonValider(event)">
 					<mx:buttonMode>true</mx:buttonMode>
-					<mx:toolTip>Valider</mx:toolTip>
+	                <mx:toolTip>{fxgt.gettext("Valider")}</mx:toolTip>
 				</mx:Image>
 				<mx:Image width="16" height="16" source="{IconEnum.getIconByName('iconAnnuler_16x16')}" click="onClickButtonCancel(event)">
 					<mx:buttonMode>true</mx:buttonMode>
-					<mx:toolTip>Annuler</mx:toolTip>
+                    <mx:toolTip>{fxgt.gettext("Annuler")}</mx:toolTip>
 				</mx:Image>
 				<mx:Spacer width="4"/>
 			</s:HGroup>
