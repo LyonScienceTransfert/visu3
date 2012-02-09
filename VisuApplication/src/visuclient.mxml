@@ -161,9 +161,17 @@
  				 var appUrl:String = FlexGlobals.topLevelApplication.url;
 				Model.getInstance().server = URLUtil.getServerName( appUrl);
 				Model.getInstance().port   = URLUtil.getPort( appUrl );
-				 a = appUrl.match(/\/(\w+)\/visuclient.swf/);
+                // INFO : if change name of application(add timestamp) then with "appUrl.match" can't get name app
+				/**
+                a = appUrl.match(/\/(\w+)\/visuclient.swf/);
 				if (a)
-					Model.getInstance().appName = a[1];	  	 		
+					Model.getInstance().appName = a[1];	  
+                */
+                 var appUrlSplit:Array = appUrl.split('/');
+                 // get app name that before last element of the array
+                 var appName:String= appUrlSplit[appUrlSplit.length-2];
+                 // set app name
+                 Model.getInstance().appName = appName;
 				
 				// we set the locale for the messages category to fr_FR
 				setlocale(Locale.LC_MESSAGES, mklocale(ISO_639_1.FR,ISO_3166.FR));				
