@@ -20,7 +20,6 @@ package com.ithaca.visu.core
 	import mx.controls.ProgressBar;
 	import mx.controls.ProgressBarLabelPlacement;
 	import mx.controls.SWFLoader;
-	import mx.core.INavigatorContent;
 	import mx.events.FlexEvent;
 	import mx.events.ModuleEvent;
 	import mx.logging.ILogger;
