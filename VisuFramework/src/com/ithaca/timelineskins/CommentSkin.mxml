@@ -62,12 +62,12 @@
                 var text:String = obsel.props[TraceModel.TEXT];
                 if(text == null)
                 {
-                    text = fxgt.gettext("Poser votre commentaire ici");
+                    text = fxgt.gettext("Ajouter un commentaire");
                 }
                 commentLabel.text = toolTip = text;
                 if(text == "")
                 {
-                    toolTip = fxgt.gettext("le commentaire est vide");
+                    toolTip = fxgt.gettext("Le commentaire est vide");
                 }
                 
                 UpdateResizeGripHeight();
@@ -217,7 +217,7 @@
                 commentLabel.text = toolTip = hostComponent.obsel.props[TraceModel.TEXT];
                 if(commentLabel.text == "")
                 {
-                    toolTip = fxgt.gettext("le commentaire est vide");
+                    toolTip = fxgt.gettext("Le commentaire est vide");
                 }
             }
 			//////////////////
