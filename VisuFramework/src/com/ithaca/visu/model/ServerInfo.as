@@ -95,6 +95,7 @@ package com.ithaca.visu.model
 
         public function get rtmpServer(): String { return _rtmpServer; }
         public function get amfGateway(): String { return _rtmpServer; }
+        public function get appName(): String { return webapp; }
 
         public function toString(): String
         {
