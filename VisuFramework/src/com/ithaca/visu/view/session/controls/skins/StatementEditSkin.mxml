@@ -17,12 +17,21 @@
 	<fx:Script>
 	<![CDATA[
 		import com.ithaca.visu.ui.utils.IconEnum;
+
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+
 		import mx.controls.Alert;
 		import mx.events.CloseEvent;
 		import mx.events.FlexEvent;
+
 		[Bindable]
 		private var widthAppendix:int = 70;
 		private var currentMouseCursor:String;
+
+        [Bindable]
+        private var fxgt:_FxGettext;
+
 		// click on label edit
 		protected function label1_clickHandler(event:MouseEvent):void
 		{
@@ -47,10 +56,10 @@
 		
 		protected function buttonDelete_clickHandler(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer la consigne?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteStatementConfirmed);
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer la consigne ?"),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteStatementConfirmed);
 		}
 		private function deleteStatementConfirmed(event:CloseEvent):void{
 			if( event.detail == Alert.YES)

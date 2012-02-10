@@ -66,6 +66,9 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import flash.events.MouseEvent;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -86,6 +89,9 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")] 
 		public var buttonEdit:Image;
 		
+        [Bindable]
+        private var fxgt:_FxGettext;
+
 		public var currentMouseCursor:String;
 		private var normal:Boolean = true;
 		public var textKeyword:String;
@@ -109,13 +115,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonDelete.toolTip = "Effacer";
+				buttonDelete.toolTip = fxgt.gettext("Effacer");
 			}
 			if(instance == buttonEdit)
 			{
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.toolTip = "Editer";
+				buttonEdit.toolTip = fxgt.gettext("Editer");
 			}
 			
 			if(instance == textContent)

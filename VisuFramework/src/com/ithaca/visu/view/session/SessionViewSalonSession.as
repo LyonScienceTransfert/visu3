@@ -4,6 +4,9 @@ package com.ithaca.visu.view.session
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.SessionFilterEnum;
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
@@ -50,7 +53,10 @@ package com.ithaca.visu.view.session
 		[SkinPart("true")]
 		public var gradientEntryTo:GradientEntry;
 		
-		private var _date:Date;
+        [Bindable]
+        private var fxgt:_FxGettext;
+		
+        private var _date:Date;
 		private var _theme:String;
 		private var _user:User;
 		private var _session:Session;
@@ -125,7 +131,7 @@ package com.ithaca.visu.view.session
 			{
 				if(dateRecorded == null)
 				{
-					dateLabel.text = "Chargement des données.";
+					dateLabel.text = fxgt.gettext("Chargement des données.");
 				}else
 				{
 					dateLabel.text = _date.toString();
@@ -169,7 +175,7 @@ package com.ithaca.visu.view.session
 			{
 				dateChange = false;
 				
-				dateLabel.text = UtilFunction.getLabelDate(this.dateRecorded,"-")+" à "+ UtilFunction.getHeurMinDate(this.dateRecorded);
+				dateLabel.text = UtilFunction.getLabelDate(this.dateRecorded, "-") + fxgt.gettext(" à ") + UtilFunction.getHeurMinDate(this.dateRecorded);
 			}
 			if (userChange)
 			{

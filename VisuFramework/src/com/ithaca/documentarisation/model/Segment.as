@@ -4,6 +4,9 @@ package com.ithaca.documentarisation.model
 	import com.ithaca.documentarisation.RetroDocumentView;
 	import com.ithaca.documentarisation.model.RetroDocument;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import flash.events.TextEvent;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
@@ -16,6 +19,9 @@ package com.ithaca.documentarisation.model
 	{
 		[Bindable]
 		public var order:int;
+
+        [Bindable]
+        private var fxgt:_FxGettext;
 
 		/*[Bindable]
 		public var title:String="";*/
@@ -70,7 +76,7 @@ package com.ithaca.documentarisation.model
             segmentXML.appendChild(endTimeVideo);
             // comment
             var commentText:String = comment;
-            if(commentText == "Cliquer ici pour ajouter du texte")
+            if (commentText == fxgt.gettext("Cliquer ici pour ajouter du texte"))
             {
                 commentText = "";
             }

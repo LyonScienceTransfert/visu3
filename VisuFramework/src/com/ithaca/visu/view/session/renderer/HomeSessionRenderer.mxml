@@ -24,6 +24,9 @@
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.lyon2.controls.utils.TimeUtils;
+
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -34,6 +37,9 @@
 			import mx.logging.Log;
 			
 			import spark.events.IndexChangeEvent;
+
+            [Bindable]
+            private var fxgt:_FxGettext;
 
 			private static var logger:ILogger = Log.getLogger("com.ithaca.visu.view.session.renderer.HomeSessionRendered");
 				/*
@@ -157,10 +163,10 @@
 			}
 			
 			private function doCancel(event:MouseEvent):void {
-				Alert.yesLabel = "Oui";
-				Alert.noLabel = "Non";
-				Alert.show("Voulez-vous supprimer cette séance ?",
-					"Confirmation", Alert.YES|Alert.NO, null, cancelSessionConformed);
+				Alert.yesLabel = fxgt.gettext("Oui");
+				Alert.noLabel = fxgt.gettext("Non");
+				Alert.show(fxgt.gettext("Voulez-vous supprimer cette séance ?"),
+					       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, cancelSessionConformed);
 			}
 			
 			private function cancelSessionConformed(event:CloseEvent):void{
@@ -260,8 +266,8 @@
 						
 					<mx:LinkButton 
 						id="cancelButton"
-						label="Annuler"
-						toolTip="Supprimer définitivement cette séance"
+						label="{fxgt.gettext('Annuler')}"
+                        toolTip="{fxgt.gettext('Supprimer définitivement cette séance')}"
 						click="doCancel(event)"
 						visible="{canCancelSession(data.statusSession)}"
 						includeInLayout="{canCancelSession(data.statusSession)}"
@@ -269,9 +275,9 @@
 					
 					<mx:LinkButton 
 						id="editButton"
-						label="Modifier"
+						label="{fxgt.gettext('Modifier')}"
 						click="doEdit(event)"
-						toolTip="Modifier la date, les participants ou le plan de séance"
+						toolTip="{fxgt.gettext('Modifier la date, les participants ou le plan de séance')}"
 						visible="{canModifySession(data.statusSession)}"
 						includeInLayout="{canModifySession(data.statusSession)}"
 						/>	
@@ -280,18 +286,18 @@
 				<s:HGroup width="100%" horizontalAlign="right" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
 					<mx:LinkButton 
 						id="connectButton"
-						label="Rejoindre"
+						label="{fxgt.gettext('Rejoindre')}"
 						click="doJoinSession(event)"
-						toolTip="Entrer dans le salon synchrone"
+						toolTip="{fxgt.gettext('Entrer dans le salon synchrone')}"
 						visible="{canJoinSession(data.statusSession)}"
 						includeInLayout="{canJoinSession(data.statusSession)}"
 						/>
 			
 					<mx:LinkButton 
 						id="retrospectionButton"
-						label="Rétrospection"
+						label="{fxgt.gettext('Rétrospection')}"
 						click="doRetrospection(event)"
-						toolTip="Entrer dans le salon de rétrospection"
+						toolTip="{fxgt.gettext('Entrer dans le salon de rétrospection')}"
 						visible="{canJoinRetrospection(data.statusSession)}"
 						includeInLayout="{canJoinRetrospection(data.statusSession)}"
 						/>
@@ -299,9 +305,9 @@
 			
 					<mx:LinkButton 
 						id="bilanButton"
-						label="Bilans"
+						label="{fxgt.gettext('Bilans')}"
 						click="doBilan(event)"
-						toolTip="Voir les bilans existants pour cette session"
+						toolTip="{fxgt.gettext('Voir les bilans existants pour cette session')}"
 						visible="{canJoinBilan(data.statusSession)}"
 						includeInLayout="{canJoinBilan(data.statusSession)}"
 						/>

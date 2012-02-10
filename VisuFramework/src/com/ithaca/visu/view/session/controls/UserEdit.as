@@ -68,6 +68,9 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import flash.events.MouseEvent;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -97,6 +100,9 @@ package com.ithaca.visu.view.session.controls
 		[SkinPart("true")]
 		public var buttonDelete:Image;
 
+        [Bindable]
+        private var fxgt:_FxGettext;
+
 		private var _user:User;
 		public var currentMouseCursor:String;
 		private var normal:Boolean = true;
@@ -119,7 +125,7 @@ package com.ithaca.visu.view.session.controls
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
 				buttonDelete.addEventListener(MouseEvent.CLICK, onButtonDeleteClick);
-				buttonDelete.toolTip = "Effacer";
+				buttonDelete.toolTip = fxgt.gettext("Effacer");
 			}
 			if(instance == buttonEdit)
 			{
@@ -134,18 +140,18 @@ package com.ithaca.visu.view.session.controls
 				
 				if(_user.role < RoleEnum.STUDENT)
 				{
-					avatarUser.toolTip = "Etudiant";
+					avatarUser.toolTip = fxgt.gettext("Etudiant");
 				}else
 					if(_user.role < RoleEnum.TUTEUR)
 					{
-						avatarUser.toolTip = "Tuteur";
+						avatarUser.toolTip = fxgt.gettext("Tuteur");
 					}else 
 						if(_user.role < RoleEnum.RESPONSABLE)
 						{
-							avatarUser.toolTip = "Responsable";
+							avatarUser.toolTip = fxgt.gettext("Responsable");
 						}else
 						{
-							avatarUser.toolTip = "Administrateur";							
+							avatarUser.toolTip = fxgt.gettext("Administrateur");
 						}
 			}
 

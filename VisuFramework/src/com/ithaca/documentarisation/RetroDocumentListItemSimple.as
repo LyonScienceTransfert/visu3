@@ -125,19 +125,19 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 		{
 			buttonDelete.addEventListener(MouseEvent.CLICK, onClickButtonDelete);
 			buttonDelete.icon =  IconEnum.getIconByName('delete');
-			buttonDelete.toolTip = "Supprimer ce bilan";
+			buttonDelete.toolTip = fxgt.gettext("Supprimer ce bilan");
 		}
 		if (instance == buttonShare)
 		{
 			buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
 			buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
-			buttonShare.toolTip = "Partager ce bilan";
+			buttonShare.toolTip = fxgt.gettext("Partager ce bilan");
 		}
 		if (instance == buttonSwitch)
 		{
             buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
             buttonSwitch.icon =  IconEnum.getIconByName('iconEye_16x16');
-            buttonSwitch.toolTip = "Visualiser ce bilan";
+            buttonSwitch.toolTip = fxgt.gettext("Visualiser ce bilan");
 		}
 	}
 
@@ -205,7 +205,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	{
 		Alert.yesLabel = fxgt.gettext("Oui");
 		Alert.noLabel = fxgt.gettext("Non");
-		Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé "+'"'+retroDocumentVO.title+'"'+" ?"),
+		Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé ") + '"' + retroDocumentVO.title+'"' + " ?",
 			fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
 	}
 	private function onClickButtonShare(event:MouseEvent):void

@@ -78,7 +78,10 @@
             
             import spark.components.Button;
             import spark.components.Label;
-			
+
+            /* When reaching the end of the timeline, how much time should we add ? */
+			private var DURATION_EXTENSION: Number = 60 * 1000; /* 1 minute */
+
 			private var currentSession:Session = null;
 			private var _stopTimeRecording:Number = 0;
 			private var DELTA_STICH:int = 20;
@@ -854,8 +857,6 @@
 			protected function onSendMessage(event:*):void
 			{
 				var message:String = textChatMessage.text;
-                message = message.split("\n").join("");
-                message = message.split("\r").join("");
                 if(event is MouseEvent){
                     sendMessage(message);
                 }else if (event is KeyboardEvent) 
@@ -944,12 +945,6 @@
 				}
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
-                if(message)
-                {
-                    // cut char new line if was click on button "Enter"
-                    message = message.split("\n").join("");
-                    message = message.split("\r").join("");
-                }else message="";
 
                 sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
@@ -1099,7 +1094,8 @@
 				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
 				timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
                 // add listener added TraceLineTitle on the stage
-                timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
+                timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
+				timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
 				timeLine.percentWidth = 100;
 				timeLine.percentHeight = 100;
 				timeLine.contextFollowCursor = true;
@@ -1209,6 +1205,15 @@
                     }
                 }
             }
+
+            /* 
+             * Handle predefined session time overrun
+             */
+            private function onCreationCompleteTimeLine(event: FlexEvent): void
+            {
+                timeline.range.addTime(timeline.begin, timeline.end + DURATION_EXTENSION, true);
+            }
+
             private function onLoadLayoutComplete(event:Event):void 
             {
                 var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
