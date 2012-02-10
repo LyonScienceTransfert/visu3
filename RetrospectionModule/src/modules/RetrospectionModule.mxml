@@ -525,7 +525,7 @@
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					} else
 					{
-						nameUser = fxgt.gettext("Comment à propos de la séance");
+						nameUser = fxgt.gettext("Commentaire à propos de la séance");
 					}
 				}
 				else if ( generatorName == 'markersGenerator' )
