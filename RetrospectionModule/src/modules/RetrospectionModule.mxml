@@ -403,7 +403,7 @@
 					var traceComment:Trace = Model.getInstance().getTraceComment();				
 					var tlgComment : TraceLineGroup;
 					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
-					tlgComment.setStyle( "title", fxgt.gettext("Comments") );
+					tlgComment.setStyle( "title", fxgt.gettext("Commentaires") );
                     // logged user 
                     var loggedUser:User = Model.getInstance().getLoggedUser();
                     var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
@@ -525,7 +525,7 @@
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					} else
 					{
-						nameUser = fxgt.gettext("Commentaire à propos de la séance");
+						nameUser = fxgt.gettext("Commentaires à propos de la séance");
 					}
 				}
 				else if ( generatorName == 'markersGenerator' )
@@ -536,7 +536,7 @@
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					}else
 					{
-						nameUser = fxgt.gettext("Marqueur à propos de la séance");
+						nameUser = fxgt.gettext("Marqueurs à propos de la séance");
 					}
 					
 				}else if( generatorName  == 'videosGenerator')
@@ -551,7 +551,7 @@
                         nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
                     }else
                     {
-                        nameUser = fxgt.gettext("Message pour tous");
+                        nameUser = fxgt.gettext("Messages pour tous");
                     }
                 }
                 else if(generatorName  == 'documentGenerator')
@@ -1829,7 +1829,7 @@
 						</video:VisuVisioAdvanced>
 						<s:HGroup gap="3"  includeIn="debug" width="100%">
 							<mx:Spacer width="100%"/>
-							<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
+							<s:Button id="buttomTraceFrame" label="{fxgt.gettext('Update split')}" click="button1_clickHandler(event)"/>
 							<s:Label text="{fxgt.gettext('Décalage max. autorisé')}" paddingTop="7"/>
 							<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
 							<s:Label text="{fxgt.gettext('Période de vérification')}" paddingTop="7"/>
