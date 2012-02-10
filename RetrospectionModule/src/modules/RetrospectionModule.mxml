@@ -866,7 +866,7 @@
 				ds.addData(obsel,"obsel");
 				ds.addData("video","textObsel");	
 				var imageProxy:Image = new Image();
-				imageProxy.source = IconEnum.getIconByName('retroDocumentSegemntAdd');
+				imageProxy.source = IconEnum.getIconByName('retroDocumentSegmentAdd');
 				imageProxy.height=15;
 				imageProxy.width=15;     
 				
