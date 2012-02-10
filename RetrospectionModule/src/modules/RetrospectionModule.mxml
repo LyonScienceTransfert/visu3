@@ -185,7 +185,6 @@
                 
                 // load layout xml file 
                 loaderTracage = new URLLoader();
-                loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
                 loaderTracage.load(new URLRequest("xml/layoutAdvanced.xml"));	
                 
                 // init loader for timeline retro
@@ -225,10 +224,6 @@
 					buttomTraceFrame.visible = true;
 //					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
 //					this.visio.setDebugMode();
-
-					timerSynchro = new Timer(intervalCheckDecalage*1000,0);
-					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
-					timerSynchro.start();
 				}
 				
 				timerSynchro = new Timer(intervalCheckDecalage*1000,0);
@@ -404,7 +399,7 @@
 					var traceComment:Trace = Model.getInstance().getTraceComment();				
 					var tlgComment : TraceLineGroup;
 					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
-					tlgComment.setStyle( "title", fxgt.gettext("Comments") );
+					tlgComment.setStyle( "title", fxgt.gettext("Commentaires") );
                     // logged user 
                     var loggedUser:User = Model.getInstance().getLoggedUser();
                     var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
@@ -473,30 +468,7 @@
 					
 				}
 			}
-            private function onLoadLayoutTracageComplete(event:Event):void 
-            {
-                if(Model.getInstance().getCurrentRetroModule() == this)
-                {
-                    // set enabled timeline tracage
-                    
-                    
-                    
-                   /*  //we init the trace object
-                    var loader:URLLoader=event.target as URLLoader;
-                    // create timeLineTracage
-                    timeLineTracage.layoutXML 		= new XML( loader.data );
-                    timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 	
-                
-                    var currentTime:Number = Model.getInstance().getTimeServeur();
-                    // duration 10 minutes
-                    timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
-                    
-                    var traceVisu:Trace = TraceManager.getTrace("visu");
-                    var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities"); */
-                }
-                
-            }
-            
+
             /**
             ** Event handler added TraceLineTitre on the stage
             */
@@ -547,9 +519,9 @@
 					if(userId != 0)
 					{
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
-					}else
+					} else
 					{
-						nameUser = "Comment sur la séance";
+						nameUser = fxgt.gettext("Commentaires à propos de la séance");
 					}
 				}
 				else if ( generatorName == 'markersGenerator' )
@@ -560,7 +532,7 @@
 						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					}else
 					{
-						nameUser = "Marqueur sur la séance";
+						nameUser = fxgt.gettext("Marqueurs à propos de la séance");
 					}
 					
 				}else if( generatorName  == 'videosGenerator')
@@ -575,7 +547,7 @@
                         nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
                     }else
                     {
-                        nameUser = "Message pour tous";
+                        nameUser = fxgt.gettext("Messages pour tous");
                     }
                 }
                 else if(generatorName  == 'documentGenerator')
@@ -656,14 +628,15 @@
 			private function updateLabelTimer(value:Number):String
 			{
 				var totalSecond:int = value/1000;
-				var minNumber:int = new int(totalSecond/60);
 				var hourNumber:int = new int(totalSecond/3600);
-				var secString:String="";
-				var minString:String="";
+				var minNumber:int = new int(totalSecond/60);
+				var seconds:Number = totalSecond - minNumber * 60;
 				var hourString:String="";
-				var secons:Number = totalSecond - minNumber*60;
-				secString = secons.toString();
-				if(secons < 10)
+				var minString:String="";
+				var secString:String="";
+
+				secString = seconds.toString();
+				if(seconds < 10)
 				{
 					secString = "0"+secString;
 				}
@@ -772,13 +745,13 @@
 					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
 					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
 					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-					retroDocumentVO.description = "new description here";
+					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
 					retroDocumentVO.documentId = 0;
 					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
 					var createurUser:User = Model.getInstance().getLoggedUser();
 					retroDocumentVO.ownerId = createurUser.id_user;
 					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = "le nouveau bilan ici";
+					retroDocumentVO.title = fxgt.gettext("Nouveau bilan");
 	
 					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
 					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
@@ -820,15 +793,15 @@
 					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
 					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
 					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-					retroDocumentVO.description = "new description here";
+					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
 					retroDocumentVO.documentId = 0;
 					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
 					var createurUser:User = Model.getInstance().getLoggedUser();
 					retroDocumentVO.ownerId = createurUser.id_user;
 					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = "Bilan sur la séance du " + '"'+Model.getInstance().getCurrentSessionRetroModule().theme+'"'; 
+					retroDocumentVO.title = fxgt.gettext('Bilan sur la séance "') + Model.getInstance().getCurrentSessionRetroModule().theme+'"'; 
 					
-					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
+					var nomCreateur:String = createurUser.lastname + " " + createurUser.firstname;
 					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
 					retroDocumentVO.xml = stringXML;
 					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
@@ -889,7 +862,7 @@
 				ds.addData(obsel,"obsel");
 				ds.addData("video","textObsel");	
 				var imageProxy:Image = new Image();
-				imageProxy.source = IconEnum.getIconByName('retroDocumentSegemntAdd');
+				imageProxy.source = IconEnum.getIconByName('retroDocumentSegmentAdd');
 				imageProxy.height=15;
 				imageProxy.width=15;     
 				
@@ -1059,7 +1032,7 @@
                         var label:Label = new Label();
                         label.setStyle("verticalCenter",0);
                         label.setStyle("horizontalCenter",0);
-                        label.text = "il n'y a pas d'activité dans salon retrospection";
+                        label.text = fxgt.gettext("Pas d'activité dans le salon de rétrospection");
                         navigatorContent.addElement(label);
                     }
                     
@@ -1852,34 +1825,18 @@
 						</video:VisuVisioAdvanced>
 						<s:HGroup gap="3"  includeIn="debug" width="100%">
 							<mx:Spacer width="100%"/>
-							<s:Button id="buttomTraceFrame" label="Update split" click="button1_clickHandler(event)"/>
-							<s:Label text="Décalage max. autorisé(s) est:" paddingTop="7"/>
+							<s:Button id="buttomTraceFrame" label="{fxgt.gettext('Update split')}" click="button1_clickHandler(event)"/>
+							<s:Label text="{fxgt.gettext('Décalage max. autorisé')}" paddingTop="7"/>
 							<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
-							<s:Label text="Périod de verification(s)" paddingTop="7"/>
+							<s:Label text="{fxgt.gettext('Période de vérification')}" paddingTop="7"/>
 							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
 						</s:HGroup>
 					</s:Group>
                    <mx:TabNavigator id="tnTimeline" width="100%" height="100%" change="tnTimeline_changeHandler(event)">
-                        <s:NavigatorContent label="Synchro TL" id="ncTimeline">
+                        <s:NavigatorContent label="{fxgt.gettext('Timeline salon')}" id="ncTimeline">
     					    <s:Group id="timeLineGroup" width="100%" height="100%"/>
                         </s:NavigatorContent>
-                        <!--<s:NavigatorContent label="Activities TL" id="ncTracage">
-                            <s:Group id="tracageTimeLineGroup" width="100%" height="100%"/>
-                        </s:NavigatorContent>-->
                     </mx:TabNavigator>
-<!--					<s:HGroup width="100%" height="100%">
-                        <s:Group id="timeLineGroup" width="100%" height="100%"/>
-                        <s:Group id="tracageTimeLineGroup" width="100%" height="100%"/>
-                    </s:HGroup>-->
-					<!--<timeline:Timeline id="timeLine" width="100%"  height="100%" 
-					    playButtonClick="timeLine_playButtonClickHandler(event)"
-						pauseButtonClick="timeLine_pauseButtonClickHandler(event)"
-						timeRulerClick="timeLine_timeRulerClickHandler(event)"
-						 playButtonClick="timeLine_playButtonClickHandler(event)"
-						timeMode="relative" 
-						contextFollowCursor="false"
-						cursorMode="auto"
-						showPlayButton="true"/>-->
 				</mx:VDividedBox>
 			</components:PanelButton>
 <!-- DOCUMENTARISATION -->		

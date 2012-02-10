@@ -34,7 +34,7 @@
         <s:State name="normalEditable"/>
     </s:states>
     
-    <!--- Defines the appearance of the SkinnableContainer class's background. -->
+    <!--- Defines the appearance of the SkinnableContainer class background. -->
     <s:Rect id="background" left="0" right="0" top="0" bottom="0">
         <s:fill>
             <!--- @private -->
@@ -50,24 +50,24 @@
 			<s:Label  paddingTop="5">
 				<s:text>Titre:</s:text>
 			</s:Label>
-			<s:TextInput id="themeLabel" width="100%" text="Le Brésil" fontWeight="bold" fontSize="14"/>
+			<s:TextInput id="themeLabel" width="100%" text="FIXME" fontWeight="bold" fontSize="14"/>
 			<mx:Spacer width="10"/>
 		</s:HGroup>
 		<mx:Spacer height="5" includeIn="normalEditable"/>
 		<s:HGroup width="100%">
 			<mx:Spacer width="2"/>
 			<s:Button id="buttonAddActivity"
-				 enabled.normal="false" label.normalEditable="Ajouter une activité" left.normalEditable="5" left.normal="5" label.normal="Ajouter une activité" includeIn="normal,normalEditable">
+				 enabled.normal="false" label.normalEditable="{fxgt.gettext('Ajouter une activité')}" left.normalEditable="5" left.normal="5" label.normal="{fxgt.gettext('Ajouter une activité')}" includeIn="normal,normalEditable">
 			</s:Button>
 			<mx:Spacer width="100%"/>
 			<s:HGroup right="5">
 				<s:Button id="sharePlanButton" >
-					<s:label>Publier ce plan</s:label>
-					<s:toolTip>Ajoute ce plan de séance à la liste des plans de séances</s:toolTip>
+	                <s:label>{fxgt.gettext('Publier ce plan')}</s:label>
+                    <s:toolTip>{fxgt.gettext("Ajouter ce plan de séance à la liste des plans de séances")}</s:toolTip>
 				</s:Button>
 				<s:Button id="createSessionButton" >
-					<s:label>Réutiliser ce plan</s:label>
-					<s:toolTip>Crée une nouvelle séance à partir de ce plan</s:toolTip>
+	                <s:label>{fxgt.gettext("Réutiliser ce plan")}</s:label>
+                    <s:toolTip>{fxgt.gettext("Créer une nouvelle séance à partir de ce plan")}</s:toolTip>
 				</s:Button>
 			<mx:Spacer width="2"/>
 			</s:HGroup>

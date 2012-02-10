@@ -78,6 +78,9 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 	import com.visualempathy.display.controls.datetime.DateTimePickerFR;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
@@ -150,6 +153,9 @@ package com.ithaca.visu.view.session.controls
 		private var _listPresentUser:ArrayCollection;
 		private var _profiles:Array;
 		
+        [Bindable]
+        private var fxgt:_FxGettext;
+
 		private var sessionChanged:Boolean;
 		private var activitiesChanged:Boolean;
 		private var usersChanged:Boolean;
@@ -425,7 +431,8 @@ package com.ithaca.visu.view.session.controls
 			// message if list users for adding empty
 			if(listUserShow.length == 0)
 			{
-				Alert.show("Hasn't utilisateur for adding to session.","Message");
+				Alert.show(fxgt.gettext("Has no user for adding to session."),
+                           fxgt.gettext("Message"));
 			}else
 			{
 				var addUser:AddUserTitleWindow = AddUserTitleWindow(PopUpManager.createPopUp( 
@@ -565,7 +572,7 @@ package com.ithaca.visu.view.session.controls
 		}
 		public function setMessageTheme():void
 		{
-			themeSession.text = "Entrez un nouveau titre de séance ici";
+			themeSession.text = fxgt.gettext("Entrez un nouveau titre de séance ici");
 			themeSession.setStyle("fontStyle","italic");
 			themeSession.setStyle("color","#CCCCCC");
 		}	
@@ -581,7 +588,7 @@ package com.ithaca.visu.view.session.controls
 		
 		public function setMessageDescription():void
 		{
-			descriptionSession.text = "Entrez une nouvelle description de séance ici";
+			descriptionSession.text = fxgt.gettext("Entrez une nouvelle description de séance ici");
 			descriptionSession.setStyle("fontStyle","italic");
 			descriptionSession.setStyle("color","#CCCCCC");
 		}
@@ -610,8 +617,8 @@ package com.ithaca.visu.view.session.controls
 		{
 			Alert.yesLabel = "Oui";
 			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer cette séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);
+			Alert.show(fxgt.gettext("Voulez-vous supprimer cette séance ?"),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteSessionConformed);
 		}
 		
 		private function deleteSessionConformed(event:CloseEvent):void{
@@ -697,7 +704,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show("You havn't user with name = "+deletingUser.firstname,"message error");
+				Alert.show(fxgt.gettext("You have no user with name = ") + deletingUser.firstname,
+                           fxgt.gettext("message error"));
 			}else{
 				this._listUser.removeItemAt(index);
 				usersChanged = true;

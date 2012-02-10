@@ -81,7 +81,10 @@ package com.ithaca.visu.view.session
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
@@ -123,6 +126,9 @@ package com.ithaca.visu.view.session
 		
 		private var filterChange:Boolean;
 		private var _loggedUser:User;
+
+        [Bindable]
+        private var fxgt:_FxGettext;
 		
 		public function SessionManagement()
 		{
@@ -226,13 +232,12 @@ package com.ithaca.visu.view.session
 				sessionCollection.addItem(session);
 				var sessionView:SessionViewSalonSession = createSessionView(session);
 				sessionsList.addElement(sessionView);
-				var typeSession:String = "Votre nouvelle séance a été créée et ajoutée à la liste des séances.";
+				var typeSession:String = fxgt.gettext("Votre nouvelle séance a été créée et ajoutée à la liste des séances.");
 				if(session.isModel)
 				{
-					typeSession = "Le nouveau plan de séance a été créé et ajouté à la liste des séances.";
+					typeSession = fxgt.gettext("Le nouveau plan de séance a été créé et ajouté à la liste des séances.");
 				}
-				Alert.show(typeSession,
-					"Information"); 
+				Alert.show(typeSession, fxgt.gettext("Information"));
 				dispatchEvent( new Event("update") );
 			}
 		}
@@ -641,7 +646,7 @@ package com.ithaca.visu.view.session
 				var session:Session = sessionDetail.session;
 				if(session.id_session == value)
 				{
-					Alert.show('La Séance "'+session.theme+'" a été supprimée par '+ nameUserDeleteSession, "Information");
+					Alert.show(fxgt.gettext('La Séance "') + session.theme + fxgt.gettext('" a été supprimée par ') + nameUserDeleteSession, fxgt.gettext("Information"));
 					this.filterChange = true;
 					this.invalidateProperties();
 				}else

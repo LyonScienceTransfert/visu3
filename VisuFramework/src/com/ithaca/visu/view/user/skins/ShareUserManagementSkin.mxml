@@ -70,14 +70,14 @@
                 </s:Label>
                 <!-- MAIL LIST SHARED USER -->
                 <s:TextArea id="mailList" width="100%" minHeight="22" maxHeight="60">
-                    <s:text>serg@hjhj.com</s:text>
+                    <s:text>MAIL</s:text>
                 </s:TextArea>
                 <s:Label height="45" width="100%" fontWeight="bold" verticalAlign="middle" textAlign="center">
                     <s:text>{fxgt.gettext("URL sur le bilan: ")}</s:text>
                 </s:Label>
                 <!-- URL BILAN -->
                 <s:TextArea id="urlBilanTextArea" width="100%" maxHeight="40">
-                    <s:text>http://visu-tutorat.org/visudev/visuclient.html</s:text>
+                    <s:text>URL_BILAN</s:text>
                 </s:TextArea>
             </s:VGroup>
         </s:HGroup>		
