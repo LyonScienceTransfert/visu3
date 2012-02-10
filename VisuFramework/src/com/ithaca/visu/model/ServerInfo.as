@@ -82,8 +82,12 @@ package com.ithaca.visu.model
 				server = URLUtil.getServerName(url)
 			 
 			//Reading webapp name
-			var ar:Array = url.match(/\/(\w+)\/\w.swf/);
-			if (ar) webapp = ar[1];
+			var ar:Array = url.match(/\/(\w+)\/[\w\d-].swf/);
+			if (ar) {
+                webapp = ar[1];
+            } else {
+                trace("WARNING! Unable to determine webapp name (see ServerInfo code)");
+            }
 			
 			_rtmpServer = "rtmp://"+server+"/"+webapp+defaultRoom;
 			_amfGateway = protocol+"://"+server+"/"+webapp+"/"+defaultRoom+"/gateway";
