@@ -18,7 +18,7 @@
 			import mx.managers.PopUpManager;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 			private static var INTERVAL_MINUTE:int = 10;
 			private var timeCodes:ArrayCollection = new ArrayCollection();
 			private var titleWindow:String = "Voulez-vous créer une nouvelle séance à partir de ce plan de séance ?";

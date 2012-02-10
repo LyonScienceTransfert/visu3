@@ -95,7 +95,7 @@
 			public var listActivities:ArrayCollection;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 					
 			[Bindable]
 			[Embed("images/fichierVisu2_20x20.png")]
@@ -1209,9 +1209,9 @@
             /* 
              * Handle predefined session time overrun
              */
-            private function onCreationCompleteTimeLine(event: FlexEvent): void
+            private function onTimelineEndReached(event: FlexEvent): void
             {
-                timeline.range.addTime(timeline.begin, timeline.end + DURATION_EXTENSION, true);
+                timeLine.range.addTime(timeLine.begin, timeLine.end + DURATION_EXTENSION, true);
             }
 
             private function onLoadLayoutComplete(event:Event):void 

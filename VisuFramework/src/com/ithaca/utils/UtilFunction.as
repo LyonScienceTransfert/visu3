@@ -64,6 +64,7 @@ package com.ithaca.utils
 {
 	import com.ithaca.documentarisation.RetroDocumentConst;
 	
+	import gnu.as3.gettext.FxGettext;
 	import gnu.as3.gettext._FxGettext;
 	
 	import mx.utils.URLUtil;
@@ -72,7 +73,7 @@ package com.ithaca.utils
 	public class UtilFunction
 	{
 		
-		private static var fxgt:_FxGettext;
+		private static var fxgt:_FxGettext = FxGettext;
 		
 		public static function isEmptyMessage(value:String):Boolean
 		{

@@ -31,7 +31,7 @@ package com.ithaca.visu.controls.users
 		protected static var log:ILogger = Log.getLogger("components.FilterPanel");
 		
 		[Bindable]
-		private var fxgt:_FxGettext;
+		private var fxgt: _FxGettext = FxGettext;
 		
 		public function UserFilters()
 		{

@@ -30,7 +30,7 @@
 		import spark.events.IndexChangeEvent;
 		
 		[Bindable]
-		private var fxgt:_FxGettext;
+		private var fxgt: _FxGettext = FxGettext;
 		
 		private var _user:User;
 		private var userChange:Boolean;

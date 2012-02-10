@@ -24,7 +24,7 @@ You cannot run it independently. -->
             import spark.components.RichText;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 			
 			// A reference to the TextInput control in which to put the result.
 			public var tempRichText:RichText = new RichText();

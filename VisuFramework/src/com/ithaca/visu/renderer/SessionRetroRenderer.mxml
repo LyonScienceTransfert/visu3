@@ -14,7 +14,7 @@
 			import mx.events.FlexEvent;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 			
 			protected function itemrenderer1_addedHandler(event:Event):void
 			{

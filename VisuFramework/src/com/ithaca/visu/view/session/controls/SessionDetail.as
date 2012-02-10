@@ -154,7 +154,7 @@ package com.ithaca.visu.view.session.controls
 		private var _profiles:Array;
 		
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		private var sessionChanged:Boolean;
 		private var activitiesChanged:Boolean;

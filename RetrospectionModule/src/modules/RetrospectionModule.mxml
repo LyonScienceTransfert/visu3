@@ -75,7 +75,7 @@
             import mx.managers.PopUpManager;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
             
             // TimeLine
             private var timeLine:Timeline;

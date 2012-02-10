@@ -101,7 +101,7 @@ package com.ithaca.visu.view.session.controls
 		public var buttonDelete:Image;
 
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		private var _user:User;
 		public var currentMouseCursor:String;

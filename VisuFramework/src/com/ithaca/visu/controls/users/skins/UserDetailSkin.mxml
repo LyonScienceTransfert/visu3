@@ -21,7 +21,7 @@
 			import gnu.as3.gettext._FxGettext;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{

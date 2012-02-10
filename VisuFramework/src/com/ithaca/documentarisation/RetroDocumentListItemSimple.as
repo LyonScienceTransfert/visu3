@@ -48,7 +48,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	private var over:Boolean;
 	
 	[Bindable]
-	private var fxgt:_FxGettext;
+	private var fxgt: _FxGettext = FxGettext;
 	
 	public function RetroDocumentListItemSimple()
 	{

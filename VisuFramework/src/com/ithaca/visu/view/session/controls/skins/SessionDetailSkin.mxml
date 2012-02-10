@@ -18,7 +18,7 @@
 			import spark.events.TextOperationEvent;
 			
             [Bindable]
-            private var fxgt:_FxGettext;
+            private var fxgt: _FxGettext = FxGettext;
 
             private function get NEW_SESSION_TITLE(): String
             {

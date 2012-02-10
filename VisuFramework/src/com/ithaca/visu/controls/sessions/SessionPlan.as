@@ -52,7 +52,7 @@ package com.ithaca.visu.controls.sessions
 		protected var currentActivityChanged:Boolean;
 		
 		[Bindable]
-		private var fxgt:_FxGettext;
+		private var fxgt: _FxGettext = FxGettext;
 		
 		public function SessionPlan()
 		{

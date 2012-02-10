@@ -45,7 +45,7 @@
 			private var typeDocument:String;
 
             [Bindable]
-            private var fxgt:_FxGettext;
+            private var fxgt: _FxGettext = FxGettext;
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{

@@ -43,7 +43,7 @@ package com.ithaca.visu.view.session
 		public var gradientEntryTo:GradientEntry;
 		
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		private var _date:Date;
 		private var _theme:String;

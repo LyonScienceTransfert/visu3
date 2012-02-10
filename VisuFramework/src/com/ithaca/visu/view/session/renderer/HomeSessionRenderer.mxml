@@ -39,7 +39,7 @@
 			import spark.events.IndexChangeEvent;
 
             [Bindable]
-            private var fxgt:_FxGettext;
+            private var fxgt: _FxGettext = FxGettext;
 
 			private static var logger:ILogger = Log.getLogger("com.ithaca.visu.view.session.renderer.HomeSessionRendered");
 				/*

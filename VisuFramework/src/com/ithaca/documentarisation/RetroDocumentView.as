@@ -125,7 +125,7 @@ public class RetroDocumentView extends SkinnableComponent
     private var _tracedTitle:String;
     
     [Bindable]
-    private var fxgt:_FxGettext;
+    private var fxgt: _FxGettext = FxGettext;
     
     public function RetroDocumentView()
     {
