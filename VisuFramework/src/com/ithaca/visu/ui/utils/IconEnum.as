@@ -178,7 +178,7 @@ package com.ithaca.visu.ui.utils
 
 		[Bindable]
 		[Embed("images/RetroDocumentSegmentAddVer1.png")]
-		static private var retroDocumentSegemntAdd:Class;
+		static private var retroDocumentSegmentAdd:Class;
 		
 		[Bindable]
 		[Embed("images/save_edit.png")]
@@ -451,8 +451,8 @@ package com.ithaca.visu.ui.utils
 				case "retroDocumentShared" : 
 					icon = retroDocumentShared;
 					break;
-				case "retroDocumentSegemntAdd" : 
-					icon = retroDocumentSegemntAdd;
+				case "retroDocumentSegmentAdd" : 
+					icon = retroDocumentSegmentAdd;
 					break;
 				case "save" : 
 					icon = save;
