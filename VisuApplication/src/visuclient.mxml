@@ -79,7 +79,7 @@
             import spark.components.RichText;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 			private var currentObselEdit:Obsel = null;
 			private var currentTextEdit:String="";
 			private var NBR_LETTERS_FOR_ID_COMMITS_GIT:int = 10;

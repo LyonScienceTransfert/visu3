@@ -30,7 +30,7 @@
 		private var currentMouseCursor:String;
 
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		// click on label edit
 		protected function label1_clickHandler(event:MouseEvent):void

@@ -29,7 +29,7 @@
             import mx.events.ToolTipEvent;
             import mx.managers.PopUpManager;
 			[Bindable]
-			private var fxgt:_FxGettext;	
+			private var fxgt: _FxGettext = FxGettext;	
 			
 			public var obsel : Obsel;
 		

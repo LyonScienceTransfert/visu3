@@ -90,7 +90,7 @@ package com.ithaca.visu.view.session.controls
 		public var buttonEdit:Image;
 		
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		public var currentMouseCursor:String;
 		private var normal:Boolean = true;

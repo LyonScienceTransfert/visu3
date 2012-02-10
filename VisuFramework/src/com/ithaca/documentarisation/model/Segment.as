@@ -21,7 +21,7 @@ package com.ithaca.documentarisation.model
 		public var order:int;
 
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		/*[Bindable]
 		public var title:String="";*/

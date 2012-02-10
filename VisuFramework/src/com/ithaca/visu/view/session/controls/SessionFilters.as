@@ -83,7 +83,7 @@ package com.ithaca.visu.view.session.controls
 		protected var filterElements:ArrayList;
 		
 		[Bindable]
-		private var fxgt:_FxGettext;
+		private var fxgt: _FxGettext = FxGettext;
 		
 		public function SessionFilters()
 		{

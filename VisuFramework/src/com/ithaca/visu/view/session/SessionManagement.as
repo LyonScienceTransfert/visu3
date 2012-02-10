@@ -128,7 +128,7 @@ package com.ithaca.visu.view.session
 		private var _loggedUser:User;
 
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 		
 		public function SessionManagement()
 		{

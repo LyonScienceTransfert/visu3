@@ -75,7 +75,7 @@
             import spark.events.IndexChangeEvent;
 			
 			[Bindable]
-			private var fxgt:_FxGettext;
+			private var fxgt: _FxGettext = FxGettext;
 			
 			[Bindable]
 			public var listSessionView:ArrayCollection;

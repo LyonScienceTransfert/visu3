@@ -109,7 +109,7 @@ package com.ithaca.visu.view.session.controls
 		public var themeLabel:TextInput;
 		
         [Bindable]
-        private var fxgt:_FxGettext;
+        private var fxgt: _FxGettext = FxGettext;
 
 		private var editabled:Boolean;
 		private var _activities:ArrayCollection;

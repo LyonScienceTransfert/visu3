@@ -21,7 +21,7 @@
 		
 		import spark.events.TextOperationEvent;
 		[Bindable]
-		private var fxgt:_FxGettext;
+		private var fxgt: _FxGettext = FxGettext;
         
         private var NEW_STATEMENT_STRING: String;
         private var NEW_DOCUMENT_TITLE_STRING: String;

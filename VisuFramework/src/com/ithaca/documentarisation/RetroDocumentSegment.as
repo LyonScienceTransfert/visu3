@@ -85,7 +85,7 @@ package com.ithaca.documentarisation
 		import gnu.as3.gettext._FxGettext;
 		
 		[Bindable]
-		private var fxgt:_FxGettext;
+		private var fxgt: _FxGettext = FxGettext;
 		
 		public function RetroDocumentSegment()
 
