@@ -348,7 +348,7 @@ or by setting the following environment variable:
 	    <tstamp>
 	  		<format 
 	  			property="TIMESTAMP_SESSION_MODULE"
-	    		pattern="yyyyMMdd-hhmmss"
+	    		pattern="yyyyMMdd-HHmmss"
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
@@ -406,7 +406,7 @@ or by setting the following environment variable:
 		<tstamp>
 	  		<format 
 	  			property="TIMESTAMP_TUTORAT_MODULE"
-	    		pattern="yyyyMMdd-hhmmss"
+	    		pattern="yyyyMMdd-HHmmss"
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
@@ -463,7 +463,7 @@ or by setting the following environment variable:
 		<tstamp>
 	  		<format 
 	  			property="TIMESTAMP_HOME_MODULE"
-	    		pattern="yyyyMMdd-hhmmss"
+	    		pattern="yyyyMMdd-HHmmss"
 	          	locale="fr,FR"/>
 		</tstamp>
 		
@@ -520,7 +520,7 @@ or by setting the following environment variable:
 	   	<tstamp>
 	  		<format 
 	  			property="TIMESTAMP_RETROSPECTION_MODULE"
-	    		pattern="yyyyMMdd-hhmmss"
+	    		pattern="yyyyMMdd-HHmmss"
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
@@ -577,7 +577,7 @@ or by setting the following environment variable:
 		<tstamp>
 	  	<format 
 	  		property="TIMESTAMP_USER_MODULE"
-	    	pattern="yyyyMMdd-hhmmss"
+	    	pattern="yyyyMMdd-HHmmss"
 	       	locale="fr,FR"/>
 		</tstamp>
 			
@@ -633,7 +633,7 @@ or by setting the following environment variable:
 	    <tstamp>
 	  		<format 
 	  			property="TIMESTAMP_BILAN_MODULE"
-	    		pattern="yyyyMMdd-hhmmss"
+	    		pattern="yyyyMMdd-HHmmss"
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
@@ -701,7 +701,7 @@ or by setting the following environment variable:
  		<tstamp>
 	  		<format 
 	  			property="COMPILE_APP_TIME"
-	    		pattern="yyyyMMdd-hhmmss"
+	    		pattern="yyyyMMdd-HHmmss"
 	          	locale="fr,FR"/>
 		</tstamp>
 		
