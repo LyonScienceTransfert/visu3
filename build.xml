@@ -352,29 +352,15 @@ or by setting the following environment variable:
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
-		<!-- deleting old module -->
-		<delete quiet="true">
-			<fileset dir="${app.deploy}" includes="${sessionmodule.name}*.swf"/>
-		</delete>
+		<!-- delete session dir -->
+	   	<antcall target="delete-old-session-module" />
 		
 		<!-- name session module with timestamp -->
 		<property name="sessionmodule.name.timestamp" value="${sessionmodule.name}-${TIMESTAMP_SESSION_MODULE}.swf" />
-		
-		<!-- update name module -->
-		<sql
-    		driver="com.mysql.jdbc.Driver"
-   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
-   	 		userid="${mysql.user}"
-   	 		password="${mysql.pass}">
-    		<classpath>
-      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
-    	  	</classpath>			
-			update `${NAME_TABLE_MODULES}` set url="modules/${sessionmodule.name.timestamp}" WHERE name="${NAME_SESSION_MODULE}";
-		</sql> 
-		
+
 		<mxmlc 
 			file="${sessionmodule.src}/modules/${sessionmodule.name}.mxml"
-		  	output="${app.deploy}/${sessionmodule.name.timestamp}"
+		  	output="${app.deploy}/${sessionmodule.name}/${sessionmodule.name.timestamp}"
 		    debug="${debug}"
 	       	strict="true" 
 		  	optimize="true" 
@@ -400,6 +386,15 @@ or by setting the following environment variable:
 		</mxmlc>
 	</target>
 
+	<target name="check-exist-old-session-module">
+    	<available filepath="${app.deploy}" type="dir" file="${sessionmodule.name}" property="sessionmodule.dir.exist"/>
+	</target>	
+	
+	<target name="delete-old-session-module" depends="check-exist-old-session-module" if="sessionmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${sessionmodule.name}"/>
+	</target>
+	
 	<!-- 
 		Build the tutorat module (salon synchrone) and produce a TutoratModule.swf file 
 
@@ -415,29 +410,15 @@ or by setting the following environment variable:
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
-		<!-- deleting old module -->
-		<delete quiet="true">
-			<fileset dir="${app.deploy}" includes="${tutoratmodule.name}*.swf"/>
-		</delete>
+		<!-- delete tutorat dir -->
+	   	<antcall target="delete-old-tutorat-module" />
 		
 		<!-- name tutorat module with timestamp -->
 		<property name="tutoratmodule.name.timestamp" value="${tutoratmodule.name}-${TIMESTAMP_TUTORAT_MODULE}.swf" />
-		
-		<!-- update name module -->
-		<sql
-    		driver="com.mysql.jdbc.Driver"
-   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
-   	 		userid="${mysql.user}"
-   	 		password="${mysql.pass}">
-    		<classpath>
-      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
-    	  	</classpath>			
-			update `${NAME_TABLE_MODULES}` set url="modules/${tutoratmodule.name.timestamp}" WHERE name="${NAME_TUTORAT_MODULE}";
-		</sql> 
-		      
+
 		<mxmlc 
 			file="${tutoratmodule.src}/modules/${tutoratmodule.name}.mxml"
-		 	output="${app.deploy}/${tutoratmodule.name.timestamp}"
+		 	output="${app.deploy}/${tutoratmodule.name}/${tutoratmodule.name.timestamp}"
 		  	debug="${debug}"
 		  	strict="true" 
 		   	optimize="true" 
@@ -462,6 +443,15 @@ or by setting the following environment variable:
 		     	         
 		</mxmlc>
 	</target>
+
+	<target name="check-exist-old-tutorat-module">
+    	<available filepath="${app.deploy}" type="dir" file="${tutoratmodule.name}" property="tutoratmodule.dir.exist"/>
+	</target>	
+	
+	<target name="delete-old-tutorat-module" depends="check-exist-old-tutorat-module" if="tutoratmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${tutoratmodule.name}"/>
+	</target>
 	
 	<!-- 
 		Build the home module (accueil) and produce a HomeModule.swf file 
@@ -469,8 +459,7 @@ or by setting the following environment variable:
 		This target works exactly as the "build_session_module" target, please refer to it for documentation. 
 	-->
 	<target name="build-home-module"  description="Builds the Home Module">
-	  	<echo>Build Home Module</echo>
-		
+	  	<echo>Build Home Module</echo>		
 		<tstamp>
 	  		<format 
 	  			property="TIMESTAMP_HOME_MODULE"
@@ -478,29 +467,15 @@ or by setting the following environment variable:
 	          	locale="fr,FR"/>
 		</tstamp>
 		
-		<!-- deleting old module -->
-		<delete quiet="true">
-			<fileset dir="${app.deploy}" includes="${homemodule.name}*.swf"/>
-		</delete>
+		<!-- delete home dir -->
+	   	<antcall target="delete-old-home-module" />
 		
 		<!-- name home module with timestamp -->
 		<property name="homemodule.name.timestamp" value="${homemodule.name}-${TIMESTAMP_HOME_MODULE}.swf" />
-								
-		<!-- update name module -->
-		<sql
-			driver="com.mysql.jdbc.Driver"
-			url="jdbc:mysql://localhost/${webapp.name}"
- 	 		userid="${mysql.user}"
-	 		password="${mysql.pass}">
-	 		<classpath>
-				<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>     
-	 		</classpath>			
-			update `${NAME_TABLE_MODULES}` set url="modules/${homemodule.name.timestamp}" WHERE name="${NAME_HOME_MODULE}";
-		</sql> 	
-				
+		
 		<mxmlc 
 		 	file="${homemodule.src}/modules/${homemodule.name}.mxml"
-		  	output="${app.deploy}/${homemodule.name.timestamp}"
+		  	output="${app.deploy}/${homemodule.name}/${homemodule.name.timestamp}"
 		   	debug="${debug}"
 		  	strict="true" 
 		   	incremental="${mxmlc.incremental}"
@@ -522,7 +497,17 @@ or by setting the following environment variable:
 				<include name="${lib.rmtp}" />
 		     	<include name="${lib.as3gettext}" />
 		     </library-path>
-		</mxmlc>
+		</mxmlc>		
+		
+	</target>
+	
+	<target name="check-exist-old-home-module">
+    	<available filepath="${app.deploy}" type="dir" file="${homemodule.name}" property="homemodule.dir.exist"/>
+	</target>	
+	
+	<target name="delete-old-home-module" depends="check-exist-old-home-module" if="homemodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${homemodule.name}"/>
 	</target>
 	
 	<!-- 
@@ -539,29 +524,15 @@ or by setting the following environment variable:
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
-		<!-- deleting old module -->
-		<delete quiet="true">
-			<fileset dir="${app.deploy}" includes="${retrospectionmodule.name}*.swf"/>
-		</delete>
+		<!-- delete retrospection dir -->
+	   	<antcall target="delete-old-retrospection-module" />
 		
 		<!-- name retrospection module with timestamp -->
 		<property name="retrospectionmodule.name.timestamp" value="${retrospectionmodule.name}-${TIMESTAMP_RETROSPECTION_MODULE}.swf" />
 		
-		<!-- update name module -->
-		<sql
-    		driver="com.mysql.jdbc.Driver"
-   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
-   	 		userid="${mysql.user}"
-   	 		password="${mysql.pass}">
-    		<classpath>
-      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
-    	  	</classpath>			
-			update `${NAME_TABLE_MODULES}` set url="modules/${retrospectionmodule.name.timestamp}" WHERE name="${NAME_RETROSPECTION_MODULE}";
-		</sql> 
-		
 		<mxmlc 
 			file="${retrospectionmodule.src}/modules/${retrospectionmodule.name}.mxml"
-		   	output="${app.deploy}/${retrospectionmodule.name.timestamp}"
+		   	output="${app.deploy}/${retrospectionmodule.name}/${retrospectionmodule.name.timestamp}"
      		debug="${debug}"
 		   	strict="true" 
 		  	load-externs="${framework.linkreport}" 
@@ -585,6 +556,15 @@ or by setting the following environment variable:
 		 	</library-path>
 		</mxmlc>
 	</target>
+
+	<target name="check-exist-old-retrospection-module">
+    	<available filepath="${app.deploy}" type="dir" file="${retrospectionmodule.name}" property="retrospectionmodule.dir.exist"/>
+	</target>	
+	
+	<target name="delete-old-retrospection-module" depends="check-exist-old-retrospection-module" if="retrospectionmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${retrospectionmodule.name}"/>
+	</target>
 	
 	<!-- 
 		Build the user module (interface de gestion des utilisateurs visu) and produce a UserModule.swf file 
@@ -600,30 +580,16 @@ or by setting the following environment variable:
 	    	pattern="yyyyMMdd-hhmmss"
 	       	locale="fr,FR"/>
 		</tstamp>
-		
-		<!-- deleting old module -->
-		<delete quiet="true">
-			<fileset dir="${app.deploy}" includes="${usermodule.name}*.swf"/>
-		</delete>
+			
+		<!-- delete user dir -->
+	   	<antcall target="delete-old-user-module" />
 		
 		<!-- name user module with timestamp -->
 		<property name="usermodule.name.timestamp" value="${usermodule.name}-${TIMESTAMP_USER_MODULE}.swf" />
 								
-		<!-- update name module -->
-		<sql
-			driver="com.mysql.jdbc.Driver"
-			url="jdbc:mysql://localhost/${webapp.name}"
- 	 		userid="${mysql.user}"
-	 		password="${mysql.pass}">
-	 		<classpath>
-				<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>     
-	 		</classpath>			
-			update `${NAME_TABLE_MODULES}` set url="modules/${usermodule.name.timestamp}" WHERE name="${NAME_USER_MODULE}";
-		</sql> 	
-		
 		<mxmlc 
 			file="${usermodule.src}/modules/${usermodule.name}.mxml"
-		   	output="${app.deploy}/${usermodule.name.timestamp}"
+		   	output="${app.deploy}/${usermodule.name}/${usermodule.name.timestamp}"
 		    debug="${debug}"
      		strict="true" 
      		optimize="true" 
@@ -648,6 +614,14 @@ or by setting the following environment variable:
 		</mxmlc>
 	</target>
 
+	<target name="check-exist-old-user-module">
+    	<available filepath="${app.deploy}" type="dir" file="${usermodule.name}" property="usermodule.dir.exist"/>
+	</target>	
+	
+	<target name="delete-old-user-module" depends="check-exist-old-user-module" if="usermodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${usermodule.name}"/>
+	</target>
 
 <!-- 
 		Build the bilan module (interface de gestion des utilisateurs visu) and produce a BilanModule.swf file 
@@ -663,29 +637,15 @@ or by setting the following environment variable:
 	          	locale="fr,FR"/>
 		</tstamp>	
 		
-		<!-- deleting old module -->
-		<delete quiet="true">
-			<fileset dir="${app.deploy}" includes="${bilanmodule.name}*.swf"/>
-		</delete>
+		<!-- delete bilan dir -->
+	   	<antcall target="delete-old-bilan-module" />
 		
 		<!-- name bilan module with timestamp -->
 		<property name="bilanmodule.name.timestamp" value="${bilanmodule.name}-${TIMESTAMP_BILAN_MODULE}.swf" />
-		
-		<!-- update name module -->
-		<sql
-    		driver="com.mysql.jdbc.Driver"
-   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
-   	 		userid="${mysql.user}"
-   	 		password="${mysql.pass}">
-    		<classpath>
-      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
-    	  	</classpath>			
-			update `${NAME_TABLE_MODULES}` set url="modules/${bilanmodule.name.timestamp}" WHERE name="${NAME_BILAN_MODULE}";
-		</sql> 
 
 		<mxmlc 
 			file="${bilanmodule.src}/modules/${bilanmodule.name}.mxml"
-		   	output="${app.deploy}/${bilanmodule.name.timestamp}"
+		   	output="${app.deploy}/${bilanmodule.name}/${bilanmodule.name.timestamp}"
 		  	debug="${debug}"
 		   	strict="true" 
 		   	optimize="true" 
@@ -708,6 +668,15 @@ or by setting the following environment variable:
 		    	<include name="${lib.as3gettext}" />
 		  	</library-path>
 		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-bilan-module">
+    	<available filepath="${app.deploy}" type="dir" file="${bilanmodule.name}" property="bilanmodule.dir.exist"/>
+	</target>	
+	
+	<target name="delete-old-bilan-module" depends="check-exist-old-bilan-module" if="bilanmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${bilanmodule.name}"/>
 	</target>
 	
 	 <!-- 
@@ -849,72 +818,216 @@ or by setting the following environment variable:
 		<target name="build-and-deploy-client" depends="build-client-all,deploy-client" description="Builds the client app and client modules, then copies the built files to the web app directory on the server"/>
 	
 		<target name="build-and-deploy-server" depends="build-server,deploy-server" description="Builds the server classes, jar them, and deploy the server jar + config to the server"/>
-	
-		<target name="deploy-client" description="Copies the client swf files to the web app directory on the server">
-	      <!-- <copy file="${app.deploy}/${clientapp.name}.swf" todir="${webapp.dir}" /> -->
-	      <!-- delete old version app -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}" includes="${clientapp.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version app -->
-	      <copy todir="${webapp.dir}">
-    		<fileset dir="${app.deploy}" includes="${clientapp.name}*.swf"/>
-  		  </copy>
-  		  	        		 
-  		  <!-- delete old version session module -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}/modules" includes="${sessionmodule.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version session module -->
-	      <copy todir="${webapp.dir}/modules">
-    		<fileset dir="${app.deploy}" includes="${sessionmodule.name}*.swf"/>
-  		  </copy>
-  		  
-  		  <!-- delete old version home module -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}/modules" includes="${homemodule.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version home module -->
-	      <copy todir="${webapp.dir}/modules">
-    		<fileset dir="${app.deploy}" includes="${homemodule.name}*.swf"/>
-  		  </copy>
-	      
-	      <!-- delete old version user module -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}/modules" includes="${usermodule.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version user module -->
-	      <copy todir="${webapp.dir}/modules">
-    		<fileset dir="${app.deploy}" includes="${usermodule.name}*.swf"/>
-  		  </copy>
-  		  
-  		  <!-- delete old version tutorat module -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}/modules" includes="${tutoratmodule.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version tutorat module -->
-	      <copy todir="${webapp.dir}/modules">
-    		<fileset dir="${app.deploy}" includes="${tutoratmodule.name}*.swf"/>
-  		  </copy>
 
-  		  <!-- delete old version retrospection module -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}/modules" includes="${retrospectionmodule.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version retrospection module -->
-	      <copy todir="${webapp.dir}/modules">
-    		<fileset dir="${app.deploy}" includes="${retrospectionmodule.name}*.swf"/>
-  		  </copy>
-  		  
-  		   <!-- delete old version bilan module -->
-	      <delete quiet="true">
-			<fileset dir="${webapp.dir}/modules" includes="${bilanmodule.name}*.swf"/>
-		  </delete>
-		  <!-- copy new version bilan module -->
-	      <copy todir="${webapp.dir}/modules">
-    		<fileset dir="${app.deploy}" includes="${bilanmodule.name}*.swf"/>
-  		  </copy>
-	      
+  	<!-- SESSION MODULE -->
+  	<target name="check-produced-session-module">
+    	<available filepath="${app.deploy}" type="dir" file="${sessionmodule.name}" property="sessionmodule.present"/>
+	</target>	
+	<target name="deploy-session-module" depends="check-produced-session-module" if="sessionmodule.present">
+  		<!-- delete old version session module -->
+	   	<delete quiet="true">
+			<fileset dir="${webapp.dir}/modules" includes="${sessionmodule.name}*.swf"/>
+		</delete>
+		<!-- copy session module -->  
+		<copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_sessionmodule" dir="${app.deploy}/${sessionmodule.name}" includes="${sessionmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file session module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_sessionmodule" refid="copy_sessionmodule"/>
+		<!-- get name file session module -->
+		<basename property="file_name_sessionmodule" file="${path_file_sessionmodule}"/>
+		<!-- update new name session module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_sessionmodule}" WHERE name="${NAME_SESSION_MODULE}";
+		</sql>	
+	</target> 	
+	
+   	<!-- HOME MODULE -->   	
+	<target name="check-produced-home-module">
+    	<available filepath="${app.deploy}" type="dir" file="${homemodule.name}" property="homenmodule.present"/>
+	</target>	
+	<target name="deploy-home-module" depends="check-produced-home-module" if="homenmodule.present">
+  		<!-- delete old version home module -->
+	    <delete quiet="true">
+	    	<fileset dir="${webapp.dir}/modules" includes="${homemodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version home module -->
+	   	<copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_homemodule" dir="${app.deploy}/${homemodule.name}" includes="${homemodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file home module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_homemodule" refid="copy_homemodule"/>
+		<!-- get name file home module -->
+		<basename property="file_name_homemodule" file="${path_file_homemodule}"/>
+		<!-- update new name home module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_homemodule}" WHERE name="${NAME_HOME_MODULE}";
+		</sql> 
+	</target> 
+
+	<!-- USER MODULE -->  
+	<target name="check-produced-user-module">
+    	<available filepath="${app.deploy}" type="dir" file="${usermodule.name}" property="usermodule.present"/>
+	</target>	
+	<target name="deploy-user-module" depends="check-produced-user-module" if="usermodule.present">
+	    <!-- delete old version user module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${usermodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version user module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_usermodule" dir="${app.deploy}/${usermodule.name}" includes="${usermodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file user module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_usermodule" refid="copy_usermodule"/>
+		<!-- get name file user module -->
+		<basename property="file_name_usermodule" file="${path_file_usermodule}"/>
+		<!-- update new name user module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_usermodule}" WHERE name="${NAME_USER_MODULE}";
+		</sql>	
+	</target> 
+
+	<!-- TUTORAT MODULE -->  
+	<target name="check-produced-tutorat-module">
+    	<available filepath="${app.deploy}" type="dir" file="${tutoratmodule.name}" property="tutoratmodule.present"/>
+	</target>	
+	<target name="deploy-tutorat-module" depends="check-produced-tutorat-module" if="tutoratmodule.present">
+	    <!-- delete old version tutorat module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${tutoratmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version tutorat module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_tutoratmodule" dir="${app.deploy}/${tutoratmodule.name}" includes="${tutoratmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file user module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_tutoratmodule" refid="copy_tutoratmodule"/>
+		<!-- get name file tutorat module -->
+		<basename property="file_name_tutoratmodule" file="${path_file_tutoratmodule}"/>
+		<!-- update new name tutorat module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_tutoratmodule}" WHERE name="${NAME_TUTORAT_MODULE}";
+		</sql>	
+	</target> 	
+
+	<!-- RETROSPECTION MODULE -->  
+	<target name="check-produced-retrospection-module">
+    	<available filepath="${app.deploy}" type="dir" file="${retrospectionmodule.name}" property="retrospectionmodule.present"/>
+	</target>	
+	<target name="deploy-retrospection-module" depends="check-produced-retrospection-module" if="retrospectionmodule.present">
+	    <!-- delete old version retrospection module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${retrospectionmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version retrospection module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_retrospectionmodule" dir="${app.deploy}/${retrospectionmodule.name}" includes="${retrospectionmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file retrospection module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_retrospectionmodule" refid="copy_retrospectionmodule"/>
+		<!-- get name file retrospection module -->
+		<basename property="file_name_retrospectionmodule" file="${path_file_retrospectionmodule}"/>
+		<!-- update new name retrospection module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_retrospectionmodule}" WHERE name="${NAME_RETROSPECTION_MODULE}";
+		</sql>	
+	</target> 
+
+	<!-- BILAN MODULE -->  
+	<target name="check-produced-bilan-module">
+    	<available filepath="${app.deploy}" type="dir" file="${bilanmodule.name}" property="bilanmodule.present"/>
+	</target>	
+	<target name="deploy-bilan-module" depends="check-produced-bilan-module" if="bilanmodule.present">
+	    <!-- delete old version bilan module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${bilanmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version bilan module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_bilanmodule" dir="${app.deploy}/${bilanmodule.name}" includes="${bilanmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file bilan module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_bilanmodule" refid="copy_bilanmodule"/>
+		<!-- get name file bilan module -->
+		<basename property="file_name_bilanmodule" file="${path_file_bilanmodule}"/>
+		<!-- update new name bilan module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>      
+    	  	</classpath>			
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_bilanmodule}" WHERE name="${NAME_BILAN_MODULE}";
+		</sql>	
+	</target> 
+  		  		  
+	<target name="deploy-client" description="Copies the client swf files to the web app directory on the server">
+		<!-- DEPLOY CLIENT APPLICATION -->
+		<!-- delete old version app -->
+	   	<delete quiet="true">
+			<fileset dir="${webapp.dir}" includes="${clientapp.name}*.swf"/>
+		</delete>
+		<!-- copy new version app -->
+	    <copy todir="${webapp.dir}">
+    		<fileset dir="${app.deploy}" includes="${clientapp.name}*.swf"/>
+  		</copy>
+  		
+		<!-- DEPLOY SESSION MODULE -->
+	   	<antcall target="deploy-session-module" />
+	   	
+		<!-- DEPLOY HOME MODULE -->
+	   	<antcall target="deploy-home-module" />
+	   	
+	   	<!-- DEPLOY USER MODULE -->
+	   	<antcall target="deploy-user-module" />
+	   	
+	   	<!-- DEPLOY TUTORAT MODULE -->
+	   	<antcall target="deploy-tutorat-module" />
+
+ 	   	<!-- DEPLOY RETROSPECTION MODULE -->
+	   	<antcall target="deploy-retrospection-module" />
+	   	
+	   	<!-- DEPLOY BILAN MODULE -->
+	   	<antcall target="deploy-bilan-module" />
+	   		      
 	      <!-- copy wrappers -->
 	      <echo>Copy wrappers</echo>
 		  <copy todir="${webapp.dir}">
@@ -969,6 +1082,6 @@ or by setting the following environment variable:
 
 		 <target name="clean" description="Removes the temporary deploy directory where built files are created from the filesystem">
 			  <delete dir="${app.deploy}"/>
-		</target>
+		</target>  	
 
 </project>
