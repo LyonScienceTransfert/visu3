@@ -224,10 +224,6 @@
 					buttomTraceFrame.visible = true;
 //					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
 //					this.visio.setDebugMode();
-
-					timerSynchro = new Timer(intervalCheckDecalage*1000,0);
-					timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
-					timerSynchro.start();
 				}
 				
 				timerSynchro = new Timer(intervalCheckDecalage*1000,0);
