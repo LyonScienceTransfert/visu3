@@ -185,7 +185,6 @@
                 
                 // load layout xml file 
                 loaderTracage = new URLLoader();
-                loaderTracage.addEventListener(Event.COMPLETE, onLoadLayoutTracageComplete);
                 loaderTracage.load(new URLRequest("xml/layoutAdvanced.xml"));	
                 
                 // init loader for timeline retro
@@ -473,30 +472,7 @@
 					
 				}
 			}
-            private function onLoadLayoutTracageComplete(event:Event):void 
-            {
-                if(Model.getInstance().getCurrentRetroModule() == this)
-                {
-                    // set enabled timeline tracage
-                    
-                    
-                    
-                   /*  //we init the trace object
-                    var loader:URLLoader=event.target as URLLoader;
-                    // create timeLineTracage
-                    timeLineTracage.layoutXML 		= new XML( loader.data );
-                    timeLineTracage.timelineLayout = new Layout( timeLineTracage ); 	
-                
-                    var currentTime:Number = Model.getInstance().getTimeServeur();
-                    // duration 10 minutes
-                    timeLineTracage.range.addTime(currentTime, currentTime + 10*60*1000);
-                    
-                    var traceVisu:Trace = TraceManager.getTrace("visu");
-                    var tlg:TraceLineGroup = timeLineTracage.addTrace(traceVisu, 0, "Activities"); */
-                }
-                
-            }
-            
+
             /**
             ** Event handler added TraceLineTitre on the stage
             */
