@@ -21,6 +21,7 @@
             import com.ithaca.timeline.skins.TraceLineTitleSkin;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.model.RetroTraceModel;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.traces.model.vo.SGBDObsel;
             import com.ithaca.utils.EditChatDialog;
@@ -1477,128 +1478,132 @@
 			{
 				if(Model.getInstance().getCurrentTutoratModule() == this)
 				{
-					var updateObselMarker:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_MARKER_OBSEL);
-					// FIXME : can change this line by this.currentSession
-					updateObselMarker.sessionId = Model.getInstance().getCurrentSessionId();
-					
-					var text:String = "";
-					var typeObsel:String = TraceModel.SET_MARKER;
-					var obsel:Obsel = event.currentTarget.obsel;
-					var action: String = ActionObselEnum.EDIT_TEXT_OBSEL;
-						
-					var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
-					var beginTime:String = currentTime.toString();
-					var endTime:String = beginTime;		
-					
-					var sessionId:int = 0;
-					var listUsersId:Array;
-					
-					if (event.currentTarget.confirm)
-					{						
-						var timeStamp:Number = 0
-						var forUserId:int = 0;
-						// set properties for existing obsel
-						if(event.currentTarget.user)
-						{
-							forUserId = event.currentTarget.user.id_user;
-						}
-						// edition the comment obsel
-						if(event.currentTarget.currentObselSkin)
-						{
-							beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-							endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-							forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
-							timeStamp = obsel.props[TraceModel.TIMESTAMP];
-							typeObsel = TraceModel.UPDATE_MARKER;
-							
-							text = obsel.props[TraceModel.TEXT];
-						}else
-						{
-							text = event.currentTarget.textComment;
-						}
-
-						if(userIdInitEditMarkerDialog > -1 && userIdInitEditMarkerDialog != forUserId)
-						{
-							// suppression old obsel
-							typeObsel = TraceModel.DELETE_MARKER;
-							action = ActionObselEnum.DELETE_OBSEL;
-							forUserId = userIdInitEditMarkerDialog;
-						}
-						// set property to send to serveur for adding obsel
-						updateObselMarker.textComment = text;
-						updateObselMarker.timeStamp = timeStamp;
-						updateObselMarker.typeObsel  = typeObsel;
-						updateObselMarker.beginTime = beginTime;
-						updateObselMarker.endTime = endTime;
-						updateObselMarker.forUserId = forUserId;
-
-					//	var session:Session = Model.getInstance().getCurrentSession();
-						var session:Session = this.currentSession;
-						if(session != null)
-						{
-							sessionId = session.id_session;
-						}else return;
-						
-						if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
-						{
-							// student will shared markers only with Tuter, Responsable, Admin 
-							// will shared if session paused or recording
-							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
-						}else
-						{
-							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
-						}
-						
-						updateObselMarker.info = text;
-						updateObselMarker.action = action
-						updateObselMarker.listUsers = listUsersId;
-					}
-					// delete marker obsel
-					if(event.currentTarget.deleting)
-					{
-						updateObselMarker.textComment = obsel.props[TraceModel.TEXT];
-						updateObselMarker.timeStamp = obsel.props[TraceModel.TIMESTAMP];
-						updateObselMarker.typeObsel  = TraceModel.DELETE_MARKER;
-						updateObselMarker.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
-						updateObselMarker.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
-						updateObselMarker.forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
-						
-						//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
-						var sessionId:int = this.currentSession.id_session;
-						var listUsersId:Array;
-						if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
-						{
-							// student will shared markers only with Tuter, Responsable, Admin 
-							// will shared if session paused or recording
-							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
-						}else
-						{
-							listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
-						}
-
-						updateObselMarker.info = obsel.props[TraceModel.TEXT];
-						updateObselMarker.action = ActionObselEnum.DELETE_OBSEL;
-						updateObselMarker.listUsers = listUsersId;
-					}
-					
-					// check if user click on PanelVideo, this case new obsel 
-					if(event.currentTarget.currentObselSkin)
-					{
-						// send updated obsel to serveur
-						dispatchEvent(updateObselMarker);
-					}else
-					{
-						// set new marker, set beginTime, endTime on server side
-						sendMarker(false, text, forUserId)	
-					}
-					
-					// check if change only COMMENT_FOR_USER_ID
-					if(userIdInitEditMarkerDialog > -1 && !event.currentTarget.deleting && userIdInitEditMarkerDialog != new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]) ) 
-					{
-						// set new marker
-						sendMarker(false, text, new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]), beginTime, endTime )
-					}
-					
+                    // update obsel only by click on buttons  save, delete
+                    if(event.currentTarget.closeDialog == RetroTraceModel.SAVE || event.currentTarget.closeDialog == RetroTraceModel.DELETE )
+                    {
+                        var updateObselMarker:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_MARKER_OBSEL);
+                        // FIXME : can change this line by this.currentSession
+                        updateObselMarker.sessionId = Model.getInstance().getCurrentSessionId();
+                        
+                        var text:String = "";
+                        var typeObsel:String = TraceModel.SET_MARKER;
+                        var obsel:Obsel = event.currentTarget.obsel;
+                        var action: String = ActionObselEnum.EDIT_TEXT_OBSEL;
+                        
+                        var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+                        var beginTime:String = currentTime.toString();
+                        var endTime:String = beginTime;		
+                        
+                        var sessionId:int = 0;
+                        var listUsersId:Array;
+                        
+                        if (event.currentTarget.confirm)
+                        {						
+                            var timeStamp:Number = 0
+                            var forUserId:int = 0;
+                            // set properties for existing obsel
+                            if(event.currentTarget.user)
+                            {
+                                forUserId = event.currentTarget.user.id_user;
+                            }
+                            // edition the comment obsel
+                            if(event.currentTarget.currentObselSkin)
+                            {
+                                beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                                endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                                forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
+                                timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                                typeObsel = TraceModel.UPDATE_MARKER;
+                                
+                                text = obsel.props[TraceModel.TEXT];
+                            }else
+                            {
+                                text = event.currentTarget.textComment;
+                            }
+                            
+                            if(userIdInitEditMarkerDialog > -1 && userIdInitEditMarkerDialog != forUserId)
+                            {
+                                // suppression old obsel
+                                typeObsel = TraceModel.DELETE_MARKER;
+                                action = ActionObselEnum.DELETE_OBSEL;
+                                forUserId = userIdInitEditMarkerDialog;
+                            }
+                            // set property to send to serveur for adding obsel
+                            updateObselMarker.textComment = text;
+                            updateObselMarker.timeStamp = timeStamp;
+                            updateObselMarker.typeObsel  = typeObsel;
+                            updateObselMarker.beginTime = beginTime;
+                            updateObselMarker.endTime = endTime;
+                            updateObselMarker.forUserId = forUserId;
+                            
+                            //	var session:Session = Model.getInstance().getCurrentSession();
+                            var session:Session = this.currentSession;
+                            if(session != null)
+                            {
+                                sessionId = session.id_session;
+                            }else return;
+                            
+                            if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+                            {
+                                // student will shared markers only with Tuter, Responsable, Admin 
+                                // will shared if session paused or recording
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+                            }else
+                            {
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+                            }
+                            
+                            updateObselMarker.info = text;
+                            updateObselMarker.action = action
+                            updateObselMarker.listUsers = listUsersId;
+                        }
+                        // delete marker obsel
+                        if(event.currentTarget.deleting)
+                        {
+                            updateObselMarker.textComment = obsel.props[TraceModel.TEXT];
+                            updateObselMarker.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                            updateObselMarker.typeObsel  = TraceModel.DELETE_MARKER;
+                            updateObselMarker.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                            updateObselMarker.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                            updateObselMarker.forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
+                            
+                            //var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+                            var sessionId:int = this.currentSession.id_session;
+                            var listUsersId:Array;
+                            if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+                            {
+                                // student will shared markers only with Tuter, Responsable, Admin 
+                                // will shared if session paused or recording
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+                            }else
+                            {
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+                            }
+                            
+                            updateObselMarker.info = obsel.props[TraceModel.TEXT];
+                            updateObselMarker.action = ActionObselEnum.DELETE_OBSEL;
+                            updateObselMarker.listUsers = listUsersId;
+                        }
+                        
+                        // check if user click on PanelVideo, this case new obsel 
+                        if(event.currentTarget.currentObselSkin)
+                        {
+                            // send updated obsel to serveur
+                            dispatchEvent(updateObselMarker);
+                        }else
+                        {
+                            // set new marker, set beginTime, endTime on server side
+                            sendMarker(false, text, forUserId)	
+                        }
+                        
+                        // check if change only COMMENT_FOR_USER_ID
+                        if(userIdInitEditMarkerDialog > -1 && !event.currentTarget.deleting && userIdInitEditMarkerDialog != new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]) ) 
+                        {
+                            // set new marker
+                            sendMarker(false, text, new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]), beginTime, endTime )
+                        }
+                    }
+                        
 					// enabled skin edited obsel
 					if(event.currentTarget.currentObselSkin)
 					{
