@@ -1209,7 +1209,7 @@
             /* 
              * Handle predefined session time overrun
              */
-            private function onTimelineEndReached(event: FlexEvent): void
+            private function onTimelineEndReached(event:TimelineEvent): void
             {
                 timeLine.range.addTime(timeLine.begin, timeLine.end + DURATION_EXTENSION, true);
             }
