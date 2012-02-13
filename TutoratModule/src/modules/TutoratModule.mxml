@@ -857,6 +857,8 @@
 			protected function onSendMessage(event:*):void
 			{
 				var message:String = textChatMessage.text;
+                message = message.split("\n").join("");
+                message = message.split("\r").join("");
                 if(event is MouseEvent){
                     sendMessage(message);
                 }else if (event is KeyboardEvent) 
@@ -945,6 +947,12 @@
 				}
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
+                if(message)
+                {
+                    // cut char new line if was click on button "Enter"
+                    message = message.split("\n").join("");
+                    message = message.split("\r").join("");
+                }else message="";
 
                 sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
