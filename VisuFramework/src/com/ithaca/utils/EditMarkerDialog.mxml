@@ -3,7 +3,7 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
-	close="PopUpManager.removePopUp(this);" >
+	close="titlewindow1_closeHandler(event)" >
 	<s:title>{fxgt.gettext("Votre marqueur")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
@@ -11,23 +11,24 @@
 	</s:states>
 	<fx:Script>
 	<![CDATA[
-		import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.RetroTraceModel;
         import com.ithaca.traces.model.TraceModel;
-		import com.ithaca.visu.model.User;
-		import com.ithaca.visu.model.vo.UserVO;
-		import com.ithaca.visu.ui.utils.IconEnum;
-		
-		import gnu.as3.gettext.FxGettext;
-		import gnu.as3.gettext._FxGettext;
-		
-		import mx.collections.ArrayCollection;
-		import mx.controls.Alert;
-		import mx.core.INavigatorContent;
-		import mx.events.CloseEvent;
-		import mx.events.FlexEvent;
-		import mx.managers.PopUpManager;
-		
-		import spark.events.IndexChangeEvent;
+        import com.ithaca.visu.model.User;
+        import com.ithaca.visu.model.vo.UserVO;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.controls.Alert;
+        import mx.core.INavigatorContent;
+        import mx.events.CloseEvent;
+        import mx.events.FlexEvent;
+        import mx.managers.PopUpManager;
+        
+        import spark.events.IndexChangeEvent;
 		
 		[Bindable]
 		private var fxgt: _FxGettext = FxGettext;
@@ -43,6 +44,7 @@
 		public var deleting : Boolean = false;
 		public var textComment:String;
 		private var _currentObselSkin:Object = null;
+        private var _closeDialog:String = "";
 		
 		////////////////////
 		////// setters/getters
@@ -87,6 +89,15 @@
 			return _currentObselSkin;
 		}		
 		
+        public function set closeDialog(value:String):void
+        {
+            _closeDialog = value;
+        }
+        public function get closeDialog():String
+        {
+            return _closeDialog;
+        }
+        
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -156,6 +167,8 @@
 		
 		private function onHandlerButtonOkAndEnterTextArea(event:*):void
 		{
+            closeDialog = RetroTraceModel.SAVE;
+            
 			confirm = true;
 			// comment text 
 			var commentText:String = textInfo.text;
@@ -196,6 +209,7 @@
 		
 		private function onClickButtonCancel(event:MouseEvent):void
 		{
+            closeDialog = RetroTraceModel.CANCEL;
 			PopUpManager.removePopUp(this);
 		}
 		private function onClickButtonDelete(event:MouseEvent):void
@@ -210,10 +224,17 @@
 		{
 			if( event.detail == Alert.YES )
 			{
+                closeDialog = RetroTraceModel.DELETE;
 				deleting = true;
 				PopUpManager.removePopUp(this);
 			}
 		}
+        
+        protected function titlewindow1_closeHandler(event:CloseEvent):void
+        {
+            closeDialog = RetroTraceModel.CLOSE_WINDOW;
+            PopUpManager.removePopUp(this);
+        }
 		
 		protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
 		{
@@ -285,8 +306,7 @@
 				return 0;
 			}
 		}
-		
-		
+
 	]]>
 	</fx:Script>
 	<s:VGroup width="100%" height="100%">
