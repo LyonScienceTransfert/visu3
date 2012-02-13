@@ -1300,7 +1300,7 @@
                         text = event.currentTarget.textComment;
                     }
                    // update obsel only by click on buttons  save, delete
-                   if(event.currentTarget.closeDialog == "save" || event.currentTarget.closeDialog == "delete" || event.currentTarget.closeDialog == "cancel" )
+                   if(event.currentTarget.closeDialog == RetroTraceModel.SAVE || event.currentTarget.closeDialog == RetroTraceModel.DELETE || event.currentTarget.closeDialog == RetroTraceModel.CANCEL )
                    {
                        var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
                        updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
