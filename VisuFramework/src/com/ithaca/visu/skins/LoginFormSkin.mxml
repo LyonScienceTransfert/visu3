@@ -41,15 +41,6 @@
 	name=submit, type=spark.components.Button, required=false
 	-->
 	<s:VGroup  width="100%" height="100%" horizontalAlign="center">
-		<s:VGroup  width="100%" includeIn="visudev" gap="10" horizontalAlign="center">
-			<s:Label >
-	            <s:text>{fxgt.gettext("Comptes étudiants prédéfinis (login/pass): e1/e1 ; e2/e2")}</s:text>
-			</s:Label>
-			<s:Label >
-                <s:text>{fxget.gettext("Comptes tuteurs prédéfinis (login/pass): t1/t1 ; t2/t2");</s:text>
-			</s:Label>
-		</s:VGroup>
-		<mx:Spacer height="25" includeIn="visudev"/>
 		<containers:Form top="0" left="0" right="0" bottom="0">
 			<containers:layout>
 				<s:VerticalLayout />
