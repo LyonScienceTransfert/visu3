@@ -1,10 +1,10 @@
 package com.ithaca.visu.controls.sessions
 {
 	import mx.controls.Image;
-
+	
 	import spark.components.Label;
+	import spark.components.RichEditableText;
 	import spark.components.supportClasses.SkinnableComponent;
-	import spark.components.supportClasses.TextBase;
 	
 	[SkinState("normal")]
 	[SkinState("vciel")]
@@ -12,7 +12,7 @@ package com.ithaca.visu.controls.sessions
 	public class SharedElementChat extends SkinnableComponent
 	{
 		[SkinPart("true")]
-		public var titleDisplay : TextBase;
+		public var titleDisplay : RichEditableText;
 		
 		[SkinPart("true")]
 		public var avatar : Image;
