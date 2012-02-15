@@ -314,7 +314,7 @@
     <s:VGroup width="100%" height="100%">
         <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
             <mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
-            <s:Label  id="labelCommentFor" fontWeight="bold"  text"{fxgt.gettext('Votre commentaire à propos de...')}"/>
+            <s:Label  id="labelCommentFor" fontWeight="bold"  text="{fxgt.gettext('Votre commentaire à propos de...')}"/>
         </s:HGroup>
         <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
             <mx:Image id="imageUser" width="50" height="50"/>

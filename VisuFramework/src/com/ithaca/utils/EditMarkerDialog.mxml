@@ -118,7 +118,6 @@
 					}
 				}else
 				{
-					labelMarkerFor.text = "Votre marqueur sur la séance : ";
 					imageUser.source = IconEnum.getPathByName("commentForSession");
 				}
 			}
@@ -139,17 +138,13 @@
 					{
 						dropDownListUser.selectedItem = virtualUser;
 					}
-				}else
-				{
-					labelMarkerFor.text = "Votre marqueur sur la séance :";
-					//groupUser.includeInLayout = groupUser.visible = false;
 				}
 			}
 			
 			if(obselChange)
 			{
 				obselChange = false;
-				var text:String = "texte de marqueur ici";
+				var text:String = fxgt.gettext("texte de marqueur ici");
 				if(obsel)
 				{
 					text = obsel.props[TraceModel.TEXT];
@@ -191,7 +186,7 @@
                 message = message.split("\n").join("");
 			}
             // check if text with promt message
-            if(message == "texte de marqueur ici")
+            if(message == fxgt.gettext("texte de marqueur ici"))
             {
                 message = "";
             }
@@ -249,13 +244,7 @@
 			// update user
 			user = listUser.getItemAt(index) as User;
 			imageUser.source = user.avatar;
-			if(user.id_user == 0)
-			{
-				labelMarkerFor.text = "Votre marqueur sur la séance : ";
-			}else
-			{
-				labelMarkerFor.text = "Votre marqueur sur : ";
-			}
+			
 			// update comment for user if it's not new comment
 			if(obsel)
 			{
@@ -279,7 +268,7 @@
 			userVO.avatar =  IconEnum.getPathByName("commentForSession");
 			userVO.id_user = 0;
 			userVO.firstname = "";
-			userVO.lastname = "la séance";
+			userVO.lastname = fxgt.gettext("la séance");
 			
 			var user:User = new User(userVO);
 			list.addItem(user);
@@ -312,9 +301,7 @@
 	<s:VGroup width="100%" height="100%">
 		<s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
 			<mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}"/>
-			<s:Label  id="labelMarkerFor" fontWeight="bold">
-				<s:text>Votre marqueur sur :</s:text>
-			</s:Label>				
+			<s:Label  id="labelMarkerFor" fontWeight="bold" text="{fxgt.gettext('Votre marqueurs à propos de...')}"/>
 		</s:HGroup>
 		<s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
 			<mx:Image id="imageUser" width="50" height="50"/>
