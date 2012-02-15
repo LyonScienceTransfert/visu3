@@ -141,7 +141,10 @@
             private var timeLineStorage:Object;
             // progresse bar
             private var _progressBarBlueLine:SWFLoader;
-            
+            // list editing comment obsel
+            private var _listEditCommentDialog:ArrayCollection;
+            // pixels between windodws editCommentDialog
+            private var DELTA_X_Y:int = 15;
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
 				// init list trace lines
@@ -267,6 +270,8 @@
                 // init listener, activity on retro document 
                 TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
 
+                // init list editing comment obsel
+                _listEditCommentDialog = new ArrayCollection();
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -327,6 +332,8 @@
 				}
 				// set current module null
 				Model.getInstance().setCurrentRetroModule(null);
+                // remove edit comment dialogs
+                removeFromStageEditCommentDialog();
 			}
 			
 			/**
@@ -518,7 +525,7 @@
 					userId = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
 					if(userId != 0)
 					{
-						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+						nameUser = fxgt.gettext("Commentaires à propos de ") + VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					} else
 					{
 						nameUser = fxgt.gettext("Commentaires à propos de la séance");
@@ -1143,7 +1150,8 @@
 					var currentCommentObselSkin:Object = event.target;
 					// set init userId 
 					userIdInitEditCommentDialog = userId;
-					
+					// set enabled false all obsels with same timestamp
+                    var timestamp:Number = obsel.props[TraceModel.TIMESTAMP];
 					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin, RetroTraceModel.OBSEL);
 				}
 			}
@@ -1177,11 +1185,21 @@
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
+                    // check if editing commmnet obsel
+                    if(obsel && isEditCommentDialogOnStage(obsel))
+                    {
+                        // do nothing
+                        return;
+                    }
+                    
                     var editCommentDialog:EditCommentDialog = new EditCommentDialog();
                     editCommentDialog.user = value;
                     
                     editCommentDialog.currentObselSkin = currentObselSkin;
                     editCommentDialog.obsel = obsel;
+                    
+                    // add edit comment dialog
+                    addEditCommentDialog(editCommentDialog);
                     
                     editCommentDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
                     // set origin the init dialog
@@ -1194,7 +1212,8 @@
                     
                     PopUpManager.addPopUp(editCommentDialog, this);
                     PopUpManager.centerPopUp(editCommentDialog);
-                    editCommentDialog.y -= editCommentDialog.height;
+                    editCommentDialog.y -= editCommentDialog.height - _listEditCommentDialog.length*DELTA_X_Y;
+                    editCommentDialog.x -=  - _listEditCommentDialog.length*DELTA_X_Y;
                     editCommentDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveCommentDialog );
                     
                 }
@@ -1299,6 +1318,12 @@
                     {
                         text = event.currentTarget.textComment;
                     }
+                    var obsel:Obsel = event.currentTarget.obsel;
+                    if(obsel)
+                    {
+                        removeEditCommentDialog(obsel);
+                    }
+                    
                    // update obsel only by click on buttons  save, delete
                    if(event.currentTarget.closeDialog == RetroTraceModel.SAVE || event.currentTarget.closeDialog == RetroTraceModel.DELETE || event.currentTarget.closeDialog == RetroTraceModel.CANCEL )
                    {
@@ -1309,8 +1334,6 @@
                        
                        
                        var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
-                       var obsel:Obsel = event.currentTarget.obsel;
-                       
                        if (event.currentTarget.confirm)
                        {						
                            var durationObselCommentMs:Number = 10*1000;
@@ -1364,7 +1387,7 @@
                        dispatchEvent(updateObselComment);
                        
                        // check if change only COMMENT_FOR_USER_ID
-                       if(userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
+                       if( obsel && userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
                        {
                            var setCommentObsel:TraceLineEvent = updateObselComment.cloneMe()
                            setCommentObsel.timeStamp = 0;
@@ -1375,10 +1398,10 @@
                        }
                     }
                     // enabled skin edited obsel
-                    if(event.currentTarget.currentObselSkin)
+/*                     if(event.currentTarget.currentObselSkin)
                     {
                         event.currentTarget.currentObselSkin.enabled = true;
-                    }
+                    } */
                    
                     // init var userIdInitEditCommentDialog
                     userIdInitEditCommentDialog = -1; 
@@ -1671,6 +1694,76 @@
 			// Utils
 			//
 			//_____________________________________________________________________	
+            
+            /**
+            * add edit comment dialog
+            */
+            private function addEditCommentDialog(value:EditCommentDialog):void
+            {
+                _listEditCommentDialog.addItem(value);
+            }
+            /**
+            * remove edit comment dialog
+            */
+            private function removeEditCommentDialog(value:Obsel):void
+            {
+                // window will move
+                var willMove:Boolean = false;
+                // index the edit comment dialog
+                var indexRemovingCommentDialog:int = -1;
+                var nbrCommentDialog:int = _listEditCommentDialog.length;
+                for(var nCommentDialog:int = 0; nCommentDialog < nbrCommentDialog; nCommentDialog++)
+                {
+                    var comentDialog:EditCommentDialog = _listEditCommentDialog.getItemAt(nCommentDialog) as EditCommentDialog;
+                    if( comentDialog.obsel == value)
+                    {
+                        indexRemovingCommentDialog = nCommentDialog;
+                        willMove = true;
+                    }
+                    // change position other edit comment dialogs
+                    if(willMove && indexRemovingCommentDialog < nCommentDialog)
+                    {
+                        comentDialog.x -= DELTA_X_Y;
+                        comentDialog.y -= DELTA_X_Y;
+                    }
+                } 
+                // remove edit comment dialog 
+                if(indexRemovingCommentDialog > -1)
+                {
+                        _listEditCommentDialog.removeItemAt(indexRemovingCommentDialog);
+                }
+            }
+            
+            /**
+            * check if edit comment dialog on stage
+            */
+            private function isEditCommentDialogOnStage(value:Obsel):Boolean
+            {
+                for each (var commentDilog:EditCommentDialog in _listEditCommentDialog)
+                {
+                    if(commentDilog.obsel == value)
+                    {
+                        // set focus for this commentDialog
+                        PopUpManager.bringToFront(commentDilog);
+                        commentDilog.textInfo.setFocus();    
+                        commentDilog.textInfo.selectAll();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            /**
+            * remove all edit comment dialogs from the stage
+            */
+            private function removeFromStageEditCommentDialog():void
+            {
+                for each (var commentDialog:EditCommentDialog in _listEditCommentDialog)
+                {
+                    PopUpManager.removePopUp(commentDialog);
+                }
+                
+            }
             
             /**
             * start tracing Retrospection room/module

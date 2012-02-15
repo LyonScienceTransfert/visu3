@@ -117,6 +117,10 @@
 			private var userIdInitEditMarkerDialog:int = -1;
             // loged user
             var loggedUser:User;
+            // list editing marker obsel
+            private var _listEditMarkerDialog:ArrayCollection;
+            // pixels between windodws editMarkerDialog
+            private var DELTA_X_Y:int = 15;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -216,6 +220,9 @@
 					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
 					// notify that module ready for use
 					notifyReadyForUse();
+                    
+                    // init list editing comment obsel
+                    _listEditMarkerDialog = new ArrayCollection();
 				}
 			}
 			
@@ -270,6 +277,8 @@
 					this.timer.stop();		
 					this.timer = null;
 				}
+                // remove edit marker dialogs
+                removeFromStageEditMarkerDialog();
 			}
 			
             /**
@@ -547,7 +556,7 @@
 						{
 							var sharedElementChat:SharedElementChat = new SharedElementChat();
 							// default color of component SharedElementChatSkin 
-							// only for chat messages sended before start session(hasn't info about users)
+							// only for chat messages sent before start session(hasn't info about users)
 							var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
 							var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
 							if(traceLine != null)
@@ -1451,23 +1460,33 @@
 			{
 				if(Model.getInstance().getCurrentTutoratModule() == this)
 				{
+                    // check if editing commmnet obsel
+                    if(obsel && isEditMarkerDialogOnStage(obsel))
+                    {
+                        // do nothing
+                        return;
+                    }
 					var editMarkerDialog:EditMarkerDialog = new EditMarkerDialog();
 					editMarkerDialog.user = value;
 					
 					editMarkerDialog.currentObselSkin = currentObselSkin;
 					editMarkerDialog.obsel = obsel;
 					
+                    // add edit marker dialog
+                    addEditMarkerDialog(editMarkerDialog);
+                    
 					editMarkerDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
 					
 					PopUpManager.addPopUp(editMarkerDialog, this);
 					PopUpManager.centerPopUp(editMarkerDialog);
-					editMarkerDialog.y -= editMarkerDialog.height;
+					editMarkerDialog.y -= editMarkerDialog.height - _listEditMarkerDialog.length*DELTA_X_Y;
+                    editMarkerDialog.x -=  - _listEditMarkerDialog.length*DELTA_X_Y;
 					editMarkerDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveMarkerDialog );
 					// enabled double click on obsel
-					if(currentObselSkin)
+					/* if(currentObselSkin)
 					{
 						editMarkerDialog.currentObselSkin.enabled = false;
-					}
+					} */
 				}
 			}
 			
@@ -1488,6 +1507,10 @@
                         var text:String = "";
                         var typeObsel:String = TraceModel.SET_MARKER;
                         var obsel:Obsel = event.currentTarget.obsel;
+                        if(obsel)
+                        {
+                            removeEditMarkerDialog(obsel);
+                        }
                         var action: String = ActionObselEnum.EDIT_TEXT_OBSEL;
                         
                         var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
@@ -1758,6 +1781,75 @@
 			// Utils
 			//
 			//_____________________________________________________________________
+            /**
+             * add edit marker dialog
+             */
+            private function addEditMarkerDialog(value:EditMarkerDialog):void
+            {
+                _listEditMarkerDialog.addItem(value);
+            }
+            /**
+             * remove edit marker dialog
+             */
+            private function removeEditMarkerDialog(value:Obsel):void
+            {
+                // window will move
+                var willMove:Boolean = false;
+                // index the edit comment dialog
+                var indexRemovingMarkerDialog:int = -1;
+                var nbrMarkerDialog:int = _listEditMarkerDialog.length;
+                for(var nMarkerDialog:int = 0; nMarkerDialog < nbrMarkerDialog; nMarkerDialog++)
+                {
+                    var markerDialog:EditMarkerDialog = _listEditMarkerDialog.getItemAt(nMarkerDialog) as EditMarkerDialog;
+                    if( markerDialog.obsel == value)
+                    {
+                        indexRemovingMarkerDialog = nMarkerDialog;
+                        willMove = true;
+                    }
+                    // change position other edit marker dialogs
+                    if(willMove && indexRemovingMarkerDialog < nMarkerDialog)
+                    {
+                        markerDialog.x -= DELTA_X_Y;
+                        markerDialog.y -= DELTA_X_Y;
+                    }
+                } 
+                // remove edit marker dialog 
+                if(indexRemovingMarkerDialog > -1)
+                {
+                    _listEditMarkerDialog.removeItemAt(indexRemovingMarkerDialog);
+                }
+            }
+            
+            /**
+             * check if edit marker dialog on stage
+             */
+            private function isEditMarkerDialogOnStage(value:Obsel):Boolean
+            {
+                for each (var markerDilog:EditMarkerDialog in _listEditMarkerDialog)
+                {
+                    if(markerDilog.obsel == value)
+                    {
+                        // set focus for this commentDialog
+                        PopUpManager.bringToFront(markerDilog);
+                        markerDilog.textInfo.setFocus();    
+                        markerDilog.textInfo.selectAll();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            /**
+             * remove all edit comment dialogs from the stage
+             */
+            private function removeFromStageEditMarkerDialog():void
+            {
+                for each (var markerDialog:EditMarkerDialog in _listEditMarkerDialog)
+                {
+                    PopUpManager.removePopUp(markerDialog);
+                }
+                
+            }
 			private function hasUserIdPresentTimeLine(value:int):Boolean
 			{
 				var result:Boolean = false;
