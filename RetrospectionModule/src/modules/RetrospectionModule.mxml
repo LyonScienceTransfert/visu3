@@ -525,7 +525,7 @@
 					userId = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
 					if(userId != 0)
 					{
-						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+						nameUser = fxgt.gettext("Commentaires à propos de ") + VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
 					} else
 					{
 						nameUser = fxgt.gettext("Commentaires à propos de la séance");
