@@ -145,7 +145,6 @@
 					} */
 				}else
 				{
-					labelCommentFor.text = "Votre commentaire sur la séance : ";
 					imageUser.source = IconEnum.getPathByName("commentForSession");
 				}
 			}
@@ -168,10 +167,6 @@
 					{
 						dropDownListUser.selectedItem = virtualUser;
 					}
-				}else
-				{
-					labelCommentFor.text = "Votre commentaire sur la séance :";
-					//groupUser.includeInLayout = groupUser.visible = false;
 				}
 			}
 			
@@ -277,13 +272,7 @@
 			// update user
 			user = listUser.getItemAt(index) as User;
 			imageUser.source = user.avatar;
-			if(user.id_user == 0)
-			{
-				labelCommentFor.text = "Votre commentaire sur la séance : ";
-			}else
-			{
-				labelCommentFor.text = "Votre commentaire sur : ";
-			}
+            
 			// update comment for user if it's not new comment
 			if(obsel)
 			{
@@ -326,7 +315,7 @@
         <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
             <mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
             <s:Label  id="labelCommentFor" fontWeight="bold">
-                <s:text>Votre commentaire sur :</s:text>
+                <s:text>Votre commentaire à propos de...</s:text>
             </s:Label>				
         </s:HGroup>
         <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
