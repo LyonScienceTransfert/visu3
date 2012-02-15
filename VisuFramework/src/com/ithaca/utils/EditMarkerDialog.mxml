@@ -4,7 +4,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
 	close="titlewindow1_closeHandler(event)" >
-	<s:title>{fxgt.gettext("Votre marqueur")}</s:title>
+	<s:title>{fxgt.gettext("Edition de marqueur")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
         <s:State name="enabled"/>

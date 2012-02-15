@@ -4,7 +4,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
     close="titlewindow1_closeHandler(event)">
-	<s:title>{fxgt.gettext("Votre commentaire")}</s:title>
+	<s:title>{fxgt.gettext("Edition de commentaire")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="enabled"/>
@@ -145,7 +145,6 @@
 					} */
 				}else
 				{
-					labelCommentFor.text = "Votre commentaire sur la séance : ";
 					imageUser.source = IconEnum.getPathByName("commentForSession");
 				}
 			}
@@ -168,17 +167,13 @@
 					{
 						dropDownListUser.selectedItem = virtualUser;
 					}
-				}else
-				{
-					labelCommentFor.text = "Votre commentaire sur la séance :";
-					//groupUser.includeInLayout = groupUser.visible = false;
 				}
 			}
 			
 			if(obselChange)
 			{
 				obselChange = false;
-				var text:String = "texte de commentaire ici";
+				var text:String = fxgt.gettext("texte de commentaire ici");
 				if(obsel)
 				{
                     // check if text the obsel is empty
@@ -223,7 +218,7 @@
                 message = message.split("\n").join("");
 			}
 			// check if text with promt message
-			if(message == "texte de commentaire ici")
+			if(message == fxgt.gettext("texte de commentaire ici"))
 			{
 				message = "";
 			}
@@ -277,13 +272,7 @@
 			// update user
 			user = listUser.getItemAt(index) as User;
 			imageUser.source = user.avatar;
-			if(user.id_user == 0)
-			{
-				labelCommentFor.text = "Votre commentaire sur la séance : ";
-			}else
-			{
-				labelCommentFor.text = "Votre commentaire sur : ";
-			}
+            
 			// update comment for user if it's not new comment
 			if(obsel)
 			{
@@ -312,7 +301,7 @@
 			userVO.avatar =  IconEnum.getPathByName("commentForSession");
 			userVO.id_user = 0;
 			userVO.firstname = "";
-			userVO.lastname = "la séance";
+			userVO.lastname = fxgt.gettext("la séance");
 			
 			var user:User = new User(userVO);
 			list.addItem(user);
@@ -325,9 +314,7 @@
     <s:VGroup width="100%" height="100%">
         <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
             <mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
-            <s:Label  id="labelCommentFor" fontWeight="bold">
-                <s:text>Votre commentaire sur :</s:text>
-            </s:Label>				
+            <s:Label  id="labelCommentFor" fontWeight="bold"  text"{fxgt.gettext('Votre commentaire à propos de...')}"/>
         </s:HGroup>
         <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
             <mx:Image id="imageUser" width="50" height="50"/>

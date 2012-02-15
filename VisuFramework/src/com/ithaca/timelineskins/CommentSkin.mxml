@@ -196,7 +196,6 @@
 			
 			protected function EditComment( e:MouseEvent ):void
 			{
-				this.enabled = false;
 				var editCommentEvent:ObselEvent = new ObselEvent(ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT);
 				editCommentEvent.obsel = obsel;
 				dispatchEvent(editCommentEvent);
