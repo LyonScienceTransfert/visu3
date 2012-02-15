@@ -577,7 +577,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		this.dispatchEvent(removeSegmentEvent);
 	}
 	// richText
-	private function onFocusInRichEditableText(event:FocusEvent):void
+	public function onFocusInRichEditableText(event:*=null):void
 	{		
 		if(richEditableText.text == "Cliquer ici pour ajouter du texte")
 		{
@@ -594,7 +594,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		richEditableText.addEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 		richEditableText.setStyle("backgroundColor", colorBackGround);
 	}
-	private function onFocusOutRichEditableText(event:FocusEvent):void
+	public function onFocusOutRichEditableText(event:*=null):void
 	{
 		if(richEditableText.text == "")
 		{
