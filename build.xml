@@ -753,6 +753,10 @@ or by setting the following environment variable:
 	         warnings="${warnings}"
 		     incremental="${mxmlc.incremental}"
 	         headless-server="true">
+	        
+	        <library-path dir="${framework.bin}" append="true">
+	            <include name="${framework.swc}" />
+	         </library-path>
 	      </mxmlc>
 	       <echo>Creates a HTML wrapper</echo>
 	      <html-wrapper 
