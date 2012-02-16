@@ -107,9 +107,9 @@
                 vboxYoutube.addElement(playerYoutube);
                 
                 // top message youtube
-                topMessageYoutube.text = "Vous bla bla Vous bla bl Vous bla bl Vous bla bl...";
+                topMessageYoutube.text = "Cliquez sur lecture afin de vérifier que vous êtes en mesure d'accéder à youtube";
                 // bottmon message youtube
-                bottomMessageYoutube.text = "Vous bla bl Vous bla bl Vous bla bl ";
+                bottomMessageYoutube.text = "Si la vidéo ne se lance pas, faites un clic droit avec la souris, cliquez sur 'paramètres', allez dans l onglet tout à gauche 'affichage' et décocher 'accéleration du matériel'";
             }
 
 		]]>
@@ -125,9 +125,9 @@
             </mx:VBox>
             <mx:Spacer width="25"/>
             <mx:VBox width="50%" height="100%" horizontalAlign="center">
-                <mx:Text width="100%" id="topMessageYoutube" textAlign="center"/>
+                <mx:Text width="100%" id="topMessageYoutube"/>
                 <mx:VBox width="50%" height="100%" id="vboxYoutube"/>
-                <mx:Text width="100%" id="bottomMessageYoutube" textAlign="center"/>
+                <mx:Text width="100%" id="bottomMessageYoutube"/>
             </mx:VBox>
                 
         </mx:HBox>  
