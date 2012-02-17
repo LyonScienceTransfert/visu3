@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  creationComplete="initCamera()" xmlns:media="flash.media.*">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="application1_creationCompleteHandler(event)" xmlns:media="flash.media.*" xmlns:controls="com.ithaca.visu.view.session.controls.*">
 	<mx:Script>
 		<![CDATA[
+            import com.ithaca.visu.model.ActivityElement;
+            import com.ithaca.visu.model.ActivityElementType;
+            import com.ithaca.visu.view.session.controls.DocumentEdit;
+            
+            import mx.events.FlexEvent;
         
 
 		public var timer:Timer = null;
+        // player youtube
+        private var playerYoutube:DocumentEdit;
+        // link to youtube
+        private var LINK_YOUTUBE:String = "http://www.youtube.com/watch?v=-q3_c5QMrfk&feature=relmfu";
 		
 		public function initCamera(event: StatusEvent = null):void
 		{
@@ -80,14 +89,48 @@
                 miclevel.setStyle("barColor","#CC0000");
 		}
 
+
+            protected function application1_creationCompleteHandler(event:FlexEvent):void
+            {
+                // init camera
+                initCamera();
+                
+                // init youtube player 
+                var playerYoutube:DocumentEdit = new DocumentEdit();
+                playerYoutube.setEditabled(false);
+                var activityObjet:Object = new Object();
+                activityObjet.data = "Test de flux de youtube.com";
+                activityObjet.url_element = LINK_YOUTUBE;
+                activityObjet.type_element =  ActivityElementType.VIDEO;
+                var activity:ActivityElement = new ActivityElement(activityObjet)
+                playerYoutube.activityElement = activity;
+                vboxYoutube.addElement(playerYoutube);
+                
+                // top message youtube
+                topMessageYoutube.text = "Cliquez sur lecture afin de vérifier que vous êtes en mesure d'accéder à youtube";
+                // bottmon message youtube
+                bottomMessageYoutube.text = "Si la vidéo ne se lance pas, faites un clic droit avec la souris, cliquez sur 'paramètres', allez dans l onglet tout à gauche 'affichage' et décocher 'accéleration du matériel'";
+            }
+
 		]]>
 	</mx:Script>
 
 	<mx:VBox id="vbox" >
-		<mx:Text selectable="false" id="clabel" width="400"/>
-		<mx:VideoDisplay width="300" height="200" id="vd" />
-		<mx:Text  id="mlabel" width="400"/>
-		<mx:ProgressBar id="miclevel" mode="manual" label="" width="100%" trackHeight="10"  height="13"  />
+        <mx:HBox width="100%" height="100%">
+            <mx:VBox width="100%" height="100%" horizontalAlign="center">
+        		<mx:Text selectable="false" id="clabel" width="100%" textAlign="center"/>
+            	<mx:VideoDisplay width="300" height="200" id="vd" />
+        		<mx:Text  id="mlabel" width="100%" textAlign="center"/>
+        		<mx:ProgressBar id="miclevel" mode="manual" label="" width="100%" trackHeight="10"  height="13"  />
+            </mx:VBox>
+            <mx:Spacer width="25"/>
+            <mx:VBox width="50%" height="100%" horizontalAlign="center">
+                <mx:Text width="100%" id="topMessageYoutube"/>
+                <mx:VBox width="50%" height="100%" id="vboxYoutube"/>
+                <mx:Text width="100%" id="bottomMessageYoutube"/>
+            </mx:VBox>
+                
+        </mx:HBox>  
         <mx:Button label="Réglages" id="reglages" click="Security.showSettings( SecurityPanel.CAMERA )" />
         <mx:Button label="Accéder à Visu" id="visu" click="navigateToURL(new URLRequest('visuclient.html'), '_self')" />
     </mx:VBox>
