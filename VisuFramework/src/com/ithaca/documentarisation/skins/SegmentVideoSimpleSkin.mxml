@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*">
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
+     currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentVideoAdvanced")]
@@ -9,9 +10,25 @@
 	
 	<fx:Script>
 	<![CDATA[
-		import com.ithaca.visu.ui.utils.IconEnum;
-		
-		import spark.skins.spark.SpinnerSkin;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import mx.events.StateChangeEvent;
+        
+        import spark.skins.spark.SpinnerSkin;
+
+        protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
+        {
+            switch (currentState)
+            {
+            case "editSelected": 
+                this.hostComponent.onFocusInRichEditableText();
+                break;
+            case "edit","editOver" :
+                this.hostComponent.onFocusOutRichEditableText();
+                break;
+            }
+        }
+
 	]]>
 	</fx:Script>
 	<s:states>
