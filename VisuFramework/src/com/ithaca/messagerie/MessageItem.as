@@ -65,7 +65,7 @@ public class MessageItem extends SkinnableComponent
     
     public function set messageFromMy(value:Boolean):void
      {
-         resivedMessage = value;
+         resivedMessage = !value;
          invalidateSkinState();
      }
     //_____________________________________________________________________
