@@ -10,7 +10,7 @@
     </fx:Declarations>
     <fx:Script>
     <![CDATA[
-        import com.ithaca.messagerie.skins.TabNavigatorMessagerieSkin;
+        import com.ithaca.messagerie.skins.AccordionMessagerieSkin;
         
         import mx.collections.ArrayCollection;
         import mx.events.CloseEvent;
