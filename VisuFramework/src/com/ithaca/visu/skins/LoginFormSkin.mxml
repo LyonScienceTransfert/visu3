@@ -63,7 +63,8 @@
 			</containers:FormItem>
 			
 			<s:Button id="forgottenButton"
-				skinClass="com.ithaca.visu.skins.LinkButtonSkin"  />
+				skinClass="com.ithaca.visu.skins.LinkButtonSkin" 
+                includeInLayout="false"/>
 		</containers:Form>
 	</s:VGroup>
 </s:Skin>
