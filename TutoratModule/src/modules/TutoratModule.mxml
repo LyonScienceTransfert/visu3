@@ -710,7 +710,7 @@
 						_currentActivityElement = event.element;
 						Alert.yesLabel = fxgt.gettext("Oui");
 						Alert.noLabel = fxgt.gettext("Non");
-						Alert.show(fxgt.gettext("Voulez-vous changer d'activité?"),
+						Alert.show(fxgt.gettext("Voulez-vous changer d'activité ?"),
 							fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, changeActivityConfirmed); 
 					}
 				}
@@ -768,7 +768,7 @@
 						// conformation for closing the session
 						Alert.yesLabel = fxgt.gettext("Oui");
 						Alert.noLabel = fxgt.gettext("Non");
-						Alert.show(fxgt.gettext("Voulez-vous arrêter l'enregistrement ? (vous pourrez le reprendre plus tard)"),
+						Alert.show(fxgt.gettext("Voulez-vous mettre en pause l'enregistrement ? (vous pourrez le reprendre plus tard)"),
 						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, stopRecordingConfirmed); 	
 					}else{
 						
@@ -849,12 +849,15 @@
 			protected function updateLabelsModule(event:ApplicationMenuEvent):void
 			{
 				if(buttonStartRecording != null){
-					if(this.visio.status == VisuVisioAdvanced.STATUS_NONE)
+					if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
 					{				
-						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");									
-					}else
-					{
-						buttonStartRecording.label = fxgt.gettext("Suspendre la séance");			
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
+						buttonStartRecording.toolTip = fxgt.gettext("Démarrer (ou redémarrer) l'enregistrement de la séance");
+					} 
+                    else 
+                    {
+						buttonStartRecording.label = fxgt.gettext("Mettre en pause");
+						buttonStartRecording.toolTip = fxgt.gettext("Mettre en pause l'enregistrement de la séance");
 					}
 					// update labels the button start activity for translating
 					this.sessionPlan.setCurrentActivityId(0);
