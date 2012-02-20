@@ -104,12 +104,12 @@
 						<s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
 						       	id="sharingMineButton"
 						       	label="Mes plans de séance (créés par moi)"
-							toolTip="Affiche uniquement les plans de séance que j'ai créés" 
+							toolTip="Afficher uniquement les plans de séance que j'ai créés" 
 						       	click="filterPast(event);"/>
 				       		 <s:RadioButton visible="{showFilterButtons}" includeInLayout="{showFilterButtons}" groupName="sharingFilter" 
 						       	id="sharingOtherButton"
 						       	label="Autres plans de séance partagés (créés par d'autres)" 
-							toolTip="Affiche uniquement les plans de séance créés et partagés par d'autres utilisateurs" 
+							toolTip="Afficher uniquement les plans de séance créés et partagés par d'autres utilisateurs" 
 						       	click="filterComing(event);"/>
 
 					</s:VGroup>
@@ -129,9 +129,9 @@
 						<s:Group width="100%"/>
 						<s:Group visible="{showNewButton}" includeInLayout="{showNewButton}">
 							<s:Button  visible="{mode=='plan'}" includeInLayout="{mode=='plan'}"
-								label="Nouveau plan" toolTip="Crée un nouveau plan de séance vide"/>
+								label="Nouveau plan" toolTip="Créer un nouveau plan de séance vide"/>
 							<s:Button visible="{mode=='session'}" includeInLayout="{mode=='session'}"
-								label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide"/>
+								label="Nouvelle séance" toolTip="Créer une nouvelle séance avec un plan de séance vide"/>
 						</s:Group>
 					</s:HGroup>
 
