@@ -867,19 +867,13 @@
 			/**
 			 * Checking that sending the message by click on button or click by "enter"
 			 */
-			protected function onSendMessage(event:*):void
+			protected function onSendMessage(event: *): void
 			{
-				var message:String = textChatMessage.text;
-                message = message.split("\n").join("");
-                message = message.split("\r").join("");
-                if(event is MouseEvent){
+				var message: String = textChatMessage.text.replace("\n", "").replace("\r", "");
+
+                if (event is MouseEvent ||
+                    (event is KeyboardEvent && event.keyCode == Keyboard.ENTER)) {
                     sendMessage(message);
-                }else if (event is KeyboardEvent) 
-                {
-                    if(event.keyCode == Keyboard.ENTER)
-                    {
-                        sendMessage(message);
-                    }
                 }
 			}
 			
@@ -960,12 +954,13 @@
 				}
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
-                if(message)
+                if (message)
                 {
-                    // cut char new line if was click on button "Enter"
-                    message = message.split("\n").join("");
-                    message = message.split("\r").join("");
-                }else message="";
+				    message = message.replace("\n", "").replace("\r", "");
+                } else 
+                {
+                    message="";
+                }
 
                 sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
