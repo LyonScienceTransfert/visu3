@@ -6,7 +6,18 @@
     <fx:Metadata>
         [HostComponent("com.ithaca.messagerie.DialogMessageItem")]
     </fx:Metadata>
-    <s:VGroup  gap="10">
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+    ]]>
+    </fx:Script>
+    <s:VGroup  id="groupDialogMessage" width="100%">
         <s:HGroup>
             <s:VGroup>
                 <s:HGroup verticalAlign="middle">
@@ -54,37 +65,17 @@
                         <s:text>Administrateur</s:text>
                     </s:Label>
                 </s:HGroup>
-                
             </s:VGroup>
         </s:HGroup>
-        <s:Group >
-            <s:layout>
-                <s:VerticalLayout gap="3"/>
-            </s:layout>
-            <s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelDialogMessage"> 
-                <s:Group id="groupMessageItem" top="0">
-                    <s:layout>
-                        <s:VerticalLayout  gap="10"/>
-                    </s:layout>
-                </s:Group>
-               <!-- <s:VGroup  id="groupMessageItem" width="100%" height="100%" gap="100"/>-->
-            </s:Scroller> 
-        </s:Group>
+        <s:Scroller width="100%" height="100%" id="scrollerPanelDialogMessage"> 
+            <s:VGroup id="groupMessageItem" top="0" left="10" width="100%"/>
+        </s:Scroller> 
+        <s:HGroup width="100%" paddingLeft="3" paddingRight="3">
+            <s:TextArea    id="textChatMessage" enabled="true" height="25" width="100%" >				
+            </s:TextArea>
+            <mx:Button id="buttonChatMessage" icon="{IconEnum.getIconByName('chat')}" height="25" >
+                <mx:label>Envoyer le message</mx:label>
+            </mx:Button>
+        </s:HGroup>	
     </s:VGroup>
-    
-   <!-- <s:Group height="100%" width="100%">
-        <s:layout>
-            <s:VerticalLayout gap="3"/>
-        </s:layout>
-        <s:Group  width="100%"  height="100%">
-            <s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
-                <s:Group id="panelChatSession"   width="100%"  top="0">
-                    <s:layout>
-                        <s:VerticalLayout  gap="5"/>
-                    </s:layout>
-                </s:Group>
-            </s:Scroller> 
-        </s:Group>
-    </s:Group>-->
-    
 </s:Skin>
