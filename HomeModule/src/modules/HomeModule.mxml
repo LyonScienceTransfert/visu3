@@ -34,6 +34,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+            import com.ithaca.messagerie.model.MessageVO;
             import com.ithaca.utils.VisuUtils;
             import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
             import com.ithaca.visu.events.InitMapEvent;
@@ -208,9 +209,10 @@
 				event.message = this.textToSend.text.toString();
 				dispatchEvent(event);
 				this.textToSend.text = ""; 
-				var loggerUser:User = Model.getInstance().getLoggedUser();
-	/* 			listConUsers.visible = false; 
- */			}
+                // add message 
+                var chatMessage:MessageVO = new MessageVO(event.message, new Date(), Model.getInstance().getLoggedUser() as UserVO, false);
+                Model.getInstance().addChatMessage(chatMessage);
+        	}
 			
 			/**
 			 * Send message to one user
