@@ -62,6 +62,7 @@
  */
 package  com.ithaca.visu.model
 {
+	import com.ithaca.messagerie.model.MessageVO;
 	import com.ithaca.timelineskins.ObselSessionOut;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.Trace;
@@ -177,7 +178,9 @@ package  com.ithaca.visu.model
         // init session id
         private var _initSessionId:Number;
         // init bilan id
-        private var _initBilanId:Number;        
+        private var _initBilanId:Number;     
+        // list chat messages
+        private var _listChatMessage:ArrayCollection = new ArrayCollection();
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -724,6 +727,18 @@ package  com.ithaca.visu.model
 				}
 			}
 		}
+        
+        /**
+        * add chat message 
+        */
+        public function addChatMessage(value:MessageVO):void
+        {
+            _listChatMessage.addItem(value);
+        }
+        public function getlistChatMessage():ArrayCollection
+        {
+            return _listChatMessage;
+        }
 		
 		/**
 		 * Get list obsels comment
