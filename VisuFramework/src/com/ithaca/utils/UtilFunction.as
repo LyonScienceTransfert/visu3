@@ -82,7 +82,7 @@ package com.ithaca.utils
 
         public static function getLabelDate(date: Date, separateur: String): String
         {
-            if(date == null) return "?";
+            if (date == null) return "?";
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};

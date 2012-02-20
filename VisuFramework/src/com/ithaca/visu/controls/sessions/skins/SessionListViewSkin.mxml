@@ -78,11 +78,11 @@
 					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingMineButton"
 								   label="Mes plans de séance (créés par moi)"
-								   toolTip="Affiche uniquement les plans de séance que j'ai créés"/>
+								   toolTip="Afficher uniquement les plans de séance que j'ai créés"/>
 					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingOtherButton"
 								   label="Autres plans de séance partagés (créés par d'autres)" 
-								   toolTip="Affiche uniquement les plans de séance créés et partagés par d'autres utilisateurs"/>	
+								   toolTip="Afficher uniquement les plans de séance créés et partagés par d'autres utilisateurs"/>	
 				</s:VGroup>	
 				<s:HGroup id="filterGroup" width="100%" verticalAlign="middle">
 					<s:Label  text="Contient le Texte:"/>
@@ -113,8 +113,8 @@
 			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" x.session="0">
 				<s:HGroup verticalAlign="bottom" width="100%" horizontalAlign="center">
 					<s:Group id="newPlanSessionButtonsGroup">
-						<s:Button id="newPlanButton" label="Nouveau plan" toolTip="Crée un nouveau plan de séance vide" includeIn="plan"/>
-						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Crée une nouvelle séance avec un plan de séance vide" includeIn="session" x="0"/>
+						<s:Button id="newPlanButton" label="Nouveau plan" toolTip="Créer un nouveau plan de séance vide" includeIn="plan"/>
+						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Créer une nouvelle séance avec un plan de séance vide" includeIn="session" x="0"/>
 					</s:Group>
 				</s:HGroup>
 				<mx:DataGrid id="planDataGrid" width="100%" height="100%" includeIn="plan">
