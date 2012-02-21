@@ -2,6 +2,7 @@ package business
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
+import com.ithaca.messagerie.model.MessageVO;
 import com.ithaca.timeline.events.TimelineEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
@@ -179,6 +180,10 @@ public class MainManager
 		logger.debug("MainManager.onResivePublicMessage: {0} {1} (id={2})", sender.lastname, sender.firstname,sender.id_user);
 //		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,fxgt.gettext("[public] ")+message ,new Date());	
 		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,message ,new Date());	
+        // add message chat
+        var chatMessage:MessageVO = new MessageVO(message, new Date(), sender, false);
+        Model.getInstance().addChatMessage(chatMessage);
+        
 	}	
 	
 	/**
