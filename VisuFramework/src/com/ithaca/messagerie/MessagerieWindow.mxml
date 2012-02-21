@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
     xmlns:s="library://ns.adobe.com/flex/spark" 
-    xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:messagerie="com.ithaca.messagerie.*"
+    xmlns:mx="library://ns.adobe.com/flex/mx"
     title="Messagerie de la plateforme"
-    close="titlewindow1_closeHandler(event)"
+    close="titlewindow1_closeHandler(event)" xmlns:messagerie="com.ithaca.messagerie.*"
    >
     <fx:Declarations>
         <!-- Place non-visual elements (e.g., services, value objects) here -->
     </fx:Declarations>
     <fx:Script>
     <![CDATA[
-        import com.ithaca.messagerie.skins.AccordionMessagerieSkin;
-        import com.ithaca.messagerie.AccordionMessagerie;
-        
         import mx.collections.ArrayCollection;
         import mx.events.CloseEvent;
         import mx.managers.PopUpManager;
