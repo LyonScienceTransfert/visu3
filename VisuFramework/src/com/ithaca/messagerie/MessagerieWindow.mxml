@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
     xmlns:s="library://ns.adobe.com/flex/spark" 
-    xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:messagerie="com.ithaca.messagerie.*"
+    xmlns:mx="library://ns.adobe.com/flex/mx"
     title="Messagerie de la plateforme"
-    close="titlewindow1_closeHandler(event)"
-    height="500">
+    close="titlewindow1_closeHandler(event)" xmlns:messagerie="com.ithaca.messagerie.*"
+   >
     <fx:Declarations>
         <!-- Place non-visual elements (e.g., services, value objects) here -->
     </fx:Declarations>
     <fx:Script>
     <![CDATA[
-        import com.ithaca.messagerie.skins.TabNavigatorMessagerieSkin;
-        
         import mx.collections.ArrayCollection;
         import mx.events.CloseEvent;
         import mx.managers.PopUpManager;
         
-        private var _listDialog:ArrayCollection 
-        private var listDialogChange:Boolean;
+        private var _listMessage:ArrayCollection 
+        private var listMessageChange:Boolean;
         private var _listConnectedUser:ArrayCollection;
         private var listConnectedUserChange:Boolean;
         //_____________________________________________________________________
@@ -25,15 +23,15 @@
         // Setter/getter
         //
         //_____________________________________________________________________
-        public function set listDialog(value:ArrayCollection):void
+        public function set listMessage(value:ArrayCollection):void
         {
-            _listDialog= value;
-            listDialogChange = true;
+            _listMessage= value;
+            listMessageChange = true;
             invalidateProperties();
         }
-        public function get listDialog():ArrayCollection
+        public function get listMessage():ArrayCollection
         {
-            return _listDialog;
+            return _listMessage;
         }
         
         public function set listConnectedUser(value:ArrayCollection):void
@@ -51,11 +49,11 @@
         override protected function commitProperties():void
         {
             super.commitProperties();	
-            if(listDialogChange)
+            if(listMessageChange)
             {
-                listDialogChange = false;
+                listMessageChange = false;
                 // create dialogs
-                tabNavigatorMessagerie.listDialog = listDialog;
+                accordion.listMessage = listMessage;
                 
             }
             if(listConnectedUserChange)
@@ -76,19 +74,25 @@
         {
             PopUpManager.removePopUp(this);
         }
+        protected function onClickButtonAddUser(event:MouseEvent):void
+        {
+
+        }
+        protected function onClickButtonCloseWindow(event:MouseEvent):void
+        {
+            PopUpManager.removePopUp(this);
+        }
 
     ]]>
     </fx:Script>
-    <s:VGroup width="100%" height="100%">
-        <messagerie:TabNavigatorMessagerie id="tabNavigatorMessagerie"
-            skinClass="com.ithaca.messagerie.skins.TabNavigatorMessagerieSkin"/>
-        <s:HGroup width="100%" verticalAlign="middle" paddingBottom="5" paddingLeft="3" paddingRight="3">
-            <s:Button id="addUser">
+    <s:VGroup width="100%" height="100%" gap="10">
+        <messagerie:AccordionMessagerie id="accordion" heightMessagerie="500" widthMessagerie="400" skinClass="com.ithaca.messagerie.skins.AccordionMessagerieSkin"/>
+        <s:HGroup width="100%" verticalAlign="middle" paddingBottom="5" paddingTop="5" paddingLeft="3" paddingRight="3" horizontalAlign="right">
+            <s:Button id="addUser" click="onClickButtonAddUser(event)">
                 <s:label>Ajouter user</s:label>
             </s:Button>
-            <s:TextInput  id="messageToSend" width="100%" />
-            <s:Button id="sendMessage"> 
-                <s:label>Send</s:label>
+            <s:Button id="closeWindow" click="onClickButtonCloseWindow(event)">
+                <s:label>cacher le chat</s:label>
             </s:Button>
         </s:HGroup>
     </s:VGroup>

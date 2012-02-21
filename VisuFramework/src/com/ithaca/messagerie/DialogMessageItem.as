@@ -7,6 +7,7 @@ import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.model.ActivityElementType;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.User;
+import com.ithaca.visu.model.vo.UserVO;
 
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -65,6 +66,9 @@ public class DialogMessageItem extends SkinnableComponent
     private var _heightDialogMessage:int;
     private var heightDialogMessageChange:Boolean;
     
+    private var _loggedUser:User;
+    
+    
     public function DialogMessageItem()
     {
         super();
@@ -103,6 +107,14 @@ public class DialogMessageItem extends SkinnableComponent
     public function get user():User
     {
         return _user;
+    }
+    public function set loggedUser(value:User):void
+    {
+        _loggedUser = value;
+    }
+    public function get loggedUser():User
+    {
+        return _loggedUser;
     }
     
     public function addMessage(value:MessageVO):void
@@ -171,7 +183,12 @@ public class DialogMessageItem extends SkinnableComponent
         var messageItem:MessageItem = new MessageItem();
         messageItem.message = item.text;
         messageItem.time =item.date;
-        messageItem.messageFromMy = item.isLoggedUserMessage;
+        var messageFromMy:Boolean = false;
+        if(item.userVO == this.loggedUser )
+        {
+            messageFromMy = true;
+        }
+        messageItem.messageFromMy = messageFromMy;
         messageItem.setStyle("skinClass", MessageItemSkin);
         messageItem.percentWidth = 100;
         groupMessageItem.addElement(messageItem);
@@ -237,7 +254,7 @@ public class DialogMessageItem extends SkinnableComponent
         dispatchEvent(sessionSharedEvent);
         
         // add message VO;
-        var messageVO:MessageVO = new MessageVO(message, new Date(), true);
+        var messageVO:MessageVO = new MessageVO(message, new Date(), loggedUser as UserVO, true);
         listMessageVO.addItem(messageVO);
         // add item message 
         addItemMessage(messageVO);

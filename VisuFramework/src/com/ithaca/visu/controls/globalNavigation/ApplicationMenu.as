@@ -1,5 +1,6 @@
 package com.ithaca.visu.controls.globalNavigation
 {
+	import com.ithaca.messagerie.MessagerieWindow;
 	import com.ithaca.utils.VisuToolTip;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
@@ -13,6 +14,7 @@ package com.ithaca.visu.controls.globalNavigation
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.events.ToolTipEvent;
+	import mx.managers.PopUpManager;
 	
 	import spark.components.Button;
 	import spark.components.ButtonBar;
@@ -185,6 +187,11 @@ package com.ithaca.visu.controls.globalNavigation
 				var nameUser:String = VisuUtils.getUserLabelLastName(user,true);
 				labelLoggedUser.text = nameUser;
 			}
+            
+			if (instance == chat)
+			{
+				chat.addEventListener(MouseEvent.CLICK, onClickButtonChat);
+			}
 		}
 		
 		/**
@@ -341,6 +348,19 @@ package com.ithaca.visu.controls.globalNavigation
 		/*----------------------------------------
 					Event handler
 		-----------------------------------------*/
+        /**
+        * activate window chat message
+        */
+        private function onClickButtonChat(event:MouseEvent):void
+        {
+            var messagerie:MessagerieWindow = new MessagerieWindow();
+            PopUpManager.addPopUp(messagerie, this);
+            PopUpManager.centerPopUp(messagerie);
+            messagerie.y = 10;
+            var listChatMessage:ArrayCollection = Model.getInstance().getlistChatMessage();          
+            messagerie.listMessage = listChatMessage;
+        }
+        
 		/**
 		 * diconnect event handler
 		 * dispatch an ApplicationMenuEvent.DISCONNECT
