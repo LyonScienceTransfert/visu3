@@ -119,60 +119,64 @@
 		]]>
 	</mx:Script>
 
-	<mx:VBox id="vbox" >
-        <mx:HBox width="100%" height="100%">
-            <mx:VBox width="100%" height="100%" horizontalAlign="center">
+    <s:HGroup width="700" height="440">
 
-               <mx:HBox width="100%" height="100%">
-                  <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="1" />
-                  <s:Label fontWeight="bold" fontSize="16" verticalAlign="middle" text="Réglage son/vidéo" />
-               </mx:HBox>
+      <s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="top" top="0">
+        
+        <s:HGroup width="100%" height="100%" verticalAlign="middle" top="5">
+          <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="1" />
+          <s:Label fontWeight="bold" fontSize="16" verticalAlign="bottom" text="Réglage son/vidéo" />
+        </s:HGroup>
+        
+        <mx:Text selectable="false" id="clabel" width="100%" textAlign="center"/>
+        <mx:VideoDisplay width="200" height="160" id="vd" />
+        <mx:Button label="Réglage vidéo" id="reglage_video" click="Security.showSettings( SecurityPanel.CAMERA )" />
+        <mx:Spacer height="25"/>
+        <mx:Text  id="mlabel" width="100%" textAlign="center"/>
+        <mx:ProgressBar id="miclevel" mode="manual" label="" width="100%" trackHeight="10"  height="13"  />
+        <mx:Button label="Réglage son" id="reglage_son" click="Security.showSettings( SecurityPanel.MICROPHONE )" />
+        <mx:Spacer height="100%"/>
+      </s:VGroup>
+      
+      <mx:Spacer width="20"/>
+      
+      <s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="top" top="0">
+        
+        <s:HGroup width="100%" height="100%" verticalAlign="middle" top="5">
+          <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="2" />
+          <s:Label fontWeight="bold" fontSize="16" verticalAlign="bottom" text="Vérification affichage" />
+        </s:HGroup>
+        
+        <mx:Text width="100%" id="topMessageYoutube"/>
+        <s:VGroup width="50%" height="100%" id="vboxYoutube"/>
+        <mx:Text width="100%" id="bottomMessageYoutube"/>
+        <mx:Button label="Réglage affichage" id="reglage_display" click="Security.showSettings( SecurityPanel.DISPLAY )" />
+        <mx:Spacer height="100%"/>
 
-        		<mx:Text selectable="false" id="clabel" width="100%" textAlign="center"/>
-            	<mx:VideoDisplay width="200" height="160" id="vd" />
-                <mx:Button label="Réglage vidéo" id="reglage_video" click="Security.showSettings( SecurityPanel.CAMERA )" />
-                <mx:Spacer height="25"/>
-        		<mx:Text  id="mlabel" width="100%" textAlign="center"/>
-        		<mx:ProgressBar id="miclevel" mode="manual" label="" width="100%" trackHeight="10"  height="13"  />
-                <mx:Button label="Réglage son" id="reglage_son" click="Security.showSettings( SecurityPanel.MICROPHONE )" />
-            </mx:VBox>
+      </s:VGroup>
+      
+      <mx:Spacer width="20"/>
+      
+      <s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="top" top="0">
+        
+        <s:HGroup width="100%" height="100%" verticalAlign="middle" top="5">
+          <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="3" />
+          <s:Label fontWeight="bold" fontSize="16" verticalAlign="bottom" text="Accès à Visu" />
+        </s:HGroup>
 
-            <mx:Spacer width="25"/>
+        <mx:Text width="100%" text="Vous pouvez maintenant accéder à l'application."/>
+        
+        <mx:Spacer height="100"/>
 
-            <mx:VBox width="50%" height="100%" horizontalAlign="center">
+        <mx:Image toolTip="Accéder à Visu" id="visu" click="navigateToURL(new URLRequest('visuclient.html'), '_self')"
+                  source="@Embed('images/launch_visu.png')"/>        
 
-               <mx:HBox width="100%" height="100%">
-                  <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="2" />
-                  <s:Label fontWeight="bold" fontSize="16" verticalAlign="middle" text="Vérification affichage" />
-               </mx:HBox>
+        <mx:Spacer height="300"/>
 
-                <mx:Text width="100%" id="topMessageYoutube"/>
-                <mx:VBox width="50%" height="100%" id="vboxYoutube"/>
-                <mx:Text width="100%" id="bottomMessageYoutube"/>
-                <mx:Button label="Réglage affichage" id="reglage_display" click="Security.showSettings( SecurityPanel.DISPLAY )" />
-            </mx:VBox>
-
-            <mx:Spacer width="25"/>
-
-            <mx:VBox width="50%" height="100%" horizontalAlign="center">
-
-              <mx:HBox width="100%" height="100%">
-                <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="3" />
-                <s:Label fontWeight="bold" fontSize="16" verticalAlign="middle" text="Accès à Visu" />
-              </mx:HBox>
-
-              <mx:Text width="100%" text="Vous pouvez maintenant accéder à l'application."/>
-              <mx:Spacer height="60"/>
-              <mx:Image toolTip="Accéder à Visu" id="visu" click="navigateToURL(new URLRequest('visuclient.html'), '_self')"
-                        source="@Embed('images/launch_visu.png')"/>
-
-            </mx:VBox>
-
-        </mx:HBox>
-
-    </mx:VBox>
-
-
+      </s:VGroup>
+      
+    </s:HGroup>
+    
 	<media:Microphone id="micro" rate="22" />
 	<media:Camera id="camera" />
 
