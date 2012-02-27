@@ -357,7 +357,10 @@ package com.ithaca.visu.controls.globalNavigation
             PopUpManager.addPopUp(messagerie, this);
             PopUpManager.centerPopUp(messagerie);
             messagerie.y = 10;
-            var listChatMessage:ArrayCollection = Model.getInstance().getlistChatMessage();          
+            // set logged user
+            messagerie.loggedUser = Model.getInstance().getLoggedUser();
+            // set list messages
+            var listChatMessage:ArrayCollection = Model.getInstance().getlistChatMessage(); 
             messagerie.listMessage = listChatMessage;
         }
         
