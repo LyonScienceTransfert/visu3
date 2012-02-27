@@ -40,6 +40,9 @@ public class DialogMessageItem extends SkinnableComponent
     public var groupDialogMessage:VGroup;
     
     [SkinPart("true")]
+    public var groupDialogInfo:VGroup;
+    
+    [SkinPart("true")]
     public var scrollerPanelDialogMessage:Scroller;
     
     [SkinPart("true")]
@@ -162,15 +165,22 @@ public class DialogMessageItem extends SkinnableComponent
         if(userChange)
         {
             userChange = false;
-            firstName.text = user.firstname;
-            lastName.text = user.lastname;
-            roleUser.text = "...";
+            if(user.id_user == 0)
+            {
+                groupDialogInfo.includeInLayout = groupDialogInfo.visible = false;
+            }else
+            {
+                firstName.text = user.firstname;
+                lastName.text = user.lastname;
+                roleUser.text = "...";
+            }
             
         }
         if(heightDialogMessageChange)
         {
             heightDialogMessageChange= false;
             groupDialogMessage.height = heightDialogMessage;
+            groupDialogMessage.percentWidth = 100;
         }
     }
     //_____________________________________________________________________
