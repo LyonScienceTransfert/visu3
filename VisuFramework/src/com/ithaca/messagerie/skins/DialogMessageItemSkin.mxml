@@ -19,7 +19,7 @@
     </fx:Script>
     <s:VGroup  id="groupDialogMessage" width="100%">
         <s:HGroup>
-            <s:VGroup>
+            <s:VGroup id="groupDialogInfo">
                 <s:HGroup verticalAlign="middle">
                     <mx:Image width="70" height="70"/>
                     <s:VGroup>
