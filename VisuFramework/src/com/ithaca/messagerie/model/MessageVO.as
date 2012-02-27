@@ -7,14 +7,16 @@ public class MessageVO
 {
     private var _text:String;
     private var _date:Date;
-    private var _userVO:UserVO;
+    private var _senderVO:UserVO;
+    private var _resiverVO:UserVO;
     private var _isWatch:Boolean;
     
-    public function MessageVO(text:String, date:Date, userVO:UserVO, isWatch:Boolean = false )
+    public function MessageVO(text:String, date:Date, sender:UserVO, resiver:UserVO, isWatch:Boolean = false )
     {
         _text = text;
         _date = date;
-        _userVO = userVO;
+        _senderVO = sender;
+        _resiverVO = resiver;
         _isWatch = isWatch;
     }
     //_____________________________________________________________________
@@ -30,9 +32,13 @@ public class MessageVO
     {
         return _date;
     }
-    public function get userVO():UserVO
+    public function get senderVO():UserVO
     {
-        return _userVO;
+        return _senderVO;
+    }
+    public function get resiverVO():UserVO
+    {
+        return _resiverVO;
     }
     public function get isWatch():Boolean
     {

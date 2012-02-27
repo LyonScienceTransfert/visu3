@@ -209,9 +209,12 @@
 				event.message = this.textToSend.text.toString();
 				dispatchEvent(event);
 				this.textToSend.text = ""; 
+               /*  // set virtual userVO, public message
+                var resiver:UserVO = new UserVO();
+                resiver.id_user = 0;
                 // add message 
-                var chatMessage:MessageVO = new MessageVO(event.message, new Date(), Model.getInstance().getLoggedUser() as UserVO, false);
-                Model.getInstance().addChatMessage(chatMessage);
+                var chatMessage:MessageVO = new MessageVO(event.message, new Date(), Model.getInstance().getLoggedUser() as UserVO, resiver, false);
+                Model.getInstance().addChatMessage(chatMessage); */
         	}
 			
 			/**
