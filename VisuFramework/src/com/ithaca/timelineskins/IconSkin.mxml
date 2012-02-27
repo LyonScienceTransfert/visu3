@@ -11,12 +11,13 @@
 	
 	<fx:Script>
         <![CDATA[ 
-			import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.Obsel;
             import com.ithaca.traces.model.TraceModel;
-			import com.ithaca.visu.ui.utils.IconEnum;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
+            import com.ithaca.utils.UtilFunction;
+            import com.ithaca.visu.ui.utils.IconEnum;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
 			
 			public var obsel : Obsel;
 			
@@ -45,16 +46,16 @@
 						hostComponent.toolTip = fxgt.gettext("Affichage du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("chez l'apprenant");
 						break;
 					case TraceModel.PLAY_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à partir de")+ " "+ hostComponent.toolTip + " " + fxgt.gettext("secondes");
+						hostComponent.toolTip = fxgt.gettext("Lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à partir de")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " + fxgt.gettext("secondes");
 						break;
 					case TraceModel.PAUSE_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Pause vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ hostComponent.toolTip + " " +fxgt.gettext("secondes");
+						hostComponent.toolTip = fxgt.gettext("Pause vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
 						break;
 					case TraceModel.END_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Fin de la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ hostComponent.toolTip + " " +fxgt.gettext("secondes");
+						hostComponent.toolTip = fxgt.gettext("Fin de la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
 						break;
 					case TraceModel.RELEASE_SLIDER_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Déplacement vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("vers") + " "+ hostComponent.toolTip + " " +fxgt.gettext("secondes");
+						hostComponent.toolTip = fxgt.gettext("Déplacement vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("vers") + " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
 						break;
 					case TraceModel.RECEIVE_DOCUMENT :
 						hostComponent.toolTip = fxgt.gettext("Envoi du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';

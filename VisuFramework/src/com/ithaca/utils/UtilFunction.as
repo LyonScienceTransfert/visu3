@@ -63,10 +63,10 @@
 package com.ithaca.utils
 {
     import com.ithaca.documentarisation.RetroDocumentConst;
-
+    
     import gnu.as3.gettext.FxGettext;
     import gnu.as3.gettext._FxGettext;
-
+    
     import mx.utils.URLUtil;
 
 
@@ -143,6 +143,20 @@ package com.ithaca.utils
             var minuteString: String = minute.toString()
             if(minute < 10 ){minuteString = "0"+minuteString;}
             var result: String = hourString + " h " + minuteString+ " min";
+            return result;
+        }
+        // param : seconds
+        // example 188 seconds
+        // return mm:ss 
+        public static function getMinSec(value:int):String
+        {
+            var minute: int = value / 60 ;
+            var minuteString:String = minute.toString();
+            if(minute < 10 ){minuteString = "0"+ minuteString};
+            var seconds:int = value - minute *60;
+            var secondsString:String = seconds.toString();
+            if(seconds < 10 ){secondsString = "0"+secondsString};
+            var result:String = minuteString+":"+secondsString;
             return result;
         }
         public static function checkVideoId(value: String): Boolean
