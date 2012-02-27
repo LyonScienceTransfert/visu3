@@ -15,6 +15,7 @@ import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
+import com.ithaca.visu.model.ActivityElementType;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.User;
@@ -172,7 +173,7 @@ public class MainManager
 	public function onResivePrivateMessage(message : String, sender: UserVO):void
 	{
 		logger.debug("MainManager.onResivePrivateMessage: {0} {1} (id={2})", sender.lastname, sender.firstname,sender.id_user);
-		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,fxgt.gettext("[personnel] ")+message,new Date());		
+		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,fxgt.gettext("[personnel] ")+message,new Date());	
 	} 
 	
 	public function onResivePublicMessage(message : String, sender: UserVO):void
@@ -180,8 +181,11 @@ public class MainManager
 		logger.debug("MainManager.onResivePublicMessage: {0} {1} (id={2})", sender.lastname, sender.firstname,sender.id_user);
 //		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,fxgt.gettext("[public] ")+message ,new Date());	
 		Model.getInstance().addFluxActivity(sender.id_user,sender.firstname, sender.lastname, sender.avatar,message ,new Date());	
+        // set virtual userVO, public message
+        var resiver:UserVO = new UserVO();
+        resiver.id_user = 0;
         // add message chat
-        var chatMessage:MessageVO = new MessageVO(message, new Date(), sender, false);
+        var chatMessage:MessageVO = new MessageVO(message, new Date(), sender, resiver, false);
         Model.getInstance().addChatMessage(chatMessage);
         
 	}	
@@ -1481,7 +1485,16 @@ public class MainManager
 		// TODO : can make simple
 		sessionSharedEvent.obselVO = obselVO;		
 		sessionSharedEvent.idUserFor = idUserFor;	
-		this.dispatcher.dispatchEvent(sessionSharedEvent);	
+		this.dispatcher.dispatchEvent(sessionSharedEvent);
+        
+        if( typeInfo == ActivityElementType.valueOf(ActivityElementType.MESSAGE))
+        {
+            // add message chat
+            var resiver:UserVO = Model.getInstance().getLoggedUser() as UserVO;
+            var sender:UserVO  = Model.getInstance().getUserPlateformeByUserId(senderUserId) as UserVO;
+            var chatMessage:MessageVO = new MessageVO(info, new Date(), sender, resiver, false);
+            Model.getInstance().addChatMessage(chatMessage);
+        }
 	}
 	
 	public function onCheckUpdatedMarker(text:String ,senderUserId:int , obselVO:SGBDObsel):void
