@@ -70,8 +70,8 @@ public class TabNavigatorMessagerie extends SkinnableComponent
                     var navContent:NavigatorContent = new NavigatorContent();
                    /* navContent.percentHeight = 100;
                     navContent.percentWidth = 100;*/
-                    navContent.label =  VisuUtils.getUserLabelFirstName(dialogVO.user, true);
-                    var dialogMessageItem:DialogMessageItem = createDialogMessageItem(dialogVO.listMessageVO, dialogVO.user);
+                    navContent.label =  VisuUtils.getUserLabelFirstName(dialogVO.sender,  true);
+                    var dialogMessageItem:DialogMessageItem = createDialogMessageItem(dialogVO.listMessageVO, dialogVO.sender);
                     navContent.addElement(dialogMessageItem);
                     
                     tabNavigatorMessage.addElement(navContent);
