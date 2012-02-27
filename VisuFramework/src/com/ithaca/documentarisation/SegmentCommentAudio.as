@@ -20,6 +20,9 @@ import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
 
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
+
 import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
@@ -85,7 +88,9 @@ public class SegmentCommentAudio extends SkinnableComponent
     // tracege interval in ms
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
-    private var _tracageTimer:Timer;    
+    private var _tracageTimer:Timer; 
+    // cursor
+    private var _cursor:String;
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -263,15 +268,18 @@ public class SegmentCommentAudio extends SkinnableComponent
 				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 			}
 		}
-		if (instance == iconSegment)
-		{
-			// can drag/drop this segment
-			iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
-			iconSegment.toolTip = "Bloc commentaire audio";
-			// TODO : message "Vous pouver deplace cet block en haut en bas",
-			// show this message only if has many blocs
-			// MouseCursor = HAND just if has many blocs
-		}
+        if (instance == iconSegment)
+        {
+            // can drag/drop this segment
+            iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+            iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
+            iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
+            var messageDND:String = "Glisser-déplacer ce bloc";
+            iconSegment.toolTip = messageDND+ " audio";
+            // TODO : message "Vous pouver deplace cet block en haut en bas",
+            // show this message only if has many blocs
+            // MouseCursor = HAND just if has many blocs
+        }
 	}	
 	override protected function commitProperties():void
 	{
@@ -437,7 +445,15 @@ public class SegmentCommentAudio extends SkinnableComponent
 		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
 		dispatchEvent(mouseDownIconSegment);
 	}
-
+    private function onMouseOverIconSegment(event:MouseEvent):void
+    {
+        _cursor =  Mouse.cursor;
+        Mouse.cursor = MouseCursor.HAND;
+    }
+    private function onMouseOutIconSegment(event:MouseEvent):void
+    {
+        Mouse.cursor = _cursor;
+    }
     // creation the segment
 	private function onCreationComplete(event:FlexEvent = null):void
 	{
