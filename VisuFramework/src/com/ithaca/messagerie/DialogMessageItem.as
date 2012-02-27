@@ -122,7 +122,7 @@ public class DialogMessageItem extends SkinnableComponent
     
     public function addMessage(value:MessageVO):void
     {
-        listMessageVO.addItem(value);
+  //      listMessageVO.addItem(value);
         // add item message 
         addItemMessage(value);
     }
@@ -194,7 +194,7 @@ public class DialogMessageItem extends SkinnableComponent
         messageItem.message = item.text;
         messageItem.time =item.date;
         var messageFromMy:Boolean = false;
-        if(item.userVO == this.loggedUser )
+        if(item.senderVO.id_user == this.loggedUser.id_user )
         {
             messageFromMy = true;
         }
@@ -264,8 +264,8 @@ public class DialogMessageItem extends SkinnableComponent
         dispatchEvent(sessionSharedEvent);
         
         // add message VO;
-        var messageVO:MessageVO = new MessageVO(message, new Date(), loggedUser as UserVO, true);
-        listMessageVO.addItem(messageVO);
+        var messageVO:MessageVO = new MessageVO(message, new Date(), loggedUser as UserVO, user as UserVO, true);
+//        listMessageVO.addItem(messageVO);
         // add item message 
         addItemMessage(messageVO);
         
