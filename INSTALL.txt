@@ -18,6 +18,9 @@
 
 * Configure variables in files :
 
+   Copy the build.properties.template to build.properties and update
+   its contents to match your local configuration.
+
    build.properties(webapp.name=instance_name)
    VisuServeur/visu/webapp/WEB-INF/red5-web.properties (webapp.contextPath = instance_name)
    
