@@ -6,13 +6,15 @@ import mx.collections.ArrayCollection;
 
 public class DialogVO
 {
-    private var _user:User;
+    private var _sender:User;
+    private var _resiver:User;
     private var _userModule:String;
     private var _listMessageVO:ArrayCollection;
     
-    public function DialogVO(user:User, userModule:String, listMessageVO:ArrayCollection)
+    public function DialogVO(sender:User, resiver:User, userModule:String, listMessageVO:ArrayCollection)
     {
-        _user = user;  
+        _sender = sender;  
+        _resiver = resiver;  
         _userModule = userModule;
         _listMessageVO = listMessageVO;
     }
@@ -21,9 +23,13 @@ public class DialogVO
     // Setter/getter
     //
     //_____________________________________________________________________
-    public function get user():User
+    public function get sender():User
     {
-        return _user;
+        return _sender;
+    }
+    public function get resiver():User
+    {
+        return _resiver;
     }
     public function get userModule():String
     {

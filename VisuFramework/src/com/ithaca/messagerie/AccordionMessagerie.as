@@ -98,7 +98,12 @@ public class AccordionMessagerie extends SkinnableComponent
     }
     public function addMessage(value:MessageVO):void
     {
-        var userId:int = value.userVO.id_user;
+        var userId:int = value.senderVO.id_user;
+        // check if message is public
+        if(value.resiverVO.id_user == 0)
+        {
+            userId = 0;
+        }
         var navContent:NavigatorContent = accordionMessage.getChildByName(userId.toString()) as NavigatorContent;
         if(navContent)
         {
@@ -108,7 +113,7 @@ public class AccordionMessagerie extends SkinnableComponent
         {
             var arr:ArrayCollection = new ArrayCollection();
             arr.addItem(value);
-            var dialog:DialogVO = new DialogVO(new User(value.userVO), "toto", arr);
+            var dialog:DialogVO = new DialogVO(new User(value.senderVO), new User(value.resiverVO), "toto", arr);
             listDialog.addItem(dialog);
             addNavContent(dialog);
             // resize dialogMessageItem
@@ -224,12 +229,21 @@ public class AccordionMessagerie extends SkinnableComponent
         {
             messageUnwatch = " ("+nbrMessageUnwatch.toString()+" non lu)";
         }
+        var labelNavContent:String = "Les messages public";
+        var nameNavContent:String = "0";
+        var dialogMessageItemForUser:User = value.resiver;
         // set label nav content
-        navContent.label =  VisuUtils.getUserLabelFirstName(value.user, true) + messageUnwatch;
+        if(value.resiver.id_user != 0)
+        {
+            labelNavContent = VisuUtils.getUserLabelFirstName(value.sender, true);
+            nameNavContent = value.sender.id_user.toString();
+            dialogMessageItemForUser = value.sender;
+        }
+        navContent.label =  labelNavContent + messageUnwatch;
             
-        navContent.name = value.user.id_user.toString();
+        navContent.name = nameNavContent
         
-        var dialogMessageItem:DialogMessageItem = createDialogMessageItem(value.listMessageVO, value.user);
+        var dialogMessageItem:DialogMessageItem = createDialogMessageItem(value.listMessageVO, dialogMessageItemForUser);
         navContent.addElement(dialogMessageItem);
         
         navContent.addEventListener(FlexEvent.ADD, onAddedNavContent);
