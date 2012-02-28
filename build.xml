@@ -813,7 +813,7 @@ or by setting the following environment variable:
 	<target name="html-wrapper" description="Creates a HTML wrapper and other js files required for the application to run in an HTML page">
 	   <echo>Creates a HTML wrapper</echo>
        <fail message="Missing clientapp.name property. html-wrapper must be called from build-visuclient" unless="clientapp.name" />
-       <fail message="Missing clientapp.name.timestsamp property. html-wrapper must be called from build-visuclient" unless="clientapp.name.timestsamp" />
+       <fail message="Missing clientapp.name.timestsamp property. html-wrapper must be called from build-visuclient" unless="clientapp.name.timestamp" />
        <fail message="Missing app.wrappers property. html-wrapper must be called from build-visuclient" unless="app.wrappers" />
 	   <mkdir dir="${app.wrappers}"/>
 	   <custom-html-wrapper
