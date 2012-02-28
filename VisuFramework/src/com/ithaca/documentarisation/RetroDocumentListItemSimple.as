@@ -46,6 +46,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	private var nbrVideoSegment:int;
 	
 	private var over:Boolean;
+    
+    private var var blocString:String;
 	
 	[Bindable]
 	private var fxgt: _FxGettext = FxGettext;
@@ -108,7 +110,12 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoVideo.visible = iconInfoVideoVisible;
 			iconInfoVideo.nbrElement = nbrVideoSegment;
 			iconInfoVideo.sourceIcon = IconEnum.getIconByName('iconVideo_16x16');
-			
+            blocString = fxgt.gettext("bloc");
+            if(nbrVideoSegment > 1)
+            {
+                blocString = fxgt.gettext("blocs");
+            }
+            iconInfoVideo.toolTip = fxgt.gettext("Vous avez") + " " + nbrVideoSegment.toString() + " " + blocString + " " + fxgt.gettext("vidéo dans le bilan");
 		}
 		if (instance == iconInfoAudio)
 		{
@@ -120,6 +127,12 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoAudio.visible = iconInfoAudioVisible;
 			iconInfoAudio.nbrElement = nbrAudioSegment;
 			iconInfoAudio.sourceIcon = IconEnum.getIconByName('iconAudio_16x16');
+            blocString = fxgt.gettext("bloc");
+            if(nbrAudioSegment > 1)
+            {
+                blocString = fxgt.gettext("blocs");
+            }
+            iconInfoAudio.toolTip = fxgt.gettext("Vous avez") + " " + nbrAudioSegment.toString() + " " + blocString + " " + fxgt.gettext("audio dans le bilan");
 		}
 		if (instance == buttonDelete)
 		{
@@ -166,6 +179,12 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 				}
 				iconInfoVideo.visible = iconInfoVideoVisible;
 				iconInfoVideo.nbrElement = nbrVideoSegment;
+                blocString = fxgt.gettext("bloc");
+                if(nbrVideoSegment > 1)
+                {
+                    blocString = fxgt.gettext("blocs");
+                }
+                iconInfoVideo.toolTip = fxgt.gettext("Vous avez") + " " + nbrVideoSegment.toString() + " " + blocString + " " + fxgt.gettext("vidéo dans le bilan");
 			}
 			if(iconInfoAudio)
 			{			
@@ -176,6 +195,12 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 				}
 				iconInfoAudio.visible = iconInfoAudioVisible;
 				iconInfoAudio.nbrElement = nbrAudioSegment;
+                blocString = fxgt.gettext("bloc");
+                if(nbrAudioSegment > 1)
+                {
+                    blocString = fxgt.gettext("blocs");
+                }
+                iconInfoAudio.toolTip = fxgt.gettext("Vous avez") + " " + nbrAudioSegment.toString() + " " + blocString + " " + fxgt.gettext("audio dans le bilan");
 			}
 			
 		}	
