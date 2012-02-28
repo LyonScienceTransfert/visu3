@@ -12,6 +12,8 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
 import flash.utils.Timer;
 
 import mx.collections.ArrayCollection;
@@ -55,6 +57,8 @@ public class SegmentTitle extends SkinnableComponent
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
     private var _tracageTimer:Timer; 
+    // cursor
+    private var _cursor:String;
     
 	public function SegmentTitle()
 	{
@@ -137,23 +141,26 @@ public class SegmentTitle extends SkinnableComponent
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
 		}
 		
-		if (instance == iconSegment)
-		{
-			// can drag/drop this segment
-			iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
-			var toolTipText:String = "Bloc texte";
-			// TODO : message "Vous pouver deplace cet block en haut en bas",
-			// show this message only if has many blocs
-			// MouseCursor = HAND just if has many blocs
-			var iconName:String ="iconLettre_t_16x16";
-			if(_fontBold)
-			{
-				toolTipText = "Bloc titre";
-				iconName = "iconLettre_T_16x16";
-			}
-			iconSegment.source = IconEnum.getIconByName(iconName);
-			iconSegment.toolTip = toolTipText;
-		}
+        if (instance == iconSegment)
+        {
+            // can drag/drop this segment
+            iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+            iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
+            iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
+            var messageDND:String = "Glisser-déplacer ce bloc";
+            var toolTipText:String = messageDND+ " texte";
+            // TODO : message "Vous pouver deplace cet block en haut en bas",
+            // show this message only if has many blocs
+            // MouseCursor = HAND just if has many blocs
+            var iconName:String ="iconLettre_t_16x16";
+            if(_fontBold)
+            {
+                toolTipText = messageDND + " titre";
+                iconName = "iconLettre_T_16x16";
+            }
+            iconSegment.source = IconEnum.getIconByName(iconName);
+            iconSegment.toolTip = toolTipText;
+        }
 	}
 	
 	
@@ -274,6 +281,17 @@ public class SegmentTitle extends SkinnableComponent
 		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
 		dispatchEvent(mouseDownIconSegment);
 	}
+    private function onMouseOverIconSegment(event:MouseEvent):void
+    {
+        _cursor =  Mouse.cursor;
+        Mouse.cursor = MouseCursor.HAND;
+    }
+    private function onMouseOutIconSegment(event:MouseEvent):void
+    {
+        Mouse.cursor = _cursor;
+    }
+    
+    
     // creation the segment
     private function onCreationComplete(event:FlexEvent = null):void
     {

@@ -19,6 +19,9 @@ import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
 
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
+
 import spark.components.HGroup;
 import spark.components.Label;
 import spark.components.RichEditableText;
@@ -105,6 +108,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
     private var _tracageTimer:Timer; 
+    // cursor
+    private var _cursor:String;
 	
 	public function SegmentVideoAdvanced()
 	{
@@ -261,15 +266,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 			}
 		}
-		if (instance == iconSegment)
-		{
-			// can drag/drop this segment
-			iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
-			iconSegment.toolTip = "Bloc vidéo + texte";
-			// TODO : message "Vous pouver deplace cet block en haut en bas",
-			// show this message only if has many blocs
-			// MouseCursor = HAND just if has many blocs
-		}
+        if (instance == iconSegment)
+        {
+            // can drag/drop this segment
+            iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+            iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
+            iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
+            var messageDND:String = "Glisser-déplacer ce bloc";
+            iconSegment.toolTip = messageDND + " vidéo";
+            // TODO : message "Vous pouver deplace cet block en haut en bas",
+            // show this message only if has many blocs
+            // MouseCursor = HAND just if has many blocs
+        }
 		
 		if(instance == startSpinner)
 		{
@@ -613,11 +621,20 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		notifyUpdateSegment();
 	}
 	
-	private function onMouseDownIconSegment(event:MouseEvent):void
-	{
-		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
-		dispatchEvent(mouseDownIconSegment);
-	}
+    private function onMouseDownIconSegment(event:MouseEvent):void
+    {
+        var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
+        dispatchEvent(mouseDownIconSegment);
+    }
+    private function onMouseOverIconSegment(event:MouseEvent):void
+    {
+        _cursor =  Mouse.cursor;
+        Mouse.cursor = MouseCursor.HAND;
+    }
+    private function onMouseOutIconSegment(event:MouseEvent):void
+    {
+        Mouse.cursor = _cursor;
+    }
 	private function onCreationCompletStartSpinner(event:FlexEvent):void
 	{
 		startSpinner.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletStartSpinner);
