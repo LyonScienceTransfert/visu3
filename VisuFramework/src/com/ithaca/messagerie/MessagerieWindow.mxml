@@ -109,10 +109,10 @@
         <messagerie:AccordionMessagerie id="accordion" heightMessagerie="500" widthMessagerie="400" skinClass="com.ithaca.messagerie.skins.AccordionMessagerieSkin"/>
         <s:HGroup width="100%" verticalAlign="middle" paddingBottom="3" paddingTop="3" paddingLeft="3" paddingRight="3" horizontalAlign="right">
             <s:Button id="addUser" click="onClickButtonAddUser(event)">
-                <s:label>Ajouter l'utilisateur</s:label>
+                <s:label>Lancer la nauveau chat privé</s:label>
             </s:Button>
             <s:Button id="closeWindow" click="onClickButtonCloseWindow(event)">
-                <s:label>Cacher le chat</s:label>
+                <s:label>Fermer la fenêtre</s:label>
             </s:Button>
         </s:HGroup>
     </s:VGroup>
