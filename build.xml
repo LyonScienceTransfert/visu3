@@ -162,7 +162,7 @@ or by setting the following environment variable:
       <attribute name="history"/> <!-- unused in template -->
       <attribute name="express-install"/>
       <attribute name="version-detection"/>
-      <attribute name="bgcolor" default="0xffffff" />
+      <attribute name="bgcolor" default="ffffff" />
       <attribute name="version-major" default="0" />
       <attribute name="version-minor" default="0" />
       <attribute name="version-revision" default="0" />
