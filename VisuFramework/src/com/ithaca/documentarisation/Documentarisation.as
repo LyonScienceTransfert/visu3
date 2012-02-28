@@ -222,25 +222,27 @@ public class Documentarisation extends SkinnableComponent
 			listRetroDocument.dataProvider = listRetroDocumentVO;
 		}
 		
-		if(retroDocumentChange)
-		{
-			retroDocumentChange = false;
-			if(retroDocumentView)
-			{
-				retroDocumentView.setEditabled(true);
-				retroDocumentView.retroDocument = _retroDocument;
-				retroDocumentView.startDateSession = _dateRecordingSession.time;
-				retroDocumentView.durationSession = _durationSession;
-				retroDocumentView.profiles = _listProfil;
-				retroDocumentView.listShareUser = _listUser;
-				retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
+        if(retroDocumentChange)
+        {
+            retroDocumentChange = false;
+            if(retroDocumentView)
+            {
+                retroDocumentView.setEditabled(true);
+                retroDocumentView.retroDocument = _retroDocument;
+                retroDocumentView.startDateSession = _dateRecordingSession.time;
+                retroDocumentView.durationSession = _durationSession;
+                retroDocumentView.profiles = _listProfil;
+                retroDocumentView.listShareUser = _listUser;
+                retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
                 if(listAllUsersChange)
                 {
                     listAllUsersChange = false;
                     retroDocumentView.allUsers = _listAllUsers;
                 }
-			}
-		}
+                // add listener when change list blocs
+                retroDocumentView.addEventListener(RetroDocumentEvent.CHANGE_LIST_RETRO_SEGMENT, onChangeListRetroSegment);
+            }
+        }
         
         if(listAllUsersChange)
         {
@@ -268,6 +270,25 @@ public class Documentarisation extends SkinnableComponent
 	// Listeners
 	//
 	//_____________________________________________________________________	
+    
+    // update list blocs by xml
+    private function onChangeListRetroSegment(event:RetroDocumentEvent):void
+    {
+       var idRetrodocument:int = event.idRetroDocument;
+       var xml:String = event.xmlRetrodocument;
+       // list retroDocumentVO from component "list"
+       var listRetroDocumentVO:ArrayCollection = this.listRetroDocument.dataProvider as ArrayCollection;
+       var nbrRetroDocumentVO:int = listRetroDocumentVO.length;
+       for(var nRetrodocumentVO:int = 0; nRetrodocumentVO < nbrRetroDocumentVO; nRetrodocumentVO++)
+       {
+            var retroDocumentVO:RetroDocumentVO = listRetroDocumentVO.getItemAt(nRetrodocumentVO) as RetroDocumentVO;
+            if(retroDocumentVO.documentId == idRetrodocument)
+            {
+                retroDocumentVO.xml = xml;
+            }
+       }
+    }
+    
 	private function onUpdateCompete(event:FlexEvent):void
 	{
 		this.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompete);

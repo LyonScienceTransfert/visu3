@@ -575,10 +575,14 @@ public class RetroDocumentView extends SkinnableComponent
         TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentAddBlockTracageEvent);
     }
     
+    // dispatcher when change list the blocs
     private function notifyChangeListSegment():void
     {
         var xml:String = _retroDocument.getRetroDocumentXMLtoSTRING();
         var updateListSegmentRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_LIST_RETRO_SEGMENT);
+        // id retrodocument
+        updateListSegmentRetroDocument.idRetroDocument = retroDocument.id;
+        // xml retrodocument
         updateListSegmentRetroDocument.xmlRetrodocument = xml;
         dispatchEvent(updateListSegmentRetroDocument);
     }
