@@ -19,6 +19,7 @@
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
             import com.ithaca.timeline.skins.TraceLineTitleSkin;
+            import com.ithaca.timelineskins.events.TimelineSkinEvent;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.RetroTraceModel;
@@ -121,6 +122,10 @@
             private var _listEditMarkerDialog:ArrayCollection;
             // pixels between windodws editMarkerDialog
             private var DELTA_X_Y:int = 15;
+            // list playVideoObsels
+            private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            // timer playVideoObsel
+            private var _timerPlayVideoObsel:Timer;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -460,7 +465,22 @@
 						Model.getInstance().addObsel(obsel);
 						// get id document
 						idDocument = obsel.props[TraceModel.ID_DOCUMENT];
+                        // set videoPlayObsel
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                            case TraceModel.PLAY_VIDEO :
+                                _listPlayVideoObsel.addItem(obsel);
+                                startTimerPlayVideoObsel();
+                                break;
+                            case TraceModel.PAUSE_VIDEO :
+                            case TraceModel.STOP_VIDEO :
+                            case TraceModel.END_VIDEO :
+                                removePlayVideoObsel(obsel);
+                                break;
+                        }
 					}
+                    
 					// update the buttons on planSession, view tutorat
 					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
 					{
@@ -1112,6 +1132,8 @@
                 // add listener added TraceLineTitle on the stage
                 timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
 				timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
+				timeLine.addEventListener(ApplicationMenuEvent.UPDATE_LANGUAGE, onPlayVideoSkinAddedOnTimeLine, true);
+				timeLine.addEventListener(ApplicationMenuEvent.UPDATE_LANGUAGE , onPlayVideoSkinAddedOnTimeLine);
 				timeLine.percentWidth = 100;
 				timeLine.percentHeight = 100;
 				timeLine.contextFollowCursor = true;
@@ -1187,7 +1209,13 @@
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
 			}
-			
+            private function onPlayVideoSkinAddedOnTimeLine(event:TimelineSkinEvent):void
+            {
+               
+            }
+            
+                
+            
             /**
              ** Event handler added TraceLineTitre on the stage
              */
@@ -1779,6 +1807,59 @@
 			// Utils
 			//
 			//_____________________________________________________________________
+            /**
+            * stop add duration obsel playVideoObsel
+            */
+            private function removePlayVideoObsel(value:Obsel):void
+            {
+                var index:int = -1;
+                var nbrObsel:int = _listPlayVideoObsel.length;
+                for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
+                    obsel.props[TraceModel.SENDER] ==  value.props[TraceModel.SENDER] )
+                    {
+                        index = nObsel;
+                        break;
+                    }
+                }
+                if(index > -1)
+                {
+                    _listPlayVideoObsel.removeItemAt(index);
+                }
+                
+            }
+            
+            private function startTimerPlayVideoObsel():void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    if(!_timerPlayVideoObsel)
+                    {
+                        _timerPlayVideoObsel = new Timer(1000,0);
+                        _timerPlayVideoObsel.addEventListener(TimerEvent.TIMER, updateTimerPlayVideoObsel);
+                        _timerPlayVideoObsel.start();
+                    }
+                }
+            }
+            
+           private function updateTimerPlayVideoObsel(event:TimerEvent):void
+           {
+               if(Model.getInstance().getCurrentTutoratModule() == this)
+               {
+                   if(_listPlayVideoObsel.length > 0)
+                   {
+                       for each(var obsel:Obsel in _listPlayVideoObsel)
+                       {
+                           obsel.end = obsel.end + 1000;
+                       }
+                   }
+               }
+           }
+               
+           
+            
             /**
              * add edit marker dialog
              */
