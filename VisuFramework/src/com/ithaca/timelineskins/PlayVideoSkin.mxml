@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    creationComplete="skin1_creationCompleteHandler(event)"
+    addedToStage="skin1_addedToStageHandler(event)">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.timeline.ObselSkin")]
+    </fx:Metadata>
+    
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.timeline.CursorIcons;
+        import com.ithaca.timeline.ObselSkin;
+        import com.ithaca.timeline.TimeRange;
+        import com.ithaca.timeline.TraceLine;
+        import com.ithaca.timeline.events.TimelineEvent;
+        import com.ithaca.timelineskins.Stylesheet;
+        import com.ithaca.timelineskins.events.TimelineSkinEvent;
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.events.ObselEvent;
+        import com.ithaca.traces.model.TraceModel;
+        import com.ithaca.utils.UtilFunction;
+        
+        import flash.events.MouseEvent;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.core.UIComponent;
+        import mx.events.FlexEvent;
+        import mx.events.PropertyChangeEvent;
+        import mx.events.PropertyChangeEventKind;
+        import mx.formatters.NumberBaseRoundType;
+        import mx.managers.PopUpManager;
+        
+        import spark.components.BorderContainer;
+        import spark.components.Group;
+        
+        private var timer:Timer;
+        private var interval:int = 1;
+        private var borderColorChange:Boolean = false;
+        public  var obsel : Obsel;
+
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            obsel = hostComponent.obsel;
+            
+            var pathIcon = hostComponent.getStyle( "icon" );
+            icon.width = 20;
+            icon.source = pathIcon;
+            
+            timer = new Timer(interval*1000,0);
+            timer.addEventListener(TimerEvent.TIMER, updateTimer);
+            timer.start(); 
+            
+            borderContainer.height = 10;
+            
+            hostComponent.traceline._timeline.zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, updateWidth);
+            
+            updateWidth( null );
+            
+            obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
+        }
+        
+        private function updateTimer(event:TimerEvent):void
+        {
+            if(borderColorChange)
+            {
+               // borderContainer.setStyle("backgroundAlpha", "1.0");
+                icon.alpha = 1.0;
+            }else
+            {
+               // borderContainer.setStyle("backgroundAlpha", "0.0");
+                icon.alpha = 0.2;
+            }
+            borderColorChange = !borderColorChange;
+            
+        }
+        
+        protected function skin1_addedToStageHandler(event:Event):void
+        {
+            var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE);
+            addedToStageEvent.obselSkin = this;
+            this.dispatchEvent(addedToStageEvent);
+        }
+        
+        public function updateWidth( event : Event ) :  void
+        {
+            var traceline 		: TraceLine = hostComponent.traceline;
+            var timeRange		: TimeRange = traceline._timeline.zoomContext.cursorRange;				
+            var startPosition 	: Number 	= timeRange.timeToPosition( Math.max( hostComponent.obsel.begin , timeRange.begin ),	traceline.width - 2 * Stylesheet.renderersSidePadding);
+            var endPosition 	: Number 	= timeRange.timeToPosition( Math.min( hostComponent.obsel.end , timeRange.end), 	traceline.width - 2 * Stylesheet.renderersSidePadding);
+            
+            width  	= (endPosition - startPosition);
+        }
+        
+        protected function onObselChange( event : PropertyChangeEvent ) : void
+        {				
+            var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
+            hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
+            width 	= y - hostComponent.x ;
+            var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
+            labelTC.text = UtilFunction.getMinSec(duration);
+        }
+
+    ]]>
+    </fx:Script>
+    <!-- SkinParts
+    name=rightGrip, type=mx.core.UIComponent, required=false
+    name=leftGrip, type=mx.core.UIComponent, required=false
+    -->
+        
+    <s:BorderContainer id="borderContainer" height="100%" width="100%" backgroundColor="#c1f2c2" borderVisible="false" minWidth="1" minHeight="1">
+        <mx:Image id="icon" top="-3" left="0"/>
+        <s:Label id="labelTC" text="00:20" right="0" top="1" fontStyle="italic" fontSize="10"/>
+    </s:BorderContainer>
+<!--    <s:BorderContainer id="borderContainer" height="100%" width="100%" backgroundColor="#c1f2c2" borderVisible="false">
+        <s:Label left="0" text="1:20"  top="1" fontSize="10" fontStyle="italic"/>
+        <mx:Image id="icon" top="-3" x="{borderContainer.width/2 - icon.width/2}"/>
+        <s:Label text="3:20" right="0" top="1" fontStyle="italic" fontSize="10"/>
+    </s:BorderContainer>-->
+</s:Skin>
