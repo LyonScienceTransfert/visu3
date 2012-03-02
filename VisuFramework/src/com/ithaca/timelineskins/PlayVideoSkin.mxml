@@ -4,7 +4,8 @@
     xmlns:mx="library://ns.adobe.com/flex/mx" 
     preinitialize="skin1_preinitializeHandler(event)"
     creationComplete="skin1_creationCompleteHandler(event)"
-    addedToStage="skin1_addedToStageHandler(event)">
+    addedToStage="skin1_addedToStageHandler(event)"
+    removedFromStage="skin1_removedFromStageHandler(event)">
     <!-- host component -->
     <fx:Metadata>
         [HostComponent("com.ithaca.timeline.ObselSkin")]
@@ -30,7 +31,6 @@
         private var interval:int = 1;
         private var borderColorChange:Boolean = false;
         private var _obsel : Obsel;
-        private var _obselClone : Obsel;
         private var stop:Boolean;
 
         //////////////////////
@@ -44,20 +44,13 @@
         {
             return _obsel;
         }
-        public function set obselClone(value:Obsel):void
-        {
-            _obselClone = value;
-        }
-        public function get obselClone():Obsel
-        {
-            return _obselClone;
-        }
         public function setSkinStop(value:Number):void
         {
             // set skin stop after creation the skin
             stop = true;
-            obselClone.end = value;
+            hostComponent.obsel.end = value;
             setViewSkinStop();
+            updateWidth( null );
         }
         protected function skin1_creationCompleteHandler(event:FlexEvent):void
         {
@@ -69,7 +62,7 @@
             
             updateWidth( null );
             
-           // obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
+            obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
             
             if(!stop)
             {
@@ -92,7 +85,7 @@
             }
                 currentState = "stop";
                 icon.alpha = 1.0;
-                var duration:int = (obselClone.end - obselClone.begin)/1000;
+                var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
                 var fromTime:int = new int(obsel.props[TraceModel.CURRENT_TIME_PLAYER]);
                 var toTime:int = fromTime + duration;
                 
@@ -100,7 +93,7 @@
                 borderContainer.setStyle("backgroundAlpha","0.0");
                 borderContainer.setStyle("borderVisible","true");
                 
-                //obsel.removeEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
+                obsel.removeEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
         }
         
         private function updateTimer(event:TimerEvent):void
@@ -116,35 +109,27 @@
             
         }
         
-        protected function skin1_addedToStageHandler(event:Event):void
-        {
-            var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE);
-            addedToStageEvent.obselSkin = this;
-            this.dispatchEvent(addedToStageEvent);
-        }
-        
         public function updateWidth( event : Event ) :  void
         {
             var traceline 		: TraceLine = hostComponent.traceline;
             var timeRange		: TimeRange = traceline._timeline.zoomContext.cursorRange;				
-            var startPosition 	: Number 	= timeRange.timeToPosition( Math.max( obselClone.begin , timeRange.begin ),	traceline.width - 2 * Stylesheet.renderersSidePadding);
-            var endPosition 	: Number 	= timeRange.timeToPosition( Math.min( obselClone.end , timeRange.end), 	traceline.width - 2 * Stylesheet.renderersSidePadding);
+            var startPosition 	: Number 	= timeRange.timeToPosition( Math.max( hostComponent.obsel.begin , timeRange.begin ),	traceline.width - 2 * Stylesheet.renderersSidePadding);
+            var endPosition 	: Number 	= timeRange.timeToPosition( Math.min( hostComponent.obsel.end , timeRange.end), 	traceline.width - 2 * Stylesheet.renderersSidePadding);
             
             width  	= (endPosition - startPosition);
             
             checkShowElement();
         }
         
-        public function onObselChange( event : PropertyChangeEvent = null ) : void
+        protected function onObselChange( event : PropertyChangeEvent ) : void
         {				
-            obselClone.end += 1000; 
-            var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( obselClone.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
-            hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( obselClone.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
+            var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
+            hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
             width 	= y - hostComponent.x ;
             
             checkShowElement();
             
-            var duration:int = (obselClone.end - obselClone.begin)/1000;
+            var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
             labelTC.text = UtilFunction.getMinSec(duration);
             
         }
@@ -163,9 +148,30 @@
 
         protected function skin1_preinitializeHandler(event:FlexEvent):void
         {
-           // _obsel = hostComponent.obsel;
-            obselClone = hostComponent.obsel.clone();
-            obsel = hostComponent.obsel;
+            _obsel = hostComponent.obsel;
+        }
+
+        protected function skin1_addedToStageHandler(event:Event):void
+        {
+            _obsel = hostComponent.obsel;
+            
+            
+            var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE);
+            addedToStageEvent.obselSkin = this;
+            this.dispatchEvent(addedToStageEvent);
+            
+            if(obsel.begin != obsel.end)
+            {
+                stop = true;
+                setViewSkinStop();
+            }
+        }
+        
+        protected function skin1_removedFromStageHandler(event:Event):void
+        {
+            var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_REMOVED_FROM_STAGE);
+            addedToStageEvent.obselSkin = this;
+            this.dispatchEvent(addedToStageEvent);
         }
 
     ]]>
@@ -174,8 +180,8 @@
         <s:State name="play"/>
         <s:State name="stop"/>
     </s:states>
-    <s:BorderContainer id="borderContainer" height="14" width="100%" backgroundColor="#c1f2c2" borderVisible="false" minWidth="1" minHeight="1">
-        <mx:Image id="icon" top="-3" left="0"/>
+    <s:BorderContainer id="borderContainer" height="12" width="100%" backgroundColor="#c1f2c2" borderVisible="false" minWidth="1" minHeight="1">
+        <mx:Image id="icon" top="-3" left="-3"/>
         <s:Label id="labelTC" text="00:20" right="0" top="1" fontStyle="italic" fontSize="10"/>
     </s:BorderContainer>
 </s:Skin>
