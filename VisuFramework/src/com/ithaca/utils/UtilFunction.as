@@ -150,14 +150,18 @@ package com.ithaca.utils
         // return mm:ss 
         public static function getMinSec(value:int):String
         {
-            var minute: int = value / 60 ;
-            var minuteString:String = minute.toString();
-            if(minute < 10 ){minuteString = "0"+ minuteString};
-            var seconds:int = value - minute *60;
-            var secondsString:String = seconds.toString();
-            if(seconds < 10 ){secondsString = "0"+secondsString};
-            var result:String = minuteString+":"+secondsString;
-            return result;
+            if(value && value > 0)
+            {
+                var minute: int = value / 60 ;
+                var minuteString:String = minute.toString();
+                if(minute < 10 ){minuteString = "0"+ minuteString};
+                var seconds:int = value - minute *60;
+                var secondsString:String = seconds.toString();
+                if(seconds < 10 ){secondsString = "0"+secondsString};
+                var result:String = minuteString+":"+secondsString;
+                return result;
+            }else
+                return "00:00";
         }
         public static function checkVideoId(value: String): Boolean
         {
