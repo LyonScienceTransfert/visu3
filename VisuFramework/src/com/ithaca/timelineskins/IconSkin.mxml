@@ -44,16 +44,19 @@
 						}
 						icon.width = 20;
 						hostComponent.toolTip = fxgt.gettext("Affichage du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("chez l'apprenant");
-						break;
+                        icon.left = -5;
+                        break;
 					case TraceModel.PLAY_VIDEO :
 						hostComponent.toolTip = fxgt.gettext("Lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à partir de")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " + fxgt.gettext("secondes");
 						break;
 					case TraceModel.PAUSE_VIDEO :
 						hostComponent.toolTip = fxgt.gettext("Pause vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
-						break;
+                        icon.top = -2;
+                        break;
 					case TraceModel.END_VIDEO :
 						hostComponent.toolTip = fxgt.gettext("Fin de la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
-						break;
+                        icon.top = -2;
+                        break;
 					case TraceModel.RELEASE_SLIDER_VIDEO :
 						hostComponent.toolTip = fxgt.gettext("Déplacement vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("vers") + " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
 						break;
