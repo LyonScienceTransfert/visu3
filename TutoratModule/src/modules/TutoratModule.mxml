@@ -123,7 +123,9 @@
             // pixels between windodws editMarkerDialog
             private var DELTA_X_Y:int = 15;
             // list playVideoObsels
-            private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            private var _listPlayVideoObselSkin:ArrayCollection = new ArrayCollection();
+            // list remover Pause/Stop/End video obsel skin
+            private var _listPauseStopEndObselSkin:ArrayCollection = new ArrayCollection();
             // timer playVideoObsel
             private var _timerPlayVideoObsel:Timer;
 			
@@ -470,13 +472,13 @@
                         switch (typeObsel)
                         {
                             case TraceModel.PLAY_VIDEO :
-                                _listPlayVideoObsel.addItem(obsel);
+                                //_listPlayVideoObselSkin.addItem(obsel);
                                 startTimerPlayVideoObsel();
                                 break;
                             case TraceModel.PAUSE_VIDEO :
                             case TraceModel.STOP_VIDEO :
                             case TraceModel.END_VIDEO :
-                                removePlayVideoObsel(obsel);
+                                removePlayVideoObselSkin(obsel);
                                 break;
                         }
 					}
@@ -1132,8 +1134,7 @@
                 // add listener added TraceLineTitle on the stage
                 timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
 				timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
-				timeLine.addEventListener(ApplicationMenuEvent.UPDATE_LANGUAGE, onPlayVideoSkinAddedOnTimeLine, true);
-				timeLine.addEventListener(ApplicationMenuEvent.UPDATE_LANGUAGE , onPlayVideoSkinAddedOnTimeLine);
+				timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onPlayVideoSkinAddedOnTimeLine);
 				timeLine.percentWidth = 100;
 				timeLine.percentHeight = 100;
 				timeLine.contextFollowCursor = true;
@@ -1209,12 +1210,16 @@
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
 			}
+            
+            /**
+            * Event handler added skin obsel PlayVideoDocument on timeline
+            */
             private function onPlayVideoSkinAddedOnTimeLine(event:TimelineSkinEvent):void
             {
-               
+               var obselSkin:Object = event.obselSkin as Object;
+               addPlayVideoObselSkin(obselSkin);
             }
             
-                
             
             /**
              ** Event handler added TraceLineTitre on the stage
@@ -1314,6 +1319,19 @@
 					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
 					{
 						var obsel:Obsel = listObsels[nObsel] as Obsel;
+                        
+                        // check obsels plyVideoDocument
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                        case TraceModel.PAUSE_VIDEO :
+                        case TraceModel.STOP_VIDEO :
+                        case TraceModel.END_VIDEO :
+                            // add removed obsels
+                            _listPauseStopEndObselSkin.addItem(obsel);
+                            break;
+                        }
+                        
 						var arrayInfoObsel:Array = Model.getInstance().addObsel(obsel);
 						if(arrayInfoObsel.length > 0)
 						{
@@ -1807,28 +1825,53 @@
 			// Utils
 			//
 			//_____________________________________________________________________
-            /**
-            * stop add duration obsel playVideoObsel
-            */
-            private function removePlayVideoObsel(value:Obsel):void
+            private function addPlayVideoObselSkin(value:Object):void
             {
-                var index:int = -1;
-                var nbrObsel:int = _listPlayVideoObsel.length;
-                for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+                _listPlayVideoObselSkin.addItem(value);
+                
+                
+                // remove obsels from timeline
+                var i:int = 0;
+                for each(var obsel:Obsel in _listPauseStopEndObselSkin)
                 {
-                    var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    if(removePlayVideoObselSkin(obsel))
+                    {
+                        _listPauseStopEndObselSkin.removeItemAt(i);
+                    }
+                    i++;
+                }
+                
+            }
+            /**
+            * stop change duration obsel playVideoObsel
+            */
+            private function removePlayVideoObselSkin(value:Obsel):Boolean
+            {
+                var result:Boolean = false;
+                var listIndexToRemove:ArrayCollection = new ArrayCollection();
+                var nbrSkin:int = _listPlayVideoObselSkin.length;
+                for(var nSkin:int = 0 ; nSkin < nbrSkin; nSkin++)
+                {
+                    var obsel:Obsel = (_listPlayVideoObselSkin.getItemAt(nSkin) as Object).obselClone;
                     if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
                     obsel.props[TraceModel.SENDER] ==  value.props[TraceModel.SENDER] )
                     {
-                        index = nObsel;
-                        break;
+                        listIndexToRemove.addItem(nSkin);
                     }
                 }
-                if(index > -1)
+                if(listIndexToRemove.length > 0)
                 {
-                    _listPlayVideoObsel.removeItemAt(index);
+                    var nbrSkinRemove:int = listIndexToRemove.length;
+                    for(var nSkinRemove:int = nbrSkinRemove -1 ; nSkinRemove >= 0; nSkinRemove--)
+                    {
+                        var index:int = listIndexToRemove.getItemAt(nSkinRemove) as int;
+                        (_listPlayVideoObselSkin.getItemAt(index) as Object).setSkinStop(value.end);
+                        _listPlayVideoObselSkin.removeItemAt(index);
+                        result =true;
+                    }
+                        
                 }
-                
+                return result;
             }
             
             private function startTimerPlayVideoObsel():void
@@ -1848,11 +1891,16 @@
            {
                if(Model.getInstance().getCurrentTutoratModule() == this)
                {
-                   if(_listPlayVideoObsel.length > 0)
+                   if(_listPlayVideoObselSkin.length > 0)
                    {
-                       for each(var obsel:Obsel in _listPlayVideoObsel)
+                       var obsel:Obsel;
+                       for each(var skin:Object in _listPlayVideoObselSkin)
                        {
-                           obsel.end = obsel.end + 1000;
+                          // obsel = skin.obsel;
+                        //   if(obsel)
+                          // {
+                           skin.onObselChange();
+                           //}
                        }
                    }
                }
