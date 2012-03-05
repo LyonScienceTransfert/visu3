@@ -19,6 +19,7 @@
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
             import com.ithaca.timeline.skins.TraceLineTitleSkin;
+            import com.ithaca.timelineskins.events.TimelineSkinEvent;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.RetroTraceModel;
@@ -121,6 +122,14 @@
             private var _listEditMarkerDialog:ArrayCollection;
             // pixels between windodws editMarkerDialog
             private var DELTA_X_Y:int = 15;
+            // list playVideoObsels
+            private var _listPlayVideoObselSkin:ArrayCollection = new ArrayCollection();
+            // list obsel playVideoObsel
+            private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            // list remover Pause/Stop/End video obsel
+            private var _listPauseStopEndObsel:ArrayCollection = new ArrayCollection();
+            // timer playVideoObsel
+            private var _timerPlayVideoObsel:Timer;
 			
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
@@ -460,7 +469,23 @@
 						Model.getInstance().addObsel(obsel);
 						// get id document
 						idDocument = obsel.props[TraceModel.ID_DOCUMENT];
+                        // set videoPlayObsel
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                            case TraceModel.PLAY_VIDEO :
+                                // start timer 
+                                startTimerPlayVideoObsel();
+                                break;
+                            case TraceModel.PAUSE_VIDEO :
+                            case TraceModel.STOP_VIDEO :
+                            case TraceModel.END_VIDEO :
+                                // add obsels
+                                removePlayVideoObsel(obsel);
+                                break;
+                        }
 					}
+                    
 					// update the buttons on planSession, view tutorat
 					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
 					{
@@ -1102,25 +1127,27 @@
 				}
 			}
 			
-			private function createTimeLine():void
-			{
-				timeLine = new Timeline();
-				// remove message from panle resume
-				panelTimeLine.removeAllElements();
-				timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
-				timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
+            private function createTimeLine():void
+            {
+                timeLine = new Timeline();
+                // remove message from panle resume
+                panelTimeLine.removeAllElements();
+                timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
+                timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
                 // add listener added TraceLineTitle on the stage
                 timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
-				timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
-				timeLine.percentWidth = 100;
-				timeLine.percentHeight = 100;
-				timeLine.contextFollowCursor = true;
-				timeLine.setStyle("timeMode","relative");
-				timeLine.setStyle("cursorMode","auto");
-				timeLine.setStyle("contextFollowCursor","false");
-				
-				panelTimeLine.addElement(timeLine);
-			}
+                timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
+                // listener add playVideoSkin on stage
+                timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onAddedPlayVideoSkinOnTimeLine);
+                timeLine.percentWidth = 100;
+                timeLine.percentHeight = 100;
+                timeLine.contextFollowCursor = true;
+                timeLine.setStyle("timeMode","relative");
+                timeLine.setStyle("cursorMode","auto");
+                timeLine.setStyle("contextFollowCursor","false");
+                
+                panelTimeLine.addElement(timeLine);
+            }
 			
             private function onCreationCompleteTimeLine(event:FlexEvent):void
             {
@@ -1187,7 +1214,17 @@
 				var traceLine:TraceLine = event.value.traceline;
 				traceLine.title = nameUser;
 			}
-			
+
+            /**
+            * Event handler added skin obsel PlayVideoDocument on timeline
+            */
+            private function onAddedPlayVideoSkinOnTimeLine(event:TimelineSkinEvent):void
+            {
+               var obselSkin:Object = event.obselSkin as Object;
+               addPlayVideoObselSkin(obselSkin);
+            }
+            
+            
             /**
              ** Event handler added TraceLineTitre on the stage
              */
@@ -1286,6 +1323,19 @@
 					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
 					{
 						var obsel:Obsel = listObsels[nObsel] as Obsel;
+                        
+                        // check obsels : pause, stop, end video
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                        case TraceModel.PAUSE_VIDEO :
+                        case TraceModel.STOP_VIDEO :
+                        case TraceModel.END_VIDEO :
+                            // add obsel
+                            addPauseStopEndObsell(obsel);
+                            break;
+                        }
+                        
 						var arrayInfoObsel:Array = Model.getInstance().addObsel(obsel);
 						if(arrayInfoObsel.length > 0)
 						{
@@ -1779,6 +1829,177 @@
 			// Utils
 			//
 			//_____________________________________________________________________
+            /**
+            * Add obsel PlayVideoSkin
+            */
+            private function addPlayVideoObsel(value:Obsel):void
+            {
+                if(!hasObsel(value,_listPlayVideoObsel))
+                {
+                    _listPlayVideoObsel.addItem(value);
+                }
+                // check if has obsel in collection 
+                function hasObsel(value:Obsel, list:ArrayCollection):Boolean
+                {
+                    var nbrObsel:int = list.length;
+                    for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                    {
+                        var obsel:Obsel = list.getItemAt(nObsel) as Obsel;
+                        if(obsel == value)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            
+            /**
+            * Remove skin PlayVideoSkin
+            */
+            private function removePlayVideoObselSkin(value:Object):void
+            {
+                for each(var skin:Object in _listPlayVideoObselSkin)
+                {
+                    if(skin == value)
+                    {
+                        var index:int = _listPlayVideoObselSkin.getItemIndex(skin);
+                        _listPlayVideoObselSkin.removeItemAt(index);
+                    }
+                }
+            }
+            
+            /**
+             * Add skin PlayVideoSkin
+             */
+            private function addPlayVideoObselSkin(value:Object):void
+            {
+                var obsel:Obsel = value.obsel;
+                // check if skin has duration > 0
+                if(obsel.begin == obsel.end)
+                {
+                    _listPlayVideoObselSkin.addItem(value);
+                    addPlayVideoObsel(obsel);
+                    // check if has obsels stop/pause/end video
+                    checkPauseStopEndObsel();
+                }
+            }
+            /**
+             * Update PlayVideoSkin
+             */
+            private function updatePlayVideoObselSkin(value:Obsel, obselStopPlay:Obsel):void
+            {
+                var listIndexToRemove:ArrayCollection = new ArrayCollection();
+                var nbrSkin:int = _listPlayVideoObselSkin.length;
+                 for(var nSkin:int = 0; nSkin < nbrSkin; nSkin++)
+                {
+                    var skin:Object = _listPlayVideoObselSkin.getItemAt(nSkin) as Object;
+                    var obsel:Obsel = skin.obsel;
+                    if(obsel == value)
+                    {
+                        skin.setSkinStop(obselStopPlay.begin);
+                        listIndexToRemove.addItem(nSkin);
+                    }
+                } 
+                
+                if(listIndexToRemove.length > 0)
+                {
+                    var nbrSkinRemove:int = listIndexToRemove.length;
+                    for(var nSkinRemove:int = nbrSkinRemove -1 ; nSkinRemove >= 0; nSkinRemove--)
+                    {
+                        var index:int = listIndexToRemove.getItemAt(nSkinRemove) as int;
+                        _listPlayVideoObselSkin.removeItemAt(index);
+                    }
+                } 
+            }
+            
+            /**
+             * Add obsels Pause, Stop, End 
+             */
+            private function addPauseStopEndObsell(value:Obsel):void
+            {
+                _listPauseStopEndObsel.addItem(value);
+            }
+            
+            /**
+             * Check obsels Pause, Stop, End 
+             */
+            private function checkPauseStopEndObsel():void
+            {
+                if(_listPauseStopEndObsel.length > 0)
+                {
+                    for each(var obsel:Obsel in _listPauseStopEndObsel)
+                    {
+                        if(removePlayVideoObsel(obsel))
+                        {
+                            var indexObselRemove:int =  _listPauseStopEndObsel.getItemIndex(obsel);
+                            _listPauseStopEndObsel.removeItemAt(indexObselRemove);
+                        }
+                    }
+                }
+            }
+            
+            /**
+            * Remove playVideoObsel => stop add duration
+            */
+            private function removePlayVideoObsel(value:Obsel):Boolean
+            {
+                var index:int = -1;
+                var obselRemoved:Obsel;
+                var nbrObsel:int = _listPlayVideoObsel.length;
+                for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
+                    obsel.props[TraceModel.SENDER] ==  value.props[TraceModel.SENDER] )
+                    {
+                        index = nObsel;
+                        obselRemoved = obsel;
+                    }
+                }
+                if(index > -1)
+                {
+                    _listPlayVideoObsel.removeItemAt(index);
+                    // change state skins of playVideoSkin
+                    updatePlayVideoObselSkin(obselRemoved, value);
+                    return true;
+                }
+                return false;
+            }
+            
+            /**
+             * Start timer PlayVideoSkin
+             */
+            private function startTimerPlayVideoObsel():void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    if(!_timerPlayVideoObsel)
+                    {
+                        _timerPlayVideoObsel = new Timer(1000,0);
+                        _timerPlayVideoObsel.addEventListener(TimerEvent.TIMER, updateTimerPlayVideoObsel);
+                        _timerPlayVideoObsel.start();
+                    }
+                }
+            }
+            
+            /**
+             * Update timer PlayVideoSkin
+             */
+           private function updateTimerPlayVideoObsel(event:TimerEvent):void
+           {
+               if(Model.getInstance().getCurrentTutoratModule() == this)
+               {
+                   if(_listPlayVideoObsel.length > 0)
+                   {
+                       for each(var obsel:Obsel in _listPlayVideoObsel)
+                       {
+                          obsel.end += 1000;
+                       }
+                   }
+               }
+           }
+               
             /**
              * add edit marker dialog
              */

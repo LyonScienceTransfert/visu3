@@ -19,7 +19,7 @@
 
 timeline|ObselSkin.PlayDocumentVideo
 {
-	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	skin-class: ClassReference("com.ithaca.timelineskins.PlayVideoSkin");
 	icon : Embed("images/iconPlayGreen_16x16.png");
 	tooltipProp : 'currenttime';
 }
