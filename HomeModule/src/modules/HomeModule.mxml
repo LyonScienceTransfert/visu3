@@ -217,26 +217,6 @@
                 Model.getInstance().addChatMessage(chatMessage); */
         	}
 			
-			/**
-			 * Send message to one user
-			 */ 
-			protected function sendMessageToUser():void
-			{
-/* 				var userId:int = this.listConUsers.selectedItem.id_user;
-				var text:String = this.textToSend.text.toString();
-				var event:MessageEvent = new MessageEvent(MessageEvent.SEND_PRV_MESSAGE);
-				event.senderUserId = Model.getInstance().getLoggedUser().getId();
-				event.message = text;
-				event.resiverUserId = userId;
-				dispatchEvent(event);
-				this.textToSend.text = "";  
-				var loggerUser:User = Model.getInstance().getLoggedUser();
-				Model.getInstance().addFluxActivity(loggerUser.id_user,loggerUser.firstname, loggerUser.avatar,"[private] "+text ,new Date());
-				listConUsers.visible = false; */
-			}
-			
-		
-			
 			private function getLabelHasNotSessionForThisDate():Label
 			{
 				var labelMessage:Label = new Label();
@@ -463,33 +443,6 @@
 					}else return false;
 				}else return false;
 			}
-			
-			
-			/**
-			 * Change participants user 
-			 */ 
-			private function onChangeSessionUsers(event:SessionHomeElementEvent):void{
-				/*
-				var sessionView:SessionHomeElement = event.currentTarget as SessionHomeElement;
-				var sessionId:uint = sessionView.session.getSessionId();
-				var oldUserId:uint = event.oldSessionUser.getId();
-				var newUserId:uint = event.newSessionUser.getId();
-				
-				var oldSessionUser:SessionUserVO = new SessionUserVO();
-				oldSessionUser.id_session = sessionId;
-				oldSessionUser.id_user = oldUserId;
-				
-				var newSessionUser:SessionUserVO = new SessionUserVO();
-				newSessionUser.id_session = sessionId;
-				newSessionUser.id_user = newUserId;
-				
-				var sessionUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.UPDATE_SESSION_USER);
-				sessionUserEvent.oldSessionUser = oldSessionUser;
-				sessionUserEvent.newSessionUser = newSessionUser;
-				dispatchEvent(sessionUserEvent);
-				 */	
-			}
-			
 		
 			
 // DELETE SESSION
