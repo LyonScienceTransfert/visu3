@@ -67,6 +67,7 @@ package  com.ithaca.visu.model
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.Trace;
 	import com.ithaca.traces.model.TraceModel;
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.events.VisuModuleEvent;
 	import com.ithaca.visu.model.vo.SessionVO;
@@ -1340,7 +1341,7 @@ package  com.ithaca.visu.model
 		 */
 		public function removeSession(sessionVO:SessionVO):String
 		{
-			var labelDate:String = getDateFormatYYY_MM_DD(sessionVO.date_session);	
+			var labelDate:String = UtilFunction.getDateFormatYYY_MM_DD(sessionVO.date_session);	
 			var nbrDateSessionObject:Object = this.listDateSession.length;
 			for(var nDateSessionObject:uint = 0; nDateSessionObject < nbrDateSessionObject; nDateSessionObject++){
 				var obj:Object = this.listDateSession[nDateSessionObject];
@@ -1398,7 +1399,7 @@ package  com.ithaca.visu.model
 		 * add session for user when responsable add him to this session 
 		 */
 		public function addSession(sessionVO:SessionVO, listUsers:Array):String{
-			var labelDate:String = getDateFormatYYY_MM_DD(sessionVO.date_session);			
+			var labelDate:String = UtilFunction.getDateFormatYYY_MM_DD(sessionVO.date_session);			
 			var session:Session = new Session(sessionVO);
 			session.setUsers(listUsers);
 			// add swap users
@@ -1589,15 +1590,15 @@ package  com.ithaca.visu.model
 				var arrDate:Array = dateString.split("-");
 				// create new date similaire like on the serveur
 				var date:Date = new Date(new Number(arrDate[0]), new Number(arrDate[1]),new Number(arrDate[2]));
-				var labelDate:String = getDateFormatYYY_MM_DD(date);
+				var labelDate:String = UtilFunction.getDateFormatYYY_MM_DD(date);
 				this.listDateSession.addItem({labelDate:labelDate, fullDate:date, listSessionDate:null});
 			}
 		}
 		
 		public function addSessionDateToday(index:int):Object
-		{
+		{ 
 			var date:Date = new Date();
-			var labelDate:String = getDateFormatYYY_MM_DD(date);
+			var labelDate:String = UtilFunction.getDateFormatYYY_MM_DD(date);
 			this.listDateSession.addItemAt({labelDate:labelDate, fullDate:date, listSessionDate:null},index);
 			return this.listDateSession.getItemAt(index);
 		}
@@ -2123,23 +2124,6 @@ package  com.ithaca.visu.model
 				}
 			}
 		}
-		
-		/**
-		 * 
-		 */
-		private function getDateFormatYYY_MM_DD(date:Date):String{
-			var month:uint = date.getMonth()+1;
-			var monthString:String = month.toString();
-			if(month < 10){
-				monthString = '0'+monthString;
-			}
-			var day:uint = date.date;
-			var dayString:String = day.toString();
-			if(day < 10){
-				dayString = '0'+dayString;
-			}
-			return date.getFullYear().toString()+"-"+monthString+"-"+dayString;
-		}	
 		
 		public function clearListFrameSplit():void
 		{

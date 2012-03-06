@@ -35,6 +35,7 @@
 	<fx:Script>
 		<![CDATA[
             import com.ithaca.messagerie.model.MessageVO;
+            import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
             import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
             import com.ithaca.visu.events.InitMapEvent;
@@ -295,23 +296,53 @@
 				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
 				{
 					var sessionUpdated: Session = event.session;
-					var sessionId:int = sessionUpdated.id_session;
-					var nbrSession:int = this.sessionsList.length;
-					for ( var nSession:int = 0; nSession < nbrSession; nSession++)
-					{
-						var session:Session = this.sessionsList.getItemAt(nSession) as Session;
-						if(session.id_session == sessionId)
-						{
-							session.theme = sessionUpdated.theme;
-							session.date_session = sessionUpdated.date_session;
-							session.participants = sessionUpdated.participants;
-							// update status users
-							updateStatusParticipants(session.participants);
-							break;
-						}
-					}
+                    // check if has this date
+                    var objDateNavigateurDay:Object = hasDateSessionInNavigateurday(this.listDateForNavigateurDay, sessionUpdated.date_session);
+                    if(objDateNavigateurDay)
+                    {
+                        if(this.navigateurDay.selectedItem && objDateNavigateurDay.labelDate == this.navigateurDay.selectedItem.labelDate)
+                        {
+                            // update sessions
+                            navigateurDay_changeHandler();
+                        }
+                    }else
+                    {
+                        // update session users
+                        updateStatusParticipants(sessionUpdated.participants);
+                        // add session
+                        var listAddSession:ArrayCollection = new ArrayCollection();
+                        listAddSession.addItem(sessionUpdated);
+                        // hasn't date
+                        var labelDate:String = UtilFunction.getDateFormatYYY_MM_DD(sessionUpdated.date_session);
+                        // get index new date 
+                        var index:int = UtilFunction.getIndexNewDateNavigatuerDay(this.listDateForNavigateurDay, sessionUpdated.date_session);
+                        // add date
+                        this.listDateForNavigateurDay.addItemAt({labelDate:labelDate, fullDate:sessionUpdated.date_session, listSessionDate:listAddSession},index);
+                    }
 				}
 			}
+            
+            /**
+            * Check has date session
+            */ 
+            private function hasDateSessionInNavigateurday(list:ArrayCollection, date:Date):Object
+            {
+                if(!list)
+                {
+                    return null;
+                }
+                var nbrDate:int = list.length;
+                for(var nDate:int = 0 ; nDate < nbrDate ; nDate++)
+                {
+                    var objDateNavigateurDay:Object = list.getItemAt(nDate) as Object;
+                    var labelNavigateurDay:String = objDateNavigateurDay.labelDate;
+                    if(labelNavigateurDay == UtilFunction.getDateFormatYYY_MM_DD(date))
+                    {
+                        return objDateNavigateurDay;
+                    }
+                }
+                return null;
+            }
 			
 			/**
 			* Update status participants the session by status on the plateforme
@@ -472,50 +503,23 @@
 					//view.updateViewUsers();
 				}
 	
-			}
-			
-			/**
-			 * Show list connected users, exclude logged user
-			 */ 
-			protected function sendOneUser_clickHandler(event:MouseEvent):void
-			{
-				/* if(listConUsers.visible){
-					listConUsers.visible = false;
-				}else
-				{
-					var listConnectedUserExludeLoggedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
-					if (listConnectedUserExludeLoggedUser.length > 0)
-					{
-						listConUsers.dataProvider = listConnectedUserExludeLoggedUser;
-						listConUsers.visible = true;
-					}
-				} */
 			}		
 			
-		
-			/**
-			 * Handler the navigateurDay component
-			 */ 
-			protected function navigateurDay_changeHandler(event:IndexChangeEvent):void
-			{
-				var selectedItem:Object = (event.target as NavigateurDay).selectedItem as Object;
-				// set selected item to Model
-				Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(selectedItem);
-				var listSessionDate:ArrayCollection = selectedItem.listSessionDate;			
-				if(listSessionDate == null){
-					// set list session from BD
-					var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
-					sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
-					sessionEventLoad.sessionDate = selectedItem.labelDate;
-					dispatchEvent(sessionEventLoad);				
-				}else{
-					// update dataProvider SessionView 
-					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
-					sessionEvent.sessionDate = selectedItem.labelDate;
-					sessionEvent.listSession = listSessionDate;
-					dispatchEvent(sessionEvent);	
-				}
-			}	
+            /**
+             * Handler the navigateurDay component
+             */ 
+            protected function navigateurDay_changeHandler(event:IndexChangeEvent = null):void
+            {
+                var selectedItem:Object = navigateurDay.selectedItem as Object;
+                // set selected item to Model
+                Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(selectedItem);
+                
+                // set list session from BD
+                var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+                sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+                sessionEventLoad.sessionDate = selectedItem.labelDate;
+                dispatchEvent(sessionEventLoad);		
+            }	
 			
 			/**
 			 * 
