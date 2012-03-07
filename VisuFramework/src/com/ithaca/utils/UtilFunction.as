@@ -67,6 +67,7 @@ package com.ithaca.utils
     import gnu.as3.gettext.FxGettext;
     import gnu.as3.gettext._FxGettext;
     
+    import mx.collections.ArrayCollection;
     import mx.utils.URLUtil;
 
 
@@ -162,6 +163,41 @@ package com.ithaca.utils
                 return result;
             }else
                 return "00:00";
+        }
+        /**
+        * param : date 
+        * @return : String 
+        */
+        public static function getDateFormatYYY_MM_DD(date:Date):String{
+            var month:uint = date.getMonth()+1;
+            var monthString:String = month.toString();
+            if(month < 10){
+                monthString = '0'+monthString;
+            }
+            var day:uint = date.date;
+            var dayString:String = day.toString();
+            if(day < 10){
+                dayString = '0'+dayString;
+            }
+            return date.getFullYear().toString()+"-"+monthString+"-"+dayString;
+        }
+        /**
+        * param : list objects navigateurDay
+        * @return : index
+        */
+        public static function getIndexNewDateNavigatuerDay(list:ArrayCollection, date:Date):int
+        {
+            var nbrObject:int = list.length;
+            for(var nObject:int = 0 ; nObject < nbrObject; nObject++)
+            {
+                var navigateurDay:Object = list.getItemAt(nObject) as Object;
+                var dateNavigateurDay:Date = navigateurDay.fullDate;
+                if(date < dateNavigateurDay)
+                {
+                    return nObject;
+                }
+            }
+            return nbrObject;
         }
         public static function checkVideoId(value: String): Boolean
         {
