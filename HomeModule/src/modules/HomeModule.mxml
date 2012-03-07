@@ -305,6 +305,12 @@
                             // update sessions
                             navigateurDay_changeHandler();
                         }
+                        // check if change only date the session
+                        if(hasSessionIdSelectedNavigateurDay(this.navigateurDay.selectedItem.listSessionDate, sessionUpdated.id_session))
+                        {
+                            // update sessions
+                            navigateurDay_changeHandler();
+                        }
                     }else
                     {
                         // update session users
@@ -318,6 +324,18 @@
                         var index:int = UtilFunction.getIndexNewDateNavigatuerDay(this.listDateForNavigateurDay, sessionUpdated.date_session);
                         // add date
                         this.listDateForNavigateurDay.addItemAt({labelDate:labelDate, fullDate:sessionUpdated.date_session, listSessionDate:listAddSession},index);
+                    }
+                    
+                    function hasSessionIdSelectedNavigateurDay(list:ArrayCollection, sessionId:int):Boolean
+                    {
+                        for each(var session:Session in list)
+                        {
+                            if(session.id_session == sessionId)
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
                     }
 				}
 			}
