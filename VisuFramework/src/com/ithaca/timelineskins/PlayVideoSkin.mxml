@@ -32,6 +32,8 @@
         private var borderColorChange:Boolean = false;
         private var _obsel : Obsel;
         private var stop:Boolean;
+        // current time videoPlayer when start play video
+        private var timeStartPlayVideo:int;
 
         //////////////////////
         /// setters/getters
@@ -39,6 +41,7 @@
         public function set obsel(value:Obsel):void
         {
             _obsel = value;
+            timeStartPlayVideo = new int(_obsel.props[TraceModel.CURRENT_TIME_PLAYER]);
         }
         public function get obsel():Obsel
         {
@@ -130,7 +133,7 @@
             checkShowElement();
             
             var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
-            labelTC.text = UtilFunction.getMinSec(duration);
+            labelTC.text = UtilFunction.getMinSec(duration + timeStartPlayVideo);
             
         }
         
@@ -148,12 +151,12 @@
 
         protected function skin1_preinitializeHandler(event:FlexEvent):void
         {
-            _obsel = hostComponent.obsel;
+            obsel = hostComponent.obsel;
         }
 
         protected function skin1_addedToStageHandler(event:Event):void
         {
-            _obsel = hostComponent.obsel;
+            obsel = hostComponent.obsel;
             
             
             var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE);
