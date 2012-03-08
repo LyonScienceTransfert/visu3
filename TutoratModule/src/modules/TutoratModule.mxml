@@ -480,6 +480,7 @@
                             case TraceModel.PAUSE_VIDEO :
                             case TraceModel.STOP_VIDEO :
                             case TraceModel.END_VIDEO :
+                            case TraceModel.RELEASE_SLIDER_VIDEO :
                                 // add obsels
                                 removePlayVideoObsel(obsel);
                                 break;
@@ -1331,6 +1332,7 @@
                         case TraceModel.PAUSE_VIDEO :
                         case TraceModel.STOP_VIDEO :
                         case TraceModel.END_VIDEO :
+                        case TraceModel.RELEASE_SLIDER_VIDEO :
                             // add obsel
                             addPauseStopEndObsell(obsel);
                             break;
@@ -1854,6 +1856,7 @@
                 }
             }
             
+
             /**
             * Remove skin PlayVideoSkin
             */
@@ -1882,7 +1885,34 @@
                     addPlayVideoObsel(obsel);
                     // check if has obsels stop/pause/end video
                     checkPauseStopEndObsel();
+                }else
+                {
+                    // check if skin in play 
+                    if(!isSkinStatePlying(obsel))
+                    {
+                        value.setSkinStop(obsel.end);
+                    }else
+                    {
+                        _listPlayVideoObselSkin.addItem(value);
+                    }
+                  //  trace("obsel playing ="+obselPlaying);
                 }
+            }
+            
+            private function isSkinStatePlying(value:Obsel):Boolean
+            {
+                for each(var object:Object in _listPlayVideoObselSkin)
+                {
+                    var obsel:Obsel = object.obsel;
+                    if(obsel == value)
+                    {
+                        if(!object.isSkinPlay())
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
             /**
              * Update PlayVideoSkin
