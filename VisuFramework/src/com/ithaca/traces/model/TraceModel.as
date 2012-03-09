@@ -100,6 +100,7 @@ public final class TraceModel
     public static const PAUSE_VIDEO: String = "PauseDocumentVideo";
     public static const END_VIDEO: String = "EndDocumentVideo";
     public static const STOP_VIDEO: String = "StopDocumentVideo";
+    public static const STOP_VIDEO_DISCONNECTING_USER: String = "StopDocumentVideoDisconnectingUser";
     public static const PRESS_SLIDER_VIDEO: String = "SliderPressDocumentVideo";
     public static const RELEASE_SLIDER_VIDEO: String = "SliderReleaseDocumentVideo";
     
