@@ -63,6 +63,10 @@
 					case TraceModel.RECEIVE_DOCUMENT :
 						hostComponent.toolTip = fxgt.gettext("Envoi du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
 						break;
+                    case TraceModel.STOP_VIDEO :
+                        hostComponent.toolTip = fxgt.gettext("Deconnexion l'apprenant en moment lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
+                        icon.top = -8;
+                        break;
 					default :
 						
 						break;

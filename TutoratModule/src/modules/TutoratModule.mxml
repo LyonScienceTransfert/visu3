@@ -128,6 +128,8 @@
             private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
             // list remover Pause/Stop/End video obsel
             private var _listPauseStopEndObsel:ArrayCollection = new ArrayCollection();
+            // list session exit obsels
+            private var _listSessionExitObsel:ArrayCollection = new ArrayCollection();
             // timer playVideoObsel
             private var _timerPlayVideoObsel:Timer;
 			
@@ -363,6 +365,8 @@
 						// FIXME gestion time
 						Model.getInstance().addViewObselSessionOut(new Date().time,event.userId)
 					}
+                    // disconnection the client  
+                    removePlayVideoObselDisconnectedUser(event.userId);
 				}	
 			}
 
@@ -1221,8 +1225,12 @@
             */
             private function onAddedPlayVideoSkinOnTimeLine(event:TimelineSkinEvent):void
             {
-               var obselSkin:Object = event.obselSkin as Object;
-               addPlayVideoObselSkin(obselSkin);
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                   var obselSkin:Object = event.obselSkin as Object;
+                   addPlayVideoObselSkin(obselSkin);
+                }
             }
             
             
@@ -1335,6 +1343,10 @@
                         case TraceModel.RELEASE_SLIDER_VIDEO :
                             // add obsel
                             addPauseStopEndObsell(obsel);
+                            break;
+                        case TraceModel.SESSION_EXIT :
+                          //  var userId:int = obsel.uid;
+                            addObselDisconnectedUser(obsel);
                             break;
                         }
                         
@@ -1884,7 +1896,12 @@
                     _listPlayVideoObselSkin.addItem(value);
                     addPlayVideoObsel(obsel);
                     // check if has obsels stop/pause/end video
-                    checkPauseStopEndObsel();
+                    if(!checkPauseStopEndObsel())
+                    {
+                        // FIXME : check order of the obsels
+                        // check obsel sessionexit
+                        //checkStopPlayVideoDocumentWhenUserDisconnected();
+                    }
                 }else
                 {
                     // check if skin in play 
@@ -1917,7 +1934,7 @@
             /**
              * Update PlayVideoSkin
              */
-            private function updatePlayVideoObselSkin(value:Obsel, obselStopPlay:Obsel):void
+            private function updatePlayVideoObselSkin(value:Obsel, obselStopPlayTimestamp:Number):void
             {
                 var listIndexToRemove:ArrayCollection = new ArrayCollection();
                 var nbrSkin:int = _listPlayVideoObselSkin.length;
@@ -1927,7 +1944,7 @@
                     var obsel:Obsel = skin.obsel;
                     if(obsel == value)
                     {
-                        skin.setSkinStop(obselStopPlay.begin);
+                        skin.setSkinStop(obselStopPlayTimestamp);
                         listIndexToRemove.addItem(nSkin);
                     }
                 } 
@@ -1954,7 +1971,7 @@
             /**
              * Check obsels Pause, Stop, End 
              */
-            private function checkPauseStopEndObsel():void
+            private function checkPauseStopEndObsel():Boolean
             {
                 if(_listPauseStopEndObsel.length > 0)
                 {
@@ -1964,10 +1981,69 @@
                         {
                             var indexObselRemove:int =  _listPauseStopEndObsel.getItemIndex(obsel);
                             _listPauseStopEndObsel.removeItemAt(indexObselRemove);
+                            return true;
                         }
                     }
                 }
+                return false;
             }
+            
+            /**
+            * Add obsel disconnected user 
+            */
+            private function addObselDisconnectedUser(value:Obsel):void
+            {
+                _listSessionExitObsel.addItem(value);
+            }
+            /**
+            * Set obsel playVideoDocument in state stop for users was disconnected when watched player youtube
+            */ 
+            private function checkStopPlayVideoDocumentWhenUserDisconnected():void
+            {
+                var nbrObsel:int = _listSessionExitObsel.length;
+                for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
+                {
+                    var obsel:Obsel = _listSessionExitObsel.getItemAt(nObsel) as Obsel;
+                    var userId:int = obsel.props[TraceModel.UID];
+                    if(removePlayVideoObselDisconnectedUser(userId))
+                    {
+                        _listSessionExitObsel.removeItemAt(nObsel);
+                        return;
+                    }
+                }
+            }
+            /**
+            * Remove playVideoObsel if user disconnect from the plateforme
+            */ 
+            private function removePlayVideoObselDisconnectedUser(value:int):Boolean
+            {
+                var index:int = -1;
+                var obselRemoved:Obsel;
+                var nbrObsel:int = _listPlayVideoObsel.length;
+                for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    // UID - id deconnected user
+                    if(obsel.props[TraceModel.SENDER] == value.toString())
+                    {
+                        index = nObsel;
+                        obselRemoved = obsel;
+                    }
+                }
+                if(index > -1)
+                {
+                    _listPlayVideoObsel.removeItemAt(index);
+                    // change state skins of playVideoSkin
+                    updatePlayVideoObselSkin(obselRemoved, -1);
+                    // add obsel on timeline
+                    var obselSessionExitWhenPlayVideo:Obsel = obselRemoved.clone();
+                    obselSessionExitWhenPlayVideo.type = TraceModel.STOP_VIDEO_DISCONNECTING_USER;
+                    Model.getInstance().addObsel(obselSessionExitWhenPlayVideo);
+                    return true;
+                }
+                return false;
+            }
+            
             
             /**
             * Remove playVideoObsel => stop add duration
@@ -1981,7 +2057,7 @@
                 {
                     var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
                     if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
-                    obsel.props[TraceModel.SENDER] ==  value.props[TraceModel.SENDER] )
+                    obsel.props[TraceModel.SENDER] == value.props[TraceModel.SENDER] )
                     {
                         index = nObsel;
                         obselRemoved = obsel;
@@ -1991,7 +2067,7 @@
                 {
                     _listPlayVideoObsel.removeItemAt(index);
                     // change state skins of playVideoSkin
-                    updatePlayVideoObselSkin(obselRemoved, value);
+                    updatePlayVideoObselSkin(obselRemoved, value.begin);
                     return true;
                 }
                 return false;
