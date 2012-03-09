@@ -51,7 +51,10 @@
         {
             // set skin stop after creation the skin
             stop = true;
-            hostComponent.obsel.end = value;
+            if(value > 0)
+            {
+                hostComponent.obsel.end = value;
+            }
             setViewSkinStop();
             updateWidth( null );
         }
