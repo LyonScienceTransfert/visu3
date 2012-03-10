@@ -1018,7 +1018,7 @@
                         timeLineTracage.contextFollowCursor = false;
                         timeLineTracage.setStyle("cursorMode","auto");
                        // timeLineTracage.setStyle("adminMode","false");
-                        timeLineTracage.showPlayButton = false;
+                       // timeLineTracage.showPlayButton = false;
                         timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
                         timeLineTracage.name = userIdString;
                         // add timeline tracage
@@ -1834,7 +1834,7 @@
 				timeLine.setStyle("timeMode","relative");
 				timeLine.contextFollowCursor = false;
 				timeLine.setStyle("cursorMode","auto");
-				timeLine.showPlayButton = true;
+		//		timeLine.showPlayButton = true;
 
                 // listeners
                 timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
