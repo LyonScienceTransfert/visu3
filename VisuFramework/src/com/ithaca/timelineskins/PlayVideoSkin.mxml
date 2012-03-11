@@ -51,9 +51,16 @@
         {
             // set skin stop after creation the skin
             stop = true;
-            hostComponent.obsel.end = value;
+            if(value > 0)
+            {
+                hostComponent.obsel.end = value;
+            }
             setViewSkinStop();
             updateWidth( null );
+        }
+        public function isSkinPlay():Boolean
+        {
+            return stop;
         }
         protected function skin1_creationCompleteHandler(event:FlexEvent):void
         {
@@ -162,12 +169,6 @@
             var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE);
             addedToStageEvent.obselSkin = this;
             this.dispatchEvent(addedToStageEvent);
-            
-            if(obsel.begin != obsel.end)
-            {
-                stop = true;
-                setViewSkinStop();
-            }
         }
         
         protected function skin1_removedFromStageHandler(event:Event):void

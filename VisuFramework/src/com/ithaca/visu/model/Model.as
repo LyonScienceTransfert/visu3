@@ -1227,6 +1227,9 @@ package  com.ithaca.visu.model
                     senderObsel = obsel.props[TraceModel.SENDER];
                     result.push({senderId:senderObsel, textObsel:textObsel, source:source});
                     break;
+                case TraceModel.STOP_VIDEO_DISCONNECTING_USER:
+                    ownerObsel = obsel.uid;
+                    break;
                 //  case TraceModel.SESSION_IN :
                 //	case TraceModel.SESSION_OUT :	
                     // FIXME : don't add obsel SessionOut, 
