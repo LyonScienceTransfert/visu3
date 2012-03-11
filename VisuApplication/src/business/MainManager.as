@@ -764,7 +764,8 @@ public class MainManager
 							// add new cloned obsels
 							listObselSI.addAll(listClonedObselSI);
 						}
-							
+                        // add obsel for make transformation the obsels "PlayVideoDocument" 
+                        listObsel.addItem(obsel);
 					//	}
 						break;
 					case TraceModel.RECORD_FILE_NAME:

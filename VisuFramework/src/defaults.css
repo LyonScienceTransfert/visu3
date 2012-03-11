@@ -41,6 +41,18 @@ timeline|ObselSkin.SliderReleaseDocumentVideo
 	icon : Embed("images/iconRealeaseSlider_16x16.png");
 	tooltipProp : 'currenttime';
 }
+timeline|ObselSkin.StopDocumentVideoDisconnectingUser
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/PlayWalkOutVer5.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.StopDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/PlayWalkOutVer5.png");
+	tooltipProp : 'currenttime';
+}
 
 timeline|Timeline
 {

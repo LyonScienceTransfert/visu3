@@ -36,6 +36,7 @@
 		<obselSelector id='PauseDocumentVideo'  	  selector="SelectorRegexp" selectorParams="type,PauseDocumentVideo" />
 		<obselSelector id='EndDocumentVideo'  	  selector="SelectorRegexp" selectorParams="type,EndDocumentVideo" />
 		<obselSelector id='SliderReleaseDocumentVideo'  	  selector="SelectorRegexp" selectorParams="type,SliderReleaseDocumentVideo" />
+		<obselSelector id='StopDocumentVideo'  	  selector="SelectorRegexp" selectorParams="type,StopDocumentVideo" />
 		<obselSelector id='Document'  	  selector="SelectorRegexp" selectorParams="type,Document" />	
 		<obselSelector id='Instructions'  selector="SelectorRegexp" selectorParams="type,Instructions" />
 		<obselSelector id='Marker'  	  selector="SelectorRegexp" selectorParams="type,Marker" />
