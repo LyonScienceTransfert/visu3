@@ -100,6 +100,7 @@
                 var toTime:int = fromTime + duration;
                 
                 labelTC.text = UtilFunction.getMinSec(fromTime) +"-"+ UtilFunction.getMinSec(toTime);
+                this.toolTip =  labelTC.text;
                 borderContainer.setStyle("backgroundAlpha","0.0");
                 borderContainer.setStyle("borderVisible","true");
                 
@@ -141,12 +142,12 @@
             
             var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
             labelTC.text = UtilFunction.getMinSec(duration + timeStartPlayVideo);
-            
+            this.toolTip =  labelTC.text;
         }
         
         private function checkShowElement():void
         {
-            if(width < 35)
+            if(width < 45)
             {
                 labelTC.visible = false;
             }else
