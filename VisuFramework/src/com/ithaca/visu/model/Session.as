@@ -137,6 +137,11 @@ package  com.ithaca.visu.model
 		
 		public function setUsers(arUsers:Array):void
 		{
+            if(arUsers == null)
+            {
+                // TODO MESSAGE
+                return;
+            }
 			var nbrUser:uint = arUsers.length;
 			if(nbrUser == 0)
 			{
