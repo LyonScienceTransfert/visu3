@@ -1342,7 +1342,7 @@
                         case TraceModel.END_VIDEO :
                         case TraceModel.RELEASE_SLIDER_VIDEO :
                             // add obsel
-                            addPauseStopEndObsell(obsel);
+                            addPauseStopEndObsel(obsel);
                             break;
                         case TraceModel.SESSION_EXIT :
                           //  var userId:int = obsel.uid;
@@ -1963,7 +1963,7 @@
             /**
              * Add obsels Pause, Stop, End 
              */
-            private function addPauseStopEndObsell(value:Obsel):void
+            private function addPauseStopEndObsel(value:Obsel):void
             {
                 _listPauseStopEndObsel.addItem(value);
             }
