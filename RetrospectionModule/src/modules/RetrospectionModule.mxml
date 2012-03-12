@@ -1834,7 +1834,7 @@
 				timeLine.setStyle("timeMode","relative");
 				timeLine.contextFollowCursor = false;
 				timeLine.setStyle("cursorMode","auto");
-		//		timeLine.showPlayButton = true;
+				timeLine.setStyle("showPlayButton","true");
 
                 // listeners
                 timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
