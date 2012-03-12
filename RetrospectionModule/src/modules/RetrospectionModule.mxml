@@ -1017,6 +1017,8 @@
                         timeLineTracage.setStyle("timeMode","relative");
                         timeLineTracage.contextFollowCursor = false;
                         timeLineTracage.setStyle("cursorMode","auto");
+                        // show export button 
+                        timeLineTracage.setStyle("showExportButton", true);
                        // timeLineTracage.setStyle("adminMode","false");
                        // timeLineTracage.showPlayButton = false;
                         timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
