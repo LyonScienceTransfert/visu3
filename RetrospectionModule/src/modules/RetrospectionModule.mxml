@@ -27,6 +27,7 @@
             import com.ithaca.timeline.TraceLineGroup;
             import com.ithaca.timeline.events.TimelineEvent;
             import com.ithaca.timeline.skins.TraceLineTitleSkin;
+            import com.ithaca.timelineskins.events.TimelineSkinEvent;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.Trace;
             import com.ithaca.traces.TraceManager;
@@ -145,6 +146,9 @@
             private var _listEditCommentDialog:ArrayCollection;
             // pixels between windodws editCommentDialog
             private var DELTA_X_Y:int = 15;
+            // list "PlayVideoObsel"
+            private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
 				// init list trace lines
@@ -671,33 +675,77 @@
 					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
 					{
 						var obsel:Obsel = listObsels[nObsel] as Obsel;
+                        // 
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                        case TraceModel.PLAY_VIDEO :
+                            addPlayVideoObsel(obsel);
+                            break;
+                        case TraceModel.PAUSE_VIDEO :
+                        case TraceModel.STOP_VIDEO :
+                        case TraceModel.END_VIDEO :
+                        case TraceModel.RELEASE_SLIDER_VIDEO :
+                            // add obsel pause/stop/end/release obsels
+                            checkPauseStopEndObsel(obsel);
+                            break;
+                        case TraceModel.SESSION_EXIT :
+                            // FIXME : add gestion show playVideoObsel when broken session
+                            break;
+                        }
 						Model.getInstance().addObsel(obsel);
 					}
 				}
 			} 
-
-			/* protected function startTimeSessionSlider_thumbReleaseHandler(event:TrackBaseEvent):void
-			{
-				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_SLIDER_VIDEO_PLAYER);
-				//actionVideoPlayer
-				this.dispatchEvent(actionVideoPlayer);
-			}
-
-
-			protected function durationSessionSlider_thumbReleaseHandler(event:TrackBaseEvent):void
-			{
-				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_SLIDER_VIDEO_PLAYER);
-				//actionVideoPlayer
-				this.dispatchEvent(actionVideoPlayer);
-			} */
-			
-			
+            /**
+            * add "PlayVideoObsel"
+            */ 
+            private function addPlayVideoObsel(value:Obsel):void
+            {
+                this._listPlayVideoObsel.addItem(value);
+            }
+            /**
+            * Set duration obsel "PlayVideoDocument"
+            */
+            private function checkPauseStopEndObsel(value:Obsel):void
+            {
+                var index:int = -1;
+                var nbrObsel:int = this._listPlayVideoObsel.length;
+                for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = this._listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
+                        obsel.props[TraceModel.SENDER] == value.props[TraceModel.SENDER] )
+                    {
+                        index = nObsel;
+                        obsel.end = value.begin;
+                    }
+                }
+                if(index > -1)
+                {
+                    this._listPlayVideoObsel.removeItemAt(index);
+                }
+            }
+            /**
+             * Event handler added skin obsel PlayVideoDocument on timeline
+             */
+            private function onAddedPlayVideoSkinOnTimeLine(event:TimelineSkinEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    var obselSkin:Object = event.obselSkin as Object;
+                    var obsel:Obsel = obselSkin.obsel;
+                    if(obsel.begin != obsel.end)
+                    {
+                        obselSkin.setSkinStop(obsel.end);
+                    }
+                }
+            }
 			//_____________________________________________________________________
 			//
 			// RetroDocument
 			//
 			//_____________________________________________________________________
-
 			private function loadListRetroDocument(event:RetroDocumentEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -705,7 +753,6 @@
 					documentarisation.listRetroDocumentVO = event.listRetroDocument;
 				}
 			}
-			
 				
 			private function showRetroDocument(event:RetroDocumentEvent):void
 			{
@@ -774,8 +821,6 @@
 			// Listeners PanelDocumentarisation
 			//
 			//_____________________________________________________________________
-
-
 			private function setRetroDocument(retroDocument:RetroDocument, listUser:Array ):void
 			{
 				documentarisation.setRetroDocument(retroDocument, listUser);
@@ -830,7 +875,6 @@
 			// Listeners ListRetroDocument
 			//
 			//_____________________________________________________________________
-
 			private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
@@ -1017,6 +1061,8 @@
                         timeLineTracage.setStyle("timeMode","relative");
                         timeLineTracage.contextFollowCursor = false;
                         timeLineTracage.setStyle("cursorMode","auto");
+                        // show export button 
+                        timeLineTracage.setStyle("showExportButton", true);
                        // timeLineTracage.setStyle("adminMode","false");
                        // timeLineTracage.showPlayButton = false;
                         timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
@@ -1834,7 +1880,7 @@
 				timeLine.setStyle("timeMode","relative");
 				timeLine.contextFollowCursor = false;
 				timeLine.setStyle("cursorMode","auto");
-		//		timeLine.showPlayButton = true;
+				timeLine.setStyle("showPlayButton","true");
 
                 // listeners
                 timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
@@ -1843,7 +1889,8 @@
                 timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, timeLine_creationCompleteHandler);
                 // set listener add comment by click on button on timeline
                 timeLine.addEventListener(TimelineEvent.PRE_ADD_COMMENT_OBSEL, onPreAddComment, true);
-				
+                // listener add playVideoSkin on stage
+                timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onAddedPlayVideoSkinOnTimeLine);
 				timeLineGroup.addElement(timeLine);
 
                 
