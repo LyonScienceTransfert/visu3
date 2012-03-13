@@ -10,6 +10,7 @@ import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
 
+import flash.events.Event;
 import flash.events.MouseEvent;
 
 import mx.collections.ArrayCollection;
@@ -52,6 +53,9 @@ public class Documentarisation extends SkinnableComponent
     private var listAllUsersChange:Boolean;
 	
 	private var _dragOwnerObject:Object;
+    
+    private var _idUpdatedRetroDocument:int = -1;
+    private var idUpdatedRetrodocumentChange:Boolean;
 	
 	public function Documentarisation()
 	{
@@ -79,7 +83,11 @@ public class Documentarisation extends SkinnableComponent
 		if(retroDocumentView)
 		{
 			retroDocumentView.updateIdRetroDocument(value);
-		}
+		}else
+        {
+            _idUpdatedRetroDocument = value;
+            idUpdatedRetrodocumentChange = true;
+        }
 		var nbrRetroDocumentVO:int = listRetroDocumentVO.length;
 		for(var nRetroDocumentVO:int = 0; nRetroDocumentVO < nbrRetroDocumentVO; nRetroDocumentVO++)
 		{
@@ -335,6 +343,12 @@ public class Documentarisation extends SkinnableComponent
 	{
 		panelEditRetroDocument.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelEditRetroDocument);
 		panelEditRetroDocument.title = "Edition de bilan";
+        // update id retrodocument
+        if(idUpdatedRetrodocumentChange)
+        {
+            idUpdatedRetrodocumentChange = false;
+            retroDocumentView.updateIdRetroDocument(_idUpdatedRetroDocument);
+        }
 	}
 	private function onDeleteRetroDocumen(event:RetroDocumentEvent):void
 	{
