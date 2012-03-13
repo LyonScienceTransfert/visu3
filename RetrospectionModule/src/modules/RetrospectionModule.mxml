@@ -1099,11 +1099,11 @@
             {
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
-                    var timeLineRetrospectionActivity:Timeline = event.currentTarget as Timeline;
+                    var timeLineRetrospectionActivity: Timeline = event.currentTarget as Timeline;
+                    var traceRetrospectionActivity:Trace = new Trace(new int(timeLineRetrospectionActivity.name), "");
                     var listObselVO:Array = timeLineStorage[timeLineRetrospectionActivity.name];
-                    
-                    var listObselTracage:ArrayCollection = new ArrayCollection(); 
                     var nbrObsel:int = listObselVO.length;
+
                     for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
                     {
                         // FIXME: the ObselVO should not be used in
@@ -1114,22 +1114,15 @@
                         // FIXME : replace static metod fromRDF by constructor Obsel, only for show obsels, not for parsing, 
                         //         hasn't parametr "props"
                         var obsel:Obsel = new Obsel(obselVO.type, 0, null, obselVO.begin.time, obselVO.begin.time);
-                        listObselTracage.addItem(obsel);
+                        traceRetrospectionActivity.obsels.addItem(obsel);
                     }
-                    var beginTimeLine:Number = (listObselTracage.getItemAt(0) as Obsel).begin;
-                    var endTimeLine:Number = (listObselTracage.getItemAt(listObselTracage.length -1 ) as Obsel).begin;
                     
                     // create timeLineTracage
                     timeLineRetrospectionActivity.layoutXML 		= new XML( loaderTracage.data );
                     timeLineRetrospectionActivity.timelineLayout = new Layout( timeLineRetrospectionActivity ); 
                     
-                    // add range
-                    timeLineRetrospectionActivity.range.addTime(beginTimeLine, endTimeLine);
-                    
-                    // trace tracage activity retro room
-                    var traceRetrospectionActivity:Trace = new Trace(new int(timeLineRetrospectionActivity.name), "");
-                    traceRetrospectionActivity.obsels = listObselTracage;
                     var traceLineGroup:TraceLineGroup = timeLineRetrospectionActivity.addTrace(traceRetrospectionActivity);
+                    timeLineRetrospectionActivity.makeTracelineGroupVisible(traceLineGroup, false);
                     
                     var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineRetrospectionActivity.name));
                     var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
