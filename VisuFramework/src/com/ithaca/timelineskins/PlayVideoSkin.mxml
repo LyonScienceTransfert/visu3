@@ -147,7 +147,7 @@
         
         private function checkShowElement():void
         {
-            if(width < 45)
+            if(width < 52)
             {
                 labelTC.visible = false;
             }else
