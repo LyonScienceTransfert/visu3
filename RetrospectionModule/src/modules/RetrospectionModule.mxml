@@ -1111,10 +1111,9 @@
                         // mechanism of the Traces API.
                         var obselVO : SGBDObsel = listObselVO[nObsel];
                        // var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-                        // FIXME : replace static metod fromRDF by constructor Obsel, only for show obsels, not for parsing, 
+                        // FIXME : replace static method fromRDF by constructor Obsel, only for show obsels, not for parsing, 
                         //         hasn't parametr "props"
-                        var obsel:Obsel = new Obsel(obselVO.type, 0, null, obselVO.begin.time, obselVO.begin.time);
-                        traceRetrospectionActivity.obsels.addItem(obsel);
+                        traceRetrospectionActivity.trace(obselVO.type, {rdf: obselVO.rdf}, obselVO.begin.time, obselVO.begin.time);
                     }
                     
                     // create timeLineTracage
