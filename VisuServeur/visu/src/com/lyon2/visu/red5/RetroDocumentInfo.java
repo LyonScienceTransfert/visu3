@@ -269,34 +269,87 @@ public class RetroDocumentInfo {
 		
 		// get retroDocuments of the owner
 		List<RetroDocument> listRetroDocumentOwner = null;
-		try {
-			listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des retroDocument " + e, e);
-		}
-		if(listRetroDocumentOwner != null)
-		{
-			log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());	
-		}else
-		{
-			log.warn("List empty !!!!!!");
-		}
 		// get retroDocuments of the other users
 		List<RetroDocument> listRetroDocumentShared = null;
-		try {
-			listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-					"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
-		}
-		if(listRetroDocumentShared != null)
-		{
-			log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());	
+		
+		// check role the user
+		Integer roleUser = app.getRoleUser(user.getProfil());
+		log.warn("roleUser = {}",roleUser);	
+		// logged user responsable or admin
+		if((roleUser == 2) || (roleUser == 1)){
+			try {
+				listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+						"rd.getDocumentsBySessionIdWithoutXML", RetroDocumentDAOImpl.createParams("sessionId", sessionId));
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des retroDocument " + e, e);
+			}
+			if(listRetroDocumentOwner != null)
+			{
+				log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());	
+			}else
+			{
+				log.warn("List empty !!!!!!");
+			}
+			try {
+				listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+						"rd.getDocumentsSharedBySessionIdWithoutXML", RetroDocumentDAOImpl.createParams("sessionId", sessionId));
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
+			}
+			if(listRetroDocumentShared != null)
+			{
+				log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());	
+			}else
+			{
+				log.warn("List empty !!!!!!");
+			}
+			// remove shared bilan from the list the all bilan
+			if(listRetroDocumentShared != null && listRetroDocumentOwner != null)
+			{
+				for (RetroDocument retrodocumentShared : listRetroDocumentShared )
+				{
+					for(RetroDocument retrodocument : listRetroDocumentOwner)
+					{
+						if (retrodocument.getDocumentId().equals(retrodocumentShared.getDocumentId()))
+						{
+							listRetroDocumentOwner.remove(retrodocument);
+							break;
+						}   
+					}
+				}
+			}
 		}else
 		{
-			log.warn("List empty !!!!!!");
+			// get the bilans of the tuteur and student
+			try {
+				listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+						"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des retroDocument " + e, e);
+			}
+			if(listRetroDocumentOwner != null)
+			{
+				log.warn("size the list retroDocument = {}",listRetroDocumentOwner.size());	
+			}else
+			{
+				log.warn("List empty !!!!!!");
+			}
+			try {
+				listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
+						"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
+			} catch (Exception e) {
+				log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
+			}
+			if(listRetroDocumentShared != null)
+			{
+				log.warn("size the list retroDocument = {}",listRetroDocumentShared.size());	
+			}else
+			{
+				log.warn("List empty !!!!!!");
+			}
 		}
+		
+
 		log.warn("===== sessionId closed session = {}",sessionId.toString());
 		IConnection connClient = (IConnection) client
 		.getAttribute("connection");

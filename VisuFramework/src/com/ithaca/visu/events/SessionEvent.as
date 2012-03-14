@@ -87,6 +87,7 @@ public class SessionEvent extends Event
 	public var dateStartRecording : Date;
 	public var nbrRetroDocumentOwner:int;
 	public var nbrRetroDocumentShare:int;
+	public var listRetroDocument:ArrayCollection;
 	public var clonedSession:Boolean;
 	public var typeRecording:String;
 

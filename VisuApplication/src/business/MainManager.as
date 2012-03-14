@@ -394,6 +394,17 @@ public class MainManager
 		var nbrRetrodocumentEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION);
 		nbrRetrodocumentEvent.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
 		nbrRetrodocumentEvent.nbrRetroDocumentShare = nbrRetroDocumentShare;
+        // list all retrodocument
+        var listRetroDocument:ArrayCollection = new ArrayCollection();
+        for each (var retroDocumentOwnerVO:RetroDocumentVO in listRetroDocumentOwner)
+        {
+            listRetroDocument.addItem(retroDocumentOwnerVO);
+        }
+        for each (var retroDocumentSharedVO:RetroDocumentVO in listRetroDocumentShared)
+        {
+            listRetroDocument.addItem(retroDocumentSharedVO);
+        }
+		nbrRetrodocumentEvent.listRetroDocument = listRetroDocument;
 		this.dispatcher.dispatchEvent(nbrRetrodocumentEvent);
 	}
 	/**

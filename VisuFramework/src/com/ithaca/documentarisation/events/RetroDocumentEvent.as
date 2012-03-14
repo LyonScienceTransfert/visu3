@@ -38,6 +38,7 @@ package  com.ithaca.documentarisation.events
 		static public const ADD_RETRO_DOCUMENT : String = 'addRetroDocument';
 		static public const GO_BILAN_MODULE_FROM_RETRO : String = 'goBilanModuleFromRetro';
 		static public const GO_RETRO_MODULE_FROM_BILAN : String = 'goRetroModuleFromBilan';
+		static public const GO_RETRO_MODULE_FROM_SESSION : String = 'goRetroModuleFromSession';
 		
 		static public const CHANGE_LIST_RETRO_SEGMENT : String = 'changeListRetroSegment';
 		static public const READY_TO_DRAG_DROP_SEGMENT : String = 'readyToDragDropSegment';

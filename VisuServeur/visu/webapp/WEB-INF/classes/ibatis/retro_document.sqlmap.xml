@@ -105,11 +105,23 @@
 	</select>
 
 	<select id="getDocumentsByInviteeIdAndSessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
-	SELECT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
-	FROM retro_document_access as rda, retro_document as rd
-	WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
+		SELECT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
+		FROM retro_document_access as rda, retro_document as rd
+		WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
 	</select>
 	
+	<select id="getDocumentsBySessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description
+		FROM retro_document 
+		WHERE id_session=#sessionId#
+	</select>
+	
+	<select id="getDocumentsSharedBySessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT DISTINCT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
+		FROM retro_document_access AS rda, retro_document AS rd
+		WHERE rd.id_session=#sessionId#
+		AND rda.id_retro_document = rd.id_retro_document
+	</select>
 	
 	<delete id="deleteDocument">
 		DELETE from retro_document WHERE id_retro_document = #value#
