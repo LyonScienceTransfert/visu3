@@ -230,6 +230,16 @@ package com.ithaca.visu.core
 			moduleNavigator.navigateToModule( "bilan", obj );
 			menu.onChangeModule(null, "bilan");
 		}
+
+        protected function goBilanFromSession(event:RetroDocumentEvent):void{
+			logger.debug("The application is requested to go to the bilan of the session {0} and retroDocumentId {1}", event.sessionId, event.idRetroDocument);
+			var obj:Array = new Array();
+			obj[0] = "CameFromSessionModule";
+			obj[1] = event.sessionId;
+			obj[2] = event.idRetroDocument;
+			moduleNavigator.navigateToModule( "bilan", obj );
+			menu.onChangeModule(null, "bilan");
+		}
 		
 		protected function goRetroFromBilan(event:RetroDocumentEvent):void{
 			logger.debug("The application is requested to go to the retro of the session {0} and retroDocumentId {1}", event.sessionId, event.idRetroDocument);

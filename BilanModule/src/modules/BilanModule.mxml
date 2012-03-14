@@ -195,6 +195,9 @@
 						case "CameFromHomeModule" :
 							// 
 							break;
+						case "CameFromSessionModule" :
+							this.selectedRetroDocumentIdWhenInit = param[2];
+							break;
 						case "CameFromRetroModule" :
 							this.selectedRetroDocumentIdWhenInit = param[2];
 							break;

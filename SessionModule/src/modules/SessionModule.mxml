@@ -376,6 +376,8 @@
 					var nbrRetroDocumentShare:int = event.nbrRetroDocumentShare;
 					sessionManagement.sessionDetailView.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
 					sessionManagement.sessionDetailView.nbrRetroDocumentShare = nbrRetroDocumentShare;
+					sessionManagement.sessionDetailView.listRetroDocument = event.listRetroDocument;
+                    
 				}
 			}
 			//_____________________________________________________________________

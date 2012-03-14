@@ -101,6 +101,8 @@ package com.ithaca.visu.controls.sessions
 		private var _nbrRetroDocumentOwner:int = 0;
 		private var _nbrRetroDocumentShare:int = 0;
 		private var nbrRetrodocumentChange:Boolean;
+        private var _listRetroDocument:ArrayCollection;
+        private var listRetroDocumentChange:Boolean;
 		
 		private var planSkin:Boolean;
 		private var planMineSkin:Boolean;
@@ -279,7 +281,15 @@ package com.ithaca.visu.controls.sessions
 			this.nbrRetrodocumentChange = true;
 			invalidateProperties();
 		}
-
+        
+        // set list retrodocument
+        public function set listRetroDocument(value:ArrayCollection):void
+        {
+            this._listRetroDocument = value;
+            this.listRetroDocumentChange = true;
+			invalidateProperties();
+        }
+        
 		public function set profiles(value:Array):void
 		{
 			this._profiles = value;
@@ -405,6 +415,13 @@ package com.ithaca.visu.controls.sessions
 				sessionBilanFormView.nbrRetroDocumentOwner = this._nbrRetroDocumentOwner;
 				sessionBilanFormView.nbrRetroDocumentShare = this._nbrRetroDocumentShare;
 			}
+            
+            if(listRetroDocumentChange)
+            {
+                listRetroDocumentChange = false;
+                
+                sessionBilanFormView.listRetroDocument = this._listRetroDocument;
+            }
 			
 			if(minuteSaveAgoChange)
 			{

@@ -1,15 +1,22 @@
 package com.ithaca.visu.controls.sessions
 {
+	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.events.SessionEvent;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.DataGrid;
 	import mx.controls.LinkButton;
+	import mx.controls.dataGridClasses.DataGridColumn;
+	import mx.controls.dataGridClasses.DataGridItemRenderer;
+	import mx.events.ListEvent;
 	
 	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
@@ -31,6 +38,12 @@ package com.ithaca.visu.controls.sessions
 		public var linkButtonGoSalonRetrospection:LinkButton;
 		[SkinPart("true")]
 		public var linkButtonGoSalonBilan:LinkButton;
+		[SkinPart("true")]
+		public var dataGridBilan:DataGrid;
+		[SkinPart("true")]
+		public var dataFieldCreationDate:DataGridColumn;
+		[SkinPart("true")]
+		public var datFieldOwnerBilan:DataGridColumn;
 		
 		private var sessionChange:Boolean;
 		
@@ -44,6 +57,9 @@ package com.ithaca.visu.controls.sessions
 		private var _nbrRetroDocumentOwner:int = 0;
 		private var _nbrRetroDocumentShare:int = 0;
 		private var nbrRetrodocumentChange:Boolean;
+        
+        private var _listRetroDocument:ArrayCollection;
+        private var listRetroDocumentChange:Boolean;
 		
 		public function SessionBilanFormView()
 		{
@@ -108,6 +124,14 @@ package com.ithaca.visu.controls.sessions
 			this.nbrRetrodocumentChange = true;
 			invalidateProperties();
 		}
+        
+        // set list retrodocument 
+        public function set listRetroDocument(value:ArrayCollection):void
+        {
+            this._listRetroDocument = value;
+            this.listRetroDocumentChange = true;
+			invalidateProperties();
+        }
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -116,14 +140,26 @@ package com.ithaca.visu.controls.sessions
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == linkButtonGoSalonRetrospection)
-			{
-				linkButtonGoSalonRetrospection.addEventListener(MouseEvent.CLICK, onGoSalonRetrospection)
-			}
-			if (instance == linkButtonGoSalonBilan)
-			{
-				linkButtonGoSalonBilan.addEventListener(MouseEvent.CLICK, onGoBilanRetrospection)
-			}
+            if (instance == linkButtonGoSalonRetrospection)
+            {
+                linkButtonGoSalonRetrospection.addEventListener(MouseEvent.CLICK, onGoSalonRetrospection)
+            }
+            if (instance == linkButtonGoSalonBilan)
+            {
+                linkButtonGoSalonBilan.addEventListener(MouseEvent.CLICK, onGoBilanRetrospection)
+            }
+            if (instance == dataGridBilan)
+            {
+                dataGridBilan.addEventListener(ListEvent.ITEM_CLICK, onItemDataGridBilanClick);
+            }
+            if (instance == dataFieldCreationDate)
+            {
+                dataFieldCreationDate.labelFunction = labelFunctionDateCreationBilan;
+            }
+            if (instance == datFieldOwnerBilan)
+            {
+                datFieldOwnerBilan.labelFunction = labelFunctionOwnerBilan;
+            }
 		}
 		override protected function commitProperties():void
 		{
@@ -151,22 +187,34 @@ package com.ithaca.visu.controls.sessions
 				durationRecordedChange = false;
 				if(labelDuration != null){ labelDuration.text = UtilFunction.getHourMin(_durationRecorded)};
 			}
-			if(nbrRetrodocumentChange)
-			{
-				var nbrBilan:int = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
-				if(nbrBilan == 0)
-				{
-					labelBilan.text = "Pour cette séance il n'existe pas le bilan";
-					linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = false;
-				}else
-				{
-					var endSBilansAll:String = "";   if(nbrBilan > 1){endSBilansAll = "s";};
-					var endSBilanShared:String = ""; if(this._nbrRetroDocumentShare > 1){endSBilanShared ="s"};
-					labelBilan.text = "Pour cette séance il y a "+nbrBilan.toString() + " bilan"+endSBilansAll+" ("+this._nbrRetroDocumentShare.toString()+" bilan"+endSBilanShared+" partagé)";
-					linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = true;
-				}
-			}
-		}
+            if(nbrRetrodocumentChange)
+            {
+                var nbrBilan:int = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
+                if(nbrBilan == 0)
+                {
+                    labelBilan.text = "Pour cette séance il n'existe pas le bilan";
+                    linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = false;
+                }else
+                {
+                    var endSBilansAll:String = "";   if(nbrBilan > 1){endSBilansAll = "s";};
+                    var endSBilanShared:String = ""; if(this._nbrRetroDocumentShare > 1){endSBilanShared ="s"};
+                    labelBilan.text = "Pour cette séance il y a "+nbrBilan.toString() + " bilan"+endSBilansAll+" ("+this._nbrRetroDocumentShare.toString()+" bilan"+endSBilanShared+" partagé)";
+                    linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = false;
+                }
+            }
+            if(listRetroDocumentChange)
+            {
+                listRetroDocumentChange = false;
+                if(this._listRetroDocument && this._listRetroDocument.length > 0)
+                {
+                    dataGridBilan.includeInLayout = dataGridBilan.visible = true;
+                    dataGridBilan.dataProvider = this._listRetroDocument;
+                }else
+                {
+                    dataGridBilan.includeInLayout = dataGridBilan.visible = false;
+                }
+            }
+        }
 		//_____________________________________________________________________
 		//
 		// Listeners
@@ -186,7 +234,19 @@ package com.ithaca.visu.controls.sessions
 			goBilanEvent.session = this.session;
 			this.dispatchEvent(goBilanEvent);
 		}
-		
+		/**
+        * Handler dataGrid the bilan 
+        */
+        private function onItemDataGridBilanClick(event:ListEvent):void
+        {
+            var itemRenderer:DataGridItemRenderer = event.itemRenderer as DataGridItemRenderer; 
+            var retroDocumentVO:RetroDocumentVO = itemRenderer.data as RetroDocumentVO; 
+            
+            var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_RETRO_MODULE_FROM_SESSION);
+            retroDocumentEvent.sessionId = retroDocumentVO.sessionId;
+            retroDocumentEvent.idRetroDocument = retroDocumentVO.documentId;
+            this.dispatchEvent(retroDocumentEvent);
+        }
 		private function getListAbsentUser():ArrayCollection
 		{
 			var result:ArrayCollection = new ArrayCollection();
@@ -226,5 +286,20 @@ package com.ithaca.visu.controls.sessions
 			}
 			labelListAbsentUser.text = strListAbsentUser;
 		}
+        ////////////////
+        /// Utils
+        ///////////////
+        private function labelFunctionDateCreationBilan(item:Object, column:Object):String
+        {
+            var result:String = UtilFunction.getDateMountHourMin(item.creationDate);
+            return result;
+        }
+        
+        private function labelFunctionOwnerBilan(item:Object, column:Object):String
+        {
+            var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
+            var result:String = VisuUtils.getUserLabelLastName(owner,true);
+            return result;
+        }
 	}
 }
