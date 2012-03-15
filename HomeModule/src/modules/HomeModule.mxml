@@ -188,7 +188,10 @@
 				}
 				
 				logger.info("The initialization has ended successfully");
-				
+                
+                // removing module from the stage
+                this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+                
 				// initialisize list Users
 				var listUsersPlateforme:ArrayCollection = Model.getInstance().getListUserPlateforme();
 				initializeUsers(listUsersPlateforme);
@@ -200,6 +203,13 @@
 				notifyReadyForUse();
 			}
 			
+            /**
+            * Remove module from stage
+            */ 
+            private function onRemovedModuleFromStage(event:Event):void
+            {
+                Model.getInstance().setCurrentHomeModule(null);
+            }
 			/**
 			 * Send message to all users
 			 */ 
