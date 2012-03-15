@@ -453,7 +453,7 @@
                                 // create timeline activity only if mode = expert
                                 if(Model.getInstance().getModeExpert())
                                 {
-o                                    tnTimeline.addElement(navigatorContent);
+                                    tnTimeline.addElement(navigatorContent);
                                 }
                             } 
                         }
