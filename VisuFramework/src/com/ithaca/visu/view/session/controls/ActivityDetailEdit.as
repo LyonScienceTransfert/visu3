@@ -71,9 +71,9 @@ package com.ithaca.visu.view.session.controls
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-    import gnu.as3.gettext.FxGettext;
-    import gnu.as3.gettext._FxGettext;
-
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.collections.Sort;
@@ -175,8 +175,8 @@ package com.ithaca.visu.view.session.controls
 				trace("add statementGroup");
 				if (statementList.length > 0) 
 				{
-					sortByOrder(statementList)
-					addStatements(statementList);					
+					var list:ArrayCollection = sortByOrder(statementList)
+					addStatements(list);					
 				}
 			}
 			
@@ -245,8 +245,8 @@ package com.ithaca.visu.view.session.controls
 				{
 					statementGroup.removeAllElements();
 					
-					sortByOrder(statementList)
-					addStatements(statementList);					
+					var list:ArrayCollection = sortByOrder(statementList)
+					addStatements(list);					
 				}
 				
 			}
@@ -258,7 +258,6 @@ package com.ithaca.visu.view.session.controls
 			for( var nActivityElement:int = 0; nActivityElement < nbrActivityElement ; nActivityElement++ )
 			{
 				var activityElement:ActivityElement = list.getItemAt(nActivityElement) as ActivityElement;
-				activityElement.order_activity_element = nActivityElement;
 				var statementEdit:StatementEdit = new StatementEdit();
 				statementEdit.percentWidth = 100;
 				statementEdit.activityElement = activityElement;
@@ -745,15 +744,23 @@ package com.ithaca.visu.view.session.controls
 			}
 			return null;
 		}
-// SORT by order
-		private function sortByOrder(list:ArrayCollection):void
-		{
-			var sort:Sort = new Sort();
-			// There is only one sort field, so use a null first parameter.
-			sort.fields = [new SortField("order_activity_element", true)];
-			list.sort = sort;
-			list.refresh();
-		}
+        /**
+        * Sort by order 
+        */
+        private function sortByOrder(list:ArrayCollection):ArrayCollection
+        {
+            var dataSortField:SortField = new SortField();
+            //name of the field 
+            dataSortField.name = "order_activity_element";
+            dataSortField.caseInsensitive = true;
+            dataSortField.numeric = true;
+            
+            var sort:Sort = new Sort();
+            sort.fields = [dataSortField];
+            list.sort = sort;
+            list.refresh();
+            return list;
+        }
 		
 		private function onClickButtonMoveUp(event:MouseEvent):void
 		{
