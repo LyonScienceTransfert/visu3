@@ -5,7 +5,7 @@
     	xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:ithaca="com.ithaca.components.*"
 		xmlns:sessions="com.ithaca.visu.controls.sessions.*"
-		
+		creationComplete="group1_creationCompleteHandler(event)"
 	>
 
 	<fx:Declarations> 
@@ -303,6 +303,12 @@
             return result;
         }
             
+
+            protected function group1_creationCompleteHandler(event:FlexEvent):void
+            {
+                fxgt = FxGettext;
+            }
+
 	]]>
     </fx:Script>
  
