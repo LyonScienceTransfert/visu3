@@ -16,12 +16,16 @@
     	<![CDATA[
             import com.ithaca.documentarisation.model.RetroDocument;
             import com.ithaca.events.SelectionEvent;
+            import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
             import com.ithaca.visu.events.SessionListViewEvent;
             import com.ithaca.visu.model.Model;
             import com.ithaca.visu.model.Session;
             import com.ithaca.visu.model.User;
             import com.lyon2.controls.utils.TimeUtils;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
             
             import mx.collections.ArrayCollection;
             import mx.collections.ArrayList;
@@ -31,10 +35,16 @@
             import mx.core.INavigatorContent;
             import mx.events.FlexEvent;
             import mx.events.ItemClickEvent;
+            import mx.events.ListEvent;
             import mx.logging.ILogger;
             import mx.logging.Log;
             
             import spark.events.IndexChangeEvent;
+
+            
+            
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
 
 			
 		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
@@ -184,21 +194,12 @@
                     if(retroDocument.id == retroDocumentId)
                     {
                         dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
-                        // add listener
-                        bilanListComponent.addEventListener(FlexEvent.UPDATE_COMPLETE, updateListComplete);
-                        bilanListComponent.selectedItem = retroDocument;
+                        bilanGridComponenet.selectedItem = retroDocument;
+                        
                         return;
                     }
                 }
             }
-        }
-            
-        private function updateListComplete(event:FlexEvent):void
-        {
-            // remove listener
-            bilanListComponent.removeEventListener(FlexEvent.UPDATE_COMPLETE, updateListComplete);
-            // scrolling selected item
-            bilanListComponent.ensureIndexIsVisible(bilanListComponent.selectedIndex);
         }
             
 		public function selectSession(sessionId:Number):void {
@@ -258,6 +259,50 @@
             }
             return result;
         }
+            
+        protected function bilanGridComponenet_creationCompleteHandler(event:FlexEvent):void
+        {
+            bilanGridComponenet.addEventListener(ListEvent.ITEM_CLICK, onClickBilanGridComponent);
+        }
+            
+        private function onClickBilanGridComponent(event:Event):void
+        {
+           var dataGrid:DataGrid = event.currentTarget as DataGrid;
+           var retroDocument:RetroDocument = dataGrid.selectedItem as RetroDocument;
+           dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
+           
+        }
+            
+        private function labelFunctionDateCreationBilan(item:Object, column:Object):String
+        {
+            var result:String = UtilFunction.getDateMountHourMin(item.creationDateAsDate);
+            return result;
+        }
+        private function labelFunctionShareBilan(item:Object, column:Object):String
+        {
+            var result:String = fxgt.gettext("non");
+            if(item.isShared())
+            {
+                result = fxgt.gettext("oui");   
+            }
+            return result;
+        }
+        private function toolTipsFunctionSharedBilan(item:Object):String
+        {
+            var result:String = fxgt.gettext("non");
+            if(item.isShared())
+            {
+                result = fxgt.gettext("oui avec ");   
+            }
+            return result;
+        }
+        private function labelFunctionOwnerBilan(item:Object, column:Object):String
+        {
+            var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
+            var result:String = VisuUtils.getUserLabelLastName(owner,true);
+            return result;
+        }
+            
 	]]>
     </fx:Script>
  
@@ -341,47 +386,23 @@
 				</s:HGroup>
 			</s:VGroup>
 		</s:Group>
-		
-			<s:Button visible="{showNewButton}" includeInLayout="{showNewButton}"
-				label="Nouveau bilan" toolTip="Crée un nouveau bilan vide"/>
-			<s:List id="bilanListComponent" creationComplete="initBilanPane(event)" width="100%" height="100%" dataProvider="{bilanCollection}" change="onChangeListener(event)">
-				<s:itemRenderer>
-	   
-				    <fx:Component>
-				        <s:ItemRenderer>
-						 <fx:Script>
-								import com.ithaca.utils.VisuUtils;
-								import com.ithaca.visu.model.Model;
-								import com.lyon2.controls.utils.TimeUtils;
-
-						 </fx:Script>
-						<s:VGroup paddingTop="10" paddingBottom="10" paddingRight="5" paddingLeft="5" width="100%">
-							<s:HGroup  width="100%" verticalAlign="middle">
-							     <s:Label fontStyle="italic" fontSize="12" color="0xFF0000" visible="{data.inviteeIds.length > 0}" includeInLayout="{data.inviteeIds.length > 0}"  text="[partagé]"/>
-							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit"  text="{data.title}" toolTip="{data.title}" maxDisplayedLines="2" maxWidth="250"/>
-								 <mx:Spacer width="100%"/>
-							     <s:Label fontWeight="bold" fontSize="15" lineBreak="toFit" text="- {VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.ownerId), true)} -"/>
-							</s:HGroup>
-							
-							<mx:Form width="100%" paddingLeft="5" paddingRight="5" >
-								<mx:FormItem includeInLayout="{data.inviteeIds.length > 0}" visible="{data.inviteeIds.length > 0}" label="Partagé avec:" width="100%">
-									<s:HGroup width="100%" >
-										<s:Label lineBreak="toFit" width="90%" text="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}" toolTip="{VisuUtils.joinUserListFromUserIds(data.inviteeIds)}"/>
-									</s:HGroup>
-								</mx:FormItem>
-								
-								<mx:FormItem label="À propos de la séance:" width="100%">
-									<s:VGroup width="100%">
-										<!-- <s:Label lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"/>-->
-										 <s:RichText lineBreak="toFit" width="90%" text="{data.session.theme}" toolTip="{data.session.theme}"  maxWidth="200"/>
-										 <s:Label text="De {VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.session.id_user), true)}, le {TimeUtils.formatVisuDateTime(data.session.date_session)}"/>
-									</s:VGroup>
-								</mx:FormItem>
-							</mx:Form>
-						</s:VGroup>
-				        </s:ItemRenderer>
-				    </fx:Component>
-				</s:itemRenderer>
-			</s:List>
+        <s:Button visible="{showNewButton}" includeInLayout="{showNewButton}"
+            label="Nouveau bilan" toolTip="Crée un nouveau bilan vide"/>
+        <mx:DataGrid id="bilanGridComponenet" creationComplete="bilanGridComponenet_creationCompleteHandler(event)" width="100%" height="100%" dataProvider="{bilanCollection}">
+            <mx:columns>
+                <mx:DataGridColumn dataField="creationDateAsDate" labelFunction="{labelFunctionDateCreationBilan}" width="85" minWidth="85">
+                    <mx:headerText>{fxgt.gettext("Date création")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn  labelFunction="{labelFunctionShareBilan}" width="30" minWidth="30" dataTipFunction="{toolTipsFunctionSharedBilan}" showDataTips="true">
+                    <mx:headerText>{fxgt.gettext("Partagé")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn itemRenderer="com.ithaca.components.renderer.DescriptionBilanRenderer" width="220" minWidth="220">
+                    <mx:headerText>{fxgt.gettext("Description")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn dataField="ownerId" labelFunction="{labelFunctionOwnerBilan}">
+                    <mx:headerText>{fxgt.gettext("Propriétaire de bilan")}</mx:headerText>
+                </mx:DataGridColumn>
+            </mx:columns>
+        </mx:DataGrid>
 	</s:VGroup>
 </s:Group>
