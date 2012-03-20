@@ -37,4 +37,6 @@ public interface RetroDocumentDAO {
 
 	public Collection<RetroDocument> getAllRetroDocuments() throws SQLException;
 	
+	public Collection<RetroDocument> getAllRetroDocumentsWithXML() throws SQLException;
+	
 }

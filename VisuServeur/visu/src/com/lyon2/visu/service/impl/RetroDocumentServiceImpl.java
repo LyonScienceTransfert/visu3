@@ -118,12 +118,15 @@ public class RetroDocumentServiceImpl implements RetroDocumentService {
 	
 	public Collection<RetroDocument> findAllRetroDocuments(boolean withXmlContent) {
 		try {
+			Collection<RetroDocument> docs = null;
 			if(withXmlContent) {
-				throw new UnsupportedOperationException("Not yet implemented");
+				//throw new UnsupportedOperationException("Not yet implemented");
+				docs = retroDocumentDao.getAllRetroDocumentsWithXML();
 			} else {
-				Collection<RetroDocument> docs = retroDocumentDao.getAllRetroDocuments();
-				return docs;
+				docs = retroDocumentDao.getAllRetroDocuments();
+				
 			}
+			return docs;
 		} catch (SQLException e) {
 			logger.error("SQL problem",e);
 			return null;
