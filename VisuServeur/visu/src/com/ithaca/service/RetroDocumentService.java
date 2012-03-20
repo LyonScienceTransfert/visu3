@@ -9,6 +9,7 @@ import com.lyon2.visu.domain.model.User;
 public interface RetroDocumentService {
 	
 	public Collection<RetroDocument> findDocumentsWhereUserIsInvited(int userId, boolean withXmlContent);
+	
 	public Collection<RetroDocument> findDocumentsByOwner(int ownerId, boolean withXmlContent);
 	
 	public Collection<RetroDocument> findDocumentsByOwner(User owner);

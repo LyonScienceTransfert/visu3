@@ -89,12 +89,14 @@ public class RetroDocumentServiceImpl implements RetroDocumentService {
 
 	public Collection<RetroDocument> findDocumentsWhereUserIsInvited(int userId, boolean withXmlContent) {
 		try {
+			Collection<RetroDocument> docs = null;
 			if(withXmlContent) {
-				throw new UnsupportedOperationException("Not yet implemented");
+				//throw new UnsupportedOperationException("Not yet implemented");
+				docs = retroDocumentDao.getRetroDocumentsByInviteeWithXML(userId);
 			} else {
-				Collection<RetroDocument> docs = retroDocumentDao.getRetroDocumentsByInviteeWithoutXML(userId);
-				return docs;
+				docs = retroDocumentDao.getRetroDocumentsByInviteeWithoutXML(userId);
 			}
+			return docs;
 		} catch (SQLException e) {
 			logger.error("SQL problem",e);
 			return null;
@@ -104,12 +106,14 @@ public class RetroDocumentServiceImpl implements RetroDocumentService {
 	public Collection<RetroDocument> findDocumentsByOwner(int ownerId,
 			boolean withXmlContent) {
 		try {
+			Collection<RetroDocument> docs = null;
 			if(withXmlContent) {
-				throw new UnsupportedOperationException("Not yet implemented");
+				//throw new UnsupportedOperationException("Not yet implemented");
+				docs = retroDocumentDao.getRetroDocumentsByOwnerWithXML(ownerId);
 			} else {
-				Collection<RetroDocument> docs = retroDocumentDao.getRetroDocumentsByOwnerWithoutXML(ownerId);
-				return docs;
+				docs = retroDocumentDao.getRetroDocumentsByOwnerWithoutXML(ownerId);
 			}
+			return docs;
 		} catch (SQLException e) {
 			logger.error("SQL problem",e);
 			return null;

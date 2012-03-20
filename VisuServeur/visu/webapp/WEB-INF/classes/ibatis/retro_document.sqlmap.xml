@@ -203,10 +203,30 @@
 		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
 		WHERE id_owner=#value#
 	</select>
+	
+	<select id="getDocumentsAndInviteeListAndSessionByOwnerIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE id_owner=#value#
+	</select>
 
 	<select id="getDocumentsAndInviteeListAndSessionByInviteeIdWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
 		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
 		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE rda.id_user=#value#
+	</select>
+
+	<select id="getDocumentsAndInviteeListAndSessionByInviteeIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
 		FROM retro_document r
 		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
 		JOIN sessions s ON r.id_session = s.id_session
