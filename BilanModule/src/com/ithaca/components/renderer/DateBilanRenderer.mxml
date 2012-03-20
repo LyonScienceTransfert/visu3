@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    focusEnabled="true">
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.utils.UtilFunction;
+        import com.lyon2.controls.utils.TimeUtils;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        override public function set data(value:Object):void 
+        {
+            super.data = value;
+            if (value != null) 
+            {
+                labelDay.text = UtilFunction.getDate(value.modifyDateAsDate);
+                
+                lableYear.text = value.modifyDateAsDate.fullYear;
+                
+                labelHour.text = TimeUtils.formatHHMM(value.modifyDateAsDate);
+            }
+        } 
+    ]]>
+    </fx:Script>
+    <s:VGroup horizontalAlign="center" verticalAlign="middle" paddingLeft="3" paddingRight="3">
+        <s:Label id="labelDay"/>
+        <s:Label id="lableYear" />
+        <s:Label id="labelHour"/>
+    </s:VGroup>
+</s:MXDataGridItemRenderer>
