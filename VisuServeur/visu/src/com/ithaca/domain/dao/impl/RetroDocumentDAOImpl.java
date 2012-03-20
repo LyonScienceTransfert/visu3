@@ -39,6 +39,11 @@ public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroD
 				"rd.getDocumentsWithoutXML");
 	}
 
+	public Collection<RetroDocument> getAllRetroDocumentsWithXML()  throws SQLException {
+		return (List<RetroDocument>) getSqlMapClient().queryForList(
+		"rd.getDocumentsWithXML");
+	}
+
 	
 	public RetroDocument createRetroDocument(Integer ownerId,
 			Integer sessionId)   throws SQLException {

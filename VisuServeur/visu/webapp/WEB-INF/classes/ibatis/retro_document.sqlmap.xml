@@ -15,16 +15,29 @@
 		<result column="description" property="description" />
 	</resultMap>
 	
-	<resultMap class="retroDocument" id="retroDocument-result-map-without-xml-with-session-and-inviteeId-list"  groupBy="documentId">
-		 <result column="id_retro_document" property="documentId"  />
-	        <result column="id_owner" property="ownerId"  />
-	        <result column="id_session" property="sessionId"  />
-	        <result column="creation_date" property="creationDate"  />
-	        <result column="last_modification_date" property="lastModified"  />
-			<result column="title" property="title" />
-			<result column="description" property="description" />
-			<result resultMap="rd.userIdResult" property="inviteeIds" />
-			<result resultMap="rd.sessionResult" property="session" />
+    <resultMap class="retroDocument" id="retroDocument-result-map-without-xml-with-session-and-inviteeId-list"  groupBy="documentId">
+       <result column="id_retro_document" property="documentId"  />
+       <result column="id_owner" property="ownerId"  />
+       <result column="id_session" property="sessionId"  />
+       <result column="creation_date" property="creationDate"  />
+       <result column="last_modification_date" property="lastModified"  />
+       <result column="title" property="title" />
+       <result column="description" property="description" />
+       <result resultMap="rd.userIdResult" property="inviteeIds" />
+       <result resultMap="rd.sessionResult" property="session" />
+    </resultMap>
+	
+	<resultMap class="retroDocument" id="retroDocument-result-map-with-session-and-inviteeId-list"  groupBy="documentId">
+		<result column="id_retro_document" property="documentId"  />
+		<result column="id_owner" property="ownerId"  />
+		<result column="id_session" property="sessionId"  />
+		<result column="creation_date" property="creationDate"  />
+		<result column="last_modification_date" property="lastModified"  />
+		<result column="title" property="title" />
+		<result column="description" property="description" />
+		<result column="xml" property="xml" />
+		<result resultMap="rd.userIdResult" property="inviteeIds" />
+		<result resultMap="rd.sessionResult" property="session" />
 	</resultMap>
 	
 	<resultMap class="retroDocument" id="retroDocument-result-map">
@@ -62,7 +75,16 @@
 		SELECT * FROM retro_document
 	</select>
 	
-		<select id="getDocumentsWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
+	<select id="getDocumentsWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+	</select>
+	
+	<select id="getDocumentsWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
 		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
 		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
 		FROM retro_document r
