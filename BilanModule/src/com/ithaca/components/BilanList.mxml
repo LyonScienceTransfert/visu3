@@ -14,9 +14,12 @@
  
     <fx:Script>
     	<![CDATA[
+            import com.ithaca.components.renderer.DateBilanRenderer;
+            import com.ithaca.components.renderer.DateSessionRenderer;
+            import com.ithaca.components.renderer.TitreBilanRenderer;
+            import com.ithaca.components.renderer.TitreSessionRenderer;
             import com.ithaca.documentarisation.model.RetroDocument;
             import com.ithaca.events.SelectionEvent;
-            import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
             import com.ithaca.visu.events.SessionListViewEvent;
             import com.ithaca.visu.model.Model;
@@ -32,12 +35,12 @@
             import mx.collections.IList;
             import mx.collections.ListCollectionView;
             import mx.collections.Sort;
-            import mx.core.INavigatorContent;
             import mx.events.FlexEvent;
             import mx.events.ItemClickEvent;
             import mx.events.ListEvent;
             import mx.logging.ILogger;
             import mx.logging.Log;
+            import mx.utils.ObjectUtil;
             
             import spark.events.IndexChangeEvent;
 
@@ -263,21 +266,57 @@
         protected function bilanGridComponenet_creationCompleteHandler(event:FlexEvent):void
         {
             bilanGridComponenet.addEventListener(ListEvent.ITEM_CLICK, onClickBilanGridComponent);
-        }
+            dataGridDateModification.width = 45;
+            dataGridDateModification.minWidth = 45;
             
+            dataGridTitreBilan.width = 200;
+            
+            dataGridTitreSession.width = 100;
+            
+            dataGridDateSession.width = 45;
+            dataGridDateSession.minWidth = 45;
+            
+            dataGridInfos.width = 30;
+            dataGridInfos.minWidth = 30;
+            
+        }
+        /**
+        * Event handler click on grid
+        */ 
         private function onClickBilanGridComponent(event:Event):void
         {
            var dataGrid:DataGrid = event.currentTarget as DataGrid;
            var retroDocument:RetroDocument = dataGrid.selectedItem as RetroDocument;
            dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
-           
         }
-            
-        private function labelFunctionDateCreationBilan(item:Object, column:Object):String
+        /**
+        * Sort by date start recording session
+        */
+        private function sortFunctionDateSession(itemA:Object, itemB:Object):int
         {
-            var result:String = UtilFunction.getDateMountHourMin(item.creationDateAsDate);
-            return result;
+            var valueA:Date = itemA.session.date_start_recording;
+            var valueB:Date = itemB.session.date_start_recording;
+            return ObjectUtil.dateCompare(valueA, valueB);
         }
+        /**
+        * Sort by titre session
+        */
+        private function sortFunctionTitreSession(itemA:Object, itemB:Object):int
+        {
+            var valueA:String = itemA.session.theme;
+            var valueB:String = itemB.session.theme;
+            return ObjectUtil.stringCompare(valueA, valueB, true);
+        }
+        /**
+        * Sort by name owner the bilan
+        */
+        private function sortFunctionOwnerBilanName(itemA:Object, itemB:Object):int
+        {
+            var valueA:String = (Model.getInstance().getUserPlateformeByUserId(itemA.ownerId) as User).lastname;
+            var valueB:String = (Model.getInstance().getUserPlateformeByUserId(itemB.ownerId) as User).lastname
+            return ObjectUtil.stringCompare(valueA, valueB, true);
+        }
+           
         private function labelFunctionShareBilan(item:Object, column:Object):String
         {
             var result:String = fxgt.gettext("non");
@@ -296,6 +335,16 @@
             }
             return result;
         }
+        /**
+        * Tooltips owner the bilan
+        */ 
+        private function toolTipsFunctionOwnerBilan(item:Object):String
+        {
+            var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
+            var result:String = fxgt.gettext("Propriétaire de bilan : ")+ VisuUtils.getUserLabelLastName(owner,true);
+            return result;
+        }
+            
         private function labelFunctionOwnerBilan(item:Object, column:Object):String
         {
             var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
@@ -304,10 +353,10 @@
         }
             
 
-            protected function group1_creationCompleteHandler(event:FlexEvent):void
-            {
-                fxgt = FxGettext;
-            }
+        protected function group1_creationCompleteHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+        }
 
 	]]>
     </fx:Script>
@@ -396,16 +445,22 @@
             label="Nouveau bilan" toolTip="Crée un nouveau bilan vide"/>
         <mx:DataGrid id="bilanGridComponenet" creationComplete="bilanGridComponenet_creationCompleteHandler(event)" width="100%" height="100%" dataProvider="{bilanCollection}">
             <mx:columns>
-                <mx:DataGridColumn dataField="creationDateAsDate" labelFunction="{labelFunctionDateCreationBilan}" width="85" minWidth="85">
-                    <mx:headerText>{fxgt.gettext("Date création")}</mx:headerText>
+                <mx:DataGridColumn id="dataGridDateModification" dataField="modifyDateAsDate" itemRenderer="com.ithaca.components.renderer.DateBilanRenderer">
+                    <mx:headerText>{fxgt.gettext("Date modification")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn  labelFunction="{labelFunctionShareBilan}" width="30" minWidth="30" dataTipFunction="{toolTipsFunctionSharedBilan}" showDataTips="true">
-                    <mx:headerText>{fxgt.gettext("Partagé")}</mx:headerText>
+                <mx:DataGridColumn  id="dataGridTitreBilan" dataField="title" itemRenderer="com.ithaca.components.renderer.TitreBilanRenderer">
+                    <mx:headerText>{fxgt.gettext("Titre bilan")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn itemRenderer="com.ithaca.components.renderer.DescriptionBilanRenderer" width="220" minWidth="220">
-                    <mx:headerText>{fxgt.gettext("Description")}</mx:headerText>
+                <mx:DataGridColumn id="dataGridTitreSession" sortCompareFunction="{sortFunctionTitreSession}" itemRenderer="com.ithaca.components.renderer.TitreSessionRenderer">
+                    <mx:headerText>{fxgt.gettext("Titre séance")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn dataField="ownerId" labelFunction="{labelFunctionOwnerBilan}">
+                <mx:DataGridColumn id="dataGridDateSession" sortCompareFunction="{sortFunctionDateSession}" itemRenderer="com.ithaca.components.renderer.DateSessionRenderer">
+                    <mx:headerText>{fxgt.gettext("Date séance")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn  id="dataGridInfos" labelFunction="{labelFunctionShareBilan}" dataTipFunction="{toolTipsFunctionSharedBilan}" showDataTips="true">
+                    <mx:headerText>{fxgt.gettext("Infos")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn  id="dataGridOwnerBilan" sortCompareFunction="{sortFunctionOwnerBilanName}" labelFunction="{labelFunctionOwnerBilan}" dataTipFunction="{toolTipsFunctionOwnerBilan}" showDataTips="true">
                     <mx:headerText>{fxgt.gettext("Propriétaire de bilan")}</mx:headerText>
                 </mx:DataGridColumn>
             </mx:columns>
