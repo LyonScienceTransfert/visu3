@@ -38,7 +38,7 @@ public class RetroDocumentInfo {
 
 	public void getAllRetroDocuments(IConnection conn) {
 		log.info("Requesting for the list of all retro documents");
-		Collection<RetroDocument> docs = this.retroDocumentService.findAllRetroDocuments(false);
+		Collection<RetroDocument> docs = this.retroDocumentService.findAllRetroDocuments(true);
 		
 		Collection<RetroDocument> allDocs = new HashSet<RetroDocument>();
 		allDocs.addAll(docs);
@@ -69,21 +69,26 @@ public class RetroDocumentInfo {
 	}
 	
 	public void getOwnedAndSharedRetroDocumentsByUserId(IConnection conn, int userId)  {
-		// check load all retroDocuments
-		if(userId == 0)
+		log.warn("======== getOwnedAndSharedRetroDocumentsByUserId");
+		IClient client = conn.getClient();
+		User user = (User) client.getAttribute("user");
+		
+		// check role the user
+		Integer roleUser = app.getRoleUser(user.getProfil());
+		log.warn("roleUser = {}",roleUser);	
+		// logged user responsable or admin
+		if((roleUser == 2) || (roleUser == 1))
 		{
 			getAllRetroDocuments(conn);
 		}else
 		{
 			log.info("Requesting for the list of owned and shared retro documents for the user {}", userId);
-			Collection<RetroDocument> ownedRetroDocs = this.retroDocumentService.findDocumentsByOwner(userId, false);
-			Collection<RetroDocument> sharedRetroDocs = this.retroDocumentService.findDocumentsWhereUserIsInvited(userId, false);
-			
+			Collection<RetroDocument> ownedRetroDocs = this.retroDocumentService.findDocumentsByOwner(userId, true);
+			Collection<RetroDocument> sharedRetroDocs = this.retroDocumentService.findDocumentsWhereUserIsInvited(userId, true);
 			
 			Collection<RetroDocument> allDocs = new HashSet<RetroDocument>();
 			allDocs.addAll(ownedRetroDocs);
 			allDocs.addAll(sharedRetroDocs);
-			
 			
 			// DEBUG
 			for(RetroDocument doc:allDocs) {
@@ -96,7 +101,6 @@ public class RetroDocumentInfo {
 			Map<Integer, Session> filterSessionMap = new TreeMap<Integer, Session>();
 			for(RetroDocument doc:allDocs)
 				filterSessionMap.put(doc.getSessionId(), doc.getSession());
-			
 			
 			Object[] args = new Object[]{allDocs, filterSessionMap.values()};
 			IConnection connClient = (IConnection)conn.getClient().getAttribute("connection");
