@@ -235,12 +235,6 @@
                 var loggedUser:User = Model.getInstance().getLoggedUser();
                 // logged user id
                 var userId:int = loggedUser.id_user;
-                // check if logged user admin
-                // FIXME : can find auther solution, on server side
-                if(VisuUtils.isAdmin(loggedUser)){
-                    // get all retro document for admin
-                    userId = 0;
-                }
                 moduleLoadedEvent.userId = userId;		
                 this.dispatchEvent(moduleLoadedEvent);
                 
