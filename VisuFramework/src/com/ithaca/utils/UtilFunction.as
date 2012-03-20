@@ -104,6 +104,19 @@ package com.ithaca.utils
             return heureString+": "+minuteString;
         }
 
+        // example return : 22 Fev 
+        public static function getDate(date: Date): String
+        {
+            if(date == null) return "?";
+            var day: int = date.getDate();
+            var dayString: String = day.toString();
+            if(day < 10){ dayString = "0"+dayString;};
+            var mounthStringBig: String = getMonthString(date).toLowerCase();
+            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
+            var result: String = dayString + " "+mounthStringShot;
+            return result;
+        }
+        
         // example return : 22 Fev 16: 00
         public static function getDateMountHourMin(date: Date): String
         {
