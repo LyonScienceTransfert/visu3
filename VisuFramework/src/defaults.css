@@ -188,6 +188,10 @@ tooltipProp : 'text';
 }
 
 
+components|BilanSharedUserToolTip
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.BilanSharedUserToolTipSkin");	
+}
 components|BilanSummaryToolTip
 {
 	skin-class:ClassReference("com.ithaca.utils.components.skins.BilanSummaryToolTipSkin");	
