@@ -16,6 +16,7 @@
     	<![CDATA[
             import com.ithaca.components.renderer.DateBilanRenderer;
             import com.ithaca.components.renderer.DateSessionRenderer;
+            import com.ithaca.components.renderer.InfosBilanRenderer;
             import com.ithaca.components.renderer.TitreBilanRenderer;
             import com.ithaca.components.renderer.TitreSessionRenderer;
             import com.ithaca.documentarisation.model.RetroDocument;
@@ -269,15 +270,15 @@
             dataGridDateModification.width = 45;
             dataGridDateModification.minWidth = 45;
             
-            dataGridTitreBilan.width = 200;
+            dataGridTitreBilan.width = 150;
             
             dataGridTitreSession.width = 100;
             
             dataGridDateSession.width = 45;
             dataGridDateSession.minWidth = 45;
             
-            dataGridInfos.width = 30;
-            dataGridInfos.minWidth = 30;
+            dataGridInfos.width = 60;
+            dataGridInfos.minWidth = 60;
             
         }
         /**
@@ -457,7 +458,7 @@
                 <mx:DataGridColumn id="dataGridDateSession" sortCompareFunction="{sortFunctionDateSession}" itemRenderer="com.ithaca.components.renderer.DateSessionRenderer">
                     <mx:headerText>{fxgt.gettext("Date séance")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn  id="dataGridInfos" labelFunction="{labelFunctionShareBilan}" dataTipFunction="{toolTipsFunctionSharedBilan}" showDataTips="true">
+                <mx:DataGridColumn  id="dataGridInfos"  itemRenderer="com.ithaca.components.renderer.InfosBilanRenderer">
                     <mx:headerText>{fxgt.gettext("Infos")}</mx:headerText>
                 </mx:DataGridColumn>
                 <mx:DataGridColumn  id="dataGridOwnerBilan" sortCompareFunction="{sortFunctionOwnerBilanName}" labelFunction="{labelFunctionOwnerBilan}" dataTipFunction="{toolTipsFunctionOwnerBilan}" showDataTips="true">
