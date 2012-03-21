@@ -33,6 +33,9 @@
         override public function set data(value:Object):void 
         {
             super.data = value;
+            
+            fxgt = FxGettext;
+            
             retroDocument = value as RetroDocument;
             
             if (retroDocument != null) 
@@ -112,12 +115,6 @@
         protected function iconInfoShared_toolTipShowHandler(event:ToolTipEvent):void
         {
             // TODO Auto-generated method stub
-        }
-
-
-        protected function mxdatagriditemrenderer1_creationCompleteHandler(event:FlexEvent):void
-        {
-            fxgt = FxGettext;
         }
 
     ]]>
