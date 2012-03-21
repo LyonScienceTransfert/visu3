@@ -3,7 +3,6 @@ package com.ithaca.utils
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.traces.model.TraceModel;
 	import com.ithaca.traces.model.vo.SGBDObsel;
-	import com.ithaca.utils.StringUtils;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
@@ -13,14 +12,18 @@ package com.ithaca.utils
 	
 	import flash.utils.Dictionary;
 	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayCollection;
-	import mx.collections.IList;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
-			
-	
+    
 	public class VisuUtils
 	{
+        [Bindable]
+        private static var fxgt: _FxGettext = FxGettext;
+        
 		public static var FOLDER_AUDIO_COMMENT_FILES:String = "usersAudioRetroDocument";
 		
 		private static var logger:ILogger = Log.getLogger("com.ithaca.utils.VisuUtils");
@@ -62,10 +65,10 @@ package com.ithaca.utils
 		
 		public static function getRoleLabel(role:int):String
 		{
-			var label:String = role < RoleEnum.STUDENT ? "Étudiant" :
- 					role < RoleEnum.TUTEUR ? "Tuteur" :
- 					role < RoleEnum.RESPONSABLE ? "Responsable" :
- 					"Administrateur";
+			var label:String = role < RoleEnum.STUDENT ? fxgt.gettext("Étudiant") :
+ 					role < RoleEnum.TUTEUR ? fxgt.gettext("Tuteur") :
+ 					role < RoleEnum.RESPONSABLE ? fxgt.gettext("Responsable") :
+                    fxgt.gettext("Administrateur");
 			return label;
 		}
 
@@ -88,29 +91,29 @@ package com.ithaca.utils
 			var recordingMessage:String = "";
 				switch (status) {
 					case SessionStatusEnum.SESSION_OPEN:
-						recordingMessage = "La séance est ouverte";
+						recordingMessage = fxgt.gettext("La séance est ouverte");
 						break;
 					case SessionStatusEnum.SESSION_CLOSE:
-						recordingMessage = "La séance est fermée";
+						recordingMessage = fxgt.gettext("La séance est fermée");
 						break;
 					case SessionStatusEnum.SESSION_RECORDING:
-						recordingMessage = "La séance est démarrée depuis " + dateRecording.getHours().toString()+"h "+dateRecording.getMinutes().toString()+"m";
+						recordingMessage = fxgt.gettext("La séance est démarrée depuis")+ " " + dateRecording.getHours().toString()+fxgt.gettext("h")+" "+dateRecording.getMinutes().toString()+fxgt.gettext("m");
 						break;
 					case SessionStatusEnum.SESSION_PAUSE:
-						recordingMessage = "La séance est démarrée depuis " + dateRecording.getHours().toString()+ "h " + dateRecording.getMinutes().toString()+ "m" + " : Suspendue";
+						recordingMessage = fxgt.gettext("La séance est démarrée depuis") +" "+ dateRecording.getHours().toString()+ fxgt.gettext("h") + " "+ dateRecording.getMinutes().toString()+ fxgt.gettext("m") + " : "+ fxgt.gettext("Suspendue");
 						break;
 					default:
-						recordingMessage = "Status de séance inconnu";
+						recordingMessage = fxgt.gettext("Status de séance inconnu");
 				}
 				return recordingMessage;
 		}
 
 		public static function getStatusLabel(status:Number):String
 		{
-			return status == ConnectionStatus.CONNECTED ? "connected" :
-					status == ConnectionStatus.PENDING ? "pending" :
-					status == ConnectionStatus.RECORDING ? "recording" :
-					"disconnected";
+			return status == ConnectionStatus.CONNECTED ? fxgt.gettext("connected") :
+					status == ConnectionStatus.PENDING ? fxgt.gettext("pending") :
+					status == ConnectionStatus.RECORDING ? fxgt.gettext("recording") :
+                    fxgt.gettext("disconnected");
 		}
 		
 		public static function getStatusImageSource(status:int):Class {
