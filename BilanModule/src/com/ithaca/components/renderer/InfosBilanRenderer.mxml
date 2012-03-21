@@ -3,7 +3,6 @@
     xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:mx="library://ns.adobe.com/flex/mx" 
     focusEnabled="true" xmlns:components="com.ithaca.utils.components.*"
-    creationComplete="mxdatagriditemrenderer1_creationCompleteHandler(event)"
     >
     <fx:Script>
     <![CDATA[
