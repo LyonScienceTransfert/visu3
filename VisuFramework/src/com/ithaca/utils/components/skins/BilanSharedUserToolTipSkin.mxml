@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    creationComplete="skin1_creationCompleteHandler(event)">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.utils.components.BilanSharedUserToolTip")]
+    </fx:Metadata>
+
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.documentarisation.model.RetroDocument;
+        import com.ithaca.utils.VisuUtils;
+        import com.ithaca.visu.model.Model;
+        import com.ithaca.visu.model.User;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.controls.Image;
+        import mx.events.FlexEvent;
+        
+        import spark.components.HGroup;
+        
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+
+        private var listSharedIds:ArrayCollection;
+        private var userString:String;
+        
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            listSharedIds = (this.hostComponent.retroDocument as RetroDocument).inviteeIds as ArrayCollection;
+            userString = fxgt.gettext("utilisateur");
+            if(listSharedIds.length > 1)
+            {
+                userString = fxgt.gettext("utilisateurs");
+            }
+            
+            labelTitreToolTip.text = fxgt.gettext("Bilan partagé avec") +" "+ listSharedIds.length.toString() + " "+ userString;
+           for each(var idSharedUser:int in listSharedIds)
+           {
+               var user:User = Model.getInstance().getUserPlateformeByUserId(idSharedUser);
+               // FIXME : can do with renderer
+               var hGroup:HGroup = new HGroup();
+               hGroup.percentWidth = 100;
+               hGroup.setStyle("verticalAlign","middle");
+               var image:Image = new Image();
+               image.source = user.avatar;
+               image.width = image.height =  25;
+               hGroup.addElement(image);
+               var label:Label = new Label();
+               label.text = VisuUtils.getUserLabelLastName(user,true) + " ("+ VisuUtils.getRoleLabel(user.role)+")";
+               label.setStyle("fontSize",10);
+               hGroup.addElement(label);
+               groupSharedUser.addElement(hGroup);
+           }
+        }
+
+    ]]>
+    </fx:Script>
+    <s:Rect id="background" left="0" right="0" top="0" bottom="0" radiusX="3">
+        <s:fill>
+            <!--- @private -->
+            <s:SolidColor id="bgFill" color="#f8ffcb"/>
+        </s:fill>
+        <s:filters>
+            <s:DropShadowFilter distance="4" alpha=".5" strength=".33"/>
+        </s:filters>
+    </s:Rect>
+
+    <s:VGroup paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="8" verticalAlign="middle">
+        <s:Label id="labelTitreToolTip" width="100%" fontSize="12"/>
+        <s:Spacer height="3"/>
+        <s:Line width="100%">
+            <s:stroke>
+                <s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
+            </s:stroke>
+        </s:Line>
+        <s:Spacer height="3"/>
+        <s:VGroup id="groupSharedUser" width="100%" verticalAlign="middle"/>
+    </s:VGroup>
+</s:Skin>
