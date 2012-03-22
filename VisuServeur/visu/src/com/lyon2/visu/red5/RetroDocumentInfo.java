@@ -283,7 +283,7 @@ public class RetroDocumentInfo {
 		if((roleUser == 2) || (roleUser == 1)){
 			try {
 				listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-						"rd.getDocumentsBySessionIdWithoutXML", RetroDocumentDAOImpl.createParams("sessionId", sessionId));
+						"rd.getDocumentsBySessionIdWithXML", RetroDocumentDAOImpl.createParams("sessionId", sessionId));
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des retroDocument " + e, e);
 			}
@@ -296,7 +296,7 @@ public class RetroDocumentInfo {
 			}
 			try {
 				listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-						"rd.getDocumentsSharedBySessionIdWithoutXML", RetroDocumentDAOImpl.createParams("sessionId", sessionId));
+						"rd.getDocumentsSharedBySessionIdWithXML", RetroDocumentDAOImpl.createParams("sessionId", sessionId));
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
 			}
@@ -327,7 +327,7 @@ public class RetroDocumentInfo {
 			// get the bilans of the tuteur and student
 			try {
 				listRetroDocumentOwner = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-						"rd.getDocumentsByOwnerIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
+						"rd.getDocumentsByOwnerIdAndSessionIdWithXML", RetroDocumentDAOImpl.createParams("ownerId",userId, "sessionId", sessionId));
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des retroDocument " + e, e);
 			}
@@ -340,7 +340,7 @@ public class RetroDocumentInfo {
 			}
 			try {
 				listRetroDocumentShared = (List<RetroDocument>) app.getSqlMapClient().queryForList(
-						"rd.getDocumentsByInviteeIdAndSessionIdWithoutXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
+						"rd.getDocumentsByInviteeIdAndSessionIdWithXML", RetroDocumentDAOImpl.createParams("inviteeId",userId, "sessionId", sessionId));
 			} catch (Exception e) {
 				log.error("Probleme lors du listing des listRetroDocumentShared " + e, e);
 			}
