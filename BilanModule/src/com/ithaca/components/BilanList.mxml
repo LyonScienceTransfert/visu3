@@ -14,11 +14,11 @@
  
     <fx:Script>
     	<![CDATA[
-            import com.ithaca.components.renderer.DateBilanRenderer;
-            import com.ithaca.components.renderer.DateSessionRenderer;
-            import com.ithaca.components.renderer.InfosBilanRenderer;
-            import com.ithaca.components.renderer.TitreBilanRenderer;
-            import com.ithaca.components.renderer.TitreSessionRenderer;
+            import com.ithaca.visu.renderer.DateBilanRenderer;
+            import com.ithaca.visu.renderer.DateSessionRenderer;
+            import com.ithaca.visu.renderer.InfosBilanRenderer;
+            import com.ithaca.visu.renderer.TitreBilanRenderer;
+            import com.ithaca.visu.renderer.TitreSessionRenderer;
             import com.ithaca.documentarisation.model.RetroDocument;
             import com.ithaca.events.SelectionEvent;
             import com.ithaca.utils.VisuUtils;
@@ -446,19 +446,19 @@
             label="Nouveau bilan" toolTip="Crée un nouveau bilan vide"/>
         <mx:DataGrid id="bilanGridComponenet" creationComplete="bilanGridComponenet_creationCompleteHandler(event)" width="100%" height="100%" dataProvider="{bilanCollection}">
             <mx:columns>
-                <mx:DataGridColumn id="dataGridDateModification" dataField="modifyDateAsDate" itemRenderer="com.ithaca.components.renderer.DateBilanRenderer">
+                <mx:DataGridColumn id="dataGridDateModification" dataField="modifyDateAsDate" itemRenderer="com.ithaca.visu.renderer.DateBilanRenderer">
                     <mx:headerText>{fxgt.gettext("Date modification")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn  id="dataGridTitreBilan" dataField="title" itemRenderer="com.ithaca.components.renderer.TitreBilanRenderer">
+                <mx:DataGridColumn  id="dataGridTitreBilan" dataField="title" itemRenderer="com.ithaca.visu.renderer.TitreBilanRenderer">
                     <mx:headerText>{fxgt.gettext("Titre bilan")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn id="dataGridTitreSession" sortCompareFunction="{sortFunctionTitreSession}" itemRenderer="com.ithaca.components.renderer.TitreSessionRenderer">
+                <mx:DataGridColumn id="dataGridTitreSession" sortCompareFunction="{sortFunctionTitreSession}" itemRenderer="com.ithaca.visu.renderer.TitreSessionRenderer">
                     <mx:headerText>{fxgt.gettext("Titre séance")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn id="dataGridDateSession" sortCompareFunction="{sortFunctionDateSession}" itemRenderer="com.ithaca.components.renderer.DateSessionRenderer">
+                <mx:DataGridColumn id="dataGridDateSession" sortCompareFunction="{sortFunctionDateSession}" itemRenderer="com.ithaca.visu.renderer.DateSessionRenderer">
                     <mx:headerText>{fxgt.gettext("Date séance")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn  id="dataGridInfos"  itemRenderer="com.ithaca.components.renderer.InfosBilanRenderer">
+                <mx:DataGridColumn  id="dataGridInfos"  itemRenderer="com.ithaca.visu.renderer.InfosBilanRenderer">
                     <mx:headerText>{fxgt.gettext("Infos")}</mx:headerText>
                 </mx:DataGridColumn>
                 <mx:DataGridColumn  id="dataGridOwnerBilan" sortCompareFunction="{sortFunctionOwnerBilanName}" labelFunction="{labelFunctionOwnerBilan}" dataTipFunction="{toolTipsFunctionOwnerBilan}" showDataTips="true">
