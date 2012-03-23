@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    focusEnabled="true" xmlns:components="com.ithaca.utils.components.*"
+    >
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.documentarisation.RetroDocumentConst;
+        import com.ithaca.documentarisation.events.RetroDocumentEvent;
+        import com.ithaca.documentarisation.model.RetroDocument;
+        import com.ithaca.documentarisation.model.Segment;
+        import com.ithaca.utils.components.BilanSharedUserToolTip;
+        import com.ithaca.utils.components.skins.IconInfoSegmentSkin;
+        import com.ithaca.visu.model.Model;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        import com.ithaca.visu.ui.utils.SharedSatusEnum;
+        import com.lyon2.controls.utils.TimeUtils;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.events.FlexEvent;
+        import mx.events.ToolTipEvent;
+        
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        private var blocString:String;
+        private var retroDocument:RetroDocument;
+        
+        override public function set data(value:Object):void 
+        {
+            super.data = value;
+            
+            fxgt = FxGettext;
+            
+            retroDocument = value as RetroDocument;
+            
+            if (retroDocument != null) 
+            {
+                if(retroDocument.ownerId == Model.getInstance().getLoggedUser().id_user)
+                {
+                    iconBilanEdit.visible = true;
+                }else
+                {
+                    iconBilanEdit.visible = false;
+                }
+            }
+        } 
+        /**
+        * Handler go to watch bilan in bilan module
+        */
+        protected function iconBilanWatch_clickHandler(event:MouseEvent):void
+        {
+            var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_BILAN_MODULE_FROM_SESSION);
+            retroDocumentEvent.sessionId = retroDocument.sessionId;
+            retroDocumentEvent.idRetroDocument = retroDocument.id;
+            this.dispatchEvent(retroDocumentEvent);
+        }
+
+        /**
+        * Handler go to edit bilan in retro module
+        */
+        protected function iconBilanEdit_clickHandler(event:MouseEvent):void
+        {
+            var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_RETRO_MODULE_FROM_SESSION);
+            retroDocumentEvent.session = retroDocument.session;
+            retroDocumentEvent.idRetroDocument = retroDocument.id;
+            this.dispatchEvent(retroDocumentEvent);
+        }
+
+    ]]>
+    </fx:Script>
+    <s:HGroup horizontalAlign="center" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="15">
+        <components:IconButton id="iconBilanEdit" 
+            width="22" height="22" 
+            toolTip="{fxgt.gettext('Modifier le bilan')}"
+            icon="{IconEnum.getIconByName('iconEdit_16x16')}"
+            click="iconBilanEdit_clickHandler(event)"
+            buttonMode="true"
+            useHandCursor="true"/>
+        <components:IconButton id="iconBilanWatch" 
+            width="22" height="22" 
+            toolTip="{fxgt.gettext('Visualiser le bilan')}"
+            icon="{IconEnum.getIconByName('iconEye_16x16')}"
+            click="iconBilanWatch_clickHandler(event)"
+            buttonMode="true"
+            useHandCursor="true"/>
+    </s:HGroup>
+</s:MXDataGridItemRenderer>
