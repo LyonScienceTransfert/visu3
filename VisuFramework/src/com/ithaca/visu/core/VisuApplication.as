@@ -249,6 +249,15 @@ package com.ithaca.visu.core
 			obj[2] = event.idRetroDocument;
 			moduleNavigator.navigateToModule( "retrospection", obj );
 		}
+        
+		protected function goRetroFromSession(event:RetroDocumentEvent):void{
+			logger.debug("The application is requested to go to the retro of the session {0} and retroDocumentId {1}", event.sessionId, event.idRetroDocument);
+			var obj:Array = new Array();
+			obj[0] = "CameFromSessionModule";
+			obj[1] = event.session;
+			obj[2] = event.idRetroDocument;
+			moduleNavigator.navigateToModule( "retrospection", obj );
+		}
 		 
 		/**
 		 * 
