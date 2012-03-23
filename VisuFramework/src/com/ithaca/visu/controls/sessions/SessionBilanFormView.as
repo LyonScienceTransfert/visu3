@@ -1,29 +1,29 @@
 package com.ithaca.visu.controls.sessions
 {
-	import com.ithaca.documentarisation.events.RetroDocumentEvent;
+	import com.ithaca.documentarisation.model.RetroDocument;
 	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.events.SessionEvent;
 	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
-	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	
 	import flash.events.MouseEvent;
+	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.DataGrid;
 	import mx.controls.LinkButton;
 	import mx.controls.dataGridClasses.DataGridColumn;
-	import mx.controls.dataGridClasses.DataGridItemRenderer;
-	import mx.events.ListEvent;
+	import mx.utils.ObjectUtil;
 	
 	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class SessionBilanFormView extends SkinnableComponent
 	{
-		
 		[SkinPart("true")]
 		public var labelListRecordedUser:Label;
 		[SkinPart("true")]
@@ -37,13 +37,9 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("true")]
 		public var linkButtonGoSalonRetrospection:LinkButton;
 		[SkinPart("true")]
-		public var linkButtonGoSalonBilan:LinkButton;
-		[SkinPart("true")]
 		public var dataGridBilan:DataGrid;
 		[SkinPart("true")]
-		public var dataFieldCreationDate:DataGridColumn;
-		[SkinPart("true")]
-		public var datFieldOwnerBilan:DataGridColumn;
+		public var dataGridOwnerBilan:DataGridColumn;
 		
 		private var sessionChange:Boolean;
 		
@@ -61,6 +57,9 @@ package com.ithaca.visu.controls.sessions
         private var _listRetroDocument:ArrayCollection;
         private var listRetroDocumentChange:Boolean;
 		
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
 		public function SessionBilanFormView()
 		{
 			super();
@@ -116,7 +115,6 @@ package com.ithaca.visu.controls.sessions
 			this.nbrRetrodocumentChange = true;
 			invalidateProperties();
 		}
-		
 		// set nbrRetroDocumentOwner 
 		public function set nbrRetroDocumentShare(value:int):void
 		{
@@ -124,7 +122,6 @@ package com.ithaca.visu.controls.sessions
 			this.nbrRetrodocumentChange = true;
 			invalidateProperties();
 		}
-        
         // set list retrodocument 
         public function set listRetroDocument(value:ArrayCollection):void
         {
@@ -144,21 +141,11 @@ package com.ithaca.visu.controls.sessions
             {
                 linkButtonGoSalonRetrospection.addEventListener(MouseEvent.CLICK, onGoSalonRetrospection)
             }
-            if (instance == linkButtonGoSalonBilan)
+            if (instance == dataGridOwnerBilan)
             {
-                linkButtonGoSalonBilan.addEventListener(MouseEvent.CLICK, onGoBilanRetrospection)
-            }
-            if (instance == dataGridBilan)
-            {
-                dataGridBilan.addEventListener(ListEvent.ITEM_CLICK, onItemDataGridBilanClick);
-            }
-            if (instance == dataFieldCreationDate)
-            {
-                dataFieldCreationDate.labelFunction = labelFunctionDateCreationBilan;
-            }
-            if (instance == datFieldOwnerBilan)
-            {
-                datFieldOwnerBilan.labelFunction = labelFunctionOwnerBilan;
+                dataGridOwnerBilan.dataTipFunction = toolTipsFunctionOwnerBilan;
+                dataGridOwnerBilan.labelFunction = labelFunctionOwnerBilan;
+                dataGridOwnerBilan.sortCompareFunction = sortFunctionOwnerBilanName;
             }
 		}
 		override protected function commitProperties():void
@@ -193,13 +180,11 @@ package com.ithaca.visu.controls.sessions
                 if(nbrBilan == 0)
                 {
                     labelBilan.text = "Pour cette séance il n'existe pas le bilan";
-                    linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = false;
                 }else
                 {
                     var endSBilansAll:String = "";   if(nbrBilan > 1){endSBilansAll = "s";};
                     var endSBilanShared:String = ""; if(this._nbrRetroDocumentShare > 1){endSBilanShared ="s"};
                     labelBilan.text = "Pour cette séance il y a "+nbrBilan.toString() + " bilan"+endSBilansAll+" ("+this._nbrRetroDocumentShare.toString()+" bilan"+endSBilanShared+" partagé)";
-                    linkButtonGoSalonBilan.includeInLayout = linkButtonGoSalonBilan.visible = false;
                 }
             }
             if(listRetroDocumentChange)
@@ -207,6 +192,11 @@ package com.ithaca.visu.controls.sessions
                 listRetroDocumentChange = false;
                 if(this._listRetroDocument && this._listRetroDocument.length > 0)
                 {
+                    // set session for this list retroDocument
+                    for each(var retroDocument:RetroDocument in this._listRetroDocument)
+                    {
+                        retroDocument.session = this.session;
+                    }
                     dataGridBilan.includeInLayout = dataGridBilan.visible = true;
                     dataGridBilan.dataProvider = this._listRetroDocument;
                 }else
@@ -220,33 +210,14 @@ package com.ithaca.visu.controls.sessions
 		// Listeners
 		//
 		//_____________________________________________________________________
-
+        
 		private function onGoSalonRetrospection(event:MouseEvent):void
 		{
 			var goRetrospectionEvent:SessionEvent = new SessionEvent(SessionEvent.GO_RETROSPECTION_MODULE);
 			goRetrospectionEvent.session = this.session;
 			this.dispatchEvent(goRetrospectionEvent);
 		}
-		
-		private function onGoBilanRetrospection(event:MouseEvent):void
-		{
-			var goBilanEvent:SessionEvent = new SessionEvent(SessionEvent.GO_BILAN_MODULE);
-			goBilanEvent.session = this.session;
-			this.dispatchEvent(goBilanEvent);
-		}
-		/**
-        * Handler dataGrid the bilan 
-        */
-        private function onItemDataGridBilanClick(event:ListEvent):void
-        {
-            var itemRenderer:DataGridItemRenderer = event.itemRenderer as DataGridItemRenderer; 
-            var retroDocumentVO:RetroDocumentVO = itemRenderer.data as RetroDocumentVO; 
-            
-            var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_RETRO_MODULE_FROM_SESSION);
-            retroDocumentEvent.sessionId = retroDocumentVO.sessionId;
-            retroDocumentEvent.idRetroDocument = retroDocumentVO.documentId;
-            this.dispatchEvent(retroDocumentEvent);
-        }
+        
 		private function getListAbsentUser():ArrayCollection
 		{
 			var result:ArrayCollection = new ArrayCollection();
@@ -286,15 +257,31 @@ package com.ithaca.visu.controls.sessions
 			}
 			labelListAbsentUser.text = strListAbsentUser;
 		}
+        
         ////////////////
         /// Utils
         ///////////////
-        private function labelFunctionDateCreationBilan(item:Object, column:Object):String
+        /**
+         * Tooltips owner the bilan
+         */ 
+        private function toolTipsFunctionOwnerBilan(item:Object):String
         {
-            var result:String = UtilFunction.getDateMountHourMin(item.creationDate);
+            var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
+            var result:String = fxgt.gettext("Propriétaire de bilan : ")+ VisuUtils.getUserLabelLastName(owner,true);
             return result;
         }
-        
+        /**
+         * Sort by name owner the bilan
+         */
+        private function sortFunctionOwnerBilanName(itemA:Object, itemB:Object):int
+        {
+            var valueA:String = (Model.getInstance().getUserPlateformeByUserId(itemA.ownerId) as User).lastname;
+            var valueB:String = (Model.getInstance().getUserPlateformeByUserId(itemB.ownerId) as User).lastname
+            return ObjectUtil.stringCompare(valueA, valueB, true);
+        }
+        /**
+        * Label the owner bilan
+        */
         private function labelFunctionOwnerBilan(item:Object, column:Object):String
         {
             var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
