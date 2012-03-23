@@ -398,11 +398,11 @@ public class MainManager
         var listRetroDocument:ArrayCollection = new ArrayCollection();
         for each (var retroDocumentOwnerVO:RetroDocumentVO in listRetroDocumentOwner)
         {
-            listRetroDocument.addItem(retroDocumentOwnerVO);
+            listRetroDocument.addItem(new RetroDocument(retroDocumentOwnerVO));
         }
         for each (var retroDocumentSharedVO:RetroDocumentVO in listRetroDocumentShared)
         {
-            listRetroDocument.addItem(retroDocumentSharedVO);
+            listRetroDocument.addItem(new RetroDocument(retroDocumentSharedVO));
         }
 		nbrRetrodocumentEvent.listRetroDocument = listRetroDocument;
 		this.dispatcher.dispatchEvent(nbrRetrodocumentEvent);
