@@ -266,7 +266,7 @@
 						
 					<mx:LinkButton 
 						id="cancelButton"
-						label="{fxgt.gettext('Annuler')}"
+						label="{fxgt.gettext('Supprimer')}"
                         toolTip="{fxgt.gettext('Supprimer définitivement cette séance')}"
 						click="doCancel(event)"
 						visible="{canCancelSession(data.statusSession)}"
