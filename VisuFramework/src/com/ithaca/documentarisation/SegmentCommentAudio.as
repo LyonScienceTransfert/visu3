@@ -28,26 +28,31 @@ import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
+
 public class SegmentCommentAudio extends SkinnableComponent
-{	
+{
+	[Bindable]
+	private var fxgt: _FxGettext = FxGettext;
 
 	[SkinPart("true")]
 	public var iconDelete:IconDelete;
-	
+
 	[SkinPart("true")]
 	public var richEditableText:RichEditableText;
-	
+
 	[SkinPart("true")]
 	public var audioRecorder:AudioRecorder;
-	
+
 	[SkinPart("true")]
 	public var iconSegment:Image;
-	
+
 	[SkinPart("true")]
 	public var groupAudioRecorder:HGroup;
 	[SkinPart("true")]
 	public var groupText:HGroup;
-	
+
 	private var _text:String;
 	private var textChange:Boolean;
 	private var _streamId:String;
@@ -55,9 +60,9 @@ public class SegmentCommentAudio extends SkinnableComponent
 	private var streamIdChange:Boolean;
 	// path audio file
 	private var _streamPath:String;
-	
+
 	private var _connection:NetConnection;
-	private var connectionChange:Boolean; 	
+	private var connectionChange:Boolean;
 	private var _segment:Segment;
 	private var segmentChange:Boolean;
 
@@ -66,29 +71,29 @@ public class SegmentCommentAudio extends SkinnableComponent
 
 	private var timer:Timer;
 	private static var UPDATE_TIME_INTERVAL:int = 250;
-	
-	
+
+
 	private var editOver:Boolean = false;
 	private var edit:Boolean = false;
 	private var shared:Boolean = false;
 	private var sharedOver:Boolean = false;
 	private var selected:Boolean;
-	
+
 	private var _modeEdit:Boolean = true;
 
 	// net Stream
 	private var _stream:NetStream;
-	
+
 	// init backGroundColor
 	private var _backGroundColorRichEditableText:String = "#FFFFFF";
 	// selected backgroundColor
 	private var colorBackGround:String = "#FFEBCC";
-    // current segment 
+    // current segment
     private var _tracedSegment:Segment;
     // tracege interval in ms
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
-    private var _tracageTimer:Timer; 
+    private var _tracageTimer:Timer;
     // cursor
     private var _cursor:String;
 	//_____________________________________________________________________
@@ -120,7 +125,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 			invalidateProperties();
 		}else
 		{
-			trace("error set the connection")
+			trace("Error when seting connection")
 		}
 	}
 	public function get connection():NetConnection
@@ -174,7 +179,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	{
 		return _modeEdit;
 	}
-	
+
 	public function rendererNormal():void
 	{
 		initSkinVars();
@@ -202,7 +207,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 			initSkinVars();
 			editOver = false;
 			invalidateSkinState();
-		}		
+		}
 	}
 	public function rendererSelected():void
 	{
@@ -214,8 +219,8 @@ public class SegmentCommentAudio extends SkinnableComponent
 			invalidateSkinState();
 		}else
 		{
-			
-		}	
+
+		}
 	}
 	public function SegmentCommentAudio()
 	{
@@ -229,7 +234,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// Overriden Methods
 	//
 	//_____________________________________________________________________
-	
+
 	override protected function partAdded(partName:String, instance:Object):void
 	{
 		super.partAdded(partName,instance);
@@ -246,8 +251,8 @@ public class SegmentCommentAudio extends SkinnableComponent
 			audioRecorder.streamPath = streamPath;
 			audioRecorder.userId = userId;
 			audioRecorder.modeShare = !modeEdit;
-			
-			// set update time interval 
+
+			// set update time interval
 			audioRecorder.updateTimeInterval = UPDATE_TIME_INTERVAL;
 			audioRecorder.addEventListener(AudioRecorderEvent.UPDATE_PATH_COMMENT_AUDIO, onUpdatePathCommentAudio);
 			audioRecorder.addEventListener(AudioRecorderEvent.UPDATE_DURATION_COMMENT_AUDIO, onUpdateDuratioCommentAudio);
@@ -274,13 +279,13 @@ public class SegmentCommentAudio extends SkinnableComponent
             iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
             iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
             iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
-            var messageDND:String = "Glisser-déplacer ce bloc";
-            iconSegment.toolTip = messageDND+ " audio";
+            var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
+            iconSegment.toolTip = messageDND+ " "  + fxgt.gettext("audio");
             // TODO : message "Vous pouver deplace cet block en haut en bas",
             // show this message only if has many blocs
             // MouseCursor = HAND just if has many blocs
         }
-	}	
+	}
 	override protected function commitProperties():void
 	{
 		super.commitProperties();
@@ -303,7 +308,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 		if(segmentChange)
 		{
 			segmentChange = false;
-			
+
 			text = segment.comment;
 			// set text message
 			if(text == "" && modeEdit)
@@ -324,18 +329,18 @@ public class SegmentCommentAudio extends SkinnableComponent
 			audioRecorder.userId = userId;
 			// set duration audio
 			durationAudio = segment.durationCommentAudio;
-			
+
 			if(audioRecorder)
 			{
 
 				audioRecorder.streamPath = streamPath;
 				audioRecorder.durationAudio = durationAudio;
-                
+
                 // set segment id for tracage audioRecorder
                 audioRecorder.parentSegmentId = segment.segmentId;
 			}
-			
-			// check duration audio 
+
+			// check duration audio
 			if(!modeEdit && durationAudio == 0)
 			{
 				groupAudioRecorder.includeInLayout = groupAudioRecorder.visible = false;
@@ -379,7 +384,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 		}
 		return skinName;
 	}
-	
+
 	//_____________________________________________________________________
 	//
 	// Listeners
@@ -396,7 +401,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// richText
 	public function onFocusInRichEditableText(event:*=null):void
 	{
-		if(richEditableText.text == "Cliquer ici pour enregistrer un commentaire")
+		if(richEditableText.text == fxgt.gettext("Cliquer ici pour enregistrer un commentaire"))
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
@@ -420,17 +425,17 @@ public class SegmentCommentAudio extends SkinnableComponent
 		{
 			text = richEditableText.text;
 		}
-		
+
 		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
 		richEditableText.removeEventListener(TextOperationEvent.CHANGE, onChangeRichEditableText);
 	}
-	
+
 	private function onChangeRichEditableText(event:TextOperationEvent):void
 	{
 		segment.comment = richEditableText.text;
 		notifyUpdateSegment();
 	}
-	
+
 	private function onUpdatePathCommentAudio(event:AudioRecorderEvent):void
 	{
 		segment.pathCommentAudio = event.pathAudio;
@@ -461,7 +466,7 @@ public class SegmentCommentAudio extends SkinnableComponent
         _tracedSegment = new Segment(segment.parentRetroDocument);
         _tracedSegment.setSegmentXML(segment.getSegmentXML());
 	}
-    
+
     // remove from stage
     private function onRemoveFromStage(event:Event):void
     {
@@ -480,7 +485,7 @@ public class SegmentCommentAudio extends SkinnableComponent
         var tempString:String;
         // save modifications in format JSON
         var diff:String = "{ ";
-        
+
         // check if has _tracedSegment
         if(_tracedSegment)
         {
@@ -506,7 +511,7 @@ public class SegmentCommentAudio extends SkinnableComponent
             {
                 diff = diff+arr.getItemAt(nElm) +",\n\t\t";
             }
-            diff = diff + arr.getItemAt(nbrElm-1) + " }"; 
+            diff = diff + arr.getItemAt(nbrElm-1) + " }";
             trace("tracage =>"+ diff);
             // tracage modifications the audio block
             var audioBlockTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK);
@@ -515,12 +520,12 @@ public class SegmentCommentAudio extends SkinnableComponent
             audioBlockTracageEvent.serialisation = this._tracedSegment.getSegmentXML();
             audioBlockTracageEvent.diff = diff
             TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(audioBlockTracageEvent);
-            
-            // save modifications of the segment 
+
+            // save modifications of the segment
             onCreationComplete();
         }
     }
-		
+
     /**
     * tracage over block
     */
@@ -550,7 +555,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// Dispatchers
 	//
 	//_____________________________________________________________________
-	
+
 	private function notifyUpdateSegment():void
 	{
 		var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
@@ -561,7 +566,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// Utils
 	//
 	//_____________________________________________________________________
-	
+
     private function startTracageTimer():void
     {
         if(!_tracageTimer)
@@ -580,32 +585,32 @@ public class SegmentCommentAudio extends SkinnableComponent
             _tracageTimer.stop();
         }
     }
-    
+
 	private function setRichEditText():void
 	{
-		richEditableText.text = "Cliquer ici pour enregistrer un commentaire";
+		richEditableText.text = fxgt.gettext("Cliquer ici pour enregistrer un commentaire");
 		richEditableText.setStyle("fontStyle","italic");
 		richEditableText.setStyle("textAlign","right");
 		var colorText:String = "#000000";
 		richEditableText.setStyle("color", colorText);
 		richEditableText.setStyle("backgroundColor", _backGroundColorRichEditableText);
 	}
-	
+
 	private function initSkinVars():void
 	{
 		shared = sharedOver = edit = editOver = selected = false;
 	}
 	public function onMetaData(infoObject:Object):void {
 		trace("metadata");
-		for (var propName:String in infoObject) 
+		for (var propName:String in infoObject)
 		{
 			trace(propName + " = " + infoObject[propName]);
 		}
 	}
-	
+
 	public function onCuePoint(infoObject:Object):void {
 		trace("onCuePoint:");
-		for (var propName:String in infoObject) 
+		for (var propName:String in infoObject)
 		{
 			if (propName != "parameters")
 			{
@@ -624,10 +629,10 @@ public class SegmentCommentAudio extends SkinnableComponent
 				{
 					trace("undefined");
 				}
-			}        
+			}
 		}
 	}
-	
+
 	public function onPlayStatus(infoObject:Object):void {
 		trace("on play status");
 		for (var prop: String in infoObject) {

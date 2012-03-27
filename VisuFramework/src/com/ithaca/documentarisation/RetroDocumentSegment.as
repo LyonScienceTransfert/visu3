@@ -1,15 +1,15 @@
 package com.ithaca.documentarisation
 {
-	
+
 	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.documentarisation.model.Segment;
 	import com.ithaca.traces.Obsel;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.lyon2.controls.utils.TimeUtils;
-	
+
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
-	
+
 	import mx.controls.Alert;
 	import mx.controls.Button;
 	import mx.core.DragSource;
@@ -18,32 +18,38 @@ package com.ithaca.documentarisation
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.managers.DragManager;
-	
+
 	import spark.components.Label;
 	import spark.components.TextArea;
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.TextOperationEvent;
-	
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	public class RetroDocumentSegment extends SkinnableComponent
 	{
 		[SkinState("normal")]
 		[SkinState("open")]
 		[SkinState("normalEditable")]
 		[SkinState("openEditable")]
-		
-			
+
+
 		private static var logger:ILogger = Log.getLogger("com.ithaca.documentarisation.RetroDocumentSegment");
-		
+
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		[SkinPart("true")]
 		public var titleSegmentLabel:Label;
-		
+
 		[SkinPart("true")]
 		public var titleSegmentTextInput:TextInput;
-		
+
 		[SkinPart("true")]
 		public var buttonDeleteSegment:Button;
-		
+
 		[SkinPart("true")]
 		public var segmentVideo:SegmentVideo;
 
@@ -52,7 +58,7 @@ package com.ithaca.documentarisation
 
 		[SkinPart("true")]
 		public var labelStartDuration:Label;
-		
+
 		[SkinPart("true")]
 		public var buttonPlayStopVideo:Button;
 
@@ -65,12 +71,12 @@ package com.ithaca.documentarisation
 		private var isDroped:Boolean = false;
 		private var statusPlaySegment:Boolean = false;
 		private var durationChange:Boolean;
-		
+
 		private var currentTimeChange:Boolean;
-		
-		private var TEXT_TITLE_EMPTY:String ="Entrez un titre ici";
+
+		private var TEXT_TITLE_EMPTY:String = fxgt.gettext("Entrez un titre ici");
 		private var DELTA_TIME:Number = 5000;
-		
+
 		private var _title:String = "";
 		private var _timeBegin:Number=0;
 		private var _timeEnd:Number=0;
@@ -80,44 +86,37 @@ package com.ithaca.documentarisation
 		private var _durationSession:Number;
 		private var _segment:Segment;
 		private var _currentTime:String = "";
-		
-		import gnu.as3.gettext.FxGettext;
-		import gnu.as3.gettext._FxGettext;
-		
-		[Bindable]
-		private var fxgt: _FxGettext = FxGettext;
-		
-		public function RetroDocumentSegment()
 
+		public function RetroDocumentSegment()
 		{
 			super();
 			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
 			fxgt = FxGettext;
 		}
-		
+
 		public function get segment():Segment
 		{
 			return _segment;
 		}
-		
+
 		public function set segment(value:Segment):void
 		{
 			this._segment = value;
 			segmentSet = true;
 			this.invalidateProperties();
 		}
-		
+
 		public function get segmentVideoView():SegmentVideo
 		{
 			return this.segmentVideo;
 		}
-		
+
 		public function get title():String
 		{
 			return _title;
 		}
-		
+
 		public function set title(value:String):void
 		{
 			this._title = value;
@@ -137,9 +136,9 @@ package com.ithaca.documentarisation
 		public function setBeginEndTime():void
 		{
 			durationChange = true;
-			invalidateProperties();	
+			invalidateProperties();
 		}
-		
+
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
@@ -151,71 +150,71 @@ package com.ithaca.documentarisation
 					);
 				segmentVideo.showDetail(emptySegmentVideo);
 				segmentVideo.setEditable(editabled);
-				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);	
+				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);
 			}
-			
+
 			if(instance == segmentComment)
 			{
 				segmentComment.text  = _textComment;
 				segmentComment.addEventListener(TextOperationEvent.CHANGE, segmentCommentTextInput_changeHandler);
 			}
-			
+
 			if(instance == buttonDeleteSegment)
 			{
 				buttonDeleteSegment.addEventListener(MouseEvent.CLICK, onDeleteSegment);
 				buttonDeleteSegment.toolTip = fxgt.gettext("Supprimer ce segment");
-			}	
+			}
 
 			if(instance == buttonPlayStopVideo)
 			{
 				if(this._timeBegin == 0 )
 				{
 					buttonPlayStopVideo.enabled = false;
-					buttonPlayStopVideo.toolTip = "Aucun segment vidéo associé actuellement";
+					buttonPlayStopVideo.toolTip = fxgt.gettext("Aucun segment vidéo associé actuellement");
 				}
 				else
 				{
-					buttonPlayStopVideo.toolTip = "Joue la vidéo correspondant à ce segment";					
+					buttonPlayStopVideo.toolTip = fxgt.gettext("Joue la vidéo correspondant à ce segment");
 				}
 				buttonPlayStopVideo.addEventListener(MouseEvent.CLICK, onPlayStopButtonClick);
-			}	
-			
+			}
+
 			if(instance == titleSegmentLabel)
 			{
 				titleSegmentLabel.text = this._title;
-			}	
-			
+			}
+
 			if(instance == titleSegmentTextInput)
 			{
 				if(this._title == "")
 				{
 					setMessageTitleSegmentTextInput();
-					titleSegmentTextInput.addEventListener(FocusEvent.FOCUS_OUT, titleSegmentTextInput_focusOutHandler);	
-					titleSegmentTextInput.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, titleSegmentTextInput_focusOutHandler);	
-					titleSegmentTextInput.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, titleSegmentTextInput_focusOutHandler);	
+					titleSegmentTextInput.addEventListener(FocusEvent.FOCUS_OUT, titleSegmentTextInput_focusOutHandler);
+					titleSegmentTextInput.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, titleSegmentTextInput_focusOutHandler);
+					titleSegmentTextInput.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, titleSegmentTextInput_focusOutHandler);
 					titleSegmentTextInput.addEventListener(FocusEvent.FOCUS_IN, titleSegmentTextInput_focusInHandler);
 				}else
 				{
 					titleSegmentTextInput.text = this._title;
 				}
 				titleSegmentTextInput.addEventListener(TextOperationEvent.CHANGE, titleSegmentTextInput_changeHandler);
-				
+
 			}
-			
+
 			if(instance == labelStartDuration)
 			{
 				labelStartDuration.text = getLabelStartDuration();
 				labelStartDuration.setStyle("fontWeight","normal");
-			}	
+			}
 		}
-		
+
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
 			if (titleChange)
 			{
 				titleChange = false;
-				
+
 				if(titleSegmentLabel != null)
 				{
 					this.titleSegmentLabel.text  = this._title;
@@ -232,7 +231,7 @@ package com.ithaca.documentarisation
 				this.segmentVideo.setNewBeginEnd(
 					this._timeBegin - this._startDateSession,
 					this._timeEnd - this._startDateSession
-					);				
+					);
 				this.segmentComment.text = this._textComment;
 				this.segmentComment.selectAll();
 				this.stage.focus = this.segmentComment;
@@ -241,13 +240,13 @@ package com.ithaca.documentarisation
 				segmentVideo.setEditable(editabled);
 				segmentVideo.addEventListener(RetroDocumentEvent.CHANGE_TIME_BEGIN_TIME_END, segmentVideo_changeHandler);
 				setEnabledButtonPlayStop();
-				
+
 				logger.debug("RetroDocumentSegment.commitProperties: duration has changed");
-				
+
 				labelStartDuration.text = getLabelStartDuration();
 				labelStartDuration.setStyle("fontWeight","normal");
 			}
-			
+
 			if(segmentSet)
 			{
 				segmentSet = false;
@@ -262,7 +261,7 @@ package com.ithaca.documentarisation
 				var end:Number = this._startDateSession;
 				if( !isNaN(this._segment.endTimeVideo))
 				{
-					end = this._segment.endTimeVideo;		
+					end = this._segment.endTimeVideo;
 				}
 				this._timeEnd = end;
 				//this._title = this._segment.title;
@@ -271,7 +270,7 @@ package com.ithaca.documentarisation
 				labelStartDuration.text = getLabelStartDuration();
 				labelStartDuration.setStyle("fontWeight","normal");
 			}
-			
+
 			if(durationChange)
 			{
 				logger.debug("RetroDocumentSegment.commitProperties: duration has changed");
@@ -279,17 +278,17 @@ package com.ithaca.documentarisation
 				labelStartDuration.text = getLabelStartDuration();
 				labelStartDuration.setStyle("fontWeight","normal");
 			}
-			
+
 			if(currentTimeChange)
 			{
 				currentTimeChange = false;
-				
-				labelStartDuration.text = this._currentTime; 
-				labelStartDuration.toolTip = this._currentTime; 
+
+				labelStartDuration.text = this._currentTime;
+				labelStartDuration.toolTip = this._currentTime;
 				labelStartDuration.setStyle("fontWeight","bold");
 			}
 		}
-		
+
 		override protected function getCurrentSkinState():String
 		{
 			if (!enabled)
@@ -309,7 +308,7 @@ package com.ithaca.documentarisation
 					}else{
 						return "normal";
 					}
-				} 
+				}
 		}
 		public function segment_clickHandler(event:MouseEvent):void
 		{
@@ -322,7 +321,7 @@ package com.ithaca.documentarisation
 			removeSegmentEvent.segment = this._segment;
 			this.dispatchEvent(removeSegmentEvent);
 		}
-		
+
 		private function onPlayStopButtonClick(even:MouseEvent):void
 		{
 			var playRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);
@@ -331,46 +330,46 @@ package com.ithaca.documentarisation
 			playRetroDocumentEvent.statusPlaySegment = this.statusPlaySegment;
 			this.dispatchEvent(playRetroDocumentEvent);
 		}
-		
+
 		public function setEmpty(value:Boolean):void
 		{
-			emptySegmentVideo = value;		
+			emptySegmentVideo = value;
 		}
 		public function setOpen(value:Boolean):void
 		{
 			open = value;
-			invalidateSkinState();	
+			invalidateSkinState();
 		}
 		public function setEditabled(value:Boolean):void
 		{
 			editabled = value;
 			this.invalidateSkinState();
-		}	
-		
+		}
+
 		private function onDragEnter(event:DragEvent):void
 		{
 			if(event.dragSource.hasFormat("obsel") && editabled)
-			{	
+			{
 				var rds:RetroDocumentSegment = event.currentTarget as RetroDocumentSegment;
 				DragManager.acceptDragDrop(rds);
-			}	
+			}
 		}
-		
+
 		private function onDragDrop(event:DragEvent):void
 		{
 			dragSource = event.dragSource;
 			isDroped = true;
 			if(!open){
-				open = true; 
+				open = true;
 				invalidateSkinState();
 				var updateSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
 				this.dispatchEvent(updateSegmentEvent);
 			}else
 			{
 				checkingEmptySegmentVideo();
-			}	
+			}
 		}
-		
+
 		public function checkingEmptySegmentVideo():void
 		{
 			if(isDroped)
@@ -381,7 +380,7 @@ package com.ithaca.documentarisation
 					Alert.yesLabel = fxgt.gettext("Oui");
 					Alert.noLabel = fxgt.gettext("Non");
 					Alert.show(fxgt.gettext("Voulez-vous ajouter l'élément au segment ? Cette opération remplace le titre du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo ?"),
-						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, updateSegmentConformed); 
+						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, updateSegmentConformed);
 				}else
 				{
 					updateSegment();
@@ -404,12 +403,12 @@ package com.ithaca.documentarisation
 				updateSegment();
 			}
 		}
-		
+
 		private function updateSegment():void
 		{
 			var obsel:Obsel = dragSource.dataForFormat("obsel") as Obsel;
 			logger.debug("Updating the retrodoc segment [begin:{0},_startDateSession:{1}]", obsel.begin,_startDateSession);
-			
+
 			if(obsel.begin - _startDateSession > DELTA_TIME)
 			{
 				_timeBegin = obsel.begin - DELTA_TIME ;
@@ -417,7 +416,7 @@ package com.ithaca.documentarisation
 			{
 				_timeBegin = _startDateSession;
 			}
-			// timeEnd  by duration of the session 
+			// timeEnd  by duration of the session
 			_timeEnd = obsel.begin + DELTA_TIME;
 			var timeEndSession:Number = this._startDateSession + this._durationSession;
 			if(_timeEnd > timeEndSession)
@@ -438,14 +437,14 @@ package com.ithaca.documentarisation
 			//_segment.title = _title;
 			logger.debug("_segment.title = _title");
 			segmentChange = true;
-			
-			
-			
+
+
+
 			this.invalidateProperties();
 			var updateSegmentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
 			this.dispatchEvent(updateSegmentEvent);
 		}
-		
+
 		private function setMessageTitleSegmentTextInput():void
 		{
 			titleSegmentTextInput.text = TEXT_TITLE_EMPTY;
@@ -468,7 +467,7 @@ package com.ithaca.documentarisation
 				titleSegmentTextInput.setStyle("color","#000000");
 			}
 		}
-		
+
 		protected function titleSegmentTextInput_changeHandler(event:TextOperationEvent):void
 		{
 			this._title = titleSegmentTextInput.text;
@@ -485,7 +484,7 @@ package com.ithaca.documentarisation
 			var notifyUpdateEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CHANGE_RETRO_SEGMENT);
 			this.dispatchEvent(notifyUpdateEvent);
 		}
-		
+
 		private function segmentVideo_changeHandler(event:RetroDocumentEvent):void
 		{
 			logger.debug("The segment video has been changed [event.beginTime: {0},event.endTime: {1}]. Updating the retro document...", event.beginTime,event.endTime);
@@ -495,10 +494,10 @@ package com.ithaca.documentarisation
 			_segment.endTimeVideo = this._timeEnd;
 			durationChange = true;
 			this.invalidateProperties();
-			
+
 			notifyUpdateSegment();
 		}
-		
+
 		private function getLabelStartDuration():String
 		{
 			logger.debug("TimeUtils.formatTimeString(timeBegin: {0}, _startDateSession: {1}, (this._timeBegin - _startDateSession)/1000: {3})",
@@ -508,68 +507,68 @@ package com.ithaca.documentarisation
 			var s:String = TimeUtils.formatTimeString(Math.floor((this._timeBegin - _startDateSession)/1000));
 			logger.debug("Label start duration: {0}", s);
 			return s;
-			
+
 			// Ne pas afficher la durée finalement, car la place manque
 			/*
 			var timeStart:Number = this._timeBegin - _startDateSession;
 			var timeMin:int = timeStart/60000;
 			var timeMinString:String = timeMin.toString();
 			if(timeMin < 10){timeMinString = "0"+timeMinString;};
-			
+
 			var timeSec:int = (timeStart - timeMin*60000)/1000;
 			var timeSecString:String = timeSec.toString();
 			if(timeSec < 10){timeSecString= "0"+timeSecString;}
-			
+
 			var timeFrom:String = timeMinString+":"+timeSecString;
-			
-			var duration:int = (this._timeEnd - this._timeBegin)/1000;	
+
+			var duration:int = (this._timeEnd - this._timeBegin)/1000;
 			var durationString:String ="("+duration.toString() + " s)";
-			
+
 			return timeFrom + " "+durationString;
 			*/
 		}
-		
+
 		private function timeToString():String
 		{
 			var timeStart:Number = this._timeBegin - _startDateSession;
 			var timeMin:int = timeStart/60000;
 			var timeMinString:String = timeMin.toString();
 			if(timeMin < 10){timeMinString = "0"+timeMinString;};
-			
+
 			var timeSec:int = (timeStart - timeMin*60000)/1000;
 			var timeSecString:String = timeSec.toString();
 			if(timeSec < 10){timeSecString= "0"+timeSecString;}
-			
+
 			var timeFrom:String = timeMinString+":"+timeSecString;
-			
+
 			var timeEnd:Number = this._timeEnd - _startDateSession;
 			var timeMinEnd:int = timeEnd/60000;
 			var timeMinEndString:String = timeMinEnd.toString();
 			if(timeMinEnd < 10){timeMinEndString = "0"+timeMinEndString;};
-			
+
 			var timeSecEnd:int = (timeEnd - timeMinEnd*60000)/1000;
 			var timeSecStringEnd:String = timeSecEnd.toString();
 			if(timeSecEnd < 10){timeSecStringEnd= "0"+timeSecStringEnd;}
-			
+
 			var timeTo:String = timeMinEndString+":"+timeSecStringEnd;
-			
+
 			return "["+timeFrom+"-"+timeTo+"]";
 		}
-		
+
 		private function setEnabledButtonPlayStop():void
 		{
 			buttonPlayStopVideo.enabled = true;
-			buttonPlayStopVideo.toolTip = "Joue la vidéo correspondant à ce segment";
+			buttonPlayStopVideo.toolTip = fxgt.gettext("Jouer la vidéo correspondant à ce segment");
 		}
-		
+
 		public function setLabelPlay(value:Boolean):void
 		{
 			if(value)
 			{
-				this.buttonPlayStopVideo.label = "Pause";
+				this.buttonPlayStopVideo.label = fxgt.gettext("Pause");
 			}else
 			{
-				this.buttonPlayStopVideo.label = "Play";		
+				this.buttonPlayStopVideo.label = fxgt.gettext("Play");
 			}
 			// set status segment
 			this.statusPlaySegment = value;
