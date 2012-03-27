@@ -619,7 +619,7 @@ public class RetroDocumentView extends SkinnableComponent
             }
             if(indexSegment < 0)
             {
-                Alert.show("you havn't segment for delete","bug message...");
+                Alert.show("No segment to delete", "Bug message...");
             }else
             {
                 listSegment.removeItemAt(indexSegment);
