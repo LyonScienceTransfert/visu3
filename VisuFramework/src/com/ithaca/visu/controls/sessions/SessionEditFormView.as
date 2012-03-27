@@ -19,6 +19,9 @@ package com.ithaca.visu.controls.sessions
 	import mx.managers.PopUpManager;
 	import mx.utils.StringUtil;
 
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import spark.components.Button;
 	import spark.components.DropDownList;
 	import spark.components.Label;
@@ -28,6 +31,8 @@ package com.ithaca.visu.controls.sessions
 	
 	public class SessionEditFormView extends SkinnableComponent
 	{
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
 		
 		[SkinPart("true")]
 		public var dateField:DateField;
