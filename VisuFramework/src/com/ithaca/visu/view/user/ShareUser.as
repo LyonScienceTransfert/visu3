@@ -2,7 +2,7 @@ package com.ithaca.visu.view.user
 {
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.RoleEnum;
-	import com.ithaca.visu.VisuUtils;
+	import com.ithaca.utils.VisuUtils;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
