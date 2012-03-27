@@ -4,7 +4,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
 	close="titlewindow1_closeHandler(event)" >
-	<s:title>{fxgt.gettext("Edition de marqueur")}</s:title>
+	<s:title>{fxgt.gettext("Édition de marqueur")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
         <s:State name="enabled"/>
@@ -144,7 +144,7 @@
 			if(obselChange)
 			{
 				obselChange = false;
-				var text:String = fxgt.gettext("texte de marqueur ici");
+				var text:String = fxgt.gettext("Entrez le texte du marqueur ici");
 				if(obsel)
 				{
 					text = obsel.props[TraceModel.TEXT];
@@ -186,7 +186,7 @@
                 message = message.split("\n").join("");
 			}
             // check if text with promt message
-            if(message == fxgt.gettext("texte de marqueur ici"))
+            if(message == fxgt.gettext("Entrez le texte du marqueur ici"))
             {
                 message = "";
             }
@@ -211,7 +211,7 @@
 		{
 			Alert.yesLabel = fxgt.gettext("Oui");
 			Alert.noLabel = fxgt.gettext("Non");
-			Alert.show(fxgt.gettext("Voulez-vous supprimer marqueur ?"),
+			Alert.show(fxgt.gettext("Voulez-vous supprimer le marqueur ?"),
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteObselConfirmed); 	
 		}
 		
@@ -301,7 +301,7 @@
 	<s:VGroup width="100%" height="100%">
 		<s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
 			<mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}"/>
-			<s:Label  id="labelMarkerFor" fontWeight="bold" text="{fxgt.gettext('Votre marqueurs à propos de...')}"/>
+			<s:Label  id="labelMarkerFor" fontWeight="bold" text="{fxgt.gettext('Votre marqueur à propos de...')}"/>
 		</s:HGroup>
 		<s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
 			<mx:Image id="imageUser" width="50" height="50"/>

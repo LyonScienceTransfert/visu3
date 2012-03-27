@@ -19,6 +19,7 @@ package com.ithaca.visu.controls.sessions
 	import mx.controls.LinkButton;
 	import mx.events.CloseEvent;
 	import mx.events.CollectionEvent;
+    import mx.utils.StringUtil;
 	
 	import spark.components.Button;
 	import spark.components.HGroup;
@@ -26,6 +27,9 @@ package com.ithaca.visu.controls.sessions
 	import spark.components.NavigatorContent;
 	import spark.components.supportClasses.SkinnableComponent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	[SkinState("empty")]
 	[SkinState("planMine")]
 	[SkinState("planOther")]
@@ -34,6 +38,9 @@ package com.ithaca.visu.controls.sessions
 	
 	public class SessionDetailView extends SkinnableComponent
 	{
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		[SkinPart("true")]
 		public var deleteButtonSession:Button;
 		[SkinPart("true")]
@@ -320,7 +327,7 @@ package com.ithaca.visu.controls.sessions
 				sessionPlanEdit.addEventListener(SessionEditEvent.DELETE_ACTIVITY_ELEMENT, onDeleteActivityElement,true);
 				sessionPlanEdit.addEventListener(SessionEditEvent.UPDATE_THEME, onUpdateTheme);
 				planTab = new NavigatorContent();
-				planTab.label = "Plan de séance";
+				planTab.label = fxgt.gettext("Plan de séance");
 				planTab.addElement(sessionPlanEdit);
 				tabNav.addChild(planTab);
 				// add date and users
@@ -330,7 +337,7 @@ package com.ithaca.visu.controls.sessions
 				sessionFormView.addEventListener(SessionEditEvent.UPDATE_DATE_TIME, onUpdateDateTime);
 				sessionFormView.addEventListener(SessionEditEvent.UPDATE_LIST_PLANED_USER, onUpdateListPlanedUser);
 				dateTab = new NavigatorContent();
-				dateTab.label = "Dates et participants";
+				dateTab.label = fxgt.gettext("Dates et participants");
 				dateTab.addElement(sessionFormView);
 				tabNav.addChild(dateTab);
 				// add bilan
@@ -338,7 +345,7 @@ package com.ithaca.visu.controls.sessions
 				sessionBilanFormView.percentHeight = 100;
 				sessionBilanFormView.percentWidth = 100;
 				recordTab = new NavigatorContent();
-				recordTab.label = "Compte-rendu de séance";
+				recordTab.label = fxgt.gettext("Compte-rendu de séance");
 				recordTab.addElement(sessionBilanFormView);
 				tabNav.addChild(recordTab);
 			}
@@ -426,7 +433,7 @@ package com.ithaca.visu.controls.sessions
 			if(minuteSaveAgoChange)
 			{
 				minuteSaveAgoChange = false;
-				labelSaveTimeAgo.text = "(il y a "+ this._minutsSaveAgo.toString()+ " min.)";
+				labelSaveTimeAgo.text = StringUtil.substitute(fxgt.gettext("(il y a {0} min.)"), this._minutsSaveAgo.toString());
 			}
 		}
 		//_____________________________________________________________________
@@ -526,18 +533,18 @@ package com.ithaca.visu.controls.sessions
 // DELETE SESSION
 		private function onDeleteSession(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer cette séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer cette séance ?"),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteSessionConformed);
 		}
 // DELETE PLAN
 		private function onDeletePlan(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer cet plan de séance ?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteSessionConformed);
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer ce plan de séance ?"),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteSessionConformed);
 		}
 		
 		private function deleteSessionConformed(event:CloseEvent):void{
@@ -623,7 +630,7 @@ package com.ithaca.visu.controls.sessions
 				// show message 
 				groupMessageSaveSession.includeInLayout = groupMessageSaveSession.visible = true;
 				var dateLastSave:Date = new Date();
-				labelLastTimeSave.text = UtilFunction.getHeurMinDate(dateLastSave);
+				labelLastTimeSave.text = UtilFunction.getHourMinDate(dateLastSave);
 				// init timer 
 				_minutsSaveAgo = 0;
 				minuteSaveAgoChange = true;

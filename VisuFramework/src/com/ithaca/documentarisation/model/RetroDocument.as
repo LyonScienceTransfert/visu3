@@ -8,15 +8,20 @@ package com.ithaca.documentarisation.model
 	import mx.collections.IList;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
-			
-		
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	public class RetroDocument
 	{
 		private var logger : ILogger = Log.getLogger('com.ithaca.documentarisation.model.RetroDocument');
 		
 		public var id:int;
 		public var sessionId:int;	
-		
+
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		[Bindable]
 		public var title:String;
 
@@ -141,7 +146,7 @@ package com.ithaca.documentarisation.model
 				segmentXML.appendChild(endTimeVideo);
 				// comment
 				var commentText:String = segment.comment;
-				if(commentText == "Cliquer ici pour ajouter du text")
+				if(commentText == fxgt.gettext("Cliquer ici pour ajouter du texte"))
 				{
 					commentText = "";
 				}

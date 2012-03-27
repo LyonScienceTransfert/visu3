@@ -87,14 +87,14 @@ package com.ithaca.utils
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mount: int = date.getMonth() +1;
-            var mountString: String = mount.toString();
-            if(mount < 10){ mountString = "0"+mountString;};
-            var result: String = date.getUTCFullYear().toString()+separateur+mountString+separateur+dayString;
+            var month: int = date.getMonth() +1;
+            var monthString: String = month.toString();
+            if(month < 10){ monthString = "0"+monthString;};
+            var result: String = date.getUTCFullYear().toString()+separateur+monthString+separateur+dayString;
             return result;
         }
 
-        public static function getHeurMinDate(date: Date): String
+        public static function getHourMinDate(date: Date): String
         {
             if(date == null) return "?";
             var heureString: String = date.getHours().toString();
@@ -111,36 +111,36 @@ package com.ithaca.utils
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mounthStringBig: String = getMonthString(date).toLowerCase();
-            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
-            var result: String = dayString + " "+mounthStringShot;
+            var monthStringBig: String = getMonthString(date).toLowerCase();
+            var monthStringShot: String = StringUtils.firstLetterCap(monthStringBig) + monthStringBig.substr(1,2);
+            var result: String = dayString + " "+monthStringShot;
             return result;
         }
         
         // example return : 22 Fev 16: 00
-        public static function getDateMountHourMin(date: Date): String
+        public static function getDateMonthHourMin(date: Date): String
         {
             if(date == null) return "?";
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mounthStringBig: String = getMonthString(date).toLowerCase();
-            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
-            var result: String = dayString + " "+mounthStringShot+" "+ getHeurMinDate(date);
+            var monthStringBig: String = getMonthString(date).toLowerCase();
+            var monthStringShot: String = StringUtils.firstLetterCap(monthStringBig) + monthStringBig.substr(1,2);
+            var result: String = dayString + " "+monthStringShot+" "+ getHourMinDate(date);
             return result;
         }
 
         // example return : 22 Fev. 2011, à 16: 00
-        public static function getDateMountYearHourMin(date: Date): String
+        public static function getDateMonthYearHourMin(date: Date): String
         {
             if(date == null) return "?";
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mounthStringBig: String = getMonthString(date).toLowerCase();
-            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
+            var monthStringBig: String = getMonthString(date).toLowerCase();
+            var monthStringShot: String = StringUtils.firstLetterCap(monthStringBig) + monthStringBig.substr(1,2);
             var year: String = date.getFullYear().toString();
-            var result: String = dayString + " "+mounthStringShot+". "+ year+", à "+ getHeurMinDate(date);
+            var result: String = dayString + " "+monthStringShot+". "+ year+", à "+ getHourMinDate(date);
             return result;
         }
         // param : minutes
@@ -250,47 +250,23 @@ package com.ithaca.utils
         }
         public static function getMonthString(date: Date): String
         {
-            var monthString: String = "";
+            /* FIXME: should be properly rewritten using DateFormatter */
             var month: Number = date.getMonth();
-            switch (month){
-                case 0:
-                    monthString = "JANVIER";
-                    break;
-                case 1:
-                    monthString = "FÉVRIER";
-                    break;
-                case 2:
-                    monthString = "MARS";
-                    break;
-                case 3:
-                    monthString = "AVRIL";
-                    break;
-                case 4:
-                    monthString = "MAI";
-                    break;
-                case 5:
-                    monthString = "JUIN";
-                    break;
-                case 6:
-                    monthString = "JUILLET";
-                    break;
-                case 7:
-                    monthString = "AOÛT";
-                    break;
-                case 8:
-                    monthString = "SEPTEMBRE";
-                    break;
-                case 9:
-                    monthString = "OCTOBRE";
-                    break;
-                case 10:
-                    monthString = "NOVEMBRE";
-                    break;
-                case 11:
-                    monthString = "DÉCEMBRE";
-                    break;
-            }
-            return monthString;
+            var monthNames: Array = [ 
+                fxgt.gettext("JANVIER"),
+                fxgt.gettext("FÉVRIER"),
+                fxgt.gettext("MARS"),
+                fxgt.gettext("AVRIL"),
+                fxgt.gettext("MAI"),
+                fxgt.gettext("JUIN"),
+                fxgt.gettext("JUILLET"),
+                fxgt.gettext("AOÛT"),
+                fxgt.gettext("SEPTEMBRE"),
+                fxgt.gettext("OCTOBRE"),
+                fxgt.gettext("NOVEMBRE"),
+                fxgt.gettext("DÉCEMBRE")
+            ];
+            return monthNames[month];
         }
 
         public static function getNumberEntier(value: Number): Number

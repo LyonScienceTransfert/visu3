@@ -334,7 +334,7 @@
 				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('down')}" width="12" height="12"/>
 			</s:HGroup>
 			<!-- DURATION -->
-			<s:Label id="durationDisplay" paddingTop="10" text="{fxgt.gettext('durée :')}" text.normal="{fxgt.gettext('durée :')}" text.normalEditable="{fxgt.gettext('durée :')}" text.open="{fxgt.gettext('durée :')}" text.openEditable="{fxgt.gettext('durée :')}"/>
+			<s:Label id="durationDisplay" paddingTop="10" text="{fxgt.gettext('Durée :')}" text.normal="{fxgt.gettext('Durée :')}" text.normalEditable="{fxgt.gettext('Durée :')}" text.open="{fxgt.gettext('Durée :')}" text.openEditable="{fxgt.gettext('Durée :')}"/>
 			<s:Label includeIn="normal,open" text="10 " id="durationActivityLabel" width="18" paddingTop="10"/>
 			<s:Label includeIn="normal,open" text="min." paddingTop="10"/>
 			<s:NumericStepper id="durationActivity" width="44"

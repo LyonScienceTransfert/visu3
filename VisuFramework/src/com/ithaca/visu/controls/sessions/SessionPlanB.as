@@ -130,11 +130,11 @@ package com.ithaca.visu.controls.sessions
 			if(activityDetail.activity.id_activity == _currentActivityId)
 			{
 				activityDetail.startButton.enabled = false;
-				activityDetail.startButton.label = fxgt.gettext("en cours");
+				activityDetail.startButton.label = fxgt.gettext("En cours");
 			}else
 			{
 				activityDetail.startButton.enabled = true;	
-				activityDetail.startButton.label = fxgt.gettext("start");
+				activityDetail.startButton.label = fxgt.gettext("Démarrer");
 			}	
 		}
 		

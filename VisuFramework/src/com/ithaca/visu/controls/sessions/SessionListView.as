@@ -36,6 +36,8 @@ package com.ithaca.visu.controls.sessions
 	import spark.events.TextOperationEvent;
 	import spark.primitives.Rect;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
 	
 	[Event(name="selectSession",type="com.ithaca.visu.events.SessionListViewEvent")]
 	[Event(name="changeTextFilter",type="com.ithaca.visu.events.SessionListViewEvent")]
@@ -47,6 +49,8 @@ package com.ithaca.visu.controls.sessions
 	 */
 	public class SessionListView extends SkinnableComponent
 	{
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
 		
 		[SkinPart("true")]
 		public var allButton:RadioButton;
@@ -515,14 +519,14 @@ package com.ithaca.visu.controls.sessions
 		private function onRadioSessionFilter(event:MouseEvent = null):void
 		{		
 			// set text the columne "Date session" by condition the session past/will
-			var textColumnDateSession:String = "Date prévue";
-			var nameFiedDateSession:String = "date_session";
+			var textColumnDateSession: String = fxgt.gettext("Date prévue");
+			var nameFiedDateSession: String = "date_session";
 			var sortDateFunction:Function = compareDateSession;
 			var labelDateFunction:Function = labelFunctionDateSession;
 			// set function "compareDateSessionRecording" for past session
 			if(pastButton != null && pastButton.selected)
 			{
-				textColumnDateSession = "Date de séance";
+				textColumnDateSession = fxgt.gettext("Date de séance");
 				nameFiedDateSession = "date_start_recording";
 				sortDateFunction = compareDateSessionRecording;
 				labelDateFunction = labelFunctionDateSessionRecording;
@@ -644,7 +648,7 @@ package com.ithaca.visu.controls.sessions
 			addEmptySession.y = (this.parentApplication.height - addEmptySession.height)/2;
 			addEmptySession.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onCreateEmptySessionConformed);
 			addEmptySession.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateEmptySession);
-			addEmptySession.setTitleWindow("Voulez-vous créer une nouvelle séance ?");
+			addEmptySession.setTitleWindow(fxgt.gettext("Voulez-vous créer une nouvelle séance ?"));
 		}
 		
 		private function onCreateEmptySessionConformed(event:SessionEditEvent):void
@@ -658,7 +662,7 @@ package com.ithaca.visu.controls.sessions
 		private function onCreateEmptySession(event:FlexEvent):void
 		{
 			var addEmptySession:CreateSessionByTemplate = event.currentTarget as CreateSessionByTemplate;
-			addEmptySession.setThemeSession("Nouveau titre de séance");
+			addEmptySession.setThemeSession(fxgt.gettext("Nouveau titre de séance"));
 		}
 		public function selectAllPlan():void
 		{
@@ -714,13 +718,13 @@ package com.ithaca.visu.controls.sessions
 		// 
 		private function labelFunctionDateSession(item:Object, column:Object):String
 		{
-			var result:String = UtilFunction.getDateMountHourMin(item.date_session);
+			var result:String = UtilFunction.getDateMonthHourMin(item.date_session);
 			return result;
 		}
 		
 		private function labelFunctionDateSessionRecording(item:Object, column:Object):String
 		{
-			var result:String = UtilFunction.getDateMountHourMin(item.date_start_recording);
+			var result:String = UtilFunction.getDateMonthHourMin(item.date_start_recording);
 			return result;
 		}
 	}

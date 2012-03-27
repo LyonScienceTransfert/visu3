@@ -67,6 +67,7 @@ package com.ithaca.visu.view.user
 	import mx.controls.Alert;
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.utils.StringUtils;
+	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.RoleEnum;
@@ -142,22 +143,7 @@ package com.ithaca.visu.view.user
 			super.partAdded(partName,instance);
 			if(instance == roleUser)
 			{
-				if(_user.role < RoleEnum.STUDENT)
-				{
-					roleUser.text = "Etudiant";
-				}else
-					if(_user.role < RoleEnum.TUTEUR)
-					{
-						roleUser.text = "Tuteur";
-					}else 
-						if(_user.role < RoleEnum.RESPONSABLE)
-						{
-							roleUser.text = "Responsable";
-						}else
-						{
-							roleUser.text = "Administrateur";							
-						}
-				
+                roleUser.text = VisuUtils.getRoleLabel(_user.role);
 			}
 			
 			if(instance == avatarUser)

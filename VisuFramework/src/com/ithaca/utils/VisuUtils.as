@@ -103,7 +103,7 @@ package com.ithaca.utils
 						recordingMessage = fxgt.gettext("La séance est démarrée depuis") +" "+ dateRecording.getHours().toString()+ fxgt.gettext("h") + " "+ dateRecording.getMinutes().toString()+ fxgt.gettext("m") + " : "+ fxgt.gettext("Suspendue");
 						break;
 					default:
-						recordingMessage = fxgt.gettext("Status de séance inconnu");
+						recordingMessage = fxgt.gettext("Statut de séance inconnu");
 				}
 				return recordingMessage;
 		}

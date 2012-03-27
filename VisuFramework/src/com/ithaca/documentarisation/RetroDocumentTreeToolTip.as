@@ -72,7 +72,7 @@ package com.ithaca.documentarisation
 				{
 					this.dateModify.text  = this._retroDocumentView.retroDocument.modifyDate;
 /*					var dateString:String = UtilFunction.getLabelDate(this._retroDocument.modifyDate,"-");
-					var heureMinString:String = UtilFunction.getHeurMinDate(this._retroDocument.modifyDate);
+					var heureMinString:String = UtilFunction.getHourMinDate(this._retroDocument.modifyDate);
 					this.dateModify.text  = dateString + " "+ heureMinString;*/
 				}
 				

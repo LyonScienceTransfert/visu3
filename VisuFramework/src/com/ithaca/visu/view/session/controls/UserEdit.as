@@ -67,7 +67,8 @@ package com.ithaca.visu.view.session.controls
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.RoleEnum;
 	import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-	
+	import com.ithaca.utils.VisuUtils;
+
     import gnu.as3.gettext.FxGettext;
     import gnu.as3.gettext._FxGettext;
 
@@ -78,7 +79,8 @@ package com.ithaca.visu.view.session.controls
 	import mx.controls.Alert;
 	import mx.controls.Image;
 	import mx.events.CloseEvent;
-	
+	import mx.utils.StringUtil;
+
 	import spark.components.Label;
 	import spark.components.RichText;
 	import spark.components.supportClasses.SkinnableComponent;
@@ -131,28 +133,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				/*buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);*/
-				buttonEdit.toolTip = "Editer";
+				buttonEdit.toolTip = fxgt.gettext("Éditer");
 			}
 			
 			if(instance == avatarUser)
 			{
 				avatarUser.source = _user.avatar;
-				
-				if(_user.role < RoleEnum.STUDENT)
-				{
-					avatarUser.toolTip = fxgt.gettext("Etudiant");
-				}else
-					if(_user.role < RoleEnum.TUTEUR)
-					{
-						avatarUser.toolTip = fxgt.gettext("Tuteur");
-					}else 
-						if(_user.role < RoleEnum.RESPONSABLE)
-						{
-							avatarUser.toolTip = fxgt.gettext("Responsable");
-						}else
-						{
-							avatarUser.toolTip = fxgt.gettext("Administrateur");
-						}
+                avatarUser.toolTip = VisuUtils.getRoleLabel(_user.role);
 			}
 
 			if(instance == textContent)
@@ -207,13 +194,13 @@ package com.ithaca.visu.view.session.controls
 		
 		protected function onButtonDeleteClick(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer "+ _user.lastname +" "+_user.firstname + "?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteUserConformed); 
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(StringUtil.substitute(fxgt.gettext("Voulez-vous supprimer {0} {1} ?"), _user.firstname, _user.lastname),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteUserConfirmed);
 		}
 		
-		private function deleteUserConformed(event:CloseEvent):void{
+		private function deleteUserConfirmed(event:CloseEvent):void{
 			if( event.detail == Alert.YES)
 			{
 				var preDeleteUser:SessionEditEvent = new SessionEditEvent(SessionEditEvent.PRE_DELETE_SESSION_USER);

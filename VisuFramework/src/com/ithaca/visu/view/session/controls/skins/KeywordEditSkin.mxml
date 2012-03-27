@@ -44,7 +44,7 @@
 			{
 				Alert.yesLabel = fxgt.gettext("Oui");
 				Alert.noLabel = fxgt.gettext("Non");
-				Alert.show(fxgt.gettext("Voulez-vous supprimer le mot-clé?"),
+				Alert.show(fxgt.gettext("Voulez-vous supprimer le mot-clé ?"),
 					       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteKeywordConfirmed);
 				
 			}

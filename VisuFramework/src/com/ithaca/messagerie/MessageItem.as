@@ -127,7 +127,7 @@ public class MessageItem extends SkinnableComponent
     //_____________________________________________________________________
     private function getTime():String
     {
-      return UtilFunction.getHeurMinDate(this._time);
+      return UtilFunction.getHourMinDate(this._time);
     }
     private function onAddedOnStage(event:FlexEvent):void
     {

@@ -321,8 +321,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show(fxgt.gettext("You have no activity with title = ") + activityDeleting.title,
-                           fxgt.gettext("message error"));
+				Alert.show(fxgt.gettext("Aucune activité avec le titre ") + activityDeleting.title,
+                           fxgt.gettext("Message"));
 			}else{
 				_activities.removeItemAt(index);
 				activitiesChanged = true;
@@ -442,8 +442,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(indexAr == -1)
 			{
-				Alert.show(fxgt.gettext("You have no activityElement in activity = ") + activity.title,
-                           fxgt.gettext("message error"));
+				Alert.show(fxgt.gettext("Aucun élément dans l'activité ") + activity.title,
+                           fxgt.gettext("Message"));
 			}	
 		}
 // MOVE UP/DOWN ACTIVITY

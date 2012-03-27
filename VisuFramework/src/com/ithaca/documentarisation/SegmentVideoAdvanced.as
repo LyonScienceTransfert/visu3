@@ -29,6 +29,8 @@ import spark.components.Spinner;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 public class SegmentVideoAdvanced extends SkinnableComponent
 {		
@@ -69,6 +71,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     
 	[SkinPart("true")]
 	public var screenShot:Image;
+
+    [Bindable]
+	private var fxgt: _FxGettext = FxGettext;
 
 	private var shared:Boolean = false;
 	private var sharedOver:Boolean = false;
@@ -272,8 +277,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
             iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
             iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
-            var messageDND:String = "Glisser-déplacer ce bloc";
-            iconSegment.toolTip = messageDND + " vidéo";
+            var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
+            iconSegment.toolTip = messageDND + " " + fxgt.gettext("vidéo");
             // TODO : message "Vous pouver deplace cet block en haut en bas",
             // show this message only if has many blocs
             // MouseCursor = HAND just if has many blocs
@@ -587,7 +592,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	// richText
 	public function onFocusInRichEditableText(event:*=null):void
 	{		
-		if(richEditableText.text == "Cliquer ici pour ajouter du texte")
+		if(richEditableText.text == fxgt.gettext("Cliquer ici pour ajouter du texte"))
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
@@ -792,7 +797,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     }
 	private function setRichEditText():void
 	{
-		richEditableText.text = "Cliquer ici pour ajouter du texte";
+		richEditableText.text = fxgt.gettext("Cliquer ici pour ajouter du texte");
 		richEditableText.setStyle("fontStyle","italic");
 		richEditableText.setStyle("textAlign","right");
 		var colorText:String = "#000000";

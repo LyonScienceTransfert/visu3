@@ -175,7 +175,7 @@
 									]]>
 								</fx:Script>
 								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" left="0" right="0" verticalAlign="middle" height="20">
-									<s:Label width="23%" text="{UtilFunction.getDateMountHourMin(data.date_session)}" maxDisplayedLines="1"/>
+									<s:Label width="23%" text="{UtilFunction.getDateMonthHourMin(data.date_session)}" maxDisplayedLines="1"/>
 									<mx:Spacer width="2%"/>
 									<s:HGroup  width="75%">
 										<s:Label  width="65%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>

@@ -5,16 +5,16 @@ package com.ithaca.utils.components
 	import com.ithaca.visu.events.PanelButtonEvent;
 	import com.ithaca.visu.ui.utils.IconEnum;
 	import com.ithaca.visu.view.video.ImageVolume;
-	
+
 	import flash.events.MouseEvent;
-	
+
 	import mx.controls.Image;
 	import mx.controls.Spacer;
 	import mx.events.ToolTipEvent;
 	import mx.managers.ToolTipManager;
-	
+
 	import spark.components.Panel;
-	
+
 	[Event(name="clickButtonMuteVolume",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonMuteMicro",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonModeZoom",type="com.ithaca.visu.events.PanelButtonEvent")]
@@ -24,13 +24,18 @@ package com.ithaca.utils.components
 	[Event(name="clickButtonShare",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonReturn",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonSwitch",type="com.ithaca.visu.events.PanelButtonEvent")]
-		
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	public class PanelButton extends Panel
 	{
-		
+        [Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		[SkinPart("true")]
 		public var buttonVolume:ImageVolume;
-		
+
 		[SkinPart("true")]
 		public var buttonMicro:IconButton;
 		[SkinPart("true")]
@@ -51,7 +56,7 @@ package com.ithaca.utils.components
 		public var imageInfo:Image;
 		[SkinPart("true")]
 		public var spicerBeforeTitle:Spacer;
-		
+
 		private var _muteMicro:Boolean;
 		private var _buttonMuteMicroVisible:Boolean;
 		private var buttonMuteMicroVisibleChange:Boolean;
@@ -59,7 +64,7 @@ package com.ithaca.utils.components
 		private var buttonModeZoomVisibleChange:Boolean;
 		private var _buttonModeMaxVisible:Boolean;
 		private var buttonModeMaxVisibleChange:Boolean;
-		
+
 		private var _buttonAddVisible:Boolean;
 		private var buttonAddVisibleChange:Boolean;
 		private var _buttonDeleteVisible:Boolean;
@@ -74,12 +79,12 @@ package com.ithaca.utils.components
 		private var buttonSwitchVisibleChange:Boolean;
 		private var _imageInfoVisible:Boolean;
 		private var imageInfoVisibleChange:Boolean;
-		
+
 		private var _buttonModeZoomEnabled:Boolean;
 		private var buttonModeZoomEnabledChange:Boolean;
 		private var _buttonModeMaxEnabled:Boolean;
 		private var buttonModeMaxEnabledChange:Boolean;
-		
+
 		private var _buttonDeleteEnabled:Boolean;
 		private var buttonDeleteEnabledChange:Boolean;
 		private var _buttonShareEnabled:Boolean;
@@ -88,14 +93,14 @@ package com.ithaca.utils.components
 		private var buttonReturnEnabledChange:Boolean;
 		private var _buttonSwitchEnabled:Boolean;
 		private var buttonSwitchEnabledChange:Boolean;
-		
+
 		private var _retroDocument:RetroDocument;
 
 		public function PanelButton()
 		{
 			super();
 		}
-		
+
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
@@ -113,7 +118,7 @@ package com.ithaca.utils.components
 				}else
 				{
 					buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume)
-					buttonVolume.toolTip = "Desactiver son micro";
+					buttonVolume.toolTip = fxgt.gettext("Désactiver le micro");
 				}
 			}
 			if (instance == buttonMicro)
@@ -126,11 +131,11 @@ package com.ithaca.utils.components
 				{
 					buttonMicro.addEventListener(MouseEvent.CLICK, onClickButtonMicro);
 					buttonMicro.icon =  IconEnum.getIconByName('micOn');
-					buttonMicro.toolTip = "Desactiver son micro";
+					buttonMicro.toolTip = fxgt.gettext("Désactiver le micro");
 					_muteMicro = false;
 				}
 			}
-			
+
 			if (instance == buttonZoom)
 			{
 				if(!_buttonModeZoomVisible)
@@ -141,14 +146,14 @@ package com.ithaca.utils.components
 				{
 					buttonZoom.addEventListener(MouseEvent.CLICK, onClickButtonZoom);
 					buttonZoom.icon =  IconEnum.getIconByName('zoom');
-					buttonZoom.toolTip = "Mode zoom";
+					buttonZoom.toolTip = fxgt.gettext("Mode zoom");
 				}
 			}
-			
+
 			if (instance == buttonMax)
 			{
 				buttonMax.enabled = _buttonModeMaxEnabled;
-				
+
 				if(!_buttonModeMaxVisible)
 				{
 					buttonMax.includeInLayout = false;
@@ -157,7 +162,7 @@ package com.ithaca.utils.components
 				{
 					buttonMax.addEventListener(MouseEvent.CLICK, onClickButtonMax);
 					buttonMax.icon =  IconEnum.getIconByName('max');
-					buttonMax.toolTip = "Mode max";
+					buttonMax.toolTip = fxgt.gettext("Mode max");
 				}
 			}
 			if (instance == buttonAdd)
@@ -170,13 +175,13 @@ package com.ithaca.utils.components
 				{
 					buttonAdd.addEventListener(MouseEvent.CLICK, onClickButtonAdd);
 					buttonAdd.icon =  IconEnum.getIconByName('retroDocumentAdd');
-					buttonAdd.toolTip = "Créer un nouveau bilan pour cette séance";
+					buttonAdd.toolTip = fxgt.gettext("Créer un nouveau bilan pour cette séance");
 				}
 			}
 			if (instance == buttonShare)
 			{
 				buttonShare.enabled = _buttonShareEnabled;
-				
+
 				if(!_buttonShareVisible)
 				{
 					buttonShare.includeInLayout = false;
@@ -185,13 +190,13 @@ package com.ithaca.utils.components
 				{
 					buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
 					buttonShare.icon =  IconEnum.getIconByName('retroDocumentShared');
-					buttonShare.toolTip = "Partager ce bilan";
+					buttonShare.toolTip = fxgt.gettext("Partager ce bilan");
 				}
 			}
 			if (instance == buttonDelete)
 			{
 				buttonDelete.enabled = _buttonDeleteEnabled;
-				
+
 				if(!_buttonDeleteVisible)
 				{
 					buttonDelete.includeInLayout = false;
@@ -200,13 +205,13 @@ package com.ithaca.utils.components
 				{
 					buttonDelete.addEventListener(MouseEvent.CLICK, onClickButtonDelete);
 					buttonDelete.icon =  IconEnum.getIconByName('delete');
-					buttonDelete.toolTip = "Supprimer ce bilan";
+					buttonDelete.toolTip = fxgt.gettext("Supprimer ce bilan");
 				}
 			}
 			if (instance == buttonReturn)
 			{
 				buttonReturn.enabled = _buttonReturnEnabled;
-				
+
 				if(!_buttonReturnVisible)
 				{
 					buttonReturn.includeInLayout = false;
@@ -215,13 +220,13 @@ package com.ithaca.utils.components
 				{
 					buttonReturn.addEventListener(MouseEvent.CLICK, onClickButtonReturn);
 					buttonReturn.icon =  IconEnum.getIconByName('iconReturnLeft_16x16');
-					buttonReturn.toolTip = "Retourner vers liste des bilans";
+					buttonReturn.toolTip = fxgt.gettext("Retour à la liste des bilans");
 				}
 			}
 			if (instance == buttonSwitch)
 			{
 				buttonSwitch.enabled = _buttonSwitchEnabled;
-				
+
 				if(!_buttonSwitchVisible)
 				{
 					buttonSwitch.includeInLayout = false;
@@ -230,7 +235,7 @@ package com.ithaca.utils.components
 				{
 					buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
 					buttonSwitch.icon =  IconEnum.getIconByName('iconMinimaze_16x16');
-					buttonSwitch.toolTip = "Editer ce bilan";
+					buttonSwitch.toolTip = fxgt.gettext("Éditer ce bilan");
 					if(spicerBeforeTitle)
 					{
 						spicerBeforeTitle.includeInLayout = true;
@@ -240,7 +245,7 @@ package com.ithaca.utils.components
 			}
 			if (instance == imageInfo)
 			{
-				
+
 				if(!_imageInfoVisible)
 				{
 					imageInfo.includeInLayout = false;
@@ -248,7 +253,7 @@ package com.ithaca.utils.components
 				}else
 				{
 					imageInfo.source =  IconEnum.getIconByName('iconInfo_16x16');
-					imageInfo.toolTip = "In construction";
+					imageInfo.toolTip = fxgt.gettext("En construction");
 					imageInfo.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToolTipBilanInfo);
 					imageInfo.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onShowToolTipBilanInfo);
 				}
@@ -256,7 +261,7 @@ package com.ithaca.utils.components
 		}
 		override protected function commitProperties():void
 		{
-			super.commitProperties();	
+			super.commitProperties();
 			if(buttonVolumeVisibleChange)
 			{
 				buttonVolumeVisibleChange = false;
@@ -267,13 +272,13 @@ package com.ithaca.utils.components
 						buttonVolume.includeInLayout = true;
 						buttonVolume.visible = true;
 						buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume);
-						buttonVolume.toolTip = "Desactiver son micro";
+						buttonVolume.toolTip = fxgt.gettext("Désactiver le micro");
 					}else
 					{
 						buttonVolume.includeInLayout = false;
 						buttonVolume.visible = false;
 						buttonVolume.removeEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume);
-					}	
+					}
 				}
 			}
 			if(buttonMuteMicroVisibleChange)
@@ -287,17 +292,17 @@ package com.ithaca.utils.components
 						buttonMicro.visible = true;
 						buttonMicro.addEventListener(MouseEvent.CLICK, onClickButtonMicro);
 						buttonMicro.icon =  IconEnum.getIconByName('micOn');
-						buttonMicro.toolTip = "Desactiver son micro";
+						buttonMicro.toolTip = fxgt.gettext("Désactiver le micro");
 						_muteMicro = false;
 					}else
 					{
 						buttonMicro.includeInLayout = false;
 						buttonMicro.visible = false;
 						buttonMicro.removeEventListener(MouseEvent.CLICK, onClickButtonMicro);
-					}	
+					}
 				}
 			}
-			
+
 			if(buttonModeMaxVisibleChange)
 			{
 				buttonModeMaxVisibleChange = false;
@@ -307,17 +312,17 @@ package com.ithaca.utils.components
 					{
 						buttonMax.includeInLayout = true;
 						buttonMax.visible = true;
-						buttonMax.toolTip = "Mode max";
+						buttonMax.toolTip = fxgt.gettext("Mode max");
 						buttonMax.addEventListener(MouseEvent.CLICK, onClickButtonMax);
 					}else
 					{
 						buttonMax.includeInLayout = false;
 						buttonMax.visible = false;
 						buttonMax.removeEventListener(MouseEvent.CLICK, onClickButtonMax);
-					}	
+					}
 				}
 			}
-			
+
 			if(buttonModeZoomVisibleChange)
 			{
 				buttonModeZoomVisibleChange = false;
@@ -327,17 +332,17 @@ package com.ithaca.utils.components
 					{
 						buttonZoom.includeInLayout = true;
 						buttonZoom.visible = true;
-						buttonZoom.toolTip = "Mode zoom";
+						buttonZoom.toolTip = fxgt.gettext("Mode zoom");
 						buttonZoom.addEventListener(MouseEvent.CLICK, onClickButtonZoom);
 					}else
 					{
 						buttonZoom.includeInLayout = false;
 						buttonZoom.visible = false;
 						buttonZoom.removeEventListener(MouseEvent.CLICK, onClickButtonZoom);
-					}	
+					}
 				}
 			}
-			
+
 			if(buttonAddVisibleChange)
 			{
 				buttonAddVisibleChange = false;
@@ -347,14 +352,14 @@ package com.ithaca.utils.components
 					{
 						buttonAdd.includeInLayout = true;
 						buttonAdd.visible = true;
-						buttonAdd.toolTip = "Créer un nouveau bilan pour cette séance";
+						buttonAdd.toolTip = fxgt.gettext("Créer un nouveau bilan pour cette séance");
 						buttonAdd.addEventListener(MouseEvent.CLICK, onClickButtonAdd);
 					}else
 					{
 						buttonAdd.includeInLayout = false;
 						buttonAdd.visible = false;
 						buttonAdd.removeEventListener(MouseEvent.CLICK, onClickButtonAdd);
-					}	
+					}
 				}
 			}
 			if(buttonShareVisibleChange)
@@ -366,14 +371,14 @@ package com.ithaca.utils.components
 					{
 						buttonShare.includeInLayout = true;
 						buttonShare.visible = true;
-						buttonShare.toolTip = "Partager ce bilan";
+						buttonShare.toolTip = fxgt.gettext("Partager ce bilan");
 						buttonShare.addEventListener(MouseEvent.CLICK, onClickButtonShare);
 					}else
 					{
 						buttonShare.includeInLayout = false;
 						buttonShare.visible = false;
 						buttonShare.removeEventListener(MouseEvent.CLICK, onClickButtonShare);
-					}	
+					}
 				}
 			}
 			if(buttonDeleteVisibleChange)
@@ -385,14 +390,14 @@ package com.ithaca.utils.components
 					{
 						buttonDelete.includeInLayout = true;
 						buttonDelete.visible = true;
-						buttonDelete.toolTip = "Supprimer ce bilan";
+						buttonDelete.toolTip = fxgt.gettext("Supprimer ce bilan");
 						buttonDelete.addEventListener(MouseEvent.CLICK, onClickButtonDelete);
 					}else
 					{
 						buttonDelete.includeInLayout = false;
 						buttonDelete.visible = false;
 						buttonDelete.removeEventListener(MouseEvent.CLICK, onClickButtonDelete);
-					}	
+					}
 				}
 			}
 			if(buttonReturnVisibleChange)
@@ -404,14 +409,14 @@ package com.ithaca.utils.components
 					{
 						buttonReturn.includeInLayout = true;
 						buttonReturn.visible = true;
-						buttonReturn.toolTip = "Retourner vers liste des bilans";
+						buttonReturn.toolTip = fxgt.gettext("Retour à la liste des bilans");
 						buttonReturn.addEventListener(MouseEvent.CLICK, onClickButtonReturn);
 					}else
 					{
 						buttonReturn.includeInLayout = false;
 						buttonReturn.visible = false;
 						buttonReturn.removeEventListener(MouseEvent.CLICK, onClickButtonReturn);
-					}	
+					}
 				}
 			}
 			if(buttonSwitchVisibleChange)
@@ -423,7 +428,7 @@ package com.ithaca.utils.components
 					{
 						buttonSwitch.includeInLayout = true;
 						buttonSwitch.visible = true;
-						buttonSwitch.toolTip = "Editer ce bilan";
+						buttonSwitch.toolTip = fxgt.gettext("Éditer ce bilan");
 						buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
 					}else
 					{
@@ -435,7 +440,7 @@ package com.ithaca.utils.components
 							spicerBeforeTitle.includeInLayout = true;
 							spicerBeforeTitle.visible = true;
 						}
-					}	
+					}
 				}
 			}
 			if(imageInfoVisibleChange)
@@ -447,15 +452,15 @@ package com.ithaca.utils.components
 					{
 						imageInfo.includeInLayout = true;
 						imageInfo.visible = true;
-						imageInfo.toolTip = " Under construction";
+						imageInfo.toolTip = fxgt.gettext("En construction");
 					}else
 					{
 						imageInfo.includeInLayout = false;
 						imageInfo.visible = false;
-					}	
+					}
 				}
 			}
-			
+
 			if(buttonModeMaxEnabledChange)
 			{
 				buttonModeMaxEnabledChange = false;
@@ -464,7 +469,7 @@ package com.ithaca.utils.components
 					buttonMax.enabled = _buttonModeMaxEnabled
 				}
 			}
-			
+
 			if(buttonModeZoomEnabledChange)
 			{
 				buttonModeZoomEnabledChange = false;
@@ -473,13 +478,13 @@ package com.ithaca.utils.components
 					buttonZoom.enabled = _buttonModeZoomEnabled
 				}
 			}
-			
+
 			if(buttonShareEnabledChange)
 			{
 				buttonShareEnabledChange = false;
 				if(buttonShare != null)
 				{
-					buttonShare.enabled = _buttonShareEnabled 
+					buttonShare.enabled = _buttonShareEnabled
 				}
 			}
 			if(buttonDeleteEnabledChange)
@@ -507,8 +512,8 @@ package com.ithaca.utils.components
 				}
 			}
 		}
-		
-		override public function set title(value:String):void 
+
+		override public function set title(value:String):void
 		{
 			if (titleDisplay)
 			{
@@ -623,8 +628,8 @@ package com.ithaca.utils.components
 		{
 			return _imageInfoVisible;
 		}
-		
-		
+
+
 		public function set buttonModeMaxEnabled(value:Boolean):void
 		{
 			_buttonModeMaxEnabled = value;
@@ -685,12 +690,12 @@ package com.ithaca.utils.components
 		{
 			return _buttonSwitchEnabled;
 		}
-		
+
 		public function set retroDocument(value:RetroDocument):void
 		{
 			_retroDocument = value;
 		}
-		
+
 		//_____________________________________________________________________
 		//
 		// Listeners
@@ -703,28 +708,28 @@ package com.ithaca.utils.components
 			clickButtonMuteVolume.mute = mute;
 			dispatchEvent(clickButtonMuteVolume);
 		}
-		
+
 		private function onClickButtonMicro(event:MouseEvent):void
 		{
 			// set muteMicro
 			_muteMicro = !_muteMicro;
 			var nameImageMicro:String = "micOn";
-			var toolTip:String = "Desactiver son micro";
+			var toolTip:String = fxgt.gettext("Désactiver le micro");
 			if(_muteMicro)
 			{
 				nameImageMicro = "micOff";
-				toolTip = "Activer son micro";
+				toolTip = fxgt.gettext("Activer le micro");
 			}
 			// set new icon of the micro
 			buttonMicro.icon =  IconEnum.getIconByName(nameImageMicro);
 			// set tooltip
 			buttonMicro.toolTip = toolTip;
-			
+
 			var clickButtonMuteMicro:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_MUTE_MICRO);
 			clickButtonMuteMicro.mute = _muteMicro;
 			dispatchEvent(clickButtonMuteMicro);
 		}
-		
+
 		private function onClickButtonZoom(event:MouseEvent):void
 		{
 			var clickButtonModeZoom:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_MODE_ZOOM);
@@ -762,7 +767,7 @@ package com.ithaca.utils.components
 			var clickButtonSwitch:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_SWITCH);
 			dispatchEvent(clickButtonSwitch);
 		}
-		
+
 		private function onCreateToolTipBilanInfo(event:ToolTipEvent):void
 		{
 			var toolTip:BilanSummaryToolTip = new BilanSummaryToolTip();

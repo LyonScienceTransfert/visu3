@@ -17,6 +17,7 @@ import gnu.as3.gettext._FxGettext;
 import mx.controls.Alert;
 import mx.controls.Menu;
 import mx.events.CloseEvent;
+import mx.utils.StringUtil;
 
 import spark.components.Button;
 import spark.components.Label;
@@ -110,12 +111,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoVideo.visible = iconInfoVideoVisible;
 			iconInfoVideo.nbrElement = nbrVideoSegment;
 			iconInfoVideo.sourceIcon = IconEnum.getIconByName('iconVideo_16x16');
-            blocString = fxgt.gettext("bloc");
-            if(nbrVideoSegment > 1)
-            {
-                blocString = fxgt.gettext("blocs");
-            }
-            iconInfoVideo.toolTip = fxgt.gettext("Vous avez") + " " + nbrVideoSegment.toString() + " " + blocString + " " + fxgt.gettext("vidéo dans le bilan");
+            iconInfoVideo.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) vidéo dans le bilan"),
+                                                          nbrVideoSegment.toString());
 		}
 		if (instance == iconInfoAudio)
 		{
@@ -127,12 +124,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoAudio.visible = iconInfoAudioVisible;
 			iconInfoAudio.nbrElement = nbrAudioSegment;
 			iconInfoAudio.sourceIcon = IconEnum.getIconByName('iconAudio_16x16');
-            blocString = fxgt.gettext("bloc");
-            if(nbrAudioSegment > 1)
-            {
-                blocString = fxgt.gettext("blocs");
-            }
-            iconInfoAudio.toolTip = fxgt.gettext("Vous avez") + " " + nbrAudioSegment.toString() + " " + blocString + " " + fxgt.gettext("audio dans le bilan");
+            iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) audio dans le bilan"),
+                                                          nbrAudioSegment.toString());
 		}
 		if (instance == buttonDelete)
 		{
@@ -172,6 +165,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			}
 			if(iconInfoVideo)
 			{
+                /* FIXME: duplicated code here (see above). It should be factorized */
 				var iconInfoVideoVisible:Boolean = true;
 				if(nbrVideoSegment == 0)
 				{
@@ -179,12 +173,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 				}
 				iconInfoVideo.visible = iconInfoVideoVisible;
 				iconInfoVideo.nbrElement = nbrVideoSegment;
-                blocString = fxgt.gettext("bloc");
-                if(nbrVideoSegment > 1)
-                {
-                    blocString = fxgt.gettext("blocs");
-                }
-                iconInfoVideo.toolTip = fxgt.gettext("Vous avez") + " " + nbrVideoSegment.toString() + " " + blocString + " " + fxgt.gettext("vidéo dans le bilan");
+                iconInfoVideo.toolTip = StringUtil.substitute(fxgt.gettext("Vous avez {0} bloc(s) vidéo dans le bilan"),
+                                                              nbrVideoSegment.toString());
 			}
 			if(iconInfoAudio)
 			{			
@@ -195,12 +185,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 				}
 				iconInfoAudio.visible = iconInfoAudioVisible;
 				iconInfoAudio.nbrElement = nbrAudioSegment;
-                blocString = fxgt.gettext("bloc");
-                if(nbrAudioSegment > 1)
-                {
-                    blocString = fxgt.gettext("blocs");
-                }
-                iconInfoAudio.toolTip = fxgt.gettext("Vous avez") + " " + nbrAudioSegment.toString() + " " + blocString + " " + fxgt.gettext("audio dans le bilan");
+                iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) audio dans le bilan"),
+                                                              nbrAudioSegment.toString());
 			}
 			
 		}	
@@ -230,8 +216,8 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 	{
 		Alert.yesLabel = fxgt.gettext("Oui");
 		Alert.noLabel = fxgt.gettext("Non");
-		Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé ") + '"' + retroDocumentVO.title+'"' + " ?",
-			fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
+		Alert.show(StringUtil.substitute(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé {0} ?"), retroDocumentVO.title),
+			       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
 	}
 	private function onClickButtonShare(event:MouseEvent):void
 	{

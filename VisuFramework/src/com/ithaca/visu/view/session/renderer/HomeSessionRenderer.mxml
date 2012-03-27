@@ -307,7 +307,7 @@
 						id="bilanButton"
 						label="{fxgt.gettext('Bilans')}"
 						click="doBilan(event)"
-						toolTip="{fxgt.gettext('Voir les bilans existants pour cette session')}"
+						toolTip="{fxgt.gettext('Voir les bilans existants pour cette séance')}"
 						visible="{canJoinBilan(data.statusSession)}"
 						includeInLayout="{canJoinBilan(data.statusSession)}"
 						/>

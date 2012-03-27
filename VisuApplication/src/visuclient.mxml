@@ -92,7 +92,7 @@
 			{
 				this.setListLang();
 				menu.listLang = listLang;
-				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onCnangeLanguage);
+				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onChangeLanguage);
 				menu.addEventListener(ApplicationMenuEvent.DISCONNECT, onDisconnect);
 				// set info about local/remote versions
 				Model.getInstance().setLocalVersionGit(localversion.substr(0, NBR_LETTERS_FOR_ID_COMMITS_GIT));
@@ -101,14 +101,14 @@
 				Model.getInstance().setDateCompiled(datecompiled);
 			}
 
-			protected function onCnangeLanguage(event:ApplicationMenuEvent):void
+			protected function onChangeLanguage(event:ApplicationMenuEvent):void
 			{
 				var language:String = event.moduleName as String;
 				setlocale(Locale.LC_MESSAGES, language);
 			}
 			
 			protected function onCloseConnection(event:ApplicationMenuEvent):void{
-				Alert.show(fxgt.gettext("Vous n'etes plus connecté au serveur."),fxgt.gettext("Information"));
+				Alert.show(fxgt.gettext("Vous n'êtes plus connecté au serveur."), fxgt.gettext("Information"));
 				this.reloadApplication();			
 			}
 			protected function onDisconnect(event:ApplicationMenuEvent):void
