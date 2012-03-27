@@ -155,7 +155,7 @@ package com.ithaca.visu.controls.sessions
 			if(sessionChange)
 			{
 				sessionChange = false;
-				labelDateDebut.text = UtilFunction.getDateMountHourMin(session.date_start_recording);
+				labelDateDebut.text = UtilFunction.getDateMonthHourMin(session.date_start_recording);
 				labelDuration.text = UtilFunction.getHourMin(_durationRecorded);
 				var str:String = "";
 				for each (var user:User in _listUserPrevu)

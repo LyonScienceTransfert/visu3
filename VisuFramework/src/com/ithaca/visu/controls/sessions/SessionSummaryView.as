@@ -202,7 +202,7 @@ package com.ithaca.visu.controls.sessions
 			if(dateSessionChange)
 			{
 				dateSessionChange = false;
-				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMountHourMin(session.date_session)};
+				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMonthHourMin(session.date_session)};
 			}
 			if(durationPlanedChange)
 			{
