@@ -623,7 +623,7 @@ package com.ithaca.visu.controls.sessions
 				// show message 
 				groupMessageSaveSession.includeInLayout = groupMessageSaveSession.visible = true;
 				var dateLastSave:Date = new Date();
-				labelLastTimeSave.text = UtilFunction.getHeurMinDate(dateLastSave);
+				labelLastTimeSave.text = UtilFunction.getHourMinDate(dateLastSave);
 				// init timer 
 				_minutsSaveAgo = 0;
 				minuteSaveAgoChange = true;
