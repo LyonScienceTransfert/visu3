@@ -47,6 +47,7 @@ import mx.events.MenuEvent;
 import mx.graphics.ImageSnapshot;
 import mx.managers.DragManager;
 import mx.managers.PopUpManager;
+import mx.utils.StringUtil;
 
 import spark.components.BorderContainer;
 import spark.components.Label;
@@ -454,15 +455,16 @@ public class RetroDocumentView extends SkinnableComponent
         
         Alert.yesLabel = fxgt.gettext("Oui");
         Alert.noLabel = fxgt.gettext("Non");
-        Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer le bilan intitulé ") + '"' + this.retroDocument.title + '"' + " ?",
-            fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
+        Alert.show(StringUtil.substitute(fxgt.gettext('Êtes-vous sûr de vouloir supprimer le bilan intitulé {0} ?'),
+                                         this.retroDocument.title),
+                   fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeRetroDocumentConformed); 
     }
     
     private function onClickButtonMenuAddSegment(event:MouseEvent):void
     {
         checkTracage();
         
-        var dp:Object = [{label: fxgt.gettext(" Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
+        var dp:Object = [{label: fxgt.gettext("Bloc titre "), typeSegment: "TitleSegment",  iconName : "iconLettre_T_16x16"}, 
             {label: fxgt.gettext("Bloc texte"), typeSegment: "TexteSegment" , iconName : "iconLettre_t_16x16"}, 
             {label: fxgt.gettext("Bloc vidéo + texte"), typeSegment: "VideoSegment", iconName : "iconVideo_16x16"},        
             {label: fxgt.gettext("Bloc commentaire audio"), typeSegment: "AudioSegment", iconName: "iconAudio_16x16"}];  
@@ -599,7 +601,7 @@ public class RetroDocumentView extends SkinnableComponent
         
         Alert.yesLabel = fxgt.gettext("Oui");
         Alert.noLabel = fxgt.gettext("Non");
-        Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer ce segment ?"),
+        Alert.show(fxgt.gettext("Êtes-vous sûr de vouloir supprimer ce bloc ?"),
             fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, removeSegmentConformed); 
     }
     private function removeSegmentConformed(event:CloseEvent):void
@@ -706,7 +708,7 @@ public class RetroDocumentView extends SkinnableComponent
             var objectProxy:Label = new Label(); 
             objectProxy.maxDisplayedLines = 6;
             objectProxy.width = 100; 
-            objectProxy.text =fxgt.gettext("Vous pouver deplacer l'obsel vers le bilan pour l'ajouter dans la liste des blocs vidéo.");
+            objectProxy.text =fxgt.gettext("Vous pouvez déplacer l'obsel vers le bilan pour l'ajouter dans la liste des blocs vidéo.");
             
             //objectProxy.obselSkin = dragInitiator;
             DragManager.doDrag(dragInitiator, ds, event.event as MouseEvent, 

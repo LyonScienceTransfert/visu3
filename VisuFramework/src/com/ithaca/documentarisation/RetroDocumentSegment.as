@@ -162,7 +162,7 @@ package com.ithaca.documentarisation
 			if(instance == buttonDeleteSegment)
 			{
 				buttonDeleteSegment.addEventListener(MouseEvent.CLICK, onDeleteSegment);
-				buttonDeleteSegment.toolTip = fxgt.gettext("Supprimer ce segment");
+				buttonDeleteSegment.toolTip = fxgt.gettext("Supprimer ce bloc");
 			}
 
 			if(instance == buttonPlayStopVideo)
@@ -170,11 +170,11 @@ package com.ithaca.documentarisation
 				if(this._timeBegin == 0 )
 				{
 					buttonPlayStopVideo.enabled = false;
-					buttonPlayStopVideo.toolTip = fxgt.gettext("Aucun segment vidéo associé actuellement");
+					buttonPlayStopVideo.toolTip = fxgt.gettext("Aucun bloc vidéo associé actuellement");
 				}
 				else
 				{
-					buttonPlayStopVideo.toolTip = fxgt.gettext("Joue la vidéo correspondant à ce segment");
+					buttonPlayStopVideo.toolTip = fxgt.gettext("Jouer la vidéo correspondant à ce segment");
 				}
 				buttonPlayStopVideo.addEventListener(MouseEvent.CLICK, onPlayStopButtonClick);
 			}
@@ -379,7 +379,7 @@ package com.ithaca.documentarisation
 				{
 					Alert.yesLabel = fxgt.gettext("Oui");
 					Alert.noLabel = fxgt.gettext("Non");
-					Alert.show(fxgt.gettext("Voulez-vous ajouter l'élément au segment ? Cette opération remplace le titre du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo ?"),
+					Alert.show(fxgt.gettext("Voulez-vous ajouter l'élément au segment ? Cette opération remplace le titre du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo."),
 						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, updateSegmentConformed);
 				}else
 				{
@@ -568,7 +568,7 @@ package com.ithaca.documentarisation
 				this.buttonPlayStopVideo.label = fxgt.gettext("Pause");
 			}else
 			{
-				this.buttonPlayStopVideo.label = fxgt.gettext("Play");
+				this.buttonPlayStopVideo.label = fxgt.gettext("Jouer");
 			}
 			// set status segment
 			this.statusPlaySegment = value;

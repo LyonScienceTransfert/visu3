@@ -95,7 +95,7 @@ package com.ithaca.visu.controls.sessions
 			// message if list users for adding empty
 			if(listUserShow.length == 0)
 			{
-				Alert.show(fxgt.gettext("There is not user to add to session."), fxgt.gettext("Message"));
+				Alert.show(fxgt.gettext("Pas d'utilisateur sélectionné."), fxgt.gettext("Message"));
 			}else
 			{
 				var addUser:AddUserTitleWindow = AddUserTitleWindow(PopUpManager.createPopUp( 
@@ -305,7 +305,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			if(index == -1)
 			{
-				Alert.show(fxgt.gettext("There is no user with name = ") + deletingUser.firstname, fxgt.gettext("Message error"));
+				Alert.show(fxgt.gettext("Aucun utilisateur avec le nom ") + deletingUser.firstname, fxgt.gettext("Message"));
 			}else{
 				this._listUser.removeItemAt(index);
 				

@@ -305,7 +305,7 @@
 			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
 <!-- STATE ERROR -->
 			<s:RichText  includeIn="error,errorMessage" top="10" horizontalCenter="0" right="10" left="10" top.errorMessage="40" left.errorMessage="10" right.errorMessage="10" horizontalCenter.errorMessage="0" bottom.errorMessage="40">
-            <s:text>{fxgt.gettext("Le lien n'est pas correct...")}</s:text>
+            <s:text>{fxgt.gettext("Le lien n'est pas valide.")}</s:text>
 			</s:RichText>
 			<s:Button includeIn="error" top="35" click="onClickButtonOkPanelError(event)" bottom="10" horizontalCenter="0">
 	        <s:label>{fxgt.gettext("OK")}</s:label>

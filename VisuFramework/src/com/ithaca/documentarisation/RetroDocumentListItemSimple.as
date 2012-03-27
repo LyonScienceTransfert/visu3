@@ -111,7 +111,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoVideo.visible = iconInfoVideoVisible;
 			iconInfoVideo.nbrElement = nbrVideoSegment;
 			iconInfoVideo.sourceIcon = IconEnum.getIconByName('iconVideo_16x16');
-            iconInfoVideo.toolTip = StringUtil.substitute(fxgt.gettext("Vous avez {0} bloc(s) vidéo dans le bilan"),
+            iconInfoVideo.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) vidéo dans le bilan"),
                                                           nbrVideoSegment.toString());
 		}
 		if (instance == iconInfoAudio)
@@ -124,7 +124,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 			iconInfoAudio.visible = iconInfoAudioVisible;
 			iconInfoAudio.nbrElement = nbrAudioSegment;
 			iconInfoAudio.sourceIcon = IconEnum.getIconByName('iconAudio_16x16');
-            iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Vous avez {0} bloc(s) audio dans le bilan"),
+            iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) audio dans le bilan"),
                                                           nbrAudioSegment.toString());
 		}
 		if (instance == buttonDelete)
@@ -185,12 +185,7 @@ public class RetroDocumentListItemSimple extends SkinnableComponent
 				}
 				iconInfoAudio.visible = iconInfoAudioVisible;
 				iconInfoAudio.nbrElement = nbrAudioSegment;
-                blocString = fxgt.gettext("bloc");
-                if(nbrAudioSegment > 1)
-                {
-                    blocString = fxgt.gettext("blocs");
-                }
-                iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Vous avez {0} bloc(s) audio dans le bilan"),
+                iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) audio dans le bilan"),
                                                               nbrAudioSegment.toString());
 			}
 			

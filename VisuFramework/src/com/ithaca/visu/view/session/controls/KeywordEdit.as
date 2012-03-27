@@ -121,7 +121,7 @@ package com.ithaca.visu.view.session.controls
 			{
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.toolTip = fxgt.gettext("Editer");
+				buttonEdit.toolTip = fxgt.gettext("Éditer");
 			}
 			
 			if(instance == textContent)

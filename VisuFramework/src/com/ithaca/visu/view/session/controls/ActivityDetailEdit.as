@@ -423,8 +423,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show(fxgt.gettext("You have no activityElement with title = ") + deletingStatement.data,
-                           fxgt.gettext("message error"));
+				Alert.show(fxgt.gettext("Pas d'élément avec le titre ") + deletingStatement.data,
+                           fxgt.gettext("Message"));
 			}else{
 				statementList.removeItemAt(index);
 			}
@@ -451,7 +451,7 @@ package com.ithaca.visu.view.session.controls
 // MEMO		
 		public function setMessageMemo():void
 		{
-			memoDisplay.text = fxgt.gettext("entrez un nouveau mémo ici");
+			memoDisplay.text = fxgt.gettext("Entrez un nouveau mémo ici");
 			memoDisplay.setStyle("fontStyle","italic");
 			memoDisplay.setStyle("color","#000000");
 			// add memo if havn't
@@ -533,7 +533,7 @@ package com.ithaca.visu.view.session.controls
 			if(index == -1)
 			{
 				Alert.show(fxgt.gettext("You have no activityElement with title = ") + deletingDocument.data,
-                           fxgt.gettext("message error"));
+                           fxgt.gettext("Message"));
 			}else{
 				documentList.removeItemAt(index);
 			}
@@ -656,7 +656,7 @@ package com.ithaca.visu.view.session.controls
 			if(indexAr == -1)
 			{
 				Alert.show(fxgt.gettext("You have no activityElement in activity = ") + activity.title,
-                           fxgt.gettext("message error"));
+                           fxgt.gettext("Message"));
 			}else{
 				arrActivityElement.removeItemAt(indexAr);
 			}	

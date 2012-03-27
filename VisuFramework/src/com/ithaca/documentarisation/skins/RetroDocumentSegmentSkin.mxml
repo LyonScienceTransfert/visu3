@@ -126,7 +126,7 @@
 	</s:Group>
 <!-- PLAY/STOP VIDEO -->
 		<mx:Button id="buttonPlayStopVideo" top="5" right="5" width="40" label.open="{fxgt.gettext(&quot;Play&quot;)}" width.open="55" width.normal="55" width.normalEditable="55" width.openEditable="55">
-			<mx:label>{fxgt.gettext("Play")}</mx:label>
+			<mx:label>{fxgt.gettext("Jouer")}</mx:label>
 		</mx:Button>
 	
 	<s:Group top="30" bottom="5" includeIn="open,openEditable" id="content" left="5"  right="5" >

@@ -431,7 +431,7 @@ package com.ithaca.visu.view.session.controls
 			// message if list users for adding empty
 			if(listUserShow.length == 0)
 			{
-				Alert.show(fxgt.gettext("Has no user for adding to session."),
+				Alert.show(fxgt.gettext("Aucun utilisateur à ajouter à la séance."),
                            fxgt.gettext("Message"));
 			}else
 			{
@@ -704,8 +704,8 @@ package com.ithaca.visu.view.session.controls
 			}
 			if(index == -1)
 			{
-				Alert.show(fxgt.gettext("You have no user with name = ") + deletingUser.firstname,
-                           fxgt.gettext("message error"));
+				Alert.show(fxgt.gettext("Aucun utilisateur avec le nom ") + deletingUser.firstname,
+                           fxgt.gettext("Message"));
 			}else{
 				this._listUser.removeItemAt(index);
 				usersChanged = true;

@@ -41,7 +41,7 @@
 		<s:VGroup width="100%" height="100">
 			<s:HGroup width="100%">
 				 <s:Label >
-					 <s:text>{fxgt.gettext("Proprietairé :")}</s:text>
+					 <s:text>{fxgt.gettext("Propriétaire :")}</s:text>
 				 </s:Label>
 				<s:Label id="ownerRetroDocument" maxDisplayedLines="1"/>
 			</s:HGroup>
@@ -58,7 +58,7 @@
 				<s:Label id="dateModify" maxDisplayedLines="1"/>
 			</s:HGroup>
 			<s:Label >
-				<s:text>{fxgt.gettext("Invites :")}</s:text>
+				<s:text>{fxgt.gettext("Invités :")}</s:text>
 	 	    </s:Label>
 <!-- INVITES -->
 			<s:Group width="100%" height="100%">
