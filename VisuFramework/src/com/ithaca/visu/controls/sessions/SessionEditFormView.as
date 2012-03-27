@@ -17,7 +17,8 @@ package com.ithaca.visu.controls.sessions
 	import mx.events.CalendarLayoutChangeEvent;
 	import mx.events.CloseEvent;
 	import mx.managers.PopUpManager;
-	
+	import mx.utils.StringUtil;
+
 	import spark.components.Button;
 	import spark.components.DropDownList;
 	import spark.components.Label;
@@ -89,7 +90,7 @@ package com.ithaca.visu.controls.sessions
 			// message if list users for adding empty
 			if(listUserShow.length == 0)
 			{
-				Alert.show("Hasn't utilisateur for adding to session.","Message");
+				Alert.show(fxgt.gettext("There is not user to add to session."), fxgt.gettext("Message"));
 			}else
 			{
 				var addUser:AddUserTitleWindow = AddUserTitleWindow(PopUpManager.createPopUp( 
@@ -276,10 +277,10 @@ package com.ithaca.visu.controls.sessions
 		protected function onDeleteUser(event:MouseEvent):void
 		{
 			var user:User = participantList.selectedItem as User;
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer "+ user.lastname +" "+user.firstname + "?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteUserConformed); 
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(StringUtil.substitute(fxgt.gettext("Voulez-vous supprimer {0} {1} ?"), user.lastname, user.firstname),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteUserConformed);
 		}
 		
 		private function deleteUserConformed(event:CloseEvent):void 
@@ -299,7 +300,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			if(index == -1)
 			{
-				Alert.show("You havn't user with name = "+deletingUser.firstname,"message error");
+				Alert.show(fxgt.gettext("There is no user with name = ") + deletingUser.firstname, fxgt.gettext("Message error"));
 			}else{
 				this._listUser.removeItemAt(index);
 				

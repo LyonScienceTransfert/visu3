@@ -11,6 +11,9 @@ package com.ithaca.visu.controls.sessions
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.events.ToolTipEvent;
@@ -49,6 +52,9 @@ package com.ithaca.visu.controls.sessions
 		[SkinPart("false")]
 		public var memoDisplay : Label;
 		
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		private var open:Boolean;
 
 		private var _activity:Activity; 
@@ -58,7 +64,6 @@ package com.ithaca.visu.controls.sessions
 		private var documentList:IList; 
 		private var memo:String=""; 
 		private var TOOL_TIPS_IMAGE_WIDTH:int = 160;
-		
 		
 		public function ActivityDetail()
 		{
@@ -81,7 +86,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			if (instance == durationDisplay)
 			{
-				durationDisplay.text = "Durée prévue : " +activity.duration.toString();
+				durationDisplay.text = fxgt.gettext("Durée prévue : ") + activity.duration.toString();
 			}
 			if (instance == startButton)
 			{
@@ -128,7 +133,7 @@ package com.ithaca.visu.controls.sessions
 				activityChanged = false;
 				
 				titleDisplay.toolTip = titleDisplay.text = _activity.title;
-				if (durationDisplay) durationDisplay.text = "Durée prévue : " + _activity.duration.toString();
+				if (durationDisplay) durationDisplay.text = fxgt.gettext("Durée prévue : ") + _activity.duration.toString();
 				parseActivityElements();
 
 			}

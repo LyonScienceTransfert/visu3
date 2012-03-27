@@ -615,8 +615,8 @@ package com.ithaca.visu.view.session.controls
 // DELETE SESSION
 		private function onButtonDeleteSession(event:MouseEvent):void
 		{
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
 			Alert.show(fxgt.gettext("Voulez-vous supprimer cette séance ?"),
 				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteSessionConformed);
 		}
