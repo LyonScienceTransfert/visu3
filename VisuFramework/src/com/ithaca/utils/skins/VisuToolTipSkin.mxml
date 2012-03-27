@@ -55,7 +55,7 @@
 			</s:Line>
 <!-- VERSION -->			
 			<s:Label textAlign="center" paddingLeft="30" fontWeight="bold">
-				<s:text>{fxgt.gettext("Information de version :")}</s:text>
+				<s:text>{fxgt.gettext("Informations de version :")}</s:text>
 			</s:Label>
 			<s:Label paddingLeft="5">
 				<s:text>{fxgt.gettext("Locale")}</s:text>
@@ -74,13 +74,13 @@
 				<s:text>{fxgt.gettext("Les dates de compilation :")}</s:text>
 			</s:Label>
 			<s:Label paddingLeft="5">
-				<s:text>{fxgt.gettext("le serveur")}</s:text>
+				<s:text>{fxgt.gettext("serveur")}</s:text>
 			</s:Label>
 			<s:Label id="labelLastCompilationVisuServeur" paddingLeft="20">
 				<s:text>20-11-2001</s:text>
 			</s:Label>
 			<!--<s:Label paddingLeft="5">
-				<s:text>{fxgt.gettext("le client")}</s:text>
+				<s:text>{fxgt.gettext("client")}</s:text>
 			</s:Label>
 			<s:Label id="labelLastCompilationVisuClient" paddingLeft="20">
 				<s:text>20-11-1998</s:text>

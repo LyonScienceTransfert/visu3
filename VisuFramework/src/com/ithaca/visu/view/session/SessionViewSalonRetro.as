@@ -140,7 +140,7 @@ package com.ithaca.visu.view.session
 			{
 				dateChange = false;
 				
-				dateLabel.text = UtilFunction.getLabelDate(this.dateRecorded,"-") + fxgt.gettext(" à ") + UtilFunction.getHeurMinDate(this.dateRecorded);
+				dateLabel.text = UtilFunction.getLabelDate(this.dateRecorded,"-") + fxgt.gettext(" à ") + UtilFunction.getHourMinDate(this.dateRecorded);
 			}
 			if (userChange)
 			{

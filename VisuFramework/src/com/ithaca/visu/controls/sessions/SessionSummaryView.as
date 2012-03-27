@@ -191,8 +191,8 @@ package com.ithaca.visu.controls.sessions
 				// FIXME : remove model
 				ownerLabel.text = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(session.id_user),true);
 				if(partageLabel != null){ partageLabel.text = "?"};
-				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMountYearHourMin(session.date_session)};
-				if(dateRecordingLabel != null){ dateRecordingLabel.text = UtilFunction.getDateMountYearHourMin(session.date_start_recording)};
+				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMonthYearHourMin(session.date_session)};
+				if(dateRecordingLabel != null){ dateRecordingLabel.text = UtilFunction.getDateMonthYearHourMin(session.date_start_recording)};
 				if(durationPlanedLabel != null){ durationPlanedLabel.text = "?";};
 				if(nbrUsersLabel != null){ nbrUsersLabel.text = session.participants.length.toString();};
 				if(durationRecordPlanedLabel != null){ durationRecordPlanedLabel.text = "?/?";};
@@ -202,7 +202,7 @@ package com.ithaca.visu.controls.sessions
 			if(dateSessionChange)
 			{
 				dateSessionChange = false;
-				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMountHourMin(session.date_session)};
+				if(datePlanedLabel != null){ datePlanedLabel.text = UtilFunction.getDateMonthHourMin(session.date_session)};
 			}
 			if(durationPlanedChange)
 			{

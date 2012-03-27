@@ -74,7 +74,8 @@
             import mx.managers.CursorManager;
             import mx.managers.DragManager;
             import mx.managers.PopUpManager;
-			
+			import mx.utils.StringUtil;
+
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
             
@@ -180,7 +181,6 @@
 					this.selectedSessionIdWhenInit = currentSessionRetroModule.id_session;
 				}
 				
-				fxgt = FxGettext;
 				// set current module
 				Model.getInstance().setCurrentRetroModule(this);
 				
@@ -372,10 +372,8 @@
 					// update label start session recording
 					var dateStartRecording:Date = event.dateStartRecording;
 					// show info the session 
-					panelVideo.title = '"' + Model.getInstance().getCurrentSessionRetroModule().theme + '",' +
-						fxgt.gettext(" enregistrée le ")+dateStartRecording.getDate().toString()+"-"+
-						(dateStartRecording.getMonth() + 1).toString()+"-"+dateStartRecording.getFullYear().toString()+fxgt.gettext(" à ")+	 
-						dateStartRecording.getHours().toString()+":"+dateStartRecording.getMinutes().toString();
+					panelVideo.title = StringUtil.substitute(fxgt.gettext('"{0}" enregistrée le {1}'),
+                                                             UtilFunction.getDateMonthYearHourMin(dateStartRecording));
 					
                     var loader:URLLoader=new URLLoader();			
                     loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
@@ -532,7 +530,8 @@
 					userId = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
 					if(userId != 0)
 					{
-						nameUser = fxgt.gettext("Commentaires à propos de ") + VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+						nameUser = StringUtil.substitute(fxgt.gettext("Commentaires à propos de {0}"),
+                                                         VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true));
 					} else
 					{
 						nameUser = fxgt.gettext("Commentaires à propos de la séance");
@@ -854,7 +853,8 @@
 					var createurUser:User = Model.getInstance().getLoggedUser();
 					retroDocumentVO.ownerId = createurUser.id_user;
 					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = fxgt.gettext('Bilan sur la séance "') + Model.getInstance().getCurrentSessionRetroModule().theme+'"'; 
+					retroDocumentVO.title = StringUtil.substitute(fxgt.gettext('Bilan sur la séance "{0}"'),
+                                                                  Model.getInstance().getCurrentSessionRetroModule().theme);
 					
 					var nomCreateur:String = createurUser.lastname + " " + createurUser.firstname;
 					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)

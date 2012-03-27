@@ -7,276 +7,1591 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Visu2 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-16 16:46+0200\n"
-"PO-Revision-Date: 2010-09-16 16:46+0200\n"
+"POT-Creation-Date: 2010-08-12 12:00+0200\n"
+"PO-Revision-Date: 2012-03-27 15:41+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:375
+msgid "\"{0}\" enregistrée le {1}"
+msgstr "\"{0}\" recorded on {1}"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:321
-msgid "JANVIER"
-msgstr "JANUARY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:414
+msgid "Commentaires"
+msgstr "Comments"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:324
-msgid "FEVRIER"
-msgstr "FEBRUARY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:508
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1261
+msgid "Mes marqueurs"
+msgstr "My markers"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:327
-msgid "MARS"
-msgstr "MARCH"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:511
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1264
+msgid "Marqueurs"
+msgstr "Markers"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:330
-msgid "AVRIL"
-msgstr "APRIL"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:533
+msgid "Commentaires à propos de {0}"
+msgstr "Comments about {0}"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:333
-msgid "MAI"
-msgstr "MAY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:537
+msgid "Commentaires à propos de la séance"
+msgstr "Comments about the session"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:336
-msgid "JUIN"
-msgstr "JUNE"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:548
+msgid "Marqueurs à propos de la séance"
+msgstr "Markers about the session"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:339
-msgid "JUILLIET"
-msgstr "JULY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:563
+msgid "Messages pour tous"
+msgstr "Messages for all"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:342
-msgid "AOÛT"
-msgstr "AUGUST"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:804
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:850
+msgid "Nouvelle description"
+msgstr "New description"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:345
-msgid "SEPTEMBRE"
-msgstr "SEPTEMBER"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:810
+msgid "Nouveau bilan"
+msgstr "New summary"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:348
-msgid "OCTOBRE"
-msgstr "OCTOBER"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:856
+msgid "Bilan sur la séance \"{0}\""
+msgstr "Summary about session \"{0}\""
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:351
-msgid "NOVEMBRE"
-msgstr "NOVEMBER"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:1092
+msgid "Pas d'activité dans le salon de rétrospection"
+msgstr "No activity in retrospection room"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:354
-msgid "DECEMBRE"
-msgstr "DECEMBER"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:1969
+msgid "Update split"
+msgstr "Update split"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:361
-msgid "DIMANCHE"
-msgstr "SUNDAY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:1970
+msgid "Décalage max. autorisé"
+msgstr "Max authorized offset"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:364
-msgid "LUNDI"
-msgstr "MONDAY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:1972
+msgid "Période de vérification"
+msgstr "Check interval"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:367
-msgid "MARDI"
-msgstr "TUESDAY"
+#: ../../RetrospectionModule/src/modules/RetrospectionModule.mxml:1977
+msgid "Timeline salon"
+msgstr "Room timeline"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:370
-msgid "MERCREDI"
-msgstr "WEDNESDAY"
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:188
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:440
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:884
+msgid "Démarrer la séance"
+msgstr "Start session"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:373
-msgid "JEUDI"
-msgstr "THURSDAY"
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:363
+msgid "a quitté la séance"
+msgstr "left the session"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:376
-msgid "VENDREDI"
-msgstr "FRIDAY"
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:387
+msgid "Suspendre la séance"
+msgstr "Suspend session"
 
-#: ../.././HomeModule/src/modules/HomeModule.mxml:379
-msgid "SAMEDI"
-msgstr "SATURDAY"
-
-
-
-#: ../.././VisuApplication/src/business/MainManager.as:167
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:728
 msgid ""
-"L'utilisateur avec le même identifiant deja connecté sur la platefirme...."
+"Poser un marqueur, une consigne, ou un mot-clé est autorisé uniquement après "
+"avoir démarré la séance."
 msgstr ""
-"L'utilisateur avec le même identifiant deja connecté sur la platefirme...."
+"Sending a marker, a statement or a keyword can be done only when the\n"
+"session is started."
 
-#: ../.././VisuApplication/src/business/MainManager.as:167
-#: ../.././VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:72
-msgid "Information"
-msgstr "Information"
-
-
-
-#: ../.././VisuApplication/src/visuclient.mxml:77
-msgid "Oui"
-msgstr "Oui"
-
-#: ../.././VisuApplication/src/visuclient.mxml:78
-msgid "Non"
-msgstr "Non"
-
-#: ../.././VisuApplication/src/visuclient.mxml:79
-msgid "Voulez-vous quitter l'application ?"
-msgstr "Voulez-vous quitter l'application ?"
-
-#: ../.././VisuApplication/src/visuclient.mxml:80
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:728
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:744
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:802
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1035
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:169
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:621
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:200
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:210
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/KeywordEditSkin.mxml:48
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:232
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/StatementEditSkin.mxml:62
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:288
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:539
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:547
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:383
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:460
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:605
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:220
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:215
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:249
+#: ../../VisuApplication/src/visuclient.mxml:119
 msgid "Confirmation"
 msgstr "Confirmation"
 
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:64
-msgid "Editer"
-msgstr "Editer"
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:741
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:799
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1032
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:166
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:618
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:197
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/KeywordEditSkin.mxml:45
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:229
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/StatementEditSkin.mxml:59
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:285
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:536
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:544
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:380
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:456
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:602
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:217
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:212
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:246
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:326
+#: ../../VisuApplication/src/visuclient.mxml:116
+msgid "Oui"
+msgstr "Oui"
 
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:67
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:742
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:800
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1033
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:167
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:619
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:198
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/KeywordEditSkin.mxml:46
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:230
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/StatementEditSkin.mxml:60
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:286
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:537
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:545
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:381
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:457
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:603
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:218
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:213
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:247
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:323
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:332
+#: ../../VisuApplication/src/visuclient.mxml:117
+msgid "Non"
+msgstr "Non"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:743
+msgid "Voulez-vous changer d'activité ?"
+msgstr "Do you want to select another activity?"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:801
+msgid ""
+"Voulez-vous mettre en pause l'enregistrement (vous pourrez le reprendre plus "
+"tard) ?"
+msgstr "Do you want to pause the recording (you can resume later)?"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:834
+msgid "a suspendu la séance."
+msgstr "suspended session."
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:885
+msgid "Démarrer (ou redémarrer) l'enregistrement de la séance"
+msgstr "Start (or restart) the session recording"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:889
+msgid "Mettre en pause"
+msgstr "Pause"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:890
+msgid "Mettre en pause l'enregistrement de la séance"
+msgstr "Pause the session recording."
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1034
+msgid ""
+"Voulez-vous clôturer la séance ? (il ne sera plus possible d'y rentrer à "
+"nouveau)"
+msgstr ""
+"Do you want to finish the session? (you will not be able to use it again)"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:1440
+msgid "Pose de marqueur non autorisée"
+msgstr "Unauthorized marker setting"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:2242
+msgid "Clôturer la séance"
+msgstr "Finish session"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:2297
+msgid "Poser un marqueur"
+msgstr "Set a marker"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:2323
+msgid "Envoyer le message"
+msgstr "Send the message"
+
+#: ../../TutoratModule/src/modules/TutoratModule.mxml:2331
+msgid "Résumé de l'activité"
+msgstr "Activity summary"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:119
+msgid "Bienvenue sur "
+msgstr "Welcome on "
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:121
+msgid " a rejoint "
+msgstr " joined "
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:139
+msgid "Actuellement connecté à "
+msgstr "Now connected to "
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:161
+msgid "Veuillez sélectionner une date de séance"
+msgstr "Please select a session date"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:236
+msgid ""
+"  \n"
+"\n"
+"\n"
+" Vous n'avez pas de séance pour cette date...\n"
+"\n"
+"\n"
+msgstr ""
+"  \n"
+"\n"
+"\n"
+" You have no session for this date\n"
+"\n"
+"\n"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:560
+msgid "<<-- AUJOURD'HUI "
+msgstr "<<-- TODAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:570
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:256
+msgid "JANVIER"
+msgstr "JANUARY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:573
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:257
+msgid "FÉVRIER"
+msgstr "FEBRUARY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:576
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:258
+msgid "MARS"
+msgstr "MARCH"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:579
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:259
+msgid "AVRIL"
+msgstr "APRIL"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:582
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:260
+msgid "MAI"
+msgstr "MAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:585
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:261
+msgid "JUIN"
+msgstr "JUNE"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:588
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:262
+msgid "JUILLET"
+msgstr "JULY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:591
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:263
+msgid "AOÛT"
+msgstr "AUGUST"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:594
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:264
+msgid "SEPTEMBRE"
+msgstr "SEPTEMBER"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:597
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:265
+msgid "OCTOBRE"
+msgstr "OCTOBER"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:600
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:266
+msgid "NOVEMBRE"
+msgstr "NOVEMBER"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:603
+#: ../../VisuFramework/src/com/ithaca/utils/UtilFunction.as:267
+msgid "DÉCEMBRE"
+msgstr "DECEMBER"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:610
+msgid "DIMANCHE"
+msgstr "SUNDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:613
+msgid "LUNDI"
+msgstr "MONDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:616
+msgid "MARDI"
+msgstr "TUESDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:619
+msgid "MERCREDI"
+msgstr "WEDNESDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:622
+msgid "JEUDI"
+msgstr "THURSDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:625
+msgid "VENDREDI"
+msgstr "FRIDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:628
+msgid "SAMEDI"
+msgstr "SATURDAY"
+
+#: ../../HomeModule/src/modules/HomeModule.mxml:963
+msgid "Envoyer"
+msgstr "Send"
+
+#: ../../VisuFramework/src/com/ithaca/messagerie/AccordionMessagerie.as:234
+msgid "non lus"
+msgstr "unread"
+
+#: ../../VisuFramework/src/com/ithaca/messagerie/AccordionMessagerie.as:236
+msgid "Les messages publics"
+msgstr "Public messages"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/CommentSkin.mxml:65
+msgid "Ajouter un commentaire"
+msgstr "Add a comment"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/CommentSkin.mxml:70
+#: ../../VisuFramework/src/com/ithaca/timelineskins/CommentSkin.mxml:219
+msgid "Le commentaire est vide"
+msgstr "Empty comment"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:46
+msgid "Affichage du document :"
+msgstr "Document display:"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:46
+msgid "chez l'apprenant"
+msgstr "on learner's side"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:50
+msgid "Lecture vidéo :"
+msgstr "Playing video:"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:50
+msgid "à partir de"
+msgstr "from"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:50
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:53
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:57
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:61
+msgid "secondes"
+msgstr "seconds"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:53
+msgid "Pause vidéo :"
+msgstr "Video pause"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:53
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:57
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:135
+msgid "à"
+msgstr "at"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:57
+msgid "Fin de la vidéo :"
+msgstr "Video end:"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:61
+msgid "Déplacement vidéo :"
+msgstr "Video seek:"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:61
+msgid "vers"
+msgstr "to"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:64
+msgid "Envoi du document :"
+msgstr "Document sending:"
+
+#: ../../VisuFramework/src/com/ithaca/timelineskins/IconSkin.mxml:67
+msgid "Déconnexion de l'apprenant au moment de la lecture vidéo :"
+msgstr "User disconnected when reading video"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionViewSalonRetro.as:108
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionViewSalonSession.as:134
+msgid "Chargement des données."
+msgstr "Loading data"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionViewSalonRetro.as:143
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionViewSalonSession.as:178
+msgid " à "
+msgstr " at "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionManagementSkin.mxml:52
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserManagementSkin.mxml:53
+msgid "Afficher"
+msgstr "Display"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionManagementSkin.mxml:62
+msgid "Créer une nouvelle séance"
+msgstr "Create a new session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionManagementSkin.mxml:67
+msgid "Liste des séances"
+msgstr "Session list"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonRetroSkin.mxml:65
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:72
+#: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentTreeToolTipSkin.mxml:50
+msgid "Titre :"
+msgstr "Title:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonRetroSkin.mxml:68
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:75
+msgid "Date :"
+msgstr "Date:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonRetroSkin.mxml:71
+#: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentTreeToolTipSkin.mxml:44
+msgid "Propriétaire :"
+msgstr "Owner:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:74
+msgid "Date de la création :"
+msgstr "Creation date:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:74
+msgid "planifiée le :"
+msgstr "planned on:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:74
+msgid "effectuée le :"
+msgstr "started on:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:77
+msgid "Créateur :"
+msgstr "Creator:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/skin/SessionViewSalonSessionSkin.mxml:78
+msgid "Prop. :"
+msgstr "Owner:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:168
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:620
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:538
+msgid "Voulez-vous supprimer cette séance ?"
+msgstr "Do you want to delete this session?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:269
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:67
+#: ../../VisuFramework/src/com/ithaca/utils/EditObselMarkerTitleWindow.mxml:74
 msgid "Supprimer"
 msgstr "Supprimer"
 
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:83
-msgid "NOM"
-msgstr "NOM"
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:270
+msgid "Supprimer définitivement cette séance"
+msgstr "Definitely delete the session"
 
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:91
-msgid "PRENOM"
-msgstr "PRENOM"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:99
-msgid "EMAIL"
-msgstr "EMAIL"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:107
-msgid "MOT DE PASSE"
-msgstr "MOT DE PASSE"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:116
-msgid "ROLE"
-msgstr "ROLE"
-
-
-
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:129
-msgid "Sauvegarder"
-msgstr "Sauvegarder"
-
-
-
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/users/UserFilters.as:71
-msgid "Tous les utilisateurs"
-msgstr "Tous les utilisateurs"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:72
-msgid "L'utilisateur "
-msgstr "L'utilisateur "
-
-#: ../.././VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:72
-msgid " est deja en liste de séance."
-msgstr " est deja en liste de séance."
-
-
-
-#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:53
-msgid "Afficher..."
-msgstr "Afficher..."
-
-#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:63
-msgid "Ajuoter une utilisateur"
-msgstr "Ajuoter une utilisateur"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:68
-msgid "Utilisateurs..."
-msgstr "Utilisateurs..."
-
-#: ../.././VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:87
-msgid "Profil ( "
-msgstr "Profil ( "
-
-
-#: ../.././HomeModule/src/modules/HomeModule.mxml:70
-msgid "Il faut choisir la date de la séance"
-msgstr "Have to choose the date of the session...."
-
-#: ../.././HomeModule/src/modules/HomeModule.mxml:260
-msgid "FLUX D'ACTIVITES"
-msgstr "Tape of messages"
-
-#: ../.././HomeModule/src/modules/HomeModule.mxml:283
-msgid "Tout"
-msgstr "All"
-
-#: ../.././HomeModule/src/modules/HomeModule.mxml:286
-msgid "Personnel"
-msgstr "Personal"
-
-#: ../.././VisuApplication/src/business/MainManager.as:99
-msgid " a rejoint le DECK "
-msgstr " join the DECK "
-
-#: ../.././VisuApplication/src/business/MainManager.as:112
-msgid " est parti du DECK "
-msgstr " walk out from the DECK "
-
-#: ../.././VisuApplication/src/business/MainManager.as:122
-msgid "[personnel] "
-msgstr "[private] "
-
-#: ../.././VisuApplication/src/business/MainManager.as:127
-msgid "[public] "
-msgstr "[public] "
-
-#: ../.././VisuApplication/src/business/MainManager.as:164
-msgid "a quité la séance : "
-msgstr "walk out from the session: "
-
-#: ../.././VisuApplication/src/business/MainManager.as:183
-msgid "a rejoint la séance : "
-msgstr "join the session : "
-
-
-#: ../.././VisuApplication/src/visuclient.mxml:123
-msgid "Accueil"
-msgstr "Reception"
-
-#: ../.././VisuApplication/src/visuclient.mxml:124
-msgid "Utilisateurs"
-msgstr "Users"
-
-#: ../.././VisuApplication/src/visuclient.mxml:125
-msgid "Séances"
-msgstr "Session"
-
-#: ../.././VisuApplication/src/visuclient.mxml:126
-msgid "Salon synchrone"
-msgstr "Class room"
-
-#: ../.././VisuApplication/src/visuclient.mxml:127
-msgid "Salon de rétrospection"
-msgstr "Retrospection room"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/controls/SessionHomeElement.as:237
-msgid "la séance démarré"
-msgstr "session started"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:68
-msgid "Langage"
-msgstr "Language"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:73
-msgid "Chat"
-msgstr "Chat"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:76
-msgid "Disconnect"
-msgstr "Disconnect"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:119
-msgid "Annuler"
-msgstr "Cancel"
-
-#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:127
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:278
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:123
 msgid "Modifier"
 msgstr "Edit"
 
-#: ../.././VisuFramework/src/com/ithaca/visu/skins/SessionHomeElementSkin.mxml:132
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:280
+msgid "Modifier la date, les participants ou le plan de séance"
+msgstr "Modify date, participants or session plan"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:289
 msgid "Rejoindre"
 msgstr "Join"
 
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:291
+msgid "Entrer dans le salon synchrone"
+msgstr "Enter class room"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:298
+msgid "Rétrospection"
+msgstr "Retrospection"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:300
+msgid "Entrer dans le salon de rétrospection"
+msgstr "Enter retrospection room"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:308
+msgid "Bilans"
+msgstr "Summaries"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:310
+msgid "Voir les bilans existants pour cette séance"
+msgstr "See existing summaries for the session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionFilters.as:124
+msgid "Mes séances"
+msgstr "My session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionFilters.as:125
+msgid "Toutes les séances"
+msgstr "All sessions"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionFilters.as:126
+msgid "Séances à venir"
+msgstr "Upcoming sessions"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionFilters.as:127
+msgid "Séances passées"
+msgstr "Past sessions"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionFilters.as:128
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionManagerView.as:142
+msgid "Plans de séance"
+msgstr "Session plans"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:434
+msgid "Aucun utilisateur à ajouter à la séance."
+msgstr "No user to add to the session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:435
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:708
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionPlanEdit.as:325
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionPlanEdit.as:446
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:427
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:536
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:659
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:98
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:308
+msgid "Message"
+msgstr "Message"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:575
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:25
+msgid "Entrez un nouveau titre de séance ici"
+msgstr "Enter a new session title here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:591
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:29
+msgid "Entrez une nouvelle description de séance ici"
+msgstr "Enter a new session description here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionDetail.as:707
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:308
+msgid "Aucun utilisateur avec le nom "
+msgstr "No user with name "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionPlanEdit.as:324
+msgid "Aucune activité avec le titre "
+msgstr "No activity with title "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionPlanEdit.as:371
+msgid "Entrez un nouveau titre d'activité ici"
+msgstr "Enter a new activity title here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionPlanEdit.as:445
+msgid "Aucun élément dans l'activité "
+msgstr "No element in activity"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:130
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/DocumentEdit.as:112
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/KeywordEdit.as:118
+msgid "Effacer"
+msgstr "Delete"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:136
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/DocumentEdit.as:118
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:287
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/KeywordEdit.as:124
+msgid "Éditer"
+msgstr "Edit"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:199
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:287
+msgid "Voulez-vous supprimer {0} {1} ?"
+msgstr "Do you want to delete {0} {1}?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:426
+msgid "Pas d'élément avec le titre "
+msgstr "No element with title "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:454
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:91
+msgid "Entrez un nouveau mémo ici"
+msgstr "Enter a new memo here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:535
+msgid "You have no activityElement with title = "
+msgstr "No element with title "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:658
+msgid "You have no activityElement in activity = "
+msgstr "No element in activity "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:209
+msgid "Voulez-vous supprimer le document ?"
+msgstr "Do you want to delete the document?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:298
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:386
+msgid "Titre du document :"
+msgstr "Document title:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:303
+msgid "Le lien est :"
+msgstr "The link is:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:308
+msgid "Le lien n'est pas valide."
+msgstr "Invalid link."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:311
+#: ../../VisuFramework/src/com/ithaca/utils/SharePlanByTemplate.mxml:67
+#: ../../VisuFramework/src/com/ithaca/utils/AddActivityTitleWindow.mxml:85
+#: ../../VisuFramework/src/com/ithaca/utils/CreateSessionByTemplate.mxml:129
+#: ../../VisuFramework/src/com/ithaca/utils/AddUserTitleWindow.mxml:52
+#: ../../VisuFramework/src/com/ithaca/utils/EditObselMarkerTitleWindow.mxml:77
+msgid "OK"
+msgstr "OK"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/KeywordEditSkin.mxml:47
+msgid "Voulez-vous supprimer le mot-clé ?"
+msgstr "Do you want to delete the keyword?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/KeywordEditSkin.mxml:126
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:430
+msgid "Valider"
+msgstr "OK"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/KeywordEditSkin.mxml:130
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:132
+#: ../../VisuFramework/src/com/ithaca/utils/SharePlanByTemplate.mxml:70
+#: ../../VisuFramework/src/com/ithaca/utils/AddActivityTitleWindow.mxml:88
+#: ../../VisuFramework/src/com/ithaca/utils/CreateSessionByTemplate.mxml:132
+#: ../../VisuFramework/src/com/ithaca/utils/AddUserTitleWindow.mxml:49
+#: ../../VisuFramework/src/com/ithaca/utils/EditObselMarkerTitleWindow.mxml:80
+msgid "Annuler"
+msgstr "Cancel"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:36
+msgid "Ajoutez une nouvelle consigne ici"
+msgstr "Add a new statement here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:37
+msgid "Entrez un nouveau titre de document ici"
+msgstr "Enter a new document title here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:38
+msgid "Ajoutez un nouveau lien ici"
+msgstr "Add a new link here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:39
+msgid "Ajoutez un nouveau mot-clé ici"
+msgstr "Add a new keyword here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:231
+msgid "Voulez-vous supprimer l'activité ?"
+msgstr "Do you want to delete the activity?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:312
+msgid "Titre d'activité:"
+msgstr "Activity title:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:329
+msgid "Supprimer l'activité"
+msgstr "Delete activity"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:337
+msgid "Durée :"
+msgstr "Duration:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:353
+msgid "Consignes :"
+msgstr "Statements:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:375
+msgid "Documents :"
+msgstr "Documents:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:397
+msgid "Url du document :"
+msgstr "Document url:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:406
+msgid "Ajouter un document"
+msgstr "Add a document"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:413
+msgid "Mots-clés :"
+msgstr "Keywords:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:435
+msgid "Mémo :"
+msgstr "Memo:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/StatementEditSkin.mxml:61
+msgid "Voulez-vous supprimer la consigne ?"
+msgstr "Do you want to delete the statement?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionPlanEditSkin.mxml:60
+msgid "Ajouter une activité"
+msgstr "Add an activity"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionPlanEditSkin.mxml:65
+msgid "Publier ce plan"
+msgstr "Publish this plan"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionPlanEditSkin.mxml:66
+msgid "Ajouter ce plan de séance à la liste des plans de séances"
+msgstr "Add this session plan to the plan list."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionPlanEditSkin.mxml:69
+msgid "Créer une séance"
+msgstr "Create a session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionPlanEditSkin.mxml:70
+msgid "Créer une nouvelle séance à partir de ce plan"
+msgstr "Create a new session using this plan"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:98
+msgid "Détails de la séance"
+msgstr "Session details"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:108
+msgid "Date prévue :"
+msgstr "Intended date:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:111
+msgid "Description :"
+msgstr "Description:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:144
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserManagementSkin.mxml:63
+msgid "Ajouter un nouvel utilisateur"
+msgstr "Add a new user"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:160
+msgid "Vous devez choisir une séance."
+msgstr "You must select a session."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:166
+msgid "Entrer dans le salon de rétrospection pour cette séance"
+msgstr "Enter in the retrospection room for this session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:182
+msgid "Supprimer la séance"
+msgstr "Delete the session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/SessionDetailSkin.mxml:183
+msgid "Sauvegarder la séance"
+msgstr "Save the session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionManagement.as:236
+msgid "Votre nouvelle séance a été créée et ajoutée à la liste des séances."
+msgstr "The new session has been created and added to the session list."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionManagement.as:239
+msgid "Le nouveau plan de séance a été créé et ajouté à la liste des séances."
+msgstr "The new session plan has been created and added to the plan list."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionManagement.as:241
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionManagement.as:652
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:75
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionManagerView.as:351
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionManagerView.as:363
+#: ../../VisuApplication/src/visuclient.mxml:111
+#: ../../VisuApplication/src/business/MainManager.as:283
+msgid "Information"
+msgstr "Information"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/SessionManagement.as:650
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionManagerView.as:349
+msgid "La Séance \"{0}\" a été supprimée par {1}"
+msgstr "The \"{0}\" session has been deleted by {1}"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:53
+msgid "Afficher..."
+msgstr "Display..."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:63
+msgid "Ajouter un utilisateur"
+msgstr "Add a user"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:68
+msgid "Utilisateurs..."
+msgstr "Users..."
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:71
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserManagementSkin.mxml:71
+msgid "Filtre de recherche"
+msgstr "Search filter"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/UserManagementSkin.mxml:87
+msgid "Profil"
+msgstr "Profile"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserManagementSkin.mxml:68
+msgid "Liste des utilisateurs"
+msgstr "User list"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserManagementSkin.mxml:87
+msgid "Infos utilisateur"
+msgstr "User infos"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/ShareUserManagementSkin.mxml:54
+msgid ""
+"Veuillez sélectionner les utilisateurs avec qui vous désirez partager ce "
+"bilan (en lecture seulement):"
+msgstr ""
+"Please select users with whom you want to share this summary (read-only):"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/ShareUserManagementSkin.mxml:69
+msgid "Liste des adresses mail des utilisateurs sélectionnés: "
+msgstr "List of e-mail addresses of selected users:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/ShareUserManagementSkin.mxml:76
+msgid "URL sur le bilan: "
+msgstr "Summary URL: "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserDatailSkin.mxml:34
+msgid "Nom :"
+msgstr "Name:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserDatailSkin.mxml:35
+msgid "Prénom :"
+msgstr "Surname:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/AddUserDatailSkin.mxml:36
+msgid "Rôle :"
+msgstr "Role:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:64
+msgid "Langue"
+msgstr "Language"
+
+#: ../../VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:69
+msgid "Chat"
+msgstr "Chat"
+
+#: ../../VisuFramework/src/com/ithaca/visu/skins/ApplicationMenuSkin.mxml:73
+msgid "Déconnexion"
+msgstr "Logout"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/InfosBilanRenderer.mxml:77
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:114
+msgid "Il y a {0} bloc(s) vidéo dans le bilan"
+msgstr "{0} video bloc(s) in the summary"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/InfosBilanRenderer.mxml:89
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:127
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:188
+msgid "Il y a {0} bloc(s) audio dans le bilan"
+msgstr "{0} audio bloc(s) in the summary"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/ActionBilanRenderer.mxml:80
+msgid "Modifier le bilan"
+msgstr "Edit summary"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/ActionBilanRenderer.mxml:87
+msgid "Visualiser le bilan"
+msgstr "Display summary"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/SessionRenderer.mxml:41
+msgid "Planifiée le :"
+msgstr "Planned on:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/SessionRenderer.mxml:46
+msgid "Effectuée le :"
+msgstr "Done on:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/SessionRenderer.mxml:51
+msgid "Débutée le :"
+msgstr "Started on:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/ConnectedUserWithListRenderer.mxml:74
+msgid "L'utilisateur {0} est déjà en séance."
+msgstr "User {0} is already online."
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/SessionRetroRenderer.mxml:59
+msgid "Titre de la séance : "
+msgstr "Session title: "
+
+#: ../../VisuFramework/src/com/ithaca/visu/renderer/SessionRetroRenderer.mxml:63
+msgid "Séance enregistrée le : "
+msgstr "Session recorded on: "
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlanB.as:133
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlan.as:154
+msgid "En cours"
+msgstr "Started"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlanB.as:137
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlan.as:158
+msgid "Démarrer"
+msgstr "Start"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionEditFormView.as:98
+msgid "Pas d'utilisateur sélectionné."
+msgstr "No selected user."
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionManagerView.as:127
+#: ../../VisuApplication/src/visuclient.mxml:300
+msgid "Séances"
+msgstr "Sessions"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionManagerView.as:361
+msgid "Le plan de la séance \"{0}\" a été supprimée par {1}"
+msgstr "The \"{0}\" session plan has been deleted by {1}"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:56
+msgid "Participants:"
+msgstr "Participants:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:66
+msgid "Manquants:"
+msgstr "Missing:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:76
+msgid "Date de début:"
+msgstr "Start date:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:86
+msgid "Durée:"
+msgstr "Duration:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:96
+msgid "Actions:"
+msgstr "Actions:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:106
+msgid "Bilans existants:"
+msgstr "Existing summaries:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:115
+msgid "Date de modification"
+msgstr "Modification date:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:118
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:453
+msgid "Titre bilan"
+msgstr "Summary title:"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:121
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:462
+msgid "Infos"
+msgstr "Infos"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:124
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:465
+msgid "Propriétaire de bilan"
+msgstr "Summary owner"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:127
+msgid "Actions"
+msgstr "Actions"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/ActivityDetail.as:89
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/ActivityDetail.as:136
+msgid "Durée prévue : "
+msgstr "Expected duration: "
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionBilanFormView.as:183
+msgid "Pour cette séance il n'existe pas de bilan"
+msgstr "No summary for this session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionBilanFormView.as:187
+msgid "Pour cette séance il y a {0} bilan(s) ({1} bilan(s) partagé(s))"
+msgstr "{0} summary(ies) ({1} shared) for this session"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionBilanFormView.as:254
+msgid "Aucun participant attendu n'était présent"
+msgstr "No expected participant was present"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionBilanFormView.as:261
+msgid "Tous les participants attendus étaient présents"
+msgstr "All expected participants were present"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionBilanFormView.as:280
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:345
+msgid "Propriétaire de bilan : "
+msgstr "Summary owner: "
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:330
+msgid "Plan de séance"
+msgstr "Session plan"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:340
+msgid "Dates et participants"
+msgstr "Dates and participants"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:348
+msgid "Compte-rendu de séance"
+msgstr "Session summary"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:436
+msgid "(il y a {0} min.)"
+msgstr "({0} min. ago)"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionDetailView.as:546
+msgid "Voulez-vous supprimer ce plan de séance ?"
+msgstr "Do you want to delete this session plan?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionListView.as:522
+msgid "Date prévue"
+msgstr "Expected date"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionListView.as:529
+#: ../../VisuFramework/src/com/ithaca/utils/CreateSessionByTemplate.mxml:113
+msgid "Date de séance"
+msgstr "Session date"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionListView.as:651
+msgid "Voulez-vous créer une nouvelle séance ?"
+msgstr "Do you want to create a new session?"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionListView.as:665
+msgid "Nouveau titre de séance"
+msgstr "New session title"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/UserFilters.as:71
+msgid "Tous les utilisateurs"
+msgstr "Tous les utilisateurs"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:64
+msgid "Editer"
+msgstr "Editer"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:83
+msgid "Nom"
+msgstr "Name"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:91
+msgid "Prénom"
+msgstr "Firstname"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:99
+msgid "Email"
+msgstr "Email"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:107
+msgid "Mot de passe"
+msgstr "Password"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:116
+msgid "Rôle"
+msgstr "Role"
+
+#: ../../VisuFramework/src/com/ithaca/visu/controls/users/skins/UserDetailSkin.mxml:129
+msgid "Sauvegarder"
+msgstr "Save"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentTitle.as:155
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentCommentAudio.as:282
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentVideoAdvanced.as:280
+msgid "Glisser-déplacer ce bloc"
+msgstr "Drag and drop this bloc"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentTitle.as:156
+msgid "texte"
+msgstr "text"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentTitle.as:239
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentTitle.as:428
+#: ../../VisuFramework/src/com/ithaca/documentarisation/model/Segment.as:79
+#: ../../VisuFramework/src/com/ithaca/documentarisation/model/RetroDocument.as:149
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentVideoAdvanced.as:595
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentVideoAdvanced.as:800
+msgid "Cliquer ici pour ajouter du texte"
+msgstr "Click here to add text"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:77
+msgid "Entrez un titre ici"
+msgstr "Enter a title here"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:165
+msgid "Supprimer ce bloc"
+msgstr "Delete the block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:173
+msgid "Aucun bloc vidéo associé actuellement"
+msgstr "No associated video block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:177
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:561
+msgid "Jouer la vidéo correspondant à ce segment"
+msgstr "Play video for this block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:382
+msgid ""
+"Voulez-vous ajouter l'élément au segment ? Cette opération remplace le titre "
+"du segment, ajoute le contenu au commentaire et remplace l'extrait vidéo."
+msgstr ""
+"Do you want to add this element to the block? This operation replaces\n"
+"the block title, adds the content and replaces the video fragment."
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:568
+msgid "Pause"
+msgstr "Pause"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:571
+#: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentSegmentSkin.mxml:129
+msgid "Jouer"
+msgstr "Play"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:217
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:146
+msgid "Visualiser ce bilan"
+msgstr "Display the summary"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:224
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:140
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:193
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:374
+msgid "Partager ce bilan"
+msgstr "Share the summary"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:230
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:134
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:208
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:393
+msgid "Supprimer ce bilan"
+msgstr "Delete the summary"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:237
+msgid "Ajouter un nouveau bloc"
+msgstr "Add a new block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:458
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:219
+msgid "Êtes-vous sûr de vouloir supprimer le bilan intitulé {0} ?"
+msgstr "Are you sure you want to delete the {0} summary?"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:467
+msgid "Bloc titre "
+msgstr "Title block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:468
+msgid "Bloc texte"
+msgstr "Text block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:469
+msgid "Bloc vidéo + texte"
+msgstr "Video+text block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:470
+msgid "Bloc commentaire audio"
+msgstr "Audio comment block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:604
+msgid "Êtes-vous sûr de vouloir supprimer ce bloc ?"
+msgstr "Are you sure you want to delete this block?"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:711
+msgid ""
+"Vous pouvez déplacer l'obsel vers le bilan pour l'ajouter dans la liste des "
+"blocs vidéo."
+msgstr "You can drag and drop the obsel to the summary to add it"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/Documentarisation.as:346
+msgid "Liste des bilans"
+msgstr "Summary list"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/Documentarisation.as:351
+msgid "Édition de bilan"
+msgstr "Summary edition"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentCommentAudio.as:283
+msgid "audio"
+msgstr "audio"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentCommentAudio.as:404
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentCommentAudio.as:591
+msgid "Cliquer ici pour enregistrer un commentaire"
+msgstr "Click here to record a comment"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentViewSkin.mxml:75
+msgid "Glissez-déposez un obsel ici pour créer un bloc vidéo"
+msgstr "Drag and drop an obsel here to create a video block"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentTreeToolTipSkin.mxml:56
+msgid "Modifié le :"
+msgstr "Edited on:"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentTreeToolTipSkin.mxml:61
+msgid "Invités :"
+msgstr "Guests:"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:176
+msgid "Vous avez {0} bloc(s) vidéo dans le bilan"
+msgstr "{0} video block(s) in the summary"
+
+#: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentVideoAdvanced.as:281
+msgid "vidéo"
+msgstr "video"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:7
+msgid "Édition de marqueur"
+msgstr "Marker edition"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:147
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:189
+msgid "Entrez le texte du marqueur ici"
+msgstr "Enter marker text here"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:214
+msgid "Voulez-vous supprimer le marqueur ?"
+msgstr "Do you want to delete the marker?"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:271
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:304
+msgid "la séance"
+msgstr "the session"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:304
+msgid "Votre marqueur à propos de..."
+msgstr "Your marker about..."
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:68
+msgid "Étudiant"
+msgstr "Student"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:69
+msgid "Tuteur"
+msgstr "Tutor"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:70
+msgid "Responsable"
+msgstr "Accountant"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:71
+msgid "Administrateur"
+msgstr "Admin"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:94
+msgid "La séance est ouverte"
+msgstr "Session open"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:97
+msgid "La séance est fermée"
+msgstr "Session closed"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:100
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:103
+msgid "La séance est démarrée depuis"
+msgstr "Session started since"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:100
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:103
+msgid "h"
+msgstr "h"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:100
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:103
+msgid "m"
+msgstr "m"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:103
+msgid "Suspendue"
+msgstr "Suspended"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:106
+msgid "Statut de séance inconnu"
+msgstr "Unknown session status"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:113
+msgid "connected"
+msgstr "connected"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:114
+msgid "pending"
+msgstr "pending"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:115
+msgid "recording"
+msgstr "recording"
+
+#: ../../VisuFramework/src/com/ithaca/utils/VisuUtils.as:116
+msgid "disconnected"
+msgstr "disconnected"
+
+#: ../../VisuFramework/src/com/ithaca/utils/URLValidator.as:16
+msgid "URL invalide."
+msgstr "Invalid URL."
+
+#: ../../VisuFramework/src/com/ithaca/utils/SharePlanByTemplate.mxml:50
+msgid "Voulez-vous rendre public ce plan de séance ?"
+msgstr "Do you want to make this plan public?"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:7
+msgid "Édition de commentaire"
+msgstr "Comment edit"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:176
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:221
+msgid "texte de commentaire ici"
+msgstr "Comment text here"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:248
+msgid "Voulez-vous supprimer le commentaire ?"
+msgstr "Do you want to delete the comment?"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:317
+msgid "Votre commentaire à propos de..."
+msgstr "Your comment about..."
+
+#: ../../VisuFramework/src/com/ithaca/utils/ShareUserTitleWindow.mxml:10
+msgid "Partage de bilan"
+msgstr "Summary sharing"
+
+#: ../../VisuFramework/src/com/ithaca/utils/AddActivityTitleWindow.mxml:52
+msgid "Ajouter une activité ?"
+msgstr "Add an activity?"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:48
+msgid "Cliquez pour accéder aux réglages audio/vidéo"
+msgstr "Click to display audio/video settings"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:58
+msgid "Informations de version :"
+msgstr "Version information"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:61
+msgid "Locale"
+msgstr "Local"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:67
+msgid "Remote"
+msgstr "Remote"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:74
+msgid "Les dates de compilation :"
+msgstr "Compilation dates:"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:77
+msgid "serveur"
+msgstr "server"
+
+#: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:83
+msgid "client"
+msgstr "client"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/skins/BilanSharedUserToolTipSkin.mxml:38
+msgid "Bilan partagé avec {0} utilisateur(s)."
+msgstr "Summary shared with {0} user(s)."
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:121
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:134
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:275
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:295
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:717
+msgid "Désactiver le micro"
+msgstr "Mute microphone"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:149
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:335
+msgid "Mode zoom"
+msgstr "Zoom mode"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:165
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:315
+msgid "Mode max"
+msgstr "Max mode"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:178
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:355
+msgid "Créer un nouveau bilan pour cette séance"
+msgstr "Create a new summary for this session"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:223
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:412
+msgid "Retour à la liste des bilans"
+msgstr "Back to summary list"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:238
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:431
+msgid "Éditer ce bilan"
+msgstr "Edit the summary"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:256
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:455
+msgid "En construction"
+msgstr "Not finished"
+
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:721
+msgid "Activer le micro"
+msgstr "Unmute microphone"
+
+#: ../../VisuFramework/src/com/ithaca/utils/CreateSessionByTemplate.mxml:96
+msgid "Voulez-vous créer une nouvelle séance à partir de ce plan de séance ?"
+msgstr "Do you want to create a new session using this session plan?"
+
+#: ../../VisuFramework/src/com/ithaca/utils/CreateSessionByTemplate.mxml:105
+msgid "Titre"
+msgstr "Title"
+
+#: ../../VisuFramework/src/com/ithaca/utils/CreateSessionByTemplate.mxml:117
+msgid " à"
+msgstr " on"
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditChatDialog.mxml:7
+msgid "Votre message"
+msgstr "Your message"
+
+#: ../../VisuFramework/src/com/ithaca/utils/AddUserTitleWindow.mxml:8
+msgid "Sélection d'utilisateur..."
+msgstr "User selection..."
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditObselMarkerTitleWindow.mxml:12
+msgid "Édition de marqueur..."
+msgstr "Marker edit..."
+
+#: ../../VisuFramework/src/com/ithaca/utils/EditObselMarkerTitleWindow.mxml:67
+msgid "Contenu de marqueur : "
+msgstr "Marker content: "
+
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:335
+msgid "Oui avec "
+msgstr "Yes with "
+
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:450
+msgid "Date modification"
+msgstr "Modification date"
+
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:456
+msgid "Titre séance"
+msgstr "Session title"
+
+#: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:459
+msgid "Date séance"
+msgstr "Session date"
+
+#: ../../BilanModule/src/com/ithaca/components/renderer/DescriptionBilanRenderer.mxml:50
+msgid "Séance : "
+msgstr "Session: "
+
+#: ../../BilanModule/src/com/ithaca/components/renderer/DescriptionBilanRenderer.mxml:53
+msgid "le : "
+msgstr "on: "
+
+#: ../../VisuApplication/src/visuclient.mxml:111
+msgid "Vous n'êtes plus connecté au serveur."
+msgstr "You are disconnected."
+
+#: ../../VisuApplication/src/visuclient.mxml:118
+msgid "Voulez-vous quitter l'application ?"
+msgstr "Do you want to leave the application?"
+
+#: ../../VisuApplication/src/visuclient.mxml:293
+msgid "Accueil"
+msgstr "Home"
+
+#: ../../VisuApplication/src/visuclient.mxml:296
+msgid "Utilisateurs"
+msgstr "Users"
+
+#: ../../VisuApplication/src/visuclient.mxml:304
+msgid "Salon synchrone"
+msgstr "Class room"
+
+#: ../../VisuApplication/src/visuclient.mxml:308
+msgid "Salon de rétrospection"
+msgstr "Retrospection room"
+
+#: ../../VisuApplication/src/business/MainManager.as:133
+msgid " a rejoint Visu "
+msgstr " joined Visu "
+
+#: ../../VisuApplication/src/business/MainManager.as:169
+msgid " a quitté Visu "
+msgstr " left Visu "
+
+#: ../../VisuApplication/src/business/MainManager.as:176
+msgid "[personnel] "
+msgstr "[private] "
+
+#: ../../VisuApplication/src/business/MainManager.as:182
+msgid "[public] "
+msgstr "[public] "
+
+#: ../../VisuApplication/src/business/MainManager.as:283
+msgid ""
+"Un utilisateur ayant le même identifiant est déjà connecté sur la plate-forme"
+msgstr "A user with the same login is already logged in."
+
+#: ../../VisuApplication/src/business/MainManager.as:469
+msgid "A été désinscrit de la séance : "
+msgstr "Has been unsubscribed from the session: "
+
+#: ../../VisuApplication/src/business/MainManager.as:489
+msgid "A été inscrit à la séance : "
+msgstr "Has been subscribed to the session: "
+
+#~ msgid "en cours"
+#~ msgstr "Started"
+
+#~ msgid "start"
+#~ msgstr "Start"
+
+#~ msgid "Supprimer ce segment"
+#~ msgstr "Delete this block"
+
+#~ msgid "Play"
+#~ msgstr "Play"
+
+#~ msgid "bloc"
+#~ msgstr "block"
+
+#~ msgid "blocs"
+#~ msgstr "blocks"
+
+#~ msgid "texte de marqueur ici"
+#~ msgstr "marker text here"
+
+#~ msgid "This is an invalid URL."
+#~ msgstr "Invalid URL."
+
+#~ msgid "Désactiver son micro"
+#~ msgstr "Mute microphone"
+
+#~ msgid "Retourner vers liste des bilans"
+#~ msgstr "Back to summary list"
+
+#~ msgid "Il faut choisir la date de la séance"
+#~ msgstr "Have to choose the date of the session...."
+
+#~ msgid "FLUX D'ACTIVITES"
+#~ msgstr "Tape of messages"
+
+#~ msgid "Tout"
+#~ msgstr "All"
+
+#~ msgid "Personnel"
+#~ msgstr "Personal"
+
+#~ msgid " est parti du DECK "
+#~ msgstr " walk out from the DECK "
+
+#~ msgid "NOM"
+#~ msgstr "NOM"
+
+#~ msgid "PRENOM"
+#~ msgstr "PRENOM"
+
+#~ msgid "EMAIL"
+#~ msgstr "EMAIL"
+
+#~ msgid "MOT DE PASSE"
+#~ msgstr "MOT DE PASSE"
+
+#~ msgid "ROLE"
+#~ msgstr "ROLE"
+
+#~ msgid "L'utilisateur "
+#~ msgstr "L'utilisateur "

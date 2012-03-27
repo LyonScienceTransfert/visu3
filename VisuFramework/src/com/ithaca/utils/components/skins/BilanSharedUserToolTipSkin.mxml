@@ -21,7 +21,8 @@
         import mx.collections.ArrayCollection;
         import mx.controls.Image;
         import mx.events.FlexEvent;
-        
+        import mx.utils.StringUtil;
+
         import spark.components.HGroup;
         
         
@@ -34,13 +35,8 @@
         protected function skin1_creationCompleteHandler(event:FlexEvent):void
         {
             listSharedIds = (this.hostComponent.retroDocument as RetroDocument).inviteeIds as ArrayCollection;
-            userString = fxgt.gettext("utilisateur");
-            if(listSharedIds.length > 1)
-            {
-                userString = fxgt.gettext("utilisateurs");
-            }
-            
-            labelTitreToolTip.text = fxgt.gettext("Bilan partagé avec") +" "+ listSharedIds.length.toString() + " "+ userString;
+            labelTitreToolTip.text = StringUtil.substitute(fxgt.gettext("Bilan partagé avec {0} utilisateur(s)."), 
+                                                           listSharedIds.length.toString());
            for each(var idSharedUser:int in listSharedIds)
            {
                var user:User = Model.getInstance().getUserPlateformeByUserId(idSharedUser);

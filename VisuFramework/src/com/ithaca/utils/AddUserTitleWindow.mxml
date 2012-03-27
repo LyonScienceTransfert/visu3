@@ -5,7 +5,7 @@
 			   xmlns:user="com.ithaca.visu.view.user.*"
 			   close="PopUpManager.removePopUp(this);" 
 			    creationComplete="titlewindow1_creationCompleteHandler(event)">
-	<s:title>{fxgt.gettext("Selection d'utilisateur...")}</s:title>
+	<s:title>{fxgt.gettext("Sélection d'utilisateur...")}</s:title>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>

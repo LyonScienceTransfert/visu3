@@ -1691,15 +1691,7 @@ package  com.ithaca.visu.model
 		
 		public function addFluxActivity(userId:int, firstname:String, lastname:String, path:String, message:String , date:Date):void
 		{
-			var h:String = date.getHours().toString();
-			var zeroMin:String = "";
-			if (date.getMinutes() < 10)
-			{
-				zeroMin = "0";
-			}
-			var m:String = zeroMin+date.getMinutes().toString();
-			var time:String = h+":"+m;
-			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,lastname,path,message,time);
+			var fluxActivity:FluxActivity = new FluxActivity(userId,firstname,lastname,path,message,UtilFunction.getHourMinDate(date));
 			this.listFluxActivity.addItem(fluxActivity);		
 		}
 

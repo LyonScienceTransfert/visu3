@@ -2,6 +2,7 @@ package com.ithaca.visu.view.user
 {
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.ui.utils.RoleEnum;
+	import com.ithaca.utils.VisuUtils;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -13,12 +14,12 @@ package com.ithaca.visu.view.user
 	public class ShareUser extends SkinnableComponent
 	{
 		[SkinPart("true")]
-		public var fistLastNameUser:Label;
+		public var firstLastNameUser:Label;
 		
 		[SkinPart("true")]
 		public var checkBoxUser:CheckBox;
 		
-		private var _fistLastName:String;
+		private var _firstLastName:String;
 		private var _user:User;
 		private var _share:Boolean;
 		
@@ -26,7 +27,7 @@ package com.ithaca.visu.view.user
 		public function set user(value:User):void
 		{
 			this._user = value;
-			this._fistLastName = value.firstname + " "+value.lastname;
+			this._firstLastName = value.firstname + " "+value.lastname;
 		}
 		public function get share():Boolean {return _share;}
 		public function set share(value:Boolean):void
@@ -47,39 +48,22 @@ package com.ithaca.visu.view.user
 				checkBoxUser.selected = _share;
 				checkBoxUser.addEventListener(Event.CHANGE, onChangeShare);
 			}
-			if (instance == fistLastNameUser)
+			if (instance == firstLastNameUser)
 			{
-				var roleUser:String=""
-				if(user.role < RoleEnum.STUDENT)
-				{
-					roleUser = "Etudiant";
-				}else
-					if(user.role < RoleEnum.TUTEUR)
-					{
-						roleUser = "Tuteur";
-					}else 
-						if(user.role < RoleEnum.RESPONSABLE)
-						{
-							roleUser = "Responsable";
-						}else
-						{
-							roleUser = "Administrateur";							
-						}
-				
-				fistLastNameUser.text = _fistLastName + " ("+roleUser+")";
+				firstLastNameUser.text = _firstLastName + " (" + VisuUtils.getRoleLabel(user.role) + ")";
 				// set color red for admins
 				if(user.role > RoleEnum.RESPONSABLE-1)
 				{
-					fistLastNameUser.setStyle("color","0xe34545");					
+					firstLastNameUser.setStyle("color","0xe34545");
 				}
                 
-                fistLastNameUser.buttonMode = true;
+                firstLastNameUser.buttonMode = true;
                 // listener click on label 
-                fistLastNameUser.addEventListener(MouseEvent.CLICK, onClickFistLastNameUser);
+                firstLastNameUser.addEventListener(MouseEvent.CLICK, onClickFirstLastNameUser);
 			}
 		}
 		
-        private function onClickFistLastNameUser(event:MouseEvent):void
+        private function onClickFirstLastNameUser(event:MouseEvent):void
         {
             if(checkBoxUser.selected)
             {

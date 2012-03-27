@@ -49,7 +49,7 @@
 			
 		]]>
 	</fx:Script>
-	<s:title>{fxgt.gettext("Ajouter activitié ?")}</s:title>
+	<s:title>{fxgt.gettext("Ajouter une activité ?")}</s:title>
 	<s:VGroup width="100%" height="100%" horizontalAlign="center">
 		<mx:Spacer height="20"/>
 		<s:HGroup width="100%">

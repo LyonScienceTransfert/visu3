@@ -17,7 +17,11 @@ package com.ithaca.visu.controls.sessions
 	import mx.events.CalendarLayoutChangeEvent;
 	import mx.events.CloseEvent;
 	import mx.managers.PopUpManager;
-	
+	import mx.utils.StringUtil;
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import spark.components.Button;
 	import spark.components.DropDownList;
 	import spark.components.Label;
@@ -27,6 +31,8 @@ package com.ithaca.visu.controls.sessions
 	
 	public class SessionEditFormView extends SkinnableComponent
 	{
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
 		
 		[SkinPart("true")]
 		public var dateField:DateField;
@@ -89,7 +95,7 @@ package com.ithaca.visu.controls.sessions
 			// message if list users for adding empty
 			if(listUserShow.length == 0)
 			{
-				Alert.show("Hasn't utilisateur for adding to session.","Message");
+				Alert.show(fxgt.gettext("Pas d'utilisateur sélectionné."), fxgt.gettext("Message"));
 			}else
 			{
 				var addUser:AddUserTitleWindow = AddUserTitleWindow(PopUpManager.createPopUp( 
@@ -276,10 +282,10 @@ package com.ithaca.visu.controls.sessions
 		protected function onDeleteUser(event:MouseEvent):void
 		{
 			var user:User = participantList.selectedItem as User;
-			Alert.yesLabel = "Oui";
-			Alert.noLabel = "Non";
-			Alert.show("Voulez-vous supprimer "+ user.lastname +" "+user.firstname + "?",
-				"Confirmation", Alert.YES|Alert.NO, null, deleteUserConformed); 
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(StringUtil.substitute(fxgt.gettext("Voulez-vous supprimer {0} {1} ?"), user.lastname, user.firstname),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteUserConformed);
 		}
 		
 		private function deleteUserConformed(event:CloseEvent):void 
@@ -299,7 +305,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			if(index == -1)
 			{
-				Alert.show("You havn't user with name = "+deletingUser.firstname,"message error");
+				Alert.show(fxgt.gettext("Aucun utilisateur avec le nom ") + deletingUser.firstname, fxgt.gettext("Message"));
 			}else{
 				this._listUser.removeItemAt(index);
 				

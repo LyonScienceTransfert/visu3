@@ -19,44 +19,50 @@ import mx.events.FlexEvent;
 import spark.components.List;
 import spark.components.supportClasses.SkinnableComponent;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
+
 [Event(name="addRetroDocument", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
 
 public class Documentarisation extends SkinnableComponent
 {
+	[Bindable]
+	private var fxgt: _FxGettext = FxGettext;
+
 	[SkinPart("true")]
 	public var panelListRetroDocument:PanelButton;
 	[SkinPart("true")]
 	public var listRetroDocument:List;
-	
+
 	[SkinPart("true")]
 	public var panelEditRetroDocument:PanelButton;
 	[SkinPart("true")]
 	public var retroDocumentView:RetroDocumentView;
-	
+
 	private var edit:Boolean;
-	
+
 	private var _listRetroDocumentVO:ArrayCollection;
 	private var listRetroDocumentVOChange:Boolean;
-	
-	private var _retroDocument:RetroDocument; 
-	private var _dateRecordingSession:Date = new Date(); 
+
+	private var _retroDocument:RetroDocument;
+	private var _dateRecordingSession:Date = new Date();
 	private var _durationSession:Number;
 	private var _listProfil:Array;
 	private var _listUser:Array;
 	private var _listUserPresentsOnTimeLine:Array;
 	private var retroDocumentChange:Boolean;
-	
+
 	private var _currentTime:Number;
 	private var currentTimeChange:Boolean;
-    
+
     private var _listAllUsers:Array;
     private var listAllUsersChange:Boolean;
-	
+
 	private var _dragOwnerObject:Object;
-    
+
     private var _idUpdatedRetroDocument:int = -1;
     private var idUpdatedRetrodocumentChange:Boolean;
-	
+
 	public function Documentarisation()
 	{
 		super();
@@ -64,7 +70,7 @@ public class Documentarisation extends SkinnableComponent
 	}
 	//_____________________________________________________________________
 	//
-	// Setter/Getter 
+	// Setter/Getter
 	//
 	//_____________________________________________________________________
 	public function set listRetroDocumentVO(value:ArrayCollection):void
@@ -79,7 +85,7 @@ public class Documentarisation extends SkinnableComponent
 	}
 	public function updateIdRetroDocument(value:int):void
 	{
-		// update id retroDocument 
+		// update id retroDocument
 		if(retroDocumentView)
 		{
 			retroDocumentView.updateIdRetroDocument(value);
@@ -98,7 +104,7 @@ public class Documentarisation extends SkinnableComponent
 				break;
 			}
 		}
-        
+
         // tracage add retrodocument
         var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
         retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_CREATE;
@@ -113,7 +119,7 @@ public class Documentarisation extends SkinnableComponent
 		retroDocumentView.retroDocument.setRetroDocumentXML(value);
 	}
 	public function selectedRetroDocument(value:int):void
-	{	
+	{
 		var nbrRetroDocument:int = listRetroDocumentVO.length;
 		for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
 		{
@@ -127,49 +133,49 @@ public class Documentarisation extends SkinnableComponent
 			}
 		}
 	}
-	
+
 	public function initDataRetroDocument(dateRecordingSession: Date, durationSession: Number, listProfil: Array, listUserPresentsOnTimeLine: Array):void
 	{
-		_dateRecordingSession = dateRecordingSession; 
+		_dateRecordingSession = dateRecordingSession;
 		_durationSession = durationSession;
 		_listProfil = listProfil;
 		_listUserPresentsOnTimeLine = listUserPresentsOnTimeLine;
 	}
-	
+
 	public function setRetroDocument(retroDocument : RetroDocument, listUser: Array):void
 	{
 		this.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompete);
-		_retroDocument = retroDocument; 
+		_retroDocument = retroDocument;
 		_listUser = listUser ;
-		
+
 		edit = true;
 		this.invalidateSkinState();
 	}
-	
+
 	public function set currentTime(value:Number):void
 	{
 		_currentTime = value;
 		currentTimeChange = true;
 		invalidateProperties();
 	};
-	
+
 	public function set dragOwnerObject(value:Object):void
 	{
 		_dragOwnerObject = value;
 	}
-	
+
 	public function get dragOwnerObject():Object
 	{
 		return _dragOwnerObject;
 	}
-    
+
     public function set listAllUsers(value:Array):void
     {
         _listAllUsers = value;
         listAllUsersChange = true;
         this.invalidateProperties();
     }
-	
+
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -208,12 +214,12 @@ public class Documentarisation extends SkinnableComponent
 			retroDocumentView.durationSession = _durationSession;
 			retroDocumentView.profiles = _listProfil;
 			retroDocumentView.listShareUser = _listUser;
-			retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine; 
+			retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
 			retroDocumentView.addEventListener(RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT, onUpdateTitreRetroDocument);
 			retroDocumentView.dragOwnerObject = dragOwnerObject;
 		}
 	}
-	
+
 	override protected function commitProperties():void
 	{
 		super.commitProperties();
@@ -229,7 +235,7 @@ public class Documentarisation extends SkinnableComponent
 			}
 			listRetroDocument.dataProvider = listRetroDocumentVO;
 		}
-		
+
         if(retroDocumentChange)
         {
             retroDocumentChange = false;
@@ -251,7 +257,7 @@ public class Documentarisation extends SkinnableComponent
                 retroDocumentView.addEventListener(RetroDocumentEvent.CHANGE_LIST_RETRO_SEGMENT, onChangeListRetroSegment);
             }
         }
-        
+
         if(listAllUsersChange)
         {
             listAllUsersChange = false;
@@ -266,9 +272,9 @@ public class Documentarisation extends SkinnableComponent
 				retroDocumentView.currentTime = _currentTime;
 			}
 		}
-		
+
 	}
-	
+
 	override protected function getCurrentSkinState():String
 	{
 		return !enabled? "disabled" : edit? "editRetroDocument" : "listRetroDocument";
@@ -277,8 +283,8 @@ public class Documentarisation extends SkinnableComponent
 	//
 	// Listeners
 	//
-	//_____________________________________________________________________	
-    
+	//_____________________________________________________________________
+
     // update list blocs by xml
     private function onChangeListRetroSegment(event:RetroDocumentEvent):void
     {
@@ -296,11 +302,11 @@ public class Documentarisation extends SkinnableComponent
             }
        }
     }
-    
+
 	private function onUpdateCompete(event:FlexEvent):void
 	{
 		this.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompete);
-		
+
 		retroDocumentChange = true;
 		this.invalidateProperties();
 	}
@@ -322,27 +328,27 @@ public class Documentarisation extends SkinnableComponent
 	}
 	private function onReturnPanelListRetroDocument(event:PanelButtonEvent):void
 	{
-	
-		edit = false;		
+
+		edit = false;
 		invalidateSkinState();
 	}
 	private function onAddRetroDocument(event:PanelButtonEvent):void
 	{
 		edit = true;
 		invalidateSkinState();
-		
+
 		var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT);
 		dispatchEvent(addRetroDocumentEvent);
 	}
 	private function onCreationCompletePanelListRetrodocument(event:FlexEvent):void
 	{
 		panelListRetroDocument.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelListRetrodocument);
-		panelListRetroDocument.title = "Liste des bilans";
+		panelListRetroDocument.title = fxgt.gettext("Liste des bilans");
 	}
 	private function onCreationCompletePanelEditRetroDocument(event:FlexEvent):void
 	{
 		panelEditRetroDocument.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelEditRetroDocument);
-		panelEditRetroDocument.title = "Edition de bilan";
+		panelEditRetroDocument.title = fxgt.gettext("Édition de bilan");
         // update id retrodocument
         if(idUpdatedRetrodocumentChange)
         {
@@ -362,32 +368,32 @@ public class Documentarisation extends SkinnableComponent
 				break;
 			}
 		}
-		
+
 		// TODO : Message if any retroDocuments
-		
+
 	}
 	private function onUpdateTitreRetroDocument(event:RetroDocumentEvent):void
 	{
 		var retroDocumentVO:RetroDocumentVO = listRetroDocument.selectedItem as RetroDocumentVO;
 		retroDocumentVO.title = event.titleRetrodocument;
 	}
-	
+
 	//_____________________________________________________________________
 	//
 	// Utils
 	//
-	//_____________________________________________________________________	
-	
+	//_____________________________________________________________________
+
 	// load retroDocument
 	private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
 	{
 		var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
 		if(value)
 		{
-			loadRetroDocument.idRetroDocument = value.documentId;;  
-			loadRetroDocument.editabled = true;				
+			loadRetroDocument.idRetroDocument = value.documentId;;
+			loadRetroDocument.editabled = true;
 			dispatchEvent(loadRetroDocument);
-			
+
 		}
 	}
 }

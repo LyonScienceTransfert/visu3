@@ -320,19 +320,19 @@
            
         private function labelFunctionShareBilan(item:Object, column:Object):String
         {
-            var result:String = fxgt.gettext("non");
+            var result:String = fxgt.gettext("Non");
             if(item.isShared())
             {
-                result = fxgt.gettext("oui");   
+                result = fxgt.gettext("Oui");
             }
             return result;
         }
         private function toolTipsFunctionSharedBilan(item:Object):String
         {
-            var result:String = fxgt.gettext("non");
+            var result:String = fxgt.gettext("Non");
             if(item.isShared())
             {
-                result = fxgt.gettext("oui avec ");   
+                result = fxgt.gettext("Oui avec ");   
             }
             return result;
         }

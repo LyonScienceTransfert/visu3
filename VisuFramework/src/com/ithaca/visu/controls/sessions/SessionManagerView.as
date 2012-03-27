@@ -17,12 +17,19 @@ package com.ithaca.visu.controls.sessions
 	import mx.events.CollectionEvent;
 	import mx.events.FlexEvent;
 	import mx.events.IndexChangedEvent;
-	
+	import mx.utils.StringUtil;
+
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.TextOperationEvent;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	public class SessionManagerView extends SkinnableComponent
 	{
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		[SkinPart("true")]
 		public var explorerSession:VisuTabNavigator;
 		
@@ -117,7 +124,7 @@ package com.ithaca.visu.controls.sessions
 			if (instance == explorerSession)
 			{
 				var sessionBox:VBox = new VBox();
-				sessionBox.label = "Séances";
+				sessionBox.label = fxgt.gettext("Séances");
 				sessionListView = new SessionListView();
 				sessionListView.id = "sessionListView";
 				sessionListView.percentWidth = 100;
@@ -132,7 +139,7 @@ package com.ithaca.visu.controls.sessions
 				explorerSession.addChild(sessionBox);
 							
 				var planBox:VBox = new VBox();
-				planBox.label = "Plans de séance";
+				planBox.label = fxgt.gettext("Plans de séance");
 				planListView = new SessionListView();
 				planListView.id = "planListView";
 				planListView.percentWidth = 100;
@@ -339,7 +346,9 @@ package com.ithaca.visu.controls.sessions
 			{
 				if(session.id_session == value)
 				{
-					Alert.show('La Séance "'+session.theme+'" a été supprimée par '+ nameUserDeleteSession, "Information");
+					Alert.show(StringUtil.substitute(fxgt.gettext('La Séance "{0}" a été supprimée par {1}'), 
+                                                     session.theme, nameUserDeleteSession),
+                               fxgt.gettext("Information"));
 					sessionDetailView.session = null;
 					filterChange = true;
 					this.invalidateProperties();
@@ -349,7 +358,9 @@ package com.ithaca.visu.controls.sessions
 			{
 				if(session.id_session == value)
 				{
-					Alert.show('Le plan de la séance "'+session.theme+'" a été supprimée par '+ nameUserDeleteSession, "Information");
+					Alert.show(StringUtil.substitute(fxgt.gettext('Le plan de la séance "{0}" a été supprimée par {1}'),
+                                                     session.theme, nameUserDeleteSession),
+                               fxgt.gettext("Information"));
 					sessionDetailView.session = null;
 					filterChange = true;
 					this.invalidateProperties();

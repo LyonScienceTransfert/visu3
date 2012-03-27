@@ -4,7 +4,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
     close="titlewindow1_closeHandler(event)">
-	<s:title>{fxgt.gettext("Edition de commentaire")}</s:title>
+	<s:title>{fxgt.gettext("Édition de commentaire")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="enabled"/>
@@ -245,7 +245,7 @@
 		{
 			Alert.yesLabel = fxgt.gettext("Oui");
 			Alert.noLabel = fxgt.gettext("Non");
-			Alert.show(fxgt.gettext("Voulez-vous supprimer commentaire ?"),
+			Alert.show(fxgt.gettext("Voulez-vous supprimer le commentaire ?"),
 				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteObselConfirmed); 	
 		}
 		

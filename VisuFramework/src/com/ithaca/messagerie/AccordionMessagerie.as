@@ -17,9 +17,13 @@ import spark.components.NavigatorContent;
 import spark.components.VScrollBar;
 import spark.components.supportClasses.SkinnableComponent;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 public class AccordionMessagerie extends SkinnableComponent
 {
+	[Bindable]
+	private var fxgt: _FxGettext = FxGettext;
 
     [SkinPart("true")]
     public var accordionMessage:Accordion;
@@ -227,9 +231,9 @@ public class AccordionMessagerie extends SkinnableComponent
         var messageUnwatch:String = "";
         if (nbrMessageUnwatch > 0)
         {
-            messageUnwatch = " ("+nbrMessageUnwatch.toString()+" non lu)";
+            messageUnwatch = " (" + nbrMessageUnwatch.toString() + " " + fxgt.gettext("non lus") + ")";
         }
-        var labelNavContent:String = "Les messages public";
+        var labelNavContent:String = fxgt.gettext("Les messages publics");
         var nameNavContent:String = "0";
         var dialogMessageItemForUser:User = value.resiver;
         // set label nav content
