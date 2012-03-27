@@ -94,7 +94,7 @@ package com.ithaca.utils
             return result;
         }
 
-        public static function getHeurMinDate(date: Date): String
+        public static function getHourMinDate(date: Date): String
         {
             if(date == null) return "?";
             var heureString: String = date.getHours().toString();
@@ -126,7 +126,7 @@ package com.ithaca.utils
             if(day < 10){ dayString = "0"+dayString;};
             var mounthStringBig: String = getMonthString(date).toLowerCase();
             var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
-            var result: String = dayString + " "+mounthStringShot+" "+ getHeurMinDate(date);
+            var result: String = dayString + " "+mounthStringShot+" "+ getHourMinDate(date);
             return result;
         }
 
@@ -140,7 +140,7 @@ package com.ithaca.utils
             var mounthStringBig: String = getMonthString(date).toLowerCase();
             var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
             var year: String = date.getFullYear().toString();
-            var result: String = dayString + " "+mounthStringShot+". "+ year+", à "+ getHeurMinDate(date);
+            var result: String = dayString + " "+mounthStringShot+". "+ year+", à "+ getHourMinDate(date);
             return result;
         }
         // param : minutes
