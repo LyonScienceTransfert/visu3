@@ -250,47 +250,23 @@ package com.ithaca.utils
         }
         public static function getMonthString(date: Date): String
         {
-            var monthString: String = "";
+            /* FIXME: should be properly rewritten using DateFormatter */
             var month: Number = date.getMonth();
-            switch (month){
-                case 0:
-                    monthString = "JANVIER";
-                    break;
-                case 1:
-                    monthString = "FÉVRIER";
-                    break;
-                case 2:
-                    monthString = "MARS";
-                    break;
-                case 3:
-                    monthString = "AVRIL";
-                    break;
-                case 4:
-                    monthString = "MAI";
-                    break;
-                case 5:
-                    monthString = "JUIN";
-                    break;
-                case 6:
-                    monthString = "JUILLET";
-                    break;
-                case 7:
-                    monthString = "AOÛT";
-                    break;
-                case 8:
-                    monthString = "SEPTEMBRE";
-                    break;
-                case 9:
-                    monthString = "OCTOBRE";
-                    break;
-                case 10:
-                    monthString = "NOVEMBRE";
-                    break;
-                case 11:
-                    monthString = "DÉCEMBRE";
-                    break;
-            }
-            return monthString;
+            var monthNames: Array = [ 
+                fxgt.gettext("JANVIER"),
+                fxgt.gettext("FÉVRIER"),
+                fxgt.gettext("MARS"),
+                fxgt.gettext("AVRIL"),
+                fxgt.gettext("MAI"),
+                fxgt.gettext("JUIN"),
+                fxgt.gettext("JUILLET"),
+                fxgt.gettext("AOÛT"),
+                fxgt.gettext("SEPTEMBRE"),
+                fxgt.gettext("OCTOBRE"),
+                fxgt.gettext("NOVEMBRE"),
+                fxgt.gettext("DÉCEMBRE")
+            ];
+            return monthNames[month];
         }
 
         public static function getNumberEntier(value: Number): Number
