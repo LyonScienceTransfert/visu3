@@ -87,10 +87,10 @@ package com.ithaca.utils
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mount: int = date.getMonth() +1;
-            var mountString: String = mount.toString();
-            if(mount < 10){ mountString = "0"+mountString;};
-            var result: String = date.getUTCFullYear().toString()+separateur+mountString+separateur+dayString;
+            var month: int = date.getMonth() +1;
+            var monthString: String = month.toString();
+            if(month < 10){ monthString = "0"+monthString;};
+            var result: String = date.getUTCFullYear().toString()+separateur+monthString+separateur+dayString;
             return result;
         }
 
@@ -111,22 +111,22 @@ package com.ithaca.utils
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mounthStringBig: String = getMonthString(date).toLowerCase();
-            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
-            var result: String = dayString + " "+mounthStringShot;
+            var monthStringBig: String = getMonthString(date).toLowerCase();
+            var monthStringShot: String = StringUtils.firstLetterCap(monthStringBig) + monthStringBig.substr(1,2);
+            var result: String = dayString + " "+monthStringShot;
             return result;
         }
         
         // example return : 22 Fev 16: 00
-        public static function getDateMountHourMin(date: Date): String
+        public static function getDateMonthHourMin(date: Date): String
         {
             if(date == null) return "?";
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mounthStringBig: String = getMonthString(date).toLowerCase();
-            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
-            var result: String = dayString + " "+mounthStringShot+" "+ getHourMinDate(date);
+            var monthStringBig: String = getMonthString(date).toLowerCase();
+            var monthStringShot: String = StringUtils.firstLetterCap(monthStringBig) + monthStringBig.substr(1,2);
+            var result: String = dayString + " "+monthStringShot+" "+ getHourMinDate(date);
             return result;
         }
 
@@ -137,10 +137,10 @@ package com.ithaca.utils
             var day: int = date.getDate();
             var dayString: String = day.toString();
             if(day < 10){ dayString = "0"+dayString;};
-            var mounthStringBig: String = getMonthString(date).toLowerCase();
-            var mounthStringShot: String = StringUtils.firstLetterCap(mounthStringBig) + mounthStringBig.substr(1,2);
+            var monthStringBig: String = getMonthString(date).toLowerCase();
+            var monthStringShot: String = StringUtils.firstLetterCap(monthStringBig) + monthStringBig.substr(1,2);
             var year: String = date.getFullYear().toString();
-            var result: String = dayString + " "+mounthStringShot+". "+ year+", à "+ getHourMinDate(date);
+            var result: String = dayString + " "+monthStringShot+". "+ year+", à "+ getHourMinDate(date);
             return result;
         }
         // param : minutes
