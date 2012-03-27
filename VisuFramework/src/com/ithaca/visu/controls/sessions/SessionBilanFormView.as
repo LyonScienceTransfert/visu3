@@ -18,6 +18,7 @@ package com.ithaca.visu.controls.sessions
 	import mx.controls.LinkButton;
 	import mx.controls.dataGridClasses.DataGridColumn;
 	import mx.utils.ObjectUtil;
+    import mx.utils.StringUtil;
 	
 	import spark.components.Label;
 	import spark.components.supportClasses.SkinnableComponent;
@@ -179,12 +180,13 @@ package com.ithaca.visu.controls.sessions
                 var nbrBilan:int = this._nbrRetroDocumentOwner + this._nbrRetroDocumentShare;
                 if(nbrBilan == 0)
                 {
-                    labelBilan.text = "Pour cette séance il n'existe pas le bilan";
-                }else
+                    labelBilan.text = fxgt.gettext("Pour cette séance il n'existe pas de bilan");
+                } else
                 {
-                    var endSBilansAll:String = "";   if(nbrBilan > 1){endSBilansAll = "s";};
-                    var endSBilanShared:String = ""; if(this._nbrRetroDocumentShare > 1){endSBilanShared ="s"};
-                    labelBilan.text = "Pour cette séance il y a "+nbrBilan.toString() + " bilan"+endSBilansAll+" ("+this._nbrRetroDocumentShare.toString()+" bilan"+endSBilanShared+" partagé)";
+                    labelBilan.text = StringUtil.substitute(
+                        fxgt.gettext("Pour cette séance il y a {0} bilan(s) ({1} bilan(s) partagé(s))"),
+                        nbrBilan.toString(),
+                        this._nbrRetroDocumentShare.toString());
                 }
             }
             if(listRetroDocumentChange)
@@ -247,11 +249,19 @@ package com.ithaca.visu.controls.sessions
 		
 		private function setListAbsences():void
 		{
-			if(this.listPresentUser.length < 1){ labelListAbsentUser.text = "Aucun participant attendu n'a été présent"; return;}
-			var listAbsentUser:ArrayCollection = getListAbsentUser();
-			var strListAbsentUser:String =""; 
-			if(listAbsentUser.length < 1){ labelListAbsentUser.text = "Tous les participants attendus ont été présents"; return;};
-			for each (var userAbsent:User in listAbsentUser)
+			if (this.listPresentUser.length < 1)
+            {
+                labelListAbsentUser.text = fxgt.gettext("Aucun participant attendu n'était présent");
+                return;
+            }
+			var listAbsentUser: ArrayCollection = getListAbsentUser();
+			var strListAbsentUser: String =""; 
+			if (listAbsentUser.length < 1)
+            {
+                labelListAbsentUser.text = fxgt.gettext("Tous les participants attendus étaient présents");
+                return;
+            };
+			for each (var userAbsent: User in listAbsentUser)
 			{
 				strListAbsentUser += VisuUtils.getUserLabelLastName(userAbsent,true) + " ("+ VisuUtils.getRoleLabel(userAbsent.role)+"), "; 
 			}

@@ -73,6 +73,9 @@ package com.ithaca.visu.view.session.controls
 	import mx.controls.Image;
 	
 	import spark.components.supportClasses.SkinnableComponent;
+
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
 	
 	public class DocumentEdit extends SkinnableComponent
 	{
@@ -81,6 +84,9 @@ package com.ithaca.visu.view.session.controls
 		public var currentMouseCursor:String;
 		public var typeDocument:String;
 		
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		[SkinPart("true")] 
 		public var buttonDelete:Image;
 		
@@ -103,13 +109,13 @@ package com.ithaca.visu.view.session.controls
 			{
 				 buttonDelete.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);
 				 buttonDelete.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				 buttonDelete.toolTip = "Effacer";
+				buttonDelete.toolTip = fxgt.gettext("Effacer");
 			}
 			if(instance == buttonEdit)
 			{
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverButton);				
 				buttonEdit.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutButton);
-				buttonEdit.toolTip = "Editer";
+				buttonEdit.toolTip = fxgt.gettext("Éditer");
 			}
 			
 		}
