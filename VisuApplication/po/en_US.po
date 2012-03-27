@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Visu2 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-12 12:00+0200\n"
-"PO-Revision-Date: 2012-03-27 15:39+0200\n"
+"PO-Revision-Date: 2012-03-27 15:41+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: \n"
@@ -123,7 +123,7 @@ msgstr ""
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:383
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:460
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:605
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:225
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:220
 #: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:215
 #: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:249
 #: ../../VisuApplication/src/visuclient.mxml:119
@@ -145,7 +145,7 @@ msgstr "Confirmation"
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:380
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:456
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:602
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:222
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:217
 #: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:212
 #: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:246
 #: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:326
@@ -168,7 +168,7 @@ msgstr "Oui"
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:381
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:457
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:603
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:223
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:218
 #: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:213
 #: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:247
 #: ../../BilanModule/src/com/ithaca/components/BilanList.mxml:323
@@ -207,7 +207,8 @@ msgstr "Pause the session recording."
 msgid ""
 "Voulez-vous clôturer la séance ? (il ne sera plus possible d'y rentrer à "
 "nouveau)"
-msgstr "Do you want to finish the session? (you will not be able to use it again)"
+msgstr ""
+"Do you want to finish the session? (you will not be able to use it again)"
 
 #: ../../TutoratModule/src/modules/TutoratModule.mxml:1440
 msgid "Pose de marqueur non autorisée"
@@ -532,7 +533,7 @@ msgid "Bilans"
 msgstr "Summaries"
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/renderer/HomeSessionRenderer.mxml:310
-msgid "Voir les bilans existants pour cette session"
+msgid "Voir les bilans existants pour cette séance"
 msgstr "See existing summaries for the session"
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionFilters.as:124
@@ -596,9 +597,8 @@ msgid "Entrez un nouveau titre d'activité ici"
 msgstr "Enter a new activity title here"
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/SessionPlanEdit.as:445
-#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:658
-msgid "You have no activityElement in activity = "
-msgstr "No element in activity "
+msgid "Aucun élément dans l'activité "
+msgstr "No element in activity"
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/UserEdit.as:130
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/DocumentEdit.as:112
@@ -619,14 +619,21 @@ msgid "Voulez-vous supprimer {0} {1} ?"
 msgstr "Do you want to delete {0} {1}?"
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:426
-#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:535
-msgid "You have no activityElement with title = "
+msgid "Pas d'élément avec le titre "
 msgstr "No element with title "
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:454
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/ActivityDetailEditSkin.mxml:91
 msgid "Entrez un nouveau mémo ici"
 msgstr "Enter a new memo here"
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:535
+msgid "You have no activityElement with title = "
+msgstr "No element with title "
+
+#: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/ActivityDetailEdit.as:658
+msgid "You have no activityElement in activity = "
+msgstr "No element in activity "
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/session/controls/skins/DocumentEditSkin.mxml:209
 msgid "Voulez-vous supprimer le document ?"
@@ -842,7 +849,8 @@ msgstr "User infos"
 msgid ""
 "Veuillez sélectionner les utilisateurs avec qui vous désirez partager ce "
 "bilan (en lecture seulement):"
-msgstr "Please select users with whom you want to share this summary (read-only):"
+msgstr ""
+"Please select users with whom you want to share this summary (read-only):"
 
 #: ../../VisuFramework/src/com/ithaca/visu/view/user/skins/ShareUserManagementSkin.mxml:69
 msgid "Liste des adresses mail des utilisateurs sélectionnés: "
@@ -883,7 +891,7 @@ msgstr "{0} video bloc(s) in the summary"
 
 #: ../../VisuFramework/src/com/ithaca/visu/renderer/InfosBilanRenderer.mxml:89
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:127
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:193
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:188
 msgid "Il y a {0} bloc(s) audio dans le bilan"
 msgstr "{0} audio bloc(s) in the summary"
 
@@ -920,10 +928,12 @@ msgid "Séance enregistrée le : "
 msgstr "Session recorded on: "
 
 #: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlanB.as:133
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlan.as:154
 msgid "En cours"
 msgstr "Started"
 
 #: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlanB.as:137
+#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlan.as:158
 msgid "Démarrer"
 msgstr "Start"
 
@@ -986,14 +996,6 @@ msgstr "Summary owner"
 #: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/skins/SessionBilanFormViewSkin.mxml:127
 msgid "Actions"
 msgstr "Actions"
-
-#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlan.as:154
-msgid "en cours"
-msgstr "Started"
-
-#: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/SessionPlan.as:158
-msgid "start"
-msgstr "Start"
 
 #: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/ActivityDetail.as:89
 #: ../../VisuFramework/src/com/ithaca/visu/controls/sessions/ActivityDetail.as:136
@@ -1114,11 +1116,11 @@ msgid "Entrez un titre ici"
 msgstr "Enter a title here"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:165
-msgid "Supprimer ce segment"
-msgstr "Delete this block"
+msgid "Supprimer ce bloc"
+msgstr "Delete the block"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:173
-msgid "Aucun segment vidéo associé actuellement"
+msgid "Aucun bloc vidéo associé actuellement"
 msgstr "No associated video block"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:177
@@ -1140,7 +1142,7 @@ msgstr "Pause"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentSegment.as:571
 #: ../../VisuFramework/src/com/ithaca/documentarisation/skins/RetroDocumentSegmentSkin.mxml:129
-msgid "Play"
+msgid "Jouer"
 msgstr "Play"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:217
@@ -1167,7 +1169,7 @@ msgid "Ajouter un nouveau bloc"
 msgstr "Add a new block"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:458
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:224
+#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:219
 msgid "Êtes-vous sûr de vouloir supprimer le bilan intitulé {0} ?"
 msgstr "Are you sure you want to delete the {0} summary?"
 
@@ -1188,7 +1190,7 @@ msgid "Bloc commentaire audio"
 msgstr "Audio comment block"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:604
-msgid "Êtes-vous sûr de vouloir supprimer ce segment ?"
+msgid "Êtes-vous sûr de vouloir supprimer ce bloc ?"
 msgstr "Are you sure you want to delete this block?"
 
 #: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentView.as:711
@@ -1230,14 +1232,6 @@ msgstr "Guests:"
 msgid "Vous avez {0} bloc(s) vidéo dans le bilan"
 msgstr "{0} video block(s) in the summary"
 
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:188
-msgid "bloc"
-msgstr "block"
-
-#: ../../VisuFramework/src/com/ithaca/documentarisation/RetroDocumentListItemSimple.as:191
-msgid "blocs"
-msgstr "blocks"
-
 #: ../../VisuFramework/src/com/ithaca/documentarisation/SegmentVideoAdvanced.as:281
 msgid "vidéo"
 msgstr "video"
@@ -1247,12 +1241,9 @@ msgid "Édition de marqueur"
 msgstr "Marker edition"
 
 #: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:147
+#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:189
 msgid "Entrez le texte du marqueur ici"
 msgstr "Enter marker text here"
-
-#: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:189
-msgid "texte de marqueur ici"
-msgstr "marker text here"
 
 #: ../../VisuFramework/src/com/ithaca/utils/EditMarkerDialog.mxml:214
 msgid "Voulez-vous supprimer le marqueur ?"
@@ -1331,7 +1322,7 @@ msgid "disconnected"
 msgstr "disconnected"
 
 #: ../../VisuFramework/src/com/ithaca/utils/URLValidator.as:16
-msgid "This is an invalid URL."
+msgid "URL invalide."
 msgstr "Invalid URL."
 
 #: ../../VisuFramework/src/com/ithaca/utils/SharePlanByTemplate.mxml:50
@@ -1339,7 +1330,7 @@ msgid "Voulez-vous rendre public ce plan de séance ?"
 msgstr "Do you want to make this plan public?"
 
 #: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:7
-msgid "Edition de commentaire"
+msgid "Édition de commentaire"
 msgstr "Comment edit"
 
 #: ../../VisuFramework/src/com/ithaca/utils/EditCommentDialog.mxml:176
@@ -1360,7 +1351,7 @@ msgid "Partage de bilan"
 msgstr "Summary sharing"
 
 #: ../../VisuFramework/src/com/ithaca/utils/AddActivityTitleWindow.mxml:52
-msgid "Ajouter une activitié ?"
+msgid "Ajouter une activité ?"
 msgstr "Add an activity?"
 
 #: ../../VisuFramework/src/com/ithaca/utils/skins/VisuToolTipSkin.mxml:48
@@ -1396,14 +1387,11 @@ msgid "Bilan partagé avec {0} utilisateur(s)."
 msgstr "Summary shared with {0} user(s)."
 
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:121
-#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:717
-msgid "Désactiver le micro"
-msgstr "Mute microphone"
-
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:134
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:275
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:295
-msgid "Désactiver son micro"
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:717
+msgid "Désactiver le micro"
 msgstr "Mute microphone"
 
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:149
@@ -1422,6 +1410,7 @@ msgid "Créer un nouveau bilan pour cette séance"
 msgstr "Create a new summary for this session"
 
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:223
+#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:412
 msgid "Retour à la liste des bilans"
 msgstr "Back to summary list"
 
@@ -1434,10 +1423,6 @@ msgstr "Edit the summary"
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:455
 msgid "En construction"
 msgstr "Not finished"
-
-#: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:412
-msgid "Retourner vers liste des bilans"
-msgstr "Back to summary list"
 
 #: ../../VisuFramework/src/com/ithaca/utils/components/PanelButton.as:721
 msgid "Activer le micro"
@@ -1547,6 +1532,36 @@ msgstr "Has been unsubscribed from the session: "
 #: ../../VisuApplication/src/business/MainManager.as:489
 msgid "A été inscrit à la séance : "
 msgstr "Has been subscribed to the session: "
+
+#~ msgid "en cours"
+#~ msgstr "Started"
+
+#~ msgid "start"
+#~ msgstr "Start"
+
+#~ msgid "Supprimer ce segment"
+#~ msgstr "Delete this block"
+
+#~ msgid "Play"
+#~ msgstr "Play"
+
+#~ msgid "bloc"
+#~ msgstr "block"
+
+#~ msgid "blocs"
+#~ msgstr "blocks"
+
+#~ msgid "texte de marqueur ici"
+#~ msgstr "marker text here"
+
+#~ msgid "This is an invalid URL."
+#~ msgstr "Invalid URL."
+
+#~ msgid "Désactiver son micro"
+#~ msgstr "Mute microphone"
+
+#~ msgid "Retourner vers liste des bilans"
+#~ msgstr "Back to summary list"
 
 #~ msgid "Il faut choisir la date de la séance"
 #~ msgstr "Have to choose the date of the session...."
