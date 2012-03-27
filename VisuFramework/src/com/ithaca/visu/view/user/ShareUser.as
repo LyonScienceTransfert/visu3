@@ -49,24 +49,7 @@ package com.ithaca.visu.view.user
 			}
 			if (instance == fistLastNameUser)
 			{
-				var roleUser:String=""
-				if(user.role < RoleEnum.STUDENT)
-				{
-					roleUser = "Etudiant";
-				}else
-					if(user.role < RoleEnum.TUTEUR)
-					{
-						roleUser = "Tuteur";
-					}else 
-						if(user.role < RoleEnum.RESPONSABLE)
-						{
-							roleUser = "Responsable";
-						}else
-						{
-							roleUser = "Administrateur";							
-						}
-				
-				fistLastNameUser.text = _fistLastName + " ("+roleUser+")";
+				firstLastNameUser.text = _firstLastName + " (" + VisuUtils.getRoleLabel(user.role) + ")";
 				// set color red for admins
 				if(user.role > RoleEnum.RESPONSABLE-1)
 				{
