@@ -131,7 +131,7 @@ package com.ithaca.utils
         }
 
         // example return : 22 Fev. 2011, à 16: 00
-        public static function getDateMountYearHourMin(date: Date): String
+        public static function getDateMonthYearHourMin(date: Date): String
         {
             if(date == null) return "?";
             var day: int = date.getDate();
