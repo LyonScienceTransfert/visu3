@@ -718,13 +718,13 @@ package com.ithaca.visu.controls.sessions
 		// 
 		private function labelFunctionDateSession(item:Object, column:Object):String
 		{
-			var result:String = UtilFunction.getDateMountHourMin(item.date_session);
+			var result:String = UtilFunction.getDateMonthHourMin(item.date_session);
 			return result;
 		}
 		
 		private function labelFunctionDateSessionRecording(item:Object, column:Object):String
 		{
-			var result:String = UtilFunction.getDateMountHourMin(item.date_start_recording);
+			var result:String = UtilFunction.getDateMonthHourMin(item.date_start_recording);
 			return result;
 		}
 	}
