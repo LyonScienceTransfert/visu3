@@ -72,7 +72,7 @@
 		<s:List width="100%" height="100%" id="groupSegment"/>
 		<s:BorderContainer id="dropContainer" includeIn="dropped" width="100%" height="100" backgroundColor="#30C837">
 			<s:RichText maxDisplayedLines="2" width="100%" height="100" horizontalCenter="0" verticalCenter="1" fontSize="14" fontWeight="normal" textAlign="center" verticalAlign="middle" fontStyle="italic">
-				 <s:text>{fxgt.gettext("Drop obsel ici, pour ajouter dans le bilan block vidéo")}</s:text>
+				 <s:text>{fxgt.gettext("Glissez-déposez un obsel ici pour créer un bloc vidéo")}</s:text>
 			</s:RichText>
 		</s:BorderContainer>
 	</s:VGroup>

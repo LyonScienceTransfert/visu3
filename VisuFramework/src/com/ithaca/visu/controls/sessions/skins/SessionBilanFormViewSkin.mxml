@@ -103,7 +103,7 @@
         <s:HGroup width="100%" gap="20">
             <s:HGroup width="110" >
                 <s:Label width="100%" textAlign="right">
-                    <s:text>{fxgt.gettext("Bilans existance:")}</s:text>
+                    <s:text>{fxgt.gettext("Bilans existants:")}</s:text>
                 </s:Label>
             </s:HGroup>
             <s:HGroup width="100%">
@@ -112,7 +112,7 @@
                     <mx:DataGrid id="dataGridBilan" width="100%" height="200">
                         <mx:columns>
                             <mx:DataGridColumn id="dataGridDateModification"  dataField="modifyDateAsDate" itemRenderer="com.ithaca.visu.renderer.DateBilanRenderer">
-                                <mx:headerText>{fxgt.gettext("Date modification")}</mx:headerText>
+                                <mx:headerText>{fxgt.gettext("Date de modification")}</mx:headerText>
                             </mx:DataGridColumn>
                             <mx:DataGridColumn id="dataGridTitreBilan" dataField="title" itemRenderer="com.ithaca.visu.renderer.TitreBilanRenderer" >
                                 <mx:headerText>{fxgt.gettext("Titre bilan")}</mx:headerText>

@@ -94,7 +94,8 @@ package com.ithaca.visu.view.session
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.utils.ObjectUtil;
-	
+	import mx.utils.StringUtil;
+
 	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.List;
@@ -646,7 +647,9 @@ package com.ithaca.visu.view.session
 				var session:Session = sessionDetail.session;
 				if(session.id_session == value)
 				{
-					Alert.show(fxgt.gettext('La Séance "') + session.theme + fxgt.gettext('" a été supprimée par ') + nameUserDeleteSession, fxgt.gettext("Information"));
+					Alert.show(StringUtil.substitute(fxgt.gettext('La Séance "{0}" a été supprimée par {1}'),
+                                                     session.theme, nameUserDeleteSession),
+                               fxgt.gettext("Information"));
 					this.filterChange = true;
 					this.invalidateProperties();
 				}else

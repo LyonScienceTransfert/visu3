@@ -9,7 +9,7 @@ You cannot run it independently. -->
 			   
 			   close="PopUpManager.removePopUp(this);" 
 			    creationComplete="titlewindow1_creationCompleteHandler(event)">
-	<s:title>{fxgt.gettext("Edition de marqueur...")}</s:title>
+	<s:title>{fxgt.gettext("Édition de marqueur...")}</s:title>
 	
 	<fx:Script>
 		<![CDATA[       
@@ -71,7 +71,7 @@ You cannot run it independently. -->
 	
 	<s:HGroup>
 		<s:Button click="onDeleteMarker(event)">
-			<s:label>{fxgt.gettext("Delete")}</s:label>
+			<s:label>{fxgt.gettext("Supprimer")}</s:label>
 		</s:Button>
 		<s:Button click="returnResult(event);">
 			<s:label>{fxgt.gettext("OK")}</s:label>

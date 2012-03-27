@@ -118,7 +118,7 @@ package com.ithaca.utils.components
 				}else
 				{
 					buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume)
-					buttonVolume.toolTip = fxgt.gettext("Désactiver son micro");
+					buttonVolume.toolTip = fxgt.gettext("Désactiver le micro");
 				}
 			}
 			if (instance == buttonMicro)
@@ -131,7 +131,7 @@ package com.ithaca.utils.components
 				{
 					buttonMicro.addEventListener(MouseEvent.CLICK, onClickButtonMicro);
 					buttonMicro.icon =  IconEnum.getIconByName('micOn');
-					buttonMicro.toolTip = fxgt.gettext("Désactiver son micro");
+					buttonMicro.toolTip = fxgt.gettext("Désactiver le micro");
 					_muteMicro = false;
 				}
 			}
@@ -220,7 +220,7 @@ package com.ithaca.utils.components
 				{
 					buttonReturn.addEventListener(MouseEvent.CLICK, onClickButtonReturn);
 					buttonReturn.icon =  IconEnum.getIconByName('iconReturnLeft_16x16');
-					buttonReturn.toolTip = fxgt.gettext("Retourner vers liste des bilans");
+					buttonReturn.toolTip = fxgt.gettext("Retour à la liste des bilans");
 				}
 			}
 			if (instance == buttonSwitch)
@@ -272,7 +272,7 @@ package com.ithaca.utils.components
 						buttonVolume.includeInLayout = true;
 						buttonVolume.visible = true;
 						buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume);
-						buttonVolume.toolTip = fxgt.gettext("Désactiver son micro");
+						buttonVolume.toolTip = fxgt.gettext("Désactiver le micro");
 					}else
 					{
 						buttonVolume.includeInLayout = false;
@@ -292,7 +292,7 @@ package com.ithaca.utils.components
 						buttonMicro.visible = true;
 						buttonMicro.addEventListener(MouseEvent.CLICK, onClickButtonMicro);
 						buttonMicro.icon =  IconEnum.getIconByName('micOn');
-						buttonMicro.toolTip = fxgt.gettext("Désactiver son micro");
+						buttonMicro.toolTip = fxgt.gettext("Désactiver le micro");
 						_muteMicro = false;
 					}else
 					{
@@ -409,7 +409,7 @@ package com.ithaca.utils.components
 					{
 						buttonReturn.includeInLayout = true;
 						buttonReturn.visible = true;
-						buttonReturn.toolTip = fxgt.gettext("Retourner vers liste des bilans");
+						buttonReturn.toolTip = fxgt.gettext("Retour à la liste des bilans");
 						buttonReturn.addEventListener(MouseEvent.CLICK, onClickButtonReturn);
 					}else
 					{
@@ -714,11 +714,11 @@ package com.ithaca.utils.components
 			// set muteMicro
 			_muteMicro = !_muteMicro;
 			var nameImageMicro:String = "micOn";
-			var toolTip:String = fxgt.gettext("Désactiver son micro");
+			var toolTip:String = fxgt.gettext("Désactiver le micro");
 			if(_muteMicro)
 			{
 				nameImageMicro = "micOff";
-				toolTip = fxgt.gettext("Activer son micro");
+				toolTip = fxgt.gettext("Activer le micro");
 			}
 			// set new icon of the micro
 			buttonMicro.icon =  IconEnum.getIconByName(nameImageMicro);

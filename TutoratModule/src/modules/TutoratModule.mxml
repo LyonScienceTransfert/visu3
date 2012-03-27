@@ -798,7 +798,7 @@
 						// conformation for closing the session
 						Alert.yesLabel = fxgt.gettext("Oui");
 						Alert.noLabel = fxgt.gettext("Non");
-						Alert.show(fxgt.gettext("Voulez-vous mettre en pause l'enregistrement ? (vous pourrez le reprendre plus tard)"),
+						Alert.show(fxgt.gettext("Voulez-vous mettre en pause l'enregistrement (vous pourrez le reprendre plus tard) ?"),
 						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, stopRecordingConfirmed); 	
 					}else{
 						

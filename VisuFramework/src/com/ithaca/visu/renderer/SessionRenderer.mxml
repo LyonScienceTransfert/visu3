@@ -48,7 +48,7 @@
 							break;
 							default:
 								labelTheme.setStyle("color","#EA8A8A");
-								labelMessageDate.text = fxgt.gettext("recording ....");
+								labelMessageDate.text = fxgt.gettext("Débutée le :");
 								dateSession = data.getSessionDateStartRecording();
 							break;
 						}

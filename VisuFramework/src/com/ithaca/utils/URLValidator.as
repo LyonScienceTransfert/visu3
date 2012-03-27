@@ -13,7 +13,7 @@ package com.ithaca.utils
 			super();
 		}
 		
-		private var _invalidUrlError: String = fxgt.gettext("This is an invalid URL.");
+		private var _invalidUrlError: String = fxgt.gettext("URL invalide.");
 		
 		[Inspectable(category="Errors", defaultValue="null")]
 		

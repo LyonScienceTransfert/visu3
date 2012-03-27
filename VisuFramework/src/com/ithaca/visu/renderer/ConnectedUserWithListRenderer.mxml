@@ -14,7 +14,8 @@
 			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
-			
+			import mx.utils.StringUtil;
+
 			import spark.components.DataGroup;
 			import spark.events.DropDownEvent;
 			import spark.events.IndexChangeEvent;
@@ -69,7 +70,9 @@
 			{
 				list.removeEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);
 				//show message
-				if(!doUpdate)Alert.show(fxgt.gettext("L'utilisateur ")+selectedUser.firstname+fxgt.gettext(" est déjè en liste de séances."),fxgt.gettext("Information"));
+				if (!doUpdate)
+                    Alert.show(StringUtil.substitute(fxgt.gettext("L'utilisateur {0} est déjà en séance."),
+                                                     selectedUser.firstname),fxgt.gettext("Information"));
 			}
 
 			protected function list_creationCompleteHandler(event:FlexEvent):void
