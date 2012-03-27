@@ -2,13 +2,18 @@ package com.ithaca.utils
 {
 	import mx.validators.ValidationResult;
 	import mx.validators.Validator;
-	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	public class URLValidator extends Validator {
+		[Bindable]
+	    private var fxgt: _FxGettext = FxGettext;
+
 		public function URLValidator() {
 			super();
 		}
 		
-		private var _invalidUrlError:String = "This is an invalid URL.";
+		private var _invalidUrlError: String = fxgt.gettext("This is an invalid URL.");
 		
 		[Inspectable(category="Errors", defaultValue="null")]
 		

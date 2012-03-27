@@ -24,6 +24,8 @@ import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 public class SegmentTitle extends SkinnableComponent
 {
@@ -37,7 +39,10 @@ public class SegmentTitle extends SkinnableComponent
 	public var 	textSegment:RichEditableText;
 	[SkinPart("true")]
 	public var 	iconDelete:IconDelete;
-	
+
+    [Bindable]
+    private var fxgt: _FxGettext = FxGettext;
+
 	private var _text:String ="text init";
 	private var _editabled:Boolean = false; 
 	private var selected:Boolean = false; 
@@ -147,8 +152,8 @@ public class SegmentTitle extends SkinnableComponent
             iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
             iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
             iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
-            var messageDND:String = "Glisser-déplacer ce bloc";
-            var toolTipText:String = messageDND+ " texte";
+            var messageDND: String = fxgt.gettext("Glisser-déplacer ce bloc");
+            var toolTipText: String = messageDND + " "  + fxgt.gettext("texte");
             // TODO : message "Vous pouver deplace cet block en haut en bas",
             // show this message only if has many blocs
             // MouseCursor = HAND just if has many blocs
@@ -231,7 +236,7 @@ public class SegmentTitle extends SkinnableComponent
 	public function onFocusInRichEditableText(event:* = null):void
 	{	
 		
-		if(textSegment.text == "Cliquer ici pour ajouter du texte")
+		if(textSegment.text == fxgt.gettext("Cliquer ici pour ajouter du texte"))
 		{
 			textSegment.text = "";
 			if(!_fontBold)
@@ -420,7 +425,7 @@ public class SegmentTitle extends SkinnableComponent
 	
 	public function setRichEditText():void
 	{
-		textSegment.text = "Cliquer ici pour ajouter du texte";
+		textSegment.text = fxgt.gettext("Cliquer ici pour ajouter du texte");
 		textSegment.setStyle("fontStyle","italic");
 		textSegment.setStyle("backgroundColor", _backGroundColorRichEditableText);
 		if(!_fontBold)
