@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
+     height="60" width="200">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.utils.components.MessageNotification")]
+    </fx:Metadata>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="hovered"/>
+    </s:states>
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.visu.ui.utils.IconEnum;
+    ]]>
+    </fx:Script>
+    <s:Rect width="100%" height="100%" radiusX="12">
+        <s:stroke>
+            <s:LinearGradientStroke rotation="90" weight="2">
+                <s:GradientEntry color="0xabcaf8" alpha="0.5625" />
+                <s:GradientEntry color="0xabcaf8" alpha="0.75" />
+            </s:LinearGradientStroke>
+        </s:stroke>
+        <s:fill>
+            <s:SolidColor color="0x70a0e8" alpha="0.90" />
+        </s:fill>
+    </s:Rect>
+    <s:HGroup height="100%" gap="5" width="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="0" paddingBottom="3">
+        
+        <mx:Image id="icon"/>
+        <s:VGroup width="100%" height="100%" gap="5">
+            <s:HGroup width="100%" horizontalAlign="right">
+                <components:IconDelete id="buttonClose"
+                  buttonMode="true" visible.hovered="true" visible.normal="false"/>
+            </s:HGroup>
+            <s:Label id="titreNotification" maxDisplayedLines="2" width="100%" color="#FFFFFF"/>
+            <s:Label id="message" width="100%" textAlign="right" color="#FFFFFF"/>
+        </s:VGroup>
+    </s:HGroup>
+</s:Skin>
