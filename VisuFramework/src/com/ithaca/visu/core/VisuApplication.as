@@ -282,24 +282,31 @@ package com.ithaca.visu.core
 			// enabled buttonBar the modules
 			menu.enabledButtonBarModules(true);
 			
-			switch(event.moduleName)
-			{
-				case VisuModuleEvent.RETROSPECTION_MODULE:
-					menu.deselectButtonBarModules();
-					menu.selectButtonRetroModule(true);
-					menu.selectButtonTutoratModule(false);
-					break;
-				case VisuModuleEvent.TUTORAT_MODULE:
-					menu.deselectButtonBarModules();
-					menu.selectButtonRetroModule(false);
-					menu.selectButtonTutoratModule(true);
-					break;
-				default:
-					menu.requireSelectionButtonBarModules();
-					menu.selectButtonRetroModule(false);
-					menu.selectButtonTutoratModule(false);
-				break;
-			}
+            switch(event.moduleName)
+            {
+            case VisuModuleEvent.RETROSPECTION_MODULE:
+                menu.deselectButtonBarModules();
+                menu.deselectButtonSalonBilan();
+                menu.selectButtonRetroModule(true);
+                menu.selectButtonTutoratModule(false);
+                break;
+            case VisuModuleEvent.TUTORAT_MODULE:
+                menu.deselectButtonBarModules();
+                menu.deselectButtonSalonBilan();
+                menu.selectButtonRetroModule(false);
+                menu.selectButtonTutoratModule(true);
+                break;
+            case VisuModuleEvent.BILAN_MODULE:
+                menu.deselectButtonBarModules();
+                menu.selectButtonRetroModule(false);
+                menu.selectButtonTutoratModule(false);
+                break;
+            default:
+                menu.requireSelectionButtonBarModules();
+                menu.selectButtonRetroModule(false);
+                menu.selectButtonTutoratModule(false);
+                break;
+            }
 			
 			/*if(event.moduleName == VisuModuleEvent.RETROSPECTION_MODULE || event.moduleName == VisuModuleEvent.TUTORAT_MODULE)
 			{

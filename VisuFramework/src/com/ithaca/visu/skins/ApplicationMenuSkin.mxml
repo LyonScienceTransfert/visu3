@@ -50,13 +50,10 @@
 				<s:DropShadowFilter alpha=".8" color="0xFFFFFF" angle="90" blurX="1" blurY="1" distance="1" /> 	
 			</s:filters>
 		</s:Label>
-		
-<!--		<s:Button id="home" label="home" includeIn="authentified" />-->
-		
 		<s:Group id="contentGroup" width="100%" includeIn="authentified" 
 				 minHeight="0" minWidth="0">
 			<s:layout>
-				<s:HorizontalLayout />
+				<s:HorizontalLayout gap="0" />
 			</s:layout>
 		</s:Group>		
 		<mx:Spacer width="100%" includeIn="authentified"/>
