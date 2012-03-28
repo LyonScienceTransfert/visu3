@@ -6,23 +6,13 @@
     >
     <fx:Script>
     <![CDATA[
-        import com.ithaca.documentarisation.RetroDocumentConst;
         import com.ithaca.documentarisation.events.RetroDocumentEvent;
         import com.ithaca.documentarisation.model.RetroDocument;
-        import com.ithaca.documentarisation.model.Segment;
-        import com.ithaca.utils.components.BilanSharedUserToolTip;
-        import com.ithaca.utils.components.skins.IconInfoSegmentSkin;
         import com.ithaca.visu.model.Model;
         import com.ithaca.visu.ui.utils.IconEnum;
-        import com.ithaca.visu.ui.utils.SharedSatusEnum;
-        import com.lyon2.controls.utils.TimeUtils;
         
         import gnu.as3.gettext.FxGettext;
         import gnu.as3.gettext._FxGettext;
-        
-        import mx.collections.ArrayCollection;
-        import mx.events.FlexEvent;
-        import mx.events.ToolTipEvent;
         
         
         [Bindable]

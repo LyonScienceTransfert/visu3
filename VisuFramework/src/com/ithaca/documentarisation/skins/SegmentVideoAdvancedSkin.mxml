@@ -49,7 +49,7 @@
 			<mx:Image source="{IconEnum.getIconByName('iconVideo_16x16')}">
 			</mx:Image>
 			<mx:Spacer width="100%"/>
-			<mx:Image  id="imagePlay" source="{IconEnum.getIconByName('iconPlay_16x16')}"
+			<mx:Image  id="imagePlay" source="{IconEnum.getIconByName('iconPlayGreen_16x16')}"
 				 excludeFrom="edit, editPlay, editPaused , shared" visible="false">
 				<mx:toolTip>Play segment video</mx:toolTip>
 				<mx:buttonMode>true</mx:buttonMode>
@@ -107,16 +107,16 @@
 					<!--<mx:Spacer height="100%"/>-->
 					<!-- BUTTONS PLAY PAUSE STOP --> 
 					<s:HGroup width="100%" horizontalAlign="center">
-						<mx:Button  id="buttonStop" icon="{IconEnum.getIconByName('iconStop_16x16')}"
+						<mx:Button  id="buttonStop" icon="{IconEnum.getIconByName('iconStopYellow_16x16')}"
 							 includeIn="editPaused, editPlay" width="40%">
 							<mx:label>Stop</mx:label>
 						</mx:Button>
 						<mx:Button id="buttonPlay" 
-							 includeIn="edit, editPaused" icon="{IconEnum.getIconByName('iconPlay_16x16')}" width="40%">
+							 includeIn="edit, editPaused" icon="{IconEnum.getIconByName('iconPlayGreen_16x16')}" width="40%">
 							<mx:label>Play</mx:label>
 						</mx:Button>
 						<mx:Button id="buttonPause"
-							 includeIn="editPlay" icon="{IconEnum.getIconByName('iconPause_16x16')}" width="40%">
+							 includeIn="editPlay" icon="{IconEnum.getIconByName('iconPauseYellow_16x16')}" width="40%">
 							<mx:label>Pause</mx:label>
 						</mx:Button>
 					</s:HGroup>

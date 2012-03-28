@@ -7,10 +7,6 @@ public class SoundEnum
 {	
     import com.ithaca.traces.model.TraceModel;
 	
-	[Bindable]
-	[Embed("images/marqueurBlanc-bas-20px.png")]
-	static private var markerIcon:Class;
-	
 	[Embed("sounds/blubup.mp3")]
 	static private var blubup_wav:Class;
 	static private var blubup:SoundAsset = new blubup_wav() as SoundAsset;
