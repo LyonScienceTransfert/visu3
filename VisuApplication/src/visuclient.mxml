@@ -280,9 +280,10 @@
 			private function setListLang():void
 			{
 				listLang.addItem({labelLang:"Français", data: "fr_FR"});
-				listLang.addItem({labelLang:"Deutsch", data: "de_DE"});
+				//listLang.addItem({labelLang:"Deutsch", data: "de_DE"});
 				listLang.addItem({labelLang:"English", data: "en_US"});
-				listLang.addItem({labelLang:"Русский", data: "ru_RU"}); 
+				//listLang.addItem({labelLang:"Русский", data: "ru_RU"}); 
+				listLang.addItem({labelLang:"Debug", data: "mm_MM"});
 			}
 			
 			private function updateListLabelModule():void{

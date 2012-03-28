@@ -159,7 +159,7 @@ package com.ithaca.visu.controls.globalNavigation
 			{
 				dropListLang.addEventListener(IndexChangeEvent.CHANGE, onChangeLange);
 				// set enabled lang
-				dropListLang.enabled = false;
+				dropListLang.enabled = true;
 			}
 /*			if (instance == home)
 			{
