@@ -12,14 +12,11 @@
         import com.ithaca.utils.components.BilanSharedUserToolTip;
         import com.ithaca.utils.components.skins.IconInfoSegmentSkin;
         import com.ithaca.visu.ui.utils.IconEnum;
-        import com.ithaca.visu.ui.utils.SharedSatusEnum;
-        import com.lyon2.controls.utils.TimeUtils;
         
         import gnu.as3.gettext.FxGettext;
         import gnu.as3.gettext._FxGettext;
         
         import mx.collections.ArrayCollection;
-        import mx.events.FlexEvent;
         import mx.events.ToolTipEvent;
         import mx.utils.StringUtil;
         
@@ -113,7 +110,7 @@
     </fx:Script>
     <s:VGroup horizontalAlign="center" verticalAlign="middle" >
         <mx:Image id="iconInfoShared" 
-            source="{IconEnum.getIconByCodeShared(SharedSatusEnum.SHARED_OK_THIS_TO_OTHER)}"
+            source="{IconEnum.getIconByName('retroDocumentShared')}"
             toolTip="Under construction"
             toolTipCreate="iconInfoShared_toolTipCreateHandler(event)"
             toolTipShow="iconInfoShared_toolTipShowHandler(event)" 
