@@ -231,23 +231,14 @@ or by setting the following environment variable:
 	  			<include-file name="images/ArrowUp.png" path="${framework.images}/ArrowUp.png"/>
 	  		  	<include-file name="images/CommentAddVer1.png" path="${framework.images}/CommentAddVer1.png"/>
 	  		  	<include-file name="images/CommentVer4.png" path="${framework.images}/CommentVer4.png"/>
-	  		  	<include-file name="images/Editer.png" path="${framework.images}/Editer.png"/>
-	  		  	<include-file name="images/iconPlus.png" path="${framework.images}/iconPlus.png"/>
-	  		  	<include-file name="images/iconMinus.png" path="${framework.images}/iconMinus.png"/>
 	  		 	<include-file name="images/marqueurBlanc-bas-20px.png" path="${framework.images}/marqueurBlanc-bas-20px.png"/>
-	  		  	<include-file name="images/messageChat.png" path="${framework.images}/messageChat.png"/>
 	  		  	<include-file name="images/PauseVer4.png" path="${framework.images}/PauseVer4.png"/>
 	  		  	<include-file name="images/PlayVer4.png" path="${framework.images}/PlayVer4.png"/>
 	  		  	<include-file name="images/PlayWalkOutVer5.png" path="${framework.images}/PlayWalkOutVer5.png"/>
 	  		  	<include-file name="images/PressSliderVer5.png" path="${framework.images}/PressSliderVer5.png"/>
 	  		  	<include-file name="images/Poubelle.png" path="${framework.images}/Poubelle.png"/>
-		  	  	<include-file name="images/SharedOtherToThisRedVer1.png" path="${framework.images}/SharedOtherToThisRedVer1.png"/>
-	  		  	<include-file name="images/SharedOtherToThisVer1.png" path="${framework.images}/SharedOtherToThisVer1.png"/>
-	  		  	<include-file name="images/SharedThisToOtherRedVer1.png" path="${framework.images}/SharedThisToOtherRedVer1.png"/>
-	  		  	<include-file name="images/SharedThisToOtherVer1.png" path="${framework.images}/SharedThisToOtherVer1.png"/>
 	  		  	<include-file name="images/StopVer4.png" path="${framework.images}/StopVer4.png"/>
 	  		  	<include-file name="images/video.jpg" path="${framework.images}/video.jpg"/>
-	  		  	<include-file name="images/add.png" path="${framework.images}/add.png"/>
 	  		  	<include-file name="images/ballRed.png" path="${framework.images}/ballRed.png"/>
 	  		  	<include-file name="images/ballBlue.png" path="${framework.images}/ballBlue.png"/>
 	  		  	<include-file name="images/ballGreen.png" path="${framework.images}/ballGreen.png"/>
@@ -267,10 +258,7 @@ or by setting the following environment variable:
 
 				<include-file name="images/ScreenShot80x60.png" path="${framework.images}/ScreenShot80x60.png"/>
 				<include-file name="images/iconVideo_16x16.png" path="${framework.images}/iconVideo_16x16.png"/>
-				<include-file name="images/iconPlay_16x16.png" path="${framework.images}/iconPlay_16x16.png"/>
-				<include-file name="images/iconPause_16x16.png" path="${framework.images}/iconPause_16x16.png"/>
 				<include-file name="images/iconEdit_16x16.png" path="${framework.images}/iconEdit_16x16.png"/>
-				<include-file name="images/iconStop_16x16.png" path="${framework.images}/iconStop_16x16.png"/>
 				<include-file name="images/iconAudio_16x16.png" path="${framework.images}/iconAudio_16x16.png"/>
 				<include-file name="images/iconMinimaze_16x16.png" path="${framework.images}/iconMinimaze_16x16.png"/>
 				<include-file name="images/iconSave_16x16.png" path="${framework.images}/iconSave_16x16.png"/>
@@ -297,10 +285,11 @@ or by setting the following environment variable:
 				<include-file name="images/iconEye_16x16.png" path="${framework.images}/iconEye_16x16.png"/>
 				<include-file name="images/iconAnnuler_16x16.png" path="${framework.images}/iconAnnuler_16x16.png"/>
 				<include-file name="images/iconValider_16x16.png" path="${framework.images}/iconValider_16x16.png"/>
-				<include-file name="images/commentAddVer3_16x16.png" path="${framework.images}/commentAddVer3_16x16.png"/>
-				<include-file name="images/tree.png" path="${framework.images}/tree.png"/>
 				<include-file name="images/share_icon.png" path="${framework.images}/share_icon.png"/>
-
+				
+				<include-file name="images/hand_close.png" path="${framework.images}/hand_close.png"/>
+				<include-file name="images/hand_open.png" path="${framework.images}/hand_open.png"/>
+				<include-file name="images/stateNormal_14x14.png" path="${framework.images}/stateNormal_14x14.png"/>
 
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 

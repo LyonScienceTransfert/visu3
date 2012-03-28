@@ -15,6 +15,9 @@ package com.ithaca.utils.components
 
 	import spark.components.Panel;
 
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	[Event(name="clickButtonMuteVolume",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonMuteMicro",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonModeZoom",type="com.ithaca.visu.events.PanelButtonEvent")]
@@ -24,9 +27,6 @@ package com.ithaca.utils.components
 	[Event(name="clickButtonShare",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonReturn",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonSwitch",type="com.ithaca.visu.events.PanelButtonEvent")]
-
-    import gnu.as3.gettext.FxGettext;
-    import gnu.as3.gettext._FxGettext;
 
 	public class PanelButton extends Panel
 	{
