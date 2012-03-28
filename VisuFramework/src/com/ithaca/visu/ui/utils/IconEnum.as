@@ -71,12 +71,8 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/marqueurBlanc-bas-20px.png")]
 		static private var markerIcon:Class;
-		
-		[Bindable]
-		[Embed("images/messageChat.png")]
-		static private var messageChatIcon:Class;
-		
-		[Bindable]
+
+        [Bindable]
 		[Embed("images/motCleVisu2_20x20.png")]
 		static private var keywordIcon:Class;
 		
@@ -103,23 +99,7 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/CommentAddVer1.png")]
 		static private var commentAdd:Class;
-
-		[Bindable]
-		[Embed("images/SharedThisToOtherVer1.png")]
-		static private var sharedOkThisToOther:Class;
-		
-		[Bindable]
-		[Embed("images/SharedOtherToThisVer1.png")]
-		static private var sharedOkOtherToThis:Class;
-
-		[Bindable]
-		[Embed("images/SharedThisToOtherRedVer1.png")]
-		static private var sharedNonThisToOther:Class;
-		
-		[Bindable]
-		[Embed("images/SharedOtherToThisRedVer1.png")]
-		static private var sharedNonOtherToThis:Class;
-		
+				
 		[Bindable]
 		[Embed("images/PlayVer4.png")]
 		static private var playPlayer:Class;
@@ -154,20 +134,9 @@ package com.ithaca.visu.ui.utils
 		static private var poubelle:Class;
 
 		[Bindable]
-		[Embed("images/Editer.png")]
-		static private var edit:Class;
-		
-		[Bindable]
-		[Embed("images/add.png")]
-		static private var add:Class;
-
-		[Bindable]
 		[Embed("images/RetroDocumentAddVer1.png")]
 		static private var retroDocumentAdd:Class;
 		
-		[Bindable]
-		//[Embed("images/RetroDocumentPartageVer1.png")]
-		//[Embed("images/share_icon.png")]
 		[Bindable]
 		[Embed("images/share_icon20x20.png")]
 		static private var retroDocumentShared:Class;
@@ -257,17 +226,8 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/iconVideo_16x16.png")]
 		static private var iconVideo_16x16:Class;
 		[Bindable]
-		[Embed("images/iconPlay_16x16.png")]
-		static private var iconPlay_16x16:Class;
-		[Bindable]
-		[Embed("images/iconPause_16x16.png")]
-		static private var iconPause_16x16:Class;
-		[Bindable]
 		[Embed("images/iconEdit_16x16.png")]
 		static private var iconEdit_16x16:Class;
-		[Bindable]
-		[Embed("images/iconStop_16x16.png")]
-		static private var iconStop_16x16:Class;
 		[Bindable]
 		[Embed("images/iconAudio_16x16.png")]
 		static private var iconAudio_16x16:Class;
@@ -326,8 +286,14 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/iconValider_16x16.png")]
 		static private var iconValider_16x16:Class;
 		[Bindable]
-		[Embed("images/tree.png")]
-		static private var tree:Class;
+		[Embed("images/hand_close.png")]
+		static private var hand_close:Class;
+		[Bindable]
+		[Embed("images/hand_open.png")]
+		static private var hand_open:Class;
+		[Bindable]
+		[Embed("images/stateNormal_14x14.png")]
+		static private var stateNormale_14x14:Class;
 		
 		public static function getPathByName(code:String):String
 		{
@@ -396,31 +362,6 @@ package com.ithaca.visu.ui.utils
 			return icon;
 		}
 		
-		public static function getIconByCodeShared(code:String):Class
-		{
-			var icon:Class;
-			switch (code)
-			{
-				case SharedSatusEnum.SHARED_OK_THIS_TO_OTHER : 
-					icon = sharedOkThisToOther;
-					break;
-				case SharedSatusEnum.SHARED_OK_OTHER_TO_THIS : 
-					icon = sharedOkThisToOther;
-				//	icon = sharedOkOtherToThis;
-					break;
-				case SharedSatusEnum.SHARED_NON_THIS_TO_OTHER : 
-					icon = sharedNonThisToOther;
-					break;
-				case SharedSatusEnum.SHARED_NON_OTHER_TO_THIS : 
-					icon = sharedNonThisToOther;
-				//	icon = sharedNonOtherToThis;
-					break;
-				default :
-					break;				
-			}
-			return icon;
-		}
-		
 		public static function getIconByName(code:String):Class
 		{
 			var icon:Class;
@@ -436,14 +377,8 @@ package com.ithaca.visu.ui.utils
 				case "delete" : 
 					icon = poubelle;
 					break;
-				case "edit" : 
-					icon = edit;
-					break;
 				case "commentAdd" : 
 					icon = commentAdd;
-					break;
-				case "add" : 
-					icon = add;
 					break;
 				case "retroDocumentAdd" : 
 					icon = retroDocumentAdd;
@@ -514,17 +449,8 @@ package com.ithaca.visu.ui.utils
 				case "iconVideo_16x16" : 
 					icon = iconVideo_16x16;
 					break;
-				case "iconPlay_16x16" : 
-					icon = iconPlay_16x16;
-					break;
-				case "iconPause_16x16" : 
-					icon = iconPause_16x16;
-					break;
 				case "iconEdit_16x16" : 
 					icon = iconEdit_16x16;
-					break;
-				case "iconStop_16x16" : 
-					icon = iconStop_16x16;
 					break;
 				case "iconAudio_16x16" : 
 					icon = iconAudio_16x16;
@@ -583,8 +509,14 @@ package com.ithaca.visu.ui.utils
 				case "iconValider_16x16" : 
 					icon = iconValider_16x16;
 					break;
-				case "tree" : 
-					icon = tree;
+				case "hand_close" : 
+					icon = hand_close;
+					break;
+				case "hand_open" : 
+					icon = hand_open;
+					break;
+				case "stateNormale_14x14" : 
+					icon = stateNormale_14x14;
 					break;
 				default :
 					break;				

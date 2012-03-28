@@ -29,6 +29,8 @@
             import com.ithaca.utils.EditMarkerDialog;
             import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
+            import com.ithaca.utils.components.MessageNotification;
+            import com.ithaca.utils.components.skins.MessageNotificationSkin;
             import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
             import com.ithaca.visu.controls.sessions.ActivityDetailB;
             import com.ithaca.visu.controls.sessions.SharedElementChat;
@@ -47,6 +49,7 @@
             import com.ithaca.visu.model.ActivityElementType;
             import com.ithaca.visu.model.DocumentActionType;
             import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Notification;
             import com.ithaca.visu.model.Session;
             import com.ithaca.visu.model.User;
             import com.ithaca.visu.ui.utils.ActionObselEnum;
@@ -71,6 +74,7 @@
             import mx.core.DragSource;
             import mx.core.IUIComponent;
             import mx.events.CloseEvent;
+            import mx.events.CollectionEvent;
             import mx.events.DragEvent;
             import mx.events.FlexEvent;
             import mx.events.ResizeEvent;
@@ -83,6 +87,8 @@
 
             /* When reaching the end of the timeline, how much time should we add ? */
 			private var DURATION_EXTENSION: Number = 60 * 1000; /* 1 minute */
+            private var TIME_UPDATE_MESSAGE_NOTIFICATION:Number = 1000; /* in ms */ 
+            private var DURATION_SHOW_NOTIFICATION_ADD_MARKER:Number = 1000 * 10; /* in ms */ 
 
 			private var currentSession:Session = null;
 			private var _stopTimeRecording:Number = 0;
@@ -132,7 +138,13 @@
             private var _listSessionExitObsel:ArrayCollection = new ArrayCollection();
             // timer playVideoObsel
             private var _timerPlayVideoObsel:Timer;
-			
+			// list message notification
+            private var _listMessageNotification:ArrayCollection;
+            // timer update show message notification 
+            private var _timerShowMessageNotification:Timer;
+            // list view message notification
+            private var _listViewMessageNotification:ArrayCollection;
+            
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{
 				//if((event.currentTarget as TutoratModule).parameters != null  || Model.getInstance().getCurrentSession() != null )
@@ -234,6 +246,12 @@
                     
                     // init list editing comment obsel
                     _listEditMarkerDialog = new ArrayCollection();
+                    // init list message notification
+                    _listMessageNotification = new ArrayCollection();
+                    // add listener message notification
+                    _listMessageNotification.addEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeCollectionMessageNotification);
+                    // init list view message notification
+                    _listViewMessageNotification = new ArrayCollection();
 				}
 			}
 			
@@ -1434,7 +1452,7 @@
 			
 			private function setEnabledGroupSetMarker(value:Boolean):void
 			{
-				groupSetMarker.enabled = value;
+				groupSetMarker.enabled = groupSetMarkerConst.enabled = value;
 				if(!value)
 				{
 					textChatMarker.text = fxgt.gettext("Pose de marqueur non autorisée");
@@ -1474,11 +1492,39 @@
 				this.dispatchEvent(goHomeModuleEvent);
 				
 			}
-			/////////////////
+            
+            //////////////
+            ////// Handler the markeurs "const"
+            //////////////
+            protected function groupSetMarkerConst_clickHandler(event:MouseEvent):void
+            {
+                var buttonId:String = (event.currentTarget as spark.components.Button).id;
+                var message:String;
+                switch(buttonId)
+                {
+                    case 'comprehenstion':
+                        message = fxgt.gettext("compréhension");
+                        break;
+                    case 'prononciation':
+                        message = fxgt.gettext("prononciation");
+                        break;
+                    case 'sens':
+                        message = fxgt.gettext("sens");
+                        break;
+                    case 'interaction':
+                        message = fxgt.gettext("interaction");
+                        break;
+                }
+                // set message notification
+                setMessageNotification(message);
+                // set marker
+                this.sendMarker(false,message);
+            }
+
+
 			//////////////
 			//////   Handlers the create/edit/delete markers
 			/////////////
-			
 			/**
 			 * Show EditMarkerDialog when user edit existing comment obsel
 			 */ 
@@ -1794,10 +1840,6 @@
 					DragManager.acceptDragDrop(Panel(event.currentTarget));
 				}
 			}
-			
-			
-			
-			
 			
 			
 			//_____________________________________________________________________
@@ -2209,7 +2251,98 @@
             {
                 this.setFocus();
             }
-
+            /**
+            * Set message notification 
+            */
+            private function setMessageNotification(value:String):void
+            {
+                if(!_timerShowMessageNotification)
+                {
+                    _timerShowMessageNotification = new Timer(TIME_UPDATE_MESSAGE_NOTIFICATION,0);
+                    _timerShowMessageNotification.addEventListener(TimerEvent.TIMER, updateTimeMessageNotification);
+                    _timerShowMessageNotification.start();
+                }
+                var notification:Notification = new Notification();
+                notification.duration = DURATION_SHOW_NOTIFICATION_ADD_MARKER;
+                notification.message = value;
+                notification.titreNotification = fxgt.gettext("Vous poser le marqueur :");
+                notification.sourceIcon = IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER);
+                // add notification
+                _listMessageNotification.addItem(notification);
+                
+            }
+            /**
+            * Update timer message notification
+            */
+            private function updateTimeMessageNotification(event:TimerEvent):void
+            {
+                var nbrNotification:int = this._listMessageNotification.length;
+                for(var nNotification:int = 0; nNotification < nbrNotification; nNotification++)
+                {
+                    var notification:Notification = _listMessageNotification.getItemAt(nNotification) as Notification;
+                    if (notification.duration > 0)
+                    {
+                        notification.duration -= TIME_UPDATE_MESSAGE_NOTIFICATION;
+                    }else
+                    {
+                        _listMessageNotification.removeItemAt(nNotification);
+                        nbrNotification --;
+                        nNotification --;
+                    }
+                }
+            }
+            /**
+            * Handler change collection message notification
+            */
+            private function onChangeCollectionMessageNotification(event:CollectionEvent):void
+            {
+                // remove all notification from stage
+                removeMessageNotification();
+                
+                // add all notification
+                addMessageNotification();
+            }
+            /**
+            * Remove all view message notification
+            */
+            private function removeMessageNotification():void
+            {
+                for each(var messageNotification:MessageNotification in _listViewMessageNotification)
+                {
+                    this.removeElement(messageNotification);
+                }
+            }
+            /**
+            * Add message notification
+            */
+            private function addMessageNotification():void
+            {
+                // remove all view message notification
+                _listViewMessageNotification.removeAll();
+                var nbrMessageNotification:int = _listMessageNotification.length;
+                
+                for(var nMessageNotification:int = 0; nMessageNotification < nbrMessageNotification ; nMessageNotification++)
+                {
+                    var notification:Notification = this._listMessageNotification.getItemAt(nMessageNotification) as Notification;
+                    var messageNotification:MessageNotification = new MessageNotification();
+                    messageNotification.setStyle("skinClass", MessageNotificationSkin);
+                    messageNotification.notification = notification;
+                    messageNotification.addEventListener(CloseEvent.CLOSE, onClickCloseMessageNotification);
+                    _listViewMessageNotification.addItem(messageNotification);
+                    messageNotification.y = nMessageNotification * 65 + 40; 
+                    messageNotification.x = this.width - 200 - 5;
+                    this.addElement(messageNotification)
+                }
+            }
+            /**
+            * Handler close notification
+            */
+            private function onClickCloseMessageNotification(event:CloseEvent):void
+            {
+                var messageNotification:MessageNotification = event.currentTarget as MessageNotification;
+                var notification: Notification = messageNotification.notification;
+                notification.duration = -1;
+            }
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -2267,7 +2400,7 @@
 <!-- VIDEO -->		 
 		<mx:VDividedBox width="77%" height="100%" minHeight="400" minWidth="550">
 			<mx:HDividedBox width="100%" height="65%">
-				<components:PanelButton  id="panelVideo" height="100%" width="70%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="200" minHeight="200"
+				<components:PanelButton  id="panelVideo" height="100%" width="70%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="500" minHeight="200"
 					dragEnter="dragEnterHandler(event);"
 					dragDrop="dragDropHandler(event);"
 					buttonMuteMicroVisible="true"
@@ -2280,33 +2413,52 @@
 					clickButtonModeMax="panelbutton1_clickButtonModeMaxHandler(event)"
 					clickButtonModeZoom="panelbutton1_clickButtonModeZoomHandler(event)"
 					>
-					<s:Group  id="groupeVideo" height="100%" width="100%">
-						<video:VisuVisioAdvanced id="visio" width="100%" top="0" bottom="30"
+					<s:VGroup  id="groupeVideo" height="100%" width="100%" paddingBottom="3">
+						<video:VisuVisioAdvanced id="visio" width="100%"
 											quality="80"
 											bandwidth="15000" autoPlay="True"  height="100%" 
 											buttonChatEnabled="true" 
 											buttonMarkerEnabled="true"
 											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
 											clickButtonChat="visio_clickButtonChatHandler(event)"
-											clickButtonZoom="panelbutton1_clickButtonModeZoomHandler(event)"/>
-						<s:VGroup width="100%" bottom="1">
-							<s:Group width="100%" height="30" id="groupSetMarker">
-								<mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true"   height="25" top="2" left="1" right="155">				
-								</mx:TextArea>
-								<mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" click="onSetMyMarker(event)" right="1" height="25" top="2"  width="150">
-										<mx:label>{fxgt.gettext("Poser un marqueur")}</mx:label>
-									</mx:Button>
-							</s:Group>	
-						</s:VGroup>
-					</s:Group>
+                                            clickButtonZoom="panelbutton1_clickButtonModeZoomHandler(event)"/>
+                        <s:HGroup width="100%" id="groupSetMarkerConst" horizontalAlign="center" verticalAlign="middle">
+                            <s:Label fontSize="10">
+                                <s:text>{fxgt.gettext("Les marqueurs prédéfinis : ")} </s:text>
+                            </s:Label>
+                            <s:Button id="comprehenstion"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor.MainState="#DB6E6E">
+                                <s:label>{fxgt.gettext("compréhension")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : compréhension")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="prononciation"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor.MainState="#DFE549">
+                                <s:label>{fxgt.gettext("prononciation")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : prononciation")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="sens"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor.MainState="#92DD56">
+                                <s:label>{fxgt.gettext("sens")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : sens")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="interaction"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor.MainState="#55B3DE">
+                                <s:label>{fxgt.gettext("interaction")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : interaction")}</s:toolTip>
+                            </s:Button>
+                        </s:HGroup>
+                        <s:HGroup width="100%" id="groupSetMarker" paddingLeft="5" paddingRight="5">
+                            <mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true" height="22" width="100%"/>				
+                            <mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" click="onSetMyMarker(event)" width="150">
+                                <mx:label>{fxgt.gettext("Poser un marqueur")}</mx:label>
+                            </mx:Button>
+                        </s:HGroup>	
+					</s:VGroup>
 				</components:PanelButton>
 <!-- CHAT -->
 				<s:Panel   height="100%" width="30%" minWidth="300">
 					<s:title>Chat</s:title>
-					<s:Group height="100%" width="100%">
-						<s:layout>
-							<s:VerticalLayout gap="3"/>
-						</s:layout>
+					<s:VGroup height="100%" width="100%" paddingBottom="3">
 						<s:Group  width="100%"  height="100%">
 							<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
 								<s:Group id="panelChatSession"   width="100%"  top="0">
@@ -2316,14 +2468,13 @@
 								</s:Group>
 							</s:Scroller> 
 						</s:Group>
-						<s:Group width="100%" bottom="3" height="30">
-							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true"   height="25" top="2" left="1" right="185">				
-							</mx:TextArea>
-							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" right="1" height="25" top="2"  width="180">
+						<s:HGroup width="100%" paddingLeft="5" paddingRight="5">
+							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true" height="22" width="100%"/>				
+							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" width="180">
 								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
 							</mx:Button>
-						</s:Group>	
-					</s:Group>
+						</s:HGroup>	
+					</s:VGroup>
 				</s:Panel>
 			</mx:HDividedBox>
 <!-- TIMELINE -->

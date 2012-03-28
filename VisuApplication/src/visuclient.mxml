@@ -192,10 +192,10 @@
 						
 				// Binds the messages of the helloword domain to the 
 				// default directory (locale)
-				fxgt.bindtextdomain("visu2", null, service);
+				fxgt.bindtextdomain("Visu2", null, service);
 				
 				// We select helloworld to be the default domain. 
-				fxgt.textdomain("visu2");
+				fxgt.textdomain("Visu2");
 				
 				// detection if application in mode debug 
 				if(ExternalInterface.available)

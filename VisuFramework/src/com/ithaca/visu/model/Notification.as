@@ -60,13 +60,50 @@
  * 
  * -- End of licenses
  */
-package com.ithaca.visu.ui.utils
+package com.ithaca.visu.model
 {
-	public class SharedSatusEnum
-	{
-		static public var SHARED_OK_THIS_TO_OTHER : String = "sharedOkThisToOther";
-		static public var SHARED_OK_OTHER_TO_THIS : String = "sharedOkOtherToThis";
-		static public var SHARED_NON_THIS_TO_OTHER : String = "sharedNonThisToOther";
-		static public var SHARED_NON_OTHER_TO_THIS : String = "sharedNonOtherToThis";
-	}
+public class Notification
+{
+    private var _sourceIcon:Class;
+    private var _titreNotification:String;
+    private var _message:String;
+    private var _duration:Number;
+    
+    public function Notification()
+    {
+    }
+    
+    public function set sourceIcon(value:Class):void
+    {
+        this._sourceIcon = value;
+    }
+    public function get sourceIcon():Class
+    {
+        return this._sourceIcon;
+    }
+    public function set titreNotification(value:String):void
+    {
+        this._titreNotification = value;
+    }
+    public function get titreNotification():String
+    {
+        return this._titreNotification;
+    }
+    public function set message(value:String):void
+    {
+        this._message = value;
+    }
+    public function get message():String
+    {
+        return this._message;
+    }
+    public function set duration(value:Number):void
+    {
+        this._duration = value;
+    }
+    public function get duration():Number
+    {
+        return this._duration;
+    }
+}
 }
