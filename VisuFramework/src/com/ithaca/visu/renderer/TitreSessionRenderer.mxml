@@ -24,7 +24,7 @@
         } 
     ]]>
     </fx:Script>
-    <s:VGroup width="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="3" paddingRight="3">
+    <s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
         <s:Label id="labelSession" maxDisplayedLines="3" width="100%" textAlign="center"/>
     </s:VGroup>
 </s:MXDataGridItemRenderer>

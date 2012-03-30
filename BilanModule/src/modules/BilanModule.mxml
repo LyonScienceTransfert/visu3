@@ -41,6 +41,9 @@
             import com.ithaca.visu.model.vo.SessionVO;
             import com.ithaca.visu.ui.utils.RoleEnum;
             
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
             import mx.collections.ArrayCollection;
             import mx.collections.ArrayList;
             import mx.events.StateChangeEvent;
@@ -55,6 +58,9 @@
 			private var selectedRetroDocumentIdWhenInit:Number = -1;
             // list shared users bilan
             private var listShareUser:Array;
+            
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
 			
 			private function showRetroDocument(event:RetroDocumentEvent):void {
 				if(Model.getInstance().getCurrentBilanModule() == this)
@@ -222,6 +228,9 @@
 			}
 			
             private function initBilanModule(event:*):void {
+                
+                // init internationalisation
+                fxgt = FxGettext;
                 // set focus
                 this.setFocus();
                 
@@ -240,6 +249,9 @@
                 
                 // set cursor 
                 CursorManager.removeBusyCursor(); 
+                
+                // set titre the panel
+                panelButtonExplorateur.title =  fxgt.gettext("Explorateur");
             }
 
 
@@ -401,6 +413,34 @@
             }
 
 
+
+            protected function panelbutton1_clickButtonReturnHandler(event:PanelButtonEvent):void
+            {
+              
+            }
+
+
+            protected function panelButtonExplorateur_clickButtonAdvancedDataGridHandler(event:PanelButtonEvent):void
+            {
+                this.bilanComp.modeNormal = false;
+                panelButtonExplorateur.buttonAdvancedDataGridEnabled = false;
+                panelButtonExplorateur.buttonAdvancedDataGridVisible = false;
+                
+                panelButtonExplorateur.buttonNormalDataGridEnabled = true;
+                panelButtonExplorateur.buttonNormalDataGridVisible = true;
+            }
+
+
+            protected function panelButtonExplorateur_clickButtonNormalDataGridHandler(event:PanelButtonEvent):void
+            {
+                this.bilanComp.modeNormal = true;
+                panelButtonExplorateur.buttonAdvancedDataGridEnabled = true;
+                panelButtonExplorateur.buttonAdvancedDataGridVisible = true;
+                
+                panelButtonExplorateur.buttonNormalDataGridEnabled = false;
+                panelButtonExplorateur.buttonNormalDataGridVisible = false;
+            }
+
 		]]>
 	</fx:Script>
     <fx:Declarations>
@@ -409,7 +449,17 @@
         <mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
     </fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
-	  	<s:Panel title="Explorateur" width="40%" minWidth="400" height="100%">
+	  	<!--<s:Panel title="Explorateur" width="40%" minWidth="400" height="100%">-->
+        <components:PanelButton id="panelButtonExplorateur" width="40%" minWidth="400" height="100%"
+            buttonReturnVisible="true"
+            buttonReturnEnabled="false"
+            clickButtonReturn="panelbutton1_clickButtonReturnHandler(event)"
+            buttonAdvancedDataGridVisible="true"
+            buttonAdvancedDataGridEnabled="true"
+            clickButtonAdvancedDataGrid="panelButtonExplorateur_clickButtonAdvancedDataGridHandler(event)"
+            buttonNormalDataGridVisible="false"
+            buttonNormalDataGridEnabled="false"
+            clickButtonNormalDataGrid="panelButtonExplorateur_clickButtonNormalDataGridHandler(event)">            
 			<s:VGroup width="100%" height="100%">
 				<ithaca:BilanList 
 					id="bilanComp"
@@ -420,7 +470,8 @@
 					height="100%"
 					/>
 			</s:VGroup>
-	    </s:Panel>   
+        </components:PanelButton> 
+	   <!-- </s:Panel>   -->
 	
         <components:PanelButton width="60%" height="100%" minWidth="570"
             id="panelButtonBilan"

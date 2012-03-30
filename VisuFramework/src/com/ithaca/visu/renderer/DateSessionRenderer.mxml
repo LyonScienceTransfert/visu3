@@ -23,16 +23,15 @@
                 var dateStartRecordingSession:Date = value.session.date_start_recording;
                 labelDay.text = UtilFunction.getDate(dateStartRecordingSession);
                 
-                lableYear.text = dateStartRecordingSession.fullYear.toString();
-                
                 labelHour.text = TimeUtils.formatHHMM(dateStartRecordingSession);
+                
+                vgroupDate.toolTip = UtilFunction.getDate(dateStartRecordingSession) + " "+dateStartRecordingSession.fullYear.toString() + ", "+ TimeUtils.formatHHMM(dateStartRecordingSession);
             }
         } 
     ]]>
     </fx:Script>
-    <s:VGroup horizontalAlign="center" verticalAlign="middle">
+    <s:VGroup id="vgroupDate" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="3" paddingRight="3" paddingTop="3">
         <s:Label id="labelDay"/>
-        <s:Label id="lableYear" />
         <s:Label id="labelHour"/>
     </s:VGroup>
 </s:MXDataGridItemRenderer>

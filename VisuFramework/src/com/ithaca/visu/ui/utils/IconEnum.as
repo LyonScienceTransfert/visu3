@@ -294,6 +294,12 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/stateNormal_14x14.png")]
 		static private var stateNormale_14x14:Class;
+		[Bindable]
+		[Embed("images/normalViewDataGrid_16x16.png")]
+		static private var normalViewDataGrid_16x16:Class;
+		[Bindable]
+		[Embed("images/advancedViewDataGrid_16x16.png")]
+		static private var advancedViewDataGrid_16x16:Class;
 		
 		public static function getPathByName(code:String):String
 		{
@@ -517,6 +523,12 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "stateNormale_14x14" : 
 					icon = stateNormale_14x14;
+					break;
+				case "normalViewDataGrid_16x16" : 
+					icon = normalViewDataGrid_16x16;
+					break;
+				case "advancedViewDataGrid_16x16" : 
+					icon = advancedViewDataGrid_16x16;
 					break;
 				default :
 					break;				

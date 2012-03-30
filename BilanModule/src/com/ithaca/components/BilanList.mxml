@@ -5,7 +5,7 @@
     	xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:ithaca="com.ithaca.components.*"
 		xmlns:sessions="com.ithaca.visu.controls.sessions.*"
-		creationComplete="group1_creationCompleteHandler(event)"
+		creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.ithaca.utils.components.*"
 	>
 
 	<fx:Declarations> 
@@ -14,18 +14,22 @@
  
     <fx:Script>
     	<![CDATA[
-            import com.ithaca.visu.renderer.DateBilanRenderer;
-            import com.ithaca.visu.renderer.DateSessionRenderer;
-            import com.ithaca.visu.renderer.InfosBilanRenderer;
-            import com.ithaca.visu.renderer.TitreBilanRenderer;
-            import com.ithaca.visu.renderer.TitreSessionRenderer;
             import com.ithaca.documentarisation.model.RetroDocument;
             import com.ithaca.events.SelectionEvent;
+            import com.ithaca.utils.UtilFunction;
             import com.ithaca.utils.VisuUtils;
             import com.ithaca.visu.events.SessionListViewEvent;
             import com.ithaca.visu.model.Model;
             import com.ithaca.visu.model.Session;
             import com.ithaca.visu.model.User;
+            import com.ithaca.visu.renderer.DateBilanRenderer;
+            import com.ithaca.visu.renderer.DateSessionRenderer;
+            import com.ithaca.visu.renderer.InfosBilanRenderer;
+            import com.ithaca.visu.renderer.OwnerBilanRenderer;
+            import com.ithaca.visu.renderer.ShareBilanRenderer;
+            import com.ithaca.visu.renderer.TitreBilanRenderer;
+            import com.ithaca.visu.renderer.TitreSessionRenderer;
+            import com.ithaca.visu.ui.utils.IconEnum;
             import com.lyon2.controls.utils.TimeUtils;
             
             import gnu.as3.gettext.FxGettext;
@@ -39,6 +43,7 @@
             import mx.events.FlexEvent;
             import mx.events.ItemClickEvent;
             import mx.events.ListEvent;
+            import mx.events.StateChangeEvent;
             import mx.logging.ILogger;
             import mx.logging.Log;
             import mx.utils.ObjectUtil;
@@ -50,318 +55,356 @@
             [Bindable]
             private var fxgt: _FxGettext = FxGettext;
 
-			
-		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
-		
-		private function handleFilterTypeChanged(event:ItemClickEvent):void {
-			logger.debug("The current filter selection has changed to " + event.currentTarget.selectedValue);
-			this.bilanCollection.refresh();
-		}
-
-		[Bindable]
-		public var showNewButton:Boolean = true;
-
-		[Bindable]
-		public var showFilterButtons:Boolean = true;
-
-		[Bindable]
-		public var showFilterText:Boolean = true;
-
-		private function onChangeListener(event:IndexChangeEvent):void {
-			if(event.currentTarget.selectedItems.length == 1) {
-				dispatchEvent(new SelectionEvent(bilanCollection.getItemAt(event.currentTarget.selectedIndices[0]).id, true, true));
-			} else if(event.currentTarget.selectedItems.length == 1) {
-				dispatchEvent(new SelectionEvent(null, true, true));
-			}
-    	}
-    	
-    	[Bindable]
-    	public var filterSessionList:ArrayList = new ArrayList();
-
-    	[Bindable]
-    	public  var bilanCollection:ArrayCollection = new ArrayCollection();
-    	
-    	public function setFilterSessionList(filterSessionList:ArrayList):void {
-			this.filterSessionList.removeAll();
-			this.filterSessionList.addAll(filterSessionList);
-			logger.debug("this.filterSessionList has been changed (new size: {0})", this.filterSessionList.length);
-    	}
-
-    	public function setBilanCollection(bilanCollection:ArrayCollection):void {
-			this.bilanCollection.filterFunction = keepRetroDocument;
-			this.bilanCollection.removeAll();
-			this.bilanCollection.addAll(bilanCollection);
-			this.bilanCollection.refresh();
-			logger.debug("this.bilanCollection has been changed (new size: {0})", this.bilanCollection.length);
-    	}
-   	
-    	private var selectedFilterSessionId:Number;
-    	
-		private function keepRetroDocument(item:Object):Boolean {
-			var d:RetroDocument = item as RetroDocument;
-			var me:User = Model.getInstance().getLoggedUser();
-
-
-			var passSelectedSessionFilter:Boolean = true;
-			
-			if(seanceFilterButton.selected && selectedFilterSessionId && selectedFilterSessionId!=d.sessionId)
-				passSelectedSessionFilter = false;
-
-			var passButtonFilter:Boolean = false;
-			if (filterType.selectedValue == "all")
-				passButtonFilter = true;
-			else if (filterType.selectedValue == "mine") 
-            {
-                if(d.ownerId == me.id_user)
+    		private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanList');
+    		
+    		private function handleFilterTypeChanged(event:ItemClickEvent):void {
+    			logger.debug("The current filter selection has changed to " + event.currentTarget.selectedValue);
+    			this.bilanCollection.refresh();
+    		}
+    
+    		[Bindable]
+    		public var showNewButton:Boolean = true;
+    
+    		[Bindable]
+    		public var showFilterButtons:Boolean = true;
+    
+    		[Bindable]
+    		public var showFilterText:Boolean = true;
+    
+    		private function onChangeListener(event:IndexChangeEvent):void {
+    			if(event.currentTarget.selectedItems.length == 1) {
+    				dispatchEvent(new SelectionEvent(bilanCollection.getItemAt(event.currentTarget.selectedIndices[0]).id, true, true));
+    			} else if(event.currentTarget.selectedItems.length == 1) {
+    				dispatchEvent(new SelectionEvent(null, true, true));
+    			}
+        	}
+        	
+        	[Bindable]
+        	public var filterSessionList:ArrayList = new ArrayList();
+    
+        	[Bindable]
+        	public  var bilanCollection:ArrayCollection = new ArrayCollection();
+        	
+        	public function setFilterSessionList(filterSessionList:ArrayList):void {
+    			this.filterSessionList.removeAll();
+    			this.filterSessionList.addAll(filterSessionList);
+    			logger.debug("this.filterSessionList has been changed (new size: {0})", this.filterSessionList.length);
+        	}
+    
+        	public function setBilanCollection(bilanCollection:ArrayCollection):void {
+    			this.bilanCollection.filterFunction = keepRetroDocument;
+    			this.bilanCollection.removeAll();
+    			this.bilanCollection.addAll(bilanCollection);
+    			this.bilanCollection.refresh();
+    			logger.debug("this.bilanCollection has been changed (new size: {0})", this.bilanCollection.length);
+        	}
+       	
+        	private var selectedFilterSessionId:Number;
+        	
+    		private function keepRetroDocument(item:Object):Boolean {
+    			var d:RetroDocument = item as RetroDocument;
+    			var me:User = Model.getInstance().getLoggedUser();
+    
+    
+    			var passSelectedSessionFilter:Boolean = true;
+    			
+    			if(seanceFilterButton.selected && selectedFilterSessionId && selectedFilterSessionId!=d.sessionId)
+    				passSelectedSessionFilter = false;
+    
+    			var passButtonFilter:Boolean = false;
+    			if (filterType.selectedValue == "all")
+    				passButtonFilter = true;
+    			else if (filterType.selectedValue == "mine") 
                 {
-                    passButtonFilter = true;
-                }
-            }
-			else if (filterType.selectedValue == "shared") 
-                if(isBilanShareWithMe(d.inviteeIds, me.id_user))
-                {
-                    passButtonFilter = true;
-                }
-			var passTextFilter:Boolean = false;
-			passTextFilter = d.title.match(filterText.text)
-								|| d.description.match(filterText.text)
-								|| d.session.theme.match(filterText.text)
-								|| d.session.description.match(filterText.text)
-								;
-			
-			logger.debug("Filtering the bilan {0}, nb invitees: {1}, ownerId: {2}", 
-					d.id,
-					d.inviteeIds.length,
-					d.ownerId
-					);
-			logger.debug("(passSelectedSessionFilter: {0}, passButtonFilter: {1}, passTextFilter: {2})",
-					passSelectedSessionFilter,
-					passButtonFilter,
-					passTextFilter
-					);
-					
-			var keep:Boolean = passSelectedSessionFilter && passButtonFilter && passTextFilter;
-			logger.debug("keep: {0}", keep);
-			return keep;
-	   }
-
-		private function filterTextChanged(event:*):void {
-			logger.debug("Filter text changed to: {0}", filterText.text);
-			this.bilanCollection.refresh();
-		}
-
-		private function clearTextFilter(event:*):void {
-			logger.debug("Filter text cleared");
-			filterText.text="";
-			this.bilanCollection.refresh();
-		}
-		
-		private function  initSessionPane(event:Event):void {
-			// TODO : set only past session and Lable in dataGrid "Date de séances" 
-			sessionComp.pastButton.selected = true;
-			sessionComp.sessionDataGrid.dataProvider = filterSessionList;
-			sessionComp.addEventListener("SelectionEvent", onSessionSelected);
-		}
-
-		private function  onSessionSelected(event:SessionListViewEvent):void {
-			var session:Session = event.selectedSession;
-			
-			if(session) {
-				logger.debug("Setting the session filter to sessionId: {0}", session.id_session);
-				this.selectedFilterSessionId = session.id_session;
-			} else {
-				logger.debug("Setting the session filter to null");
-				this.selectedFilterSessionId = 0;
-			}
-			this.bilanCollection.refresh();
-		}
-		
-		private function initBilanPane(event:*):void {
-			var sort:Sort = new Sort(); 	
-			sort.compareFunction = compareBilanByCreationDates;
-			bilanCollection.sort = sort;
-            bilanCollection.refresh();
-		}
-		
-		private function onSeanceFilterButtonChange(event:*):void {
-			   bilanCollection.refresh();
-		}
-        
-        public function selectRetroDocument(retroDocumentId:Number):void
-        {
-            if(retroDocumentId)
-            {
-                var nbrRetroDocument:int = bilanCollection.length;
-                for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
-                {
-                    var retroDocument:RetroDocument = bilanCollection.getItemAt(nRetroDocument) as RetroDocument;
-                    if(retroDocument.id == retroDocumentId)
+                    if(d.ownerId == me.id_user)
                     {
-                        dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
-                        bilanGridComponenet.selectedItem = retroDocument;
-                        
-                        return;
+                        passButtonFilter = true;
+                    }
+                }
+    			else if (filterType.selectedValue == "shared") 
+                    if(isBilanShareWithMe(d.inviteeIds, me.id_user))
+                    {
+                        passButtonFilter = true;
+                    }
+    			var passTextFilter:Boolean = false;
+    			passTextFilter = d.title.match(filterText.text)
+    								|| d.description.match(filterText.text)
+    								|| d.session.theme.match(filterText.text)
+    								|| d.session.description.match(filterText.text)
+    								;
+    			
+    			logger.debug("Filtering the bilan {0}, nb invitees: {1}, ownerId: {2}", 
+    					d.id,
+    					d.inviteeIds.length,
+    					d.ownerId
+    					);
+    			logger.debug("(passSelectedSessionFilter: {0}, passButtonFilter: {1}, passTextFilter: {2})",
+    					passSelectedSessionFilter,
+    					passButtonFilter,
+    					passTextFilter
+    					);
+    					
+    			var keep:Boolean = passSelectedSessionFilter && passButtonFilter && passTextFilter;
+    			logger.debug("keep: {0}", keep);
+    			return keep;
+    	   }
+    
+    		private function filterTextChanged(event:*):void {
+    			logger.debug("Filter text changed to: {0}", filterText.text);
+    			this.bilanCollection.refresh();
+    		}
+    
+    		private function clearTextFilter(event:*):void {
+    			logger.debug("Filter text cleared");
+    			filterText.text="";
+    			this.bilanCollection.refresh();
+    		}
+    		
+    		private function  initSessionPane(event:Event):void {
+    			// TODO : set only past session and Lable in dataGrid "Date de séances" 
+    			sessionComp.pastButton.selected = true;
+    			sessionComp.sessionDataGrid.dataProvider = filterSessionList;
+    			sessionComp.addEventListener("SelectionEvent", onSessionSelected);
+    		}
+    
+    		private function  onSessionSelected(event:SessionListViewEvent):void {
+    			var session:Session = event.selectedSession;
+    			
+    			if(session) {
+    				logger.debug("Setting the session filter to sessionId: {0}", session.id_session);
+    				this.selectedFilterSessionId = session.id_session;
+    			} else {
+    				logger.debug("Setting the session filter to null");
+    				this.selectedFilterSessionId = 0;
+    			}
+    			this.bilanCollection.refresh();
+    		}
+    		
+    		private function initBilanPane(event:*):void {
+    			var sort:Sort = new Sort(); 	
+    			sort.compareFunction = compareBilanByCreationDates;
+    			bilanCollection.sort = sort;
+                bilanCollection.refresh();
+    		}
+    		
+    		private function onSeanceFilterButtonChange(event:*):void {
+    			   bilanCollection.refresh();
+    		}
+            
+            public function selectRetroDocument(retroDocumentId:Number):void
+            {
+                if(retroDocumentId)
+                {
+                    var nbrRetroDocument:int = bilanCollection.length;
+                    for(var nRetroDocument:int = 0; nRetroDocument < nbrRetroDocument; nRetroDocument++ )
+                    {
+                        var retroDocument:RetroDocument = bilanCollection.getItemAt(nRetroDocument) as RetroDocument;
+                        if(retroDocument.id == retroDocumentId)
+                        {
+                            dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
+                            bilanGridComponenet.selectedItem = retroDocument;
+                            
+                            return;
+                        }
                     }
                 }
             }
-        }
-            
-		public function selectSession(sessionId:Number):void {
-			logger.debug("Select the session {0} in the session filter list", sessionId);
-			if(sessionId) {
-				var sessionSelection:Array= new Array();
-				// get list session from dataProvider, didn't set list session by "listSessionCollection" before
-				var listSession:ListCollectionView = sessionComp.sessionDataGrid.dataProvider as ListCollectionView;
-				if(listSession.length > 0 )
-				{
-					logger.debug("Session list's size: {0}", listSession.length);
-					for (var i:int = 0; i<listSession.length; i = i+1) {
-						var session:Session = listSession.getItemAt(i) as Session;
-						logger.debug("{0} equals {1}", session.id_session, sessionId);
-						if(session.id_session == sessionId) {
-							logger.debug("YES");
-							sessionSelection.push(session);
-						} else
-							logger.debug("NO");
-					}
-	
-					logger.debug("Show the session list filter");
-					seanceFilterButton.selected = true;
-	
-					logger.debug("The new selection is {0}", sessionSelection);
-					sessionComp.sessionDataGrid.selectedItems = sessionSelection;
-				}
-				
-				this.selectedFilterSessionId = sessionId;
-
-				logger.debug("Refresh the bilan list");
-				bilanCollection.refresh();
-			}
-		}
-		         
-		private function compareBilanByCreationDates(a:Object, b:Object, fields:Array = null):int {
-			return TimeUtils.compareDates(
-					(a as RetroDocument).creationDateAsDate,
-					(b as RetroDocument).creationDateAsDate
-					);
-		}
-		
-
-        /////////
-        // Utils
-        ////////
-        private function isBilanShareWithMe(list:IList, userId:int):Boolean
-        {
-            var result:Boolean = false;
-            for(var i:int = 0; i < list.length ; i++ )
+                
+    		public function selectSession(sessionId:Number):void {
+    			logger.debug("Select the session {0} in the session filter list", sessionId);
+    			if(sessionId) {
+    				var sessionSelection:Array= new Array();
+    				// get list session from dataProvider, didn't set list session by "listSessionCollection" before
+    				var listSession:ListCollectionView = sessionComp.sessionDataGrid.dataProvider as ListCollectionView;
+    				if(listSession.length > 0 )
+    				{
+    					logger.debug("Session list's size: {0}", listSession.length);
+    					for (var i:int = 0; i<listSession.length; i = i+1) {
+    						var session:Session = listSession.getItemAt(i) as Session;
+    						logger.debug("{0} equals {1}", session.id_session, sessionId);
+    						if(session.id_session == sessionId) {
+    							logger.debug("YES");
+    							sessionSelection.push(session);
+    						} else
+    							logger.debug("NO");
+    					}
+    	
+    					logger.debug("Show the session list filter");
+    					seanceFilterButton.selected = true;
+    	
+    					logger.debug("The new selection is {0}", sessionSelection);
+    					sessionComp.sessionDataGrid.selectedItems = sessionSelection;
+    				}
+    				
+    				this.selectedFilterSessionId = sessionId;
+    
+    				logger.debug("Refresh the bilan list");
+    				bilanCollection.refresh();
+    			}
+    		}
+    		         
+    		private function compareBilanByCreationDates(a:Object, b:Object, fields:Array = null):int {
+    			return TimeUtils.compareDates(
+    					(a as RetroDocument).creationDateAsDate,
+    					(b as RetroDocument).creationDateAsDate
+    					);
+    		}
+    		
+    
+            /////////
+            // Utils
+            ////////
+            private function isBilanShareWithMe(list:IList, userId:int):Boolean
             {
-                var id:int = list.getItemAt(i) as int;
-                if(id == userId)
+                var result:Boolean = false;
+                for(var i:int = 0; i < list.length ; i++ )
                 {
-                    result = true;
+                    var id:int = list.getItemAt(i) as int;
+                    if(id == userId)
+                    {
+                        result = true;
+                    }
+                }
+                return result;
+            }
+            
+            protected function bilanGridComponenet_creationCompleteHandler(event:FlexEvent):void
+            {
+                bilanGridComponenet.addEventListener(ListEvent.ITEM_CLICK, onClickBilanGridComponent);
+                updateSizeColumnDataGrig();
+                
+              /*   dataGridInfos.width = 60;
+                dataGridInfos.minWidth = 60; */
+                
+            }
+            /**
+            * Event handler click on grid
+            */ 
+            private function onClickBilanGridComponent(event:Event):void
+            {
+               var dataGrid:DataGrid = event.currentTarget as DataGrid;
+               var retroDocument:RetroDocument = dataGrid.selectedItem as RetroDocument;
+               dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
+            }
+            /**
+            * Sort by date start recording session
+            */
+            private function sortFunctionDateSession(itemA:Object, itemB:Object):int
+            {
+                var valueA:Date = itemA.session.date_start_recording;
+                var valueB:Date = itemB.session.date_start_recording;
+                return ObjectUtil.dateCompare(valueA, valueB);
+            }
+            /**
+            * Sort by titre session
+            */
+            private function sortFunctionTitreSession(itemA:Object, itemB:Object):int
+            {
+                var valueA:String = itemA.session.theme;
+                var valueB:String = itemB.session.theme;
+                return ObjectUtil.stringCompare(valueA, valueB, true);
+            }
+            /**
+            * Sort by name owner the bilan
+            */
+            private function sortFunctionOwnerBilanName(itemA:Object, itemB:Object):int
+            {
+                var valueA:String = (Model.getInstance().getUserPlateformeByUserId(itemA.ownerId) as User).lastname;
+                var valueB:String = (Model.getInstance().getUserPlateformeByUserId(itemB.ownerId) as User).lastname
+                return ObjectUtil.stringCompare(valueA, valueB, true);
+            }
+            /**
+            * Sort by nbr the blocs the bilan
+            */
+            private function sortFunctionInfosBilan(itemA:Object, itemB:Object):int
+            {
+                var valueA:Number = (itemA as RetroDocument).listSegment.length;
+                var valueB:Number = (itemB as RetroDocument).listSegment.length;
+                return ObjectUtil.numericCompare(valueA, valueB);
+            }
+            /**
+            * Sort by shared the bilan
+            */
+            private function sortFunctionShare(itemA:Object, itemB:Object):int
+            {
+                var valueA:Boolean = (itemA as RetroDocument).isShared();
+                var valueB:Boolean = (itemB as RetroDocument).isShared();
+                return ObjectUtil.compare(valueA, valueB);
+            }
+               
+            private function labelFunctionShareBilan(item:Object, column:Object):String
+            {
+                var result:String = fxgt.gettext("Non");
+                if(item.isShared())
+                {
+                    result = fxgt.gettext("Oui");
+                }
+                return result;
+            }
+            private function toolTipsFunctionSharedBilan(item:Object):String
+            {
+                var result:String = fxgt.gettext("Non");
+                if(item.isShared())
+                {
+                    result = fxgt.gettext("Oui avec ");   
+                }
+                return result;
+            }
+    
+            protected function group1_creationCompleteHandler(event:FlexEvent):void
+            {
+                fxgt = FxGettext;
+                this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, onStateChange);
+            }
+            public function set modeNormal(value:Boolean):void
+            {
+                if(value)
+                {
+                    this.currentState = "normal";
+                }else
+                {
+                    this.currentState = "advanced";
                 }
             }
-            return result;
-        }
-            
-        protected function bilanGridComponenet_creationCompleteHandler(event:FlexEvent):void
-        {
-            bilanGridComponenet.addEventListener(ListEvent.ITEM_CLICK, onClickBilanGridComponent);
-            dataGridDateModification.width = 45;
-            dataGridDateModification.minWidth = 45;
-            
-            dataGridTitreBilan.width = 150;
-            
-            dataGridTitreSession.width = 100;
-            
-            dataGridDateSession.width = 45;
-            dataGridDateSession.minWidth = 45;
-            
-            dataGridInfos.width = 60;
-            dataGridInfos.minWidth = 60;
-            
-        }
-        /**
-        * Event handler click on grid
-        */ 
-        private function onClickBilanGridComponent(event:Event):void
-        {
-           var dataGrid:DataGrid = event.currentTarget as DataGrid;
-           var retroDocument:RetroDocument = dataGrid.selectedItem as RetroDocument;
-           dispatchEvent(new SelectionEvent(retroDocument.id.toString(), true, true));
-        }
-        /**
-        * Sort by date start recording session
-        */
-        private function sortFunctionDateSession(itemA:Object, itemB:Object):int
-        {
-            var valueA:Date = itemA.session.date_start_recording;
-            var valueB:Date = itemB.session.date_start_recording;
-            return ObjectUtil.dateCompare(valueA, valueB);
-        }
-        /**
-        * Sort by titre session
-        */
-        private function sortFunctionTitreSession(itemA:Object, itemB:Object):int
-        {
-            var valueA:String = itemA.session.theme;
-            var valueB:String = itemB.session.theme;
-            return ObjectUtil.stringCompare(valueA, valueB, true);
-        }
-        /**
-        * Sort by name owner the bilan
-        */
-        private function sortFunctionOwnerBilanName(itemA:Object, itemB:Object):int
-        {
-            var valueA:String = (Model.getInstance().getUserPlateformeByUserId(itemA.ownerId) as User).lastname;
-            var valueB:String = (Model.getInstance().getUserPlateformeByUserId(itemB.ownerId) as User).lastname
-            return ObjectUtil.stringCompare(valueA, valueB, true);
-        }
-           
-        private function labelFunctionShareBilan(item:Object, column:Object):String
-        {
-            var result:String = fxgt.gettext("Non");
-            if(item.isShared())
+            private function onStateChange(event:StateChangeEvent):void
             {
-                result = fxgt.gettext("Oui");
+                updateSizeColumnDataGrig();
             }
-            return result;
-        }
-        private function toolTipsFunctionSharedBilan(item:Object):String
-        {
-            var result:String = fxgt.gettext("Non");
-            if(item.isShared())
+            private function updateSizeColumnDataGrig():void
             {
-                result = fxgt.gettext("Oui avec ");   
-            }
-            return result;
-        }
-        /**
-        * Tooltips owner the bilan
-        */ 
-        private function toolTipsFunctionOwnerBilan(item:Object):String
-        {
-            var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
-            var result:String = fxgt.gettext("Propriétaire de bilan : ")+ VisuUtils.getUserLabelLastName(owner,true);
-            return result;
-        }
-            
-        private function labelFunctionOwnerBilan(item:Object, column:Object):String
-        {
-            var owner:User = Model.getInstance().getUserPlateformeByUserId(item.ownerId);
-            var result:String = VisuUtils.getUserLabelLastName(owner,true);
-            return result;
-        }
+                dataGridDateModification.width = 45;
+                dataGridDateModification.minWidth = 45;
+                
+                dataGridTitreBilan.width = 250;
+                if(this.currentState == "advanced")
+                {
+                    dataGridTitreBilan.width = 150;
+                    dataGridTitreSession.width = 100;
+                    dataGridDateSession.width = 45;
+                    dataGridDateSession.minWidth = 45;
+                    dataGridPartage.width = 45;
+                    dataGridPartage.minWidth = 45;
+                }
+            }           
             
 
-        protected function group1_creationCompleteHandler(event:FlexEvent):void
-        {
-            fxgt = FxGettext;
-        }
+            protected function buttonViewNormale_clickHandler(event:MouseEvent):void
+            {
+                modeNormal = true;
+            }
+
+
+            protected function buttonViewAdvanced_clickHandler(event:MouseEvent):void
+            {
+                modeNormal = false;
+            }
 
 	]]>
     </fx:Script>
- 
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="advanced"/>
+    </s:states>
 	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 
 		<s:Group width="100%">
@@ -395,8 +438,6 @@
 						height="100%"
 						creationComplete="initSessionPane(event)"/>
 				</s:VGroup>
-				
-
 				<s:VGroup width="100%" verticalAlign="middle">
 						 <s:RadioButton 
 							value="all"
@@ -444,6 +485,15 @@
 		</s:Group>
         <s:Button visible="{showNewButton}" includeInLayout="{showNewButton}"
             label="Nouveau bilan" toolTip="Crée un nouveau bilan vide"/>
+        <s:HGroup width="100%"  horizontalAlign="right" verticalAlign="middle">
+            <s:Label>
+                <s:text>{fxgt.gettext("Visualisation la liste des bilans :")}</s:text>
+            </s:Label>
+            <components:IconButton id="buttonViewNormale" icon="{IconEnum.getIconByName('normalViewDataGrid_16x16')}" width="22" height="22"
+                 click="buttonViewNormale_clickHandler(event)" enabled.advanced="true" enabled.normal="false"/>
+            <components:IconButton id="buttonViewAdvanced" icon="{IconEnum.getIconByName('advancedViewDataGrid_16x16')}" width="22" height="22"
+                 click="buttonViewAdvanced_clickHandler(event)" enabled.advanced="false" enabled.normal="true"/>
+        </s:HGroup>
         <mx:DataGrid id="bilanGridComponenet" creationComplete="bilanGridComponenet_creationCompleteHandler(event)" width="100%" height="100%" dataProvider="{bilanCollection}">
             <mx:columns>
                 <mx:DataGridColumn id="dataGridDateModification" dataField="modifyDateAsDate" itemRenderer="com.ithaca.visu.renderer.DateBilanRenderer">
@@ -452,17 +502,24 @@
                 <mx:DataGridColumn  id="dataGridTitreBilan" dataField="title" itemRenderer="com.ithaca.visu.renderer.TitreBilanRenderer">
                     <mx:headerText>{fxgt.gettext("Titre bilan")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn id="dataGridTitreSession" sortCompareFunction="{sortFunctionTitreSession}" itemRenderer="com.ithaca.visu.renderer.TitreSessionRenderer">
+                <mx:DataGridColumn  id="dataGridOwnerBilan" sortCompareFunction="{sortFunctionOwnerBilanName}" itemRenderer="com.ithaca.visu.renderer.OwnerBilanRenderer">
+                    <mx:headerText>{fxgt.gettext("Propriétaire de bilan")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn id="dataGridTitreSession" sortCompareFunction="{sortFunctionTitreSession}" itemRenderer="com.ithaca.visu.renderer.TitreSessionRenderer"
+                     includeIn="advanced">
                     <mx:headerText>{fxgt.gettext("Titre séance")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn id="dataGridDateSession" sortCompareFunction="{sortFunctionDateSession}" itemRenderer="com.ithaca.visu.renderer.DateSessionRenderer">
+                <mx:DataGridColumn id="dataGridDateSession" sortCompareFunction="{sortFunctionDateSession}" itemRenderer="com.ithaca.visu.renderer.DateSessionRenderer"
+                    includeIn="advanced">
                     <mx:headerText>{fxgt.gettext("Date séance")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn  id="dataGridInfos"  itemRenderer="com.ithaca.visu.renderer.InfosBilanRenderer">
-                    <mx:headerText>{fxgt.gettext("Infos")}</mx:headerText>
+                <mx:DataGridColumn  id="dataGridPartage"  itemRenderer="com.ithaca.visu.renderer.ShareBilanRenderer" sortCompareFunction="{sortFunctionShare}"
+                    includeIn="advanced">
+                    <mx:headerText>{fxgt.gettext("Partagé")}</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn  id="dataGridOwnerBilan" sortCompareFunction="{sortFunctionOwnerBilanName}" labelFunction="{labelFunctionOwnerBilan}" dataTipFunction="{toolTipsFunctionOwnerBilan}" showDataTips="true">
-                    <mx:headerText>{fxgt.gettext("Propriétaire de bilan")}</mx:headerText>
+                <mx:DataGridColumn  id="dataGridInfos"  itemRenderer="com.ithaca.visu.renderer.InfosBilanRenderer" sortCompareFunction="{sortFunctionInfosBilan}"
+                    includeIn="advanced">
+                    <mx:headerText>{fxgt.gettext("Nbre blocs")}</mx:headerText>
                 </mx:DataGridColumn>
             </mx:columns>
         </mx:DataGrid>

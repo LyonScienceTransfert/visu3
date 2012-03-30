@@ -27,6 +27,8 @@ package com.ithaca.utils.components
 	[Event(name="clickButtonShare",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonReturn",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonSwitch",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonAdvancedDataGrid",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonNormalDataGrid",type="com.ithaca.visu.events.PanelButtonEvent")]
 
 	public class PanelButton extends Panel
 	{
@@ -56,7 +58,11 @@ package com.ithaca.utils.components
 		public var imageInfo:Image;
 		[SkinPart("true")]
 		public var spicerBeforeTitle:Spacer;
-
+		[SkinPart("true")]
+		public var buttonAdvancedDataGrid:IconButton;
+		[SkinPart("true")]
+		public var buttonNormalDataGrid:IconButton;
+        
 		private var _muteMicro:Boolean;
 		private var _buttonMuteMicroVisible:Boolean;
 		private var buttonMuteMicroVisibleChange:Boolean;
@@ -64,7 +70,6 @@ package com.ithaca.utils.components
 		private var buttonModeZoomVisibleChange:Boolean;
 		private var _buttonModeMaxVisible:Boolean;
 		private var buttonModeMaxVisibleChange:Boolean;
-
 		private var _buttonAddVisible:Boolean;
 		private var buttonAddVisibleChange:Boolean;
 		private var _buttonDeleteVisible:Boolean;
@@ -79,12 +84,15 @@ package com.ithaca.utils.components
 		private var buttonSwitchVisibleChange:Boolean;
 		private var _imageInfoVisible:Boolean;
 		private var imageInfoVisibleChange:Boolean;
+		private var _buttonAdvancedDataGridVisible:Boolean;
+		private var buttonAdvancedDataGridVisibleChange:Boolean;
+		private var _buttonNormalDataGridVisible:Boolean;
+		private var buttonNormalDataGridVisibleChange:Boolean;
 
 		private var _buttonModeZoomEnabled:Boolean;
 		private var buttonModeZoomEnabledChange:Boolean;
 		private var _buttonModeMaxEnabled:Boolean;
 		private var buttonModeMaxEnabledChange:Boolean;
-
 		private var _buttonDeleteEnabled:Boolean;
 		private var buttonDeleteEnabledChange:Boolean;
 		private var _buttonShareEnabled:Boolean;
@@ -93,6 +101,10 @@ package com.ithaca.utils.components
 		private var buttonReturnEnabledChange:Boolean;
 		private var _buttonSwitchEnabled:Boolean;
 		private var buttonSwitchEnabledChange:Boolean;
+		private var _buttonAdvancedDataGridEnabled:Boolean;
+		private var buttonAdvancedDataGridEnabledChange:Boolean;
+		private var _buttonNormalDataGridEnabled:Boolean;
+		private var buttonNormalDataGridEnabledChange:Boolean;
 
 		private var _retroDocument:RetroDocument;
 
@@ -258,6 +270,36 @@ package com.ithaca.utils.components
 					imageInfo.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onShowToolTipBilanInfo);
 				}
 			}
+            if (instance == buttonAdvancedDataGrid)
+            {
+                buttonAdvancedDataGrid.enabled = _buttonAdvancedDataGridEnabled;
+                
+                if(!_buttonAdvancedDataGridVisible)
+                {
+                    buttonAdvancedDataGrid.includeInLayout = false;
+                    buttonAdvancedDataGrid.visible = false;
+                }else
+                {
+                    buttonAdvancedDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonAdvancedDataGrid);
+                    buttonAdvancedDataGrid.icon =  IconEnum.getIconByName('advancedViewDataGrid_16x16');
+                    buttonAdvancedDataGrid.toolTip = fxgt.gettext(" ? avancé");
+                }
+            }
+            if (instance == buttonNormalDataGrid)
+            {
+                buttonNormalDataGrid.enabled = _buttonNormalDataGridEnabled;
+                
+                if(!_buttonNormalDataGridVisible)
+                {
+                    buttonNormalDataGrid.includeInLayout = false;
+                    buttonNormalDataGrid.visible = false;
+                }else
+                {
+                    buttonNormalDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonNormalDataGrid);
+                    buttonNormalDataGrid.icon =  IconEnum.getIconByName('normalViewDataGrid_16x16');
+                    buttonNormalDataGrid.toolTip = fxgt.gettext(" ? normal");
+                }
+            }
 		}
 		override protected function commitProperties():void
 		{
@@ -461,6 +503,48 @@ package com.ithaca.utils.components
 				}
 			}
 
+			if(buttonAdvancedDataGridVisibleChange)
+			{
+                buttonAdvancedDataGridVisibleChange = false;
+				if(buttonAdvancedDataGrid != null)
+				{
+					if(_buttonAdvancedDataGridVisible)
+					{
+                        buttonAdvancedDataGrid.includeInLayout = true;
+                        buttonAdvancedDataGrid.visible = true;
+                        buttonAdvancedDataGrid.toolTip = fxgt.gettext(" ? avancé");
+                        buttonAdvancedDataGrid.icon =  IconEnum.getIconByName('advancedViewDataGrid_16x16');
+                        buttonAdvancedDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonAdvancedDataGrid);
+					}else
+					{
+                        buttonAdvancedDataGrid.includeInLayout = false;
+                        buttonAdvancedDataGrid.visible = false;
+                        buttonAdvancedDataGrid.removeEventListener(MouseEvent.CLICK, onClickButtonAdvancedDataGrid);
+					}
+				}
+			}
+            
+			if(buttonNormalDataGridVisibleChange)
+			{
+                buttonNormalDataGridVisibleChange = false;
+				if(buttonNormalDataGrid != null)
+				{
+					if(_buttonNormalDataGridVisible)
+					{
+                        buttonNormalDataGrid.includeInLayout = true;
+                        buttonNormalDataGrid.visible = true;
+                        buttonNormalDataGrid.icon =  IconEnum.getIconByName('normalViewDataGrid_16x16');
+                        buttonNormalDataGrid.toolTip = fxgt.gettext(" ? normal")
+                        buttonNormalDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonNormalDataGrid);
+					}else
+					{
+                        buttonNormalDataGrid.includeInLayout = false;
+                        buttonNormalDataGrid.visible = false;
+                        buttonNormalDataGrid.removeEventListener(MouseEvent.CLICK, onClickButtonNormalDataGrid);
+					}
+				}
+			}
+            
 			if(buttonModeMaxEnabledChange)
 			{
 				buttonModeMaxEnabledChange = false;
@@ -509,6 +593,22 @@ package com.ithaca.utils.components
 				if(buttonSwitch != null)
 				{
 					buttonSwitch.enabled = _buttonSwitchEnabled
+				}
+			}
+			if(buttonAdvancedDataGridEnabledChange)
+			{
+                buttonAdvancedDataGridEnabledChange = false;
+				if(buttonAdvancedDataGrid != null)
+				{
+                    buttonAdvancedDataGrid.enabled = _buttonAdvancedDataGridEnabled
+				}
+			}
+			if(buttonNormalDataGridEnabledChange)
+			{
+                buttonNormalDataGridEnabledChange = false;
+				if(buttonNormalDataGrid != null)
+				{
+                    buttonNormalDataGrid.enabled = _buttonNormalDataGridEnabled
 				}
 			}
 		}
@@ -618,6 +718,26 @@ package com.ithaca.utils.components
 		{
 			return _buttonSwitchVisible;
 		}
+		public function set buttonNormalDataGridVisible(value:Boolean):void
+		{
+			_buttonNormalDataGridVisible = value;
+            buttonNormalDataGridVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonNormalDataGridVisible():Boolean
+		{
+			return _buttonNormalDataGridVisible;
+		}
+		public function set buttonAdvancedDataGridVisible(value:Boolean):void
+		{
+			_buttonAdvancedDataGridVisible = value;
+            buttonAdvancedDataGridVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonAdvancedDataGridVisible():Boolean
+		{
+			return _buttonAdvancedDataGridVisible;
+		}
 		public function set imageInfoVisible(value:Boolean):void
 		{
 			_imageInfoVisible = value;
@@ -689,6 +809,26 @@ package com.ithaca.utils.components
 		public function get buttonSwitchEnabled():Boolean
 		{
 			return _buttonSwitchEnabled;
+		}
+		public function set buttonNormalDataGridEnabled(value:Boolean):void
+		{
+			_buttonNormalDataGridEnabled = value;
+            buttonNormalDataGridEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonNormalDataGridEnabled():Boolean
+		{
+			return _buttonNormalDataGridEnabled;
+		}
+		public function set buttonAdvancedDataGridEnabled(value:Boolean):void
+		{
+			_buttonAdvancedDataGridEnabled = value;
+            buttonAdvancedDataGridEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonAdvancedDataGridEnabled():Boolean
+		{
+			return _buttonAdvancedDataGridEnabled;
 		}
 
 		public function set retroDocument(value:RetroDocument):void
@@ -766,6 +906,16 @@ package com.ithaca.utils.components
 		{
 			var clickButtonSwitch:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_SWITCH);
 			dispatchEvent(clickButtonSwitch);
+		}
+		private function onClickButtonAdvancedDataGrid(event:MouseEvent):void
+		{
+			var clickButtonAdvancedDataGrid:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_ADVANCED_DATA_GRID);
+			dispatchEvent(clickButtonAdvancedDataGrid);
+		}
+		private function onClickButtonNormalDataGrid(event:MouseEvent):void
+		{
+			var clickButtonNormalDataGrid:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_NORMAL_DATA_GRID);
+			dispatchEvent(clickButtonNormalDataGrid);
 		}
 
 		private function onCreateToolTipBilanInfo(event:ToolTipEvent):void

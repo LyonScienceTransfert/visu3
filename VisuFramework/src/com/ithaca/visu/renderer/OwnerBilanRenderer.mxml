@@ -6,6 +6,10 @@
     >
     <fx:Script>
     <![CDATA[
+        import com.ithaca.utils.VisuUtils;
+        import com.ithaca.visu.model.Model;
+        import com.ithaca.visu.model.User;
+        
         import gnu.as3.gettext.FxGettext;
         import gnu.as3.gettext._FxGettext;
         
@@ -18,13 +22,14 @@
             super.data = value;
             if (value != null) 
             {
-                labelBilan.text = value.title;
-                labelBilan.toolTip = value.title;
+                var owner:User = Model.getInstance().getUserPlateformeByUserId(value.ownerId);
+                labelOwner.text = VisuUtils.getUserLabelLastName(owner,true);
+                vgroupOwner.toolTip = fxgt.gettext("Propriétaire de bilan : ")+ labelOwner.text;
             }
         } 
     ]]>
     </fx:Script>
-    <s:VGroup width="100%" height="60" horizontalAlign="center" verticalAlign="middle" paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
-        <s:Label id="labelBilan" maxDisplayedLines="3" fontWeight="bold" width="100%" textAlign="center"/>
+    <s:VGroup id="vgroupOwner" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+        <s:Label id="labelOwner" maxDisplayedLines="1" width="100%" textAlign="center"/>
     </s:VGroup>
 </s:MXDataGridItemRenderer>
