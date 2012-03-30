@@ -22,33 +22,33 @@
 	<mx:Form includeInLayout="{bilan}" visible="{bilan}" paddingLeft="5" paddingRight="5" 
 			paddingTop="5" paddingBottom="5">
 
-	    <mx:FormItem label="Titre:" width="100%">
+	    <mx:FormItem label="{fxgt.gettext('Titre:')}" width="100%">
 			<s:Label  width="100%" lineBreak="toFit" text="{bilan.title}"/>
 	    </mx:FormItem>
 		
-		<mx:FormItem label="Description:" width="100%">
+		<mx:FormItem label="{fxgt.gettext('Description:')}" width="100%">
 			<s:Label width="100%" lineBreak="toFit" text="{bilan.description}"/>
 	    </mx:FormItem>
 
-	    <mx:FormItem label="Propriétaire:" width="100%">
+	    <mx:FormItem label="{fxgt.gettext('Propriétaire:')}" width="100%">
 			<s:Label width="100%" text="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(bilan.ownerId))}"/>
 	    </mx:FormItem>
 
-	    <mx:FormItem label="Création:" width="100%">
+	    <mx:FormItem label="{fxgt.gettext('Création:')}" width="100%">
 			<s:Label width="100%" text="{TimeUtils.formatVisuDateTime(bilan.creationDateAsDate)}"/>
 	    </mx:FormItem>
 
-	    <mx:FormItem label="Dernière modification:" width="100%">
+	    <mx:FormItem label="{fxgt.gettext('Dernière modification:')}" width="100%">
 			<s:Label width="100%" text="{TimeUtils.formatVisuDateTime(bilan.modifyDateAsDate)}"/>
 	    </mx:FormItem>
 
 		<mx:FormItem 
-			label="À propos de la séance:" 
+            label="{fxgt.gettext('À propos de la séance:')}"
 			width="100%">
 			<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="20">
 				<s:Label text="{'['+TimeUtils.formatVisuDateTime(bilan.session.date_session)+']'}"/>
 				<s:Label width="100%" lineBreak="toFit" text="{bilan.session.theme}"/>
-				<s:Label text="{'(de ' + VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user),true) + ')'}"/>
+				<s:Label text="{'(' + VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(bilan.session.id_user),true) + ')'}"/>
 			</s:HGroup>
 	    </mx:FormItem>
 
