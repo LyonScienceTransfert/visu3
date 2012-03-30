@@ -51,6 +51,7 @@
             import mx.logging.Log;
             import mx.managers.CursorManager;
             import mx.managers.PopUpManager;
+            import mx.utils.StringUtil;
 			
 			private var logger : ILogger = Log.getLogger('modules.BilanModule');
 			
@@ -102,9 +103,8 @@
 						canEditBilan = true;
 					}
 					panelButtonBilan.buttonSwitchEnabled = panelButtonBilan.buttonShareEnabled = canEditBilan;
-					panelButtonBilan.title = "Bilan de "+'"'+doc.title+'"';
+					panelButtonBilan.title = StringUtil.substitute(fxgt.gettext('Bilan de "{0}"'), doc.title);
 					panelButtonBilan.retroDocument = doc;
-					
 				}
 			}
 			
@@ -449,7 +449,6 @@
         <mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
     </fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
-	  	<!--<s:Panel title="Explorateur" width="40%" minWidth="400" height="100%">-->
         <components:PanelButton id="panelButtonExplorateur" width="40%" minWidth="400" height="100%"
             buttonReturnVisible="true"
             buttonReturnEnabled="false"

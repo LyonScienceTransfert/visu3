@@ -19,6 +19,9 @@
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
@@ -27,6 +30,9 @@
 			
 			private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer');
 			
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
+
 			[Bindable]
 			private var timer:Timer;
 			
@@ -43,10 +49,10 @@
             {
                 if(value)
                 {
-                    infoLabel.text = "Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits";
+                    infoLabel.text = fxgt.gettext("Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits");
                 }else
                 {
-                    infoLabel.text = "Aucun bilan sélectionné";
+                    infoLabel.text = fxgt.gettext("Aucun bilan sélectionné");
                 }
             }
             
@@ -110,42 +116,42 @@
 			
 			protected function buttonPlay_clickHandler(event:* = null):void
 			{
-				if( buttonPlay.label == "Play")
+				if( buttonPlay.label == fxgt.gettext("Play"))
 				{
-					buttonPlay.label = "Pause";
+					buttonPlay.label = fxgt.gettext("Pause");
 					this.visio.resumeStreams();
 					this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
 				}else
 				{
-					buttonPlay.label = "Play";
+					buttonPlay.label = fxgt.gettext("Play");
 					this.visio.pauseStreams();
 					this.visio.status = VisuVisioAdvanced.STATUS_PAUSE;
 				}
 			}
 			protected function buttonMute_clickHandler(event:* = null):void
 			{
-				if(buttonMute.label == "Couper le son")
+				if (buttonMute.label == fxgt.gettext("Couper le son"))
 				{
-					buttonMute.label = "Activer le son";
+					buttonMute.label = fxgt.gettext("Activer le son");
 					this.visio.setVolumeMute(true);
 				}else
 				{
-					buttonMute.label = "Couper le son";
+					buttonMute.label = fxgt.gettext("Couper le son");
 					this.visio.setVolumeMute(false);
 				}
 			}
 			
 			public function initButtons(value:Boolean):void
 			{
-				var label:String = "Couper le son";
+				var label:String = fxgt.gettext("Couper le son");
 				if(!value)
 				{
-					label = "Activer le son";
+					label = fxgt.gettext("Activer le son");
 				}
 				buttonMute.label = label;
 				buttonMute_clickHandler();
 				buttonPlay.enabled = false;
-				buttonPlay.label = "Pause";
+				buttonPlay.label = fxgt.gettext("Pause");
 				buttonPlay_clickHandler();
 			}
 			
@@ -205,7 +211,7 @@
 					}
 					// enabled button play/pause
 					buttonPlay.enabled = true;
-					buttonPlay.label = "Pause";
+					buttonPlay.label = fxgt.gettext("Pause");
 				}else
 				{
 					// click on button "play" the AudioRecorder
@@ -225,7 +231,7 @@
 				timer.stop();
 				// enabled button play/pause
 				buttonPlay.enabled = true;
-				buttonPlay.label = "Play";
+				buttonPlay.label = fxgt.gettext("Play");
 			}
 			
 			public function stopRetroSegment():void
@@ -241,7 +247,7 @@
 				visio.pauseStreams();
 				// enabled button play/pause
 				buttonPlay.enabled = true;
-				buttonPlay.label = "Play";
+				buttonPlay.label = fxgt.gettext("Play");
 			}
 			/**
 			 * set timer for video segment
@@ -282,7 +288,7 @@
 				visio.status = VisuVisioAdvanced.STATUS_NONE;
 				// enabled button play/pause
 				buttonPlay.enabled = true;
-				buttonPlay.label = "Play";
+				buttonPlay.label = fxgt.gettext("Play");
 			}
 			//////////////
 			/// Handlers VisuVisioAdvanced
@@ -360,10 +366,10 @@
 							<mx:Spacer height="5"/>
 							<s:HGroup width="100%" horizontalAlign="center">
 								<s:Button id="buttonPlay" click="buttonPlay_clickHandler(event)" enabled="false">
-									<s:label>Pause</s:label>
+	                              <s:label>{fxgt.gettext('Pause')}</s:label>
 								</s:Button>
 								<s:Button id="buttonMute" click="buttonMute_clickHandler(event)">
-									<s:label>Couper le son</s:label>
+                                  <s:label>{fxgt.gettext('Couper le son')}</s:label>
 								</s:Button>
 							</s:HGroup>
 							<mx:Spacer height="5"/>
