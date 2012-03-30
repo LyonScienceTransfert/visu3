@@ -58,66 +58,36 @@
                             break;
                     }
                 }
-                if(!retroDocument.isShared())
-                {
-                    iconInfoShared.visible = false;
-                }else
-                {
-                    iconInfoShared.visible = true;
-                } 
-                
-                if(nbrVideoBloc > 0)
-                {
-                    iconInfoVideo.visible = true;
-                    iconInfoVideo.nbrElement = nbrVideoBloc;
-                    iconInfoVideo.sourceIcon = IconEnum.getIconByName('iconVideo_16x16');
-                    iconInfoVideo.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) vidéo dans le bilan"),
-                                                                  nbrVideoBloc.toString());
-                }else
-                {
-                    iconInfoVideo.visible = false;
-                }
-                
-                if(nbrAudioBloc > 0)
-                {
-                    iconInfoAudio.visible = true;
-                    iconInfoAudio.nbrElement = nbrAudioBloc;
-                    iconInfoAudio.sourceIcon = IconEnum.getIconByName('iconAudio_16x16');
-                    iconInfoAudio.toolTip = StringUtil.substitute(fxgt.gettext("Il y a {0} bloc(s) audio dans le bilan"),
-                                                                  nbrAudioBloc.toString());
 
-                }else
+                var ch:String = "";
+                var nbrBlocs:int = listBloc.length;
+                if(nbrBlocs > 0)
                 {
-                    iconInfoAudio.visible = false;
+                    labelInfo.text = nbrBlocs.toString()+" (";
+                    if(nbrVideoBloc > 0)
+                    {
+                        labelInfo.text += nbrVideoBloc.toString() + " "+ fxgt.gettext("vidéo");
+                        ch = ", ";
+                    }
+                    if(nbrAudioBloc > 0)
+                    {
+                        labelInfo.text += ch + nbrAudioBloc.toString() + " "+ fxgt.gettext("audio");
+                        ch = ", ";
+                    }
+                    if(nbrTextBloc > 0)
+                    {
+                        labelInfo.text += ch + nbrTextBloc.toString() + " "+ fxgt.gettext("autres");
+                    }
+                    labelInfo.text += ")";
                 }
+                vgroupInfo.toolTip = labelInfo.text;
+                
             }
         } 
 
-        protected function iconInfoShared_toolTipCreateHandler(event:ToolTipEvent):void
-        {
-           var toolTip:BilanSharedUserToolTip = new BilanSharedUserToolTip();
-           toolTip.retroDocument = retroDocument;
-           event.toolTip = toolTip;
-        }
-
-
-        protected function iconInfoShared_toolTipShowHandler(event:ToolTipEvent):void
-        {
-            // TODO Auto-generated method stub
-        }
-
     ]]>
     </fx:Script>
-    <s:VGroup horizontalAlign="center" verticalAlign="middle" >
-        <mx:Image id="iconInfoShared" 
-            source="{IconEnum.getIconByName('retroDocumentShared')}"
-            toolTip="Under construction"
-            toolTipCreate="iconInfoShared_toolTipCreateHandler(event)"
-            toolTipShow="iconInfoShared_toolTipShowHandler(event)" 
-            width="18" height="18"/>
-        <s:HGroup width="100%" gap="0">
-            <components:IconInfoSegment id="iconInfoVideo" skinClass="com.ithaca.utils.components.skins.IconInfoSegmentSkin"/>
-            <components:IconInfoSegment id="iconInfoAudio" skinClass="com.ithaca.utils.components.skins.IconInfoSegmentSkin"/>
-        </s:HGroup>
+    <s:VGroup id="vgroupInfo" horizontalAlign="center" verticalAlign="middle" width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5">
+            <s:Label id="labelInfo" width="100%" maxDisplayedLines="2"/>
     </s:VGroup>
 </s:MXDataGridItemRenderer>

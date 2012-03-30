@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    focusEnabled="true" xmlns:components="com.ithaca.utils.components.*"
+    >
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.documentarisation.RetroDocumentConst;
+        import com.ithaca.documentarisation.model.RetroDocument;
+        import com.ithaca.documentarisation.model.Segment;
+        import com.ithaca.utils.components.BilanSharedUserToolTip;
+        import com.ithaca.utils.components.skins.IconInfoSegmentSkin;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.events.ToolTipEvent;
+        import mx.utils.StringUtil;
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        private var blocString:String;
+        private var retroDocument:RetroDocument;
+        
+        override public function set data(value:Object):void 
+        {
+            super.data = value;
+            
+            fxgt = FxGettext;
+            
+            retroDocument = value as RetroDocument;
+            
+            if (retroDocument != null) 
+            {
+                if(!retroDocument.isShared())
+                {
+                    iconInfoShared.visible = false;
+                }else
+                {
+                    iconInfoShared.visible = true;
+                } 
+            }
+        } 
+        
+        protected function iconInfoShared_toolTipCreateHandler(event:ToolTipEvent):void
+        {
+            var toolTip:BilanSharedUserToolTip = new BilanSharedUserToolTip();
+            toolTip.retroDocument = retroDocument;
+            event.toolTip = toolTip;
+        }
+        
+        
+        protected function iconInfoShared_toolTipShowHandler(event:ToolTipEvent):void
+        {
+            // TODO Auto-generated method stub
+        }
+        
+    ]]>
+    </fx:Script>
+    <s:VGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
+        <mx:Image id="iconInfoShared" 
+            source="{IconEnum.getIconByName('retroDocumentShared')}"
+            toolTip="Under construction"
+            toolTipCreate="iconInfoShared_toolTipCreateHandler(event)"
+            toolTipShow="iconInfoShared_toolTipShowHandler(event)" 
+            width="18" height="18"/>
+    </s:VGroup>
+</s:MXDataGridItemRenderer>
