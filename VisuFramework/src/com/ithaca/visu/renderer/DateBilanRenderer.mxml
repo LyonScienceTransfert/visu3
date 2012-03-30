@@ -20,18 +20,18 @@
             super.data = value;
             if (value != null) 
             {
-                labelDay.text = UtilFunction.getDate(value.modifyDateAsDate);
+                var dateModifyBilan:Date = value.modifyDateAsDate as Date;
+                labelDay.text = UtilFunction.getDate(dateModifyBilan);
                 
-                lableYear.text = value.modifyDateAsDate.fullYear;
+                labelHour.text = TimeUtils.formatHHMM(dateModifyBilan);
                 
-                labelHour.text = TimeUtils.formatHHMM(value.modifyDateAsDate);
+                vgroupDate.toolTip = UtilFunction.getDate(dateModifyBilan) + " "+dateModifyBilan.fullYear.toString() + ", "+ TimeUtils.formatHHMM(dateModifyBilan); 
             }
         } 
     ]]>
     </fx:Script>
-    <s:VGroup horizontalAlign="center" verticalAlign="middle" paddingLeft="3" paddingRight="3">
+    <s:VGroup id="vgroupDate" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="3" paddingRight="3" paddingBottom="3" paddingTop="3">
         <s:Label id="labelDay"/>
-        <s:Label id="lableYear" />
         <s:Label id="labelHour"/>
     </s:VGroup>
 </s:MXDataGridItemRenderer>
