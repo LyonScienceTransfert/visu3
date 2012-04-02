@@ -74,7 +74,7 @@
             import mx.managers.CursorManager;
             import mx.managers.DragManager;
             import mx.managers.PopUpManager;
-			import mx.utils.StringUtil;
+            import mx.utils.StringUtil;
 
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
@@ -369,12 +369,11 @@
 					this.currentSessionDateRecording = event.dateStartRecording;
 					this.currentSessionDuration = event.durationSessionRetro;
 
-					// update label start session recording
-					var dateStartRecording:Date = event.dateStartRecording;
-					// show info the session 
-					panelVideo.title = StringUtil.substitute(fxgt.gettext('"{0}" enregistrée le {1}'),
-                                                             UtilFunction.getDateMonthYearHourMin(dateStartRecording));
-					
+                    // update label start session recording
+                    var dateStartRecording:Date = event.dateStartRecording;
+                    var session:Session = 	Model.getInstance().getCurrentSessionRetroModule();
+                    // show info the session 
+                    panelVideo.title = '"'+ session.theme + '" '+fxgt.gettext("enregistrée le") + UtilFunction.getDateMonthYearHourMin(dateStartRecording)
                     var loader:URLLoader=new URLLoader();			
                     loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
                     // check xml layout for logged user
