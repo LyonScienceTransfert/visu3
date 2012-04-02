@@ -372,8 +372,8 @@
                     // update label start session recording
                     var dateStartRecording:Date = event.dateStartRecording;
                     var session:Session = 	Model.getInstance().getCurrentSessionRetroModule();
-                    // show info the session 
-                    panelVideo.title = '"'+ session.theme + '" '+fxgt.gettext("enregistrée le") + UtilFunction.getDateMonthYearHourMin(dateStartRecording)
+                    // show info the session // '"'+ session.theme + '" '+fxgt.gettext("enregistrée le") +
+                    panelVideo.title =   UtilFunction.getDateMonthYearHourMin(dateStartRecording)
                     var loader:URLLoader=new URLLoader();			
                     loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
                     // check xml layout for logged user
