@@ -16,17 +16,16 @@ import flash.ui.Mouse;
 import flash.ui.MouseCursor;
 import flash.utils.Timer;
 
-import gnu.as3.gettext.FxGettext;
-import gnu.as3.gettext._FxGettext;
-
 import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
 
-import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
+
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 public class SegmentTitle extends SkinnableComponent
 {
@@ -38,12 +37,8 @@ public class SegmentTitle extends SkinnableComponent
 	
 	[SkinPart("true")]
 	public var 	textSegment:RichEditableText;
-    
 	[SkinPart("true")]
 	public var 	iconDelete:IconDelete;
-    
-	[SkinPart("true")]
-	public var 	hgroupSegment:HGroup;
 
     [Bindable]
     private var fxgt: _FxGettext = FxGettext;
@@ -308,7 +303,6 @@ public class SegmentTitle extends SkinnableComponent
         // save clone the segment for tracage the modifications
         _tracedSegment = new Segment(segment.parentRetroDocument);
         _tracedSegment.setSegmentXML(segment.getSegmentXML());
-        hgroupSegment.width = this.segment.width;
     }
     private function onRemoveFromStage(event:Event):void
     {

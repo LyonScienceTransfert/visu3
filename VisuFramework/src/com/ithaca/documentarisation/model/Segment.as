@@ -4,12 +4,12 @@ package com.ithaca.documentarisation.model
 	import com.ithaca.documentarisation.RetroDocumentView;
 	import com.ithaca.documentarisation.model.RetroDocument;
 	
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
+
 	import flash.events.TextEvent;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
-	
-	import gnu.as3.gettext.FxGettext;
-	import gnu.as3.gettext._FxGettext;
 	
 	import mx.utils.UIDUtil;
 	
@@ -47,8 +47,6 @@ package com.ithaca.documentarisation.model
 		public var byteArray:ByteArray = null;
         
         public var segmentId:String = "";
-        
-        public var width:Number;
 
 		public function Segment(parentRetroDocument:RetroDocument)
 		{
