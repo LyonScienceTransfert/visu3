@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
     <classEntry path="com.ithaca.visu.controls.ConnectedUser"/>
@@ -37,6 +37,23 @@
     <classEntry path="com.ithaca.visu.controls.sessions.skins.KeywordSkin"/>
     <classEntry path="com.ithaca.visu.controls.timeline.TimeLine"/>
     <classEntry path="com.ithaca.visu.events.ActivityElementEvent"/>
+    <classEntry path="com.ithaca.messagerie.AccordionMessagerie"/>
+    <classEntry path="com.ithaca.messagerie.skins.AccordionMessagerieSkin"/>
+    <classEntry path="com.ithaca.timelineskins.PlayVideoSkin"/>
+    <classEntry path="com.ithaca.timelineskins.events.TimelineSkinEvent"/>
+    <classEntry path="com.ithaca.utils.components.BilanSharedUserToolTip"/>
+    <classEntry path="com.ithaca.utils.components.skins.BilanSharedUserToolTipSkin"/>
+    <classEntry path="com.ithaca.visu.renderer.DateBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.DateSessionRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.InfosBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.TitreSessionRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.TitreBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.ActionBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.model.Notification"/>
+    <classEntry path="com.ithaca.utils.components.MessageNotification"/>
+    <classEntry path="com.ithaca.utils.components.skins.MessageNotificationSkin"/>
+    <classEntry path="com.ithaca.visu.renderer.ShareBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.OwnerBilanRenderer"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>
