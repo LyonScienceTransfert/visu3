@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties mainApplicationPath="SessionModuleApp.mxml" projectUUID="ae0e5324-78fe-40ee-8444-81b27ccb8ef6" version="6">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
@@ -9,19 +9,12 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
-      <libraryPathEntry kind="3" linkType="1" path="/AssetsLib/bin/AssetsLib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/ComponentsLib/bin/ComponentsLib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/UtilsLib/bin/UtilsLib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/VisuFramework/bin/VisuFramework.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/swc"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
-  <applications>
-    <application path="SessionModuleApp.mxml"/>
-  </applications>
-  <modules>
-    <module application="src/SessionModuleApp.mxml" destPath="modules/SessionModule.swf" optimize="true" sourcePath="src/modules/SessionModule.mxml"/>
-  </modules>
+  <applications/>
+  <modules/>
   <buildCSSFiles/>
 </actionScriptProperties>
