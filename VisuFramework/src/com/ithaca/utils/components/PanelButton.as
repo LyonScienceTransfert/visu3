@@ -111,6 +111,7 @@ package com.ithaca.utils.components
 		public function PanelButton()
 		{
 			super();
+            fxgt = FxGettext;
 		}
 
 		//_____________________________________________________________________
