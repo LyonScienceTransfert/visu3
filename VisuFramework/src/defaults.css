@@ -181,7 +181,7 @@ icon :Embed("images/StartActivity.png");
 }*/
 timeline|ObselSkin.Activity
 {
-skin-class: ClassReference("com.ithaca.timeline.skins.ActivitySkin");
+skin-class: ClassReference("com.ithaca.timelineskins.ActivitySkin");
 icon :Embed("images/StartActivity.png");
 }
 
