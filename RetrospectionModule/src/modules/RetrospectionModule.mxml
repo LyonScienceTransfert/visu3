@@ -152,6 +152,8 @@
             
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
+                // init internalisation
+                fxgt: = FxGettext;
 				// init list trace lines
 				Model.getInstance().initListTraceLine();
 				
@@ -1911,6 +1913,12 @@
                 this.setFocus();
             }
 
+
+            protected function panelVideo_clickButtonAddHandler(event:PanelButtonEvent):void
+            {
+                // TODO Auto-generated method stub
+            }
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -1947,7 +1955,8 @@
 				buttonModeMaxEnabled="true"
 				clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
 				clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
-				clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)">
+				clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)"
+                >
 				<mx:VDividedBox width="100%" height="100%">
 					<s:Group height="75%" width="100%" id="groupeVideo">
 						<video:VisuVisioAdvanced id="visio" width="100%"  height="100%"
