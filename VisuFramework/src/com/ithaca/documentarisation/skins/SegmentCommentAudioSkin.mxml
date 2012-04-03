@@ -2,7 +2,8 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*" xmlns:documentarisation="com.ithaca.documentarisation.*"
-	 currentStateChange="skin1_currentStateChangeHandler(event)">
+	currentStateChange="skin1_currentStateChangeHandler(event)"
+    width="100%">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentCommentAudio")]
@@ -35,7 +36,7 @@
 
 		]]>
 		</fx:Script>
-		<s:VGroup width="330" gap="1">
+		<s:VGroup width="100%" gap="1">
 			<s:HGroup width="100%"  id="groupAudioRecorder" gap="1" horizontalAlign="center" verticalAlign="middle" height="16">
 				<!-- SPACER FOR BILAN MODULE-->
 				<mx:Spacer width="35" includeIn="shared, sharedOver"/>
@@ -67,7 +68,7 @@
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText"
 					editable.sharedOver="false" editable.shared="false"
-					width="100%" 
+					width="100%" multiline="true"
 					color="#000000" paddingTop="3" selectable="true" selectionHighlighting="whenActive">
 				</s:RichEditableText>
 			</s:HGroup>
