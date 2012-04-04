@@ -1516,7 +1516,7 @@
                         break;
                 }
                 // set message notification
-                setMessageNotification(message);
+                // setMessageNotification(message);
                 // set marker
                 this.sendMarker(false,message);
             }
@@ -2423,9 +2423,6 @@
 											clickButtonChat="visio_clickButtonChatHandler(event)"
                                             clickButtonZoom="panelbutton1_clickButtonModeZoomHandler(event)"/>
                         <s:HGroup width="100%" id="groupSetMarkerConst" horizontalAlign="center" verticalAlign="middle">
-                            <s:Label fontSize="10">
-                                <s:text>{fxgt.gettext("Les marqueurs prédéfinis : ")} </s:text>
-                            </s:Label>
                             <s:Button id="comprehenstion"
                                 click="groupSetMarkerConst_clickHandler(event)" chromeColor.MainState="#DB6E6E">
                                 <s:label>{fxgt.gettext("compréhension")}</s:label>
