@@ -292,7 +292,8 @@ or by setting the following environment variable:
 				<include-file name="images/stateNormal_14x14.png" path="${framework.images}/stateNormal_14x14.png"/>
 				<include-file name="images/advancedViewDataGrid_16x16.png" path="${framework.images}/advancedViewDataGrid_16x16.png"/>
 				<include-file name="images/normalViewDataGrid_16x16.png" path="${framework.images}/normalViewDataGrid_16x16.png"/>
-				
+				<include-file name="images/marqueurBlancTrans.png" path="${framework.images}/marqueurBlancTrans.png"/>
+				<include-file name="images/marqueurFondBlanc.png" path="${framework.images}/marqueurFondBlanc.png"/>
 
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 
