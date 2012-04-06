@@ -12,6 +12,7 @@ import com.ithaca.visu.events.BilanEvent;
 import com.ithaca.visu.events.SalonRetroEvent;
 import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
+import com.ithaca.visu.events.ShortMarkerEvent;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
@@ -1411,6 +1412,11 @@ public class MainManager
 			// update list user
 			var eventUpdateSessionView:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_USER);
 			this.dispatcher.dispatchEvent(eventUpdateSessionView);	
+            
+            // notification for sending info about shot markers
+            // FIXME : will check every time when user join session, can generate many times
+            var initShortMarkerEvent:ShortMarkerEvent = new ShortMarkerEvent(ShortMarkerEvent.INIT_SHORT_MARKER);
+            this.dispatcher.dispatchEvent(initShortMarkerEvent);
 	}
 
 	/**
