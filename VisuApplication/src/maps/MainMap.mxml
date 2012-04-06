@@ -7,21 +7,22 @@
         xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
 
     <fx:Script><![CDATA[
-		import business.MainManager;
-		
-		import com.asfusion.mate.utils.debug.Debugger;
-		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
-		import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
-		import com.ithaca.visu.events.AuthenticationEvent;
-		import com.ithaca.visu.events.MessageEvent;
-		import com.ithaca.visu.events.SessionEvent;
-		import com.ithaca.visu.events.SessionSharedEvent;
-		import com.ithaca.visu.events.SessionUserEvent;
-		import com.ithaca.visu.events.TraceLineEvent;
-		import com.ithaca.visu.model.Model;
-		
-		import mx.events.FlexEvent;
+        import business.MainManager;
+        
+        import com.asfusion.mate.utils.debug.Debugger;
+        import com.flashdevs.mateExt.rtmpService.RtmpService;
+        import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
+        import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
+        import com.ithaca.visu.events.AuthenticationEvent;
+        import com.ithaca.visu.events.MessageEvent;
+        import com.ithaca.visu.events.SessionEvent;
+        import com.ithaca.visu.events.SessionSharedEvent;
+        import com.ithaca.visu.events.SessionUserEvent;
+        import com.ithaca.visu.events.ShortMarkerEvent;
+        import com.ithaca.visu.events.TraceLineEvent;
+        import com.ithaca.visu.model.Model;
+        
+        import mx.events.FlexEvent;
 
         ]]></fx:Script>
 
@@ -176,7 +177,7 @@
 		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendSharedInfo"
-							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor, event.beginTime, event.endTime]}"/>              
+							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor, event.beginTime, event.endTime, event.typeShortMarker]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
@@ -200,7 +201,13 @@
 							  event.textComment, event.beginTime, event.endTime, event.forUserId, event.sessionId, event.timeStamp]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-		
+        
+        <mate:EventHandlers type="{ShortMarkerEvent.SAVE_SHORT_MARKER}" debug="true">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+                <mate:Request action="obselInfo.addObselSaveShortMarker"   arguments="{[event.loggedUserId, event.listText, event.listColor]}" />
+            </rtmp:RtmpServiceInvoker>
+        </mate:EventHandlers>
+        
         <mate:EventHandlers type="{RtmpDataEvent.DATA}" debug="true"/>
 		
 
