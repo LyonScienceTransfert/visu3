@@ -1452,20 +1452,48 @@
 			
 			private function setEnabledGroupSetMarker(value:Boolean):void
 			{
-				groupSetMarker.enabled = groupSetMarkerConst.enabled = value;
+                sendMarkerAnimation.enabled = groupSetMarkerConst.enabled = value;
 				if(!value)
 				{
-					textChatMarker.text = fxgt.gettext("Pose de marqueur non autorisée");
+                    sendMarkerAnimation.text = fxgt.gettext("Pose de marqueur non autorisée");
 					// hide button set marcker on composant VideoPanel 
 					visio.buttonMarkerEnabled = false;
 				}else
 				{
-					textChatMarker.text = "";
-					// show button set marcker on composant VideoPanel 
+                    sendMarkerAnimation.text = "";
+					// show button set marker on composant VideoPanel 
 					visio.buttonMarkerEnabled = true;
 				}
-			}
+			} 
 
+            /**
+            * Init bouttons short markers
+            */
+            private function onInitShortMarker(event:ShortMarkerEvent):void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    var saveShortMarkerEvent:ShortMarkerEvent = new ShortMarkerEvent(ShortMarkerEvent.SAVE_SHORT_MARKER);
+                    var listColor:Array = new Array();
+                    listColor.push("#DB6E6E");
+                    listColor.push("#DFE549");
+                    listColor.push("#92DD56");
+                    listColor.push("#55B3DE");
+                    saveShortMarkerEvent.listColor = listColor;
+                    
+                    var listText:Array = new Array();
+                    listText.push("comp");
+                    listText.push("pron");
+                    listText.push("sens");
+                    listText.push("inte");
+                    saveShortMarkerEvent.listText = listText;
+                    
+                    saveShortMarkerEvent.loggedUserId = Model.getInstance().getLoggedUser().id_user;
+                    
+                    dispatchEvent(saveShortMarkerEvent);
+                }
+            }                             
+            
 			private function onUpdateDeletedSession(event:SessionEvent):void
 			{
 				if(Model.getInstance().getCurrentTutoratModule() == this)
@@ -2392,6 +2420,8 @@
 		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 		
+        <mate:Listener type="{ShortMarkerEvent.INIT_SHORT_MARKER}"  method="onInitShortMarker"/>
+
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_MARKER_BY_SKIN_MARKER}"  method="onPreAddMarkerBySkinMarker" useWeakReference="true"/>
 
 	</fx:Declarations>
