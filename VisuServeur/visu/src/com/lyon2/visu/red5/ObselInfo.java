@@ -77,6 +77,7 @@ import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
 import com.ithaca.domain.model.Obsel;
 import com.ithaca.domain.model.RetroDocument;
 import com.lyon2.utils.ObselStringParams;
+import com.lyon2.utils.UserColor;
 import com.lyon2.utils.UserDate;
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.Session;
@@ -605,6 +606,80 @@ public class ObselInfo {
 		}
 	}
 
+    /**
+     * 
+     * Set short markers, add info in system trace
+     * 
+     * @param conn
+     * @param userId
+     * @param listTextShortMarker
+     * @param listColorShortMarker
+     */
+    @SuppressWarnings("unchecked")
+    public void addObselSaveShortMarker(IConnection conn, int userId, String[] listTextShortMarker, String[] listColorShortMarker ) {
+            log.warn("======== addObselSaveShortMarker = {}",userId);
+            IClient clientRecording = conn.getClient();
+            List<Obsel> listObselSystemSessionStart = null;
+         // find time start recording
+    		Integer sessionId = (Integer) clientRecording.getAttribute("sessionId");
+			String typeObselSystem = "SystemSessionShortMarker";
+			String traceSystem = "";
+			// try find obsel the system
+			try {
+	        	// get list obsel "SystemSessionStart"
+				String traceParam = "%-0%";
+				String refParam = "%:hasSession "+"\""+sessionId.toString()+"\""+"%";
+				ObselStringParams osp = new ObselStringParams(traceParam,refParam);	
+				log.warn("======== addObselSaveShortMarker = osp  {}",osp.toString());
+				
+				listObselSystemSessionStart = (List<Obsel>) app.getSqlMapClient().queryForList("obsels.getTraceIdByObselSystemSessionStartSystemSessionEnter", osp);
+	           
+				log.warn("======== addObselSaveShortMarker = listObselSystemSessionStart  {}",listObselSystemSessionStart.toString());
+
+				if(listObselSystemSessionStart != null)
+	            {
+	            	// get traceId the system 
+					Obsel obselSystemSessionStart = listObselSystemSessionStart.get(0);
+					traceSystem = obselSystemSessionStart.getTrace();
+					
+				} else {
+					// TODO : message error
+				}
+				log.warn("======== addObselSaveShortMarker = traceSystem = {}",traceSystem);
+			} catch (Exception e) {
+				// TODO : message error
+			}
+			// set list text short marker
+			List<String> listText = new ArrayList<String>();
+			for (String textMarker : listTextShortMarker)
+			{
+				listText.add(textMarker);
+			}
+			// set list text short color
+			List<String> listColor = new ArrayList<String>();
+			for (String colorMarker : listColorShortMarker)
+			{
+				listColor.add(colorMarker);
+			}
+			// set obsel init short marker
+			List<Object> paramsObselSystem = new ArrayList<Object>();
+			paramsObselSystem.add("session");
+			paramsObselSystem.add(sessionId.toString());
+			paramsObselSystem.add("presenttextshortmarker");
+			paramsObselSystem.add(listText);
+			paramsObselSystem.add("presentcolorsshortmarker");
+			paramsObselSystem.add(listColor);
+			paramsObselSystem.add("idUserFor");
+			paramsObselSystem.add(String.valueOf(userId));
+			Obsel obsel = null;
+			try {
+				 	obsel = app.setObsel(0, traceSystem, typeObselSystem,
+						paramsObselSystem);
+			} catch (SQLException sqle) {
+				log.error("=====Errors===== {}", sqle);
+			}
+			log.warn("======== addObselSaveShortMarker = obsel = {}", obsel);
+    }
 	
 	
 	@SuppressWarnings("unchecked")
