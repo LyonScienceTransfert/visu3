@@ -9,7 +9,7 @@
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
                         currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
 						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
-						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*">
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*" xmlns:controls1="com.ithaca.visu.controls.*">
 	<fx:Script>
 		<![CDATA[
             import com.ithaca.timeline.Layout;
@@ -34,12 +34,15 @@
             import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
             import com.ithaca.visu.controls.sessions.ActivityDetailB;
             import com.ithaca.visu.controls.sessions.SharedElementChat;
+            import com.ithaca.visu.controls.skins.SendMarkerAnimationSkin;
             import com.ithaca.visu.events.ActivityElementEvent;
             import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.MarkerEvent;
             import com.ithaca.visu.events.MessageEvent;
             import com.ithaca.visu.events.PanelButtonEvent;
             import com.ithaca.visu.events.SessionEvent;
             import com.ithaca.visu.events.SessionSharedEvent;
+            import com.ithaca.visu.events.ShortMarkerEvent;
             import com.ithaca.visu.events.TraceLineEvent;
             import com.ithaca.visu.events.VisuActivityEvent;
             import com.ithaca.visu.events.VisuModuleEvent;
@@ -973,7 +976,8 @@
 			 */
 			protected function onSetMyMarker(event:*):void
 			{
-				 var message:String = textChatMarker.text; 
+				// var message:String = textChatMarker.text; 
+				 var message:String = ""; 
 				if(event is MouseEvent){
 					this.sendMarker(false, message);
 				}else if (event is KeyboardEvent) 
@@ -987,7 +991,7 @@
 			/**
 			 *  Sending marker
 			 */
-			private function sendMarker(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0, beginTime:String = "", endTime:String = "" ):void
+			private function sendMarker(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0, typeShortMarker:String="void", beginTime:String = "", endTime:String = "" ):void
 			{
 				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var sessionId:int = this.currentSession.id_session;
@@ -1014,6 +1018,7 @@
 				sessionSharedEvent.status = this.visio.status;
 				sessionSharedEvent.listUsers = listUsersId;
 				sessionSharedEvent.idUserFor = idUserFor;
+				sessionSharedEvent.typeShortMarker = typeShortMarker;
 				if(beginTime != "")
 				{
 					sessionSharedEvent.beginTime = beginTime;
@@ -1024,7 +1029,7 @@
 				}
 				dispatchEvent(sessionSharedEvent);
 				// update text
-				textChatMarker.text = "";
+				//textChatMarker.text = "";
 			}
 			
  			protected function panelPlanSession_resizeHandler(event:ResizeEvent):void
@@ -1522,31 +1527,20 @@
 			}
             
             //////////////
-            ////// Handler the markeurs "const"
+            ////// Handler the short markers 
             //////////////
             protected function groupSetMarkerConst_clickHandler(event:MouseEvent):void
             {
-                var buttonId:String = (event.currentTarget as spark.components.Button).id;
-                var message:String;
-                switch(buttonId)
-                {
-                    case 'comprehenstion':
-                        message = fxgt.gettext("compréhension");
-                        break;
-                    case 'prononciation':
-                        message = fxgt.gettext("prononciation");
-                        break;
-                    case 'sens':
-                        message = fxgt.gettext("sens");
-                        break;
-                    case 'interaction':
-                        message = fxgt.gettext("interaction");
-                        break;
-                }
+                var currentButton:spark.components.Button = event.currentTarget as spark.components.Button;
+                sendMarkerAnimation.textMarkerAnimation = currentButton.label;
+                sendMarkerAnimation.textMarkerAnimationColor = currentButton.getStyle("chromeColor");
+                sendMarkerAnimation.goAnimation();
+                
+                var buttonId:String = currentButton.id;
                 // set message notification
                 // setMessageNotification(message);
                 // set marker
-                this.sendMarker(false,message);
+                this.sendMarker(false, currentButton.label, 0, buttonId);
             }
 
 
@@ -1758,8 +1752,13 @@
                         // check if change only COMMENT_FOR_USER_ID
                         if(userIdInitEditMarkerDialog > -1 && !event.currentTarget.deleting && userIdInitEditMarkerDialog != new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]) ) 
                         {
+                            var typeShortMarker:String = obsel.props[TraceModel.TYPE_SHORT_MARKER];
+                            if(typeShortMarker == null)
+                            {
+                                typeShortMarker ="void";
+                            }
                             // set new marker
-                            sendMarker(false, text, new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]), beginTime, endTime )
+                            sendMarker(false, text, new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]), typeShortMarker , beginTime, endTime )
                         }
                     }
                         
