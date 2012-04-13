@@ -420,27 +420,6 @@
             }
 
 
-            protected function panelButtonExplorateur_clickButtonAdvancedDataGridHandler(event:PanelButtonEvent):void
-            {
-                this.bilanComp.modeNormal = false;
-                panelButtonExplorateur.buttonAdvancedDataGridEnabled = false;
-                panelButtonExplorateur.buttonAdvancedDataGridVisible = false;
-                
-                panelButtonExplorateur.buttonNormalDataGridEnabled = true;
-                panelButtonExplorateur.buttonNormalDataGridVisible = true;
-            }
-
-
-            protected function panelButtonExplorateur_clickButtonNormalDataGridHandler(event:PanelButtonEvent):void
-            {
-                this.bilanComp.modeNormal = true;
-                panelButtonExplorateur.buttonAdvancedDataGridEnabled = true;
-                panelButtonExplorateur.buttonAdvancedDataGridVisible = true;
-                
-                panelButtonExplorateur.buttonNormalDataGridEnabled = false;
-                panelButtonExplorateur.buttonNormalDataGridVisible = false;
-            }
-
 		]]>
 	</fx:Script>
     <fx:Declarations>
@@ -450,15 +429,10 @@
     </fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
         <components:PanelButton id="panelButtonExplorateur" width="40%" minWidth="400" height="100%"
-            buttonReturnVisible="true"
+            buttonReturnVisible="false"
             buttonReturnEnabled="false"
             clickButtonReturn="panelbutton1_clickButtonReturnHandler(event)"
-            buttonAdvancedDataGridVisible="true"
-            buttonAdvancedDataGridEnabled="true"
-            clickButtonAdvancedDataGrid="panelButtonExplorateur_clickButtonAdvancedDataGridHandler(event)"
-            buttonNormalDataGridVisible="false"
-            buttonNormalDataGridEnabled="false"
-            clickButtonNormalDataGrid="panelButtonExplorateur_clickButtonNormalDataGridHandler(event)">            
+            >            
 			<s:VGroup width="100%" height="100%">
 				<ithaca:BilanList 
 					id="bilanComp"

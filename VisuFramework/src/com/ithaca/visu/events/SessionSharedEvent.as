@@ -31,6 +31,7 @@ public class SessionSharedEvent extends Event
 
 	public var beginTime:String = "void";
 	public var endTime:String = "void";
+	public var typeShortMarker:String = "void";
 	
 	
 	

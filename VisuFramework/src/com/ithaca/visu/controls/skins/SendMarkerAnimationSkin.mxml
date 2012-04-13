@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    stateChangeComplete="skin1_stateChangeCompleteHandler(event)">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.visu.controls.SendMarkerAnimation")]
+    </fx:Metadata>
+   <fx:Script>
+   <![CDATA[
+       import com.ithaca.traces.model.TraceModel;
+       import com.ithaca.visu.ui.utils.IconEnum;
+       
+       import gnu.as3.gettext.FxGettext;
+       import gnu.as3.gettext._FxGettext;
+       
+       import mx.controls.Spacer;
+       import mx.events.EffectEvent;
+       import mx.events.FlexEvent;
+       
+       [Bindable]
+       private var fxgt: _FxGettext = FxGettext;
+      
+
+       protected function skin1_stateChangeCompleteHandler(event:FlexEvent):void
+       {
+           if(this.currentState == "showMarker")
+           {
+               this.currentState = "normal";
+           }
+       }
+
+       protected function resize1_effectEndHandler(event:EffectEvent):void
+       {
+           //spacerShowMarker.width=0;
+           setCurrentState("normal", true);
+           
+       }
+
+   ]]>
+   </fx:Script>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="showMarker"/>
+    </s:states>
+    <s:transitions>
+        <s:Transition fromState="normal" toState="showMarker">
+            <s:Sequence>
+                    <s:Fade id="fadeStartAnimation"  targets="{[textMarker]}" duration="300" />
+                    <s:RemoveAction targets="{[textMarker]}"/>
+                    <s:AddAction targets="{[markerAnimation]}"/>
+                    <s:Fade  targets="{[markerAnimation]}" duration="300"/>
+                    <s:Resize targets="{[spacerShowMarker]}" widthTo="{markerAnimation.width - buttonSendMarker.width }" duration="1000" effectEnd="resize1_effectEndHandler(event)"/>
+                    <s:Parallel duration="1000">
+                        <s:Resize targets="{[spacerShowMarker]}" widthTo="0" />
+                        <s:Fade  targets="{[markerAnimation]}"/>
+                    </s:Parallel>    
+                    <s:RemoveAction targets="{[markerAnimation]}" />
+            </s:Sequence>
+        </s:Transition>
+        <s:Transition fromState="showMarker" toState="normal">
+                <s:Sequence>
+                    <s:AddAction targets="{[textMarker]}"/>
+                    <s:Fade id="fadeEndAnimation" targets="{[textMarker]}" duration="700"/>
+                </s:Sequence>
+        </s:Transition>
+    </s:transitions>
+    <s:HGroup width="100%" id="groupSetMarker" paddingLeft="5" paddingRight="5" height="26">
+        <s:HGroup id="groupNormal" width="100%" height="100%" verticalAlign="middle">
+            <mx:Spacer id="spacerShowMarker" width="0"/>
+            <mx:TextArea id="markerAnimation" text="."  includeIn="showMarker" editable="false" width="100%" height="22"/>
+            <mx:TextArea  id="textMarker"  enabled="true"  width="100%" height="22" includeIn="normal"/>				
+            <mx:Button id="buttonSendMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" width="150">
+                <mx:label>"Poser un marqueur"</mx:label>
+            </mx:Button>
+        </s:HGroup>
+    </s:HGroup>	
+</s:Skin>

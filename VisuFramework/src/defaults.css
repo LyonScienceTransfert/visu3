@@ -174,6 +174,11 @@ icon :Embed("images/consigneVisu2_20x20.png");
 tooltipProp : 'text';
 }
 
+/*timeline|ObselSkin.Activity
+{
+skin-class: ClassReference("com.ithaca.timelineskins.ActivitySkin");
+icon :Embed("images/StartActivity.png");
+}*/
 timeline|ObselSkin.Activity
 {
 skin-class: ClassReference("com.ithaca.timelineskins.ActivitySkin");

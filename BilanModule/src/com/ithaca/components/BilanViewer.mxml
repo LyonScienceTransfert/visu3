@@ -348,7 +348,7 @@
 								<s:List id="segmentList" 
 									borderVisible="false" width="100%" height="100%"  
 									dataProvider="{bilan.listSegment}" 
-									itemRendererFunction="setRendererSegmentFunction"
+									itemRendererFunction="setRendererSegmentFunction" 
 									>
 								</s:List>
 						</s:VGroup>
