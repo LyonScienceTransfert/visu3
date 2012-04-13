@@ -101,7 +101,7 @@ public class SharedInfo
 	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor, String beginTime, String endTime)
+	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor, String beginTime, String endTime, String typeShortMarker)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
@@ -231,6 +231,11 @@ public class SharedInfo
 			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor >= 0)
 			   		{
 			   			paramsObselSend.add(ObselType.ID_USER_FOR);paramsObselSend.add(String.valueOf(idUserFor));
+			   			// set type short marker for existing type <> "void"
+			   			if(!typeShortMarker.equals("void"))
+			   			{
+			   				paramsObselSend.add(ObselType.TYPE_SHORT_MARKER);paramsObselSend.add(typeShortMarker);
+			   			}
 			   		}
 			   		// add url sending documents
 			   		if(typeInfo == 3 || typeInfo == 4 )
@@ -275,6 +280,11 @@ public class SharedInfo
 			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor >= 0)
 			   		{
 			   			paramsObselReceive.add(ObselType.ID_USER_FOR);paramsObselReceive.add(String.valueOf(idUserFor));
+			   			// set type short marker for existing type <> "void"
+			   			if(!typeShortMarker.equals("void"))
+			   			{
+			   				paramsObselReceive.add(ObselType.TYPE_SHORT_MARKER);paramsObselReceive.add(typeShortMarker);
+			   			}
 			   		}
 		   			// add url sending/reading documents
 			   		if(typeInfo == 3 || typeInfo == 4 || typeInfo == 7 || typeInfo == 8 || typeInfo == 100)

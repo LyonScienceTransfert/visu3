@@ -16,8 +16,8 @@
 			<dataSource type="SIMPLE">
 				<property name="JDBC.Driver" value="com.mysql.jdbc.Driver"/>
 				<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu2"/>
-				<property name="JDBC.Username" value="visu2"/>
-				<property name="JDBC.Password" value="visu2"/>
+				<property name="JDBC.Username" value="root"/>
+				<property name="JDBC.Password" value="root"/>
                 <property name="Pool.PingQuery" value="select 1"/>
                 <property name="Pool.PingEnabled" value="true"/>
                 <!-- 28800000 ms is 8 hours, the default timeout of mysql. Let's use half. -->

@@ -67,6 +67,7 @@ public class Documentarisation extends SkinnableComponent
 	{
 		super();
 		_listRetroDocumentVO = new ArrayCollection();
+        fxgt = FxGettext;
 	}
 	//_____________________________________________________________________
 	//

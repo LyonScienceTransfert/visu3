@@ -69,6 +69,14 @@ package com.ithaca.visu.ui.utils
         import com.ithaca.traces.model.TraceModel;
 		
 		[Bindable]
+		[Embed("images/marqueurBlancTrans.png")]
+		static private var marqueurBlancTrans:Class;
+
+        [Bindable]
+		[Embed("images/marqueurFondBlanc.png")]
+		static private var marqueurFondBlanc:Class;
+        
+		[Bindable]
 		[Embed("images/marqueurBlanc-bas-20px.png")]
 		static private var markerIcon:Class;
 
@@ -374,6 +382,12 @@ package com.ithaca.visu.ui.utils
 			
 			switch (code)
 			{
+				case "marqueurBlancTrans" : 
+					icon = marqueurBlancTrans;
+					break;
+				case "marqueurFondBlanc" : 
+					icon = marqueurFondBlanc;
+					break;
 				case "up" : 
 					icon = arrowUp;
 					break;
