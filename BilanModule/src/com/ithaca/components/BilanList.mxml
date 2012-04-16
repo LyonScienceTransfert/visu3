@@ -365,7 +365,7 @@
                 dataGridDateModification.width = 45;
                 dataGridDateModification.minWidth = 45;
 
-                dataGridTitreBilan.width = 250;
+                dataGridTitreBilan.width = 350;
                 if(this.currentState == "advanced")
                 {
                     dataGridTitreBilan.width = 150;
