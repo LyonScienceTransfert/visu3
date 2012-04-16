@@ -64,7 +64,7 @@
 
     ]]>
     </fx:Script>
-    <s:HGroup horizontalAlign="center" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="15">
+    <s:HGroup horizontalAlign="center" verticalAlign="middle" width="100%" height="100%">
         <components:IconButton id="iconBilanEdit" 
             width="22" height="22" 
             toolTip="{fxgt.gettext('Modifier le bilan')}"

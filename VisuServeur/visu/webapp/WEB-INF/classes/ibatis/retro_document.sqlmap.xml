@@ -99,10 +99,14 @@
 		WHERE id_owner=#ownerId# AND id_session=#sessionId#
 	</select>
 	
-	<select id="getDocumentsByOwnerIdAndSessionIdWithXML" resultMap="retroDocument-result-map">
-		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description, xml
-		FROM retro_document 
-		WHERE id_owner=#ownerId# AND id_session=#sessionId#
+	<select id="getDocumentsByOwnerIdAndSessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE id_owner=#ownerId# AND s.id_session=#sessionId#
 	</select>
 
 	<select id="getDocumentById" resultMap="retroDocument-result-map">
@@ -137,24 +141,32 @@
 		WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
 	</select>
 
-	<select id="getDocumentsByInviteeIdAndSessionIdWithXML" resultMap="retroDocument-result-map">
-		SELECT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description, rd.xml
-		FROM retro_document_access as rda, retro_document as rd
-		WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
+	<select id="getDocumentsByInviteeIdAndSessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE rda.id_user=#inviteeId# and r.id_session=#sessionId# and rda.id_retro_document = r.id_retro_document
 	</select>
-	
+
 	<select id="getDocumentsBySessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
 		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description
 		FROM retro_document 
 		WHERE id_session=#sessionId#
 	</select>
 
-	<select id="getDocumentsBySessionIdWithXML" resultMap="retroDocument-result-map">
-		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description, xml
-		FROM retro_document 
-		WHERE id_session=#sessionId#
+	<select id="getDocumentsBySessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE s.id_session=#sessionId#
 	</select>
-	
+
 	<select id="getDocumentsSharedBySessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
 		SELECT DISTINCT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
 		FROM retro_document_access AS rda, retro_document AS rd
@@ -162,11 +174,14 @@
 		AND rda.id_retro_document = rd.id_retro_document
 	</select>
 	
-	<select id="getDocumentsSharedBySessionIdWithXML" resultMap="retroDocument-result-map">
-		SELECT DISTINCT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description, rd.xml
-		FROM retro_document_access AS rda, retro_document AS rd
-		WHERE rd.id_session=#sessionId#
-		AND rda.id_retro_document = rd.id_retro_document
+	<select id="getDocumentsSharedBySessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE r.id_session=#sessionId# and rda.id_retro_document = r.id_retro_document
 	</select>
 	
 	<select id="getDocumentsAndInviteeListAndSessionByOwnerIdWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
