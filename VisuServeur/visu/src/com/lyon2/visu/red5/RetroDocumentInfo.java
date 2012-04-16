@@ -355,6 +355,7 @@ public class RetroDocumentInfo {
 		
 
 		log.warn("===== sessionId closed session = {}",sessionId.toString());
+		
 		IConnection connClient = (IConnection) client
 		.getAttribute("connection");
 		Object[] argsRetroDocument = { listRetroDocumentOwner, listRetroDocumentShared};
