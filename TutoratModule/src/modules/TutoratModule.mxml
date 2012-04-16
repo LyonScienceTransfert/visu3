@@ -1540,7 +1540,8 @@
                 // set message notification
                 // setMessageNotification(message);
                 // set marker
-                this.sendMarker(false, currentButton.label, 0, buttonId);
+                
+                this.sendMarker(false, currentButton.label+ " : "+ sendMarkerAnimation.text, 0, buttonId);
             }
 
 

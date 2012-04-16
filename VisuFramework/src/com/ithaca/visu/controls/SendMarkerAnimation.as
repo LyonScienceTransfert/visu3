@@ -56,7 +56,7 @@ public class SendMarkerAnimation extends SkinnableComponent
     }
     public function get text():String
     {
-        return _text;
+        return textMarker.text;
     }
     public function set text(value:String):void
     {
@@ -198,6 +198,9 @@ public class SendMarkerAnimation extends SkinnableComponent
     {
        var stopAnimationEvent:MarkerEvent = new MarkerEvent(MarkerEvent.STOP_ANIMATION_SEND_MARKER);
        dispatchEvent(stopAnimationEvent);
+
+       // clear text input
+       textMarker.text = "";
     }
     ///////////////
     ////// Utils
