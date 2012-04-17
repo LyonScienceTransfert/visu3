@@ -47,12 +47,15 @@
 
             public function set showBilanByInitApplication(value:Boolean):void
             {
-                if(value)
+                if(infoLabel)
                 {
-                    infoLabel.text = fxgt.gettext("Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits");
-                }else
-                {
-                    infoLabel.text = fxgt.gettext("Aucun bilan sélectionné");
+                    if(value)
+                    {
+                        infoLabel.text = fxgt.gettext("Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits");
+                    }else
+                    {
+                        infoLabel.text = fxgt.gettext("Aucun bilan sélectionné");
+                    }
                 }
             }
             
