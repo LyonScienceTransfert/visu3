@@ -59,6 +59,8 @@
 			private var selectedRetroDocumentIdWhenInit:Number = -1;
             // list shared users bilan
             private var listShareUser:Array;
+            // flag show bilan by init application 
+            private var showBilanByInitApplication:Boolean = false;
             
             [Bindable]
             private var fxgt: _FxGettext = FxGettext;
@@ -189,7 +191,7 @@
 			{	
 				logger.debug("BilanModule.configureHandler");
                 // set label 
-                bilanViewer.showBilanByInitApplication = false;
+                showBilanByInitApplication = false;
 				if((event.currentTarget as BilanModule).parameters != null)
 				{
 					logger.debug("There are parameters passed to BilanModule");
@@ -211,7 +213,7 @@
                         case "CameOnInitApplication" :
                             this.selectedRetroDocumentIdWhenInit = param[2];
                             // set flag came by init application
-                            bilanViewer.showBilanByInitApplication = true;
+                            showBilanByInitApplication = true;
                             break;
 					}
 					// set selected sessionId
@@ -252,6 +254,8 @@
                 
                 // set titre the panel
                 panelButtonExplorateur.title =  fxgt.gettext("Explorateur");
+                // set label
+                bilanViewer.showBilanByInitApplication = showBilanByInitApplication;
             }
 
 
