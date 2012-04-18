@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    focusEnabled="true"
+    >
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.utils.VisuUtils;
+        import com.ithaca.visu.model.User;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        override public function set data(value:Object):void 
+        {
+            super.data = value;
+            if (value != null) 
+            {
+                var participant:User = value as User;
+                labelOwner.text = VisuUtils.getUserLabelLastName(participant,true);
+                vgroupOwner.toolTip = fxgt.gettext("Participant de la séance : ")+ labelOwner.text;
+               // imageUser.source = participant.avatar;
+            }
+        } 
+    ]]>
+    </fx:Script>
+    <s:VGroup id="vgroupOwner" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+      <!--  <mx:Image id="imageUser" width="50" height="50"/>-->
+        <s:Label id="labelOwner" maxDisplayedLines="1" width="100%" textAlign="center"/>
+    </s:VGroup>
+</s:MXDataGridItemRenderer>

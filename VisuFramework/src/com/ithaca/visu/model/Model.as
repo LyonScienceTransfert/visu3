@@ -182,6 +182,8 @@ package  com.ithaca.visu.model
         private var _initBilanId:Number;     
         // list chat messages
         private var _listChatMessage:ArrayCollection = new ArrayCollection();
+        // list session/usersIdSharedMarker
+        private var _listSessionAndUserIdSharedMarker:ArrayCollection = new ArrayCollection();
 		public function Model(access:Private)
 		{
 			if (access == null)
@@ -533,9 +535,100 @@ package  com.ithaca.visu.model
 		{
 			this._buttonSalonRetro.enabled = value;
 		}
-		
-		
-		
+		/**
+        * set list session with list usersIdSharedMarker
+        */
+		public function set listSessionAndUserIdSharedMarker(value:ArrayCollection):void
+        {
+            _listSessionAndUserIdSharedMarker = value;
+        }
+        /**
+        * get list session with list usersIdShareMarker
+        */
+		public function get listSessionAndUserIdSharedMarker():ArrayCollection
+        {
+            return _listSessionAndUserIdSharedMarker;
+        }
+        /**
+        * get list usersId 
+        */
+        public function getListIdUsersBySessionId(idSession:int):ArrayCollection
+        {
+            for each(var elm:Object in listSessionAndUserIdSharedMarker)
+            {
+                if(elm.idSession == idSession)
+                {
+                    return elm.listIdUser;
+                }
+            }
+            return null;
+        }
+        /**
+        * check if user share marker
+        */
+        public function isUserShareMarkerByIdUserByIdSession(idUser:int,idSession:int):Boolean
+        {
+            var listIdUsers:ArrayCollection = getListIdUsersBySessionId(idSession);
+            if(listIdUsers)
+            {
+                for each (var elm:Object in listIdUsers)
+                {
+                    if(elm.idUser == idUser)
+                    {
+                        return elm.share;
+                    }
+                }
+                return false;
+            }else return false;
+        }
+        /**
+        * set list partisipants in session without logged user
+        */
+        public function addUserIdShareMarkerBySessionId(idSession:int, idUser:int , share:Boolean):void
+        {
+            var obj:Object = getObjectBySessionId(idSession,listSessionAndUserIdSharedMarker);
+            if(obj)
+            {
+                if(!hasIdUser(idUser, obj.listIdUser))
+                {
+                    // add new user 
+                    (obj.listIdUser as ArrayCollection).addItem({idUser:idUser, share:share});
+                }
+            }else
+            {
+                var listIdUsers:ArrayCollection = new ArrayCollection();
+                listIdUsers.addItem({idUser:idUser, share:share});
+                listSessionAndUserIdSharedMarker.addItem({idSession:idSession, listIdUser:listIdUsers});
+            }
+            // check has id user
+            function hasIdUser(id:int, list:ArrayCollection):Boolean
+            {
+                for each(var elm:Object in list)
+                {
+                    if(elm.idUser == id)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            // check has id session
+            function getObjectBySessionId(id:int, list:ArrayCollection):Object
+            {
+                var result:Object = null;
+                
+                for each(var elm:Object in list)
+                {
+                    if(elm.idSession == id)
+                    {
+                        result = elm;
+                    }
+                }
+                return result;
+            }
+        }
+        
 		/**
 		 * current tutorat module, only for debugging
 		 */
@@ -1990,7 +2083,23 @@ package  com.ithaca.visu.model
 			}
 			return result;
 		}
-		
+		/**
+        * get list users id with status "RECORDING" of the recording session AND with share = true
+        */
+        public function getListIdUserByRecordingSessionShareMarker(idSession:int):Array
+        {
+    		var result:Array = new Array();
+            for each(var user:User in _listUsersPlateforme)
+            {
+                if(user.status == ConnectionStatus.RECORDING && user.currentSessionId == idSession && isUserShareMarkerByIdUserByIdSession(user.id_user,idSession))
+                {
+                    result.push(user.id_user);
+                }
+            }
+            // add logged user
+            result.push(this._loggedUser.id_user);
+            return result;
+        }
 		/**
 		 * get list users id with status "RECORDING" of the recording session 
 		 */

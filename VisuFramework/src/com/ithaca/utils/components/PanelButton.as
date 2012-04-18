@@ -282,8 +282,8 @@ package com.ithaca.utils.components
                 }else
                 {
                     buttonAdvancedDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonAdvancedDataGrid);
-                    buttonAdvancedDataGrid.icon =  IconEnum.getIconByName('advancedViewDataGrid_16x16');
-                    buttonAdvancedDataGrid.toolTip = fxgt.gettext(" ? avancé");
+                    buttonAdvancedDataGrid.icon =  IconEnum.getIconByName('iconOption_16x16');
+                    buttonAdvancedDataGrid.toolTip = fxgt.gettext("Configuration du partage mes marqueurs");
                 }
             }
             if (instance == buttonNormalDataGrid)
@@ -513,8 +513,8 @@ package com.ithaca.utils.components
 					{
                         buttonAdvancedDataGrid.includeInLayout = true;
                         buttonAdvancedDataGrid.visible = true;
-                        buttonAdvancedDataGrid.toolTip = fxgt.gettext(" ? avancé");
-                        buttonAdvancedDataGrid.icon =  IconEnum.getIconByName('advancedViewDataGrid_16x16');
+                        buttonAdvancedDataGrid.toolTip = fxgt.gettext("Configuration du partage mes marqueurs");
+                        buttonAdvancedDataGrid.icon =  IconEnum.getIconByName('iconOption_16x16');
                         buttonAdvancedDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonAdvancedDataGrid);
 					}else
 					{
