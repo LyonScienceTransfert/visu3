@@ -25,6 +25,7 @@
             import com.ithaca.traces.model.RetroTraceModel;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.traces.model.vo.SGBDObsel;
+            import com.ithaca.utils.ConfigShareMarker;
             import com.ithaca.utils.EditChatDialog;
             import com.ithaca.utils.EditMarkerDialog;
             import com.ithaca.utils.UtilFunction;
@@ -255,6 +256,18 @@
                     _listMessageNotification.addEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeCollectionMessageNotification);
                     // init list view message notification
                     _listViewMessageNotification = new ArrayCollection();
+                    
+                    // set list userSharedMarker
+                    // idSession: {idUser,shared}
+                    for each(var user:User in this.currentSession.participants)
+                    {
+                       
+                        if(user.id_user !=  this.loggedUser.id_user)
+                        {
+                            // add userId how share markers 
+                            Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, user.id_user, true)
+                        }
+                    }
 				}
 			}
 			
@@ -332,6 +345,11 @@
                             if(event.status == ConnectionStatus.RECORDING)
                             {
                                 module.visio.status = VisuVisioAdvanced.STATUS_RECORD;
+                            }
+                            // add id user share marker, not logged user
+                            if(event.userId != this.loggedUser.id_user)
+                            {
+                                Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, event.userId, true);
                             }
                             // status session
                             var statusSession:int = currentSession.statusSession;
@@ -996,14 +1014,21 @@
 				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
 				var sessionId:int = this.currentSession.id_session;
 				var listUsersId:Array;
-				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
-				{
-					// student will shared markers only with Tuter, Responsable, Admin
-					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT );
-				}else
-				{
-					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR );
-				}
+                if(true)
+                {
+                    listUsersId = Model.getInstance().getListIdUserByRecordingSessionShareMarker(this.currentSession.id_session);
+                    
+                }else
+                {
+    				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+    				{
+    					// student will shared markers only with Tuter, Responsable, Admin
+    					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT );
+    				}else
+    				{
+    					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR );
+    				}
+                }
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
                 if (message)
@@ -1133,7 +1158,7 @@
                         // user can add to time line
                         var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
                         // check if user can be on time line
-                        if(VisuUtils.isAddTraceSalonSynchrone(loggedUser, user))
+                        if(VisuUtils.isAddTraceSalonSynchrone(loggedUser, user, true))
                         {
                             this.addTraceLineOnViewTraceLineGroup(traceGroup);
                         } 
@@ -1326,7 +1351,7 @@
                                 // TODO : update list user plateforme after new user join plateforme
                                 var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
                                 // check if user can be on time line
-                                if(user == null || VisuUtils.isAddTraceSalonSynchrone(loggedUser, user))
+                                if(user == null || VisuUtils.isAddTraceSalonSynchrone(loggedUser, user, true))
                                 {
                                     this.addTraceLineOnViewTraceLineGroup(traceGroup);
                                 } 
@@ -2400,6 +2425,21 @@
                 sendMarkerAnimation.enabled = true;
             }
 
+            protected function panelVideo_clickButtonAdvancedDataGridHandler(event:PanelButtonEvent):void
+            {
+                var configShareMarker:ConfigShareMarker = new ConfigShareMarker();
+                configShareMarker.model = Model.getInstance();
+                configShareMarker.user = Model.getInstance().getLoggedUser();
+                
+                // list id users
+                var listIdUser:ArrayCollection = Model.getInstance().getListIdUsersBySessionId(this.currentSession.id_session);
+                
+                configShareMarker.listIdUser = listIdUser;
+                
+                PopUpManager.addPopUp(configShareMarker, this);
+                PopUpManager.centerPopUp(configShareMarker);
+            }
+
 		]]>
 	</fx:Script>
 	<modules:states>
@@ -2459,19 +2499,22 @@
 <!-- VIDEO -->		 
 		<mx:VDividedBox width="77%" height="100%" minHeight="400" minWidth="550">
 			<mx:HDividedBox width="100%" height="65%">
-				<components:PanelButton  id="panelVideo" height="100%" width="70%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="500" minHeight="200"
-					dragEnter="dragEnterHandler(event);"
-					dragDrop="dragDropHandler(event);"
-					buttonMuteMicroVisible="true"
-					buttonModeMaxVisible="true"
-					buttonModeZoomVisible="true"
-					buttonModeZoomEnabled="false"
-					buttonModeMaxEnabled="true"
-					clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
-					clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
-					clickButtonModeMax="panelbutton1_clickButtonModeMaxHandler(event)"
-					clickButtonModeZoom="panelbutton1_clickButtonModeZoomHandler(event)"
-					>
+                <components:PanelButton  id="panelVideo" height="100%" width="70%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="500" minHeight="200"
+                    dragEnter="dragEnterHandler(event);"
+                    dragDrop="dragDropHandler(event);"
+                    buttonMuteMicroVisible="true"
+                    buttonModeMaxVisible="true"
+                    buttonModeZoomVisible="true"
+                    buttonModeZoomEnabled="false"
+                    buttonModeMaxEnabled="true"
+                    buttonAdvancedDataGridEnabled="true"
+                    buttonAdvancedDataGridVisible="true"
+                    clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
+                    clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
+                    clickButtonModeMax="panelbutton1_clickButtonModeMaxHandler(event)"
+                    clickButtonModeZoom="panelbutton1_clickButtonModeZoomHandler(event)"
+                    clickButtonAdvancedDataGrid="panelVideo_clickButtonAdvancedDataGridHandler(event)"
+                    >
 					<s:VGroup  id="groupeVideo" height="100%" width="100%" paddingBottom="3">
 						<video:VisuVisioAdvanced id="visio" width="100%"
 											quality="80"

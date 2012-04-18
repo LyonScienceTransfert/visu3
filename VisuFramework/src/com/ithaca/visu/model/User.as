@@ -63,9 +63,9 @@
 package   com.ithaca.visu.model
 {
 	
+	import com.ithaca.visu.model.vo.UserVO;
 	import com.ithaca.visu.ui.utils.ConnectionStatus;
 	import com.ithaca.visu.ui.utils.RightStatus;
-	import com.ithaca.visu.model.vo.UserVO;
 
 	public class User extends UserVO
 	{
@@ -75,6 +75,7 @@ package   com.ithaca.visu.model
 		private var _role:int;
 		public var id_client:String = "";
 		public var currentSessionId:int;
+        private var _shareMarker:Boolean = false;
 		
 		public function User(user:UserVO)
 		{
@@ -87,6 +88,16 @@ package   com.ithaca.visu.model
 			this.password = user.password || "";
 			this.message = user.message;
 		}
+        
+        public function set shareMarker(value:Boolean):void
+        {
+            _shareMarker = value;
+        }
+        public function get  shareMarker():Boolean
+        {
+            return this._shareMarker;
+        }
+        
 		public function getId():int
 		{
 			return this.id_user;

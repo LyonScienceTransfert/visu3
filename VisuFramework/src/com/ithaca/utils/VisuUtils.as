@@ -28,8 +28,23 @@ package com.ithaca.utils
 		
 		private static var logger:ILogger = Log.getLogger("com.ithaca.utils.VisuUtils");
 		
-        public static function isAddTraceSalonSynchrone(loggedUser:User, checkUser:User):Boolean
+        public static function isAddTraceSalonSynchrone(loggedUser:User, checkUser:User, unidistance:Boolean):Boolean
         {
+            if(unidistance)
+            {
+                if(loggedUser.id_user == checkUser.id_user || isResponsable(loggedUser) || isAdmin(loggedUser))
+                {
+                    return true;
+                }else if(isTuteur(loggedUser) || isStudent(loggedUser))
+                {
+                    if(isResponsable(checkUser) || isAdmin(checkUser))
+                    {
+                       // hide admin, responsable for tuteur,admin
+                       return false;
+                    }else return true;
+                }else return false;
+            }
+                
             if(loggedUser.id_user == checkUser.id_user || isResponsable(loggedUser) || isAdmin(loggedUser))
             {
                 return true;

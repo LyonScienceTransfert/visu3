@@ -14,24 +14,26 @@ public class SessionSharedEvent extends Event
 	static public const SEND_SHARED_INFO : String = 'sendSharedInfo';
 	static public const RECEIVE_SHARED_INFO : String = 'receiveSharedInfo';
 	static public const SEND_EDITED_MARKER : String = 'sendEditedMarker';
+	static public const UPDATE_SHARE_MARKER : String = 'updateShareMarker';
 
-	// properties
-	public var typeInfo : int;
-	public var info : String;
-	public var listUsers : Array;
-	public var senderUserId : int;
-	public var url : String;
-	public var status : int;	
-	public var obselVO:SGBDObsel;
-	public var timeStamp:Number;
-	public var idDocument:Number = 0;
-	public var currentTimeVideoPlayer:Number = 0;
-	public var action:String = "";
-	public var idUserFor:int = 0;
-
-	public var beginTime:String = "void";
-	public var endTime:String = "void";
-	public var typeShortMarker:String = "void";
+    // properties
+    public var typeInfo : int;
+    public var info : String;
+    public var listUsers : Array;
+    public var senderUserId : int;
+    public var url : String;
+    public var status : int;	
+    public var obselVO:SGBDObsel;
+    public var timeStamp:Number;
+    public var idDocument:Number = 0;
+    public var currentTimeVideoPlayer:Number = 0;
+    public var action:String = "";
+    public var idUserFor:int = 0;
+    
+    public var beginTime:String = "void";
+    public var endTime:String = "void";
+    public var typeShortMarker:String = "void";
+    public var shareMarker:Boolean;
 	
 	
 	
