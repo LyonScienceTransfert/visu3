@@ -265,7 +265,7 @@
                         if(user.id_user !=  this.loggedUser.id_user)
                         {
                             // add userId how share markers 
-                            Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, user.id_user, true)
+                            Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, user.id_user, false)
                         }
                     }
 				}
@@ -349,7 +349,7 @@
                             // add id user share marker, not logged user
                             if(event.userId != this.loggedUser.id_user)
                             {
-                                Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, event.userId, true);
+                                Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, event.userId, false);
                             }
                             // status session
                             var statusSession:int = currentSession.statusSession;
@@ -1509,6 +1509,8 @@
                     listColor.push("#DFE549");
                     listColor.push("#92DD56");
                     listColor.push("#55B3DE");
+                    listColor.push("#92DD56");
+                    listColor.push("#DB6E6E");
                     saveShortMarkerEvent.listColor = listColor;
                     
                     var listText:Array = new Array();
@@ -1516,6 +1518,8 @@
                     listText.push("pron");
                     listText.push("sens");
                     listText.push("inte");
+                    listText.push("posi");
+                    listText.push("nega");
                     saveShortMarkerEvent.listText = listText;
                     
                     saveShortMarkerEvent.loggedUserId = Model.getInstance().getLoggedUser().id_user;
@@ -2508,7 +2512,7 @@
                     buttonModeZoomEnabled="false"
                     buttonModeMaxEnabled="true"
                     buttonAdvancedDataGridEnabled="true"
-                    buttonAdvancedDataGridVisible="true"
+                    buttonAdvancedDataGridVisible="false"
                     clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
                     clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
                     clickButtonModeMax="panelbutton1_clickButtonModeMaxHandler(event)"
@@ -2524,8 +2528,18 @@
 											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
 											clickButtonChat="visio_clickButtonChatHandler(event)"
                                             clickButtonZoom="panelbutton1_clickButtonModeZoomHandler(event)"/>
-                        <s:HGroup width="100%" id="groupSetMarkerConst" horizontalAlign="center" verticalAlign="middle">
-                            <s:Button id="comp"
+                        <s:HGroup width="100%" id="groupSetMarkerConst" horizontalAlign="center" verticalAlign="middle" gap="20">
+                            <s:Button id="posi"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#92DD56">
+                                <s:label>{fxgt.gettext("positif")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : positif")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="nega"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DB6E6E">
+                                <s:label>{fxgt.gettext("négatif")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : négatif")}</s:toolTip>
+                            </s:Button>
+                           <!-- <s:Button id="comp"
                                 click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DB6E6E">
                                 <s:label>{fxgt.gettext("compréhension")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : compréhension")}</s:toolTip>
@@ -2544,7 +2558,7 @@
                                 click="groupSetMarkerConst_clickHandler(event)" chromeColor="#55B3DE">
                                 <s:label>{fxgt.gettext("interaction")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : interaction")}</s:toolTip>
-                            </s:Button>
+                            </s:Button>-->
                         </s:HGroup>
                         <controls1:SendMarkerAnimation id="sendMarkerAnimation" width="100%" skinClass="com.ithaca.visu.controls.skins.SendMarkerAnimationSkin"
                              sendMarker="sendMarkerAnimation_sendMarkerHandler(event)"

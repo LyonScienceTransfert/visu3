@@ -70,6 +70,12 @@
                     case  "inte" :
                         color = "#55B3DE";
                         break;
+                    case  "posi" :
+                        color = "#92DD56";
+                        break;
+                    case  "nega" :
+                        color = "#DB6E6E";
+                        break;
                     default :
                         color = "#000000";
                         break;
