@@ -434,7 +434,14 @@ public class ObselInfo {
 		List<String> listTraceId = null;
 		int roleUser = app.getRoleUser(user.getProfil());
 		// admin and responsable has role 1 and 2
-		if (roleUser == 1 || roleUser == 2 )
+		// tuteur has role 3
+		/**
+		 * FIXME : special for UNIDISTANCE,
+		 * tuteur have to see trace the other tuteur
+		 * was :  if (roleUser == 1 || roleUser == 2 )
+		 * now : if (roleUser == 1 || roleUser == 2 || roleUser == 3)
+		 */
+		if (roleUser == 1 || roleUser == 2 || roleUser == 3)
 		{
 			traceParam = "%-" + "void" + "%";
 			refParam = "%:hasSession " + "\"" + sessionId.toString() + "\""
