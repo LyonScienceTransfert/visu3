@@ -6,6 +6,7 @@
 		xmlns:ithaca="com.ithaca.components.*"
 		xmlns:controls="com.lyon2.controls.*"
 		xmlns:mate="http://mate.asfusion.com/" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*"
+        creationComplete="group1_creationCompleteHandler(event)"
 	    >
     <fx:Script>
         <![CDATA[
@@ -19,9 +20,9 @@
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
-
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
@@ -44,19 +45,12 @@
 			// for calculate seekSession, beginSegment has time ms from 1970
 			private var sessionStart:Number;
 			private var currentRetroDocumentSegmentPlaying:SegmentVideoAdvanced = null;
+            // show info label
+            private var _showLabelInfo:Boolean;
 
             public function set showBilanByInitApplication(value:Boolean):void
             {
-                if(infoLabel)
-                {
-                    if(value)
-                    {
-                        infoLabel.text = fxgt.gettext("Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits");
-                    }else
-                    {
-                        infoLabel.text = fxgt.gettext("Aucun bilan sélectionné");
-                    }
-                }
+                _showLabelInfo = value;
             }
             
 			public function stop():void {
@@ -315,6 +309,21 @@
 				visio.connection = Model.getInstance().getNetConnection();
 				visio.addVideoStream("void",null, 0.0, true);
 			}
+
+
+            protected function group1_creationCompleteHandler(event:FlexEvent):void
+            {
+                if(infoLabel)
+                {
+                    if(_showLabelInfo)
+                    {
+                        infoLabel.text = fxgt.gettext("Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits");
+                    }else
+                    {
+                        infoLabel.text = fxgt.gettext("Aucun bilan sélectionné");
+                    }
+                }
+            }
 
         ]]>
     </fx:Script>
