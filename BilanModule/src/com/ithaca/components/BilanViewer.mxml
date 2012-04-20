@@ -51,6 +51,7 @@
             public function set showBilanByInitApplication(value:Boolean):void
             {
                 _showLabelInfo = value;
+                group1_creationCompleteHandler();
             }
             
 			public function stop():void {
@@ -311,7 +312,7 @@
 			}
 
 
-            protected function group1_creationCompleteHandler(event:FlexEvent):void
+            protected function group1_creationCompleteHandler(event:*=null):void
             {
                 if(infoLabel)
                 {
