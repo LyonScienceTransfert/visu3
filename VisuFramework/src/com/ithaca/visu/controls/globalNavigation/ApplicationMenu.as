@@ -160,7 +160,8 @@ package com.ithaca.visu.controls.globalNavigation
 			{
 				dropListLang.addEventListener(IndexChangeEvent.CHANGE, onChangeLange);
 				// set enabled lang
-				dropListLang.enabled = true;
+                // disactivate for Unidistance
+				dropListLang.enabled = false;
 			}
 /*			if (instance == home)
 			{
