@@ -734,6 +734,8 @@ public class RetroDocumentView extends SkinnableComponent
         segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
         var obselSkin:ObselSkin = event.dragInitiator as ObselSkin;
         var obsel:Obsel = obselSkin.obsel;
+        // set obsel ref
+        segment.obselRef = obsel;
         // set text obselSkin, toolTips
         var textObsel:String = obselSkin.toolTip;
         segment.comment = textObsel;
