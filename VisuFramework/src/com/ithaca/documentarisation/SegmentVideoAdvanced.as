@@ -3,7 +3,12 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
 import com.ithaca.traces.model.RetroTraceModel;
+import com.ithaca.traces.model.TraceModel;
+import com.ithaca.utils.UtilFunction;
+import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.visu.model.Model;
+import com.ithaca.visu.model.User;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.IconEnum;
@@ -13,14 +18,16 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
 import flash.utils.Timer;
+
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
-
-import flash.ui.Mouse;
-import flash.ui.MouseCursor;
 
 import spark.components.HGroup;
 import spark.components.Label;
@@ -28,9 +35,6 @@ import spark.components.RichEditableText;
 import spark.components.Spinner;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
-
-import gnu.as3.gettext.FxGettext;
-import gnu.as3.gettext._FxGettext;
 
 public class SegmentVideoAdvanced extends SkinnableComponent
 {		
@@ -68,9 +72,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 
     [SkinPart("true")]
     public var groupText:HGroup;
-    
-	[SkinPart("true")]
+    // remove screen-shot
+	/*[SkinPart("true")]
 	public var screenShot:Image;
+    */
+    [SkinPart("true")]
+    public var hgroupDndOwnerObsel:HGroup;
+    
+    [SkinPart("true")]
+    public var iconDndObsel:Image;
+    
+    [SkinPart("true")]
+    public var labelDndObsel:Label;
 
     [Bindable]
 	private var fxgt: _FxGettext = FxGettext;
@@ -315,7 +328,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			updateLabelCurrentTime();
 		}
 		
-		if(instance == screenShot)
+        // remove screen-shot
+		/*if(instance == screenShot)
 		{
 			if(segment.byteArray != null)
 			{
@@ -324,7 +338,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			{
 				screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
 			}
-		}
+		}*/
 	}
 	
 	override protected function partRemoved(partName:String, instance:Object):void
@@ -384,8 +398,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 				var duration:Number = Math.floor(durationMs / 1000);
 				labelDuration.text = TimeUtils.formatTimeString(duration); 
 			}
-			
-			if(segment.byteArray != null)
+			// remove screen-shot
+			/*if(segment.byteArray != null)
 			{
 				if(screenShot)
 				{
@@ -397,13 +411,25 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 				{
 					screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
 				}
-			}
+			}*/
             
             // check text
             if(!modeEdit && text == "")
             {
                 groupText.includeInLayout = groupText.visible = false;
             }
+            // show icon and owner obsel ref only if was DND obsel and video bloc
+            if(segment.obselRef && (segment.obselRef.type == TraceModel.SET_MARKER || segment.obselRef.type == TraceModel.RECEIVE_MARKER))
+            {
+                hgroupDndOwnerObsel.includeInLayout = hgroupDndOwnerObsel.visible = true;
+                // icon of obsel ref
+                var source:Object = IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER);
+                iconDndObsel.source = source;
+                var ownerObsel:User = Model.getInstance().getUserPlateformeByUserId(segment.obselRef.uid); 
+                
+                labelDndObsel.text = fxgt.gettext("propriétaire de marqueur : ")+  VisuUtils.getUserLabelLastName(ownerObsel,true);
+            }
+            
 		}
 		if(currentTimeChange)
 		{
@@ -670,6 +696,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     // creation the segment
     private function onCreationComplete(event:FlexEvent = null):void
     {
+        fxgt = FxGettext;
         // save clone the segment for tracage the modifications
         _tracedSegment = new Segment(segment.parentRetroDocument);
         _tracedSegment.setSegmentXML(segment.getSegmentXML());

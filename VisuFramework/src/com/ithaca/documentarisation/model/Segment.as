@@ -3,13 +3,14 @@ package com.ithaca.documentarisation.model
 	import com.ithaca.documentarisation.RetroDocumentConst;
 	import com.ithaca.documentarisation.RetroDocumentView;
 	import com.ithaca.documentarisation.model.RetroDocument;
+	import com.ithaca.traces.Obsel;
 	
-    import gnu.as3.gettext.FxGettext;
-    import gnu.as3.gettext._FxGettext;
-
 	import flash.events.TextEvent;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
+	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
 	
 	import mx.utils.UIDUtil;
 	
@@ -47,6 +48,9 @@ package com.ithaca.documentarisation.model
 		public var byteArray:ByteArray = null;
         
         public var segmentId:String = "";
+        
+        // obsel was DND for create new bloc
+        private var _obselRef:Obsel = null;
 
 		public function Segment(parentRetroDocument:RetroDocument)
 		{
@@ -54,6 +58,14 @@ package com.ithaca.documentarisation.model
             segmentId = UIDUtil.createUID();
 		}
 		
+        public function set obselRef(value:Obsel):void
+        {
+            _obselRef = value;
+        }
+        public function get obselRef():Obsel
+        {
+            return _obselRef;
+        }
 		public function setSegmentXML(segment:XML):void
 		{
             segmentId = segment.attribute(RetroDocumentConst.TAG_ID).toString();
