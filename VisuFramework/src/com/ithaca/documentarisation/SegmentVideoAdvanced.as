@@ -2,6 +2,7 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.UtilFunction;
@@ -80,7 +81,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     public var hgroupDndOwnerObsel:HGroup;
     
     [SkinPart("true")]
-    public var iconDndObsel:Image;
+    public var iconDndObsel:SegmentVideoIconMarker;
     
     [SkinPart("true")]
     public var labelDndObsel:Label;
@@ -421,12 +422,11 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             // show icon and owner obsel ref only if was DND obsel and video bloc
             if(segment.obselRef && (segment.obselRef.type == TraceModel.SET_MARKER || segment.obselRef.type == TraceModel.RECEIVE_MARKER))
             {
+                // set skin
                 hgroupDndOwnerObsel.includeInLayout = hgroupDndOwnerObsel.visible = true;
                 // icon of obsel ref
-                var source:Object = IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER);
-                iconDndObsel.source = source;
+                iconDndObsel.obsel = segment.obselRef;
                 var ownerObsel:User = Model.getInstance().getUserPlateformeByUserId(segment.obselRef.uid); 
-                
                 labelDndObsel.text = fxgt.gettext("propriétaire de marqueur : ")+  VisuUtils.getUserLabelLastName(ownerObsel,true);
             }
             

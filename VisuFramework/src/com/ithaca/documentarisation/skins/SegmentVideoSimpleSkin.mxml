@@ -2,7 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
-     currentStateChange="skin1_currentStateChangeHandler(event)">
+     currentStateChange="skin1_currentStateChangeHandler(event)" xmlns:documentarisation="com.ithaca.documentarisation.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.SegmentVideoAdvanced")]
@@ -116,7 +116,7 @@
                 </s:HGroup>
                 <!-- part horizontal : icon obsel , owner obsel-->
                 <s:HGroup id="hgroupDndOwnerObsel" width="100%" verticalAlign="middle" includeInLayout="false" visible="false"  fontSize="10" horizontalAlign="center">
-                    <mx:Image id="iconDndObsel"/>
+                    <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
                     <s:Label id="labelDndObsel" maxDisplayedLines="1" />
                 </s:HGroup>
             </s:VGroup>
