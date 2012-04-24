@@ -60,7 +60,7 @@
         			<!-- DURATION, PLAY, STOP, PAUSE -->
         			<s:HGroup width="90" gap="1" height="22">
         				<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
-        				<s:HGroup  id="labelGroup" gap="1" fontSize="10" height="100%" paddingTop="3">
+        				<s:HGroup  id="labelGroup" gap="1" fontSize="10" height="100%" paddingTop.edit="3" paddingTop.editOver="3" paddingTop.editPause="3" paddingTop.editPlay="3" paddingTop.editSelected="3">
         					<!-- ICON SEGMENT -->
         					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPause,sharedPlay">
         					</s:Label>
@@ -115,9 +115,16 @@
         			</s:HGroup>
                 </s:HGroup>
                 <!-- part horizontal : icon obsel , owner obsel-->
-                <s:HGroup id="hgroupDndOwnerObsel" width="100%" verticalAlign="middle" includeInLayout="false" visible="false"  fontSize="10" horizontalAlign="center">
+                <s:HGroup id="hgroupDndOwnerObsel" width="100%" verticalAlign="middle" includeInLayout="false" visible="false" fontSize="10" horizontalAlign="center" toolTip=".">
                     <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
-                    <s:Label id="labelDndObsel" maxDisplayedLines="1" />
+                    <s:VGroup width="100%" gap="3">
+                        <s:HGroup width="100%" horizontalAlign="center">
+                            <s:Label id="labelDndObsel" maxDisplayedLines="1" text="qsqsq"/>
+                        </s:HGroup>
+                        <s:HGroup width="100%" horizontalAlign="center">
+                            <s:Label id="labelDndObselTempsContent" maxDisplayedLines="1" width="100%" text="ghgh"/>
+                        </s:HGroup>
+                    </s:VGroup>
                 </s:HGroup>
             </s:VGroup>
             <!-- part vertical : icon delete-->
