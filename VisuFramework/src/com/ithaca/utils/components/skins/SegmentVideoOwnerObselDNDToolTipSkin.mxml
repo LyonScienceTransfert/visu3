@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:documentarisation="com.ithaca.documentarisation.*"
+    creationComplete="skin1_creationCompleteHandler(event)"
+     width="250">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.utils.components.SegmentVideoOwnerObselDNDToolTip")]
+    </fx:Metadata>
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin;
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.TraceModel;
+        import com.ithaca.utils.VisuUtils;
+        import com.ithaca.utils.components.IconButton;
+        import com.ithaca.visu.model.Model;
+        import com.ithaca.visu.model.User;
+        import com.lyon2.controls.utils.TimeUtils;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.events.FlexEvent;
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        private var obsel:Obsel;
+        private var timeCreateObsel:Number;
+        
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+            obsel = this.hostComponent.obsel;
+            timeCreateObsel = this.hostComponent.timeCreateObsel;
+            
+            iconDndObsel.obsel = obsel;
+            var owner:User = Model.getInstance().getUserPlateformeByUserId(obsel.uid);
+            ownerObsel.text = VisuUtils.getUserLabelLastName(owner,true);
+            tsObsel.text = TimeUtils.formatTimeString(Math.floor(timeCreateObsel / 1000));
+            contenueObsel.text = obsel.props[TraceModel.TEXT];
+        }
+        
+    ]]>
+    </fx:Script>
+    <s:Rect id="background" left="0" right="0" top="0" bottom="0" radiusX="3">
+        <s:fill>
+            <!--- @private -->
+            <s:SolidColor id="bgFill" color="#f8ffcb"/>
+        </s:fill>
+        <s:filters>
+            <s:DropShadowFilter distance="4" alpha=".5" strength=".33"/>
+        </s:filters>
+    </s:Rect>
+    
+    <s:HGroup width="100%" fontSize="10" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+        <s:VGroup height="100%" verticalAlign="top">
+            <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
+        </s:VGroup>
+        <s:VGroup width="100%">
+            <s:HGroup width="100%" >
+                <s:VGroup height="100%" horizontalAlign="right" verticalAlign="top">
+                    <s:Label>
+                        <s:text>{fxgt.gettext("Propriétaire de marqueur:")}</s:text>
+                    </s:Label>
+                    <s:Label>
+                        <s:text>{fxgt.gettext("Création de marqueur:")}</s:text>
+                    </s:Label>
+                    <s:Label>
+                        <s:text>{fxgt.gettext("Contenue de marqueur:")}</s:text>
+                    </s:Label>
+                </s:VGroup>
+                <s:VGroup horizontalAlign="left" verticalAlign="top">
+                    <s:Label id="ownerObsel" text="sayfulin"/>
+                    <s:Label id="tsObsel" text="sayfulin"/>
+                </s:VGroup>
+            </s:HGroup>
+
+            <s:RichEditableText id="contenueObsel" editable="false" width="100%"
+                  verticalAlign="top" textAlign="center" fontSize="12" selectable="false"/>
+        </s:VGroup>
+    </s:HGroup>
+</s:Skin>

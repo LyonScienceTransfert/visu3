@@ -8,6 +8,7 @@ import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.utils.components.SegmentVideoOwnerObselDNDToolTip;
 import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.User;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
@@ -29,6 +30,7 @@ import gnu.as3.gettext._FxGettext;
 import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
+import mx.events.ToolTipEvent;
 
 import spark.components.HGroup;
 import spark.components.Label;
@@ -85,6 +87,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     
     [SkinPart("true")]
     public var labelDndObsel:Label;
+    
+    [SkinPart("true")]
+    public var labelDndObselTempsContent:Label;
 
     [Bindable]
 	private var fxgt: _FxGettext = FxGettext;
@@ -427,7 +432,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
                 // icon of obsel ref
                 iconDndObsel.obsel = segment.obselRef;
                 var ownerObsel:User = Model.getInstance().getUserPlateformeByUserId(segment.obselRef.uid); 
-                labelDndObsel.text = fxgt.gettext("propriétaire de marqueur : ")+  VisuUtils.getUserLabelLastName(ownerObsel,true);
+                labelDndObsel.text = fxgt.gettext("Propriétaire de marqueur:")+ " "+ VisuUtils.getUserLabelLastName(ownerObsel,true);
+                labelDndObselTempsContent.text = fxgt.gettext("Création de marqueur:")+ " "+TimeUtils.formatTimeString(Math.floor(_timeBegin / 1000)) + " , "+fxgt.gettext("Contenue de marqueur:")+ " "+text ; 
+                // tooltips 
+                hgroupDndOwnerObsel.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToopTipHgroupDndOwnerObsel);
             }
             
 		}
@@ -526,6 +534,13 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	//
 	//_____________________________________________________________________
 
+    private function onCreateToopTipHgroupDndOwnerObsel(event:ToolTipEvent):void
+    {
+        var toolTip:SegmentVideoOwnerObselDNDToolTip = new SegmentVideoOwnerObselDNDToolTip();
+        toolTip.obsel = segment.obselRef;
+        toolTip.timeCreateObsel = this._timeBegin;
+        event.toolTip = toolTip;
+    }
 	private function onClickImagePlay(event:MouseEvent):void
 	{
 		var playSegmentVideoEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PLAY_RETRO_SEGMENT);

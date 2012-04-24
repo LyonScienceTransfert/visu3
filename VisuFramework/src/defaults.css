@@ -193,6 +193,10 @@ tooltipProp : 'text';
 }
 
 
+components|SegmentVideoOwnerObselDNDToolTip
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.SegmentVideoOwnerObselDNDToolTipSkin");	
+}
 components|BilanSharedUserToolTip
 {
 	skin-class:ClassReference("com.ithaca.utils.components.skins.BilanSharedUserToolTipSkin");	
