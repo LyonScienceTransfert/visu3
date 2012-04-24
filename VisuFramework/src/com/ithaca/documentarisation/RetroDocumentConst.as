@@ -16,6 +16,7 @@ package com.ithaca.documentarisation {
 		 public static const TAG_TYPE_SOURCE: String = "typeSource";
 		 public static const TAG_DURATION_COMMENT_AUDIO: String = "durationCommentAudio";
 		 public static const TAG_PATH_COMMENT_AUDIO: String = "pathCommentAudio";
+		 public static const TAG_PARENT_OBSEL: String = "parentObsel";
 		 
 		 public static const TEXT_SEGMENT:String = "TextBlock";
 		 public static const TITLE_SEGMENT:String = "TitleBlock";

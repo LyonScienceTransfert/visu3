@@ -74,7 +74,12 @@ package com.ithaca.documentarisation.model
 			comment = segment.child(RetroDocumentConst.TAG_COMMENT).toString(); 
 			typeSource = segment.child(RetroDocumentConst.TAG_TYPE_SOURCE).toString(); 
 			durationCommentAudio = segment.child(RetroDocumentConst.TAG_DURATION_COMMENT_AUDIO).toString(); 
-			pathCommentAudio = segment.child(RetroDocumentConst.TAG_PATH_COMMENT_AUDIO).toString(); 
+			pathCommentAudio = segment.child(RetroDocumentConst.TAG_PATH_COMMENT_AUDIO).toString();
+            var obselRefString:String = segment.child(RetroDocumentConst.TAG_PARENT_OBSEL).toString();
+            if(obselRefString)
+            {
+                obselRef = Obsel.fromRDF(obselRefString);
+            }
 		}
         
         public function getSegmentXML():XML
@@ -107,6 +112,13 @@ package com.ithaca.documentarisation.model
             var stringPathCommentAudio:String = "<"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">"+pathCommentAudio+"</"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">";
             var pathCommentAudio:XML = new XML(stringPathCommentAudio);
             segmentXML.appendChild(pathCommentAudio);
+            // parent obsel when do DND
+            if(obselRef)
+            {
+                var stringParentObsel:String = "<"+RetroDocumentConst.TAG_PARENT_OBSEL+"><![CDATA["+obselRef.toRDF()+"]]></"+RetroDocumentConst.TAG_PARENT_OBSEL+">";
+                var parentObsel:XML = new XML(stringParentObsel);
+                segmentXML.appendChild(parentObsel);
+            }
             return segmentXML;
         }
         

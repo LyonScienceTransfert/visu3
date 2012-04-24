@@ -333,7 +333,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			// set current time
 			updateLabelCurrentTime();
 		}
-		
+		if(instance == hgroupDndOwnerObsel)
+		{
+            hgroupDndOwnerObsel.includeInLayout = hgroupDndOwnerObsel.visible = false;
+		}
         // remove screen-shot
 		/*if(instance == screenShot)
 		{
