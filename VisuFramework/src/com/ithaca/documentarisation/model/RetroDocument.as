@@ -165,8 +165,14 @@ package com.ithaca.documentarisation.model
 				var stringPathCommentAudio:String = "<"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">"+segment.pathCommentAudio+"</"+RetroDocumentConst.TAG_PATH_COMMENT_AUDIO+">";
 				var pathCommentAudio:XML = new XML(stringPathCommentAudio);
 				segmentXML.appendChild(pathCommentAudio);
-			
-				root.appendChild(segmentXML);
+                // parent obsel when do DND
+                if(segment.obselRef)
+                {
+                    var stringParentObsel:String = "<"+RetroDocumentConst.TAG_PARENT_OBSEL+"><![CDATA["+segment.obselRef.toRDF()+"]]></"+RetroDocumentConst.TAG_PARENT_OBSEL+">";
+                    var parentObsel:XML = new XML(stringParentObsel);
+                    segmentXML.appendChild(parentObsel);
+                }
+                root.appendChild(segmentXML);
 			}
 			
 			var result:String = root.toXMLString();

@@ -44,8 +44,7 @@
 	</s:states>
 	<s:VGroup width="330" gap="1">
 		<s:HGroup width="100%" gap="1" verticalAlign="middle"
-			
-			height.shared="16" height.sharedOver="16" height.sharedPause="16" height.sharedPlay="16">
+			>
 			<!-- SPACER FOR BILAN MODULE-->
 			<mx:Spacer width="35" includeIn="shared,sharedOver,sharedPause,sharedPlay"/>
             <!-- part vertical : icon segment-->
@@ -60,7 +59,7 @@
         			<!-- DURATION, PLAY, STOP, PAUSE -->
         			<s:HGroup width="90" gap="1" height="22">
         				<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
-        				<s:HGroup  id="labelGroup" gap="1" fontSize="10" height="100%" paddingTop.edit="3" paddingTop.editOver="3" paddingTop.editPause="3" paddingTop.editPlay="3" paddingTop.editSelected="3">
+        				<s:HGroup  id="labelGroup" gap="1" fontSize="10" height="100%" paddingTop="3">
         					<!-- ICON SEGMENT -->
         					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPause,sharedPlay">
         					</s:Label>
@@ -115,7 +114,7 @@
         			</s:HGroup>
                 </s:HGroup>
                 <!-- part horizontal : icon obsel , owner obsel-->
-                <s:HGroup id="hgroupDndOwnerObsel" width="100%" verticalAlign="middle" includeInLayout="false" visible="false" fontSize="10" horizontalAlign="center" toolTip=".">
+                <s:HGroup id="hgroupDndOwnerObsel" width="100%" verticalAlign="middle" includeInLayout="true" visible="true" fontSize="10" horizontalAlign="center" toolTip=".">
                     <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
                     <s:VGroup width="100%" gap="3">
                         <s:HGroup width="100%" horizontalAlign="center">
@@ -128,12 +127,11 @@
                 </s:HGroup>
             </s:VGroup>
             <!-- part vertical : icon delete-->
-            <s:VGroup verticalAlign="top" height="100%">
+            <s:VGroup verticalAlign="top" height="100%" includeIn="edit,editOver,editPause,editPlay,editSelected">
                 <s:HGroup width="100%" verticalAlign="top">
         			<!-- ICON DELETE -->
         			<components:IconDelete id="iconDelete"
         				buttonMode="true"
-        				includeIn="edit,editOver,editPause,editPlay,editSelected"
         				visible.edit="false"
         				visible.editSelected="true" visible.editPlay="true" visible.editPause="true">
         				<components:toolTip>Suprimer ce segment</components:toolTip>
