@@ -104,9 +104,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	private var editPlay:Boolean = false;
 	private var editPause:Boolean = false;
 	
-	private var currentTimeChange:Boolean;
-	private var durationChange:Boolean;
-	private var timeSegmentChange:Boolean;
+    private var currentTimeChange:Boolean;
+    private var durationChange:Boolean;
+    private var timeSegmentChange:Boolean;
+    private var startDateSessionChange:Boolean;
 	
 	private var _modeEdit:Boolean = true;
 	
@@ -226,6 +227,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	public function set startDateSession(value:Number):void
 	{
 		_startDateSession = value;
+        startDateSessionChange = true;
+        invalidateProperties();
 	};
 	public function get startDateSession():Number{return _startDateSession;};
 	public function set durationSession(value:Number):void
@@ -355,73 +358,38 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		super.partRemoved(partName,instance);
 		
 	}
-	override protected function commitProperties():void
-	{
-		super.commitProperties();	
-		if(segmentChange)
-		{
-			segmentChange = false;
-			
-			text = segment.comment;
-			// set text message
-			if(text == "" && modeEdit)
-			{
-				setRichEditText();
-			}else
-			{
-				richEditableText.text = text;
-				richEditableText.setStyle("textAlign","left");
-			}
-			if(modeEdit)
-			{
-				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
-				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
-			}
-			
-			/////////////////////////
-			// check NaN time
-			if(isNaN(this._segment.beginTimeVideo))
-			{
-				this._timeBegin = 0;
-			}else
-			{
-				this._timeBegin = this._segment.beginTimeVideo - this._startDateSession;
-			}
-			
-			if( isNaN(this._segment.endTimeVideo))
-			{
-				this._timeEnd = 0;		
-			}else
-			{
-				this._timeEnd = this._segment.endTimeVideo - this._startDateSession;
-			}
-			//this._title = this._segment.title;
-			// enabled button playStop
-		//	setEnabledButtonPlayStop();
-		//	labelStartDuration.text = getLabelStartDuration();
-		//	labelStartDuration.setStyle("fontWeight","normal");
-			/////////////////////////
-			if(labelDuration)
-			{
-				var durationMs:Number = _timeEnd - _timeBegin;
-				var duration:Number = Math.floor(durationMs / 1000);
-				labelDuration.text = TimeUtils.formatTimeString(duration); 
-			}
-			// remove screen-shot
-			/*if(segment.byteArray != null)
-			{
-				if(screenShot)
-				{
-					screenShot.source = segment.byteArray;
-				}
-			}else
-			{
-				if(screenShot)
-				{
-					screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
-				}
-			}*/
+    override protected function commitProperties():void
+    {
+        super.commitProperties();	
+        if(segmentChange)
+        {
+            segmentChange = false;
             
+            text = segment.comment;
+            // set text message
+            if(text == "" && modeEdit)
+            {
+                setRichEditText();
+            }else
+            {
+                richEditableText.text = text;
+                richEditableText.setStyle("textAlign","left");
+            }
+            if(modeEdit)
+            {
+                richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
+                richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+            }
+            
+            // check NaN time
+            updateTimeBeginTimeEndBloc();
+            
+            if(labelDuration)
+            {
+                var durationMs:Number = _timeEnd - _timeBegin;
+                var duration:Number = Math.floor(durationMs / 1000);
+                labelDuration.text = TimeUtils.formatTimeString(duration); 
+            }
             // check text
             if(!modeEdit && text == "")
             {
@@ -441,52 +409,57 @@ public class SegmentVideoAdvanced extends SkinnableComponent
                 hgroupDndOwnerObsel.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToopTipHgroupDndOwnerObsel);
             }
             
-		}
-		if(currentTimeChange)
-		{
-			currentTimeChange = false;
-			
-			// set current time
-			updateLabelCurrentTime();
-		}
-		if(durationChange)
-		{
-			durationChange = false;
-			// set duration
-			updateLabelDuration();
-		}
-		if(timeSegmentChange)
-		{
-			timeSegmentChange = false;
-			
-			var newBegin:Number = Math.floor(_timeBegin / 1000);
-			var newEnd:Number = Math.floor(_timeEnd / 1000);
-			
-			if(startSpinner != null)
-			{
-				startSpinner.value = newBegin;
-				startSpinner.maximum = newEnd;
-				
-			}
-			if(endSpinner != null)
-			{
-				endSpinner.value = newEnd;
-				endSpinner.minimum = newBegin;
-			}
-			if(labelStartSpinner != null)
-			{
-				labelStartSpinner.text  = TimeUtils.formatTimeString(newBegin); 
-			}
-			if(labelEndSpinner != null)
-			{
-				labelEndSpinner.text  = TimeUtils.formatTimeString(newEnd); 
-			}
-			if(labelDuration)
-			{
-				updateLabelDuration();
-			}
-		}
-	}
+        }
+        if(currentTimeChange)
+        {
+            currentTimeChange = false;
+            
+            // set current time
+            updateLabelCurrentTime();
+        }
+        if(durationChange)
+        {
+            durationChange = false;
+            // set duration
+            updateLabelDuration();
+        }
+        if(timeSegmentChange)
+        {
+            timeSegmentChange = false;
+            
+            var newBegin:Number = Math.floor(_timeBegin / 1000);
+            var newEnd:Number = Math.floor(_timeEnd / 1000);
+            
+            if(startSpinner != null)
+            {
+                startSpinner.value = newBegin;
+                startSpinner.maximum = newEnd;
+                
+            }
+            if(endSpinner != null)
+            {
+                endSpinner.value = newEnd;
+                endSpinner.minimum = newBegin;
+            }
+            if(labelStartSpinner != null)
+            {
+                labelStartSpinner.text  = TimeUtils.formatTimeString(newBegin); 
+            }
+            if(labelEndSpinner != null)
+            {
+                labelEndSpinner.text  = TimeUtils.formatTimeString(newEnd); 
+            }
+            if(labelDuration)
+            {
+                updateLabelDuration();
+            }
+        }
+        if(startDateSessionChange)
+        {
+            startDateSessionChange = false;
+            updateTimeBeginTimeEndBloc();
+        }
+    }
 	override protected function getCurrentSkinState():String
 	{
 		var skinName:String;
@@ -885,5 +858,23 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		var duration:Number = Math.floor(durationMs / 1000); 
 		labelDuration.text = TimeUtils.formatTimeString(duration); 
 	}
+	private function updateTimeBeginTimeEndBloc():void
+	{
+        if(isNaN(this._segment.beginTimeVideo))
+        {
+            this._timeBegin = 0;
+        }else
+        {
+            this._timeBegin = this._segment.beginTimeVideo - this._startDateSession;
+        }
+        
+        if( isNaN(this._segment.endTimeVideo))
+        {
+            this._timeEnd = 0;		
+        }else
+        {
+            this._timeEnd = this._segment.endTimeVideo - this._startDateSession;
+        }
+    }
 }
 }
