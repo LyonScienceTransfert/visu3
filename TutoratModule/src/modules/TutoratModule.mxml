@@ -1182,24 +1182,27 @@
 			
             private function createTimeLine():void
             {
-                timeLine = new Timeline();
-                // remove message from panle resume
-                panelTimeLine.removeAllElements();
-                timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
-                timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
-                // add listener added TraceLineTitle on the stage
-                timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
-                timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
-                // listener add playVideoSkin on stage
-                timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onAddedPlayVideoSkinOnTimeLine);
-                timeLine.percentWidth = 100;
-                timeLine.percentHeight = 100;
-                timeLine.contextFollowCursor = true;
-                timeLine.setStyle("timeMode","relative");
-                timeLine.setStyle("cursorMode","auto");
-                timeLine.setStyle("contextFollowCursor","false");
-                
-                panelTimeLine.addElement(timeLine);
+                if(!timeLine)
+                {
+                    timeLine = new Timeline();
+                    // remove message from panle resume
+                    panelTimeLine.removeAllElements();
+                    timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
+                    timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
+                    // add listener added TraceLineTitle on the stage
+                    timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
+                    timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
+                    // listener add playVideoSkin on stage
+                    timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onAddedPlayVideoSkinOnTimeLine);
+                    timeLine.percentWidth = 100;
+                    timeLine.percentHeight = 100;
+                    timeLine.contextFollowCursor = true;
+                    timeLine.setStyle("timeMode","relative");
+                    timeLine.setStyle("cursorMode","auto");
+                    timeLine.setStyle("contextFollowCursor","false");
+                    
+                    panelTimeLine.addElement(timeLine);
+                }
             }
 			
             private function onCreationCompleteTimeLine(event:FlexEvent):void
