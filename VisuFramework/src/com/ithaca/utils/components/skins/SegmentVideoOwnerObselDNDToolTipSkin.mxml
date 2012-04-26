@@ -36,9 +36,10 @@
             timeCreateObsel = this.hostComponent.timeCreateObsel;
             
             iconDndObsel.obsel = obsel;
+            var dateCreateParentObsel:Date = new Date(obsel.begin);
             var owner:User = Model.getInstance().getUserPlateformeByUserId(obsel.uid);
-            ownerObsel.text = VisuUtils.getUserLabelLastName(owner,true);
-            tsObsel.text = TimeUtils.formatTimeString(Math.floor(timeCreateObsel / 1000));
+            ownerObsel.text = fxgt.gettext("Créé le")+ " "+  TimeUtils.formatDDMMYYYY(dateCreateParentObsel)+ " "+ TimeUtils.formatHHMM(dateCreateParentObsel)+" "+ fxgt.gettext("par")+" "+VisuUtils.getUserLabelLastName(owner,true);
+
             contenueObsel.text = obsel.props[TraceModel.TEXT];
         }
         
@@ -55,28 +56,11 @@
     </s:Rect>
     
     <s:HGroup width="100%" fontSize="10" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
-        <s:VGroup height="100%" verticalAlign="top">
-            <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
-        </s:VGroup>
-        <s:VGroup width="100%">
-            <s:HGroup width="100%" >
-                <s:VGroup height="100%" horizontalAlign="right" verticalAlign="top">
-                    <s:Label>
-                        <s:text>{fxgt.gettext("Propriétaire de marqueur:")}</s:text>
-                    </s:Label>
-                    <s:Label>
-                        <s:text>{fxgt.gettext("Création de marqueur:")}</s:text>
-                    </s:Label>
-                    <s:Label>
-                        <s:text>{fxgt.gettext("Contenue de marqueur:")}</s:text>
-                    </s:Label>
-                </s:VGroup>
-                <s:VGroup horizontalAlign="left" verticalAlign="top">
-                    <s:Label id="ownerObsel" text="sayfulin"/>
-                    <s:Label id="tsObsel" text="sayfulin"/>
-                </s:VGroup>
+        <s:VGroup height="100%" width="100%">
+            <s:HGroup width="100%" verticalAlign="middle">
+                <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
+                <s:Label id="ownerObsel"/>
             </s:HGroup>
-
             <s:RichEditableText id="contenueObsel" editable="false" width="100%"
                   verticalAlign="top" textAlign="center" fontSize="12" selectable="false"/>
         </s:VGroup>

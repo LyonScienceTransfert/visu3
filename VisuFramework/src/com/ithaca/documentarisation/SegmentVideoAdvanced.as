@@ -376,8 +376,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
                 // icon of obsel ref
                 iconDndObsel.obsel = segment.obselRef;
                 var ownerObsel:User = Model.getInstance().getUserPlateformeByUserId(segment.obselRef.uid); 
-                labelDndObsel.text = fxgt.gettext("Propriétaire de marqueur:")+ " "+ VisuUtils.getUserLabelLastName(ownerObsel,true);
-                labelDndObselTempsContent.text = fxgt.gettext("Création de marqueur:")+ " "+TimeUtils.formatTimeString(Math.floor(_timeBegin / 1000)) + " , "+fxgt.gettext("Contenue de marqueur:")+ " "+text ; 
+                var dateCreateParentObsel:Date = new Date(this._segment.obselRef.begin);
+                labelDndObsel.text = fxgt.gettext("Créé le")+ " "+  TimeUtils.formatDDMMYYYY(dateCreateParentObsel)+ " "+ TimeUtils.formatHHMM(dateCreateParentObsel)+" "+ fxgt.gettext("par")+" "+VisuUtils.getUserLabelLastName(ownerObsel,true);
+                labelDndObselTempsContent.text = segment.obselRef.props[TraceModel.TEXT]; 
                 // tooltips 
                 hgroupDndOwnerObsel.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToopTipHgroupDndOwnerObsel);
             }
