@@ -121,7 +121,7 @@
                             <s:Label id="labelDndObsel" maxDisplayedLines="1" text="qsqsq"/>
                         </s:HGroup>
                         <s:HGroup width="100%" horizontalAlign="center">
-                            <s:Label id="labelDndObselTempsContent" maxDisplayedLines="1" width="100%" text="ghgh"/>
+                            <s:Label id="labelDndObselTempsContent" maxDisplayedLines="1" width="100%"/>
                         </s:HGroup>
                     </s:VGroup>
                 </s:HGroup>
