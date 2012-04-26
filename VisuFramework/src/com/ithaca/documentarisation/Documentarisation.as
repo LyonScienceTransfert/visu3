@@ -6,6 +6,7 @@ import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.utils.components.PanelButton;
 import com.ithaca.visu.events.PanelButtonEvent;
+import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
@@ -13,14 +14,14 @@ import com.ithaca.visu.traces.events.TracageEvent;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
+
 import mx.collections.ArrayCollection;
 import mx.events.FlexEvent;
 
 import spark.components.List;
 import spark.components.supportClasses.SkinnableComponent;
-
-import gnu.as3.gettext.FxGettext;
-import gnu.as3.gettext._FxGettext;
 
 [Event(name="addRetroDocument", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
 
@@ -143,10 +144,12 @@ public class Documentarisation extends SkinnableComponent
 		_listUserPresentsOnTimeLine = listUserPresentsOnTimeLine;
 	}
 
-	public function setRetroDocument(retroDocument : RetroDocument, listUser: Array):void
+	public function setRetroDocument(retroDocument : RetroDocument, listUser: Array, session:Session):void
 	{
 		this.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompete);
 		_retroDocument = retroDocument;
+        // set current session retroDocument
+        _retroDocument.session = session;
 		_listUser = listUser ;
 
 		edit = true;
@@ -273,7 +276,6 @@ public class Documentarisation extends SkinnableComponent
 				retroDocumentView.currentTime = _currentTime;
 			}
 		}
-
 	}
 
 	override protected function getCurrentSkinState():String

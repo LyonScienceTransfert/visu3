@@ -825,7 +825,7 @@
 			//_____________________________________________________________________
 			private function setRetroDocument(retroDocument:RetroDocument, listUser:Array ):void
 			{
-				documentarisation.setRetroDocument(retroDocument, listUser);
+				documentarisation.setRetroDocument(retroDocument, listUser,  Model.getInstance().getCurrentSessionRetroModule());
 			}
 			/**
 			 * set id the retrodocument

@@ -107,7 +107,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     private var currentTimeChange:Boolean;
     private var durationChange:Boolean;
     private var timeSegmentChange:Boolean;
-    private var startDateSessionChange:Boolean;
 	
 	private var _modeEdit:Boolean = true;
 	
@@ -118,7 +117,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	private var segmentChange:Boolean;
 	
 	private var _startDateSession:Number = 0;
-	private var _durationSession:Number;
 	private var _timeBegin:Number=0;
 	private var _timeEnd:Number=0;
 	private var _currentTime:Number = 0;
@@ -179,6 +177,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	{
 		return _modeEdit;
 	}
+    public function set currentTime(value:Number):void{
+        _currentTime = value;
+        currentTimeChange = true;
+        invalidateProperties();
+    };
+    public function get currentTime():Number{return _currentTime;};
 	public function rendererNormal():void
 	{
 		initSkinVars();
@@ -223,26 +227,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			invalidateSkinState();
 		}	
 	}
-	
-	public function set startDateSession(value:Number):void
-	{
-		_startDateSession = value;
-        startDateSessionChange = true;
-        invalidateProperties();
-	};
-	public function get startDateSession():Number{return _startDateSession;};
-	public function set durationSession(value:Number):void
-	{
-		_durationSession = value;
-	};
-	public function get durationSession():Number{return _durationSession;};
-	
-	public function set currentTime(value:Number):void{
-		_currentTime = value;
-		currentTimeChange = true;
-		invalidateProperties();
-	};
-	public function get currentTime():Number{return _currentTime;};
 	
 	public function setBeginEndTime():void
 	{
@@ -340,17 +324,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
             hgroupDndOwnerObsel.includeInLayout = hgroupDndOwnerObsel.visible = false;
 		}
-        // remove screen-shot
-		/*if(instance == screenShot)
-		{
-			if(segment.byteArray != null)
-			{
-				screenShot.source = segment.byteArray;
-			}else
-			{
-				screenShot.source = IconEnum.getIconByName('ScreenShot80x60'); 
-			}
-		}*/
 	}
 	
 	override protected function partRemoved(partName:String, instance:Object):void
@@ -453,11 +426,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             {
                 updateLabelDuration();
             }
-        }
-        if(startDateSessionChange)
-        {
-            startDateSessionChange = false;
-            updateTimeBeginTimeEndBloc();
         }
     }
 	override protected function getCurrentSkinState():String
@@ -860,6 +828,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	}
 	private function updateTimeBeginTimeEndBloc():void
 	{
+        // set start time session selected retroDocument
+        this._startDateSession = _segment.parentRetroDocument.session.date_start_recording.time;
+        
         if(isNaN(this._segment.beginTimeVideo))
         {
             this._timeBegin = 0;
