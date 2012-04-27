@@ -31,6 +31,7 @@ import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
 import mx.events.ToolTipEvent;
+import mx.managers.CursorManager;
 
 import spark.components.HGroup;
 import spark.components.Label;
@@ -131,8 +132,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
     private var _tracageTimer:Timer; 
-    // cursor
-    private var _cursor:String;
+    // cursor id
+    private var _cursorID:int;
 	
 	public function SegmentVideoAdvanced()
 	{
@@ -279,15 +280,21 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}
         if (instance == iconSegment)
         {
-            // can drag/drop this segment
-            iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
-            iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
-            iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
-            var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
-            iconSegment.toolTip = messageDND + " " + fxgt.gettext("vidéo");
-            // TODO : message "Vous pouver deplace cet block en haut en bas",
-            // show this message only if has many blocs
-            // MouseCursor = HAND just if has many blocs
+            if(modeEdit)
+            {
+                // can drag/drop this segment
+                iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+                iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
+                iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
+                var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
+                iconSegment.toolTip = messageDND + " " + fxgt.gettext("vidéo");
+                // TODO : message "Vous pouver deplace cet block en haut en bas",
+                // show this message only if has many blocs
+                // MouseCursor = HAND just if has many blocs
+            }else
+            {
+                iconSegment.toolTip = fxgt.gettext("Bloc vidéo");
+            }
         }
 		
 		if(instance == startSpinner)
@@ -614,17 +621,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	
     private function onMouseDownIconSegment(event:MouseEvent):void
     {
+        CursorManager.removeCursor(_cursorID);
+        _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_close'));
         var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
         dispatchEvent(mouseDownIconSegment);
     }
     private function onMouseOverIconSegment(event:MouseEvent):void
     {
-        _cursor =  Mouse.cursor;
-        Mouse.cursor = MouseCursor.HAND;
+        _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_open'));
     }
     private function onMouseOutIconSegment(event:MouseEvent):void
     {
-        Mouse.cursor = _cursor;
+        CursorManager.removeCursor(_cursorID);
     }
 	private function onCreationCompletStartSpinner(event:FlexEvent):void
 	{
