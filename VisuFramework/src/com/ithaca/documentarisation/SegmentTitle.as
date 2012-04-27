@@ -16,16 +16,17 @@ import flash.ui.Mouse;
 import flash.ui.MouseCursor;
 import flash.utils.Timer;
 
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
+
 import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
+import mx.managers.CursorManager;
 
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
-
-import gnu.as3.gettext.FxGettext;
-import gnu.as3.gettext._FxGettext;
 
 public class SegmentTitle extends SkinnableComponent
 {
@@ -62,8 +63,8 @@ public class SegmentTitle extends SkinnableComponent
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
     private var _tracageTimer:Timer; 
-    // cursor
-    private var _cursor:String;
+    // cursor id
+    private var _cursorID:int;
     
 	public function SegmentTitle()
 	{
@@ -283,17 +284,18 @@ public class SegmentTitle extends SkinnableComponent
 
 	private function onMouseDownIconSegment(event:MouseEvent):void
 	{
+        CursorManager.removeCursor(_cursorID);
+        _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_close'));
 		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
 		dispatchEvent(mouseDownIconSegment);
 	}
     private function onMouseOverIconSegment(event:MouseEvent):void
     {
-        _cursor =  Mouse.cursor;
-        Mouse.cursor = MouseCursor.HAND;
+        _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_open'));
     }
     private function onMouseOutIconSegment(event:MouseEvent):void
     {
-        Mouse.cursor = _cursor;
+        CursorManager.removeCursor(_cursorID);
     }
     
     

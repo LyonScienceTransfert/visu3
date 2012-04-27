@@ -7,6 +7,7 @@ import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconDelete;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
+import com.ithaca.visu.ui.utils.IconEnum;
 
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -14,22 +15,22 @@ import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.net.NetConnection;
 import flash.net.NetStream;
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
 import flash.utils.Timer;
+
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 import mx.collections.ArrayCollection;
 import mx.controls.Image;
 import mx.events.FlexEvent;
-
-import flash.ui.Mouse;
-import flash.ui.MouseCursor;
+import mx.managers.CursorManager;
 
 import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
-
-import gnu.as3.gettext.FxGettext;
-import gnu.as3.gettext._FxGettext;
 
 public class SegmentCommentAudio extends SkinnableComponent
 {
@@ -94,8 +95,8 @@ public class SegmentCommentAudio extends SkinnableComponent
     private var TRACAGE_INTERVAL:Number = 10*1000;
     // timer the trasage
     private var _tracageTimer:Timer;
-    // cursor
-    private var _cursor:String;
+    // cursor id
+    private var _cursorID:int;
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -275,15 +276,21 @@ public class SegmentCommentAudio extends SkinnableComponent
 		}
         if (instance == iconSegment)
         {
-            // can drag/drop this segment
-            iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
-            iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
-            iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
-            var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
-            iconSegment.toolTip = messageDND+ " "  + fxgt.gettext("audio");
-            // TODO : message "Vous pouver deplace cet block en haut en bas",
-            // show this message only if has many blocs
-            // MouseCursor = HAND just if has many blocs
+            if(modeEdit)
+            {
+                // can drag/drop this segment
+                iconSegment.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownIconSegment);
+                iconSegment.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverIconSegment);
+                iconSegment.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutIconSegment);
+                var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
+                iconSegment.toolTip = messageDND+ " "  + fxgt.gettext("audio");
+                // TODO : message "Vous pouver deplace cet block en haut en bas",
+                // show this message only if has many blocs
+                // MouseCursor = HAND just if has many blocs
+            }else
+            {
+                iconSegment.toolTip = fxgt.gettext("Bloc audio");
+            }
         }
 	}
 	override protected function commitProperties():void
@@ -447,17 +454,18 @@ public class SegmentCommentAudio extends SkinnableComponent
 	}
 	private function onMouseDownIconSegment(event:MouseEvent):void
 	{
+        CursorManager.removeCursor(_cursorID);
+        _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_close'));
 		var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
 		dispatchEvent(mouseDownIconSegment);
 	}
     private function onMouseOverIconSegment(event:MouseEvent):void
     {
-        _cursor =  Mouse.cursor;
-        Mouse.cursor = MouseCursor.HAND;
+        _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_open'));
     }
     private function onMouseOutIconSegment(event:MouseEvent):void
     {
-        Mouse.cursor = _cursor;
+        CursorManager.removeCursor(_cursorID);
     }
     // creation the segment
 	private function onCreationComplete(event:FlexEvent = null):void
