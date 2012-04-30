@@ -314,8 +314,6 @@
 
             protected function group1_creationCompleteHandler(event:*=null):void
             {
-                fxgt = FxGettext;
-                
                 if(infoLabel)
                 {
                     if(_showLabelInfo)
