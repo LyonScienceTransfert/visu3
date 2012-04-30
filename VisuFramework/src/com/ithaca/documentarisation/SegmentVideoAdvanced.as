@@ -32,6 +32,7 @@ import mx.controls.Image;
 import mx.events.FlexEvent;
 import mx.events.ToolTipEvent;
 import mx.managers.CursorManager;
+import mx.utils.StringUtil;
 
 import spark.components.HGroup;
 import spark.components.Label;
@@ -384,7 +385,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
                 iconDndObsel.obsel = segment.obselRef;
                 var ownerObsel:User = Model.getInstance().getUserPlateformeByUserId(segment.obselRef.uid); 
                 var dateCreateParentObsel:Date = new Date(this._segment.obselRef.begin);
-                labelDndObsel.text = fxgt.gettext("Créé le")+ " "+  TimeUtils.formatDDMMYYYY(dateCreateParentObsel)+ " "+ TimeUtils.formatHHMM(dateCreateParentObsel)+" "+ fxgt.gettext("par")+" "+VisuUtils.getUserLabelLastName(ownerObsel,true);
+                labelDndObsel.text = StringUtil.substitute(fxgt.gettext("Créé le {0} {1} par {2}"), 
+                                                                        TimeUtils.formatDDMMYYYY(dateCreateParentObsel),
+                                                                        TimeUtils.formatHHMM(dateCreateParentObsel),
+                                                                        VisuUtils.getUserLabelLastName(ownerObsel,true));
                 labelDndObselTempsContent.text = segment.obselRef.props[TraceModel.TEXT]; 
                 // tooltips 
                 hgroupDndOwnerObsel.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToopTipHgroupDndOwnerObsel);
