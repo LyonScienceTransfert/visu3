@@ -23,6 +23,7 @@
         import gnu.as3.gettext._FxGettext;
         
         import mx.events.FlexEvent;
+	    import mx.utils.StringUtil;
         
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;
@@ -31,15 +32,16 @@
         
         protected function skin1_creationCompleteHandler(event:FlexEvent):void
         {
-            fxgt = FxGettext;
             obsel = this.hostComponent.obsel;
             timeCreateObsel = this.hostComponent.timeCreateObsel;
             
             iconDndObsel.obsel = obsel;
             var dateCreateParentObsel:Date = new Date(obsel.begin);
             var owner:User = Model.getInstance().getUserPlateformeByUserId(obsel.uid);
-            ownerObsel.text = fxgt.gettext("Créé le")+ " "+  TimeUtils.formatDDMMYYYY(dateCreateParentObsel)+ " "+ TimeUtils.formatHHMM(dateCreateParentObsel)+" "+ fxgt.gettext("par")+" "+VisuUtils.getUserLabelLastName(owner,true);
-
+            ownerObsel.text = StringUtil.substitute(fxgt.gettext("Créé le {0} {1} par {2}"),
+                                                    TimeUtils.formatDDMMYYYY(dateCreateParentObsel),
+                                                    TimeUtils.formatHHMM(dateCreateParentObsel),
+                                                    VisuUtils.getUserLabelLastName(owner,true));
             contenueObsel.text = obsel.props[TraceModel.TEXT];
         }
         
