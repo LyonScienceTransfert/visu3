@@ -178,7 +178,36 @@ public class UserServiceImpl implements UserService
 		}
 		return null;
 	}
+	
+	public User getUserByActivatedKey(String activatedKey)
+	{
+		log.debug("getUserByActivatedKey activatedKey {}", activatedKey );
+		try
+		{
+			return this.userDao.getUserByActivatedKey(activatedKey);
+		}
+		catch (Exception e)
+		{
+			log.error("--getUserByActivatedKey : " + e.getMessage());
+		}
+		return null;
+	}
+	
+	public Integer setUserPassword(Integer userId, String password)
+	{
+		log.debug("setUserPassword userId {}", userId );
+		try
+		{
+			return this.userDao.setUserPassword(userId, password);
+		}
+		catch (Exception e)
+		{
+			log.error("--setUserPassword : " + e.getMessage());
+		}
+		return null;
+	}
 		
+	
 	public UserDAO getUserDao() {
 		return userDao;
 	}

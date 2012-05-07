@@ -29,6 +29,7 @@ package com.ithaca.visu.events
 		public static const SESSION_MODULE:String = "sessionModule";
 		public static const BILAN_MODULE:String = "bilanModule";
 		public static const HOME_MODULE:String = "homeModule";
+		public static const PROFIL_MODULE:String = "profilModule";
 		
 		public var listModules:Array;
 		public var moduleName:String;

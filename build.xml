@@ -54,6 +54,7 @@ or by setting the following environment variable:
    	<property name="NAME_TUTORAT_MODULE"  value="tutorat" />
    	<property name="NAME_RETROSPECTION_MODULE"  value="retrospection" />
    	<property name="NAME_BILAN_MODULE"  value="bilan" />
+   	<property name="NAME_PROFIL_MODULE"  value="profil" />
 
 	<!-- The FLEX_HOME variable (with this typo) must be set to the flex sdk repository
 		 for the compc and mxmlc compilers to run properly-->
@@ -121,6 +122,10 @@ or by setting the following environment variable:
 	<!--  Pathes to Retrospection Module sources -->
    <property name="retrospectionmodule.src" location="${visu.dev.path}/RetrospectionModule/src" />
    <property name="retrospectionmodule.name" value="RetrospectionModule" />
+   
+   	<!--  Pathes to Profil Module sources -->
+   <property name="profilmodule.src" location="${visu.dev.path}/ProfilModule/src" />
+   <property name="profilmodule.name" value="ProfilModule" />
 
 
 	<!--  the name of the visu swf file -->
@@ -711,6 +716,69 @@ or by setting the following environment variable:
 		 <delete  dir="${app.deploy}/${bilanmodule.name}"/>
 	</target>
 
+
+
+
+
+<!--
+		Build the profil module (interface de gestion des utilisateurs visu) and produce a ProfilModule.swf file
+
+		This target works exactly as the "build_profil_module" target, please refer to it for documentation.
+	-->
+	<target name="build-profil-module"  description="Builds the Profil Module">
+	   	<echo>Build Profil Module</echo>
+	    <tstamp>
+	  		<format
+	  			property="TIMESTAMP_PROFIL_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete profil dir -->
+	   	<antcall target="delete-old-profil-module" />
+
+		<!-- name profil module with timestamp -->
+		<property name="profilmodule.name.timestamp" value="${profilmodule.name}-${TIMESTAMP_PROFIL_MODULE}.swf" />
+
+		<mxmlc
+			file="${profilmodule.src}/modules/${profilmodule.name}.mxml"
+		   	output="${app.deploy}/${profilmodule.name}/${profilmodule.name.timestamp}"
+		  	debug="${debug}"
+		   	strict="true"
+		   	optimize="true"
+		 	incremental="${mxmlc.incremental}"
+		   	warnings="${warnings}"
+		   	load-externs="${framework.linkreport}"
+		   	headless-server="true">
+
+		   	<!-- will include all files with .css, .as, .mxml extensions -->
+		    <source-path path-element="${profilmodule.src}"/>
+
+		    <library-path dir="${framework.bin}" append="true">
+				<include name="${framework.swc}" />
+			</library-path>
+
+		 	<library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+		    	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		    	<include name="${lib.as3gettext}" />
+		  	</library-path>
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-profil-module">
+    	<available filepath="${app.deploy}" type="dir" file="${profilmodule.name}" property="profilmodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-profil-module" depends="check-exist-old-profil-module" if="profilmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${profilmodule.name}"/>
+	</target>
+
+
+
+
 	 <!--
 	 	Build the visu client application, i.e. from "visuclient.mxml" to "visuclient.swf"
 	 -->
@@ -831,6 +899,7 @@ or by setting the following environment variable:
     	<antcall target="build-retrospection-module" />
     	<antcall target="build-tutorat-module" />
     	<antcall target="build-bilan-module" />
+    	<antcall target="build-profil-module" />
 
     	<!-- html wrapper do in target "build-visuclient-swf" -->
     	<!-- <antcall target="html-wrapper" />  -->
@@ -1037,6 +1106,36 @@ or by setting the following environment variable:
 			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_bilanmodule}" WHERE name="${NAME_BILAN_MODULE}";
 		</sql>
 	</target>
+	
+	<!-- PROFIL MODULE -->
+	<target name="check-produced-profil-module">
+    	<available filepath="${app.deploy}" type="dir" file="${profilmodule.name}" property="profilmodule.present"/>
+	</target>
+	<target name="deploy-profil-module" depends="check-produced-profil-module" if="profilmodule.present">
+	    <!-- delete old version profil module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${profilmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version profil module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_profilmodule" dir="${app.deploy}/${profilmodule.name}" includes="${profilmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file profil module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_profilmodule" refid="copy_profilmodule"/>
+		<!-- get name file profil module -->
+		<basename property="file_name_profilmodule" file="${path_file_profilmodule}"/>
+		<!-- update new name profil module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_profilmodule}" WHERE name="${NAME_PROFIL_MODULE}";
+		</sql>
+	</target>
 
 	<target name="deploy-client" description="Copies the client swf files to the web app directory on the server">
 		<!-- DEPLOY CLIENT APPLICATION -->
@@ -1066,6 +1165,9 @@ or by setting the following environment variable:
 
 	   	<!-- DEPLOY BILAN MODULE -->
 	   	<antcall target="deploy-bilan-module" />
+	   	
+	   	<!-- DEPLOY PROFIL MODULE -->
+	   	<antcall target="deploy-profil-module" />
 
 	      <!-- copy wrappers -->
 	      <echo>Copy wrappers</echo>

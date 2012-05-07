@@ -82,4 +82,8 @@ public interface UserDAO
 		
 		public User getUser(Integer userId) throws SQLException;
 		
+		public User getUserByActivatedKey(String activatedKey) throws SQLException;
+		
+		public Integer setUserPassword(Integer userId, String password) throws SQLException;
+		
 	}

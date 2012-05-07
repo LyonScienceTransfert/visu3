@@ -5,6 +5,7 @@ package com.ithaca.visu.core
 	import com.ithaca.documentarisation.events.RetroDocumentEvent;
 	import com.ithaca.visu.controls.globalNavigation.ApplicationMenu;
 	import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+	import com.ithaca.visu.controls.login.ActivateForm;
 	import com.ithaca.visu.controls.login.LoginForm;
 	import com.ithaca.visu.controls.login.event.LoginFormEvent;
 	import com.ithaca.visu.events.AuthenticationEvent;
@@ -40,6 +41,9 @@ package com.ithaca.visu.core
 		
 		[SkinPart("true")]
 		public var menu:ApplicationMenu;
+        
+		[SkinPart("true")]
+		public var activatedForm:ActivateForm;
 		/**
 		 * 
 		 * Register Singleton Manager and other components
@@ -54,6 +58,8 @@ package com.ithaca.visu.core
 		protected var defaultModule:String; 
 
 		private var _authentified:Boolean;
+		private var _activated:Boolean;
+        
 		public function get authentified():Boolean
 		{
 			return _authentified;
@@ -64,6 +70,17 @@ package com.ithaca.visu.core
 			_authentified = value;
 			invalidateSkinState();
 		}
+		public function get activated():Boolean
+		{
+			return _activated;
+		}
+
+		public function set activated(value:Boolean):void
+		{
+            _activated = value;
+			invalidateSkinState();
+		}
+        
 		public function VisuApplication()
 		{
 			super();
@@ -146,7 +163,7 @@ package com.ithaca.visu.core
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled ? "disabledWithControlBar": authentified ? "authentified" : "normalWithControlBar";
+			return !enabled ? "disabledWithControlBar": authentified ? "authentified" :  activated ? "activated" : "normalWithControlBar";
 		}
 		/**
 		 * 
@@ -301,6 +318,11 @@ package com.ithaca.visu.core
                 menu.selectButtonRetroModule(false);
                 menu.selectButtonTutoratModule(false);
                 break;
+            case VisuModuleEvent.PROFIL_MODULE:
+                menu.deselectButtonBarModules();
+                menu.selectButtonRetroModule(false);
+                menu.selectButtonTutoratModule(false);
+                break;
             default:
                 menu.requireSelectionButtonBarModules();
                 menu.selectButtonRetroModule(false);
@@ -328,11 +350,11 @@ package com.ithaca.visu.core
 		 *  
 		 * 
 		 */
-		protected function authUser(event:Event):void
+		protected function authUser(event:LoginFormEvent):void
 		{	
 			var loginEvent:AuthenticationEvent = new AuthenticationEvent(AuthenticationEvent.CONNECT);
 			loginEvent.rtmpSever = Model.getInstance().rtmpServer;
-			loginEvent.params = {"username" : loginForm.loginField.text, "password" : loginForm.passField.text};
+			loginEvent.params = {"username" : event.username, "password" : event.password};
 			dispatchEvent(loginEvent);
 		}
 		

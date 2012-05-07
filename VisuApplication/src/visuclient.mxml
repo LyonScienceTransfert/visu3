@@ -14,6 +14,8 @@
 	>
 	<fx:Declarations>
 		<map:MainMap id="mainMap"/>
+		<mate:Listener type="{LoginFormEvent.GET_USER_ACTIVATED_KEY}"  method="updateActivatedForm"/>
+		<mate:Listener type="{LoginFormEvent.UPDATE_PASSWORD_DELETE_ACTIVATED_KEY}"  method="showLoginForm"/>
 		<mate:Listener type="{VisuModuleEvent.LOAD_LIST_MODULES}"  method="userLoggedIN"/>
 		<mate:Listener type="{SessionEvent.JOIN_SESSION}"  method="joinSession"/>
 		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
@@ -53,13 +55,14 @@
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.utils.EditObselMarkerTitleWindow;
-            import com.ithaca.utils.UtilFunction;
             import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+            import com.ithaca.visu.controls.login.event.LoginFormEvent;
             import com.ithaca.visu.events.SessionEvent;
             import com.ithaca.visu.events.SessionSharedEvent;
             import com.ithaca.visu.events.VisuModuleEvent;
             import com.ithaca.visu.model.Model;
             import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.vo.UserVO;
             import com.ithaca.visu.ui.utils.ActionObselEnum;
             import com.ithaca.visu.ui.utils.RoleEnum;
             
@@ -85,6 +88,8 @@
 			private var currentObselEdit:Obsel = null;
 			private var currentTextEdit:String="";
 			private var NBR_LETTERS_FOR_ID_COMMITS_GIT:int = 10;
+            
+            private var activatedKey = null;
 			
 			private var listLang:ArrayCollection = new ArrayCollection();
 			
@@ -99,6 +104,12 @@
 				Model.getInstance().setRemoteVersionGit(remoteversion.substr(0, NBR_LETTERS_FOR_ID_COMMITS_GIT));	
 
 				Model.getInstance().setDateCompiled(datecompiled);
+                
+                // check activated key
+                if(activatedKey)
+                {
+                    checkActivatedKey();
+                }
 			}
 
 			protected function onChangeLanguage(event:ApplicationMenuEvent):void
@@ -241,6 +252,12 @@
                                     {
                                         Model.getInstance().setModeExpert(true);
                                     }
+                                }
+                                // check property activation_key
+                                if(params.hasOwnProperty('activation_key'))
+                                {
+                                    // set activation_key
+                                    activatedKey = params['activation_key']
                                 }
                             }
 						}
@@ -393,6 +410,37 @@
                 stage.focus = editObselMarker;
                 // set listener delete obsel
                 editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselMarker);
+            }
+            
+            /**
+            * update activated form 
+            */
+            private function updateActivatedForm(event:LoginFormEvent):void
+            {
+                var userVO:UserVO = event.userVO;
+                
+                activatedForm.loggedUser = userVO;
+            }
+            
+            /**
+            * show login form
+            */
+            private function showLoginForm(event:LoginFormEvent):void
+            {
+                authentified = activated = false;
+            }
+            
+            /**
+            * check if user has activated key
+            * 
+            */
+            private function checkActivatedKey():void
+            {
+                // set skin activated 
+                activated = true;
+                var checkActivatedKeyEvent:LoginFormEvent = new LoginFormEvent(LoginFormEvent.CHECK_ACTIVATED_KEY);
+                checkActivatedKeyEvent.activatedKey = activatedKey;
+                dispatchEvent(checkActivatedKeyEvent);
             }
 		]]>
 	</fx:Script>

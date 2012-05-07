@@ -8,6 +8,7 @@ import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.traces.model.vo.SGBDObsel;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+import com.ithaca.visu.controls.login.event.LoginFormEvent;
 import com.ithaca.visu.events.BilanEvent;
 import com.ithaca.visu.events.SalonRetroEvent;
 import com.ithaca.visu.events.SessionEvent;
@@ -84,6 +85,28 @@ public class MainManager
 	}
 	// methods
 	
+    
+    /**
+     * update password, clear activated key on server side
+     * @param result, 1 => ok, 0 => ko;
+     */
+    public function onSetUserPassword(result:int):void
+    {
+      var updatePasswordEvent:LoginFormEvent = new LoginFormEvent(LoginFormEvent.UPDATE_PASSWORD_DELETE_ACTIVATED_KEY);
+      dispatcher.dispatchEvent(updatePasswordEvent);
+    }
+    
+    /**
+     * load user will activate password by activated key
+     * @param userVO
+     */
+    public function onLoadUserActivatedKey(userVO:UserVO):void
+    {
+      var userActivatedKeyEvent:LoginFormEvent = new LoginFormEvent(LoginFormEvent.GET_USER_ACTIVATED_KEY);
+      userActivatedKeyEvent.userVO = userVO;
+      dispatcher.dispatchEvent(userActivatedKeyEvent);
+    }
+    
 	/**
 	 * set logged user
 	 * @param

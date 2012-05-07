@@ -13,6 +13,7 @@
         import com.flashdevs.mateExt.rtmpService.RtmpService;
         import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
         import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
+        import com.ithaca.visu.controls.login.event.LoginFormEvent;
         import com.ithaca.visu.events.AuthenticationEvent;
         import com.ithaca.visu.events.MessageEvent;
         import com.ithaca.visu.events.SessionEvent;
@@ -27,11 +28,20 @@
         ]]></fx:Script>
 
     <fx:Declarations>
+        <s:RemoteObject
+            id="remoteUser"
+            endpoint="{Model.getInstance().AMFServer}"
+            destination="UserService"
+            makeObjectsBindable="true"
+            showBusyCursor="true">
+        </s:RemoteObject>	
+        
 		<mate:Injectors target="{MainManager}" debug="true">
 			<mate:PropertyInjector source="{RtmpService}"
 								   targetKey="netConnection" sourceKey="netConnection"/>
 		</mate:Injectors>
-		
+        
+        
         <mate:Debugger level="{Debugger.ALL}"/>
 		<!-- FlexEvent.CREATION_COMPLETE __________________________________________________________________ -->		
 		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
@@ -66,6 +76,26 @@
 				</rtmp:faultHandlers>-->
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
+ 
+        <mate:EventHandlers type="{LoginFormEvent.CHECK_ACTIVATED_KEY}" debug="true">
+            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="getUserByActivatedKey" arguments="{[event.activatedKey]}">
+                <mate:resultHandlers>
+                    <mate:MethodInvoker generator="{MainManager}"
+                        method="onLoadUserActivatedKey" arguments="{[resultObject]}"/>
+                </mate:resultHandlers>
+            </mate:RemoteObjectInvoker>	
+        </mate:EventHandlers>
+        
+        <!-- Set password , delete activate key-->
+        <mate:EventHandlers type="{LoginFormEvent.SET_PASSWORD}" debug="true" useCapture="true">
+            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="setUserPassword" arguments="{[event.userId, event.password]}">
+                <mate:resultHandlers>
+                    <mate:MethodInvoker generator="{MainManager}"
+                        method="onSetUserPassword" arguments="{[resultObject]}"/>
+                </mate:resultHandlers>
+            </mate:RemoteObjectInvoker>	
+        </mate:EventHandlers>
+        
 		
 		<mate:EventHandlers type="{'clientInfo'}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
