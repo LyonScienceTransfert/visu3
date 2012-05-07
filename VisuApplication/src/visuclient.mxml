@@ -105,6 +105,9 @@
 
 				Model.getInstance().setDateCompiled(datecompiled);
                 
+                var amfServer:String = Model.getInstance().AMFServer;
+                Alert.show(amfServer);
+                
                 // check activated key
                 if(activatedKey)
                 {
