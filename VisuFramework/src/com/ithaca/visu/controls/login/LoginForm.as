@@ -1,5 +1,7 @@
 package com.ithaca.visu.controls.login
 {
+	import com.adobe.crypto.MD5;
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.controls.login.event.LoginFormEvent;
 	import com.ithaca.visu.model.Model;
 	
@@ -141,11 +143,11 @@ package com.ithaca.visu.controls.login
 			var result:Array = Validator.validateAll( [loginValidator, passValidator])
 			if (result.length==0)
 			{
-				var e:LoginFormEvent = new LoginFormEvent(LoginFormEvent.LOGIN);
-				e.username = loginField.text;
-				e.password = passField.text;
+				var loginFormEvent:LoginFormEvent = new LoginFormEvent(LoginFormEvent.LOGIN);
+                loginFormEvent.username = loginField.text;
+                loginFormEvent.password = UtilFunction.getCryptWord(passField.text);
 					
-				dispatchEvent( new LoginFormEvent( LoginFormEvent.LOGIN ) );
+				dispatchEvent( loginFormEvent );
 			}
 			else
 			{

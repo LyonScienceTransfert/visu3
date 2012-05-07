@@ -69,6 +69,7 @@ import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
+import com.lyon2.utils.UtilFunction;
 import com.lyon2.visu.domain.dao.UserDAO;
 import com.lyon2.visu.domain.model.User;
 
@@ -122,4 +123,15 @@ public class UserDAOImpl extends SqlMapClientTemplate implements UserDAO
 		return (User) getSqlMapClient().queryForObject("users.getUser",userId);
 	}
 
+	public User getUserByActivatedKey(String activatedKey) throws SQLException 
+	{
+		log.debug("getUserByActivatedKey {}", activatedKey);
+		return (User) getSqlMapClient().queryForObject("users.getUserByActivatedKey",activatedKey);
+	}
+	
+	public Integer setUserPassword(Integer userId, String password) throws SQLException 
+	{
+		log.debug("setUserPassword {}", userId);
+		return (Integer) getSqlMapClient().update("users.setUserPassword", UtilFunction.createParams("userId", userId, "password", password));
+	}
 }

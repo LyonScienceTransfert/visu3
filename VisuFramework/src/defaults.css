@@ -350,6 +350,10 @@ login|LoginForm
 {
 	skin-class:ClassReference("com.ithaca.visu.skins.LoginFormSkin");	
 }
+login|ActivateForm
+{
+    skin-class:ClassReference("com.ithaca.visu.controls.login.skins.ActivateFormSkin");	
+}
 sessions|ActivityDetail
 {
 	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin");	

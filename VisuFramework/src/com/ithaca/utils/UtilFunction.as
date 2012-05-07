@@ -62,7 +62,9 @@
  */
 package com.ithaca.utils
 {
+    import com.adobe.crypto.MD5;
     import com.ithaca.documentarisation.RetroDocumentConst;
+    import com.ithaca.visu.model.Model;
     
     import gnu.as3.gettext.FxGettext;
     import gnu.as3.gettext._FxGettext;
@@ -274,6 +276,15 @@ package com.ithaca.utils
             var result: String = value.toString();
             result = result.split(".")[0];
             return new Number(result);
+        }
+        /**
+        * criptage the passwor
+        * md5(md5(pass)+word)
+        */
+        public static function getCryptWord(value:String):String
+        {
+            var result:String = MD5.hash(MD5.hash(value) + Model.getInstance().server);
+            return result;
         }
     }
 }

@@ -131,6 +131,8 @@ import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
 
+import com.lyon2.utils.UtilFunction;
+
 /**
  * Sample application that uses the client manager.
  * 
@@ -651,7 +653,24 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			sc.invoke("checkClientInfo", obj);
 		}
 	}
-
+	/**
+	 * Update password connected user
+	 * 
+	 * @param an encrypted version of the user password
+	 */
+	public void updatePassword(IConnection conn, String password) throws SQLException {
+		log.warn("updatePassword");
+		IClient client = conn.getClient();
+		Integer userId = (Integer) client.getAttribute("uid");
+		
+		try {
+			getSqlMapClient().update(
+					"users.updatePassword", UtilFunction.createParams("userId", userId, "password", password));
+		} catch (Exception e) {
+			log.error("Probleme lors du update password " + e);
+		}
+		
+	}
 	@SuppressWarnings("unchecked")
 	public List<User> listUsers() throws SQLException {
 		log.debug("listUsers");

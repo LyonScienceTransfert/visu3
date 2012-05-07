@@ -103,7 +103,7 @@ package  com.ithaca.visu.model
 		private static var instance:Model;
 		/* Serveur */
 		public var server : String = "localhost";
-		public var port   : uint = 5080; 
+		public var port   : uint = 0; 
 		public var appName: String = "visu2";
 		public var roomName: String = "monSalon";
 		
@@ -1763,17 +1763,18 @@ package  com.ithaca.visu.model
 		public function getConnectedUserExcludeLoggedUser():ArrayCollection
 		{
 			var listConnectedUserExcludeLoggedUser:ArrayCollection = new ArrayCollection();
-//			var nbrConnectedUser:uint = this.listConnectedUsers.length;
-			var nbrConnectedUser:uint = this._listUsersPlateforme.length;
-			for(var nConnectedUser:uint = 0; nConnectedUser < nbrConnectedUser ; nConnectedUser++)
-			{
-//				var user:User = this.listConnectedUsers[nConnectedUser];
-				var user:User = this._listUsersPlateforme[nConnectedUser];
-				if(user != _loggedUser)
-				{
-					listConnectedUserExcludeLoggedUser.addItem(user);
-				}
-			}
+            if(getListUserPlateforme())
+            {
+    			var nbrConnectedUser:uint = getListUserPlateforme().length;
+    			for(var nConnectedUser:uint = 0; nConnectedUser < nbrConnectedUser ; nConnectedUser++)
+    			{
+    				var user:User = this._listUsersPlateforme[nConnectedUser];
+    				if(user != _loggedUser)
+    				{
+    					listConnectedUserExcludeLoggedUser.addItem(user);
+    				}
+    			}
+            }
 			return listConnectedUserExcludeLoggedUser;
 		}
 

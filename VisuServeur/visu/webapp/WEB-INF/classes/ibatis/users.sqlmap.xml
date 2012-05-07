@@ -24,7 +24,7 @@
 		<result column="password" jdbcType="VARCHAR"
 			property="password" />
 		<result column="profil" jdbcType="VARCHAR" property="profil" />     
-		<result column="activation_key" jdbcType="TINYINT" property="activation_key" />
+		<result column="activation_key" jdbcType="VARCHAR" property="activation_key" />
 		<result column="recovery_key" jdbcType="TINYINT" property="recovery_key" />
 		<result column="avatar" jdbcType="VARCHAR" property="avatar" />
 		<result column="message" jdbcType="VARCHAR" property="message" />	
@@ -46,6 +46,13 @@
 		<include refid="selectBase" />
 		FROM users 
         WHERE id_user = #value#
+	</select>
+
+	<select id="getUserByActivatedKey" parameterClass="String"
+		resultMap="userResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM users 
+        WHERE activation_key = #value#
 	</select>
 
 	<select id="getUserByUsernamePassword" parameterClass="java.util.HashMap"
@@ -100,6 +107,23 @@
 			avatar = #avatar:VARCHAR#,
 			message = #message:VARCHAR#
 		WHERE id_user = #id_user:BIGINT#
+	</update>
+	
+	<update id="updatePassword">
+		UPDATE 
+			users
+		SET 
+			password = #password#
+		WHERE id_user = #userId#
+	</update>
+	
+	<update id="setUserPassword">
+		UPDATE 
+			users
+		SET 
+			password = #password#,
+			activation_key = null
+		WHERE id_user = #userId#
 	</update>
 
 	<delete id="delete"

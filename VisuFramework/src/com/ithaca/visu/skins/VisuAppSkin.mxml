@@ -46,6 +46,7 @@
     <s:states>
         <s:State name="normal" />
         <s:State name="disabled" />
+        <s:State name="activated" />
 		<s:State name="authentified"/>
         <s:State name="normalWithControlBar" />
         <s:State name="disabledWithControlBar" />
@@ -113,8 +114,9 @@
         <!--- @copy spark.components.SkinnableContainer#contentGroup -->
         <s:Group id="contentGroup" width="100%" height="100%" minWidth="0" minHeight="0">
 			 
-		<login:LoginForm excludeFrom="authentified"
+		<login:LoginForm excludeFrom="authentified, activated"
 					 id="loginForm" horizontalCenter="0" verticalCenter="0" />
+        <login:ActivateForm includeIn="activated" id="activatedForm" horizontalCenter="0" verticalCenter="0" />
 		</s:Group>
     </s:Group> 
 </s:Skin>
