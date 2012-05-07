@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:modules="com.ithaca.visu.modules.*"
+    configure="visumodulebase1_configureHandler(event)"
+    creationComplete="visumodulebase1_creationCompleteHandler(event)"
+    stateChangeComplete="visumodulebase1_stateChangeCompleteHandler(event)" xmlns:maps="maps.*" xmlns:skins="components.skins.*"
+     height="100%" width="100%">
+    <fx:Script>
+    <![CDATA[
+        import com.adobe.crypto.MD5;
+        import com.ithaca.utils.UtilFunction;
+        import com.ithaca.visu.controls.login.event.LoginFormEvent;
+        import com.ithaca.visu.events.InitMapEvent;
+        import com.ithaca.visu.events.VisuModuleEvent;
+        import com.ithaca.visu.model.Model;
+        
+        import components.skins.ProfilFormSkin;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.events.FlexEvent;
+
+        
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+        {
+            // init internalisation
+            fxgt = FxGettext;
+            
+            // init map profil
+            var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_PROFIL);
+            this.dispatchEvent(initMapEvent); 
+        }
+
+
+        protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
+        {
+            // set focus, runtime error SDK 4.5
+            this.setFocus();
+            
+            // notify that module ready for use
+            notifyReadyForUse();
+        }
+
+        ////////////////////////////////////////////////////////
+        // INFO : have to set focus, runtime error SDK 4.5    //
+        ////////////////////////////////////////////////////////
+        protected function visumodulebase1_stateChangeCompleteHandler(event:FlexEvent):void
+        {
+            this.setFocus();
+        }
+        
+        ////////////////////
+        ////// UTILS
+        ///////////////////	
+        /**
+         * notify , ready for use
+         */
+        private function notifyReadyForUse():void
+        {
+            var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+            event.moduleName = VisuModuleEvent.PROFIL_MODULE;
+            this.dispatchEvent(event);
+        }
+
+
+        protected function button1_clickHandler(event:MouseEvent):void
+        {
+            /* var passwordMD5:String = UtilFunction.getCryptWord(passwordInput.text);
+            var loginFormEvent:LoginFormEvent = new LoginFormEvent(LoginFormEvent.UPDATE_PASSWORD);
+            loginFormEvent.password = passwordMD5
+            this.dispatchEvent(loginFormEvent); */
+        }
+
+    ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <maps:ProfilMap id="profilMap"  dispatcher="{this}"/>
+    </fx:Declarations>
+    <s:VGroup height="100%" width="100%" horizontalAlign="center" verticalAlign="middle">
+        <!--<s:VGroup height="100%" width="300" 
+            horizontalAlign="center" 
+            verticalAlign="middle" 
+            >
+            <s:Label>
+                <s:text>{fxgt.gettext('Vous pouvez changer votre mot de pass')}</s:text>
+            </s:Label>
+            <s:HGroup width="100%">
+                <s:TextInput id="passwordInput"
+                     displayAsPassword="true"
+                     width="100%"/>
+                <s:Button
+                     click="button1_clickHandler(event)">
+                    <s:label>{fxgt.gettext('Submit')}</s:label>
+                </s:Button>
+            </s:HGroup>
+            <s:Label id="resMD5" width="100%"/>
+        </s:VGroup>-->
+        <skins:ProfilForm user="{Model.getInstance().getLoggedUser()}" skinClass="components.skins.ProfilFormSkin"/>
+    </s:VGroup>
+</modules:VisuModuleBase>

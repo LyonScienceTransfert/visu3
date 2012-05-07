@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<mate:LocalEventMap 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	
+	<fx:Script><![CDATA[
+        import business.ProfilManager;
+        
+        import com.asfusion.mate.utils.debug.Debugger;
+        import com.flashdevs.mateExt.rtmpService.RtmpService;
+        import com.ithaca.visu.controls.login.event.LoginFormEvent;
+        import com.ithaca.visu.events.*;
+        
+        import mx.events.FlexEvent;
+        
+
+		
+	]]></fx:Script>
+    
+	<fx:Declarations>
+		<mate:Debugger level="{Debugger.ALL}"/>
+		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
+			<mate:ObjectBuilder generator="{ProfilManager}" constructorArguments="{scope.dispatcher}"/>
+		</mate:EventHandlers>	
+		<!-- InitMapEvent.INIT_MAP_PROFIL __________________________________________________________________ -->		
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_PROFIL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="testApp"   arguments="{['Profil']}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+        <!-- Update password -->
+        <mate:EventHandlers type="{LoginFormEvent.UPDATE_PASSWORD}" debug="true" useCapture="true">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+                <mate:Request action="updatePassword"   arguments="{[event.password]}" />
+            </rtmp:RtmpServiceInvoker>
+        </mate:EventHandlers>
+		
+		
+	</fx:Declarations>
+	
+</mate:LocalEventMap>
