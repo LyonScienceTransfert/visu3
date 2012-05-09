@@ -102,12 +102,6 @@ package com.ithaca.visu.controls.users
 		public var emailInput : TextInput;
 		[SkinPart("true")]
 		public var emailDisplay : Label;
-		
-		[SkinPart("true")]
-		public var passwordInput : TextInput;
-		
-		[SkinPart("true")]
-		public var passwordDisplay : Label;
 
 		[SkinPart("true")]
 		public var avatarUser : Image;
@@ -255,7 +249,6 @@ package com.ithaca.visu.controls.users
 			u.firstname = firstnameInput.text;
 			u.lastname = lastnameInput.text;
 			u.mail = emailInput.text;
-			u.password = passwordInput.text;
 			u.profil = RightStatus.numberToBinary(profileList.selectedItem.profile);
 			u.id_user = _user.id_user;
 			u.avatar = _user.avatar;
@@ -309,9 +302,6 @@ package com.ithaca.visu.controls.users
 			emailInput.text = user.mail;
 			emailDisplay.text = user.mail;
 			
-			passwordInput.text = user.password;
-			passwordDisplay.text = user.password;
-			
 			avatarUser.source = user.avatar;
 			
 			updateProfileList();
@@ -335,7 +325,6 @@ package com.ithaca.visu.controls.users
 			lastnameInput.text = user.lastname;			
 			firstnameInput.text = user.firstname;			
 			emailInput.text = user.mail;
-			passwordInput.text = user.password;
 			avatarUser.source = user.avatar;
 			updateProfileList();
 		}
@@ -344,7 +333,6 @@ package com.ithaca.visu.controls.users
 			lastnameDisplay.text = user.lastname;
 			firstnameDisplay.text = user.firstname;
 			emailDisplay.text = user.mail;
-			passwordDisplay.text = user.password;
 			avatarUser.source = user.avatar;
 			profileDisplay.text = getProfile(user.role).short_description;
 			

@@ -203,8 +203,6 @@ package com.ithaca.visu.view.user
 			userVO.firstname = value.firstname;
 			userVO.lastname = value.lastname;
 			userVO.mail = value.mail;
-			userVO.password = value.password;
-			userVO.profil = value.profil;
 			userVO.id_user = value.id_user;
 			userVO.avatar = value.avatar;
 			userVO.message = value.message;
