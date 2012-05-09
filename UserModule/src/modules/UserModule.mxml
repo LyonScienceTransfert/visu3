@@ -141,7 +141,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							user.firstname = userVOUpdated.firstname;
 							user.lastname = userVOUpdated.lastname;
 							user.mail = userVOUpdated.mail;
-							user.password = userVOUpdated.password;
 							user.profil = userVOUpdated.profil;
 							// set state normal
 							userManagement.userDetail.setStateNormal();

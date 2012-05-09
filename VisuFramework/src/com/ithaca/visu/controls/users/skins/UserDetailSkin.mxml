@@ -166,16 +166,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						 includeIn="normal"/>
 				<s:TextInput id="emailInput"  minWidth="100" width="100%" includeIn="edit"/>
 			</containers:FormItem>
-			
-			<containers:FormItem id="LABEL_PASS"  width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("Mot de passe")}</containers:label>
-				<s:Label id="passwordDisplay" 
-						 includeIn="normal" 
-						 height="100%" verticalAlign="middle" />
-				<s:TextInput id="passwordInput" 
-							 minWidth="100" width="100%" displayAsPassword="true" includeIn="edit" />
-			</containers:FormItem>
-			
+						
 			<containers:FormItem id="LABEL_ROLE" width="80%" minHeight="25" backgroundColor="#666666">
 				<containers:label>{fxgt.gettext("Rôle")}</containers:label>
 				<s:Label id="profileDisplay"  includeIn="normal" 

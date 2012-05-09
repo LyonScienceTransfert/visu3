@@ -71,7 +71,6 @@ package com.ithaca.visu.model.vo
 		public var lastname:String;
 		public var firstname:String;
 		public var mail:String;
-		public var password:String;
 		public var activation_key:String;
 		public var recovery_key:String;
 		public var avatar:String;
