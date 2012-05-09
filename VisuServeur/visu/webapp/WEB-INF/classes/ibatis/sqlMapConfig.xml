@@ -15,7 +15,7 @@
 		<transactionManager type="JDBC">
 			<dataSource type="SIMPLE">
 				<property name="JDBC.Driver" value="com.mysql.jdbc.Driver"/>
-				<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu2"/>
+				<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu2?useUnicode=yes&amp;characterEncoding=UTF8"/>
 				<property name="JDBC.Username" value="root"/>
 				<property name="JDBC.Password" value="root"/>
                 <property name="Pool.PingQuery" value="select 1"/>
