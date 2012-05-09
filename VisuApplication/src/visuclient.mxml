@@ -169,12 +169,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 				Model.getInstance().setDateCompiled(datecompiled);
                 
-                var amfServer:String = Model.getInstance().AMFServer;
-                Alert.show(amfServer);
                 
                 // check activated key
                 if(activatedKey)
                 {
+                    // set endpoint for RemoteObject remoteUser
+                    this.mainMap.remoteUser.endpoint = Model.getInstance().AMFServer;;
                     checkActivatedKey();
                 }
 			}
