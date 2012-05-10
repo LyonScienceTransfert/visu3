@@ -127,6 +127,9 @@ package com.ithaca.visu.controls.sessions
 		{
 			super();
 			_listPresentUser = new ArrayCollection();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
 		}
 		//_____________________________________________________________________
 		//

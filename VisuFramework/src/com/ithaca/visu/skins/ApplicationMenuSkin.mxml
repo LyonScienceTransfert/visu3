@@ -66,7 +66,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		currentStateChange="skin1_currentStateChangeHandler(event)">
+		currentStateChange="skin1_currentStateChangeHandler(event)"
+        preinitialize="skin1_preinitializeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.globalNavigation.ApplicationMenu")]
@@ -90,6 +91,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					dropListLang.selectedIndex = 0;
 				}
 			}
+            /**
+            * Initialisation gettext
+            */
+            protected function skin1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
+
 		]]>
 	</fx:Script>
 	<!-- states -->

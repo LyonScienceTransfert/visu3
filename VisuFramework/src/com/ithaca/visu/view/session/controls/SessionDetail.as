@@ -172,6 +172,10 @@ package com.ithaca.visu.view.session.controls
 		public function SessionDetail()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			_activities = new ArrayCollection();
 			_listPresentUser = new ArrayCollection();
 			_listUser = new ArrayList();

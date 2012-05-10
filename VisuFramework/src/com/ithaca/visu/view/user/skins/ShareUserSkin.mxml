@@ -88,6 +88,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
             // set focus, runtime error SDK 4.5
             this.setFocus();
             
+            // initialisation gettext
             fxgt = FxGettext;
         }
         

@@ -66,7 +66,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		  maxWidth="140" xmlns:components="com.ithaca.utils.components.*">
+		maxWidth="140" xmlns:components="com.ithaca.utils.components.*"
+        preinitialize="skin1_preinitializeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.KeywordEdit")]
@@ -75,9 +76,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<![CDATA[
 			import com.ithaca.visu.ui.utils.IconEnum;
 			
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
-
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -142,6 +143,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				this.editableContent.text = this.textContent.text;
 				stage.focus = this.editableContent;
 			}
+
+            protected function skin1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
 
 		]]>
 	</fx:Script>

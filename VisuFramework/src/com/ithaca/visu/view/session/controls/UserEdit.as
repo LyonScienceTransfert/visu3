@@ -112,6 +112,10 @@ package com.ithaca.visu.view.session.controls
 		public function UserEdit() 
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			currentMouseCursor  = Mouse.cursor; 
 		}
 		public function get user():User {return _user; }

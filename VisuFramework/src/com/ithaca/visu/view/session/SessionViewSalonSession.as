@@ -139,6 +139,10 @@ package com.ithaca.visu.view.session
 		public function SessionViewSalonSession()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			this.buttonMode = true;
 			this.useHandCursor = true;
 			_listUserSession = new ArrayCollection();

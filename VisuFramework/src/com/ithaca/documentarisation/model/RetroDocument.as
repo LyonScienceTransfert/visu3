@@ -121,6 +121,9 @@ package com.ithaca.documentarisation.model
 		{
 			listSegment = new ArrayCollection();
 			
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			if(vo) {
 				this.sessionId = vo.sessionId;
 				this.id = vo.documentId;

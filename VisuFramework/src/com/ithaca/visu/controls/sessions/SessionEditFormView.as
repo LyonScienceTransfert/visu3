@@ -125,6 +125,10 @@ package com.ithaca.visu.controls.sessions
 		public function SessionEditFormView()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			initTimeCode();
 		}
 

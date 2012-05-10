@@ -96,8 +96,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		private var LIFT_EDITABLED_COMPONENT:int = 75;
 		protected function skin1_creationCompleteHandler(event:FlexEvent):void
 		{
-			fxgt = FxGettext;
-		    NEW_STATEMENT_STRING = fxgt.gettext("Ajoutez une nouvelle consigne ici");
+            // initialisation gettext
+            fxgt = FxGettext;
+            NEW_STATEMENT_STRING = fxgt.gettext("Ajoutez une nouvelle consigne ici");
             NEW_DOCUMENT_TITLE_STRING = fxgt.gettext("Entrez un nouveau titre de document ici");
             NEW_LINK_STRING = fxgt.gettext("Ajoutez un nouveau lien ici");
             NEW_KEYWORD_STRING = fxgt.gettext("Ajoutez un nouveau mot-clé ici");

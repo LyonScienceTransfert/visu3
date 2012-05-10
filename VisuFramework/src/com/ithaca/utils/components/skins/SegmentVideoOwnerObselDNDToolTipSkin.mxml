@@ -67,7 +67,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
     xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:documentarisation="com.ithaca.documentarisation.*"
     creationComplete="skin1_creationCompleteHandler(event)"
-     width="250">
+    preinitialize="skin1_preinitializeHandler(event)"
+    width="250">
     <!-- host component -->
     <fx:Metadata>
         [HostComponent("com.ithaca.utils.components.SegmentVideoOwnerObselDNDToolTip")]
@@ -87,7 +88,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
         import gnu.as3.gettext._FxGettext;
         
         import mx.events.FlexEvent;
-	    import mx.utils.StringUtil;
+        import mx.utils.StringUtil;
         
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;
@@ -108,7 +109,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
                                                     VisuUtils.getUserLabelLastName(owner,true));
             contenueObsel.text = obsel.props[TraceModel.TEXT];
         }
-        
+
+        protected function skin1_preinitializeHandler(event:FlexEvent):void
+        {
+            // initialisation gettext
+            fxgt = FxGettext;
+        }
+
     ]]>
     </fx:Script>
     <s:Rect id="background" left="0" right="0" top="0" bottom="0" radiusX="3">

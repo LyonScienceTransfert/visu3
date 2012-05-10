@@ -199,6 +199,9 @@ package com.ithaca.visu.controls.sessions
 		public function SessionListView()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
 		}
 		//_____________________________________________________________________
 		//

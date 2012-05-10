@@ -89,6 +89,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
         {
             super.data = value;
             
+            // initialisation gettext
             fxgt = FxGettext;
             
             retroDocument = value as RetroDocument;

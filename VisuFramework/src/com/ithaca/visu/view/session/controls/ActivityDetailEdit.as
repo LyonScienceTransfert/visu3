@@ -142,6 +142,10 @@ package com.ithaca.visu.view.session.controls
 		public function ActivityDetailEdit()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			statementList = new ArrayCollection();
 			documentList = new ArrayCollection();
 			keywordList = new ArrayCollection();

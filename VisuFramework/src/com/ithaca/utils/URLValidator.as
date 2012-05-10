@@ -73,6 +73,9 @@ package com.ithaca.utils
 
 		public function URLValidator() {
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
 		}
 		
 		private var _invalidUrlError: String = fxgt.gettext("URL invalide.");

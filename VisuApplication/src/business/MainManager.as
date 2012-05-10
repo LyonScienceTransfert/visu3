@@ -143,6 +143,7 @@ public class MainManager
 	public function MainManager(dispatcher:IEventDispatcher)
 	{
 		this.dispatcher = dispatcher;
+        // Initialisation gettext
 		fxgt = FxGettext;
 	}
 	// methods

@@ -119,6 +119,10 @@ package com.ithaca.visu.view.session
 		public function SessionViewSalonRetro()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			this.buttonMode = true;
 			this.useHandCursor = true;
 		}

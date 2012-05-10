@@ -100,6 +100,9 @@ package com.ithaca.visu.view.session.controls
 		{
 			this.currentMouseCursor = Mouse.cursor;
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
 		}
 		
 		override protected function partAdded(partName:String, instance:Object):void

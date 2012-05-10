@@ -69,17 +69,35 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	horizontalAlign="left"
 	gap="5"
+    preinitialize="hgroup1_preinitializeHandler(event)"
 	>
 
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.documentarisation.model.RetroDocument;
-			import com.ithaca.utils.VisuUtils;
-			import com.ithaca.visu.model.Model;
-			import com.lyon2.controls.utils.TimeUtils;
+            import com.ithaca.documentarisation.model.RetroDocument;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.model.Model;
+            import com.lyon2.controls.utils.TimeUtils;
+            
+            import mx.events.FlexEvent;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
 
 			[Bindable]
 			public var bilan:RetroDocument = null;
+            
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
+
+            /**
+            * Initialisation gettext
+            */
+            protected function hgroup1_preinitializeHandler(event:FlexEvent):void
+            {
+                fxgt = FxGettext;
+            }
+
 		]]>
 	</fx:Script>
 
