@@ -66,10 +66,10 @@ package com.ithaca.visu.view.user
 	import com.ithaca.visu.controls.users.UserDetail;
 	import com.ithaca.visu.controls.users.UserFilters;
 	import com.ithaca.visu.controls.users.event.UserFilterEvent;
-	import com.lyon2.controls.utils.LemmeFormatter;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.UserVO;
+	import com.lyon2.controls.utils.LemmeFormatter;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -81,9 +81,13 @@ package com.ithaca.visu.view.user
 	
 	import spark.components.Button;
 	import spark.components.List;
+	import spark.components.Panel;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
+    
+    import gnu.as3.gettext.FxGettext;
+    import gnu.as3.gettext._FxGettext;
 	
 	
 	public class UserManagement extends SkinnableComponent
@@ -104,6 +108,12 @@ package com.ithaca.visu.view.user
 		
 		[SkinPart("true")]
 		public var userDetail:UserDetail;
+
+        [SkinPart("true")]
+		public var userDetailPanel:Panel;
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
 		
 		[Bindable] public var selectedUser:User;
 		[Bindable] public var filterProfileMax:int = -1;
@@ -113,6 +123,9 @@ package com.ithaca.visu.view.user
 		public function UserManagement()
 		{
 			super();
+            
+            // init internalisation
+            fxgt = FxGettext;
 		}
 		
 		public var userCollection:ArrayCollection;
@@ -161,6 +174,14 @@ package com.ithaca.visu.view.user
 			if (instance == addUserButton)
 			{
 				addUserButton.addEventListener(MouseEvent.CLICK, addButton_clickHandler);
+			}
+			if (instance == userDetail)
+			{
+                userDetail.user = null;
+			}
+			if (instance == userDetailPanel)
+			{
+                userDetailPanel.title = fxgt.gettext("Profil");
 			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -214,6 +235,9 @@ package com.ithaca.visu.view.user
 			
 			userDetail.editing = true;
 			userDetail.user = new User( new UserVO());
+            // set titre the panel
+            userDetailPanel.title = fxgt.gettext("Profil");
+            
 		}
 		
 		/**
@@ -282,12 +306,10 @@ package com.ithaca.visu.view.user
 			}	
 		}
 		
-		//_____________________________________________________________________
-		//
-		// Methods Handlers
-		//
-		//_____________________________________________________________________
-		
-		
+        public function setStateEmpty():void{
+            userDetail.setStateEmpty();
+            // set title the panel
+            userDetailPanel.title = fxgt.gettext("Profil");
+        }
 	}
 }
