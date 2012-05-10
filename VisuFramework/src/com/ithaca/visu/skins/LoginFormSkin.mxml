@@ -81,8 +81,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
             import gnu.as3.gettext._FxGettext;
             
             import mx.events.FlexEvent;
-            
-            import ws.tink.spark.skins.containers.FormItemSkin;
 
             [Bindable]
             private var fxgt:_FxGettext = FxGettext;
@@ -108,38 +106,24 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			]]>
 		</fx:Script>
 	</s:states>
+	<s:VGroup  width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
 	
-	<!-- SkinParts
-	name=info, type=spark.components.supportClasses.TextBase, required=false
-	name=passField, type=spark.components.TextInput, required=false
-	name=loginField, type=spark.components.TextInput, required=false
-	name=submit, type=spark.components.Button, required=false
-	-->
-	<s:VGroup  width="100%" height="100%" horizontalAlign="center">
-		<containers:Form top="0" left="0" right="0" bottom="0">
-			<containers:layout>
-				<s:VerticalLayout />
-			</containers:layout>
-	
-			<containers:FormItem
-				id="loginFormItem" 
-				width="100%">
-				<s:TextInput id="loginField" width="150" />
-			</containers:FormItem>
+        <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
+            <s:Label id="loginLabel" />
+			<s:TextInput id="loginField" width="150" />
+        </s:HGroup>
+        
+        <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
+            <s:Label id="passLabel" />
+		    <s:TextInput id="passField" width="150" />
+        </s:HGroup>
+
+        <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
+			<s:Button id="submit" />
+        </s:HGroup>
 			
-			<containers:FormItem 
-				id="passFormItem"
-				width="100%">
-				<s:TextInput id="passField" width="150" />
-			</containers:FormItem>
-			
-			<containers:FormItem  width="100%">
-				<s:Button id="submit" />
-			</containers:FormItem>
-			
-			<s:Button id="forgottenButton"
+		<s:Button id="forgottenButton"
 				skinClass="com.ithaca.visu.skins.LinkButtonSkin" 
                 includeInLayout="false"/>
-		</containers:Form>
 	</s:VGroup>
 </s:Skin>

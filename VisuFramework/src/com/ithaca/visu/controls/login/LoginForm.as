@@ -62,19 +62,15 @@
  */
 package com.ithaca.visu.controls.login
 {
-	import com.adobe.crypto.MD5;
 	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.controls.login.event.LoginFormEvent;
-	import com.ithaca.visu.model.Model;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import mx.events.FlexEvent;
 	import mx.events.ValidationResultEvent;
-	import mx.validators.EmailValidator;
 	import mx.validators.StringValidator;
-	import mx.validators.ValidationResult;
 	import mx.validators.Validator;
 	
 	import spark.components.Button;
@@ -82,8 +78,6 @@ package com.ithaca.visu.controls.login
 	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
-	
-	import ws.tink.spark.containers.FormItem;
 
 	[SkinState("pending")]
 	[SkinState("normal")]
@@ -102,10 +96,10 @@ package com.ithaca.visu.controls.login
 		public var passField:TextInput;
 		
 		[SkinPart("false")]
-		public var loginFormItem:FormItem;
+		public var loginLabel:Label;
 		
 		[SkinPart("false")]
-		public var passFormItem:FormItem;
+		public var passLabel:Label;
 		
 		[SkinPart("true")]
 		public var submit:Button;
@@ -139,9 +133,9 @@ package com.ithaca.visu.controls.login
 				loginValidator.source = loginField;
 				loginValidator.property = "text";
 			}
-			else if (instance == loginFormItem )
+			else if (instance == loginLabel )
 			{
-				loginFormItem.label="login";
+                loginLabel.text = "login";
 			}
 			else if (instance == passField)
 			{
@@ -150,9 +144,9 @@ package com.ithaca.visu.controls.login
 				passValidator.property = "text";
 				passField.addEventListener(FlexEvent.ENTER, validateLogin);
 			}
-			else if (instance == passFormItem)
+			else if (instance == passLabel)
 			{
-				passFormItem.label = "password";
+                passLabel.text = "password";
 			}
 			else if (instance == submit)
 			{
