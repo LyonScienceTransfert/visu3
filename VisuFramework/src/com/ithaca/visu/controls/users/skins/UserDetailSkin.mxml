@@ -75,14 +75,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.visu.skins.LinkButtonSkin;
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			import mx.events.FlexEvent;
 			
 			import ws.tink.spark.containers.*;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
 			
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
@@ -95,99 +93,94 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		]]>
 	</fx:Script>
 	
-	<!-- SkinParts
-	name=saveButton, type=spark.components.Button, required=false
-	name=passsword, type=spark.components.TextInput, required=false
-	name=profileList, type=spark.components.DropDownList, required=false
-	name=deleteButton, type=spark.components.Button, required=false
-	name=lastname, type=spark.components.TextInput, required=false
-	name=editButton, type=spark.components.Button, required=false
-	name=cancelButton, type=spark.components.Button, required=false
-	name=email, type=spark.components.TextInput, required=false
-	name=firstname, type=spark.components.TextInput, required=false
-	-->
-	
 	<!-- states -->
 	<s:states>
 		<s:State name="normal" />
 		<s:State name="edit" />
 		<s:State name="pending" />
 	</s:states>
+    <s:Rect 
+        top="0" left="0" right="0" bottom="0"
+        includeIn="pending">
+        <s:fill>
+            <s:SolidColor alpha=".5" color="#CC0000" />
+        </s:fill>
+    </s:Rect>
 	
-	
-	<s:Group top="0" bottom="0" left="0" right="0">
-		<s:layout>
-			<s:BasicLayout/>
-		</s:layout>
+	<s:VGroup  width="100%" height="100%" horizontalAlign="center" verticalAlign="top" gap="50">
 		
-		<s:Group top="0" left="0" right="0" height="50" includeIn="normal">
-			<s:layout>
-				<s:HorizontalLayout />
-			</s:layout>
-			<s:Button id="editButton">
+		<s:HGroup width="100%" includeIn="normal, edit, pending" horizontalAlign="center">
+			<s:Button id="editButton" visible.normal="true" visible.pending="false" visible.edit="false">
 				<s:label>{fxgt.gettext("Editer")}</s:label>	
 			</s:Button>
-			<s:Button id="deleteButton">
+			<s:Button id="deleteButton" visible.normal="true" visible.pending="false" visible.edit="false">
 				<s:label>{fxgt.gettext("Supprimer")}</s:label>	
 			</s:Button>
-		</s:Group>
+		</s:HGroup>
 		
-		<s:Rect 
-			top="0" left="0" right="0" bottom="0"
-			includeIn="pending">
-			<s:fill>
-				<s:SolidColor alpha=".5" color="#CC0000" />
-			</s:fill>
-		</s:Rect>
-		 		
-		<containers:Form enabled.pending="false" enabled="true" id="form"
-			top="50" bottom="0" left="0" right="0" backgroundColor="#eeeeee">
-		 
-			<containers:FormItem id="LABEL_NOM" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("Nom")}</containers:label>
-				<s:Label id="firstnameDisplay" 
-						 includeIn="normal" height="100%" verticalAlign="middle" 
-						 fontWeight="bold"/> 
-				<s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"/>
-			</containers:FormItem>
-			
-			<containers:FormItem id="LABEL_PRENOM" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("Prénom")}</containers:label>
-				<s:Label id="lastnameDisplay" fontWeight="bold" 
-						 height="100%" verticalAlign="middle"
-						 includeIn="normal" />
-				<s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"/>
-			</containers:FormItem>
-			
-			<containers:FormItem id="LABEL_EMAIL" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("Email")}</containers:label>
-				<s:Label id="emailDisplay" 
-						 height="100%" verticalAlign="middle"
-						 includeIn="normal"/>
-				<s:TextInput id="emailInput"  minWidth="100" width="100%" includeIn="edit"/>
-			</containers:FormItem>
-						
-			<containers:FormItem id="LABEL_ROLE" width="80%" minHeight="25" backgroundColor="#666666">
-				<containers:label>{fxgt.gettext("Rôle")}</containers:label>
-				<s:Label id="profileDisplay"  includeIn="normal" 
-						 height="100%" verticalAlign="middle" />
-				<s:DropDownList id="profileList" labelField="short_description" 
-								minWidth="100" includeIn="edit" />
-				<s:Button includeIn="edit" 
-						  skinClass="com.ithaca.visu.skins.LinkButtonSkin">
-					<s:label>{fxgt.gettext("Modifier")}</s:label>	
-				</s:Button>
-			</containers:FormItem>
-			
-			<containers:FormItem includeIn="edit,pending" width="80%" minHeight="25" backgroundColor="#666666">
-				<s:Button id="saveButton">
-					<s:label>{fxgt.gettext("Sauvegarder")}</s:label>	
-				</s:Button>
-				<s:Button id="cancelButton">
-					<s:label>{fxgt.gettext("Annuler")}</s:label>	
-				</s:Button>
-			</containers:FormItem>
-			<mx:Image id="avatarUser" width="100" height="100"/>
-		</containers:Form>
-	</s:Group>
+        <s:VGroup width="80%" gap="20">
+            <s:HGroup width="100%" gap="10">
+                <s:VGroup height="100%" horizontalAlign="right" gap.normal="20" gap.edit="30" paddingTop.edit="5">
+                    <s:HGroup width="100%" verticalAlign="middle">
+                        <s:Label>
+                            <s:text>{fxgt.gettext("Nom")}</s:text>
+                        </s:Label>
+                    </s:HGroup>
+                    <s:HGroup width="100%" verticalAlign="middle">
+                        <s:Label>
+                            <s:text>{fxgt.gettext("Prénom")}</s:text>
+                        </s:Label>
+                    </s:HGroup>
+                    <s:HGroup width="100%" verticalAlign="middle">
+                        <s:Label>
+                            <s:text>{fxgt.gettext("Email")}</s:text>
+                        </s:Label>
+                    </s:HGroup>
+                    <s:HGroup width="100%" verticalAlign="middle">
+                        <s:Label>
+                            <s:text>{fxgt.gettext("Rôle")}</s:text>
+                        </s:Label>
+                    </s:HGroup>
+                </s:VGroup>
+                
+                <s:VGroup height="100%" width="100%" horizontalAlign="left" gap="20">
+                    <s:HGroup verticalAlign="middle" width="100%">
+                        <s:Label id="firstnameDisplay" 
+                            includeIn="normal" height="100%" verticalAlign="middle" 
+                            fontWeight="bold"/> 
+                        <s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"/>
+                    </s:HGroup>
+                    <s:HGroup verticalAlign="middle" width="100%">
+                        <s:Label id="lastnameDisplay" fontWeight="bold" 
+                            height="100%" verticalAlign="middle"
+                            includeIn="normal" />
+                        <s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"/>
+                    </s:HGroup>
+                    <s:HGroup verticalAlign="middle" width="100%">
+                        <s:Label id="emailDisplay" 
+                            height="100%" verticalAlign="middle"
+                            includeIn="normal"/>
+                        <s:TextInput id="emailInput" minWidth="100" width="100%" includeIn="edit"/>
+                    </s:HGroup>
+                    <s:HGroup verticalAlign="middle" width="100%">
+                        <s:Label id="profileDisplay"  includeIn="normal" 
+                            height="100%" verticalAlign="middle" />
+                        <s:DropDownList id="profileList" labelField="short_description" 
+                            minWidth="100" includeIn="edit" />
+                    </s:HGroup>
+                    <s:HGroup verticalAlign="middle" width="100%" includeIn="edit">
+                        <s:Button id="saveButton">
+                            <s:label>{fxgt.gettext("Sauvegarder")}</s:label>	
+                        </s:Button>
+                        <s:Button id="cancelButton">
+                            <s:label>{fxgt.gettext("Annuler")}</s:label>	
+                        </s:Button>
+                    </s:HGroup>
+                </s:VGroup>
+            </s:HGroup>
+            
+            <mx:Image id="avatarUser" width="100" height="100"/>
+            
+        </s:VGroup>
+	</s:VGroup>
 </s:Skin>
