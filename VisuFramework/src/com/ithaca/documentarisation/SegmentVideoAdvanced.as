@@ -201,6 +201,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	public function SegmentVideoAdvanced()
 	{
 		super();
+        
+        // initialisation gettext
+        fxgt = FxGettext;
+        
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);

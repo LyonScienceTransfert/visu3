@@ -120,6 +120,8 @@ package com.ithaca.visu.controls.sessions
 		{
 			super();
 			_activities = new ArrayList();	
+            
+            // initialisation gettext
 			fxgt = FxGettext;
 		}
 		

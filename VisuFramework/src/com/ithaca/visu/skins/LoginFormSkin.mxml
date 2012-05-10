@@ -68,6 +68,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		minWidth="250" minHeight="200" 
 		xmlns:containers="ws.tink.spark.containers.*" 
+        preinitialize="skin1_preinitializeHandler(event)"
 		>
 	<!-- host component -->
 	<fx:Metadata>
@@ -76,12 +77,22 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
-			import gnu.as3.gettext._FxGettext;
             import gnu.as3.gettext.FxGettext;
-			import ws.tink.spark.skins.containers.FormItemSkin;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.events.FlexEvent;
+            
+            import ws.tink.spark.skins.containers.FormItemSkin;
 
             [Bindable]
             private var fxgt:_FxGettext = FxGettext;
+
+
+            protected function skin1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
 
 		]]>
 	</fx:Script>

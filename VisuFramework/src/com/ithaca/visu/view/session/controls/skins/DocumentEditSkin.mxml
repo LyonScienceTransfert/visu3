@@ -67,7 +67,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		creationComplete="skin1_creationCompleteHandler(event)"
-		 preinitialize="skin1_preinitializeHandler(event)">
+		preinitialize="skin1_preinitializeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.DocumentEdit")]
@@ -260,6 +260,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			protected function skin1_preinitializeHandler(event:FlexEvent):void
 			{
+                // initialisation gettext
+                fxgt = FxGettext;
+                
 				// set const
 				this.currentUrl = this.hostComponent.currentUrl;
 				this.currentText = this.hostComponent.currentText;

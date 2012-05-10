@@ -65,7 +65,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 -->
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:controls="com.ithaca.visu.view.session.controls.*" xmlns:datetime="com.visualempathy.display.controls.datetime.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+        xmlns:sessions="com.ithaca.visu.controls.sessions.*" 
+        xmlns:controls="com.ithaca.visu.view.session.controls.*" 
+        xmlns:datetime="com.visualempathy.display.controls.datetime.*"
+        preinitialize="skin1_preinitializeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.view.session.controls.SessionDetail")]
@@ -73,9 +77,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
-
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			import mx.events.FlexEvent;
 			
@@ -148,6 +152,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				this.hostComponent.updateDateSession(this.picker.selectedDate);
 			}
 
+            protected function skin1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
 
 		]]>
 	</fx:Script>

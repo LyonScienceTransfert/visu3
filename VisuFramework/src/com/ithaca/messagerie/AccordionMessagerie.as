@@ -108,6 +108,8 @@ public class AccordionMessagerie extends SkinnableComponent
     public function AccordionMessagerie()
     {
         super();
+        // initialisation gettext
+        fxgt = FxGettext;
     }
     //_____________________________________________________________________
     //

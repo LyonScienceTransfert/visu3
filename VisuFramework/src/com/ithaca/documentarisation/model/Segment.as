@@ -116,6 +116,9 @@ package com.ithaca.documentarisation.model
 
 		public function Segment(parentRetroDocument:RetroDocument)
 		{
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			this.parentRetroDocument = parentRetroDocument;
             segmentId = UIDUtil.createUID();
 		}

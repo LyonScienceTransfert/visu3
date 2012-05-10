@@ -88,8 +88,9 @@ package com.ithaca.visu.view.session.controls
 		public function SessionFilters()
 		{
 			super();
-			fxgt = FxGettext;
-			populateDefaultFilter();
+            // initialisation gettext
+            fxgt = FxGettext;	
+            populateDefaultFilter();
 		}
 		
 		override protected function commitProperties():void

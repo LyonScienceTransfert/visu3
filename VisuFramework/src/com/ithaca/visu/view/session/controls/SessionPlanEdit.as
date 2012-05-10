@@ -124,6 +124,9 @@ package com.ithaca.visu.view.session.controls
 		public function SessionPlanEdit()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
 		}
 		
 		//_____________________________________________________________________

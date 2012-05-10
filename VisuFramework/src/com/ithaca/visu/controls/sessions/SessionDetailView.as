@@ -192,6 +192,10 @@ package com.ithaca.visu.controls.sessions
 		public function SessionDetailView()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			_listUser = new ArrayCollection();
 			_activities = new ArrayCollection();
 			_listPresentUser = new ArrayCollection();

@@ -134,6 +134,9 @@ package com.ithaca.visu.view.session
 		public function SessionManagement()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
 		}
 		
 		public var sessionCollection:ArrayCollection;

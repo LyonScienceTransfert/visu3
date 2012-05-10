@@ -100,6 +100,10 @@ package com.ithaca.visu.view.session.controls
 		public function KeywordEdit()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			currentMouseCursor  = Mouse.cursor; 
 		}
 		public function get activityElement():ActivityElement {return _activityElement; }

@@ -65,7 +65,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 -->
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
     xmlns:s="library://ns.adobe.com/flex/spark" 
-    xmlns:mx="library://ns.adobe.com/flex/mx">
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    preinitialize="skin1_preinitializeHandler(event)">
     <!-- host component -->
     <fx:Metadata>
         [HostComponent("com.ithaca.messagerie.DialogMessageItem")]
@@ -77,8 +78,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
         import gnu.as3.gettext.FxGettext;
         import gnu.as3.gettext._FxGettext;
         
+        import mx.events.FlexEvent;
+        
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;
+
+        protected function skin1_preinitializeHandler(event:FlexEvent):void
+        {
+            // initialisation gettext
+            fxgt = FxGettext;
+        }
+
     ]]>
     </fx:Script>
     <s:VGroup  id="groupDialogMessage" width="100%">

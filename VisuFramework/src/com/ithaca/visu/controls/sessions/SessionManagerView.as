@@ -118,6 +118,10 @@ package com.ithaca.visu.controls.sessions
 		public function SessionManagerView()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			sessionList = new ArrayCollection();
 			planList = new ArrayCollection();
 		}

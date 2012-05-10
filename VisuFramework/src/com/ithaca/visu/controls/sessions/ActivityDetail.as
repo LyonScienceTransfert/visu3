@@ -130,6 +130,10 @@ package com.ithaca.visu.controls.sessions
 		public function ActivityDetail()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			statementList = new ArrayCollection();
 			documentList = new ArrayCollection();
 		}

@@ -131,6 +131,9 @@ public class SegmentTitle extends SkinnableComponent
 	public function SegmentTitle()
 	{
 		super();
+        // initialisation gettext
+        fxgt = FxGettext;
+        
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);

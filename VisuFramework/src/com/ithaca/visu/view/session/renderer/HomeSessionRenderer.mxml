@@ -68,7 +68,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				xmlns:mx="library://ns.adobe.com/flex/mx"
 				xmlns:layout1="com.lyon2.controls.sparks.layout.*"
 				xmlns:myviews="com.ithaca.visu.view.user.*"
-				maxWidth="{width}">
+				maxWidth="{width}"
+                preinitialize="itemrenderer1_preinitializeHandler(event)">
 
 
 	<s:states>
@@ -88,9 +89,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.lyon2.controls.utils.TimeUtils;
-
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -251,6 +252,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							eventName);				
 				actionGroup.dispatchEvent(sessionHomeElementEvent);			
 			}
+
+            protected function itemrenderer1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
 
 		]]>
 	</fx:Script>

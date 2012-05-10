@@ -81,8 +81,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			protected function skin1_creationCompleteHandler(event:FlexEvent):void
 			{
-				fxgt = FxGettext;
-			}
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
 
 			protected function skin1_addedToStageHandler(event:Event):void
 			{
