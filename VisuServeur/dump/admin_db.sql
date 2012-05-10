@@ -224,6 +224,7 @@ INSERT INTO `modules` VALUES('session', 'Séances', 'modules/SessionModule.swf',
 INSERT INTO `modules` VALUES('tutorat', 'Salon synchrone', 'modules/TutoratModule.swf', 'tutorat.ccs', 4);
 INSERT INTO `modules` VALUES('retrospection', 'Salon de rétrospection', 'modules/RetrospectionModule.swf', 'retrospection.ccs', 4);
 INSERT INTO `modules` VALUES('bilan', 'Bilans', 'modules/BilanModule.swf', 'bilan.ccs', 4);
+INSERT INTO `modules` VALUES('profil', 'Profil', 'modules/ProfilModule.swf', 'profil.ccs', 4);
 
 -- --------------------------------------------------------
 
