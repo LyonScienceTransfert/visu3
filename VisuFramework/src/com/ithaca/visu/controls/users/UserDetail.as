@@ -83,6 +83,7 @@ package com.ithaca.visu.controls.users
 	[SkinSate("normal")]
 	[SkinSate("edit")]
 	[SkinSate("pending")]
+	[SkinSate("empty")]
 	
 	public class UserDetail extends SkinnableComponent
 	{
@@ -125,30 +126,102 @@ package com.ithaca.visu.controls.users
 		public var deleteButton : Button;
 		
 		 
+        private var _profiles:Array = [];
+        private var profilesChanged : Boolean;
 		
-		
+        
+        private var _user : User; 
+        private var userChanged : Boolean;
+        
 		private var pending : Boolean; 
+        private var _editing : Boolean; 
+        
+        private var empty : Boolean;
 		
 		
 		public function UserDetail()
 		{
 			super();
 		}
-		
+        
+        //_____________________________________________________________________
+        //
+        // Setter/getter
+        //
+        //_____________________________________________________________________		
+        [Bindable("update")]
+        public function get profiles():Array {return _profiles;}
+        public function set profiles(value:Array):void
+        {
+            if( value && value != _profiles )
+            {
+                _profiles = value;
+                profilesChanged = true;
+                invalidateProperties();
+                dispatchEvent( new Event("update") );
+            }
+        } 
+        
+        [Bindable("update")]
+        public function get user():User { return _user; }
+        public function set user(value:User):void 
+        {
+            if(value == null)
+            {
+                pending = _editing = false;
+                empty = true;
+                this.invalidateSkinState();
+                return;                
+            }
+            _user = value;
+            userChanged = true;
+            
+            pending = _editing = false;
+            empty = false;
+            
+            dispatchEvent( new Event("update") );    
+                
+            if( _user.id_user == 0)
+            {
+                pending = empty = false;
+                _editing  = true;
+            }
+            
+            this.invalidateSkinState();
+        }
+        
+        
+        public function set editing(value:Boolean):void
+        {
+            _editing = true;
+            empty = false;
+            invalidateSkinState();
+        }
+        
+        public function setStateNormal():void{
+            pending = false;
+            _editing = false;
+            empty = false;
+            invalidateSkinState();
+        }
+        public function setStateEmpty():void{
+            pending = false;
+            _editing = false;
+            empty = true;
+            invalidateSkinState();
+        }
 		
 		//_____________________________________________________________________
 		//
 		// Overriden Methods
 		//
 		//_____________________________________________________________________
-		
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
 			if (instance == editButton)
 			{
 				editButton.addEventListener(MouseEvent.CLICK, editButton_clickHandler);
-				editButton.enabled = false; 
 			}
 			if (instance == saveButton)
 			{
@@ -206,22 +279,17 @@ package com.ithaca.visu.controls.users
 			}
 			if (userChanged)
 			{
-				if( user )
-				{
-					editButton.enabled = true; 
-					deleteButton.enabled = false;
-				}
-				if ( getCurrentSkinState() == "normal")
+				userChanged = true;
+                if ( getCurrentSkinState() == "normal" || getCurrentSkinState() == "empty")
 					setDisplay();
 				else
 					setInput();
-				userChanged = true;
 			}
 		}
 		
 		override protected function getCurrentSkinState():String
 		{
-			return !enabled ? "disabled" : pending ? "pending" : _editing ?  "edit" : "normal"; 
+			return !enabled ? "disabled" : pending ? "pending" : _editing ?  "edit" :  empty ? "empty" : "normal"; 
 		}
 		//_____________________________________________________________________
 		//
@@ -235,8 +303,8 @@ package com.ithaca.visu.controls.users
 		protected function editButton_clickHandler(event:MouseEvent):void
 		{
 			_editing = true;
+            empty = false;
 			invalidateSkinState();
-			
 		}
 		
 		/**
@@ -244,7 +312,7 @@ package com.ithaca.visu.controls.users
 		 */
 		protected function saveButton_clickHandler(event:MouseEvent):void
 		{
-			pending = true;
+			pending = true;   empty = false;
 			var u:UserVO = new UserVO();
 			u.firstname = firstnameInput.text;
 			u.lastname = lastnameInput.text;
@@ -256,7 +324,7 @@ package com.ithaca.visu.controls.users
 			if(u.id_user == 0)
 			{
 				var userEventAdd:UserEvent = new UserEvent(UserEvent.ADD_USER);
-				u.avatar = "https://wave.google.com/wave/static/images/unknown.jpg";
+				u.avatar = "users/avatars/unknown.png" 
 				userEventAdd.userVO = u;
 				
 				dispatchEvent( userEventAdd );
@@ -274,14 +342,11 @@ package com.ithaca.visu.controls.users
 		 */
 		protected function deleteButton_clickHandler(event:MouseEvent):void
 		{
-			//pending = true;
 			var u:UserVO = new UserVO();
 			u.id_user = _user.id_user;
 			var userEventDelete:UserEvent = new UserEvent(UserEvent.DELETE_USER);
 			userEventDelete.userVO = u;
 			dispatchEvent( userEventDelete );
-		//	invalidateSkinState();
-			
 		}
 		
 		
@@ -290,7 +355,7 @@ package com.ithaca.visu.controls.users
 		 */
 		protected function cancelButton_clickHandler(event:MouseEvent):void
 		{
-			pending = false; _editing=false;
+			pending = false; _editing=false;  empty = false;
 			
 			//Reset textInput value
 			lastnameInput.text = user.lastname;
@@ -309,9 +374,6 @@ package com.ithaca.visu.controls.users
 			
 			invalidateSkinState();
 		}
-		
-
-		
 		/*
 		 *
 		 * Methods
@@ -327,6 +389,8 @@ package com.ithaca.visu.controls.users
 			emailInput.text = user.mail;
 			avatarUser.source = user.avatar;
 			updateProfileList();
+            
+            firstnameInput.setFocus();
 		}
 		protected function setDisplay():void
 		{
@@ -335,7 +399,6 @@ package com.ithaca.visu.controls.users
 			emailDisplay.text = user.mail;
 			avatarUser.source = user.avatar;
 			profileDisplay.text = getProfile(user.role).short_description;
-			
 		}
 		
 		/**
@@ -371,57 +434,5 @@ package com.ithaca.visu.controls.users
 			} 
 			return lastProfile;
 		}
-		
-		
-		
- 		private var _profiles:Array = [];
-		private var profilesChanged : Boolean;
-		[Bindable("update")]
-		public function get profiles():Array {return _profiles;}
-		public function set profiles(value:Array):void
-		{
-			if( value && value != _profiles )
-			{
-				_profiles = value;
-				profilesChanged = true;
-				invalidateProperties();
-				dispatchEvent( new Event("update") );
-			}
-		} 
-		
-		private var _user : User; 
-		private var userChanged : Boolean;
-		[Bindable("update")]
-		public function get user():User { return _user; }
-		public function set user(value:User):void 
-		{
-			if (_user != value)
-			{
-				_user = value;
-				userChanged = true;
-				invalidateProperties();
-				dispatchEvent( new Event("update") );
-			}
-			if( _user.id_user == 0)
-			{
-				if (firstnameInput) firstnameInput.setFocus();
-			}
-		}
-		
-		private var _editing : Boolean; 
-		public function set editing(value:Boolean):void
-		{
-			_editing = true;
-			invalidateSkinState();
-		}
-		
-		public function setStateNormal():void{
-			pending = false;
-			_editing = false;
-			invalidateSkinState();
-		}
-		
-		
-		
 	}
 }

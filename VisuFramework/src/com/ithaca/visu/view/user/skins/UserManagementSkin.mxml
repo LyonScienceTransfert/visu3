@@ -147,7 +147,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:Group>
 		
 		<s:Group width="50%" height="100%">
-			<s:Panel top="40" 
+			<s:Panel id="userDetailPanel" top="40" 
 					width="100%" height="80%">	
                 <s:title>{fxgt.gettext("Profil") + "(" +userDetail.user.firstname + ")"}</s:title>
 				<users:UserDetail id="userDetail" 
