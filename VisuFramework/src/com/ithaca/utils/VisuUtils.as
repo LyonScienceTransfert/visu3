@@ -214,7 +214,7 @@ package com.ithaca.utils
 			for each (var user:User in userList) {
 				label+= first ? '': ', ';
 				
-				label+= StringUtils.firstLetterCap(user.lastname) + ". " + StringUtils.cap(user.firstname);
+				label+= getUserLabelLastName(user, true);
 				first = false;
 			}
 			return label;
