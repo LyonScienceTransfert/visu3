@@ -397,7 +397,6 @@ CREATE TABLE `users` (
   `mail` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
   `activation_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
-  `recovery_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
   `profil` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `message` varchar(3000) CHARACTER SET utf8 COLLATE utf8_unicode_ci default 'Hello...',
@@ -406,7 +405,7 @@ CREATE TABLE `users` (
 ) ENGINE=MyISAM AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Password for admin = azerty';
 SET character_set_client = @saved_cs_client;
 
-INSERT INTO `users` VALUES(1, 'Admin', 'ADMIN', 'admin', '4bd65b7d2f7f8053793ca5857cc05ddf', NULL, NULL, 'users/avatars/unknown.png', '00010001000111110111','Hello, ___' );
+INSERT INTO `users` VALUES(1, 'Admin', 'ADMIN', 'admin', '4bd65b7d2f7f8053793ca5857cc05ddf', NULL, 'users/avatars/unknown.png', '00010001000111110111','Hello, ___' );
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
