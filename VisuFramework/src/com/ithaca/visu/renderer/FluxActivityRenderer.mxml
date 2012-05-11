@@ -83,7 +83,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:HorizontalLayout gap="3"/>
 			</s:layout>
 			<mx:Image includeInLayout="{data.pathImage}" visible="{data.pathImage}" source="{data.pathImage}"  width="25" height="25" />
-			<s:Label left="35" id="labelFirstName" fontWeight="bold" paddingTop="5" width="100%" text="{StringUtils.firstLetterCap(data.lastname) +'. ' + StringUtils.cap(data.firstname)}"/>
+			<s:Label left="35" id="labelFirstName" fontWeight="bold" paddingTop="5" width="100%" text="{StringUtils.firstLetterCap(data.firstname) +'. ' + StringUtils.cap(data.lastname)} "/>
 			<s:Label  text="{data.time}"   fontSize="10"  color="#000000"  paddingRight="0" paddingTop="7"/>
 		</s:Group>
 		
