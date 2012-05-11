@@ -705,16 +705,15 @@ package com.ithaca.visu.controls.sessions
 			}
 		}
 		
-		public function onAddNewSession(event:MouseEvent):void
-		{
-			var addEmptySession:CreateSessionByTemplate = CreateSessionByTemplate(PopUpManager.createPopUp( 
-				this, CreateSessionByTemplate , true) as spark.components.TitleWindow);
-			addEmptySession.x = (this.parentApplication.width - addEmptySession.width)/2;
-			addEmptySession.y = (this.parentApplication.height - addEmptySession.height)/2;
-			addEmptySession.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onCreateEmptySessionConformed);
-			addEmptySession.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateEmptySession);
-			addEmptySession.setTitleWindow(fxgt.gettext("Voulez-vous créer une nouvelle séance ?"));
-		}
+        public function onAddNewSession(event:MouseEvent):void
+        {
+            var addEmptySession:CreateSessionByTemplate = CreateSessionByTemplate(PopUpManager.createPopUp( 
+                this, CreateSessionByTemplate , true) as spark.components.TitleWindow);
+            PopUpManager.centerPopUp(addEmptySession);
+            addEmptySession.addEventListener(SessionEditEvent.PRE_ADD_SESSION, onCreateEmptySessionConformed);
+            addEmptySession.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateEmptySession);
+            addEmptySession.setTitleWindow(fxgt.gettext("Voulez-vous créer une nouvelle séance ?"));
+        }
 		
 		private function onCreateEmptySessionConformed(event:SessionEditEvent):void
 		{
