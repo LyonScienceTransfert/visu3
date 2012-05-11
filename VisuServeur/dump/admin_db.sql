@@ -30,16 +30,20 @@
 --
 
 DROP TABLE IF EXISTS `activities`;
-CREATE TABLE IF NOT EXISTS `activities` (
-  `id_activity` int(11) NOT NULL AUTO_INCREMENT,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `activities` (
+  `id_activity` int(11) NOT NULL auto_increment,
   `id_session` int(11) NOT NULL,
-  `title` text,
-  `duration` int(6) DEFAULT NULL,
-  `ind` int(2) DEFAULT NULL,
-  PRIMARY KEY (`id_activity`,`id_session`),
+  `title` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `duration` int(6) default NULL,
+  `ind` int(2) default NULL,
+  PRIMARY KEY  (`id_activity`,`id_session`),
   UNIQUE KEY `IDX_activities2` (`id_activity`),
   KEY `IDX_activities1` (`id_session`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1184 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1334 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
 -- --------------------------------------------------------
 INSERT INTO `activities` VALUES(1, 1, '1. Les bourgeois-bohème', 15, 0);
 INSERT INTO `activities` VALUES(2, 1, '2. Les nappies : la jeunesse dorée des beaux quartiers du sud-ouest parisien', 10, 1);
@@ -50,17 +54,21 @@ INSERT INTO `activities` VALUES(4, 1, '4. Le style bling-bling', 10, 3);
 --
 
 DROP TABLE IF EXISTS `activities_elements`;
-CREATE TABLE IF NOT EXISTS `activities_elements` (
-  `id_element` int(11) NOT NULL AUTO_INCREMENT,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `activities_elements` (
+  `id_element` int(11) NOT NULL auto_increment,
   `id_activity` int(11) NOT NULL,
-  `data` text,
-  `url_element` varchar(255) DEFAULT NULL,
-  `type_element` varchar(40) DEFAULT NULL,
-  `type_mime` varchar(255) DEFAULT NULL,
-  `order_activity_element` int(2) NOT NULL DEFAULT '-1',
-  PRIMARY KEY (`id_element`,`id_activity`),
+  `data` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `url_element` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `type_element` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `type_mime` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `order_activity_element` int(2) NOT NULL default '-1',
+  PRIMARY KEY  (`id_element`,`id_activity`),
   KEY `IDX_activities_elements1` (`id_activity`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19679 ;
+) ENGINE=MyISAM AUTO_INCREMENT=20223 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
 -- --------------------------------------------------------
 INSERT INTO `activities_elements` VALUES(1, 1, 'Cette catégorie sociale (les bourgeois-bohème/bobos) existe en France. Est-ce le cas aux Etats-Unis ?', '', 'consigne', NULL, -1);
 INSERT INTO `activities_elements` VALUES(2, 1, 'A quoi associez-vous cette catégorie aux US ?', '', 'consigne', NULL, -1);
@@ -209,13 +217,16 @@ INSERT INTO `activities_elements` VALUES(141, 4, '0 	la Une de Libération', 'ht
 --
 
 DROP TABLE IF EXISTS `modules`;
-CREATE TABLE IF NOT EXISTS `modules` (
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `label` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `css` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `modules` (
+  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `label` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `url` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `css` varchar(255) collate utf8_unicode_ci NOT NULL,
   `profileUser` smallint(2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
 
 
 INSERT INTO `modules` VALUES('home', 'Accueil', 'modules/HomeModule.swf', 'accueil.ccs', 4);
@@ -233,14 +244,17 @@ INSERT INTO `modules` VALUES('profil', 'Profil', 'modules/ProfilModule.swf', 'pr
 --
 
 DROP TABLE IF EXISTS `obsels`;
-CREATE TABLE IF NOT EXISTS `obsels` (
-  `id_obsel` int(11) NOT NULL AUTO_INCREMENT,
-  `trace` varchar(255) DEFAULT NULL,
-  `type_obsel` varchar(255) NOT NULL,
-  `begin_obsel` datetime DEFAULT NULL,
-  `rdf` text,
-  PRIMARY KEY (`id_obsel`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43468 ;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `obsels` (
+  `id_obsel` int(11) NOT NULL auto_increment,
+  `trace` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `type_obsel` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `begin_obsel` datetime default NULL,
+  `rdf` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  PRIMARY KEY  (`id_obsel`)
+) ENGINE=MyISAM AUTO_INCREMENT=96822 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
 
 -- --------------------------------------------------------
 
@@ -249,12 +263,15 @@ CREATE TABLE IF NOT EXISTS `obsels` (
 --
 
 DROP TABLE IF EXISTS `profile_descriptions`;
-CREATE TABLE IF NOT EXISTS `profile_descriptions` (
-  `profile` int(2) NOT NULL AUTO_INCREMENT,
-  `short_description` varchar(255) NOT NULL,
-  `long_description` text NOT NULL,
-  PRIMARY KEY (`profile`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1048577 ;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `profile_descriptions` (
+  `profile` int(2) NOT NULL auto_increment,
+  `short_description` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci  NOT NULL,
+  `long_description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci  NOT NULL,
+  PRIMARY KEY  (`profile`)
+) ENGINE=MyISAM AUTO_INCREMENT=1048577 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
 
 
 INSERT INTO `profile_descriptions` VALUES(503, 'tuteur', 'it user with droit .....');
@@ -268,20 +285,22 @@ INSERT INTO `profile_descriptions` VALUES(70135, 'administrateur', 'administrato
 --
 
 DROP TABLE IF EXISTS `retro_document`;
-CREATE TABLE IF NOT EXISTS `retro_document` (
-  `id_retro_document` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `retro_document` (
+  `id_retro_document` int(10) unsigned zerofill NOT NULL auto_increment,
   `id_owner` int(10) unsigned zerofill NOT NULL,
   `id_session` int(10) unsigned zerofill NOT NULL,
-  `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `last_modification_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `title` varchar(255) DEFAULT NULL,
-  `description` text,
+  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `last_modification_date` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `xml` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id_retro_document`),
+  PRIMARY KEY  (`id_retro_document`),
   KEY `by_owner` (`id_owner`),
   KEY `by_owner_and_by_session` (`id_owner`,`id_session`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='The documents created in the retrospection room that contain' AUTO_INCREMENT=131 ;
-
+) ENGINE=MyISAM AUTO_INCREMENT=163 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='The documents created in the retrospection room that contain';
+SET character_set_client = @saved_cs_client;
 -- --------------------------------------------------------
 
 --
@@ -289,14 +308,16 @@ CREATE TABLE IF NOT EXISTS `retro_document` (
 --
 
 DROP TABLE IF EXISTS `retro_document_access`;
-CREATE TABLE IF NOT EXISTS `retro_document_access` (
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `retro_document_access` (
   `id_retro_document` int(10) unsigned zerofill NOT NULL,
   `id_user` int(10) unsigned zerofill NOT NULL COMMENT 'The id of the user who has a read access to the retrospection document',
-  PRIMARY KEY (`id_retro_document`,`id_user`),
+  PRIMARY KEY  (`id_retro_document`,`id_user`),
   KEY `by_document` (`id_user`),
   KEY `by_user` (`id_user`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='The users that have a read access on a retrospection documen';
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='The users that have a read access on a retrospection documen';
+SET character_set_client = @saved_cs_client;
 -- --------------------------------------------------------
 
 --
@@ -304,12 +325,15 @@ CREATE TABLE IF NOT EXISTS `retro_document_access` (
 --
 
 DROP TABLE IF EXISTS `roles`;
-CREATE TABLE IF NOT EXISTS `roles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `label` varchar(255) NOT NULL,
-  `description` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL auto_increment,
+  `label` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
 
 -- --------------------------------------------------------
 
@@ -318,22 +342,24 @@ CREATE TABLE IF NOT EXISTS `roles` (
 --
 
 DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE IF NOT EXISTS `sessions` (
-  `id_session` int(11) NOT NULL AUTO_INCREMENT,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `sessions` (
+  `id_session` int(11) NOT NULL auto_increment,
   `id_user` int(11) NOT NULL,
-  `description` varchar(40) DEFAULT NULL,
-  `theme` text,
-  `date_session` datetime DEFAULT '2000-01-01 00:00:00',
-  `isModel` tinyint(1) DEFAULT NULL,
-  `start_recording` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
-  `status_session` tinyint(1) NOT NULL DEFAULT '0',
-  `id_currentActivity` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_session`,`id_user`),
+  `description` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `theme` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `date_session` datetime default '2000-01-01 00:00:00',
+  `isModel` tinyint(1) default NULL,
+  `start_recording` datetime NOT NULL default '2000-01-01 00:00:00',
+  `status_session` tinyint(1) NOT NULL default '0',
+  `id_currentActivity` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id_session`,`id_user`),
   UNIQUE KEY `IDX_sessions1` (`id_session`,`id_user`),
   UNIQUE KEY `IDX_sessions2` (`id_session`),
   KEY `IDX_sessions3` (`id_user`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=349 ;
-
+) ENGINE=MyISAM AUTO_INCREMENT=389 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
 -- --------------------------------------------------------
 INSERT INTO `sessions` VALUES(1, 1, 'Les stéréotypes de la bourgeoisie', 'Les stéréotypes de la bourgeoisie', '2011-01-11 16:55:39', 1, '2010-12-29 12:59:06', 1, 0);
 --
@@ -341,16 +367,19 @@ INSERT INTO `sessions` VALUES(1, 1, 'Les stéréotypes de la bourgeoisie', 'Les 
 --
 
 DROP TABLE IF EXISTS `session_users`;
-CREATE TABLE IF NOT EXISTS `session_users` (
-  `id_session_user` int(11) NOT NULL AUTO_INCREMENT,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `session_users` (
+  `id_session_user` int(11) NOT NULL auto_increment,
   `id_session` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
-  `mask` int(20) DEFAULT NULL,
-  PRIMARY KEY (`id_session_user`),
+  `mask` int(20) default NULL,
+  PRIMARY KEY  (`id_session_user`),
   UNIQUE KEY `IDX_users1` (`id_session_user`),
   KEY `id_session` (`id_session`,`id_user`),
   KEY `id_user` (`id_user`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1306 ;
+) ENGINE=MyISAM AUTO_INCREMENT=1402 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
 
 -- --------------------------------------------------------
 
@@ -359,22 +388,25 @@ CREATE TABLE IF NOT EXISTS `session_users` (
 --
 
 DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id_user` int(11) NOT NULL AUTO_INCREMENT,
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `users` (
+  `id_user` int(11) NOT NULL auto_increment,
   `firstname` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `lastname` varchar(255) NOT NULL,
-  `mail` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `activation_key` varchar(255) DEFAULT NULL,
-  `recovery_key` varchar(255) DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `profil` varchar(20) NOT NULL,
-  `message` varchar(3000) DEFAULT 'Hello...',
-  PRIMARY KEY (`id_user`),
+  `lastname` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `mail` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `activation_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `recovery_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci default NULL,
+  `profil` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `message` varchar(3000) CHARACTER SET utf8 COLLATE utf8_unicode_ci default 'Hello...',
+  PRIMARY KEY  (`id_user`),
   UNIQUE KEY `IDX_users1` (`id_user`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Password for admin = azerty';
+SET character_set_client = @saved_cs_client;
 
-INSERT INTO `users` VALUES(1, 'Admin', 'ADMIN', 'admin', 'admin', NULL, NULL, 'https://wave.google.com/wave/static/images/unknown.jpg', '00010001000111110111','Hello, ___' );
+INSERT INTO `users` VALUES(1, 'Admin', 'ADMIN', 'admin', '4bd65b7d2f7f8053793ca5857cc05ddf', NULL, NULL, 'users/avatars/unknown.png', '00010001000111110111','Hello, ___' );
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
