@@ -73,11 +73,15 @@ package com.ithaca.visu.controls.sessions
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.events.ToolTipEvent;
+	import mx.utils.StringUtil;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -85,8 +89,6 @@ package com.ithaca.visu.controls.sessions
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.components.supportClasses.TextBase;
 	import spark.layouts.VerticalLayout;
-	
-	
 	
 	[SkinState("normal")]
 	[SkinState("open")]
@@ -128,10 +130,16 @@ package com.ithaca.visu.controls.sessions
 		private var memo:String=""; 
 		private var TOOL_TIPS_IMAGE_WIDTH:int = 160;
 		
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
 		
 		public function ActivityDetailB()
 		{
 			super();
+            
+            // initialisation gettext
+            fxgt = FxGettext;
+            
 			statementList = new ArrayCollection();
 			documentList = new ArrayCollection();
 			keywordList = new ArrayCollection();
@@ -151,7 +159,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			if (instance == durationDisplay)
 			{
-				durationDisplay.text = "Durée prévue : " +activity.duration.toString();
+				durationDisplay.text = StringUtil.substitute(fxgt.gettext('Durée prévue : "{0}" min'), activity.duration.toString());
 			}
 			if (instance == startButton)
 			{
@@ -167,7 +175,7 @@ package com.ithaca.visu.controls.sessions
 				}else
 				{
 					var labelStatement:Label = new Label();
-					labelStatement.text = "Aucune consigne n'est définie pour cette activité..."
+					labelStatement.text = fxgt.gettext("Aucune consigne n'est définie pour cette activité...");
 					statementGroup.addElement(labelStatement);
 				}
 			}
@@ -183,7 +191,7 @@ package com.ithaca.visu.controls.sessions
 					var labelDocument:Label = new Label();
 					var layout:VerticalLayout = new VerticalLayout();
 					documentGroup.layout =  layout;
-					labelDocument.text = "Aucun document n'est défini pour cette activité..."
+					labelDocument.text = fxgt.gettext("Aucun document n'est défini pour cette activité...");
 					documentGroup.addElement(labelDocument);
 				}
 			}
@@ -197,7 +205,7 @@ package com.ithaca.visu.controls.sessions
 				}else
 				{
 					var labelKeyword:Label = new Label();
-					labelKeyword.text = "Aucun mot-clé n'est défini pour cette activité...";
+					labelKeyword.text = fxgt.gettext("Aucun mot-clé n'est défini pour cette activité...");
 					keywordGroup.height = 30;
 					keywordGroup.addElement(labelKeyword);
 				}
@@ -230,7 +238,7 @@ package com.ithaca.visu.controls.sessions
 				activityChanged = false;
 				
 				titleDisplay.toolTip = titleDisplay.text = _activity.title;
-				if (durationDisplay) durationDisplay.text = "Durée prévue : " + _activity.duration.toString();
+				if (durationDisplay) durationDisplay.text = StringUtil.substitute(fxgt.gettext('Durée prévue : "{0}" min'), activity.duration.toString());
 				parseActivityElements();
 				
 			}
