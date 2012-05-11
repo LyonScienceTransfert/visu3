@@ -159,7 +159,7 @@ package com.ithaca.visu.controls.sessions
 			}
 			if (instance == durationDisplay)
 			{
-				durationDisplay.text = StringUtil.substitute(fxgt.gettext('Durée prévue : "{0}" min'), activity.duration.toString());
+				durationDisplay.text = StringUtil.substitute(fxgt.gettext('Durée prévue : {0} min'), activity.duration.toString());
 			}
 			if (instance == startButton)
 			{
@@ -238,7 +238,7 @@ package com.ithaca.visu.controls.sessions
 				activityChanged = false;
 				
 				titleDisplay.toolTip = titleDisplay.text = _activity.title;
-				if (durationDisplay) durationDisplay.text = StringUtil.substitute(fxgt.gettext('Durée prévue : "{0}" min'), activity.duration.toString());
+				if (durationDisplay) durationDisplay.text = StringUtil.substitute(fxgt.gettext('Durée prévue : {0} min'), activity.duration.toString());
 				parseActivityElements();
 				
 			}
