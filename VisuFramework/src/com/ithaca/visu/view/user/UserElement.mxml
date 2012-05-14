@@ -64,42 +64,40 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 -->
 <s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
-	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:mx="library://ns.adobe.com/flex/mx"
-	xmlns:visu="com.ithaca.visu.controls.*"
-	verticalAlign="middle">
-	<fx:Declarations>
-
-	</fx:Declarations>
-
-
-	
-	<fx:Script>
-		<![CDATA[
-				import com.ithaca.utils.StringUtils;
-				import com.ithaca.utils.VisuUtils;
-				import com.ithaca.visu.model.User;
-			
-				[Bindable]
-				public var user:User;
-				
-				[Bindable]
-				public var firstNameInitials:Boolean = false;
-				
-				[Bindable]
-				public var statusIconWidth:int = 16;
-
-				[Bindable]
-				public var showStatusIcon:Boolean = true;
-
-				[Bindable]
-				public var showRoleInParentheses:Boolean = false;
-				
-		]]>
-	</fx:Script>
-
-	<mx:Image id="statusIcon" visible="{showStatusIcon}" width="{statusIconWidth}" height="{statusIconWidth}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.status)}" /> 
-	<!--<visu:ConnectionLight width="{statusIconWidth}" height="{statusIconWidth}"  id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" status="{user.status}" />-->
-	<s:Label text="{firstNameInitials?StringUtils.firstLetterCap(user.lastname):StringUtils.cap(user.lastname)}{firstNameInitials?'.':''} {StringUtils.cap(user.firstname)}"/>
-	<s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"/>
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    xmlns:visu="com.ithaca.visu.controls.*"
+    verticalAlign="middle">
+    <fx:Declarations>
+        
+    </fx:Declarations>
+    
+    
+    
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.utils.VisuUtils;
+        import com.ithaca.visu.model.User;
+        
+        [Bindable]
+        public var user:User;
+        
+        [Bindable]
+        public var firstNameInitials:Boolean = false;
+        
+        [Bindable]
+        public var statusIconWidth:int = 16;
+        
+        [Bindable]
+        public var showStatusIcon:Boolean = true;
+        
+        [Bindable]
+        public var showRoleInParentheses:Boolean = false;
+        
+    ]]>
+    </fx:Script>
+    
+    <mx:Image id="statusIcon" visible="{showStatusIcon}" width="{statusIconWidth}" height="{statusIconWidth}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.status)}" /> 
+    <s:Label text="{VisuUtils.getUserLabelLastName(user, true)}"/>
+    <s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"/>
 </s:HGroup>
