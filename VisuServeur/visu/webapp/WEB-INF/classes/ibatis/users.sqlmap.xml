@@ -23,13 +23,12 @@
 		<result column="mail" jdbcType="VARCHAR" property="mail" />
 		<result column="profil" jdbcType="VARCHAR" property="profil" />     
 		<result column="activation_key" jdbcType="VARCHAR" property="activation_key" />
-		<result column="recovery_key" jdbcType="TINYINT" property="recovery_key" />
 		<result column="avatar" jdbcType="VARCHAR" property="avatar" />
 		<result column="message" jdbcType="VARCHAR" property="message" />	
 	</resultMap>
 
 	<sql id="selectBase">
-		select id_user as u_id, lastname, firstname, mail, profil, avatar, activation_key, recovery_key, message
+		select id_user as u_id, lastname, firstname, mail, profil, avatar, activation_key, message
 	</sql>
 	
 	<select id="getUsers" parameterClass="user"
@@ -67,7 +66,7 @@
     
     <select id="getUsersFromSession" parameterClass="int"
 		resultMap="userResult" cacheModel="cache">
-		SELECT u.id_user as u_id, lastname, firstname, mail, profil, avatar, activation_key, recovery_key, message
+		SELECT u.id_user as u_id, lastname, firstname, mail, profil, avatar, activation_key, message
         FROM users u , session_users s
         WHERE s.id_session = #value# AND s.id_user = u.id_user
     </select>
@@ -99,7 +98,6 @@
 			mail = #mail:VARCHAR#, 
 			profil = #profil:BIGINT#,
 			activation_key = #activation_key:VARCHAR#,
-			recovery_key = #recovery_key:VARCHAR#,
 			avatar = #avatar:VARCHAR#,
 			message = #message:VARCHAR#
 		WHERE id_user = #id_user:BIGINT#

@@ -206,7 +206,6 @@ package com.ithaca.visu.view.user
 			userVO.id_user = value.id_user;
 			userVO.avatar = value.avatar;
 			userVO.message = value.message;
-			userVO.recovery_key = value.recovery_key;
 			userVO.activation_key = value.activation_key;
 			return userVO;
 		}

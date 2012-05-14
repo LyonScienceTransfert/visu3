@@ -288,6 +288,10 @@ public class SegmentCommentAudio extends SkinnableComponent
 	public function SegmentCommentAudio()
 	{
 		super();
+        
+        // init internalisation
+        fxgt = FxGettext;
+        
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
@@ -532,9 +536,6 @@ public class SegmentCommentAudio extends SkinnableComponent
     // creation the segment
 	private function onCreationComplete(event:FlexEvent = null):void
 	{
-        // init internalisation
-        fxgt = FxGettext;
-    
         // save clone the segment for tracage the modifications
         _tracedSegment = new Segment(segment.parentRetroDocument);
         _tracedSegment.setSegmentXML(segment.getSegmentXML());
