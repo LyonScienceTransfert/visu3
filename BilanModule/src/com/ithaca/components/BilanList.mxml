@@ -504,13 +504,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
                             value="mine"
                             groupName="filterType"
                             label="{fxgt.gettext('Mes bilans (créés par moi)')}"
-                            toolTip="{fxgt.gettext('Affiche uniquement les bilans que j\'ai créés')}"
+                            toolTip="{fxgt.gettext("Affiche uniquement les bilans que j'ai créés")}"
                             />
                          <s:RadioButton
                             value="shared"
                             groupName="filterType"
-                            label="{fxgt.gettext('Autres bilans (créés par d\'autres) et partagés avec moi')}"
-                            toolTip="{fxgt.gettext('Affiche uniquement les bilans créés par d\'autres et partagés avec moi')}"
+                            label="{fxgt.gettext("Autres bilans (créés par d'autres) et partagés avec moi")}"
+                            toolTip="{fxgt.gettext("Affiche uniquement les bilans créés par d'autres et partagés avec moi")}"
                             />
                 </s:VGroup>
 
