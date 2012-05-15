@@ -500,18 +500,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
                             label="{fxgt.gettext('Tous les bilans')}"
                             toolTip="{fxgt.gettext('Affiche tous les bilans')}"
                             selected="true"/>
-                    <s:RadioButton
+                        <s:RadioButton
                             value="mine"
-                            groupName="filterType"
-                            label="{fxgt.gettext('Mes bilans (créés par moi)')}"
-                            toolTip="{fxgt.gettext('Affiche uniquement les bilans que j\'ai créés')}"
-                            />
+                            groupName="filterType">
+                            <s:label>{fxgt.gettext('Mes bilans (créés par moi)')}</s:label>
+                            <s:toolTip>{fxgt.gettext("Affiche uniquement les bilans que j'ai créés")}</s:toolTip>
+                        </s:RadioButton>
+                            
                          <s:RadioButton
                             value="shared"
-                            groupName="filterType"
-                            label="{fxgt.gettext('Autres bilans (créés par d\'autres) et partagés avec moi')}"
-                            toolTip="{fxgt.gettext('Affiche uniquement les bilans créés par d\'autres et partagés avec moi')}"
-                            />
+                            groupName="filterType">
+                            <s:label>{fxgt.gettext("Autres bilans (créés par d'autres) et partagés avec moi")}</s:label>  
+                            <s:toolTip>{fxgt.gettext("Affiche uniquement les bilans créés par d'autres et partagés avec moi")}</s:toolTip>
+                         </s:RadioButton>
                 </s:VGroup>
 
 
