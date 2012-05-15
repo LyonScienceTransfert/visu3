@@ -324,7 +324,7 @@ package com.ithaca.visu.controls.users
 			if(u.id_user == 0)
 			{
 				var userEventAdd:UserEvent = new UserEvent(UserEvent.ADD_USER);
-				u.avatar = "users/avatars/unknown.png" 
+				u.avatar = "/images/unknown.png";
 				userEventAdd.userVO = u;
 				
 				dispatchEvent( userEventAdd );
