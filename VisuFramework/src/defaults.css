@@ -216,10 +216,6 @@ components|IconInfoSegment
 {
 	skin-class:ClassReference("com.ithaca.utils.components.skins.IconInfoSegmentSkin");	
 }
-documentarisation|SegmentVideoAdvanced
-{
-	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin");
-}
 documentarisation|SegmentTitle
 {
 	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentTitleSkin");
@@ -311,11 +307,6 @@ documentarisation|RetroDocumentSegment
 	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentSegmentSkin");
 }
 
-documentarisation|SegmentVideo
-{
-	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoSkin");
-}
-
 ConnectionLight
 {
 	skinClass: ClassReference("com.ithaca.visu.skins.ConnectionLightSkin");
@@ -326,11 +317,6 @@ ConnectedUser
 	skin-class:ClassReference("com.ithaca.visu.skins.ConnectedUserSkin");
 	corner-radius:10px;
 }
-
-/*SessionHomeElement
-{
-	skin-class:ClassReference("com.ithaca.visu.skins.SessionHomeElementSkin");
-}*/
 
 AdvancedTextInput
 {

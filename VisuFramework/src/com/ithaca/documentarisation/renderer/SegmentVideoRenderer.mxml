@@ -70,9 +70,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
 	<fx:Script>
 	<![CDATA[
-		import com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin;
 		import com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin;
-		import com.ithaca.visu.model.Model;
 		
 		import mx.events.StateChangeEvent;
 
