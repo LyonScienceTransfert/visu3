@@ -64,10 +64,8 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
-import com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.traces.model.TraceModel;
-import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconDelete;
 import com.ithaca.utils.components.SegmentVideoOwnerObselDNDToolTip;
@@ -82,8 +80,6 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
-import flash.ui.Mouse;
-import flash.ui.MouseCursor;
 import flash.utils.Timer;
 
 import gnu.as3.gettext.FxGettext;
@@ -139,6 +135,16 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 
     [SkinPart("true")]
     public var groupText:HGroup;
+    
+    [SkinPart("true")]
+    public var labelInfoDuration:Label;
+
+    [SkinPart("true")]
+    public var labelInfoStartSpinner:Label;
+
+    [SkinPart("true")]
+    public var labelInfoEndSpinner:Label;
+    
     // remove screen-shot
 	/*[SkinPart("true")]
 	public var screenShot:Image;
@@ -327,6 +333,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		if (instance == iconDelete)
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);	
+			iconDelete.toolTip = fxgt.gettext("Suprimer ce bloc");	
 		}
 		if (instance == richEditableText)
 		{
@@ -397,6 +404,18 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		if(instance == hgroupDndOwnerObsel)
 		{
             hgroupDndOwnerObsel.includeInLayout = hgroupDndOwnerObsel.visible = false;
+		}
+		if(instance == labelInfoDuration)
+		{
+            labelInfoDuration.text = fxgt.gettext("Durée");
+		}
+		if(instance == labelInfoStartSpinner)
+		{
+            labelInfoStartSpinner.text = fxgt.gettext("Début")+":";
+		}
+		if(instance == labelInfoEndSpinner)
+		{
+            labelInfoEndSpinner.text = fxgt.gettext("Fin")+":";
 		}
 	}
 	
@@ -898,13 +917,34 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
 			labelCurrentTime.text = TimeUtils.formatTimeString(currnetTimeS);  
 		}
+        // update labelInfo
+        updateLabelInfo();
 	}
 	private function updateLabelDuration():void
 	{
 		var durationMs:Number = _timeEnd - _timeBegin;
 		var duration:Number = Math.floor(durationMs / 1000); 
 		labelDuration.text = TimeUtils.formatTimeString(duration); 
+        // update labelInfo
+        updateLabelInfo();
 	}
+    /**
+    * update labelInfo by different state skin
+    */
+    private function updateLabelInfo():void
+    {
+        if(labelInfoDuration)
+        {
+            if( edit || editSelected || editOver || sharedOver || shared)
+            {
+                labelInfoDuration.text = fxgt.gettext("Durée");
+            }else
+            {
+                labelInfoDuration.text = fxgt.gettext("/");
+            }
+        }
+    }
+        
 	private function updateTimeBeginTimeEndBloc():void
 	{
         // set start time session selected retroDocument
