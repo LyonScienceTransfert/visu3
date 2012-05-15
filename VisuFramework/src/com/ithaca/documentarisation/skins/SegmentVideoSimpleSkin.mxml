@@ -127,7 +127,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
         					<!-- ICON SEGMENT -->
         					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPause,sharedPlay">
         					</s:Label>
-        					<s:Label id="labelInfo" text.editSelected="Durée" text.edit="Durée" text.editOver="Durée" text.editPlay="/" text.editPause="/"  text.sharedOver="Durée" text.shared="Durée" text.sharedPlay="/" text.sharedPause="/"/>
+        					<s:Label id="labelInfoDuration"/>
         					<s:Label id="labelDuration" text="02:24">
         					</s:Label>
         				</s:HGroup>
@@ -159,7 +159,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
         			<!-- LABELS START END -->
                     <mx:Spacer width="100%"/>
         			<s:HGroup  verticalAlign="middle" width="100%" horizontalAlign="center" includeIn="edit,editOver,editPause,editPlay,editSelected" gap="0" fontSize="10">
-        				<s:Label text="Début:"/>
+        				<s:Label id="labelInfoStartSpinner"/>
         				<s:Label id="labelStartSpinner" text="11:11"/>
         				<s:Spinner  id="startSpinner" minimum="0" 
         					skinClass="spark.skins.spark.SpinnerSkin" 
@@ -167,7 +167,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
         					enabled.editPause="false"
         					enabled.editPlay="false"/>               
         				<mx:Spacer width="7"/>
-        				<s:Label text="Fin:"/>
+        				<s:Label id="labelInfoEndSpinner"/>
         				<s:Label id="labelEndSpinner" text="14:14"/>
         				<s:Spinner id="endSpinner"  maximum="{24*60*60}" 
         					skinClass="spark.skins.spark.SpinnerSkin" 
@@ -182,7 +182,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
                     <s:VGroup width="100%" gap="3">
                         <s:HGroup width="100%" horizontalAlign="center">
-                            <s:Label id="labelDndObsel" maxDisplayedLines="1" text="qsqsq"/>
+                            <s:Label id="labelDndObsel" maxDisplayedLines="1"/>
                         </s:HGroup>
                         <s:HGroup width="100%" horizontalAlign="center">
                             <s:Label id="labelDndObselTempsContent" maxDisplayedLines="1" width="100%"/>
@@ -198,7 +198,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
         				buttonMode="true"
         				visible.edit="false"
         				visible.editSelected="true" visible.editPlay="true" visible.editPause="true">
-        				<components:toolTip>Suprimer ce segment</components:toolTip>
         			</components:IconDelete>
                 </s:HGroup>
             </s:VGroup>
