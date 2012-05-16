@@ -63,6 +63,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import mx.controls.Image;
+	import mx.graphics.GradientEntry;
 	
 	import spark.components.Label;
 	import spark.components.RichEditableText;
@@ -84,8 +85,11 @@ package com.ithaca.visu.controls.sessions
 		
 		[SkinPart("false")]
 		public var nameUser :Label;
-		
-		
+        
+		[SkinPart("false")]
+		public var fullColorGradientExit :GradientEntry;
+
+		private var _msgSystem:Boolean;
 		private var infoChanged:Boolean;
 		private var _pathAvatar:String;
 		private var _nameSender:String;
@@ -135,6 +139,13 @@ package com.ithaca.visu.controls.sessions
 				nameUser.text = _nameSender;
 				nameUser.toolTip = _nameSender;
 				this.percentWidth = 100; 
+                if(_msgSystem)
+                {
+                    titleDisplay.setStyle("fontStyle", "italic");
+                }else
+                {
+                    fullColorGradientExit.color = _backGroundColor;
+                }
 			}
 		}
 		public function set statVciel(value:Boolean):void
@@ -151,9 +162,10 @@ package com.ithaca.visu.controls.sessions
 			return "normal";
 		}
 		
-		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:*, backGroundColor:uint):void
+		public function setElementChat(pathAvatar:String, nameSender:String, info:String, sourceImageInfo:*, backGroundColor:uint, msgSystem:Boolean = false):void
 		{
 			infoChanged = true;
+            _msgSystem = msgSystem;
 			_pathAvatar = pathAvatar;
 			_nameSender = nameSender;
 			_info = info;
@@ -161,7 +173,5 @@ package com.ithaca.visu.controls.sessions
 			_backGroundColor = backGroundColor;
 			invalidateProperties();
 		}
-		
-		public function get backGroundColor():uint{return this._backGroundColor};
 	}
 }

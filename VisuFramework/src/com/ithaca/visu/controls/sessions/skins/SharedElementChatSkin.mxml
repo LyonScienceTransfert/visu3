@@ -65,8 +65,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 -->
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx"
-		preinitialize="skin1_preinitializeHandler(event)">
+		xmlns:mx="library://ns.adobe.com/flex/mx">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.sessions.SharedElementChat")]
@@ -75,11 +74,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
-			protected function skin1_preinitializeHandler(event:FlexEvent):void
-			{
-				fullColorGradientExit.color = this.hostComponent.backGroundColor;
-			}
-
 		]]>
 	</fx:Script>
 	<!-- states -->
@@ -98,11 +92,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:fill>
 				<s:LinearGradient rotation="90">					
 					<s:GradientEntry color="#FFFFFF" />						
-					<s:GradientEntry id="fullColorGradientExit"/>						
+					<s:GradientEntry id="fullColorGradientExit" color ="#cccccc"/>						
 				</s:LinearGradient>
 			</s:fill>
 		</s:Rect>
-		<mx:Image id="avatar"  left="3" top="1" width="30" height="30"/>
+		<mx:Image id="avatar"  left="3" top="1" width="25" height="25"/>
 		<s:Label id="nameUser"  maxDisplayedLines="1" visible.vciel="true" visible.normal="false" top="5" left="40"  width="90"/>
 		<mx:Image id="imageInfo" left.normal="44"  left.vciel="135" top="5" maxWidth="25" maxHeight="25"/>
 		<s:RichEditableText id="titleDisplay" left.normal="72" left.vciel="40" top.normal="5" top.vciel="30" right="10" color="#121212"
@@ -110,6 +104,4 @@ knowledge of the CeCILL-C license and that you accept its terms.
                  editable="false" selectable="true" selectionHighlighting="always" right.normal="10" backgroundAlpha="0.0">
 		</s:RichEditableText>
 	</s:Group>
-	
-	
 </s:Skin>
