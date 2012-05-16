@@ -193,7 +193,7 @@ package com.ithaca.utils.components
 				}else
 				{
 					buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume)
-					buttonVolume.toolTip = fxgt.gettext("Désactiver le micro");
+					buttonVolume.toolTip = fxgt.gettext("Mute");
 				}
 			}
 			if (instance == buttonMicro)
@@ -377,7 +377,7 @@ package com.ithaca.utils.components
 						buttonVolume.includeInLayout = true;
 						buttonVolume.visible = true;
 						buttonVolume.addEventListener(ImageVolumeEvent.CLICK_IMAGE_VOLUME, onClickButtonVolume);
-						buttonVolume.toolTip = fxgt.gettext("Désactiver le micro");
+						buttonVolume.toolTip = fxgt.gettext("Mute");
 					}else
 					{
 						buttonVolume.includeInLayout = false;
