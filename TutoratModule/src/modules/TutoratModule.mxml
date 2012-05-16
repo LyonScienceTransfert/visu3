@@ -463,7 +463,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					// TODO icon for this event
 					if(event.userId != Model.getInstance().getLoggedUser().id_user)
 					{
-						this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");	
+						this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"", true);	
 						// add viewObsel "SessionOut"
 						// FIXME gestion time
 						Model.getInstance().addViewObselSessionOut(new Date().time,event.userId)
@@ -1519,7 +1519,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				return result;
 			}
 
-			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:*):void
+			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:* , msgSystem:Boolean = false):void
 			{
 				// exclus the obsel "Start activity"
 				if( ownerObsel != 0)
@@ -1531,7 +1531,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						var userName:String = traceLine.userName as String;
 						var userColor:uint = traceLine.userColor;
 						var sharedElementChat:SharedElementChat = new SharedElementChat();
-						sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
+						sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor, msgSystem);
 						sharedElementChat.statVciel = Model.getInstance().checkServeurVisuVciel();
 						if(this.panelChatSession != null && this == Model.getInstance().getCurrentTutoratModule() as TutoratModule)
 						{

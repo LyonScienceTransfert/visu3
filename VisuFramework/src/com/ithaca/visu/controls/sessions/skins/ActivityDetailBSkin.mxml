@@ -75,7 +75,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
-            import com.ithaca.visu.controls.sessions.renderer.ActivityDetailKeywordRenderer;
 			protected function group1_clickHandler(event:MouseEvent):void
 			{
 				if(event.target is Group)
