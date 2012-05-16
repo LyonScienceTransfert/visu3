@@ -75,6 +75,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
+            import com.ithaca.visu.controls.sessions.renderer.ActivityDetailKeywordRenderer;
 			protected function group1_clickHandler(event:MouseEvent):void
 			{
 				if(event.target is Group)
@@ -142,10 +143,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:Button id="startButton" right="3" width="80" cornerRadius="10" verticalCenter="0"/>
 	</s:Group>
 	
-	<s:Group top="30" left="5" right="5" bottom="10" includeIn="open" id="content">
-		<s:layout>
-			<s:VerticalLayout />
-		</s:layout>
+	<s:VGroup top="30" left="5" right="5" bottom="10" includeIn="open" id="content" height="100%">
 		<s:Label id="durationDisplay" paddingTop="5" includeIn="open"/>
 		<s:Group id="statementGroup" width="100%">
 			<s:layout>
@@ -172,15 +170,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			</s:fill>
 		</s:Rect> 
 
-		<s:Group width="100%" height="70">
-			<s:Scroller top="5" left="5" right="5" bottom="5">
-				<s:Group id="keywordGroup">
-					<s:layout>
-						<layout1:FlowLayout  horizontalGap="5"   />
-					</s:layout>
-				</s:Group>
-			</s:Scroller>
-		</s:Group>
+        <s:Group id="keywordGroup" width="100%">
+            <s:layout>
+                <s:TileLayout horizontalAlign="center"/>
+            </s:layout>
+        </s:Group>
 		
 		<s:Rect height="2" width="100%">
 			<s:fill>
@@ -191,7 +185,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:Label id="memoDisplay" maxDisplayedLines="2" 
 				 width="100%" 
 				 fontStyle="italic" color="#666666"/>
-	</s:Group>
+	</s:VGroup>
 	<s:transitions>
 		<s:Transition fromState="normal" toState="open">
 			<s:Sequence>
