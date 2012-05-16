@@ -91,6 +91,8 @@ package  com.ithaca.documentarisation.events
 		static public const LOAD_LIST_USERS : String = 'loadListUsers';
 		static public const LOADED_ALL_USERS : String = 'loadedAllUsersRetroDocument';
 		static public const UPDATE_STREAM_PATH_AUDIO_COMMENT_SEGMENT_RETRO_DOCUMENT : String = 'updateStremPathAudioCommentSegmentRetroDocument';
+		static public const ADD_ON_STAGE_RETRO_DOCUMENT : String = 'addOnStageRetroDocument';
+		static public const REMOVE_FROM_STAGE_RETRO_DOCUMENT : String = 'removeFromStageRetroDocument';
 		
 		static public const PLAY_RETRO_SEGMENT : String = 'playRetroSegment';
 		static public const PAUSE_RETRO_SEGMENT : String = 'pauseRetroSegment';

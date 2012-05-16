@@ -218,6 +218,14 @@ public class Documentarisation extends SkinnableComponent
 		this.invalidateSkinState();
 	}
 
+    /**
+    * Add bloc vidéo in retroDocument
+    */
+    public function addBlocVideoCurrentRetroDocument():void
+    {
+        this.retroDocumentView.addSegmentVideo();
+    }
+    
 	public function set currentTime(value:Number):void
 	{
 		_currentTime = value;
@@ -389,13 +397,17 @@ public class Documentarisation extends SkinnableComponent
 			var retroDocumentVO:RetroDocumentVO = listRetroDocument.selectedItem as RetroDocumentVO;
 			dispatchLoadRetroDocument(retroDocumentVO);
 	//		CursorManager.setBusyCursor();
-
 	}
+    
 	private function onReturnPanelListRetroDocument(event:PanelButtonEvent):void
 	{
 
 		edit = false;
 		invalidateSkinState();
+        
+        // dispatch event remove retroDocument from Stage
+        var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.REMOVE_FROM_STAGE_RETRO_DOCUMENT);
+        this.dispatchEvent(retroDocumentAddOnStage);
 	}
 	private function onAddRetroDocument(event:PanelButtonEvent):void
 	{
