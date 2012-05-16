@@ -69,9 +69,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				xmlns:layout1="com.lyon2.controls.sparks.layout.*"
 				xmlns:myviews="com.ithaca.visu.view.user.*"
 				maxWidth="{width}"
-                preinitialize="itemrenderer1_preinitializeHandler(event)">
-
-
+                preinitialize="itemrenderer1_preinitializeHandler(event)"
+                currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
 	<s:states>
 		<s:State name="normal" />
 		<s:State name="selected" />
@@ -79,29 +78,30 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
-			import com.ithaca.utils.StringUtils;
-			import com.ithaca.utils.VisuUtils;
-			import com.ithaca.visu.events.SessionHomeElementEvent;
-			import com.ithaca.visu.model.Model;
-			import com.ithaca.visu.model.Session;
-			import com.ithaca.visu.model.User;
-			import com.ithaca.visu.ui.utils.IconEnum;
-			import com.ithaca.visu.ui.utils.RoleEnum;
-			import com.ithaca.visu.ui.utils.SessionStatusEnum;
-			import com.lyon2.controls.utils.TimeUtils;
-			
-			import gnu.as3.gettext.FxGettext;
-			import gnu.as3.gettext._FxGettext;
-			
-			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
-			import mx.core.INavigatorContent;
-			import mx.events.CloseEvent;
-			import mx.events.FlexEvent;
-			import mx.logging.ILogger;
-			import mx.logging.Log;
-			
-			import spark.events.IndexChangeEvent;
+            import com.ithaca.utils.StringUtils;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.events.SessionHomeElementEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.ui.utils.IconEnum;
+            import com.ithaca.visu.ui.utils.RoleEnum;
+            import com.ithaca.visu.ui.utils.SessionStatusEnum;
+            import com.lyon2.controls.utils.TimeUtils;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.core.INavigatorContent;
+            import mx.events.CloseEvent;
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;
+            import mx.logging.ILogger;
+            import mx.logging.Log;
+            
+            import spark.events.IndexChangeEvent;
 
             [Bindable]
             private var fxgt: _FxGettext = FxGettext;
@@ -259,6 +259,20 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 fxgt = FxGettext;
             }
 
+            protected function itemrenderer1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                if( data.statusSession == SessionStatusEnum.SESSION_CLOSE && this.currentState == "normal")
+                {
+                    iconSessionCloseNormal.includeInLayout = iconSessionCloseNormal.visible  = true;
+                    iconSessionCloseSelected.includeInLayout = iconSessionCloseSelected.visible  = false;
+                }
+                if( data.statusSession == SessionStatusEnum.SESSION_CLOSE && this.currentState == "selected")
+                {
+                    iconSessionCloseSelected.includeInLayout = iconSessionCloseSelected.visible  = true;
+                    iconSessionCloseNormal.includeInLayout = iconSessionCloseNormal.visible  = false;
+                }
+            }
+
 		]]>
 	</fx:Script>
 
@@ -283,7 +297,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		
 		<s:VGroup width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" horizontalAlign="center">
 			<s:HGroup width="100%" verticalAlign="top">	
-				<s:Label id="hourDisplay" fontWeight="bold" text="{TimeUtils.formatHHMM(data.date_session)}"/>
+                <s:VGroup horizontalAlign="center" gap="2">
+    				<s:Label id="hourDisplay" fontWeight="bold" text="{TimeUtils.formatHHMM(data.date_session)}"/>
+                    <s:Path id="iconSessionCloseNormal" includeInLayout="false" visible="false" data ="M52.589,0c-17.279,0-31.19,14.068-31.19,31.37v6.237H8.708v43.957C8.708,91.94,17.445,100,27.823,100h37.645
+                        c10.376,0,18.323-8.06,18.323-18.436V31.37C83.791,14.068,69.877,0,52.589,0z M54.063,82.367c0.114,0.424,0.021,0.868-0.241,1.221
+                        c-0.273,0.348-0.682,0.55-1.124,0.55H40.593c-0.437,0-0.849-0.202-1.117-0.55c-0.269-0.353-0.358-0.799-0.246-1.223l3.416-12.996
+                        c-2.346-1.396-3.803-3.911-3.803-6.697c0-4.312,3.5-7.81,7.803-7.81c4.301,0,7.804,3.498,7.804,7.81
+                        c0,2.786-1.461,5.302-3.803,6.698L54.063,82.367z M72.159,37.607h-38.07V31.37c0-10.378,8.664-18.821,19.033-18.821
+                        c10.379,0,19.037,8.443,19.037,18.821V37.607z" width="16" height="20">
+                        <s:fill>
+                            <s:SolidColor color="#333333"/>
+                        </s:fill>
+                    </s:Path>
+                </s:VGroup>
 				<s:VGroup width="100%">	
 						<s:Label id="titleDisplay"   width="100%" text="{data.theme}"/>
 						<s:Label id="usersPreviewList" includeIn="normal" width="100%" text="{VisuUtils.joinUserList(data.participants.toArray())}"/>
@@ -384,9 +410,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						/>
 				</s:HGroup>
 			</s:HGroup>
-			
-			<s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
-			
+			<s:HGroup verticalAlign="middle" gap="15">
+                <s:Path id="iconSessionCloseSelected" includeInLayout="false" visible="false" data ="M52.589,0c-17.279,0-31.19,14.068-31.19,31.37v6.237H8.708v43.957C8.708,91.94,17.445,100,27.823,100h37.645
+                    c10.376,0,18.323-8.06,18.323-18.436V31.37C83.791,14.068,69.877,0,52.589,0z M54.063,82.367c0.114,0.424,0.021,0.868-0.241,1.221
+                    c-0.273,0.348-0.682,0.55-1.124,0.55H40.593c-0.437,0-0.849-0.202-1.117-0.55c-0.269-0.353-0.358-0.799-0.246-1.223l3.416-12.996
+                    c-2.346-1.396-3.803-3.911-3.803-6.697c0-4.312,3.5-7.81,7.803-7.81c4.301,0,7.804,3.498,7.804,7.81
+                    c0,2.786-1.461,5.302-3.803,6.698L54.063,82.367z M72.159,37.607h-38.07V31.37c0-10.378,8.664-18.821,19.033-18.821
+                    c10.379,0,19.037,8.443,19.037,18.821V37.607z" width="16" height="20">
+                    <s:fill>
+                        <s:SolidColor color="#333333"/>
+                    </s:fill>
+                </s:Path>
+                <s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
+            </s:HGroup>
 		</s:VGroup>
 	</s:Group>
 </s:ItemRenderer>
