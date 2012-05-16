@@ -102,6 +102,7 @@ import mx.controls.Menu;
 import mx.controls.PopUpButton;
 import mx.core.ClassFactory;
 import mx.core.DragSource;
+import mx.core.FlexBitmap;
 import mx.events.CloseEvent;
 import mx.events.DragEvent;
 import mx.events.FlexEvent;
@@ -197,7 +198,6 @@ public class RetroDocumentView extends SkinnableComponent
         fxgt = FxGettext;
 
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-      //  this.addEventListener(FocusEvent.FOCUS_OUT, onRemoveFromStage);
     }
     public function updateIdRetroDocument(value:int):void
     {
@@ -426,6 +426,10 @@ public class RetroDocumentView extends SkinnableComponent
             {
                 _updatedIdRetroDocument = 0;
             }
+            
+            // dispatch event add retroDocument on Stage
+            var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT);
+            this.dispatchEvent(retroDocumentAddOnStage);
         }
         
         if(idRetroDocumentChange)
@@ -467,7 +471,6 @@ public class RetroDocumentView extends SkinnableComponent
         // stop tracage timer
         stopTracageTimer();
     }
-    
     /**
      * check tracage modification the retro document
      */
@@ -603,6 +606,22 @@ public class RetroDocumentView extends SkinnableComponent
         }
         // add segment
         addSegment(segment , RetroTraceModel.MENU, null, sourceType);
+    }
+    /**
+    * Add bloc vidéo by button on videoPanel
+    */
+    public function addSegmentVideo():void
+    {
+        var segment:Segment = new Segment(this._retroDocument);
+        segment.order = 3;
+        segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
+        segment.comment = "";
+        
+        segment.beginTimeVideo = this._startDateSession + _currentTime;
+        segment.endTimeVideo = this._startDateSession + _currentTime + DEFAULT_DURATION_SEGMENT_VIDEO;
+        
+        // add segment
+        addSegment(segment , RetroTraceModel.PANEL_VIDEO, null, RetroTraceModel.VIDEO);
     }
     
     // by default add text segment

@@ -118,6 +118,7 @@ public final class RetroTraceModel
     public static const SERIALISATION: String = "serialisation";
     public static const CREATE_TYPE: String = "createType";
     public static const MENU: String = "menu";
+    public static const PANEL_VIDEO: String = "panelVideo";
     public static const DRAG_DROP: String = "drag-drop";
     public static const SOURCE_OBSEL: String = "sourceObsel";
     public static const SOURCE_TYPE: String = "sourceType";

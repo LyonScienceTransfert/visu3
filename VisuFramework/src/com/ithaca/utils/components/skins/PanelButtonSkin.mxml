@@ -271,29 +271,29 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     </s:fill>
                 </s:Rect>
                 <s:HGroup  left="9" right="3" top="1" bottom="0" minHeight="30" verticalAlign="middle" gap="1"> 
-	                <!-- layer 3: text -->
-	                <!--- @copy spark.components.Panel#titleDisplay -->
-					<components:IconButton id="buttonReturn" height="22" width="22" buttonMode="true"/>
-					<mx:Spacer id="spicerBeforeTitle" width="15" includeIn="normal"/>
-	                <s:Label id="titleDisplay" maxDisplayedLines="1" lineBreak="toFit" height="100%" width="100%" minHeight="30"
-	                         fontWeight="bold" verticalAlign="middle"  >
-	                </s:Label>
-					<mx:Spacer width="1"/>
-					
-					<components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true"/>
-					<components:IconButton id="buttonAdd" height="22" width="22" buttonMode="true"/>
-					<components:IconButton id="buttonShare" height="22" width="22" buttonMode="true"/>
-					
-					<components:IconButton id="buttonMax" height="22" width="22" buttonMode="true"/>
-					<components:IconButton id="buttonZoom" height="22" width="22" buttonMode="true"/>
-					<components:IconButton  id="buttonMicro" height="22" width="22" buttonMode="true"/>
-					<video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" buttonMode="true"/>
-					<components:IconButton id="buttonSwitch" height="22" width="22" buttonMode="true"/>
-					<components:IconButton id="buttonAdvancedDataGrid" height="22" width="22" buttonMode="true"/>
-					<components:IconButton id="buttonNormalDataGrid" height="22" width="22" buttonMode="true"/>
-					<mx:Image id="imageInfo" height="16" width="16" buttonMode="true"/>
-					<mx:Spacer width="1"/>
-				</s:HGroup>
+                    <!-- layer 3: text -->
+                    <!--- @copy spark.components.Panel#titleDisplay -->
+                    <components:IconButton id="buttonReturn" height="22" width="22" buttonMode="true"/>
+                    <mx:Spacer id="spicerBeforeTitle" width="15" includeIn="normal"/>
+                    <s:Label id="titleDisplay" maxDisplayedLines="1" lineBreak="toFit" height="100%" width="100%" minHeight="30"
+                        fontWeight="bold" verticalAlign="middle"  >
+                    </s:Label>
+                    <components:IconButton id="buttonNormalDataGrid" height="22" width="22" buttonMode="true"/>
+                    <mx:Spacer width="1"/>
+                    
+                    <components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonAdd" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonShare" height="22" width="22" buttonMode="true"/>
+                    
+                    <components:IconButton id="buttonMax" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonZoom" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton  id="buttonMicro" height="22" width="22" buttonMode="true"/>
+                    <video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonSwitch" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonAdvancedDataGrid" height="22" width="22" buttonMode="true"/>
+                    <mx:Image id="imageInfo" height="16" width="16" buttonMode="true"/>
+                    <mx:Spacer width="1"/>
+                </s:HGroup>
             </s:Group>
             
             <!--

@@ -359,8 +359,8 @@ package com.ithaca.utils.components
                 }else
                 {
                     buttonNormalDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonNormalDataGrid);
-                    buttonNormalDataGrid.icon =  IconEnum.getIconByName('normalViewDataGrid_16x16');
-                    buttonNormalDataGrid.toolTip = fxgt.gettext(" ? normal");
+                    buttonNormalDataGrid.icon =  IconEnum.getIconByName('iconVideo_16x16');
+                    buttonNormalDataGrid.toolTip = fxgt.gettext("Ajouter bloc vidéo")
                 }
             }
 		}
@@ -596,8 +596,8 @@ package com.ithaca.utils.components
 					{
                         buttonNormalDataGrid.includeInLayout = true;
                         buttonNormalDataGrid.visible = true;
-                        buttonNormalDataGrid.icon =  IconEnum.getIconByName('normalViewDataGrid_16x16');
-                        buttonNormalDataGrid.toolTip = fxgt.gettext(" ? normal")
+                        buttonNormalDataGrid.icon =  IconEnum.getIconByName('iconVideo_16x16');
+                        buttonNormalDataGrid.toolTip = fxgt.gettext("Ajouter bloc vidéo")
                         buttonNormalDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonNormalDataGrid);
 					}else
 					{

@@ -316,6 +316,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				// set listeners
 				documentarisation.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch, true);
 				documentarisation.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument, true);
+				documentarisation.addEventListener(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT, onAddOnStageRetroDocument, true);
+				documentarisation.addEventListener(RetroDocumentEvent.REMOVE_FROM_STAGE_RETRO_DOCUMENT, onRemoveFromStageRetroDocument);
 				
 				// show retroDocument if was selected
 				if(selectedRetroDocumentIdWhenInit > 0)
@@ -882,6 +884,21 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					this.dispatchEvent(createRetroDocumentVOEvent);
 				}
 			}
+            
+            /**
+            * Add retroDocument on stage
+            */
+            private function onAddOnStageRetroDocument(event:RetroDocumentEvent):void
+            {
+                panelVideo.buttonNormalDataGridEnabled = true;
+            }
+            /**
+            * Remove retroDocument from stage
+            */
+            private function onRemoveFromStageRetroDocument(event:RetroDocumentEvent):void
+            {
+                panelVideo.buttonNormalDataGridEnabled = false;
+            }
 			//_____________________________________________________________________
 			//
 			// Listeners PanelDocumentarisation
@@ -1975,11 +1992,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
             {
                 this.setFocus();
             }
-
-
-            protected function panelVideo_clickButtonAddHandler(event:PanelButtonEvent):void
+            
+            /**
+            * Add bloc video in current retroDocument
+            */
+            protected function panelVideo_clickButtonNormalDataGridHandler(event:PanelButtonEvent):void
             {
-                // TODO Auto-generated method stub
+                documentarisation.addBlocVideoCurrentRetroDocument();
             }
 
 		]]>
@@ -2009,16 +2028,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
 <!-- VIDEO -->
-			<components:PanelButton height="100%" width="100%" id="panelVideo" minWidth="450"
-				buttonVolumeVisible="true"
-				buttonMuteMicroVisible="false"
-				buttonModeMaxVisible="true"
-				buttonModeZoomVisible="true"
-				buttonModeZoomEnabled="false"
-				buttonModeMaxEnabled="true"
-				clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
-				clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
-				clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)"
+            <components:PanelButton height="100%" width="100%" id="panelVideo" minWidth="450"
+                buttonVolumeVisible="true"
+                buttonMuteMicroVisible="false"
+                buttonModeMaxVisible="true"
+                buttonModeZoomVisible="true"
+                buttonModeZoomEnabled="false"
+                buttonModeMaxEnabled="true"
+                buttonNormalDataGridVisible="true"
+                buttonNormalDataGridEnabled="false"
+                clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
+                clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
+                clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)"
+                clickButtonNormalDataGrid="panelVideo_clickButtonNormalDataGridHandler(event)"
                 >
 				<mx:VDividedBox width="100%" height="100%">
 					<s:Group height="75%" width="100%" id="groupeVideo">
