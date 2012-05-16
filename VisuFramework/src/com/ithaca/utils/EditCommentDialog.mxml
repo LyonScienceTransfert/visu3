@@ -67,6 +67,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
+    preinitialize="titlewindow1_preinitializeHandler(event)"
     close="titlewindow1_closeHandler(event)">
 	<s:title>{fxgt.gettext("Édition de commentaire")}</s:title>
 	<s:states>
@@ -326,7 +327,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
         protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
         {
-            fxgt = FxGettext;
             textInfo.setFocus();    
             textInfo.selectAll();
         }
@@ -372,6 +372,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			return user;
 		}
 
+
+
+        protected function titlewindow1_preinitializeHandler(event:FlexEvent):void
+        {
+            // init internationalisation
+            fxgt = FxGettext;
+        }
 
 	]]>
     </fx:Script>
