@@ -115,6 +115,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<fx:Script>
 		<![CDATA[
             import com.ithaca.documentarisation.events.RetroDocumentEvent;
+            import com.ithaca.internationalisation.InternationalisationEvent;
+            import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.events.ObselEvent;
             import com.ithaca.traces.model.TraceModel;
@@ -178,12 +180,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     checkActivatedKey();
                 }
 			}
-
+            /**
+            * Change language
+            */
 			protected function onChangeLanguage(event:ApplicationMenuEvent):void
 			{
 				var language:String = event.moduleName as String;
 				setlocale(Locale.LC_MESSAGES, language);
-			}
+         	}
 			
 			protected function onCloseConnection(event:ApplicationMenuEvent):void{
 				Alert.show(fxgt.gettext("Vous n'êtes plus connecté au serveur."), fxgt.gettext("Information"));
@@ -345,6 +349,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				// do some stuff here, if needed.
 				var eventUpdateLanguage:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.UPDATE_LANGUAGE);
 				this.dispatchEvent(eventUpdateLanguage);
+                
+                // dispatch event change language, update all labels
+                var changeLanguageEvent:InternationalisationEvent = new InternationalisationEvent(InternationalisationEvent.CHANGE_LANGUAGE);
+                InternationalisationEventDispatcherFactory.getEventDispatcher().dispatchEvent(changeLanguageEvent);
+
 			}
 			
 			private function onIOError(event:IOErrorEvent):void
@@ -359,14 +368,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			{
 				// update labels of the buttons at all modules
 				this.updateListLabelModule();
-			}
+ 			}
 
 			private function setListLang():void
 			{
 				listLang.addItem({labelLang:"Français", data: "fr_FR"});
 				//listLang.addItem({labelLang:"Deutsch", data: "de_DE"});
 				listLang.addItem({labelLang:"English", data: "en_US"});
-				//listLang.addItem({labelLang:"Русский", data: "ru_RU"}); 
+				listLang.addItem({labelLang:"Русский", data: "ru_RU"}); 
 				listLang.addItem({labelLang:"Debug", data: "mm_MM"});
 			}
 			

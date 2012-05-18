@@ -64,6 +64,8 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.internationalisation.InternationalisationEvent;
+import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.VisuUtils;
@@ -214,7 +216,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-	}
+        // set change language listener
+        InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
+    }
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -321,14 +325,17 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		if (instance == imagePlay)
 		{
 			imagePlay.addEventListener(MouseEvent.CLICK, onClickImagePlay);	
+			imagePlay.toolTip = fxgt.gettext("Play");	 
 		}
 		if (instance == imagePause)
 		{
 			imagePause.addEventListener(MouseEvent.CLICK, onClickImagePause);	
+			imagePause.toolTip = fxgt.gettext("Pause");	
 		}
 		if (instance == imageJumpStart)
 		{
 			imageJumpStart.addEventListener(MouseEvent.CLICK, onClickImageJumpStart);	
+            imageJumpStart.toolTip = fxgt.gettext("Stop");	
 		}
 		if (instance == iconDelete)
 		{
@@ -407,7 +414,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}
 		if(instance == labelInfoDuration)
 		{
-            labelInfoDuration.text = fxgt.gettext("Durée");
+            labelInfoDuration.text = fxgt.gettext("Durée")+":";
 		}
 		if(instance == labelInfoStartSpinner)
 		{
@@ -566,7 +573,15 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}else
 		{
 			skinName = "shared";
+            shared = true;
 		}
+        if( edit || editSelected || editOver || sharedOver || shared)
+        {
+            labelInfoDuration.text = fxgt.gettext("Durée")+":";
+        }else if( editPlay || editPause || sharedPlay || sharedPause)
+        {
+            labelInfoDuration.text = fxgt.gettext("/");
+        }
 		return skinName;
 	}
 	//_____________________________________________________________________
@@ -819,7 +834,26 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             onCreationComplete();
         }
     }
-	
+	/**
+    * Change language listener
+    */
+    private function onChangeLanguage(even:InternationalisationEvent):void
+    {
+        // update labelInfo
+        updateLabelInfo();
+        // update richeditableText
+        updateRichEditableText();
+        // update label spinner 
+        updateLabelSpinner();
+        // update toolTips segment icon 
+        updateToolTipsIconSegment();
+        // update toolTips delete icon
+        updateToolTipsIconDelete();
+        // update label parent obsel
+        updateLabelParentObsel();
+        // update labels buttons play, pause, stop
+        updateButtonPlayPauseStop();
+    }
 	//_____________________________________________________________________
 	//
 	// Dispatchers
@@ -917,16 +951,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
 			labelCurrentTime.text = TimeUtils.formatTimeString(currnetTimeS);  
 		}
-        // update labelInfo
-        updateLabelInfo();
 	}
 	private function updateLabelDuration():void
 	{
 		var durationMs:Number = _timeEnd - _timeBegin;
 		var duration:Number = Math.floor(durationMs / 1000); 
 		labelDuration.text = TimeUtils.formatTimeString(duration); 
-        // update labelInfo
-        updateLabelInfo();
 	}
     /**
     * update labelInfo by different state skin
@@ -937,15 +967,95 @@ public class SegmentVideoAdvanced extends SkinnableComponent
         {
             if( edit || editSelected || editOver || sharedOver || shared)
             {
-                labelInfoDuration.text = fxgt.gettext("Durée");
-            }else
+                labelInfoDuration.text = fxgt.gettext("Durée")+":";
+            }else if( editPlay || editPause || sharedPlay || sharedPause)
             {
                 labelInfoDuration.text = fxgt.gettext("/");
             }
         }
     }
-        
-	private function updateTimeBeginTimeEndBloc():void
+    /**
+    * update prompt richEditableText
+    */
+    private function updateRichEditableText():void
+    {
+        if( segment.comment == "")
+        {
+            richEditableText.text = fxgt.gettext("Cliquer ici pour ajouter du texte");
+        }
+    }
+    /**
+    * update titre the spinners
+    */
+    private function updateLabelSpinner():void
+    {
+        if(labelInfoStartSpinner)
+        {
+            labelInfoStartSpinner.text = fxgt.gettext("Début")+":";
+        }
+        if(labelInfoEndSpinner)
+        {
+            labelInfoEndSpinner.text = fxgt.gettext("Fin")+":";
+        }
+    }
+    /**
+    * update toolTips segment icon 
+    */
+    private function updateToolTipsIconSegment():void
+    {
+        if(modeEdit)
+        {
+            var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
+            iconSegment.toolTip = messageDND + " " + fxgt.gettext("vidéo");
+        }else
+        {
+            iconSegment.toolTip = fxgt.gettext("Bloc vidéo");
+        }
+    }
+    /**
+    * update toolTips delete icon
+    */
+    private function updateToolTipsIconDelete():void
+    {
+        if(iconDelete)
+        {
+            iconDelete.toolTip = fxgt.gettext("Suprimer ce bloc");	
+        }
+    }
+    /**
+    * update label parent obsel
+    */
+    private function updateLabelParentObsel():void
+    {
+        if(hgroupDndOwnerObsel.includeInLayout)
+        {
+            var ownerObsel:User = Model.getInstance().getUserPlateformeByUserId(segment.obselRef.uid); 
+            var dateCreateParentObsel:Date = new Date(this._segment.obselRef.begin);
+            labelDndObsel.text = StringUtil.substitute(fxgt.gettext("Créé le {0} {1} par {2}"), 
+                TimeUtils.formatDDMMYYYY(dateCreateParentObsel),
+                TimeUtils.formatHHMM(dateCreateParentObsel),
+                VisuUtils.getUserLabelLastName(ownerObsel,true));
+        }
+    }
+    /**
+    * Update labels the button play, pause, stop
+    */
+    private function updateButtonPlayPauseStop():void
+    {
+        if(imagePlay)
+        {
+            imagePlay.toolTip = fxgt.gettext("Play");
+        }
+        if(imagePause)
+        {
+            imagePause.toolTip = fxgt.gettext("Pause");	
+        }
+        if(imageJumpStart)
+        {
+            imageJumpStart.toolTip = fxgt.gettext("Stop");	
+        }
+    }
+ 	private function updateTimeBeginTimeEndBloc():void
 	{
         // set start time session selected retroDocument
         this._startDateSession = _segment.parentRetroDocument.session.date_start_recording.time;

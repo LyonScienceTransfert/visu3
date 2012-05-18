@@ -135,19 +135,16 @@ knowledge of the CeCILL-C license and that you accept its terms.
         				<mx:Image id="imagePlay" 
         					buttonMode="true" 
         					source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause">
-        					<mx:toolTip>Play</mx:toolTip>
         				</mx:Image>
         				<!-- IMAGE JUMP START --> 
         				<mx:Image id="imageJumpStart" 
         					buttonMode="true" 
         					source="{IconEnum.getIconByName('iconStopYellow_16x16')}" includeIn=" editPause, sharedPause">
-        					<mx:toolTip>Stop</mx:toolTip>
         				</mx:Image>
         				<!-- IMAGE PAUSE --> 
         				<mx:Image id="imagePause" 
         					buttonMode="true" 
         					source="{IconEnum.getIconByName('iconPauseYellow_16x16')}" includeIn="editPlay,sharedPlay">
-        					<mx:toolTip>Pause</mx:toolTip>
         				</mx:Image>
         			</s:HGroup>
         			<!-- SCREEN SHOT -->
