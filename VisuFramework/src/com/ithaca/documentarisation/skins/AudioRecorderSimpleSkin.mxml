@@ -179,21 +179,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:HGroup width="100%" height="50%" verticalAlign="middle" horizontalAlign="center" gap="1">
 		<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
 		<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
-			<s:Label id="labelCurrnetTime" includeIn="play,record" color.record="#E73A3A">
-				
-			</s:Label>
-			<s:Label id="labelInfo" text.normal="Durée" text.normalEmpty="Pas d'audio" text.overEmpty="Pas d'audio" text.over="Durée" text.play="/" text.record="/" color.record="#FF2B2B" text.overShare="Durée" text.overShareEmpty="Pas d'audio">
-				
-			</s:Label>
+			<s:Label id="labelCurrnetTime" includeIn="play,record" color.record="#E73A3A"/>
+			<s:Label id="labelInfo" color.record="#FF2B2B"/>
 			<s:Label id="lableDuration" includeIn="normal,over,overShare,play,record" color.record="#ED3030">
-				
 			</s:Label>
 		</s:HGroup>
 		<!-- IMAGE PLAY --> 
 		<mx:Image id="imagePlay" 
 			buttonMode="true" 
 			source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="over,overShare">
-			<mx:toolTip>Ecouter</mx:toolTip>
 		</mx:Image>
 		<!-- IMAGE STOP -->
 		<mx:Image id="imageStop"
@@ -201,13 +195,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			includeIn="play,record"
 			source.play="{IconEnum.getIconByName('iconStopYellow_16x16')}"
 			source.record="{IconEnum.getIconByName('iconStopRed_16x16')}">
-			<mx:toolTip>Arrêter</mx:toolTip>
 		</mx:Image>
 		<!-- IMAGE RECORD -->
 		<mx:Image id="imageRecord"
 			buttonMode="true"
 			source="{IconEnum.getIconByName('iconRecordBorder_16x16')}" includeIn="over,overEmpty">
-			<mx:toolTip>Enregistrer</mx:toolTip>		
 		</mx:Image>
 	</s:HGroup>	
 </s:Skin>
