@@ -64,25 +64,23 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
+import com.ithaca.internationalisation.InternationalisationEvent;
+import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 import com.ithaca.traces.model.RetroTraceModel;
-import com.ithaca.traces.model.TraceModel;
 import com.ithaca.utils.VisuUtils;
-import com.ithaca.utils.components.IconButton;
-import com.ithaca.visu.events.VideoPanelEvent;
-import com.ithaca.visu.model.Model;
-import com.ithaca.visu.model.User;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
-import com.lyon2.controls.VideoComponent;
 import com.lyon2.controls.utils.TimeUtils;
 
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.media.Microphone;
 import flash.media.SoundTransform;
-import flash.net.NetConnection;
 import flash.net.NetStream;
 import flash.utils.Timer;
+
+import gnu.as3.gettext.FxGettext;
+import gnu.as3.gettext._FxGettext;
 
 import mx.controls.Button;
 import mx.controls.Image;
@@ -94,7 +92,6 @@ import mx.logging.Log;
 import spark.components.HSlider;
 import spark.components.Label;
 import spark.components.supportClasses.SkinnableComponent;
-import spark.primitives.Rect;
 
 public class AudioRecorder extends SkinnableComponent
 {
@@ -116,7 +113,12 @@ public class AudioRecorder extends SkinnableComponent
 	[SkinPart("true")]
 	public var lableDuration:Label;
 	[SkinPart("true")]
+	public var labelInfo:Label;
+	[SkinPart("true")]
 	public var currentTimeAudionSlider:HSlider;
+    
+    [Bindable]
+    private var fxgt: _FxGettext = FxGettext;
 	
 	private var empty:Boolean = false;
 	private var play:Boolean = false;
@@ -157,7 +159,14 @@ public class AudioRecorder extends SkinnableComponent
 	public function AudioRecorder()
 	{
 		super();
+        
+        // initialisation gettext
+        fxgt = FxGettext;
+        
 		this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
+        // set change language listener
+        InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
+
 	}
 	//_____________________________________________________________________
 	//
@@ -346,14 +355,21 @@ public class AudioRecorder extends SkinnableComponent
 		if(instance == imagePlay)
 		{
 			imagePlay.addEventListener(MouseEvent.CLICK, onClickImagePlay);
+			imagePlay.toolTip = fxgt.gettext("Ecouter"); 
 		}
 		if(instance == imageStop)
 		{
 			imageStop.addEventListener(MouseEvent.CLICK, onClickImageStop);
+			imageStop.toolTip = fxgt.gettext("Arrêter");
 		}
 		if(instance == imageRecord)
 		{
 			imageRecord.addEventListener(MouseEvent.CLICK, onClickImageRecord);
+			imageRecord.toolTip = fxgt.gettext("Enregistrer");
+		}
+		if(instance == labelInfo)
+		{
+            labelInfo.text = fxgt.gettext("Durée");
 		}
 	}
 	
@@ -429,6 +445,8 @@ public class AudioRecorder extends SkinnableComponent
 		{
 			skinName = "normal"
 		}
+        // update labelInfo
+        updateLabelInfo();
 		return skinName;
 	}
 	//_____________________________________________________________________
@@ -612,8 +630,29 @@ public class AudioRecorder extends SkinnableComponent
 			micro.setLoopBack(true);
 		}
 	}
-	
-	private function microLevel(event:TimerEvent):void {
+    /**
+     * Change language listener
+     */
+    private function onChangeLanguage(even:InternationalisationEvent):void
+    {
+        if(imagePlay)
+        {
+            imagePlay.toolTip = fxgt.gettext("Ecouter"); 
+        }
+        if(imageStop)
+        {
+            imageStop.toolTip = fxgt.gettext("Arrêter"); 
+        }
+        if(imageRecord)
+        {
+            imageRecord.toolTip = fxgt.gettext("Enregistrer");
+        }
+
+        // update labelInfo
+        updateLabelInfo();
+    }
+
+    private function microLevel(event:TimerEvent):void {
 		/*progressBar.percentWidth = micro.activityLevel;*/
 	}
 	//_____________________________________________________________________
@@ -621,6 +660,23 @@ public class AudioRecorder extends SkinnableComponent
 	//  Utils
 	//
 	//_____________________________________________________________________
+    /**
+    * Update labelInfo
+    */
+    private function updateLabelInfo():void
+    {
+        if(normalEmpty || overEmpty || overShareEmpty )
+        {
+            labelInfo.text = fxgt.gettext("Pas d'audio");
+        }else 
+        if( play || record)
+        {
+            labelInfo.text = fxgt.gettext("/");
+        } else
+        {
+            labelInfo.text = fxgt.gettext("Durée");
+        }
+    }
 	private function publishStream():void
 	{
 		// TODO : check _connection, _stream not null
