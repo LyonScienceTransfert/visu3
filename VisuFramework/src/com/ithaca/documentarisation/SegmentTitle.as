@@ -70,6 +70,9 @@ import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.IconEnum;
 
+import com.ithaca.internationalisation.InternationalisationEvent;
+import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
+
 import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.MouseEvent;
@@ -138,7 +141,10 @@ public class SegmentTitle extends SkinnableComponent
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
         // add tracage mouse over the block
-        this.addEventListener(MouseEvent.MOUSE_OVER, traceBlockOver)
+        this.addEventListener(MouseEvent.MOUSE_OVER, traceBlockOver);
+        
+        // set change language listener
+        InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
 	}
 	//_____________________________________________________________________
 	//
@@ -210,6 +216,7 @@ public class SegmentTitle extends SkinnableComponent
 		if(instance == iconDelete)
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
+			iconDelete.toolTip = fxgt.gettext("Suprimer ce bloc");	
 		}
 		
         if (instance == iconSegment)
@@ -377,6 +384,31 @@ public class SegmentTitle extends SkinnableComponent
         // stop tracage timer
         stopTracageTimer();
     }
+    /**
+     * Change language listener
+     */
+    private function onChangeLanguage(even:InternationalisationEvent):void
+    {
+        if( segment.comment == "")
+        {
+            textSegment.text = fxgt.gettext("Cliquer ici pour ajouter du texte");
+        }
+        if(iconDelete)
+        {
+            iconDelete.toolTip = fxgt.gettext("Suprimer ce bloc");	
+        }
+        if(iconSegment)
+        {
+            var messageDND: String = fxgt.gettext("Glisser-déplacer ce bloc");
+            var toolTipText: String = messageDND + " "  + fxgt.gettext("texte");
+            if(_fontBold)
+            {
+                toolTipText = messageDND + " " + fxgt.gettext("titre");
+            }
+            iconSegment.toolTip = toolTipText;
+        }
+    }
+
     // check tracage modification the segment
     private function checkTracage(event:* = null):void
     {

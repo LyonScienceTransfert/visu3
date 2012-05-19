@@ -118,7 +118,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				buttonMode="true"
  				includeIn=" edit, editSelected"
 				height="16">
-				<components:toolTip>Suprimer ce segment</components:toolTip>
 			</components:IconDelete>
 		</s:HGroup>
 		<s:Line width="100%" includeIn="edit, editSelected">
