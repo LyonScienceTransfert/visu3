@@ -70,6 +70,8 @@ import com.ithaca.utils.components.IconDelete;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.IconEnum;
+import com.ithaca.internationalisation.InternationalisationEvent;
+import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -295,6 +297,8 @@ public class SegmentCommentAudio extends SkinnableComponent
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+        // set change language listener
+        InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
 	}
 	//_____________________________________________________________________
 	//
@@ -309,6 +313,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 		if(instance == iconDelete)
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
+			iconDelete.toolTip = fxgt.gettext("Suprimer ce bloc");	
 		}
 
 		if(instance == audioRecorder)
@@ -474,7 +479,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// richText
 	public function onFocusInRichEditableText(event:*=null):void
 	{
-		if(richEditableText.text == fxgt.gettext("Cliquer ici pour enregistrer un commentaire"))
+		if(richEditableText.text == fxgt.gettext("Cliquer ici pour enregistrer un commentaire"));
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
@@ -597,6 +602,31 @@ public class SegmentCommentAudio extends SkinnableComponent
 
             // save modifications of the segment
             onCreationComplete();
+        }
+    }
+    /**
+     * Change language listener
+     */
+    private function onChangeLanguage(even:InternationalisationEvent):void
+    {
+        // update prompt richEditableText
+        if( segment.comment == "")
+        {
+            richEditableText.text = fxgt.gettext("Cliquer ici pour enregistrer un commentaire");
+        }
+        // update toolTips icon delete
+        if(iconDelete)
+        {
+            iconDelete.toolTip = fxgt.gettext("Suprimer ce bloc");	
+        }
+        // update toolTips bloc icon 
+        if(modeEdit)
+        {
+            var messageDND:String = fxgt.gettext("Glisser-déplacer ce bloc");
+            iconSegment.toolTip = messageDND+ " "  + fxgt.gettext("audio");
+        }else
+        {
+            iconSegment.toolTip = fxgt.gettext("Bloc audio");
         }
     }
 

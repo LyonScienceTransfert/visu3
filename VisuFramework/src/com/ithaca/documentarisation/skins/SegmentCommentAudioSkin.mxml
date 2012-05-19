@@ -115,7 +115,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					includeIn="edit, editOver, editSelected"
 					visible.edit="false"
 					visible.editSelected="true">
-					<components:toolTip>Suprimer ce segment</components:toolTip>
 				</components:IconDelete>
 			</s:HGroup>
 			<s:HGroup width="100%" 
