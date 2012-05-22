@@ -63,12 +63,14 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.ExtendToolTip;
+	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.controls.sessions.skins.KeywordSkin;
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.ActivityElementType;
+	import com.ithaca.visu.ui.utils.IconEnum;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -287,25 +289,30 @@ package com.ithaca.visu.controls.sessions
 				statementGroup.addElement(s);
 			}
 		}
-		protected function addDocuments(list:IList):void
-		{
-			for each( var el:ActivityElement in list)
-			{
-				var image:ImageActivity = new ImageActivity()
-				var source:String = "images/video.jpg";
-				if(el.type_element == "image")
-				{
-					source = el.url_element;
-				}
-				image.source = source;
-				image.toolTip = el.data;
-				image.activityElement = el;
-				image.doubleClickEnabled = true;
-				image.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onToolTipsCreate);
-				image.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipsShown);
-				documentGroup.addElement(image);
-			}
-		}
+        protected function addDocuments(list:IList):void
+        {
+            for each( var el:ActivityElement in list)
+            {
+                var image:ImageActivity = new ImageActivity()
+                // image par default
+                var source:String = IconEnum.getPathByName("video"); 
+                if(el.type_element == "image")
+                {
+                    source = el.url_element;
+                }else
+                {
+                    // get first frame video 
+                    source = VisuUtils.getVideoYoutubeFirstFrame(el.url_element);
+                }
+                image.source = source;
+                image.toolTip = el.data;
+                image.activityElement = el;
+                image.doubleClickEnabled = true;
+                image.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onToolTipsCreate);
+                image.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipsShown);
+                documentGroup.addElement(image);
+            }
+        }
 		
 		protected function addKeywords(list:IList):void
 		{
