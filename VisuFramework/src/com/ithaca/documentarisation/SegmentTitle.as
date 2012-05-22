@@ -64,14 +64,14 @@ package com.ithaca.documentarisation
 {
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.internationalisation.InternationalisationEvent;
+import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.visu.model.Model;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.IconEnum;
-
-import com.ithaca.internationalisation.InternationalisationEvent;
-import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -89,9 +89,11 @@ import mx.controls.Image;
 import mx.events.FlexEvent;
 import mx.managers.CursorManager;
 
+import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
+import spark.primitives.Line;
 
 public class SegmentTitle extends SkinnableComponent
 {
@@ -105,6 +107,15 @@ public class SegmentTitle extends SkinnableComponent
 	public var 	textSegment:RichEditableText;
 	[SkinPart("true")]
 	public var 	iconDelete:IconDelete;
+    
+    [SkinPart("true")]
+    public var groupText:HGroup;
+    
+    [SkinPart("true")]
+    public var groupBloc:HGroup;
+    
+    [SkinPart("true")]
+    public var lineBottom:Line;
 
     [Bindable]
     private var fxgt: _FxGettext = FxGettext;
@@ -130,6 +141,8 @@ public class SegmentTitle extends SkinnableComponent
     private var _tracageTimer:Timer; 
     // cursor id
     private var _cursorID:int;
+    // mockup
+    private var _bilanModule:Object;
     
 	public function SegmentTitle()
 	{
@@ -145,7 +158,9 @@ public class SegmentTitle extends SkinnableComponent
         
         // set change language listener
         InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
-	}
+	    // set bilanModule 
+        _bilanModule = Model.getInstance().getCurrentBilanModule();
+    }
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -213,6 +228,20 @@ public class SegmentTitle extends SkinnableComponent
 				textSegment.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
 			}
 		}
+		if(instance == groupBloc)
+		{
+            if(_bilanModule == null)
+            {
+                groupBloc.paddingLeft = 10;           
+            }
+        }
+		if(instance == lineBottom)
+		{
+            if(_bilanModule == null)
+            {
+                lineBottom.includeInLayout = lineBottom.visible = false;
+            }
+        }
 		if(instance == iconDelete)
 		{
 			iconDelete.addEventListener(MouseEvent.CLICK, onClickIconDelete);
@@ -238,6 +267,11 @@ public class SegmentTitle extends SkinnableComponent
             }
             iconSegment.source = IconEnum.getIconByName(iconName);
             iconSegment.toolTip = toolTipText;
+            
+            if(_bilanModule == null)
+            {
+                iconSegment.includeInLayout = iconSegment.visible = false;
+            }
         }
 	}
 	
