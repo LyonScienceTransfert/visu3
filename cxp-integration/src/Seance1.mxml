@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Group top="68" width="1024" minHeight="667" horizontalCenter="0">
+		
+		<!-- container -->
+		<s:Group width="1004" height="100%" horizontalCenter="0">
+
+			<!-- background -->
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:fill>
+						<s:SolidColor color="0xffefd1" />
+					</s:fill>
+				</s:Rect>
+				
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:stroke>
+						<s:SolidColorStroke color="0x9f9f9f" />
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			
+			<!-- Panneaux -->
+			<s:Group width="100%" height="100%">
+				
+				<s:Panel left="1" top="1" bottom="1" width="290" height="100%" skinClass="skins.FlexiblePanel" title="Explorer">
+					
+					<!-- Onglets -->
+					<mx:TabNavigator left="1" right="1" top="7" width="100%" height="100%"
+									 minHeight="200" paddingBottom="2">
+						
+						<!-- Onglet Séances -->
+						<s:NavigatorContent width="100%" height="100%" label="Séances">
+							
+							<!-- Filtres -->
+							<s:Group width="100%" height="120" top="0" left="2" right="2">
+								<s:Group width="100%" height="81">
+									
+									<s:Rect width="100%" height="100%" radiusX="2">
+										<s:fill>
+											<s:SolidColor color="0xfff4df" />
+										</s:fill>
+									</s:Rect>
+									
+									<s:Label x="10" y="5" text="Filtres :"/>
+									<s:RadioButton x="10" y="15" label="Toutes les séances"/>
+									<s:RadioButton x="10" y="30" label="Séances passés"/>
+									<s:RadioButton x="10" y="45" label="Séances à venir"/>
+									<s:HGroup bottom="0" left="10">
+										<s:Label height="20" text="Contient le texte :"
+												 verticalAlign="middle"/>
+										<s:TextInput height="18" bottom="0"/>
+									</s:HGroup>
+								</s:Group>
+								
+								<!-- Bouton nouvelle séance -->
+								<s:Group x="76" bottom="1" >
+									<s:Image source="images/Seance/btn_new_seance.png"/>
+									<s:Label x="25" y="5" height="15" text="Nouvelle séance"
+											 verticalAlign="middle"/>
+								</s:Group>
+								
+							</s:Group>
+							
+							<!-- Tableau des séances programmées -->
+							<s:Group y="120" left="2" right="2" width="100%" height="100%">
+								
+							
+								
+								<mx:AdvancedDataGrid id="adg1" width="100%" height="100%"
+													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
+													 designViewDataType="flat">
+									<mx:dataProvider>
+										<mx:ArrayCollection>
+											
+											<!-- données du  -->
+											<fx:Object date="01/05/2012" proprietaire="Tuteur 1" titre="Introduction au cinéma" />
+											<fx:Object date="30/05/2012" proprietaire="Tuteur 4" titre="Les stéréotypes" />
+											<fx:Object date="15/05/2012" proprietaire="Tuteur 1" titre="Les journaux" />
+											<fx:Object date="29/05/2012" proprietaire="Tuteur 8" titre="" />
+											<fx:Object date="02/06/2012" proprietaire="Tuteur 7" titre="Bonjour." />
+											
+										</mx:ArrayCollection>
+									</mx:dataProvider>
+									<mx:columns>
+										<mx:AdvancedDataGridColumn headerText="Date prévu" dataField="date"/>
+										<mx:AdvancedDataGridColumn headerText="Titre de séance" dataField="titre"/>
+										<mx:AdvancedDataGridColumn headerText="Propriétaire de séance" dataField="proprietaire"/>
+									</mx:columns>
+									
+									
+								</mx:AdvancedDataGrid>
+							</s:Group>
+							
+						</s:NavigatorContent>
+						
+					</mx:TabNavigator>
+					
+				</s:Panel>
+				
+				<!-- Panneau détail de la séance -->
+				<s:Panel right="1" top="1" bottom="1" width="694" height="100%" skinClass="skins.FlexiblePanel" title="Détail de la séance">
+					<!-- Détail informations sur la séance -->
+					<s:Group width="100%" left="5" right="5" top="5">
+						<s:Label text="La séance a été sauvegardée à 18h43 (il y a 8 minutes)" y="0" width="100%" textAlign="right" />
+						<s:VGroup>
+							<s:HGroup>
+								<s:Label text="Titre :" fontWeight="bold" />
+								<s:Label text="Les stéréotypes de la bourgeoisie" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Propriétaire :" fontWeight="bold" />
+								<s:Label text="Tuteur 1" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Date réelle/prévue :" fontWeight="bold" />
+								<s:Label text="24/06/2012 15:00 / 24/06/2012 16:00" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Durée réelle/prévue :" fontWeight="bold" />
+								<s:Label text="0h44min / 1h00m" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Nombre de participants réels/prévus :" fontWeight="bold" />
+								<s:Label text="3/4" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Nombre de bilans pour cette séance :" fontWeight="bold" />
+								<s:Label text="2" />
+							</s:HGroup>
+						</s:VGroup>
+					</s:Group>
+				</s:Panel>
+				
+			</s:Group>
+			<!-- Fin Group Panneaux -->
+		</s:Group>
+		<!-- Fin Group Container -->
+	</s:Group>
+</s:Application>
