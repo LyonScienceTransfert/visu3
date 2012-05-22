@@ -1,0 +1,5 @@
+Visu is a videoconferencing software mainly aimed at foreign language
+courses.
+
+It consists in a red5 server webapplication (using a MySQL database)
+accessed through a flash-based frontend.

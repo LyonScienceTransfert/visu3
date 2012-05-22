@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.controls.UserEdit")]
+	</fx:Metadata>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="editable" />
+	</s:states>
+	<fx:Script>
+		<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+		
+		import mx.controls.Alert;
+		import mx.events.CloseEvent;
+		import mx.events.FlexEvent;
+			
+		]]>
+	</fx:Script>
+	<!-- SkinParts
+	name=textContent, type=spark.components.RichText, required=false
+	name=buttonEdit, type=mx.controls.Image, required=false
+	name=buttonDelete, type=mx.controls.Image, required=false
+	name=avatarUser, type=mx.controls.Image, required=false
+	-->
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%"  height="30">
+			<s:Rect id="fill" radiusX="10"
+					left="2" right="2" top="1" bottom="1">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="border" radiusX="10"
+					left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<!-- IMAGE -->
+			<mx:Image id="avatarUser" left="10" top="2" width="26" height="26"/>
+			<!-- TEXT -->   		
+			<s:Label  id="textContent" text="NOM_UTILISATEUR" top="3" left="42" right="10" maxDisplayedLines="1"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5" height="22" fontWeight="bold" top.normal="3" left.normal="42" right.normal="40" paddingLeft.normal="0" paddingRight.normal="0"/>
+			<!-- BOUTTONS -->
+			<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  visible.editable="false" width="16"
+					   right="20" top="10" height="32"/>
+			<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}" visible.editable="false" right="5"  width="16" height="16" top="10"/>
+		</s:Group>
+	</s:Group>
+</s:Skin>

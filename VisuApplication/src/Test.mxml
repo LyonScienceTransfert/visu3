@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:media="flash.media.*"
+                xmlns:controls="com.ithaca.visu.view.session.controls.*"
+                creationComplete="application1_creationCompleteHandler(event)">
+	<mx:Script>
+		<![CDATA[
+            import com.ithaca.visu.model.ActivityElement;
+            import com.ithaca.visu.model.ActivityElementType;
+            import com.ithaca.visu.view.session.controls.DocumentEdit;
+
+            import mx.events.FlexEvent;
+
+
+		public var timer: Timer = null;
+        // player youtube
+        private var playerYoutube: DocumentEdit;
+        // link to youtube
+        private var LINK_YOUTUBE: String = "http://www.youtube.com/watch?v=-q3_c5QMrfk&feature=relmfu";
+
+		public function initCamera(event: StatusEvent = null): void
+		{
+            if (timer)
+                timer.stop();
+
+			camera = Camera.getCamera();
+			if (camera == null)
+			{
+				clabel.htmlText = "<b>Pas de caméra détectée</b>. Cliquez sur le bouton '<i>Réglage vidéo</i>' ci-dessous pour essayer de choisir un autre modèle.";
+			}
+            else
+            {
+                camera.setMode( vd.width, vd.height, camera.fps);
+                vd.attachCamera( camera );
+                if (camera.muted)
+                {
+                    clabel.htmlText = "Caméra détectée [" + camera.name + "] mais <b>vous n'avez pas autorisé l'application à l'utiliser</b>.";
+                }
+                else
+                {
+                    clabel.htmlText = "Caméra détectée[" + camera.name + "] - Vous devez vous voir dans la fenêtre ci-dessous.";
+                }
+            }
+
+			micro = Microphone.getMicrophone();
+			if (micro == null)
+			{
+				mlabel.htmlText = "<b>Pas de micro détecté</b>."
+			}
+            else
+			{
+                /*
+                 * Check for authorization updates.
+                 * Since camera-less computers are more common, we subscribe here
+                 * at the microphone level. Since access authorization is global,
+                 * it will correctly update the webcam status also.
+                 */
+                micro.addEventListener(StatusEvent.STATUS, initCamera);
+
+				micro.setLoopBack(true);
+				micro.setUseEchoSuppression(true);
+				micro.setSilenceLevel(0);
+                if (micro.muted)
+                {
+    				mlabel.htmlText = "Micro détecté [" + micro.name + "] mais <b>vous n'avez pas autorisé l'application à l'utiliser</b>.";
+                }
+                else
+                {
+                    if (! timer)
+                    {
+                        timer = new Timer(100);
+                        timer.addEventListener(TimerEvent.TIMER, checkVolume );
+                        timer.start();
+                    }
+                    else
+                    {
+                        timer.start();
+                    }
+    				mlabel.text = "Micro détecté [" + micro.name + "] - la jauge de son doit bouger";
+    			}
+            }
+        }
+
+		private function checkVolume(event: TimerEvent = null):void
+		{
+			miclevel.setProgress(micro.activityLevel, 100);
+			if (micro.activityLevel < 70)
+                miclevel.setStyle("barColor","haloBlue");
+            else if(micro.activityLevel > 70 && micro.activityLevel < 90 )
+                miclevel.setStyle("barColor","#FF9900");
+		    else
+                miclevel.setStyle("barColor","#CC0000");
+		}
+
+
+            protected function application1_creationCompleteHandler(event:FlexEvent):void
+            {
+                // init camera
+                initCamera();
+
+                // init youtube player
+                var playerYoutube:DocumentEdit = new DocumentEdit();
+                playerYoutube.setEditabled(false);
+                var activityObjet:Object = new Object();
+                activityObjet.data = "Test de flux de youtube.com";
+                activityObjet.url_element = LINK_YOUTUBE;
+                activityObjet.type_element =  ActivityElementType.VIDEO;
+                var activity:ActivityElement = new ActivityElement(activityObjet)
+                playerYoutube.activityElement = activity;
+                vboxYoutube.addElement(playerYoutube);
+
+                // top message youtube
+                topMessageYoutube.text = "Cliquez sur lecture afin de vérifier que vous pouvez accéder à Youtube";
+                // bottmon message youtube
+                bottomMessageYoutube.htmlText = "Si la vidéo ne se lance pas, cliquez sur '<i>Réglage affichage</i>' ci-dessous et décochez '<i>Accélération du matériel</i>' ('<i>Enable hardware acceleration</i>')";
+            }
+
+		]]>
+	</mx:Script>
+
+    <s:HGroup width="700" height="440">
+
+      <s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="top" top="0">
+        
+        <s:HGroup width="100%" height="100%" verticalAlign="middle" top="5">
+          <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="1" />
+          <s:Label fontWeight="bold" fontSize="16" verticalAlign="bottom" text="Réglage son/vidéo" />
+        </s:HGroup>
+        
+        <mx:Text selectable="false" id="clabel" width="100%" textAlign="center"/>
+        <mx:VideoDisplay width="200" height="160" id="vd" />
+        <mx:Button label="Réglage vidéo" id="reglage_video" click="Security.showSettings( SecurityPanel.CAMERA )" />
+        <mx:Spacer height="25"/>
+        <mx:Text  id="mlabel" width="100%" textAlign="center"/>
+        <mx:ProgressBar id="miclevel" mode="manual" label="" width="100%" trackHeight="10"  height="13"  />
+        <mx:Button label="Réglage son" id="reglage_son" click="Security.showSettings( SecurityPanel.MICROPHONE )" />
+        <mx:Spacer height="100%"/>
+      </s:VGroup>
+      
+      <mx:Spacer width="20"/>
+      
+      <s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="top" top="0">
+        
+        <s:HGroup width="100%" height="100%" verticalAlign="middle" top="5">
+          <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="2" />
+          <s:Label fontWeight="bold" fontSize="16" verticalAlign="bottom" text="Vérification affichage" />
+        </s:HGroup>
+        
+        <mx:Text width="100%" id="topMessageYoutube"/>
+        <s:VGroup width="50%" height="100%" id="vboxYoutube"/>
+        <mx:Text width="100%" id="bottomMessageYoutube"/>
+        <mx:Button label="Réglage affichage" id="reglage_display" click="Security.showSettings( SecurityPanel.DISPLAY )" />
+        <mx:Spacer height="100%"/>
+
+      </s:VGroup>
+      
+      <mx:Spacer width="20"/>
+      
+      <s:VGroup width="30%" height="100%" horizontalAlign="center" verticalAlign="top" top="0">
+        
+        <s:HGroup width="100%" height="100%" verticalAlign="middle" top="5">
+          <s:Label fontWeight="bold" fontSize="24" color="0x444444" text="3" />
+          <s:Label fontWeight="bold" fontSize="16" verticalAlign="bottom" text="Accès à Visu" />
+        </s:HGroup>
+
+        <mx:Text width="100%" text="Vous pouvez maintenant accéder à l'application."/>
+        
+        <mx:Spacer height="100"/>
+
+        <mx:Image toolTip="Accéder à Visu" id="visu" click="navigateToURL(new URLRequest('visuclient.html'), '_self')"
+                  source="@Embed('images/launch_visu.png')"/>        
+
+        <mx:Spacer height="300"/>
+
+      </s:VGroup>
+      
+    </s:HGroup>
+    
+	<media:Microphone id="micro" rate="22" />
+	<media:Camera id="camera" />
+
+</mx:Application>

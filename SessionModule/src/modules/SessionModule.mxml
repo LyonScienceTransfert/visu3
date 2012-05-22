@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:modules="com.ithaca.visu.modules.*"
+		xmlns:maps="maps.*"
+		width="100%" height="100%" 
+		configure="visumodulebase1_configureHandler(event)" 
+		creationComplete="visumodulebase1_creationCompleteHandler(event)"
+        currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
+		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*" xmlns:mate="http://mate.asfusion.com/" xmlns:sessions="com.ithaca.visu.controls.sessions.*"> 
+	<fx:Script>
+		<![CDATA[ 
+            import com.ithaca.visu.controls.sessions.SessionDetailView;
+            import com.ithaca.visu.events.SelectionEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.SessionUserEvent;
+            import com.ithaca.visu.events.UserEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Activity;
+            import com.ithaca.visu.model.ActivityElement;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.ActivityElementVO;
+            import com.ithaca.visu.model.vo.ActivityVO;
+            import com.ithaca.visu.model.vo.SessionVO;
+            import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
+            import com.ithaca.visu.model.vo.UserVO;
+            import com.ithaca.visu.ui.utils.SessionStatusEnum;
+            import com.ithaca.visu.view.session.controls.SessionDetail;
+            import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+            import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.events.FlexEvent;
+            import mx.events.IndexChangedEvent;
+            import mx.events.StateChangeEvent;
+            import mx.managers.CursorManager;
+			
+			private var currentSession:Session = null;
+			
+			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+			{			
+				if((event.currentTarget as SessionModule).parameters != null)
+				{
+					var param:Object = (event.currentTarget as SessionModule).parameters ;
+					currentSession = param as Session;
+					Model.getInstance().setCurrentSessionSalonSession(currentSession);
+				}else
+				{
+					currentSession = Model.getInstance().getCurrentSessionSalonSession();
+				}
+				Model.getInstance().setCurrentSessionModule(this);
+				
+			}
+			
+			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
+			{
+                // set focus
+                this.setFocus();
+                
+				sessionManagement.filterSession = Model.getInstance().getCurrentFilterSession();
+				sessionManagement.addEventListener(SessionFilterEvent.CHANGE_FILTER, onChangeFilterSession);
+				
+				var sessionDetailView:SessionDetailView = sessionManagement.sessionDetailView;
+				if(sessionDetailView != null)
+				{
+					sessionDetailView.addEventListener(SessionEditEvent.DELETE_ACTIVITY, onDeleteActivity,true);
+					sessionDetailView.addEventListener(SessionEditEvent.UPDATE_ACTIVITY, onUpdateActivity,true);
+					sessionDetailView.addEventListener(SessionEditEvent.ADD_ACTIVITY, onAddActivity,true);
+					sessionDetailView.addEventListener(SessionEditEvent.DELETE_ACTIVITY_ELEMENT, onDeleteActivityElement,true);
+					sessionDetailView.addEventListener(SessionEditEvent.UPDATE_ACTIVITY_ELEMENT, onUpdateActivityElement,true);	
+					sessionDetailView.addEventListener(SessionEditEvent.ADD_ACTIVITY_ELEMENT, onAddActivityElement,true);
+					sessionDetailView.addEventListener(SessionEditEvent.UPDATE_SESSION, onUpdateSession);
+					sessionDetailView.addEventListener(SessionEditEvent.ADD_SESSION, onAddSession);
+					sessionDetailView.sessionFormView.addEventListener(SessionEditEvent.PRE_LOAD_USERS, onPreLoadUsers);
+					sessionManagement.addEventListener(SessionEditEvent.ADD_EMPTY_SESSION, onAddEmptySession,true);
+					
+					// set current session
+					sessionManagement.session = this.currentSession;
+					
+					// removing module from the stage
+					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+				}
+				// set cursor 
+				CursorManager.removeBusyCursor();
+				// notify that module ready for use
+				notifyReadyForUse();
+			}
+// ACTIVITY
+			private function onDeleteActivity(event:SessionEditEvent):void
+			{
+				var activityVO:ActivityVO = this.setActivityVO(event.activity);
+				var deleteActivity:SessionEvent = new SessionEvent(SessionEvent.DELETE_ACTIVITY);
+				deleteActivity.activityVO = activityVO;
+				this.dispatchEvent(deleteActivity);
+			}
+			private function onUpdateActivity(event:SessionEditEvent):void
+			{	
+				var activityVO:ActivityVO = this.setActivityVO(event.activity);
+				var updateActivity:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY_SESSION);
+				updateActivity.activityVO = activityVO;
+				this.dispatchEvent(updateActivity);
+				
+			}
+			private function onAddActivity(event:SessionEditEvent):void
+			{
+				var activityVO:ActivityVO = this.setActivityVO(event.activity);
+				var addActivity:SessionEvent = new SessionEvent(SessionEvent.ADD_ACTIVITY);
+				addActivity.activityVO = activityVO;
+				this.dispatchEvent(addActivity);
+			}
+			private function setActivityVO(activity:Activity):ActivityVO
+			{
+				var activityVO:ActivityVO = new ActivityVO();
+				activityVO.id_activity = activity.id_activity; 
+				activityVO.id_session = Model.getInstance().getCurrentSessionId();
+				activityVO.title = activity.title;
+				activityVO.duration = activity.duration;
+				activityVO.ind = activity.ind;
+				return activityVO;
+			}
+			private function setActivityVOAndSessionId(activity:Activity,sessionId:int):ActivityVO
+			{
+				var activityVO:ActivityVO = new ActivityVO();
+				activityVO.id_activity = activity.id_activity; 
+				activityVO.id_session = sessionId;
+				activityVO.title = activity.title;
+				activityVO.duration = activity.duration;
+				activityVO.ind = activity.ind;
+				return activityVO;
+			}
+// ACTIVITYELEMENT
+			private function onDeleteActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
+				
+				var deleteActivtyElementEvent:SessionEvent = new SessionEvent(SessionEvent.DELETE_ACTIVITY_ELEMENT);
+				deleteActivtyElementEvent.activityElementVO = activityElementVO;				
+				this.dispatchEvent(deleteActivtyElementEvent);
+			}
+			private function onUpdateActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
+				
+				var updateActivityElement:SessionEvent = new SessionEvent(SessionEvent.UPDATE_ACTIVITY_ELEMENT_SESSION);
+				updateActivityElement.activityElementVO = activityElementVO;
+				this.dispatchEvent(updateActivityElement);		
+			}
+			private function onAddActivityElement(event:SessionEditEvent):void
+			{
+				var activityElement:ActivityElement = event.activityElement;
+				var activity:Activity = event.activity;
+				var activityElementVO:ActivityElementVO = this.setActivityElementVO(activityElement,activity);
+				
+				var addActivityElement:SessionEvent = new SessionEvent(SessionEvent.ADD_ACTIVITY_ELEMENT);
+				addActivityElement.activityElementVO = activityElementVO;
+				this.dispatchEvent(addActivityElement);		
+			}
+			private function setActivityElementVO(activityElement:ActivityElement, activity:Activity):ActivityElementVO
+			{
+				if(activityElement != null)
+				{
+					var alm:ActivityElementVO = new ActivityElementVO();
+					alm.id_element = activityElement.id_element;
+					var idActivity:int;
+					if(activity == null)
+					{
+						idActivity = 0;
+					}else{
+						idActivity = activity.id_activity
+					}
+					alm.id_activity = idActivity;
+					alm.data = activityElement.data;
+					alm.url_element = activityElement.url_element;
+					alm.type_element = activityElement.type_element;
+					alm.type_mime = activityElement.type_mime;
+					alm.order_activity_element = activityElement.order_activity_element;		
+					return alm;
+				}
+				return null;
+			}
+// SESSION
+			private function onUpdateSession(event:SessionEditEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var updateSession:SessionEvent = new SessionEvent(SessionEvent.UPDATE_SESSION);
+					var session:Session = event.session;
+					var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
+					sessionVO.duration_session = session.duration_session;
+					sessionVO.id_session = session.id_session;
+					sessionVO.id_user = session.id_user;
+					sessionVO.theme = session.theme;
+					sessionVO.date_session = session.date_session;
+					sessionVO.isModel = session.isModel;
+					sessionVO.description = session.description;
+					sessionVO.start_recording = session.date_start_recording;
+					sessionVO.status_session = session.statusSession;
+					sessionVO.id_currentActivity = 0;
+					updateSession.sessionWitOutListUserVO = sessionVO;
+					this.dispatchEvent(updateSession);
+				}
+			}
+			
+			private function onAddSession(event:SessionEditEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
+					var session:Session = event.session;
+					var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
+					sessionVO.duration_session = session.duration_session;
+					sessionVO.id_session = session.id_session;
+					sessionVO.id_user = Model.getInstance().getLoggedUser().id_user;
+					
+					sessionVO.theme = event.theme;
+					sessionVO.date_session = event.date;
+					sessionVO.isModel = event.isModel;
+					
+					sessionVO.description = session.description;
+					sessionVO.start_recording = session.date_start_recording;
+					var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
+					var userId:int = 0;
+					if(event.isModel)
+					{
+						statusSession = SessionStatusEnum.SESSION_CLOSE; 
+					}else
+					{
+						userId  = Model.getInstance().getLoggedUser().id_user;
+					}
+					sessionVO.status_session = statusSession;
+					sessionVO.id_currentActivity = 0;
+					addSession.sessionWitOutListUserVO = sessionVO;
+					addSession.userId = userId;
+					this.dispatchEvent(addSession);
+				}
+			}
+			
+			private function onAddEmptySession(event:SessionEditEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var addSession:SessionEvent = new SessionEvent(SessionEvent.ADD_SESSION);
+					var sessionVO:SessionWithoutListUserVO = new SessionWithoutListUserVO();
+					sessionVO.duration_session = 0;
+					sessionVO.id_session = 0;
+					sessionVO.id_user = Model.getInstance().getLoggedUser().id_user;
+					sessionVO.theme = event.theme;
+					sessionVO.date_session = event.date;
+					sessionVO.isModel = event.isModel;
+					sessionVO.description = event.theme;
+					sessionVO.start_recording = new Date();
+					var statusSession:uint = SessionStatusEnum.SESSION_OPEN;
+					var userId:int = 0;
+					if(event.isModel)
+					{
+						statusSession = SessionStatusEnum.SESSION_CLOSE; 
+					}else
+					{
+						userId  = Model.getInstance().getLoggedUser().id_user;
+					}
+					sessionVO.status_session = statusSession;
+					sessionVO.id_currentActivity = 0;
+					addSession.sessionWitOutListUserVO = sessionVO;
+					addSession.userId = userId;
+					this.dispatchEvent(addSession);		
+				}
+			}
+			
+			private function onPreLoadUsers(event:SessionEditEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var loadUsers:SessionEditEvent = new SessionEditEvent(SessionEditEvent.LOAD_LIST_USERS);
+					this.dispatchEvent(loadUsers);
+				}
+			}
+			
+			/**
+			 * Add cloned session to SessionManagerView
+			 */
+			private function addClonedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var session:Session = event.session;
+					sessionManagement.addSession(session);
+				}
+			}
+			
+			private function onLoadedAllUsers(event:UserEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					if(sessionManagement.sessionDetailView)
+					{
+						sessionManagement.sessionDetailView.allUsers = event.listUser;
+					}
+				}
+			}
+			
+			private function onShowUpdatedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					this.sessionManagement.updateSession(event.session);
+				}
+			}
+			
+			private function setListPresentUserInSession(event:SessionUserEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var listUser:ArrayCollection = event.listUser;
+					this.sessionManagement.sessionDetailView.listPresentUser = listUser;
+				}
+			}
+			
+			private function onChangeFilterSession(event:SessionFilterEvent):void
+			{
+				var filter:int = event.filterSession;
+				Model.getInstance().setCurrentFilterSession(filter);
+			}
+			
+			/**
+			 * Remove deleted session
+			 */
+			public function onUpdateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var sessionId:int = event.sessionId;
+					var userId:int = event.userId;
+					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+					var nameUser:String = user.lastname + " " +user.firstname;
+					sessionManagement.removeSessionView(sessionId, nameUser);
+					// enabled button "salon synchrone
+					if(Model.getInstance().getCurrentSession() != null &&  Model.getInstance().getCurrentSession().id_session == sessionId)
+					{
+						Model.getInstance().setCurrentSession(null);
+						Model.getInstance().setEnabledButtonSalonTutorat(false);
+					}
+				}
+			}
+			
+			private function onRemovedModuleFromStage(event:Event):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					Model.getInstance().setCurrentSessionSalonSession(sessionManagement.session);
+					Model.getInstance().setCurrentSessionModule(null);
+				}
+			}
+			
+			private function onLoadDurationSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var durationRecorded:Number = event.durationSessionRetro;
+					sessionManagement.sessionDetailView.durationRecorded = durationRecorded;
+				}
+			}
+			
+			private function onLoadListRetrodocumentSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var nbrRetroDocumentOwner:int = event.nbrRetroDocumentOwner;
+					var nbrRetroDocumentShare:int = event.nbrRetroDocumentShare;
+					sessionManagement.sessionDetailView.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
+					sessionManagement.sessionDetailView.nbrRetroDocumentShare = nbrRetroDocumentShare;
+					sessionManagement.sessionDetailView.listRetroDocument = event.listRetroDocument;
+                    
+				}
+			}
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________
+			/**
+			 * notify , ready for use
+			 */
+			private function notifyReadyForUse():void
+			{
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.SESSION_MODULE;
+				this.dispatchEvent(event);
+			}
+            
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
+
+		]]>
+	
+	</fx:Script>
+	<sessions:SessionManagerView id="sessionManagement" visible="true" includeInLayout="true" loggedUser="{Model.getInstance().getLoggedUser()}" top="0" left="0" right="0" bottom="0"/>
+	<fx:Declarations>
+		<maps:SessionMap dispatcher="{this}"/>
+		<mate:Listener type="{SessionEvent.ADD_CLONED_SESSION}"  method="addClonedSession"/>
+		<mate:Listener type="{UserEvent.LOADED_ALL_USERS}"  method="onLoadedAllUsers"/>
+		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"  method="onShowUpdatedSession"/>
+		<mate:Listener type="{SessionUserEvent.LOAD_LIST_SESSION_USER}"  method="setListPresentUserInSession"/>
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_DURATION_SESSION}"  method="onLoadDurationSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION}"  method="onLoadListRetrodocumentSession"/>
+	</fx:Declarations>
+</modules:VisuModuleBase>
+

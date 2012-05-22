@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Build the visu client modules and main application,
+	and put the produced swf files to the "deploy/" directory.
+	(produced swf files in "deploy/" are to be deployed to
+	the red5 server by the VisuServeur/build.xml script)
+-->
+
+<!-- Info: The size of memory available to the JVM may required to be extended for the
+           compile tasks. You may need to extend the JVM memory space with the options "-Xms", "-Xmx" and "-XX:MaxPermSize":
+
+	       Ex: -Xms768m -Xmx1024m -XX:MaxPermSize=512m
+
+or by setting the following environment variable:
+
+		ANT_OPTS="-Xms768m -Xmx1024m -XX:MaxPermSize=512m"
+
+-->
+
+<project name="Visu Client Builder" default="build-and-deploy-all">
+
+<loadproperties srcFile="build.properties"/>
+
+
+	<property name="visu.dev.path" location="." />
+
+
+	<property name="player.major.version" value="10.1" />
+   	<property name="locale" value="en_US" />
+
+	<!-- the value for the "debug" compiler option for compc and mxmlc -->
+   	<property name="debug" value="true" />
+
+	<!-- True if the compiler should display warnings to the console -->
+   	<property name="warnings" value="false" />
+
+	<!-- the value for the "debug" compiler option for compc and mxmlc -->
+   	<property name="mxmlc.incremental" value="false" />
+
+	<!-- the name for bot the final swf file and the mxml application source file -->
+   	<property name="webapp.dir"  location="${red5.dir}/webapps/${webapp.name}" />
+
+   	<!-- the name for lib mysql -->
+   	<!-- <property name="mysql.dir"  location="${red5.dir}/webapps/${webapp.name}/WEB-INF/lib" /> -->
+   	<property name="mysql.dir"  location="VisuServeur/visu/webapp/WEB-INF/lib" />
+
+   	<!-- name table the modules -->
+   	<property name="NAME_TABLE_MODULES"  value="modules" />
+   	<!-- names of modules -->
+   	<property name="NAME_SESSION_MODULE"  value="session" />
+   	<property name="NAME_HOME_MODULE"  value="home" />
+   	<property name="NAME_USER_MODULE"  value="user" />
+   	<property name="NAME_TUTORAT_MODULE"  value="tutorat" />
+   	<property name="NAME_RETROSPECTION_MODULE"  value="retrospection" />
+   	<property name="NAME_BILAN_MODULE"  value="bilan" />
+   	<property name="NAME_PROFIL_MODULE"  value="profil" />
+
+	<!-- The FLEX_HOME variable (with this typo) must be set to the flex sdk repository
+		 for the compc and mxmlc compilers to run properly-->
+   <property name="FLEX_HOME" location="${flex.sdk}"/>
+
+	<!-- add flex ant task from adobe sdk-->
+   <taskdef resource="flexTasks.tasks" classpath="${flex.sdk}/ant/lib/flexTasks.jar"/>
+
+   <!-- The source folder where visuclient.mxml will be found -->
+   <property name="app.src" location="${visu.dev.path}/VisuApplication/src" />
+
+	<!-- The temporary output folder where to place the swf files before being deployed to the server -->
+   <property name="app.deploy" location="${visu.dev.path}/${deploy.tmp}" />
+
+   <!-- The temporary output folder where to place the wrapper files before being deployed to the server -->
+   <property name="app.wrappers" location="${app.deploy}/wrappers" />
+
+	<!-- Visu framework related variables -->
+   <property name="framework.path" location="${visu.dev.path}/VisuFramework" />
+   <property name="framework.src" location="${framework.path}/src" />
+   <property name="framework.images" location="${framework.src}/images" />
+   <property name="framework.timeLineImages" location="${framework.src}/com/ithaca/timeline/images" />
+   <property name="framework.sounds" location="${framework.src}/sounds" />
+   <property name="framework.bin" location="${framework.path}/bin" />
+   <property name="framework.linkreport" location="${framework.bin}/link-report.xml" />
+   <property name="framework.locale" location="${framework.path}/locale" />
+
+	<!-- The temporary asset SWC that contains embedded ressources -->
+   <property name="framework.assets.swc" value="visu_framework.assets.swc" />
+
+	<!-- The Visu SWC library for compiling visu modules and application -->
+   <property name="framework.swc" value="visu_framework.swc" />
+
+
+	<!--  Pathes to third party libraries-->
+   <property name="thirdparty.dir" location="${visu.dev.path}/swc" />
+   <property name="lib.swfaddress" value="SWFAddress.swc" />
+   <property name="lib.mate" value="Mate_08_9.swc" />
+   <property name="lib.rmtp" value="rtmp-service-1.0.swc" />
+   <property name="lib.as3gettext" value="as3-gettext-0.4.1.swc" />
+   <property name="lib.traces" value="Traces.swc"/>
+   <property name="lib.timeline" value="Timeline.swc" />
+
+	<!--  Pathes to User Module sources -->
+   <property name="usermodule.src" location="${visu.dev.path}/UserModule/src" />
+   <property name="usermodule.name" value="UserModule" />
+
+	<!--  Pathes to Bilan Module sources -->
+   <property name="bilanmodule.src" location="${visu.dev.path}/BilanModule/src" />
+   <property name="bilanmodule.name" value="BilanModule" />
+
+
+	<!--  Pathes to Session Module sources -->
+   <property name="sessionmodule.src" location="${visu.dev.path}/SessionModule/src" />
+   <property name="sessionmodule.name" value="SessionModule" />
+
+	<!--  Pathes to Tutorat Module sources -->
+   <property name="tutoratmodule.src" location="${visu.dev.path}/TutoratModule/src" />
+   <property name="tutoratmodule.name" value="TutoratModule" />
+
+	<!--  Pathes to Home Module sources -->
+   <property name="homemodule.src" location="${visu.dev.path}/HomeModule/src" />
+   <property name="homemodule.name" value="HomeModule" />
+
+	<!--  Pathes to Retrospection Module sources -->
+   <property name="retrospectionmodule.src" location="${visu.dev.path}/RetrospectionModule/src" />
+   <property name="retrospectionmodule.name" value="RetrospectionModule" />
+   
+   	<!--  Pathes to Profil Module sources -->
+   <property name="profilmodule.src" location="${visu.dev.path}/ProfilModule/src" />
+   <property name="profilmodule.name" value="ProfilModule" />
+
+
+	<!--  the name of the visu swf file -->
+	 <property name="visuclient.swf" value="visuclient"/>
+
+
+	<!--  server project path -->
+	<property name="project.server.path"     location="${visu.dev.path}/VisuServeur/visu/"/>
+	<property name="project.server.src"     location="${project.server.path}/src"/>
+	<property name="server.tmp.classes"     location="${app.deploy}/tmp"/>
+
+	<!--  jar properties -->
+	<property name="jar.name"     value="${webapp.name}"/>
+	<property name="jar.dir"     location="${app.deploy}"/>
+	<property name="jar.file"    location="${jar.dir}/${jar.name}.jar" />
+
+	<!--  Property file -->
+	<property name="file.props.versioninfo.filename"     value="comp-info.properties"/>
+	<property name="file.props.versioninfo"     location="${visu.dev.path}/${file.props.versioninfo.filename}"/>
+
+
+	<!-- Puts the current time in a property file -->
+	<target name="compile-info">
+		<delete file="${file.props.versioninfo}"/>
+		<tstamp>
+			<format property="COMPILE_TIME" pattern="dd MMMMM yyyy - HH:mm:ss (Z)" timezone="UTC"/>
+		</tstamp>
+		<echo message="${COMPILE_TIME}" file="${file.props.versioninfo}"/>
+	</target>
+    
+    <!-- Adapted from http://www.chasingdaydreams.com/2010/01/flex-custom-html-wrappers-in-ant/ -->
+    <macrodef name="custom-html-wrapper" description="Generates HTML Wrapper using custom template">
+      <attribute name="file"/>
+      <attribute name="title"/>
+      <attribute name="application"/>
+      <attribute name="swf"/>
+      <attribute name="width"/>
+      <attribute name="height"/>
+      <attribute name="history"/> <!-- unused in template -->
+      <attribute name="express-install"/>
+      <attribute name="version-detection"/>
+      <attribute name="bgcolor" default="ffffff" />
+      <attribute name="version-major" default="0" />
+      <attribute name="version-minor" default="0" />
+      <attribute name="version-revision" default="0" />
+      <attribute name="output"/>
+
+      <sequential>
+        <!--
+        <copy todir="@{output}/js">
+          <fileset dir="VisuApplication/html-template/js"/>
+        </copy>
+        -->
+        <copy file="VisuApplication/html-template/playerProductInstall.swf" todir="@{output}" />
+        <copy file="VisuApplication/html-template/swfobject.js" todir="@{output}" />
+        <copy file="VisuApplication/html-template/index.template.html" tofile="@{output}/@{file}" />
+
+        <replace file="@{output}/@{file}" token="$${title}" value="@{title}"/>
+        <replace file="@{output}/@{file}" token="$${swf}" value="@{swf}"/>
+        <replace file="@{output}/@{file}" token="$${width}" value="@{width}"/>
+        <replace file="@{output}/@{file}" token="$${height}" value="@{height}"/>
+        <replace file="@{output}/@{file}" token="$${bgcolor}" value="@{bgcolor}"/>
+        <replace file="@{output}/@{file}" token="$${application}" value="@{application}"/>
+        <replace file="@{output}/@{file}" token="$${version_major}" value="@{version-major}"/>
+        <replace file="@{output}/@{file}" token="$${version_minor}" value="@{version-minor}"/>
+        <replace file="@{output}/@{file}" token="$${version_revision}" value="@{version-revision}"/>
+      </sequential>
+    </macrodef>
+
+	<!-- Package the visu frameworks classes and resources, and put them
+		 into a temporary library named "visu_framework.swc" (located in "./VisuFramework/bin/")
+		 that will serve as a library when building visu modules.
+	-->
+	<target name="build-framework" description="Builds the Framework project and put assets in a swc file" depends="compile-info">
+	      <echo>Compile framework library</echo>
+
+		<!--
+			The compc compiler creates a SWC files.
+			For information about compiler options, see http://help.adobe.com/en_US/flex/using/WS2db454920e96a9e51e63e3d11c0bf69084-7fd2.html
+		-->
+
+		<!-- Create a SWC container for assets resources that are used by many components
+			 in client modules and the framework-->
+
+
+
+	  	  <compc
+	        output="${framework.bin}/${framework.assets.swc}"
+	  	  	debug="${debug}"
+	        strict="true"
+		    incremental="${mxmlc.incremental}"
+	   	    warnings="${warnings}"
+	        headless-server="true">
+
+	  	  		<include-file name="${file.props.versioninfo.filename}" path="${file.props.versioninfo}"/>
+
+
+	  	  		<!--	Put the images that are referenced by [Embed('images/{imagename}.{ext}')]
+	  	  				in actionscript file into the library -->
+
+
+	  		  	<include-file name="images/motCleVisu2_20x20.png" path="${framework.images}/motCleVisu2_20x20.png"/>
+	  		  	<include-file name="images/chatMessageVisu2_20x20.png" path="${framework.images}/chatMessageVisu2_20x20.png"/>
+	  		  	<include-file name="images/consigneVisu2_20x20.png" path="${framework.images}/consigneVisu2_20x20.png"/>
+	  		  	<include-file name="images/fichierVisu2_20x20.png" path="${framework.images}/fichierVisu2_20x20.png"/>
+
+	  		  	<include-file name="images/ArrowDown.png" path="${framework.images}/ArrowDown.png"/>
+	  			<include-file name="images/ArrowUp.png" path="${framework.images}/ArrowUp.png"/>
+	  		  	<include-file name="images/CommentAddVer1.png" path="${framework.images}/CommentAddVer1.png"/>
+	  		  	<include-file name="images/CommentVer4.png" path="${framework.images}/CommentVer4.png"/>
+	  		 	<include-file name="images/marqueurBlanc-bas-20px.png" path="${framework.images}/marqueurBlanc-bas-20px.png"/>
+	  		  	<include-file name="images/PauseVer4.png" path="${framework.images}/PauseVer4.png"/>
+	  		  	<include-file name="images/PlayVer4.png" path="${framework.images}/PlayVer4.png"/>
+	  		  	<include-file name="images/PlayWalkOutVer5.png" path="${framework.images}/PlayWalkOutVer5.png"/>
+	  		  	<include-file name="images/PressSliderVer5.png" path="${framework.images}/PressSliderVer5.png"/>
+	  		  	<include-file name="images/Poubelle.png" path="${framework.images}/Poubelle.png"/>
+	  		  	<include-file name="images/StopVer4.png" path="${framework.images}/StopVer4.png"/>
+	  		  	<include-file name="images/video.jpg" path="${framework.images}/video.jpg"/>
+	  		  	<include-file name="images/ballRed.png" path="${framework.images}/ballRed.png"/>
+	  		  	<include-file name="images/ballBlue.png" path="${framework.images}/ballBlue.png"/>
+	  		  	<include-file name="images/ballGreen.png" path="${framework.images}/ballGreen.png"/>
+	  		  	<include-file name="images/ballGrey.png" path="${framework.images}/ballGrey.png"/>
+				<include-file name="images/iconZoom_16x16.png" path="${framework.images}/iconZoom_16x16.png"/>
+				<include-file name="images/iconChat_16x16.png" path="${framework.images}/iconChat_16x16.png"/>
+				<include-file name="images/iconVolume_16x16.png" path="${framework.images}/iconVolume_16x16.png"/>
+				<include-file name="images/iconMute_16x16.png" path="${framework.images}/iconMute_16x16.png"/>
+				<include-file name="images/iconMax_16x16.png" path="${framework.images}/iconMax_16x16.png"/>
+				<include-file name="images/mic_on.png" path="${framework.images}/mic_on.png"/>
+				<include-file name="images/mic_off.png" path="${framework.images}/mic_off.png"/>
+				<include-file name="images/deleteRoundIcon_16x16.png" path="${framework.images}/deleteRoundIcon_16x16.png"/>
+				<include-file name="images/dragDropPlace_16x8.png" path="${framework.images}/dragDropPlace_16x8.png"/>
+				<include-file name="images/playWhiteTriangle_16x16.png" path="${framework.images}/playWhiteTriangle_16x16.png"/>
+				<include-file name="images/recordWhiteRectangle_16x16.png" path="${framework.images}/recordWhiteRectangle_16x16.png"/>
+				<include-file name="images/recordRedBall_16x16.png" path="${framework.images}/recordRedBall_16x16.png"/>
+
+				<include-file name="images/ScreenShot80x60.png" path="${framework.images}/ScreenShot80x60.png"/>
+				<include-file name="images/iconVideo_16x16.png" path="${framework.images}/iconVideo_16x16.png"/>
+				<include-file name="images/iconEdit_16x16.png" path="${framework.images}/iconEdit_16x16.png"/>
+				<include-file name="images/iconAudio_16x16.png" path="${framework.images}/iconAudio_16x16.png"/>
+				<include-file name="images/iconMinimaze_16x16.png" path="${framework.images}/iconMinimaze_16x16.png"/>
+				<include-file name="images/iconSave_16x16.png" path="${framework.images}/iconSave_16x16.png"/>
+				<include-file name="images/iconOption_16x16.png" path="${framework.images}/iconOption_16x16.png"/>
+				<include-file name="images/iconPauseYellow_16x16.png" path="${framework.images}/iconPauseYellow_16x16.png"/>
+
+				<include-file name="images/deleteRoundIconRed_16x16.png" path="${framework.images}/deleteRoundIconRed_16x16.png"/>
+				<include-file name="images/iconPlayGreen_16x16.png" path="${framework.images}/iconPlayGreen_16x16.png"/>
+				<include-file name="images/iconRecordBorder_16x16.png" path="${framework.images}/iconRecordBorder_16x16.png"/>
+				<include-file name="images/iconStopRed_16x16.png" path="${framework.images}/iconStopRed_16x16.png"/>
+				<include-file name="images/iconStopYellow_16x16.png" path="${framework.images}/iconStopYellow_16x16.png"/>
+ 				<include-file name="images/iconLettre_t__16x16.png" path="${framework.images}/iconLettre_t__16x16.png"/>
+ 				<include-file name="images/iconLettre_T_16x16.png" path="${framework.images}/iconLettre_T_16x16.png"/>
+ 				<include-file name="images/iconInfo_16x16.png" path="${framework.images}/iconInfo_16x16.png"/>
+ 				<include-file name="images/iconReturnLeft_16x16.png" path="${framework.images}/iconReturnLeft_16x16.png"/>
+
+	  		  	<include-file name="images/share_icon20x20.png" path="${framework.images}/share_icon20x20.png"/>
+	  		  	<include-file name="images/RetroDocumentSegmentAddVer1.png" path="${framework.images}/RetroDocumentSegmentAddVer1.png"/>
+	  		  	<include-file name="images/save_edit.png" path="${framework.images}/save_edit.png"/>
+	  		  	<include-file name="images/RetroDocumentAddVer1.png" path="${framework.images}/RetroDocumentAddVer1.png"/>
+	  		  	<include-file name="images/Attention_yellow.png" path="${framework.images}/Attention_yellow.png"/>
+	  		  	<include-file name="images/loaderBlueLine.swf" path="${framework.images}/loaderBlueLine.swf"/>
+	  		  	<include-file name="images/RetroDocumentAddSegmentWithArrow_16x16.png" path="${framework.images}/RetroDocumentAddSegmentWithArrow_16x16.png"/>
+				<include-file name="images/iconEye_16x16.png" path="${framework.images}/iconEye_16x16.png"/>
+				<include-file name="images/iconAnnuler_16x16.png" path="${framework.images}/iconAnnuler_16x16.png"/>
+				<include-file name="images/iconValider_16x16.png" path="${framework.images}/iconValider_16x16.png"/>
+				<include-file name="images/share_icon.png" path="${framework.images}/share_icon.png"/>
+				
+				<include-file name="images/hand_close.png" path="${framework.images}/hand_close.png"/>
+				<include-file name="images/hand_open.png" path="${framework.images}/hand_open.png"/>
+				<include-file name="images/stateNormal_14x14.png" path="${framework.images}/stateNormal_14x14.png"/>
+				<include-file name="images/advancedViewDataGrid_16x16.png" path="${framework.images}/advancedViewDataGrid_16x16.png"/>
+				<include-file name="images/normalViewDataGrid_16x16.png" path="${framework.images}/normalViewDataGrid_16x16.png"/>
+				<include-file name="images/marqueurBlancTrans.png" path="${framework.images}/marqueurBlancTrans.png"/>
+				<include-file name="images/marqueurFondBlanc.png" path="${framework.images}/marqueurFondBlanc.png"/>
+
+	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
+
+	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
+	  	  		<include-file name="locale/fr_FR/HumanDate.properties" path="${framework.locale}/fr_FR/HumanDate.properties"/>
+
+	  	  	</compc>
+
+
+		<!-- Create the SWC library file that will be passed as input of the compiler
+			 for client modules. The above SWC file must me prepared beforehand and passed as a library because
+			 visu framework classes that are compiled here refer to them. -->
+	  	  <compc
+	         output="${framework.bin}/${framework.swc}"
+	         debug="${debug}"
+	         strict="true"
+	         optimize="true"
+		     incremental="${mxmlc.incremental}"
+	   	     warnings="${warnings}"
+	         headless-server="true">
+
+	         <!-- define the source path -->
+	         <include-sources dir="${framework.src}" includes="*"/>
+	         <source-path path-element="${framework.src}" />
+
+	      	<!-- add external swc-->
+	      	<external-library-path dir="${flex.sdk}/frameworks" append="true">
+	      		<include name="libs/player/${player.major.version}/playerglobal.swc" />
+	      		<include name="libs/textLayout.swc" />
+	      		<include name="libs/osmf.swc" />
+	      		<include name="libs/framework.swc" />
+	      		<include name="libs/spark.swc" />
+	      		<include name="libs/sparkskins.swc" />
+	      		<include name="libs/rpc.swc" />
+	      	</external-library-path>
+
+	   	  	<!-- The "library-path" option adds a library swc to the path at compile time
+				 and required resources are then compiled and integrated as byte code to the produced
+				 SWC file.
+			-->
+	      	<library-path dir="${flex.sdk}/frameworks" append="true">
+	      		<include name="flash-integration.swc" />
+	      	</library-path>
+
+	  	  	<!-- The include-libraries option allows not only to make assets accessible
+	  	  		 at compile time (i.e. to add them to the path at compile time), but also
+	  	  		 to copy them into the produced SWC library as assets (not only as byte code).
+
+	  	  		 The specific "include" option is required for visu since some images are referenced by client modules
+	  	  	 -->
+	  	    <include-libraries dir="${framework.bin}" append="true">
+	  	    	<include name="${framework.assets.swc}" />
+	  	    </include-libraries>
+
+	  	  <!-- Add external 3rd-party dependencies to the path -->
+	         <library-path dir="${thirdparty.dir}" append="true">
+				<include name="${lib.swfaddress}" />
+	            <include name="${lib.mate}" />
+	            <include name="${lib.rmtp}" />
+	            <include name="${lib.as3gettext}" />
+	            <include name="${lib.traces}" />
+	            <include name="${lib.timeline}" />
+	         </library-path>
+
+	  	  	<include-file name="defaults.css" path="${framework.src}/defaults.css"/>
+	      </compc>
+	</target>
+
+
+	<!-- Build the session module and produce a SessionModule.swf file -->
+	<target name="build-session-module" description="Builds the Session Module">
+		<echo>Build Session Module</echo>
+
+		<!-- Create the SessionModule.swf from the sources
+			 The combination of options "load-externs=report.xml" and optimize="true" allow
+			 to use the link report produces by the Visu main application in order for SessionModule.swf to
+			 load classes at runtime that are held by visuclient.swf and not to include them into SessionModule.swf.
+			 This implements the RSL (Runtime Shared Library) mechanism defined by Flex. With these two compiation options,
+			 the size of SessionModule.swf is smaller and SessionModule.swf reuses resources in visuclient.swf which
+			  acts as a RSL (Both SessionModule.swf and visuclient.swf must be loaded by clients)
+
+			 Documentation about mxmlc compiler options are available here: http://help.adobe.com/en_US/flex/using/WS2db454920e96a9e51e63e3d11c0bf69084-7fcc.html
+	    -->
+	    <tstamp>
+	  		<format
+	  			property="TIMESTAMP_SESSION_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete session dir -->
+	   	<antcall target="delete-old-session-module" />
+
+		<!-- name session module with timestamp -->
+		<property name="sessionmodule.name.timestamp" value="${sessionmodule.name}-${TIMESTAMP_SESSION_MODULE}.swf" />
+
+		<mxmlc
+			file="${sessionmodule.src}/modules/${sessionmodule.name}.mxml"
+		  	output="${app.deploy}/${sessionmodule.name}/${sessionmodule.name.timestamp}"
+		    debug="${debug}"
+	       	strict="true"
+		  	optimize="true"
+		  	load-externs="${framework.linkreport}"
+		  	incremental="${mxmlc.incremental}"
+		  	warnings="${warnings}"
+		  	headless-server="true">
+
+		 	<!-- will include all files with .css, .as, .mxml extensions -->
+			<source-path path-element="${sessionmodule.src}"/>
+
+		  	<library-path dir="${framework.bin}" append="true">
+		   		<include name="${framework.swc}" />
+		 	</library-path>
+
+		 	<library-path dir="${thirdparty.dir}" append="true">
+				<include name="${lib.swfaddress}" />
+				<include name="${lib.mate}" />
+				<include name="${lib.rmtp}" />
+				<include name="${lib.as3gettext}" />
+		  	</library-path>
+
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-session-module">
+    	<available filepath="${app.deploy}" type="dir" file="${sessionmodule.name}" property="sessionmodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-session-module" depends="check-exist-old-session-module" if="sessionmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${sessionmodule.name}"/>
+	</target>
+
+	<!--
+		Build the tutorat module (salon synchrone) and produce a TutoratModule.swf file
+
+		This target works exactly as the "build_session_module" target, please refer to it for documentation.
+	-->
+	<target name="build-tutorat-module"  description="Builds the Tutorat Module">
+		<echo>Build Tutorat Module</echo>
+
+		<tstamp>
+	  		<format
+	  			property="TIMESTAMP_TUTORAT_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete tutorat dir -->
+	   	<antcall target="delete-old-tutorat-module" />
+
+		<!-- name tutorat module with timestamp -->
+		<property name="tutoratmodule.name.timestamp" value="${tutoratmodule.name}-${TIMESTAMP_TUTORAT_MODULE}.swf" />
+
+		<mxmlc
+			file="${tutoratmodule.src}/modules/${tutoratmodule.name}.mxml"
+		 	output="${app.deploy}/${tutoratmodule.name}/${tutoratmodule.name.timestamp}"
+		  	debug="${debug}"
+		  	strict="true"
+		   	optimize="true"
+		 	incremental="${mxmlc.incremental}"
+		  	load-externs="${framework.linkreport}"
+		 	warnings="${warnings}"
+			headless-server="true">
+
+			<!-- will include all files with .css, .as, .mxml extensions -->
+		  	<source-path path-element="${tutoratmodule.src}"/>
+
+		   	<library-path dir="${framework.bin}" append="true">
+		      	<include name="${framework.swc}" />
+		   	</library-path>
+
+			<library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+				<include name="${lib.mate}" />
+				<include name="${lib.rmtp}" />
+				<include name="${lib.as3gettext}" />
+			</library-path>
+
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-tutorat-module">
+    	<available filepath="${app.deploy}" type="dir" file="${tutoratmodule.name}" property="tutoratmodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-tutorat-module" depends="check-exist-old-tutorat-module" if="tutoratmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${tutoratmodule.name}"/>
+	</target>
+
+	<!--
+		Build the home module (accueil) and produce a HomeModule.swf file
+
+		This target works exactly as the "build_session_module" target, please refer to it for documentation.
+	-->
+	<target name="build-home-module"  description="Builds the Home Module">
+	  	<echo>Build Home Module</echo>
+		<tstamp>
+	  		<format
+	  			property="TIMESTAMP_HOME_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete home dir -->
+	   	<antcall target="delete-old-home-module" />
+
+		<!-- name home module with timestamp -->
+		<property name="homemodule.name.timestamp" value="${homemodule.name}-${TIMESTAMP_HOME_MODULE}.swf" />
+
+		<mxmlc
+		 	file="${homemodule.src}/modules/${homemodule.name}.mxml"
+		  	output="${app.deploy}/${homemodule.name}/${homemodule.name.timestamp}"
+		   	debug="${debug}"
+		  	strict="true"
+		   	incremental="${mxmlc.incremental}"
+		   	load-externs="${framework.linkreport}"
+		   	optimize="true"
+		   	warnings="${warnings}"
+		 	headless-server="true">
+
+		 	<!-- define a source path (will include all files with .css, .as, .mxml extensions) -->
+		  	<source-path path-element="${homemodule.src}"/>
+
+			<library-path dir="${framework.bin}" append="true">
+		    	<include name="${framework.swc}" />
+		  	</library-path>
+
+		    <library-path dir="${thirdparty.dir}" append="true">
+				<include name="${lib.swfaddress}" />
+				<include name="${lib.mate}" />
+				<include name="${lib.rmtp}" />
+		     	<include name="${lib.as3gettext}" />
+		     </library-path>
+		</mxmlc>
+
+	</target>
+
+	<target name="check-exist-old-home-module">
+    	<available filepath="${app.deploy}" type="dir" file="${homemodule.name}" property="homemodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-home-module" depends="check-exist-old-home-module" if="homemodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${homemodule.name}"/>
+	</target>
+
+	<!--
+		Build the retrospection module (salon de rétrospection) and produce a RetrospectionModule.swf file
+
+		This target works exactly as the "build_retrospection_module" target, please refer to it for documentation.
+	-->
+	<target name="build-retrospection-module"  description="Builds the Retrospection Module">
+	  	<echo>Build Retrospection Module</echo>
+	   	<tstamp>
+	  		<format
+	  			property="TIMESTAMP_RETROSPECTION_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete retrospection dir -->
+	   	<antcall target="delete-old-retrospection-module" />
+
+		<!-- name retrospection module with timestamp -->
+		<property name="retrospectionmodule.name.timestamp" value="${retrospectionmodule.name}-${TIMESTAMP_RETROSPECTION_MODULE}.swf" />
+
+		<mxmlc
+			file="${retrospectionmodule.src}/modules/${retrospectionmodule.name}.mxml"
+		   	output="${app.deploy}/${retrospectionmodule.name}/${retrospectionmodule.name.timestamp}"
+     		debug="${debug}"
+		   	strict="true"
+		  	load-externs="${framework.linkreport}"
+		   	incremental="${mxmlc.incremental}"
+		   	optimize="true"
+		   	warnings="${warnings}"
+		   	headless-server="true">
+
+		   	<!-- will include all files with .css, .as, .mxml extensions -->
+		   	<source-path path-element="${retrospectionmodule.src}"/>
+
+		 	<library-path dir="${framework.bin}" append="true">
+		    	<include name="${framework.swc}" />
+		   	</library-path>
+
+		  	<library-path dir="${thirdparty.dir}" append="true">
+		   		<include name="${lib.swfaddress}" />
+		     	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		     	<include name="${lib.as3gettext}" />
+		 	</library-path>
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-retrospection-module">
+    	<available filepath="${app.deploy}" type="dir" file="${retrospectionmodule.name}" property="retrospectionmodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-retrospection-module" depends="check-exist-old-retrospection-module" if="retrospectionmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${retrospectionmodule.name}"/>
+	</target>
+
+	<!--
+		Build the user module (interface de gestion des utilisateurs visu) and produce a UserModule.swf file
+
+		This target works exactly as the "build_session_module" target, please refer to it for documentation.
+	-->
+	<target name="build-user-module"  description="Builds the Users Module">
+	 	<echo>Build User Module</echo>
+
+		<tstamp>
+	  	<format
+	  		property="TIMESTAMP_USER_MODULE"
+	    	pattern="yyyyMMdd-HHmmss"
+	       	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete user dir -->
+	   	<antcall target="delete-old-user-module" />
+
+		<!-- name user module with timestamp -->
+		<property name="usermodule.name.timestamp" value="${usermodule.name}-${TIMESTAMP_USER_MODULE}.swf" />
+
+		<mxmlc
+			file="${usermodule.src}/modules/${usermodule.name}.mxml"
+		   	output="${app.deploy}/${usermodule.name}/${usermodule.name.timestamp}"
+		    debug="${debug}"
+     		strict="true"
+     		optimize="true"
+     		incremental="${mxmlc.incremental}"
+     		warnings="${warnings}"
+     		load-externs="${framework.linkreport}"
+     		headless-server="true">
+
+		    <!-- will include all files with .css, .as, .mxml extensions -->
+		    <source-path path-element="${usermodule.src}"/>
+
+		    <library-path dir="${framework.bin}" append="true">
+				<include name="${framework.swc}" />
+			</library-path>
+
+		    <library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+		     	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		     	<include name="${lib.as3gettext}" />
+		    </library-path>
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-user-module">
+    	<available filepath="${app.deploy}" type="dir" file="${usermodule.name}" property="usermodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-user-module" depends="check-exist-old-user-module" if="usermodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${usermodule.name}"/>
+	</target>
+
+<!--
+		Build the bilan module (interface de gestion des utilisateurs visu) and produce a BilanModule.swf file
+
+		This target works exactly as the "build_bilan_module" target, please refer to it for documentation.
+	-->
+	<target name="build-bilan-module"  description="Builds the Bilan Module">
+	   	<echo>Build Bilan Module</echo>
+	    <tstamp>
+	  		<format
+	  			property="TIMESTAMP_BILAN_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete bilan dir -->
+	   	<antcall target="delete-old-bilan-module" />
+
+		<!-- name bilan module with timestamp -->
+		<property name="bilanmodule.name.timestamp" value="${bilanmodule.name}-${TIMESTAMP_BILAN_MODULE}.swf" />
+
+		<mxmlc
+			file="${bilanmodule.src}/modules/${bilanmodule.name}.mxml"
+		   	output="${app.deploy}/${bilanmodule.name}/${bilanmodule.name.timestamp}"
+		  	debug="${debug}"
+		   	strict="true"
+		   	optimize="true"
+		 	incremental="${mxmlc.incremental}"
+		   	warnings="${warnings}"
+		   	load-externs="${framework.linkreport}"
+		   	headless-server="true">
+
+		   	<!-- will include all files with .css, .as, .mxml extensions -->
+		    <source-path path-element="${bilanmodule.src}"/>
+
+		    <library-path dir="${framework.bin}" append="true">
+				<include name="${framework.swc}" />
+			</library-path>
+
+		 	<library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+		    	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		    	<include name="${lib.as3gettext}" />
+		  	</library-path>
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-bilan-module">
+    	<available filepath="${app.deploy}" type="dir" file="${bilanmodule.name}" property="bilanmodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-bilan-module" depends="check-exist-old-bilan-module" if="bilanmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${bilanmodule.name}"/>
+	</target>
+
+
+
+
+
+<!--
+		Build the profil module (interface de gestion des utilisateurs visu) and produce a ProfilModule.swf file
+
+		This target works exactly as the "build_profil_module" target, please refer to it for documentation.
+	-->
+	<target name="build-profil-module"  description="Builds the Profil Module">
+	   	<echo>Build Profil Module</echo>
+	    <tstamp>
+	  		<format
+	  			property="TIMESTAMP_PROFIL_MODULE"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- delete profil dir -->
+	   	<antcall target="delete-old-profil-module" />
+
+		<!-- name profil module with timestamp -->
+		<property name="profilmodule.name.timestamp" value="${profilmodule.name}-${TIMESTAMP_PROFIL_MODULE}.swf" />
+
+		<mxmlc
+			file="${profilmodule.src}/modules/${profilmodule.name}.mxml"
+		   	output="${app.deploy}/${profilmodule.name}/${profilmodule.name.timestamp}"
+		  	debug="${debug}"
+		   	strict="true"
+		   	optimize="true"
+		 	incremental="${mxmlc.incremental}"
+		   	warnings="${warnings}"
+		   	load-externs="${framework.linkreport}"
+		   	headless-server="true">
+
+		   	<!-- will include all files with .css, .as, .mxml extensions -->
+		    <source-path path-element="${profilmodule.src}"/>
+
+		    <library-path dir="${framework.bin}" append="true">
+				<include name="${framework.swc}" />
+			</library-path>
+
+		 	<library-path dir="${thirdparty.dir}" append="true">
+		    	<include name="${lib.swfaddress}" />
+		    	<include name="${lib.mate}" />
+		     	<include name="${lib.rmtp}" />
+		    	<include name="${lib.as3gettext}" />
+		  	</library-path>
+		</mxmlc>
+	</target>
+
+	<target name="check-exist-old-profil-module">
+    	<available filepath="${app.deploy}" type="dir" file="${profilmodule.name}" property="profilmodule.dir.exist"/>
+	</target>
+
+	<target name="delete-old-profil-module" depends="check-exist-old-profil-module" if="profilmodule.dir.exist">
+		<!-- deleting dir-->
+		 <delete  dir="${app.deploy}/${profilmodule.name}"/>
+	</target>
+
+
+
+
+	 <!--
+	 	Build the visu client application, i.e. from "visuclient.mxml" to "visuclient.swf"
+	 -->
+	   <target name="build-visuclient-swf" description="Builds the application swf file">
+	      <echo>Build Visu</echo>
+
+		<!--
+			the "link-report" option creates an output xml file (the link report) where
+			all classes held in the produced swf file will be indexed. This link report
+			is given as input for the compilation of Visu client modules, in order not
+			to include again in the client modules classes that will be accessible at runtime
+			in the main swf file (visuclient.swf).
+
+			This is the implementation of the Flex RSL (Runtime Shared Library) mechanism.
+			For a complete documentation, see http://help.adobe.com/en_US/flex/using/WS2db454920e96a9e51e63e3d11c0bf69084-7add.html
+
+		 -->
+
+		<!-- timestamp -->
+ 		<tstamp>
+	  		<format
+	  			property="COMPILE_APP_TIME"
+	    		pattern="yyyyMMdd-HHmmss"
+	          	locale="fr,FR"/>
+		</tstamp>
+
+		<!-- deleting old app -->
+		<delete quiet="true">
+			<fileset dir="${app.deploy}" includes="${clientapp.name}*.swf"/>
+		</delete>
+
+		<!-- name app client with timestamp -->
+	   	<!-- clientapp.name.timestamp without ".swf", the wrapper will add "swf" -->
+		<property name="clientapp.name.timestamp" value="${clientapp.name}-${COMPILE_APP_TIME}" />
+	   	<mxmlc
+	         file="${app.src}/${clientapp.name}.mxml"
+	         output="${app.deploy}/${clientapp.name.timestamp}.swf"
+	         debug="${debug}"
+	         strict="true"
+	         link-report="${framework.linkreport}"
+	         warnings="${warnings}"
+	         incremental="${mxmlc.incremental}"
+	         headless-server="true">
+
+	         <!-- will include all files with .css, .as, .mxml extensions -->
+	         <source-path path-element="${app.src}"/>
+
+	         <library-path dir="${framework.bin}" append="true">
+	            <include name="${framework.swc}" />
+	         </library-path>
+
+	      	 <library-path dir="${thirdparty.dir}" append="true">
+	      		            <include name="${lib.swfaddress}" />
+	      		            <include name="${lib.mate}" />
+	      		            <include name="${lib.rmtp}" />
+	      		            <include name="${lib.as3gettext}" />
+			</library-path>
+
+		</mxmlc>
+	    <!-- do this target with new name app -->
+	   	<antcall target="html-wrapper" />
+	</target>
+
+	<target name="build-test-page"  description="Builds the Test swf file and wrapper">
+	      <echo>Build Test page</echo>
+	      <mkdir dir="${app.wrappers}"/>
+		     <mxmlc
+	         file="${app.src}/Test.mxml"
+	         output="${app.wrappers}/Test.swf"
+	         debug="${debug}"
+	         strict="true"
+	         warnings="${warnings}"
+		     incremental="${mxmlc.incremental}"
+	         headless-server="true">
+
+	        <library-path dir="${framework.bin}" append="true">
+	            <include name="${framework.swc}" />
+	         </library-path>
+	      </mxmlc>
+	       <echo>Creates a HTML wrapper</echo>
+	      <html-wrapper
+			file="Test.html"
+	            application="app"
+	            swf="Test"
+	            history="true"
+	            express-install="true"
+	            version-detection="true"
+	            width="100%"
+	            height="100%"
+	            output="${app.wrappers}"/>
+		   </target>
+
+	<target name="html-wrapper" description="Creates a HTML wrapper and other js files required for the application to run in an HTML page">
+	   <echo>Creates a HTML wrapper</echo>
+       <fail message="Missing clientapp.name property. html-wrapper must be called from build-visuclient" unless="clientapp.name" />
+       <fail message="Missing clientapp.name.timestsamp property. html-wrapper must be called from build-visuclient" unless="clientapp.name.timestamp" />
+       <fail message="Missing app.wrappers property. html-wrapper must be called from build-visuclient" unless="app.wrappers" />
+	   <mkdir dir="${app.wrappers}"/>
+	   <custom-html-wrapper
+	       	title="Welcome to Visu 2"
+			file="${clientapp.name}.html"
+	            application="app"
+	            swf="${clientapp.name.timestamp}"
+	            history="true"
+	            express-install="true"
+	            version-detection="true"
+	            width="100%"
+	            height="100%"
+	            output="${app.wrappers}"/>
+	</target>
+
+	<target name="build-client-all" description="Builds the client app, all client modules, and dependencies">
+   		<antcall target="build-framework" />
+    	<antcall target="build-visuclient-swf" />
+    	<antcall target="build-user-module" />
+    	<antcall target="build-home-module" />
+    	<antcall target="build-session-module" />
+    	<antcall target="build-retrospection-module" />
+    	<antcall target="build-tutorat-module" />
+    	<antcall target="build-bilan-module" />
+    	<antcall target="build-profil-module" />
+
+    	<!-- html wrapper do in target "build-visuclient-swf" -->
+    	<!-- <antcall target="html-wrapper" />  -->
+
+    	<antcall target="build-test-page" />
+	</target>
+
+	    <target name="build-server" description="Builds the java server classes and puts them in a jar">
+	        <delete dir="${server.tmp.classes}"/>
+	        <mkdir dir="${server.tmp.classes}"/>
+	        <javac encoding="utf-8" srcdir="${project.server.src}" destdir="${server.tmp.classes}">
+	          <compilerarg value="-Xlint:unchecked" />
+	          <classpath>
+	            <pathelement path="${classpath}"/>
+	            <pathelement location="${red5.dir}/red5.jar"/>
+	            <fileset dir="${project.server.path}/webapp/WEB-INF/lib" includes="*.jar"/>
+	          </classpath>
+	        </javac>
+	        <mkdir dir="${jar.dir}"/>
+	        <jar destfile="${jar.file}" basedir="${server.tmp.classes}" />
+	        <delete dir="${server.tmp.classes}"/>
+	    </target>
+
+		<target name="build-and-deploy-client" depends="build-client-all,deploy-client" description="Builds the client app and client modules, then copies the built files to the web app directory on the server"/>
+
+		<target name="build-and-deploy-server" depends="build-server,deploy-server" description="Builds the server classes, jar them, and deploy the server jar + config to the server"/>
+
+  	<!-- SESSION MODULE -->
+  	<target name="check-produced-session-module">
+    	<available filepath="${app.deploy}" type="dir" file="${sessionmodule.name}" property="sessionmodule.present"/>
+	</target>
+	<target name="deploy-session-module" depends="check-produced-session-module" if="sessionmodule.present">
+  		<!-- delete old version session module -->
+	   	<delete quiet="true">
+			<fileset dir="${webapp.dir}/modules" includes="${sessionmodule.name}*.swf"/>
+		</delete>
+		<!-- copy session module -->
+		<copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_sessionmodule" dir="${app.deploy}/${sessionmodule.name}" includes="${sessionmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file session module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_sessionmodule" refid="copy_sessionmodule"/>
+		<!-- get name file session module -->
+		<basename property="file_name_sessionmodule" file="${path_file_sessionmodule}"/>
+		<!-- update new name session module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_sessionmodule}" WHERE name="${NAME_SESSION_MODULE}";
+		</sql>
+	</target>
+
+   	<!-- HOME MODULE -->
+	<target name="check-produced-home-module">
+    	<available filepath="${app.deploy}" type="dir" file="${homemodule.name}" property="homenmodule.present"/>
+	</target>
+	<target name="deploy-home-module" depends="check-produced-home-module" if="homenmodule.present">
+  		<!-- delete old version home module -->
+	    <delete quiet="true">
+	    	<fileset dir="${webapp.dir}/modules" includes="${homemodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version home module -->
+	   	<copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_homemodule" dir="${app.deploy}/${homemodule.name}" includes="${homemodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file home module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_homemodule" refid="copy_homemodule"/>
+		<!-- get name file home module -->
+		<basename property="file_name_homemodule" file="${path_file_homemodule}"/>
+		<!-- update new name home module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_homemodule}" WHERE name="${NAME_HOME_MODULE}";
+		</sql>
+	</target>
+
+	<!-- USER MODULE -->
+	<target name="check-produced-user-module">
+    	<available filepath="${app.deploy}" type="dir" file="${usermodule.name}" property="usermodule.present"/>
+	</target>
+	<target name="deploy-user-module" depends="check-produced-user-module" if="usermodule.present">
+	    <!-- delete old version user module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${usermodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version user module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_usermodule" dir="${app.deploy}/${usermodule.name}" includes="${usermodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file user module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_usermodule" refid="copy_usermodule"/>
+		<!-- get name file user module -->
+		<basename property="file_name_usermodule" file="${path_file_usermodule}"/>
+		<!-- update new name user module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_usermodule}" WHERE name="${NAME_USER_MODULE}";
+		</sql>
+	</target>
+
+	<!-- TUTORAT MODULE -->
+	<target name="check-produced-tutorat-module">
+    	<available filepath="${app.deploy}" type="dir" file="${tutoratmodule.name}" property="tutoratmodule.present"/>
+	</target>
+	<target name="deploy-tutorat-module" depends="check-produced-tutorat-module" if="tutoratmodule.present">
+	    <!-- delete old version tutorat module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${tutoratmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version tutorat module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_tutoratmodule" dir="${app.deploy}/${tutoratmodule.name}" includes="${tutoratmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file user module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_tutoratmodule" refid="copy_tutoratmodule"/>
+		<!-- get name file tutorat module -->
+		<basename property="file_name_tutoratmodule" file="${path_file_tutoratmodule}"/>
+		<!-- update new name tutorat module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_tutoratmodule}" WHERE name="${NAME_TUTORAT_MODULE}";
+		</sql>
+	</target>
+
+	<!-- RETROSPECTION MODULE -->
+	<target name="check-produced-retrospection-module">
+    	<available filepath="${app.deploy}" type="dir" file="${retrospectionmodule.name}" property="retrospectionmodule.present"/>
+	</target>
+	<target name="deploy-retrospection-module" depends="check-produced-retrospection-module" if="retrospectionmodule.present">
+	    <!-- delete old version retrospection module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${retrospectionmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version retrospection module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_retrospectionmodule" dir="${app.deploy}/${retrospectionmodule.name}" includes="${retrospectionmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file retrospection module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_retrospectionmodule" refid="copy_retrospectionmodule"/>
+		<!-- get name file retrospection module -->
+		<basename property="file_name_retrospectionmodule" file="${path_file_retrospectionmodule}"/>
+		<!-- update new name retrospection module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_retrospectionmodule}" WHERE name="${NAME_RETROSPECTION_MODULE}";
+		</sql>
+	</target>
+
+	<!-- BILAN MODULE -->
+	<target name="check-produced-bilan-module">
+    	<available filepath="${app.deploy}" type="dir" file="${bilanmodule.name}" property="bilanmodule.present"/>
+	</target>
+	<target name="deploy-bilan-module" depends="check-produced-bilan-module" if="bilanmodule.present">
+	    <!-- delete old version bilan module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${bilanmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version bilan module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_bilanmodule" dir="${app.deploy}/${bilanmodule.name}" includes="${bilanmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file bilan module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_bilanmodule" refid="copy_bilanmodule"/>
+		<!-- get name file bilan module -->
+		<basename property="file_name_bilanmodule" file="${path_file_bilanmodule}"/>
+		<!-- update new name bilan module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_bilanmodule}" WHERE name="${NAME_BILAN_MODULE}";
+		</sql>
+	</target>
+	
+	<!-- PROFIL MODULE -->
+	<target name="check-produced-profil-module">
+    	<available filepath="${app.deploy}" type="dir" file="${profilmodule.name}" property="profilmodule.present"/>
+	</target>
+	<target name="deploy-profil-module" depends="check-produced-profil-module" if="profilmodule.present">
+	    <!-- delete old version profil module -->
+	    <delete quiet="true">
+ 			<fileset dir="${webapp.dir}/modules" includes="${profilmodule.name}*.swf"/>
+		</delete>
+		<!-- copy new version profil module -->
+	    <copy todir="${webapp.dir}/modules">
+    		<fileset id="copy_profilmodule" dir="${app.deploy}/${profilmodule.name}" includes="${profilmodule.name}*.swf"/>
+  		</copy>
+  		<!-- get path file profil module -->
+  		<pathconvert pathsep="${line.separator}" property="path_file_profilmodule" refid="copy_profilmodule"/>
+		<!-- get name file profil module -->
+		<basename property="file_name_profilmodule" file="${path_file_profilmodule}"/>
+		<!-- update new name profil module in database -->
+		<sql
+    		driver="com.mysql.jdbc.Driver"
+   	 	  	url="jdbc:mysql://localhost/${webapp.name}"
+   	 		userid="${mysql.user}"
+   	 		password="${mysql.pass}">
+    		<classpath>
+      			<pathelement path="${mysql.dir}/mysql-connector-java-5.1.5.jar"/>
+    	  	</classpath>
+			update `${NAME_TABLE_MODULES}` set url="modules/${file_name_profilmodule}" WHERE name="${NAME_PROFIL_MODULE}";
+		</sql>
+	</target>
+
+	<target name="deploy-client" description="Copies the client swf files to the web app directory on the server">
+		<!-- DEPLOY CLIENT APPLICATION -->
+		<!-- delete old version app -->
+	   	<delete quiet="true">
+			<fileset dir="${webapp.dir}" includes="${clientapp.name}*.swf"/>
+		</delete>
+		<!-- copy new version app -->
+	    <copy todir="${webapp.dir}">
+    		<fileset dir="${app.deploy}" includes="${clientapp.name}*.swf"/>
+  		</copy>
+
+		<!-- DEPLOY SESSION MODULE -->
+	   	<antcall target="deploy-session-module" />
+
+		<!-- DEPLOY HOME MODULE -->
+	   	<antcall target="deploy-home-module" />
+
+	   	<!-- DEPLOY USER MODULE -->
+	   	<antcall target="deploy-user-module" />
+
+	   	<!-- DEPLOY TUTORAT MODULE -->
+	   	<antcall target="deploy-tutorat-module" />
+
+ 	   	<!-- DEPLOY RETROSPECTION MODULE -->
+	   	<antcall target="deploy-retrospection-module" />
+
+	   	<!-- DEPLOY BILAN MODULE -->
+	   	<antcall target="deploy-bilan-module" />
+	   	
+	   	<!-- DEPLOY PROFIL MODULE -->
+	   	<antcall target="deploy-profil-module" />
+
+	      <!-- copy wrappers -->
+	      <echo>Copy wrappers</echo>
+		  <copy todir="${webapp.dir}">
+	        <fileset dir="${app.wrappers}" includes="**"/>
+	      </copy>
+	      <!-- copy flex frameworks -->
+	      <echo>Copy frameworks</echo>
+	      <copy todir="${webapp.dir}">
+	          <fileset dir="${FLEX_HOME}/frameworks/rsls/">
+		         <include name="*.swf"/>
+		      </fileset>
+	      </copy>
+	      <!-- copy internalisation folder "locale" -->
+	      <echo>Copy folder "locale"</echo>
+		  <copy todir="${webapp.dir}/locale">
+	        <fileset dir="${app.src}/locale/" includes="**"/>
+	      </copy>
+	       <!-- copy layout files -->
+	      <echo>Copy layout files</echo>
+		  <copy todir="${webapp.dir}/xml">
+	        <fileset dir="${visu.dev.path}/xml/" includes="**"/>
+	      </copy>
+
+	     <!-- copy start page, images, manuals files-->
+		  <copy todir="${webapp.dir}">
+	        <fileset dir="${visu.dev.path}/start_page_assets/" includes="**"/>
+	      </copy>
+	    </target>
+
+		<!-- Deploy the visu server jar and clien swf files to the Red5 server -->
+	    <target name="deploy-server" depends="clean-webinf-libs" description="Copies the server jar, configuration files, and dependencies to the web app directory on the server">
+
+	      <mkdir dir="${webapp.dir}" />
+
+	      <copy verbose="true" todir="${webapp.dir}" overwrite="true">
+	        <fileset dir="${project.server.path}/webapp" />
+	      </copy>
+
+	      <mkdir dir="${webapp.dir}/WEB-INF/lib" />
+
+	      <copy  verbose="true"  file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
+	    </target>
+
+		<target name="clean-webinf-libs">
+			<echo message="Removing ktbs-client jars from the server WEB-INF/lib directory"/>
+			<delete quiet="true">
+				<fileset dir="${webapp.dir}/WEB-INF/lib" includes="ktbs*.jar"/>
+			</delete>
+		</target>
+
+	    <target name="build-and-deploy-all" depends="build-and-deploy-client,build-and-deploy-server" description="Builds the client and the server, and deploy the built files to the web app directory on the server"/>
+
+		 <target name="clean" description="Removes the temporary deploy directory where built files are created from the filesystem">
+			  <delete dir="${app.deploy}"/>
+		</target>
+
+</project>

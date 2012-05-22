@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties mainApplicationPath="visuclient.mxml" projectUUID="76c789b1-5f1c-466d-9e30-80ab81b3ad5c" version="6">
+  <compiler additionalCompilerArguments="-locale fr_FR" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="/Applications/red5/webapps/visu2" outputFolderPath="bin-debug" rootURL="http://localhost/visu2" sourceFolderPath="src" strict="true" targetPlayerVersion="10.2.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+    <compilerSourcePath>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/SessionModule/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/TutoratModule/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/HomeModule/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/UserModule/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/RetrospectionModule/src"/>
+      <compilerSourcePathEntry kind="1" linkType="1" path="${DOCUMENTS}/BilanModule/src"/>
+    </compilerSourcePath>
+    <libraryPath defaultLinkType="3">
+      <libraryPathEntry kind="4" path="">
+        <excludedEntries>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
+        </excludedEntries>
+      </libraryPathEntry>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DOCUMENTS}/swc"/>
+      <libraryPathEntry kind="3" linkType="1" path="${DOCUMENTS}/VisuFramework/bin/VisuFramework.swc" useDefaultLinkType="false"/>
+    </libraryPath>
+    <sourceAttachmentPath/>
+  </compiler>
+  <applications>
+    <application path="visuclient.mxml"/>
+    <application path="Test.mxml"/>
+  </applications>
+  <modules>
+    <module application="src/visuclient.mxml" destPath="modules/RetrospectionModule.swf" optimize="true" sourcePath="[source path] RetrospectionModule-src/modules/RetrospectionModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/TutoratModule.swf" optimize="true" sourcePath="[source path] TutoratModule-src/modules/TutoratModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/SessionModule.swf" optimize="true" sourcePath="[source path] SessionModule-src/modules/SessionModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/UserModule.swf" optimize="true" sourcePath="[source path] UserModule-src/modules/UserModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/HomeModule.swf" optimize="true" sourcePath="[source path] HomeModule-src/modules/HomeModule.mxml"/>
+    <module application="src/visuclient.mxml" destPath="modules/BilanModule.swf" optimize="true" sourcePath="[source path] BilanModule-src/modules/BilanModule.mxml"/>
+  </modules>
+  <buildCSSFiles/>
+</actionScriptProperties>

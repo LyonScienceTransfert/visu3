@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="obsels">
+
+	<typeAlias alias="obsel" type="com.ithaca.domain.model.Obsel" />
+    <typeAlias alias="obselStringParam" type="com.lyon2.utils.ObselStringParams" />
+
+	<cacheModel id="cache" type="LRU" readOnly="false">
+        <flushInterval hours="24"/>
+        <flushOnExecute statement="obsels.delete"/>
+        <flushOnExecute statement="obsels.insert"/>
+        <flushOnExecute statement="obsels.update"/>
+        <property name="cache-size" value="1000"/>
+    </cacheModel>
+
+	<resultMap class="obsel" id="obselResult">
+		<result column="id_obsel" jdbcType="INTEGER" property="id" />
+		<result column="trace" jdbcType="VARCHAR" property="trace" />
+		<result column="type_obsel" jdbcType="VARCHAR" property="type" />
+		<result column="begin_obsel" javaType="java.util.Date" property="begin" />
+		<result column="rdf" jdbcType="LONGVARCHAR" property="rdf" />
+	</resultMap>
+
+	<sql id="selectBase">
+		SELECT id_obsel, trace, type_obsel, begin_obsel, rdf
+	</sql>
+
+	
+	<select id="getObsel" parameterClass="int" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels WHERE type_obsel = #value#
+	</select>
+	
+	<select id="getObselSetMark" parameterClass="int" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels WHERE type_obsel = 'SetMark'
+	</select>
+		
+	<select id="getTraces" cacheModel="cache">
+	    SELECT DISTINCT trace
+		FROM obsels
+        ORDER BY trace
+	</select>
+	
+	<select id="getTracesBySessionId" cacheModel="cache" parameterClass="obselStringParam" resultClass="String" >
+	  <![CDATA[  
+	  	SELECT DISTINCT trace
+	  	FROM obsels 
+	  	WHERE rdf LIKE #refParam#	
+	  	AND (type_obsel = 'SessionStart' OR type_obsel = 'SessionEnter')
+	  ]]>	
+	</select>
+	
+	<select id="getTracesByUserId" cacheModel="cache" resultMap="obselResult" parameterClass="obselStringParam" >
+	  <![CDATA[  
+	  	SELECT * FROM obsels WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') and trace like #traceParam#	
+	  ]]>	
+	</select>
+	
+	<select id="getTracesBySessionIdAndUserId" cacheModel="cache" parameterClass="obselStringParam" resultClass="String" >
+	  <![CDATA[  
+	  	SELECT DISTINCT trace
+	  	FROM obsels 
+	  	WHERE trace LIKE #traceParam# and rdf LIKE #refParam# 
+	  	AND (type_obsel = 'SessionStart' OR type_obsel = 'SessionEnter')
+	  ]]>	
+	</select>
+	
+	
+	<select id="getObselsSessionStartSessionEnterByTraceId"  resultMap="obselResult" cacheModel="cache" parameterClass="String">
+	<![CDATA[  
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') 
+		AND trace =  #value#	
+		 ]]>	
+	</select>
+	
+	 <select id="getObselBySessionId" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+        WHERE rdf LIKE #refParam# 
+	</select>	        
+		
+	<select id="getTrace" parameterClass="String" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels
+		WHERE trace = #value#
+	</select>
+	
+	<select id="getTraceComment" parameterClass="String" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels
+		WHERE rdf LIKE #value# 
+	</select>
+
+	<select id="getTraceCommentBySujetAndSession" parameterClass="obselStringParam" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		 FROM  obsels
+		 WHERE rdf LIKE #traceParam# and rdf LIKE #refParam# 
+	</select>
+	
+	<select id="getTraceCommentBySujetAndParentTraceId" parameterClass="obselStringParam" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		 FROM  obsels
+		 WHERE rdf LIKE #traceParam# and rdf LIKE #refParam# 
+	</select>
+
+	<select id="getTraceRetro" parameterClass="obselStringParam" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		 FROM  obsels
+		 WHERE type_obsel LIKE #traceParam# and rdf LIKE #refParam# 
+	</select>
+
+	<select id="getSessionStartObselsForUserId" parameterClass="String" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels
+		WHERE type_obsel = 'SessionStart' and trace like #value#
+	</select>
+
+	<select id="getTextCommentsObselsForStartObsel" parameterClass="String" resultMap="obselResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM obsels
+		WHERE type = 'TextComment' and rdf like #value#
+	</select>
+    <!--
+		<select id="getTraceIdByObselSessionStart" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        
+        SELECT *
+		FROM obsels
+		WHERE type_obsel = 'SessionStart' and trace like #traceParam# and rdf like #refParam# 
+	</select>
+    -->
+    <select id="getTraceIdByObselSessionStartSessionEnter" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionStart' or type_obsel = 'SessionEnter') and trace like #traceParam# and rdf like #refParam# 
+	</select>
+	
+    <select id="getTraceIdByObselSystemSessionStartSystemSessionEnter" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SystemSessionStart' or type_obsel = 'SystemSessionEnter') and trace like #traceParam# and rdf like #refParam# 
+	</select>
+	
+    <select id="getObselSystemUpdateMarker" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE type_obsel = 'SystemUpdateMarker' OR type_obsel = 'SystemDeleteMarker' and trace like #traceParam# and rdf like #refParam# 
+	</select>
+	
+    <select id="getSessionExitSessionPauseObselsForUserId" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionExit' or type_obsel = 'SessionPause') and trace like #traceParam#	
+	</select>
+	
+    <select id="getObselBySessionIdBySessionExitSessionPause" parameterClass="obselStringParam"  cacheModel="cache" resultMap="obselResult">
+        SELECT *
+		FROM obsels
+		WHERE (type_obsel = 'SessionExit' or type_obsel = 'SessionPause') and rdf like #refParam#	
+	</select>
+	
+	<select id="getTraceSystemIdBySessionId" parameterClass="String" resultClass="String" cacheModel="cache">
+	<![CDATA[  
+        SELECT DISTINCT trace 
+        FROM obsels WHERE type_obsel='SystemSessionStart' and rdf like #value# 
+	]]>	
+	</select>
+	
+	<insert id="insert" parameterClass="obsel">
+		INSERT INTO obsels
+		SET 
+		    trace = #trace#,
+			type_obsel = #type#,
+			begin_obsel = #begin#,
+			rdf = #rdf#
+
+		<selectKey keyProperty="id" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterClass="obsel">
+		UPDATE obsels
+		SET 
+		    trace = #trace#,
+			type_obsel = #type#,
+			begin_obsel = #begin#,
+			rdf = #rdf#
+		where id_obsel = #id:INTEGER#
+	</update>
+
+	<delete id="delete" parameterClass="obsel">
+		DELETE from obsels WHERE id_obsel = #id:INTEGER#
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    creationComplete="titlewindow1_creationCompleteHandler(event)"
+    close="PopUpManager.removePopUp(this);" >
+    <s:title>{fxgt.gettext("Votre message")}</s:title>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="enabled"/>
+    </s:states>
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.TraceModel;
+        import com.ithaca.visu.model.User;
+        import com.ithaca.visu.model.vo.UserVO;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.controls.Alert;
+        import mx.core.INavigatorContent;
+        import mx.events.CloseEvent;
+        import mx.events.FlexEvent;
+        import mx.managers.PopUpManager;
+        
+        import spark.events.IndexChangeEvent;
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        private var _user:User;
+        private var userChange:Boolean;
+        private var _listUser:ArrayCollection;
+        private var listUserChange:Boolean;
+
+        
+        public var confirm : Boolean = false;	
+        public var deleting : Boolean = false;
+        public var textComment:String;
+        
+        ////////////////////
+        ////// setters/getters
+        ////////////////////
+        public function set user(value:User):void
+        {
+            _user = value;
+            userChange = true;
+            invalidateProperties();
+        }
+        public function get user():User
+        {
+            return _user;
+        }
+        public function set listUser(value:ArrayCollection):void
+        {
+            _listUser = value;
+            listUserChange = true;
+            invalidateProperties();
+        }
+        public function get listUser():ArrayCollection
+        {
+            return _listUser;
+        }		
+        
+        //_____________________________________________________________________
+        //
+        // Overriden Methods
+        //
+        //_____________________________________________________________________
+        
+        override protected function commitProperties():void
+        {
+            super.commitProperties();	
+            if(userChange)
+            {
+                userChange = false;
+                if(user)
+                {
+                    if(imageUser != null)
+                    {
+                        imageUser.source = user.avatar;
+                    }
+                }else
+                {
+                    labelMarkerFor.text = "Votre message pour tous : ";
+                    imageUser.source = IconEnum.getPathByName("commentForSession");
+                }
+            }
+            if(listUserChange)
+            {
+                listUserChange = false;
+                if(listUser)
+                {
+                    dropDownListUser.dataProvider = listUser;
+                    dropDownListUser.labelFunction = setNameUserDromDownList;
+                    // add virtual user = comment for session
+                    var virtualUser:User = addVirtualUser(listUser);
+                    if(user)
+                    {
+                        var indexSelectedUser:int = getIndexUser(user);
+                        dropDownListUser.selectedIndex = indexSelectedUser;
+                    }else
+                    {
+                        dropDownListUser.selectedItem = virtualUser;
+                    }
+                }else
+                {
+                    labelMarkerFor.text = "Votre message pour tous : ";
+                    //groupUser.includeInLayout = groupUser.visible = false;
+                }
+            }
+        }
+        
+        //_____________________________________________________________________
+        //
+        // Listeners
+        //
+        //_____________________________________________________________________
+        
+        private function onHandlerButtonOkAndEnterTextArea(event:*):void
+        {
+            confirm = true;
+            // comment text 
+            var commentText:String = textInfo.text;
+            if(event is MouseEvent){
+                setMyComment(false, commentText);
+            }else if (event is KeyboardEvent) 
+            {
+                if(event.keyCode == Keyboard.ENTER)
+                {
+                    setMyComment(true, commentText);
+                }
+            }
+        }
+        
+        private function setMyComment(cutLastCharMessage:Boolean, message:String):void
+        {
+            // cut char new line if was click on button "Enter"
+            if(cutLastCharMessage)
+            {
+                message = message.split("\n").join("");
+            }
+            // check if text with promt message
+            if(message == "texte de message ici")
+            {
+                message = "";
+            }
+           
+            textComment = message;
+            
+            PopUpManager.removePopUp(this);
+        }
+        
+        private function onClickButtonCancel(event:MouseEvent):void
+        {
+            PopUpManager.removePopUp(this);
+        }
+        
+        protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+            textInfo.setFocus();
+            textInfo.selectAll();
+            
+        }
+        protected function dropDownListUser_changeHandler(event:IndexChangeEvent):void
+        {
+            var index:int = event.newIndex;
+            // update user
+            user = listUser.getItemAt(index) as User;
+            imageUser.source = user.avatar;
+            if(user.id_user == 0)
+            {
+                labelMarkerFor.text = "Votre message pour tous : ";
+            }else
+            {
+                labelMarkerFor.text = "Votre message : ";
+            }
+        }
+        
+        //////////////
+        // Utils
+        //////////////
+        private function setNameUserDromDownList(item:Object):String
+        {
+            var result:String="void";
+            var user:User = item as User;
+            result = VisuUtils.getUserLabelLastName(user, true);
+            return result;
+        }
+        private function addVirtualUser(list:ArrayCollection):User
+        {
+            var userVO:UserVO= new UserVO();
+            userVO.avatar =  IconEnum.getPathByName("commentForSession");
+            userVO.id_user = 0;
+            userVO.firstname = "";
+            userVO.lastname = "la séance";
+            
+            var user:User = new User(userVO);
+            list.addItem(user);
+            return user;
+        }
+        private function getIndexUser(value:User):int
+        {
+            var index:int = -1;
+            var nbrUser:int = listUser.length;
+            for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+            {
+                var user:User = listUser.getItemAt(nUser) as User;
+                if(user.id_user == value.id_user)
+                {
+                    index = nUser;
+                    break;
+                }
+            }
+            if(index > -1)
+            {
+                return index;
+            }else
+            {
+                return 0;
+            }
+        }
+        
+        
+    ]]>
+    </fx:Script>
+    <s:VGroup width="100%" height="100%">
+        <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
+            <mx:Image  source="{IconEnum.getIconByName('chat')}"/>
+            <s:Label  id="labelMarkerFor" fontWeight="bold">
+                <s:text>Votre message pour :</s:text>
+            </s:Label>				
+        </s:HGroup>
+        <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
+            <mx:Image id="imageUser" width="50" height="50"/>
+            <s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
+        </s:HGroup>
+        <s:HGroup width="100%" paddingLeft="10" paddingRight="10">
+            <s:RichEditableText  id="textInfo" keyUp="onHandlerButtonOkAndEnterTextArea(event)" height="45" width.enabled="100%" width.normal="210"/>
+        </s:HGroup>
+        <s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10">
+            <s:Button id="buttonOk" click="onHandlerButtonOkAndEnterTextArea(event)">
+                <s:label>Valider</s:label>
+            </s:Button>
+            <s:Button id="buttonCancel" click="onClickButtonCancel(event)">
+                <s:label>Annuler</s:label>
+            </s:Button>
+        </s:HGroup>
+    </s:VGroup>
+</s:TitleWindow>

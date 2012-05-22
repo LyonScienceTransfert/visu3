@@ -1,0 +1,23 @@
+# The flex sdk installation directory
+flex.sdk=/opt/flex_sdk_4.5.1.21328A/
+
+# The red5 installation directory where to deploy the webapp
+red5.dir=/Applications/red5
+
+# The name of the webapp dir in red5 server 
+webapp.name=visu2
+
+# The name of the client app swf file built by Ant, but also of the 
+# name of the application .mxml source file 
+clientapp.name=visuclient
+
+# The path to the temporary directory where built files are created 
+# and located untill they are deployed to the webapp directory. 
+deploy.tmp=deploy
+
+# Password to Database
+mysql.pass=root
+
+# User to Database
+mysql.user=root
+

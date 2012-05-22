@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+        xmlns:sessions="com.ithaca.visu.controls.sessions.*" 
+        xmlns:controls="com.ithaca.visu.view.session.controls.*" 
+        xmlns:datetime="com.visualempathy.display.controls.datetime.*"
+        preinitialize="skin1_preinitializeHandler(event)">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.controls.SessionDetail")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.events.TextOperationEvent;
+			
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
+
+            private function get NEW_SESSION_TITLE(): String
+            {
+                return fxgt.gettext("Entrez un nouveau titre de séance ici");
+            }
+            private function get NEW_SESSION_DESCRIPTION(): String
+            {
+                return fxgt.gettext("Entrez une nouvelle description de séance ici");
+            }
+
+			protected function themeSession_focusOutHandler(event:FocusEvent):void
+			{
+				if(themeSession.text == ""){
+					this.hostComponent.setMessageTheme();
+				}else
+				{
+					this.hostComponent.updateTheme(themeSession.text);
+				}
+			}
+			
+			protected function themeSession_changeHandler(event:Event):void
+			{
+				this.hostComponent.updateTheme(themeSession.text);
+			}
+
+			protected function descriptionSession_changeHandler(event:TextOperationEvent):void
+			{
+				this.hostComponent.updateDescription(descriptionSession.text);
+			}
+			
+			protected function themeSession_focusInHandler(event:FocusEvent):void
+			{
+				if (themeSession.text == NEW_SESSION_TITLE)
+				{
+					themeSession.text = "";
+					themeSession.setStyle("fontStyle","normal");
+					themeSession.setStyle("color","#000000");
+				}
+			}
+
+			protected function descriptionSession_focusOutHandler(event:FocusEvent):void
+			{
+				if(descriptionSession.text == ""){
+					this.hostComponent.setMessageDescription();
+				}else
+				{
+					this.hostComponent.updateDescription(descriptionSession.text);
+				}
+			}
+
+			protected function descriptionSession_focusInHandler(event:FocusEvent):void
+			{
+				if (descriptionSession.text == NEW_SESSION_DESCRIPTION)
+				{
+					descriptionSession.text = "";
+					descriptionSession.setStyle("fontStyle","normal");
+					descriptionSession.setStyle("color","#000000");
+				}
+			}
+			
+			protected function picker_updateDateTimeHandler(event:SessionEditEvent):void
+			{
+				this.hostComponent.updateDateSession(this.picker.selectedDate);
+			}
+
+            protected function skin1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
+
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+		<s:State name="normalEditable"/>
+		<s:State name="accessRetrospection"/>
+	</s:states>
+
+	<s:Panel width="100%" height="100%" backgroundColor="#e4e4e4">
+        <s:title>{fxgt.gettext("Détails de la séance")}</s:title>
+		<s:Group  width="100%" top.normal="0" height.normalEditable="100%" height.disabled="100%" bottom.normal="0" bottom.accessRetrospection="0" top.accessRetrospection="0">
+			<s:Group height="160" width="100%">
+				<s:HGroup width="100%" height="100%">
+					<!-- LABELS -->
+					<s:Group height="100%" width="20%" includeIn="accessRetrospection,normal,normalEditable">
+						<s:Label fontWeight="bold" fontSize="14" right.normalEditable="5" verticalCenter.normalEditable="-3" right.normal="5" verticalCenter.normal="-3" right.accessRetrospection="5" verticalCenter.accessRetrospection="-3">
+							<s:text>Titre :</s:text>
+						</s:Label>
+						<s:Label fontWeight="bold" fontSize="14" top.normalEditable="10" right.normalEditable="5" right.normal="5" top.normal="10" right.accessRetrospection="5" top.accessRetrospection="10">
+	                    <s:text>{fxgt.gettext("Date prévue :")}</s:text>
+						</s:Label>
+						<s:Label right="5" bottom="35" fontWeight="bold" fontSize="14">
+	                    <s:text>{fxgt.gettext("Description :")}</s:text>
+						</s:Label>
+					</s:Group>
+<!-- THEME -->	
+					<s:Group height="100%" width="40%" includeIn="accessRetrospection,normal,normalEditable">
+						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" verticalCenter="0" backgroundColor="#FFFFFF" change="themeSession_changeHandler(event)"
+											  focusOut="themeSession_focusOutHandler(event)"
+											   focusIn="themeSession_focusInHandler(event)" textAlign="center" verticalAlign="middle" enabled="true" includeIn="normalEditable">
+							<s:text>L</s:text>
+						</s:RichEditableText>
+
+<!-- DATE TIME -->	
+						<datetime:DateTimePickerFR id="picker" minuteIncrement="5" top="5" 
+												     updateDateTime="picker_updateDateTimeHandler(event)" includeIn="normalEditable"/>
+						<s:RichEditableText  id="descriptionSession" height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF"
+											  change="descriptionSession_changeHandler(event)" 
+											  focusOut="descriptionSession_focusOutHandler(event)"
+											  focusIn="descriptionSession_focusInHandler(event)" fontStyle="italic" textAlign="center" verticalAlign="middle" includeIn="normalEditable">
+							<s:text>description</s:text>
+						</s:RichEditableText> 
+						<s:RichText includeIn="normal,accessRetrospection" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
+						<s:RichText includeIn="normal,accessRetrospection" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
+						<s:Group  includeIn="normal,accessRetrospection" left="0" top="5" height="22">
+							<s:Label  id="dateLabel" verticalCenter="0" left="0" fontSize="14"/>
+							<s:Label text="{fxgt.gettext('à')}" verticalCenter="0" left="75" fontSize="14"/>
+							<s:Label  id="heurLabel" verticalCenter="0" left="90" fontSize="14"/>
+							<s:Label text=":" verticalCenter="0" left="110" fontSize="14"/>
+							<s:Label  id="minLabel" verticalCenter="0" left="120" fontSize="14"/>
+						</s:Group>
+					</s:Group>
+					<!-- USERS -->
+					<s:Group height="100%" width="40%" includeIn="accessRetrospection,normal,normalEditable">
+						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true" enabled.accessRetrospection="false">
+	                    <s:label>{fxgt.gettext("Ajouter un nouvel utilisateur")}</s:label>
+						</s:Button>
+						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">
+							<s:Group id="groupUser">
+								<s:layout.normal>
+									<s:VerticalLayout gap="5" />
+								</s:layout.normal>
+								<s:layout.accessRetrospection>
+									<s:VerticalLayout gap="5" />
+								</s:layout.accessRetrospection>
+								<s:layout.normalEditable>
+									<s:VerticalLayout gap="5" />
+								</s:layout.normalEditable>
+							</s:Group>
+						</s:Scroller>
+					</s:Group>
+					<s:Label includeIn="disabled" text="{fxgt.gettext('Vous devez choisir une séance.')}" visible="false"/>
+				</s:HGroup>
+			</s:Group>
+			<controls:SessionPlanEdit  id="sessionPlanEdit" width="96%" horizontalCenter="0" backgroundColor="#FFFFFF"
+									    bottom.accessRetrospection="100" top="165" bottom="30" top.accessRetrospection="165" horizontalCenter.accessRetrospection="0"/>
+			<s:Button id="buttonGoRetrospection"  includeIn="accessRetrospection" bottom="5" right="15">
+                <s:label>{fxgt.gettext("Entrer dans le salon de rétrospection pour cette séance")}</s:label>
+			</s:Button>
+            <!-- FIXME: fix string definitions -->
+			<s:Label includeIn="accessRetrospection" text="Durée de la séance :  45:55" fontWeight="bold" fontSize="14" left="382" bottom="40"/>
+			<s:Label includeIn="accessRetrospection" text="Date d'enregistrement : 23-03-2011" fontWeight="bold" fontSize="14" left="382" bottom="66"/>
+			<s:Label includeIn="accessRetrospection" text="Utilisateurs enregistrés :" fontWeight="bold" fontSize="14" bottom="66" left="14"/>
+			<s:Scroller left="10" right="460" bottom="2" height="64" includeIn="accessRetrospection">
+				<s:Group width="100%" height="100%" id="groupRecordedUser">
+					<s:layout>
+						<s:VerticalLayout>
+							<s:gap>5</s:gap>
+						</s:VerticalLayout>
+					</s:layout>
+				</s:Group>
+			</s:Scroller>
+			<s:HGroup width="100%" horizontalAlign="right" bottom="5" right="5">
+				<s:Button id="buttonDeleteSession" label="{fxgt.gettext('Supprimer la séance')}" includeIn="normalEditable,normal" right="163"/>
+				<s:Button includeIn="normalEditable" label="{fxgt.gettext('Sauvegarder la séance')}" right="7" id="buttonSaveSession"/>
+			</s:HGroup>
+		</s:Group>
+	</s:Panel>
+</s:Skin>

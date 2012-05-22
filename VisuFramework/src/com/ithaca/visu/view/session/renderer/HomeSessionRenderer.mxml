@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				xmlns:layout1="com.lyon2.controls.sparks.layout.*"
+				xmlns:myviews="com.ithaca.visu.view.user.*"
+				maxWidth="{width}"
+                preinitialize="itemrenderer1_preinitializeHandler(event)">
+
+
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="selected" />
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.utils.StringUtils;
+			import com.ithaca.utils.VisuUtils;
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
+			import com.lyon2.controls.utils.TimeUtils;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.INavigatorContent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			
+			import spark.events.IndexChangeEvent;
+
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
+
+			private static var logger:ILogger = Log.getLogger("com.ithaca.visu.view.session.renderer.HomeSessionRendered");
+				/*
+				logger.debug("==== Session {0} ({1})", data.id_session, data.theme);				
+				logger.debug("Session owner: {0} ", data.id_user);				
+				logger.debug("Logged user: {0} - {1} {2} ({3})", 
+							loggedUser.id_user,
+							loggedUser.lastname,
+							loggedUser.firstname,
+							VisuUtils.getRoleLabel(loggedUser.role)
+							);				
+				logger.debug("canWrite: {0}", canWrite());
+				logger.debug("canAccess: {0}", canAccess());
+				logger.debug("isClosed: {0}", isClosed());
+				logger.debug("canJoinSession: {0}", canJoinSession());
+				logger.debug("canJoinRetrospection: {0}", canJoinRetrospection());
+				logger.debug("canCancelSession: {0}", canCancelSession());
+				logger.debug("canModifySession: {0}", !isClosed() && canWrite());
+*/
+
+			private function canWrite():Boolean {
+				return RoleEnum.hasResponsableRight(Model.getInstance().getLoggedUser().role)
+						|| data.id_user == Model.getInstance().getLoggedUser().id_user;
+			}
+			
+			private function canAccess():Boolean {
+				return RoleEnum.hasResponsableRight(Model.getInstance().getLoggedUser().role)
+						|| data.id_user == Model.getInstance().getLoggedUser().id_user
+						|| data.hasUser(Model.getInstance().getLoggedUser().id_user);
+			}
+			
+			private function isClosed():Boolean {
+				return data.statusSession==SessionStatusEnum.SESSION_CLOSE;
+			}
+			
+			private function isStarted():Boolean
+			{
+				return data.statusSession != SessionStatusEnum.SESSION_OPEN;
+			}
+			
+			private function canJoinSession(bindableStatus:int):Boolean {
+				return !isClosed() && canAccess();
+			}
+
+			private function canJoinRetrospection(bindableStatus:int):Boolean {
+				return isClosed() && canAccess();
+			}
+			
+			private function canJoinBilan(bindableStatus:int):Boolean {
+				return isClosed() && canAccess();
+			}
+			
+			private function canModifySession(bindableStatus:int):Boolean {
+				var loggedUser:User = Model.getInstance().getLoggedUser();
+				return !isStarted() && canWrite();
+			}
+			
+			private function canCancelSession(bindableStatus:int):Boolean {
+				return !isStarted() && canWrite();
+			}
+			
+			 override public function set data(value:Object):void { 
+		    	super.data = value; 
+			    if (value== null) 
+			      return; 
+				
+				var session:Session = data as Session;
+				
+			
+				if(cancelButton) {
+					cancelButton.visible = canCancelSession(data.statusSession);
+					cancelButton.includeInLayout = canCancelSession(data.statusSession);
+				}
+
+				if(connectButton) {
+					connectButton.visible = canJoinSession(data.statusSession);
+					connectButton.includeInLayout = canJoinSession(data.statusSession);
+				}
+
+				if(retrospectionButton) {
+					retrospectionButton.visible = canJoinRetrospection(data.statusSession);
+					retrospectionButton.includeInLayout = canJoinRetrospection(data.statusSession);
+				}
+
+				if(editButton) {
+					editButton.visible = canModifySession(data.statusSession);
+					editButton.includeInLayout = canModifySession(data.statusSession);
+				}
+				
+				if(subDisplay) {
+					subDisplay.text = VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording);
+				}
+				
+				if(hourDisplay) {
+					hourDisplay.text = TimeUtils.formatHHMM(data.date_session);
+				}
+				
+				if(cancelButton) {
+					titleDisplay.text = data.theme;
+				}
+
+				if(usersPreviewList) {
+					usersPreviewList.text = VisuUtils.joinUserList(data.participants.toArray());
+				}
+		    } 
+			
+			private function doJoinSession(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_JOIN_SESSION);
+			}
+			
+			private function doEdit(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_EDIT_SESSION);
+			}
+			
+			private function doRetrospection(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION);
+			}
+			
+			private function doBilan(event:MouseEvent):void {
+					dispatch(SessionHomeElementEvent.ACTION_GOTO_BILANMODULE);
+			}
+			
+			private function doCancel(event:MouseEvent):void {
+				Alert.yesLabel = fxgt.gettext("Oui");
+				Alert.noLabel = fxgt.gettext("Non");
+				Alert.show(fxgt.gettext("Voulez-vous supprimer cette séance ?"),
+					       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, cancelSessionConformed);
+			}
+			
+			private function cancelSessionConformed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{		
+					dispatch(SessionHomeElementEvent.ACTION_CANCEL_SESSION);
+				}
+			}
+			
+			private function dispatch(eventName:String):void {
+				var sessionHomeElementEvent:SessionHomeElementEvent = new SessionHomeElementEvent(eventName); 
+				var session:Session = data as Session;
+				sessionHomeElementEvent.session = session;
+				sessionHomeElementEvent.typeAction = eventName;
+				logger.debug("Dispatching the event SessionHomeElementEvent.{2} for the session {0} ({1})", 
+							data.id_session, 
+							data.theme,
+							eventName);				
+				actionGroup.dispatchEvent(sessionHomeElementEvent);			
+			}
+
+            protected function itemrenderer1_preinitializeHandler(event:FlexEvent):void
+            {
+                // initialisation gettext
+                fxgt = FxGettext;
+            }
+
+		]]>
+	</fx:Script>
+
+
+	<s:Group width="100%">
+	
+		<s:Rect width="100%" height="100%" radiusX="8" includeIn="selected">
+			<s:fill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="0xFFFFFF" />
+							<s:GradientEntry color="0xD8D8D8" />
+						</s:LinearGradient>
+			</s:fill>
+			<s:stroke>
+				<s:LinearGradientStroke rotation="90" weight="1">
+					<s:GradientEntry color="0x000000" alpha="0.5625" />
+					<s:GradientEntry color="0x000000" alpha="0.75" />
+				</s:LinearGradientStroke>
+			</s:stroke>
+		</s:Rect>
+		
+		
+		<s:VGroup width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" horizontalAlign="center">
+			<s:HGroup width="100%" verticalAlign="top">	
+				<s:Label id="hourDisplay" fontWeight="bold" text="{TimeUtils.formatHHMM(data.date_session)}"/>
+				<s:VGroup width="100%">	
+						<s:Label id="titleDisplay"   width="100%" text="{data.theme}"/>
+						<s:Label id="usersPreviewList" includeIn="normal" width="100%" text="{VisuUtils.joinUserList(data.participants.toArray())}"/>
+				</s:VGroup>	
+			</s:HGroup>	
+			
+			<s:Scroller includeIn="selected" width="100%" itemDestructionPolicy="auto">		
+				<s:DataGroup id="users"  width="100%" height="50" 
+						dataProvider="{data.participants}">
+					<s:layout>
+						<layout1:FlowLayout />
+					</s:layout>
+					
+					<s:itemRenderer>
+                    <fx:Component>
+                        <s:ItemRenderer>
+                            <s:states>
+                                <s:State name="normal" />
+                            </s:states>
+                            <s:Rect id="fill" radiusX="10"
+								left="1" right="1" top="1" bottom="1">
+								<s:fill>
+									<s:LinearGradient rotation="90">
+										<s:GradientEntry color="0xFFFFFF" />
+										<s:GradientEntry color="0xD8D8D8" />
+									</s:LinearGradient>
+								</s:fill>
+							</s:Rect>
+							
+							<s:Rect id="border" radiusX="10"
+									left="0" right="0" top="0" bottom="0" height="20" >
+								<s:stroke>
+									<s:LinearGradientStroke rotation="90" weight="1">
+										<s:GradientEntry color="0x000000" 
+														 alpha="0.5625"/>
+										<s:GradientEntry color="0x000000" 
+														 alpha="0.75" />
+									</s:LinearGradientStroke>
+								</s:stroke>
+							</s:Rect>
+                            <myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
+                        </s:ItemRenderer>
+                    </fx:Component>
+                </s:itemRenderer>
+					
+				</s:DataGroup>
+			</s:Scroller>
+			
+			<s:HGroup id="actionGroup" includeIn="selected" width="100%">	
+				<s:HGroup width="100%" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+						
+					<mx:LinkButton 
+						id="cancelButton"
+						label="{fxgt.gettext('Supprimer')}"
+                        toolTip="{fxgt.gettext('Supprimer définitivement cette séance')}"
+						click="doCancel(event)"
+						visible="{canCancelSession(data.statusSession)}"
+						includeInLayout="{canCancelSession(data.statusSession)}"
+						/>
+					
+					<mx:LinkButton 
+						id="editButton"
+						label="{fxgt.gettext('Modifier')}"
+						click="doEdit(event)"
+						toolTip="{fxgt.gettext('Modifier la date, les participants ou le plan de séance')}"
+						visible="{canModifySession(data.statusSession)}"
+						includeInLayout="{canModifySession(data.statusSession)}"
+						/>	
+				</s:HGroup>
+					
+				<s:HGroup width="100%" horizontalAlign="right" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+					<mx:LinkButton 
+						id="connectButton"
+						label="{fxgt.gettext('Rejoindre')}"
+						click="doJoinSession(event)"
+						toolTip="{fxgt.gettext('Entrer dans le salon synchrone')}"
+						visible="{canJoinSession(data.statusSession)}"
+						includeInLayout="{canJoinSession(data.statusSession)}"
+						/>
+			
+					<mx:LinkButton 
+						id="retrospectionButton"
+						label="{fxgt.gettext('Rétrospection')}"
+						click="doRetrospection(event)"
+						toolTip="{fxgt.gettext('Entrer dans le salon de rétrospection')}"
+						visible="{canJoinRetrospection(data.statusSession)}"
+						includeInLayout="{canJoinRetrospection(data.statusSession)}"
+						/>
+			
+			
+					<mx:LinkButton 
+						id="bilanButton"
+						label="{fxgt.gettext('Bilans')}"
+						click="doBilan(event)"
+						toolTip="{fxgt.gettext('Voir les bilans existants pour cette séance')}"
+						visible="{canJoinBilan(data.statusSession)}"
+						includeInLayout="{canJoinBilan(data.statusSession)}"
+						/>
+				</s:HGroup>
+			</s:HGroup>
+			
+			<s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
+			
+		</s:VGroup>
+	</s:Group>
+</s:ItemRenderer>

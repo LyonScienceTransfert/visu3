@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<mate:LocalEventMap 
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo"
+        xmlns:mate="http://mate.asfusion.com/"
+        xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	<fx:Script>
+		<![CDATA[
+            import com.asfusion.mate.utils.debug.Debugger;
+            import com.flashdevs.mateExt.rtmpService.RtmpService;
+            import com.ithaca.documentarisation.events.RetroDocumentEvent;
+            import com.ithaca.visu.events.BilanEvent;
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            
+            import managers.BilanManager;
+            
+            import mx.events.FlexEvent;
+
+			private var ALL_INFO:int = 777;
+		]]>
+	</fx:Script>
+
+
+    <fx:Declarations>
+    
+		<!-- 
+			~~~~~~~~ DEBUGGER ~~~~~~~~
+		-->	
+		<mate:Debugger level="{Debugger.ALL}"/>
+
+		<!-- 
+			~~~~~~~~ EVENTS HANDLERS ~~~~~~~~
+		-->	
+		<!-- InitMapEvent.INIT_MAP_BILAN __________________________________________________________________ -->		
+		<mate:EventHandlers type="{InitMapEvent.INIT_MAP_BILAN}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="testApp"   arguments="{['Bilan']}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{BilanEvent.BILAN_MODULE_LOADED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getOwnedAndSharedRetroDocumentsByUserId"   arguments="{[event.userId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{BilanEvent.BILAN_LOADED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselByClosedSession"   arguments="{[event.sessionId, VisuModuleEvent.BILAN_MODULE]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{BilanEvent.NEW_BILAN_SELECTED}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[event.bilanId, false]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+				
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
+			<!-- BilanManager creation -->
+			<mate:ObjectBuilder generator="{BilanManager}" constructorArguments="{[scope.dispatcher]}"/>
+		</mate:EventHandlers>
+		
+        <!-- USERS -->
+        <mate:EventHandlers type="{RetroDocumentEvent.LOAD_LIST_USERS}" debug="true">
+            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
+                <mate:resultHandlers>
+                    <mate:MethodInvoker generator="{BilanManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
+                </mate:resultHandlers>
+                <mate:faultHandlers>
+                    <mate:MethodInvoker generator="{BilanManager}"
+                        method="error" arguments="{[currentEvent]}"/>
+                </mate:faultHandlers>
+            </mate:RemoteObjectInvoker>
+        </mate:EventHandlers>
+        
+        <!-- Update shared users the bilan -->
+        <mate:EventHandlers type="{RetroDocumentEvent.UPDATE_RETRO_DOCUMENT}" debug="true">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+                <mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
+            </rtmp:RtmpServiceInvoker>
+        </mate:EventHandlers>
+		
+		<!-- Application complete start-->
+		
+		
+		<!-- 
+			~~~~~~~~ INJECTORS ~~~~~~~~
+		-->
+		
+		<!--
+		  ~~~~~~~~ REMOTEOBJECTS ~~~~~~~~
+		-->
+		<s:RemoteObject
+			id="remoteBilan"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="BilanService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>	
+        
+        <s:RemoteObject
+            id="remoteUser"
+            endpoint="{Model.getInstance().AMFServer}"
+            destination="UserService"
+            makeObjectsBindable="true"
+            showBusyCursor="true">
+        </s:RemoteObject>
+    </fx:Declarations>
+</mate:LocalEventMap>

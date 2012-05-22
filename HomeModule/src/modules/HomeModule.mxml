@@ -1,0 +1,1087 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:modules="com.ithaca.visu.modules.*" xmlns:maps="maps.*"
+	xmlns:mate="http://mate.asfusion.com/" xmlns:controls="com.ithaca.visu.controls.*"
+	configure="configureHandler(event)" creationComplete="creationCompleteHandler(event)"
+    currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
+	top="15" bottom="5" left="5" right="5" height="100%">
+	<fx:Declarations>
+
+		<maps:HomeMap id="homeMap" dispatcher="{this}" />
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_SESSION}"
+			method="updateSessionView" />
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_USER}"
+			method="updateView" />
+		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"
+			method="updateLanguageNavigateurDay" />
+		<mate:Listener type="{SessionEvent.SHOW_LIST_DATE_SESSION}"
+			method="showDateSession" />
+		<mate:Listener type="{SessionEvent.SHOW_LIST_SESSION}"
+			method="showSession" />
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"
+			method="updateDeletedSession" />
+		<mate:Listener type="{SessionEvent.SHOW_UPDATED_SESSION}"
+			method="showUpdatedSession" />
+			
+<!--		<mate:Listener type="{SessionEvent.LOAD_LIST_USERS_PLATEFORME}"
+			method="onLoadedAllUsers" />-->
+		<mx:ArrayCollection id="usersList" filterFunction="keepUser"/>
+		<mx:ArrayCollection id="sessionsList"/>
+	</fx:Declarations>
+
+
+	
+	<fx:Script>
+		<![CDATA[
+            import com.ithaca.messagerie.model.MessageVO;
+            import com.ithaca.utils.UtilFunction;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.MessageEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.SessionHomeElementEvent;
+            import com.ithaca.visu.events.SessionUserEvent;
+            import com.ithaca.visu.events.UserEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.SessionUserVO;
+            import com.ithaca.visu.model.vo.UserVO;
+            import com.ithaca.visu.renderer.FluxActivityRenderer;
+            import com.ithaca.visu.ui.utils.ConnectionStatus;
+            import com.ithaca.visu.ui.utils.RightStatus;
+            import com.ithaca.visu.ui.utils.RoleEnum;
+            import com.ithaca.visu.view.user.MessageUser;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.collections.ArrayCollection;
+            import mx.collections.Sort;
+            import mx.collections.SortField;
+            import mx.controls.Alert;
+            import mx.core.IVisualElement;
+            import mx.events.CloseEvent;
+            import mx.events.CollectionEvent;
+            import mx.events.DragEvent;
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;
+            import mx.logging.ILogger;
+            import mx.logging.Log;
+            import mx.managers.CursorManager;
+            
+            import spark.components.supportClasses.GroupBase;
+            import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			private var fxgt: _FxGettext = FxGettext;
+			
+			[Bindable]
+			public var listSessionView:ArrayCollection;
+			
+
+			[Bindable]
+			public var listDateForNavigateurDay:ArrayCollection;
+			
+			[Bindable]
+			public var fluxActivity : ArrayCollection;
+			
+			private var _editableSession:Boolean;
+			private var _loggedUser:User;
+			private var cancelSessionId:int = -1;
+
+			protected function configureHandler(event:VisuModuleEvent):void
+			{				
+				// init map of this  module
+				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_HOME);
+				this.dispatchEvent(initMapEvent);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				// set focus
+                this.setFocus();
+                
+				fxgt = FxGettext;
+				
+				logger.info("Init the home module components");
+				
+				// check if this is first enter in HomeModule
+				var homeModule:VisuModuleBase = Model.getInstance().getCurrentHomeModule();
+				if(homeModule == null)
+				{
+					// add mesage Welcome
+					var namePlateforme:String = Model.getInstance().getNamePlateforme();
+					var user:User = Model.getInstance().getLoggedUser();
+					// Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Bienvenue sur ")+namePlateforme,new Date());		
+					// add flux activity
+					Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.lastname,user.avatar,fxgt.gettext(" a rejoint ")+namePlateforme+".",new Date());
+					var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUserExcludeLoggedUser();
+					var strConnectedUser:String = ""
+					var nbrUser:int = listConnectedUser.length;
+					for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+					{
+						var virgulePoint:String=', ';
+						var userConnected:User = listConnectedUser.getItemAt(nUser) as User;
+						if(nUser == nbrUser-1)
+						{
+							virgulePoint = '.'	
+						}
+						strConnectedUser += userConnected.firstname+virgulePoint;
+					}
+					if(strConnectedUser != "")
+					{
+						var namePlateforme:String = Model.getInstance().getNamePlateforme();
+						// add message about connected users
+						//Model.getInstance().addFluxActivity(user.id_user,user.firstname,user.avatar,fxgt.gettext("Actuellement connecté à ")+namePlateforme+" : "+strConnectedUser,new Date());
+					}
+				}
+				
+				Model.getInstance().setCurrentHomeModule(this);
+				
+				_loggedUser = Model.getInstance().getLoggedUser();				
+				// check status logged user
+				var statusLoggedUser:int =_loggedUser.status; 
+				if(statusLoggedUser == ConnectionStatus.CONNECTED)
+				{
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
+					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
+					outSession.userId = _loggedUser.id_user;
+					this.dispatchEvent(outSession);
+				}
+				
+				var profile:String = _loggedUser.profil;				
+				_editableSession = RightStatus.hasRight(profile, RightStatus.CAN_MODIFY_OTHER_SESSION);
+				// image of the logged user
+				//imageLoggedUser.source = _loggedUser.avatar;
+				// promt in navigateurDay
+				navigateurDay.prompt = fxgt.gettext("Veuillez sélectionner une date de séance");				
+				// remove all views the session
+				//this.listSessionView = new ArrayCollection();
+				//this.sessionGroup.removeAllElements();
+				this.sessionsList.removeAll();
+				
+				//var vb:VGroup = new VGroup();	
+				//this.sessionGroup.addElement(vb);
+				//this.sessionsList.addItem(vb);
+				
+				if(Model.getInstance().hasDateSession())
+				{
+					// set dataProvider the navigateurDay  
+					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
+					// get last time selected item navigateurDay
+					var lastSelectedObject:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
+					sessionEvent.listSession = lastSelectedObject.listSessionDate;
+					sessionEvent.sessionDate = lastSelectedObject.labelDate;
+					dispatchEvent(sessionEvent);				
+				}else{
+					// id loggedUser
+					var loggedUserId:int = Model.getInstance().getLoggedUser().id_user;
+					// getiing list date of sessions from BD
+					var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_DATE_SESSION);
+					sessionEvent.userId = loggedUserId;				
+					dispatchEvent(sessionEvent);					
+				}
+				
+				logger.info("The initialization has ended successfully");
+                
+                // removing module from the stage
+                this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+                
+				// initialisize list Users
+				var listUsersPlateforme:ArrayCollection = Model.getInstance().getListUserPlateforme();
+				initializeUsers(listUsersPlateforme);
+				
+				// set cursor 
+				CursorManager.removeBusyCursor();
+				
+				// notify that module ready for use
+				notifyReadyForUse();
+			}
+			
+            /**
+            * Remove module from stage
+            */ 
+            private function onRemovedModuleFromStage(event:Event):void
+            {
+                Model.getInstance().setCurrentHomeModule(null);
+            }
+			/**
+			 * Send message to all users
+			 */ 
+			protected function sendAll_clickHandler():void
+			{						
+				var event:MessageEvent = new MessageEvent(MessageEvent.SEND_PUB_MESSAGE);
+				event.senderUserId = Model.getInstance().getLoggedUser().getId();
+				event.message = this.textToSend.text.toString();
+				dispatchEvent(event);
+				this.textToSend.text = ""; 
+               /*  // set virtual userVO, public message
+                var resiver:UserVO = new UserVO();
+                resiver.id_user = 0;
+                // add message 
+                var chatMessage:MessageVO = new MessageVO(event.message, new Date(), Model.getInstance().getLoggedUser() as UserVO, resiver, false);
+                Model.getInstance().addChatMessage(chatMessage); */
+        	}
+			
+			private function getLabelHasNotSessionForThisDate():Label
+			{
+				var labelMessage:Label = new Label();
+				labelMessage.setStyle("fontSize", 14);
+				labelMessage.setStyle("fontWeight", "bold");
+				labelMessage.text = fxgt.gettext("  \n\n\n Vous n'avez pas de séance pour cette date...\n\n\n");
+				return labelMessage;
+			}
+			/**
+			 * Update session view
+			 */ 
+			public function updateSessionView(event:SessionEvent):void
+			{
+				var homeModule:HomeModule = Model.getInstance().getCurrentHomeModule() as HomeModule;
+				if( homeModule == this)
+				{
+					this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
+					// set selected label date 
+					var openDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+					this.navigateurDay.selectedItem = openDate;
+					// update view only if date of session for updating the same with date on navigateurDay
+					if(openDate.labelDate == event.sessionDate)
+					{					
+						var listSession:ArrayCollection = event.listSession;
+						this.sessionsList.removeAll();
+				
+						var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+						if(listSession != null)
+						{
+							var nbrSession:uint = listSession.length;
+								for(var nSession:uint = 0; nSession < nbrSession; nSession++)
+								{
+									var session:Session = listSession[nSession];
+									// check connected users
+									session.checkConnectedUsers(listConnectedUser);
+									this.sessionsList.addItem(session)
+									
+								}
+						}else
+							{	
+							// havn't session to show by this date 
+							navigateurDay.selectedIndex = -1;
+						}
+					}
+				}
+			}	
+			
+			private function updateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					var sessionId:int = event.sessionId;
+					var nbrSession:int = this.sessionsList.length;
+					var index:int = -1;
+					for ( var nSession:int = 0; nSession < nbrSession; nSession++)
+					{
+						var session:Session = this.sessionsList.getItemAt(nSession) as Session;
+						if(session.id_session == sessionId)
+						{
+							index = nSession;
+							break;
+						}
+					}
+					if(index > -1)
+					{
+						this.sessionsList.removeItemAt(index);
+					}
+					if(this.sessionsList.length == 0)
+					{
+						navigateurDay.selectedIndex = -1;
+					}
+				}
+			}
+			private function showUpdatedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					var sessionUpdated: Session = event.session;
+                    // check if has this date
+                    var objDateNavigateurDay:Object = hasDateSessionInNavigateurday(this.listDateForNavigateurDay, sessionUpdated.date_session);
+                    if(objDateNavigateurDay)
+                    {
+                        if(this.navigateurDay.selectedItem && objDateNavigateurDay.labelDate == this.navigateurDay.selectedItem.labelDate)
+                        {
+                            // update sessions
+                            navigateurDay_changeHandler();
+                        }
+                        // check if change only date the session
+                        if(hasSessionIdSelectedNavigateurDay(this.navigateurDay.selectedItem.listSessionDate, sessionUpdated.id_session))
+                        {
+                            // update sessions
+                            navigateurDay_changeHandler();
+                        }
+                    }else
+                    {
+                        // update session users
+                        updateStatusParticipants(sessionUpdated.participants);
+                        // add session
+                        var listAddSession:ArrayCollection = new ArrayCollection();
+                        listAddSession.addItem(sessionUpdated);
+                        // hasn't date
+                        var labelDate:String = UtilFunction.getDateFormatYYY_MM_DD(sessionUpdated.date_session);
+                        // get index new date 
+                        var index:int = UtilFunction.getIndexNewDateNavigatuerDay(this.listDateForNavigateurDay, sessionUpdated.date_session);
+                        // add date
+                        this.listDateForNavigateurDay.addItemAt({labelDate:labelDate, fullDate:sessionUpdated.date_session, listSessionDate:listAddSession},index);
+                    }
+                    
+                    function hasSessionIdSelectedNavigateurDay(list:ArrayCollection, sessionId:int):Boolean
+                    {
+                        for each(var session:Session in list)
+                        {
+                            if(session.id_session == sessionId)
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+				}
+			}
+            
+            /**
+            * Check has date session
+            */ 
+            private function hasDateSessionInNavigateurday(list:ArrayCollection, date:Date):Object
+            {
+                if(!list)
+                {
+                    return null;
+                }
+                var nbrDate:int = list.length;
+                for(var nDate:int = 0 ; nDate < nbrDate ; nDate++)
+                {
+                    var objDateNavigateurDay:Object = list.getItemAt(nDate) as Object;
+                    var labelNavigateurDay:String = objDateNavigateurDay.labelDate;
+                    if(labelNavigateurDay == UtilFunction.getDateFormatYYY_MM_DD(date))
+                    {
+                        return objDateNavigateurDay;
+                    }
+                }
+                return null;
+            }
+			
+			/**
+			* Update status participants the session by status on the plateforme
+			*/ 
+			private function updateStatusParticipants(list:ArrayCollection):void
+			{
+				var nbrUser:int = list.length;
+				for(var nUser:int = 0; nUser < nbrUser; nUser++)
+				{
+					var user:User = list.getItemAt(nUser) as User;
+					var userPlateforme:User = Model.getInstance().getUserPlateformeByUserId(user.id_user);
+					user.setStatus(userPlateforme.getStatus());
+				}
+			}
+				
+			private function showDateSession(event :SessionEvent):void{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this){
+					if( Model.getInstance().getSessionDate().length == 0)
+					{
+						Model.getInstance().setSessionDate(event.listDate);
+						this.listDateForNavigateurDay = Model.getInstance().getSessionDate();
+						var elementDateStartToday:Object = getObjectDateSessionStartToday(this.listDateForNavigateurDay);
+						// nothing to show and noting to load
+						if(elementDateStartToday != null)
+						{
+							var labelDate:String = elementDateStartToday.labelDate;
+							Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(elementDateStartToday);
+							
+							var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+							sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+							sessionEventLoad.sessionDate = labelDate;
+							dispatchEvent(sessionEventLoad);
+						}
+					}
+				}
+			}
+			
+			private function showSession(event :SessionEvent):void{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this){
+					// FIXME have to change name the property 
+					var listSession :Array = event.listDate;
+					Model.getInstance().setListSessionsByDate(listSession , event.sessionDate);
+					
+					var nbrSession:uint = listSession.length;
+					if(nbrSession != 0)
+					{
+						for(var nSession:uint = 0; nSession < nbrSession ; nSession++)
+						{
+							var userEvent:UserEvent = new UserEvent(UserEvent.LOAD_LIST_USERS_SESSION);
+							userEvent.sessionId = listSession[nSession].id_session;
+							userEvent.sessionDate = event.sessionDate;
+							dispatchEvent(userEvent);			
+						}	
+					}else
+					{
+						var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
+						var listSessionEmpty:ArrayCollection = new ArrayCollection();
+						sessionEvent.listSession = listSessionEmpty;
+						sessionEvent.sessionDate = event.sessionDate;
+						dispatchEvent(sessionEvent);	
+					}
+				}				
+			}
+
+			/**
+			 * 
+			 */
+			private function getObjectDateSessionStartToday(arr:ArrayCollection):Object
+			{
+				var date:Date = new Date();
+				var result:Object = null;
+				var deltaPositive:Number = Number.MAX_VALUE;
+				var deltaNegative:Number = Number.MAX_VALUE;
+				var hasDateToday:Boolean = false;
+				var nbrElement:uint = arr.length;
+				for(var nElement:uint = 0; nElement < nbrElement ; nElement++)
+				{
+					var elmDate:Date = arr[nElement].fullDate;
+					if(isDateToday(elmDate)){
+						result = arr[nElement];
+						hasDateToday = true;
+						break;
+					}
+				
+					var tempDelta:Number = elmDate.getTime() - date.getTime();
+					if(tempDelta > 0)
+					{
+						if(tempDelta < deltaPositive)
+						{
+							deltaPositive = tempDelta;
+							result = arr[nElement];
+						}
+					}else{
+						tempDelta = tempDelta * -1;
+						if(tempDelta < deltaNegative)
+						{
+							deltaNegative = tempDelta;
+							result = arr[nElement];
+						}
+					}
+				}	
+				// result will null if user hasn't session
+				if(!hasDateToday && result != null)
+				{
+					// where will add date today
+					var obj:Object = null;
+					var index:uint = arr.getItemIndex(result);
+					var diff:Number = (result.fullDate as Date).getTime() - date.getTime();
+					if(diff < 0)
+					{
+						 index++;
+					}
+					obj = Model.getInstance().addSessionDateToday(index);
+					return obj;
+					
+				}else return result; 
+			}	
+			
+			private function isDateToday(arrDate:Date):Boolean
+			{
+				var date:Date = new Date();
+				if(date.getFullYear() == arrDate.getFullYear())
+				{
+					if(date.getMonth() == arrDate.getMonth()){
+						if(date.getDate() == arrDate.getDate())
+						{
+							return true;
+						}else return false;
+					}else return false;
+				}else return false;
+			}
+		
+			
+// DELETE SESSION
+			private function deleteSessionConformed(event:CloseEvent):void{
+				if( event.detail == Alert.YES)
+				{
+					var cancelSessionEvent:SessionEvent = new SessionEvent(SessionEvent.CANCEL_SESSION);
+					cancelSessionEvent.sessionId = this.cancelSessionId;
+					this.dispatchEvent(cancelSessionEvent);
+				}
+			}
+			
+			
+			/**
+			 * Update dataProvider each sessionView
+			 */ 
+			public function updateView(event:SessionEvent = null):void
+			{
+				/*for each(var view:SessionHomeElement in this.listSessionView)
+				{
+					view.session.checkConnectedUsers(Model.getInstance().getConnectedUsers());
+					view.updateViewUsers();
+				}
+				 */
+				for each(var session:Session in this.sessionsList) {
+					session.checkConnectedUsers(Model.getInstance().getConnectedUsers());
+					//view.updateViewUsers();
+				}
+	
+			}		
+			
+            /**
+             * Handler the navigateurDay component
+             */ 
+            protected function navigateurDay_changeHandler(event:IndexChangeEvent = null):void
+            {
+                var selectedItem:Object = navigateurDay.selectedItem as Object;
+                // set selected item to Model
+                Model.getInstance().setSelectedItemNavigateurDayByLoggedUser(selectedItem);
+                
+                // set list session from BD
+                var sessionEventLoad:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_SESSION);
+                sessionEventLoad.userId = Model.getInstance().getLoggedUser().id_user;
+                sessionEventLoad.sessionDate = selectedItem.labelDate;
+                dispatchEvent(sessionEventLoad);		
+            }	
+			
+			/**
+			 * 
+			 */
+			protected function showLabalNavigateurDay(item:Object):String
+			{
+				var date:Date = item.fullDate as Date;
+				if(this.isDateToday(date))
+				{
+					return fxgt.gettext("<<-- AUJOURD'HUI ");
+				}else
+				{
+                /* FIXME: use mx.formatters.DateFormatter ("EEEE D MMMM YYYY") */
+					var dayString:String = date.getDate().toString();
+					var yearString:String = date.getFullYear().toString();
+					var monthString:String = "";
+					var month:Number = date.getMonth();
+					switch (month){
+						case 0:
+							monthString = fxgt.gettext("JANVIER");
+							break;
+						case 1:
+							monthString = fxgt.gettext("FÉVRIER");
+							break;
+						case 2:
+							monthString = fxgt.gettext("MARS");
+							break;
+						case 3:
+							monthString = fxgt.gettext("AVRIL");
+							break;
+						case 4:
+							monthString = fxgt.gettext("MAI");
+							break;
+						case 5:
+							monthString = fxgt.gettext("JUIN");
+							break;
+						case 6:
+							monthString = fxgt.gettext("JUILLET");
+							break;
+						case 7:
+							monthString = fxgt.gettext("AOÛT");
+							break;
+						case 8:
+							monthString = fxgt.gettext("SEPTEMBRE");
+							break;
+						case 9:
+							monthString = fxgt.gettext("OCTOBRE");
+							break;
+						case 10:
+							monthString = fxgt.gettext("NOVEMBRE");
+							break;
+						case 11:
+							monthString = fxgt.gettext("DÉCEMBRE");
+							break;
+					}
+					var dayWeek:Number = date.getDay();
+					var dayWeekString:String="";
+					switch (dayWeek){
+						case 0:
+							dayWeekString = fxgt.gettext("DIMANCHE");
+							break;
+						case 1:
+							dayWeekString = fxgt.gettext("LUNDI");
+							break;
+						case 2:
+							dayWeekString = fxgt.gettext("MARDI");
+							break;
+						case 3:
+							dayWeekString = fxgt.gettext("MERCREDI");
+							break;
+						case 4:
+							dayWeekString = fxgt.gettext("JEUDI");
+							break;
+						case 5:
+							dayWeekString = fxgt.gettext("VENDREDI");
+							break;
+						case 6:
+							dayWeekString = fxgt.gettext("SAMEDI");
+							break;		
+					}
+					return 	dayWeekString + " " + dayString + " " + monthString+ " " + yearString ;		
+				}
+			}
+			
+			/**
+			 * Update language of te selected item 
+			 */
+			protected function updateLanguageNavigateurDay(event:ApplicationMenuEvent):void
+			{
+				var selectedDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
+				this.navigateurDay.selectedIndex = -1;		
+				this.navigateurDay.selectedItem = selectedDate;				
+			}
+			
+			/**
+			 * Send message to all by click button "enter"
+			 */
+			protected function onKeyUp(event:KeyboardEvent):void
+			{
+				if (event.keyCode == Keyboard.ENTER)
+				{
+					sendAll_clickHandler();
+				}
+			}
+			
+
+			
+			
+			// new version with the list
+			public function initializeUsers(listUsersPlateforme:ArrayCollection):void
+			{
+				if(Model.getInstance().getCurrentHomeModule() as HomeModule == this)
+				{
+					for each(var u in listUsersPlateforme) {
+						usersList.addItem(u);
+					}
+				}
+			}
+			
+		
+			
+			private function setListenerOnListConnectedUser(value:Boolean):void
+			{
+				var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+				if(value)
+				{
+					listConnectedUser.addEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeListConnectedUser);				
+				}else
+				{
+					if(listConnectedUser.hasEventListener(CollectionEvent.COLLECTION_CHANGE))
+					{
+						listConnectedUser.removeEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeListConnectedUser);
+					}
+				}
+			}
+			
+			/**
+			* join/walk out user on/out the plateforme
+			*/ 
+			private function onChangeListConnectedUser(event:CollectionEvent):void
+			{
+				var listConnectedUser:ArrayCollection = Model.getInstance().getConnectedUsers();
+				usersList.removeAll();
+				initializeUsers(listConnectedUser);
+			}
+			
+			
+            import mx.events.MenuEvent;
+            import mx.controls.Alert;
+            import mx.logging.Log;
+            import mx.logging.ILogger;
+		
+			private static var logger:ILogger = Log.getLogger("modules.HomeModule");
+
+        	private var filterConnected:Boolean;
+        	private var filterNotConnected:Boolean
+        	private var filterRecording:Boolean
+        	private var filterPending:Boolean
+         	private var keepTuteur:Boolean
+        	private var keepEtudiant:Boolean
+        	private var keepResponsable:Boolean
+        	private var keepAdmin:Boolean
+ 
+            private function refreshUserList():void {
+
+            	filterConnected = userMenu.dataProvider[1].menuitem.(@id =="filterConnected").@toggled == 'true';
+            	filterNotConnected = userMenu.dataProvider[1].menuitem.(@id =="filterNotConnected").@toggled == 'true';
+            	filterRecording = userMenu.dataProvider[1].menuitem.(@id =="filterRecording").@toggled == 'true';
+            	filterPending = userMenu.dataProvider[1].menuitem.(@id =="filterPending").@toggled == 'true';
+	         	keepTuteur = userMenu.dataProvider[1].menuitem.(@id =="filterRoleTuteur").@toggled == 'true';
+            	keepEtudiant = userMenu.dataProvider[1].menuitem.(@id =="filterRoleEtudiant").@toggled == 'true';
+            	keepResponsable = userMenu.dataProvider[1].menuitem.(@id =="filterRoleResponsable").@toggled == 'true';
+            	keepAdmin = userMenu.dataProvider[1].menuitem.(@id =="filterRoleAdministrateur").@toggled == 'true';
+  
+				logger.debug("Refreshing the user list (filterConnected={0},filterNotConnected={1},filterRecording={2},filterPending={3},keepTuteur={4},keepEtudiant={5},keepResponsable={6},keepAdmin={7})",
+	            	filterConnected,
+	            	filterNotConnected,
+	            	filterRecording,
+	            	filterPending,
+		         	keepTuteur,
+	            	keepEtudiant,
+	            	keepResponsable,
+	            	keepAdmin
+            	);
+
+           		var sort:Sort = new Sort(); 
+ 				sort.fields = [new SortField("firstname", false), new SortField("lastname", false)];
+				if( userMenu.dataProvider[0].(@id =="sortMenu").menuitem.(@id =="sortByStatus").@toggled == 'true') {
+					//logger.debug("Setting the sort function of the user list to {0}", "compareUserByStatus");
+					sort.compareFunction = compareUserByStatus;
+				} else if( userMenu.dataProvider[0].(@id =="sortMenu").menuitem.(@id =="sortByRole").@toggled == 'true') {
+					//logger.debug("Setting the sort function of the user list to {0}", "compareUserByRole");
+					sort.compareFunction = compareUserByRole;
+				} else {
+					//logger.debug("No sort function will apply to the user list (lexocographical order)");
+					sort.compareFunction = null;
+				}
+				
+				usersList.sort = sort;
+               	usersList.refresh();
+            }
+            
+            private function menuHandler(evt:MenuEvent):void {
+				if (evt.item.@data != "top") {
+					logger.info("A menu item has been clicked on the user list: {0} ", evt.item.@label);
+					refreshUserList();
+                }
+            }
+            
+            function compareUserByRole(a:Object, b:Object, fields:Array = null):int {
+				//logger.debug("Comparing roles of user {0} ({1}) and  user {2} ({3})", a.firstname, a.role, b.firstname, b.role);
+            	return a.role < b.role ? -1 :
+            			a.role > b.role ? 1 : 0;
+            }
+            
+            function compareUserByStatus(a:Object, b:Object, fields:Array = null):int {
+				//logger.debug("Comparing status of user {0} ({1}) and  user {2} ({3})", a.firstname, a.getStatus(), b.firstname, b.getStatus());
+            	return a.getStatus() == b.getStatus() ?  0 :
+            				a.getStatus() > b.getStatus() ?  -1 : 1;
+            	
+            }
+            
+  
+            public function keepUser(item:Object):Boolean {
+            	var userItem:User = item as User;
+            	
+            	var keepStatus:Boolean = false;
+            	if(userItem.getStatus() == ConnectionStatus.CONNECTED)
+       				keepStatus = filterConnected;
+           		
+            	if(userItem.getStatus() == ConnectionStatus.DISCONNECTED) 
+       				keepStatus = filterNotConnected;
+            	
+            	if(userItem.getStatus() == ConnectionStatus.RECORDING) 
+       				keepStatus = filterRecording;
+
+            	if(userItem.getStatus() == ConnectionStatus.PENDING) 
+       				keepStatus = filterPending;
+
+            	var keepRole:Boolean = false;
+            	if(VisuUtils.isTuteur(userItem))
+            		keepRole = keepTuteur;
+            	
+            	if(VisuUtils.isStudent(userItem)) 
+            		keepRole = keepEtudiant;
+            	
+            	if(VisuUtils.isResponsable(userItem)) 
+            		keepRole = keepResponsable;
+            	
+            	if(VisuUtils.isAdmin(userItem))
+            		keepRole = keepAdmin;
+            	
+	            var keep:Boolean = keepStatus && keepRole;
+				/*
+				logger.debug("User {0} {1} (id={2}, role={3}) is {4} in the user list [keepStatus:{5},keepRole:{6}]",
+								 userItem.lastname,
+								 userItem.firstname,
+								 userItem.id_user,
+								 VisuUtils.getRoleLabel(userItem.role),
+								 keep?"KEPT":"NOT KEPT",
+								 keepStatus,
+								 keepRole
+								 );
+	            */
+		      	return keep;
+		   }
+		   
+		   
+		   private function initSessionList(event:Event):void {
+				logger.debug("Adding listeners to the session list component");
+		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_EDIT_SESSION, dispatchSessionEvent);
+		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_JOIN_SESSION, dispatchSessionEvent);
+		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_CANCEL_SESSION, dispatchSessionEvent);
+		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION, dispatchSessionEvent);
+		   		sessionList.addEventListener(SessionHomeElementEvent.ACTION_GOTO_BILANMODULE, dispatchSessionEvent);
+		   }
+		   
+		   private function dispatchSessionEvent(event:SessionHomeElementEvent):void
+			{
+				logger.debug("A SessionHomeElementEvent has been caught by HomeModule");
+				var eventSession:SessionEvent;
+				switch(event.typeAction)
+				{
+					case SessionHomeElementEvent.ACTION_JOIN_SESSION:
+					{
+						eventSession = new SessionEvent(SessionEvent.JOIN_SESSION);
+						break;
+					}
+					case SessionHomeElementEvent.ACTION_EDIT_SESSION:
+					{
+						eventSession = new SessionEvent(SessionEvent.EDIT_SESSION);
+						break;
+					}
+					case SessionHomeElementEvent.ACTION_CANCEL_SESSION:
+					{
+						eventSession = new SessionEvent(SessionEvent.CANCEL_SESSION);
+						eventSession.sessionId = event.session.id_session;
+						break;
+					}				
+					case SessionHomeElementEvent.ACTION_GOTO_RETROSPECTION:
+					{
+						eventSession = new SessionEvent(SessionEvent.GO_RETROSPECTION_MODULE);
+						break;
+					}
+					case SessionHomeElementEvent.ACTION_GOTO_BILANMODULE:
+					{
+						eventSession = new SessionEvent(SessionEvent.GO_BILAN_MODULE);
+						eventSession.session = event.session;
+						break;
+					}					
+				}
+				if(event.session) {
+					eventSession.session = event.session;
+					logger.warn("The event {0} is being dispatched by HomeModule", event.typeAction);
+					dispatchEvent(eventSession);
+				} else {
+					logger.warn("The event {0} cannot be handled", event.typeAction);
+				}
+			}
+
+			// Update scroller when new flux came 
+			protected function listFluxActivity_updateCompleteHandler(event:FlexEvent):void
+			{
+				if(fluxActivity != null && fluxActivity.length > 0)
+				{
+					listFluxActivity.ensureIndexIsVisible(fluxActivity.length-1);					
+				}
+			}
+////////////////////
+////// UTILS
+///////////////////			
+			/**
+			 * notify , ready for use
+			 */
+			private function notifyReadyForUse():void
+			{
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.HOME_MODULE;
+				this.dispatchEvent(event);
+			}
+
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
+
+		]]>
+	</fx:Script>
+	
+
+	
+	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"
+		top="0" bottom="0" left="0" right="0" maxWidth="1024">
+
+		<s:HGroup width="100%" height="50" horizontalAlign="left"
+			gap="30" verticalAlign="bottom">
+			<mx:Image source="{Model.getInstance().getLoggedUser().avatar}"
+				width="50" height="50" />
+			<s:Label
+				text="{Model.getInstance().getLoggedUser().lastname + ' '+ Model.getInstance().getLoggedUser().getFirstName()}"
+				fontSize="20" />
+		</s:HGroup>
+		
+		
+		<s:HGroup width="100%" height="100%">
+			<s:Panel id="calendarPanel" width="40%" height="100%" title="Calendrier">
+				<s:VGroup  width="100%" height="100%" id="vGroupListSession">
+						<controls:NavigateurDay id="navigateurDay"
+							dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"
+							visible="true" change="navigateurDay_changeHandler(event)" width="100%" />
+							<s:List 
+								id="sessionList"
+								includeInLayout="{sessionsList.length!=0}"
+								visible="{sessionsList.length!=0}"
+								width="{vGroupListSession.width}"
+								height="100%"
+								borderVisible="false"
+								dataProvider="{sessionsList}"
+								creationComplete="initSessionList(event)"								
+								itemRenderer="com.ithaca.visu.view.session.renderer.HomeSessionRenderer"
+								/>
+					<s:HGroup verticalAlign="middle" horizontalAlign="center" visible="{sessionsList.length==0}" includeInLayout="{sessionsList.length==0}" width="100%" height="100%">
+							<s:Label text="Aucune séance pour cette date"/>
+					</s:HGroup>
+				</s:VGroup>
+			</s:Panel>
+			
+			
+			<!-- FLUX ACTIVITY -->
+			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global">
+			
+					<s:VGroup width="100%" height="100%" id="vGroupFluxActivity">
+	
+						<s:List 
+							dataProvider="{fluxActivity}" 
+							itemRenderer="com.ithaca.visu.renderer.FluxActivityRenderer"
+							width="{vGroupFluxActivity.width}"
+							height="100%"
+							id="listFluxActivity"
+							borderVisible="false"
+							creationComplete="refreshUserList()"
+							updateComplete="listFluxActivity_updateCompleteHandler(event)"/>
+
+						<s:HGroup paddingTop="5" paddingRight="5" paddingLeft="5" paddingBottom="5" gap="5" verticalAlign="middle" width="100%"
+							horizontalAlign="center">
+							<s:TextInput id="textToSend" width="100%"
+								height="{navigateurDay.height}" keyUp="onKeyUp(event)" />
+							<s:Button height="{navigateurDay.height}"
+								click="sendAll_clickHandler()">
+								<s:label>{fxgt.gettext("Envoyer")}</s:label>
+							</s:Button>
+						</s:HGroup>
+					</s:VGroup>
+					<!--
+				</s:HGroup>
+				-->
+			</s:Panel>
+			
+			<s:Panel id="userPanel" width="30%" height="100%" title="Utilisateurs">
+				<s:VGroup width="100%" height="100%" id="vGroupUserList">
+			
+					<mx:MenuBar id="userMenu" width="100%" labelField="@label"
+						itemClick="menuHandler(event);">
+						<fx:XMLList>
+							<!-- 
+								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
+								http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS5b3ccc516d4fbf351e63e3d118a9b90204-7e6b.html   
+							-->
+								<menuitems id="sortMenu" label="Tri" data="top">
+									<menuitem label="Par statut" type="radio" id="sortByStatus"
+										groupName="radioGroup" toggled="true" />
+									<menuitem label="Par rôle" type="radio" id="sortByRole"
+										groupName="radioGroup" />
+									<menuitem label="Par ordre alphabétique" id="sortByLexicoOrder"
+										type="radio" groupName="radioGroup" />
+								</menuitems>
+								<menuitems id="filterMenu" label="Filtre" data="top">
+									<menuitem label="En salon" id="filterPending"
+										type="check" toggled="true" />
+									<menuitem label="En cours d'enregistrement" id="filterRecording"
+										type="check" toggled="true" />
+									<menuitem label="Connecté" id="filterConnected" type="check"
+										toggled="true" />
+									<menuitem label="Non connecté" id="filterNotConnected"
+										type="check" toggled="false" />
+									<menuitem type="separator" id="separator"/>
+									<menuitem label="Étudiants" id="filterRoleEtudiant" type="check"
+										toggled="true" />
+									<menuitem label="Tuteurs" id="filterRoleTuteur" type="check"
+										toggled="true" />
+									<menuitem label="Responsables de formation" id="filterRoleResponsable"
+										type="check" toggled="true" />
+									<menuitem label="Administrateurs" id="filterRoleAdministrateur"
+										type="check" toggled="true" />
+								</menuitems>
+						</fx:XMLList>
+					</mx:MenuBar>
+			
+					<s:List id="userList" width="{vGroupUserList.width}" height="100%"
+						dataProvider="{usersList}"
+						borderVisible="false"
+						itemRenderer="com.ithaca.visu.view.user.renderer.UserRenderer"
+						/>
+   
+					
+				</s:VGroup>
+			</s:Panel>
+		</s:HGroup>
+	</s:VGroup>
+</modules:VisuModuleBase>

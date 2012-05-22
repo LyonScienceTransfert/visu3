@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>VisuApplication</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>com.adobe.flexbuilder.project.flexbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>com.adobe.flexbuilder.project.flexnature</nature>
+		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[source path] BilanModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/BilanModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] HomeModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/HomeModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] RetrospectionModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/RetrospectionModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] SessionModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/SessionModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] TutoratModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/TutoratModule/src</locationURI>
+		</link>
+		<link>
+			<name>[source path] UserModule-src</name>
+			<type>2</type>
+			<locationURI>DOCUMENTS/UserModule/src</locationURI>
+		</link>
+		<link>
+			<name>bin-debug</name>
+			<type>2</type>
+			<location>/Applications/red5/webapps/visu2</location>
+		</link>
+	</linkedResources>
+</projectDescription>

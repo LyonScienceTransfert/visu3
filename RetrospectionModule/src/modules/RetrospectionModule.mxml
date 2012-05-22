@@ -1,0 +1,2062 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<modules:VisuModuleBase width="100%" height="100%" 
+						creationComplete="visumodulebase1_creationCompleteHandler(event)" 
+						configure="visumodulebase1_configureHandler(event)" 
+						xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						xmlns:s="library://ns.adobe.com/flex/spark" 
+						xmlns:mx="library://ns.adobe.com/flex/mx" 
+						xmlns:modules="com.ithaca.visu.modules.*"
+						xmlns:maps="maps.*" xmlns:mate="http://mate.asfusion.com/"	
+						xmlns:timeline="com.ithaca.timeline.*"
+						xmlns:controls="com.lyon2.controls.*" 
+						xmlns:video="com.ithaca.visu.view.video.*" 
+						xmlns:components="com.ithaca.utils.components.*" 
+						xmlns:documentarisation="com.ithaca.documentarisation.*"
+						currentState="State1" 
+                        currentStateChange="visumodulebase1_currentStateChangeHandler(event)"> 
+	<fx:Script>
+		<![CDATA[ 
+            import com.ithaca.documentarisation.SegmentVideoAdvanced;
+            import com.ithaca.documentarisation.events.RetroDocumentEvent;
+            import com.ithaca.documentarisation.model.RetroDocument;
+            import com.ithaca.timeline.Layout;
+            import com.ithaca.timeline.ObselSkin;
+            import com.ithaca.timeline.SelectorRegexp;
+            import com.ithaca.timeline.Timeline;
+            import com.ithaca.timeline.TraceLine;
+            import com.ithaca.timeline.TraceLineGroup;
+            import com.ithaca.timeline.events.TimelineEvent;
+            import com.ithaca.timeline.skins.TraceLineTitleSkin;
+            import com.ithaca.timelineskins.events.TimelineSkinEvent;
+            import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.Trace;
+            import com.ithaca.traces.TraceManager;
+            import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.model.RetroTraceModel;
+            import com.ithaca.traces.model.TraceModel;
+            import com.ithaca.traces.model.vo.SGBDObsel;
+            import com.ithaca.utils.EditCommentDialog;
+            import com.ithaca.utils.UtilFunction;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.PanelButtonEvent;
+            import com.ithaca.visu.events.SalonRetroEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.TraceLineEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.RetroDocumentVO;
+            import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+            import com.ithaca.visu.traces.TracageManager;
+            import com.ithaca.visu.traces.events.TracageEvent;
+            import com.ithaca.visu.ui.utils.ConnectionStatus;
+            import com.ithaca.visu.ui.utils.IconEnum;
+            import com.ithaca.visu.ui.utils.RoleEnum;
+            import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+            import com.ithaca.visu.view.video.model.StreamObsel;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.controls.Image;
+            import mx.controls.SWFLoader;
+            import mx.controls.dataGridClasses.DataGridColumn;
+            import mx.core.DragSource;
+            import mx.events.CollectionEvent;
+            import mx.events.CollectionEventKind;
+            import mx.events.FlexEvent;
+            import mx.events.IndexChangedEvent;
+            import mx.events.StateChangeEvent;
+            import mx.managers.CursorManager;
+            import mx.managers.DragManager;
+            import mx.managers.PopUpManager;
+            import mx.utils.StringUtil;
+
+			[Bindable]
+			private var fxgt: _FxGettext = FxGettext;
+            
+            // TimeLine
+            private var timeLine:Timeline;
+            // TimeLine activity
+            private var timeLineTracage:Timeline;
+            // flag if timelineTracage on the stage
+            private var timeLineTracageAddedOnStage:Boolean;
+            //  private var tracageTimeLineGroup:Group;
+			
+			[Bindable]
+		    //	private var timer:Timer;
+			
+			private var timerSynchro:Timer;
+			private var timerRetroDocumentSegment:Timer;
+			private var currentTimeSessionMilliseconds:Number;
+			private var timerMouseDownObsel:Timer;
+
+            // Memorize x,y mouse position on MouseDown, to be able to 
+            // check how far the mouse has moved from the click position
+            private var click_x_position:Number;
+            private var click_y_position:Number;
+
+			// max duratio befor play video in ms.
+			private var MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN:Number = 2*1000;
+            // Maximum squared distance (4pixels here) of mouse move to take into account the MAX_DURATION
+            private var MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN: Number = 4 * 4;
+			
+			public var listSessionOpen : ArrayCollection;
+			
+			[Bindable]
+			public var listSessionClose : ArrayCollection;
+			
+			private var pickCheryClick:Number = 0;
+			private var currentSessionDateRecording:Date = null;
+			private var currentSessionDuration:Number;
+			private var currentSessionId:int;
+			private var DELTA_STICH:int = 20;
+			private var currentRetroDocumentSegmentPlaying:SegmentVideoAdvanced = null;
+			private var beginTimeCurrentSegment:Number= 0;
+			private var clickOnTimeLine:Boolean = true;
+			
+			// interval the decalage max in seconds
+			[Bindable]
+			private var maxIntervalDecalage:Number = 1.1;
+			// interval the contol of the decalage im microseconds 
+			private var INTERVAL_CONTROL_DECALAGE:Number = 10000;
+			// interval the check the decalage in seconds
+            [Bindable]
+            // interval check decalage in seconds
+            private var intervalCheckDecalage:Number = 5;
+			// time start session plus time in this session 
+			private var currentTime:Number;
+			
+			private var selectedSessionIdWhenInit:Number = -1;
+			private var selectedRetroDocumentIdWhenInit:Number = -1;
+			// init EditComentDialog with this userId
+			private var userIdInitEditCommentDialog:int = -1;
+			// current ObselSkin to dragging
+			private var currentObselSkin:ObselSkin = null;
+            // loader layout.xml for timeline the tracage
+            private var loaderTracage:URLLoader;
+            // 
+            private var timeLineStorage:Object;
+            // progresse bar
+            private var _progressBarBlueLine:SWFLoader;
+            // list editing comment obsel
+            private var _listEditCommentDialog:ArrayCollection;
+            // pixels between windodws editCommentDialog
+            private var DELTA_X_Y:int = 15;
+            // list "PlayVideoObsel"
+            private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            
+			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+			{	
+                // init internalisation
+                fxgt = FxGettext;
+				// init list trace lines
+				Model.getInstance().initListTraceLine();
+				
+				if((event.currentTarget as RetrospectionModule).parameters != null)
+				{
+					var param:Array = (event.currentTarget as RetrospectionModule).parameters as Array ;
+					var cameFromModule:String = param[0];
+					switch (cameFromModule)
+					{
+					case "CameFromHomeModule" :
+						// 
+						break;
+					case "CameFromBilanModule" :
+						this.selectedRetroDocumentIdWhenInit = param[2]; 
+						break;
+					case "CameFromSessionModule" :
+						this.selectedRetroDocumentIdWhenInit = param[2]; 
+						break;
+					}
+					// set selected sessionId
+					var session:Session = param[1];
+					Model.getInstance().setCurrentSessionRetroModule(session);
+					this.selectedSessionIdWhenInit = session.id_session;
+				}else
+				{
+					var currentSessionRetroModule:Session = Model.getInstance().getCurrentSessionRetroModule();
+					this.selectedSessionIdWhenInit = currentSessionRetroModule.id_session;
+				}
+				
+				// set current module
+				Model.getInstance().setCurrentRetroModule(this);
+				
+				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_RETROSPECTION);
+				this.dispatchEvent(initMapEvent); 
+
+				// set current sessionId
+				this.currentSessionId = this.selectedSessionIdWhenInit
+				
+				// enabled button salon retro
+				Model.getInstance().setEnabledButtonSalonRetro(true);
+                
+                // load layout xml file 
+                loaderTracage = new URLLoader();
+                loaderTracage.load(new URLRequest("xml/layoutAdvanced.xml"));	
+                
+                // init loader for timeline retro
+                _progressBarBlueLine = new SWFLoader()
+                _progressBarBlueLine.setStyle("verticalCenter",0);
+                _progressBarBlueLine.setStyle("horizontalCenter",0);
+                _progressBarBlueLine.source = IconEnum.getIconByName("loaderBlueLine");
+			}
+			
+			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
+			{
+                // set focus, runtime error SDK 4.5
+                this.setFocus();
+				// check status logged user
+				var loggedUser:User =  Model.getInstance().getLoggedUser();
+				var statusLoggedUser:int =loggedUser.status; 
+				if(statusLoggedUser == ConnectionStatus.CONNECTED)
+				{
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
+					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
+					outSession.userId = loggedUser.id_user;
+					this.dispatchEvent(outSession);
+				}
+				
+ 				this.visio.connection = Model.getInstance().getNetConnection();
+				// removing module from the stage
+				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+				// add obsel join retro room
+				var joinSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.GO_IN_MODULE);
+				this.dispatchEvent(joinSalonRetro);
+				
+				if( Model.getInstance().getModeDebug())
+				{
+					this.setCurrentState("debug");
+					
+					Model.getInstance().clearListFrameSplit();
+					buttomTraceFrame.visible = true;
+//					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
+//					this.visio.setDebugMode();
+				}
+				
+				timerSynchro = new Timer(intervalCheckDecalage*1000,0);
+				timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
+				timerSynchro.start(); 
+				
+				
+				// set the data of the session
+				documentarisation.initDataRetroDocument(
+					this.currentSessionDateRecording, 
+					this.currentSessionDuration,
+					Model.getInstance().profiles,
+					Model.getInstance().getListUserIdPresentOnTimeLine());
+				// set listeners
+				documentarisation.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch, true);
+				documentarisation.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument, true);
+				
+				// show retroDocument if was selected
+				if(selectedRetroDocumentIdWhenInit > 0)
+				{
+					documentarisation.selectedRetroDocument(selectedRetroDocumentIdWhenInit)
+				}
+				// set cursor 
+				CursorManager.removeBusyCursor();
+				if(Model.getInstance().getCurrentRetroModule() as RetrospectionModule == this)
+				{
+					// create TimeLine
+					createTimeLine();
+					// get the obsels 
+					getObsels();
+				}
+                
+                // init listener, activity on Timeline
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on user video
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on session video
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on retro document blocks
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
+                // init listener, activity on retro document 
+                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
+
+                // init list editing comment obsel
+                _listEditCommentDialog = new ArrayCollection();
+			}
+			
+			private function updateTimerSynchro(event:TimerEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+                    // check decalage only if play video
+                    if(this.visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+                    {
+    					this.visio.synchroStreamsByValue(this.maxIntervalDecalage);
+                    }
+				}
+			}
+			
+			private function onPreActionUserObselComment(event:SalonRetroEvent):void
+			{
+				var beginTime:Number;
+				var endTime:Number;
+				var timeStamp:Number;
+				 var onActionUserStartEditCancelEditObsel:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_OBSEL_COMMENT_START_EDIT_CANCEL_EDIT);
+				onActionUserStartEditCancelEditObsel.editTypeCancel = event.editTypeCancel;
+				onActionUserStartEditCancelEditObsel.text = event.text;
+				onActionUserStartEditCancelEditObsel.typeAction = event.typeAction;
+				var obsel:Obsel = event.obsel;
+				if ( obsel == null)
+				{
+					beginTime = 0;
+					endTime = 0;
+					timeStamp = 0;
+				}else
+				{
+					beginTime = obsel.begin;
+					endTime = obsel.end;
+					timeStamp = event.timeStamp;
+				}
+				onActionUserStartEditCancelEditObsel.timeStamp = timeStamp;
+				onActionUserStartEditCancelEditObsel.timeObselBegin = beginTime;
+				onActionUserStartEditCancelEditObsel.timeObselEnd = endTime;
+				this.dispatchEvent(onActionUserStartEditCancelEditObsel);
+			}
+			/**
+			 * Removing all streams and local devices
+			 */
+			private function onRemovedModuleFromStage(event:Event):void
+			{
+				if(this.visio != null)
+				{
+					this.removeAllStreams();
+					this.visio.removeTimer();
+					
+					if(this.timerRetroDocumentSegment)
+					{
+						this.timerRetroDocumentSegment.stop();			
+					}
+					// add obsel user walk out from retro room
+					var outFromSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
+					this.dispatchEvent(outFromSalonRetro);
+				}
+				// set current module null
+				Model.getInstance().setCurrentRetroModule(null);
+                // remove edit comment dialogs
+                removeFromStageEditCommentDialog();
+			}
+			
+			/**
+			 * remove all listeners the stream here and remove the streams from VisuVisio
+			 */
+			// FIXME it's not necessary to remove all listeners
+			private function removeAllStreams():void
+			{
+				this.visio.removeAllStreams();
+			}
+			
+			private function setCurrentRetroDocumentSegmentPlaying(value:SegmentVideoAdvanced):void
+			{
+				this.currentRetroDocumentSegmentPlaying = value;
+			}
+			private function getCurrentRetroDocumentSegmentPlaying():SegmentVideoAdvanced
+			{
+				return this.currentRetroDocumentSegmentPlaying;
+			}
+			
+			// creation the resume activity
+			private function updateTimeLine(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					this.currentSessionDateRecording = event.dateStartRecording;
+					this.currentSessionDuration = event.durationSessionRetro;
+
+                    // update label start session recording
+                    var dateStartRecording:Date = event.dateStartRecording;
+                    var session:Session = 	Model.getInstance().getCurrentSessionRetroModule();
+                    panelVideo.title = StringUtil.substitute(fxgt.gettext('"{0}" enregistrée le "{1}"'), session.theme ,UtilFunction.getDateMonthYearHourMin(dateStartRecording));
+                    var loader:URLLoader=new URLLoader();			
+                    loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
+                    // check xml layout for logged user
+                    var pathLayoutXml:String = Model.getInstance().getPathLayoutXml(VisuModuleEvent.RETROSPECTION_MODULE);
+                    loader.load(new URLRequest(pathLayoutXml));	
+				}
+				// add drag listener
+				setListenerDragVideo();
+				if(documentarisation)
+				{
+					// set the data of the session
+					documentarisation.initDataRetroDocument(
+						this.currentSessionDateRecording, 
+						this.currentSessionDuration,
+						Model.getInstance().profiles,
+						Model.getInstance().getListUserIdPresentOnTimeLine());
+				}
+			}
+			private function onLoadLayoutComplete(event:Event):void 
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					//we init the trace object
+					var loader:URLLoader=event.target as URLLoader;
+					// create TImeLine
+					timeLine.layoutXML 		= new XML( loader.data );
+					timeLine.timelineLayout = new Layout( timeLine ); 	
+					
+                    this.setObsels();
+                    timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine );
+                    // add listener added TraceLineTitle on the stage
+                    timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
+					
+					var traceComment:Trace = Model.getInstance().getTraceComment();				
+					var tlgComment : TraceLineGroup;
+					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
+					tlgComment.setStyle( "title", fxgt.gettext("Commentaires") );
+                    // logged user 
+                    var loggedUser:User = Model.getInstance().getLoggedUser();
+                    var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
+                    if(listTraceGroup != null)
+                    {											
+                        var nbrTraceGroup:int = listTraceGroup.length;
+                        for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+                        {												
+                            var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+                            
+                            // trace of user 
+                            // FIXME: which trace ? synchronous trace ? retrospection activity trace ?
+                            var trace:Trace = traceGroup.userTrace as Trace;
+                            // get user
+                            var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
+                            /// don't show trace if any obsels in the trace
+                            var nbrObsels:Number = trace.obsels.length;
+                            if(nbrObsels > 0)
+                            {
+                                var tlg :TraceLineGroup ;		
+                                tlg = timeLine.addTrace(trace,-1, "user");
+                                var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+                                
+                                tlg.setStyle("title", lastNameUser );				
+                                tlg.setStyle("bgColor", traceGroup.userColor);
+                                tlg.setStyle("icon", traceGroup.userAvatar );	                                
+                            }
+                            
+                            
+                            // show timeline activity only for responsable and admin
+                            if(RoleEnum.hasAdminRight(loggedUser.role) || RoleEnum.hasResponsableRight(loggedUser.role))
+                            {
+                                // add NavigatorContent for each user presents in session
+                                var navigatorContent:NavigatorContent = new NavigatorContent();
+                                navigatorContent.percentHeight =  navigatorContent.height = 100;
+                                navigatorContent.label =  lastNameUser;
+                                // set id user like name
+                                navigatorContent.name = user.id_user.toString();
+                                // add navigator content
+                                // create timeline activity only if mode = expert
+                                if(Model.getInstance().getModeExpert())
+                                {
+                                    tnTimeline.addElement(navigatorContent);
+                                }
+                            } 
+                        }
+					}
+					
+					var startRecordingSession:Number = this.currentSessionDateRecording.time;
+					// FIXME : bug here
+				//	timeLine.range.reset();
+					timeLine.range.addTime(startRecordingSession, startRecordingSession + this.currentSessionDuration);
+					// set timeStartSession in VisuVisioAdvaned
+					this.visio.startTimeSession = startRecordingSession;
+					
+					// set dataProvider with collection the StreamObsel
+					this.visio.dataProvider = Model.getInstance().getListStreamObsel();
+					
+					// set pickCherryClick
+					this.pickCheryClick = 0;					
+					this.visio.startTimer();
+					
+					
+					// notify that module ready for use
+					notifyReadyForUse();
+					
+				}
+			}
+
+            /**
+            ** Event handler added TraceLineTitre on the stage
+            */
+            private function onAddedTraceLineOnStage(event:TimelineEvent):void
+            {
+                // logged user
+                var loggedUser:User = Model.getInstance().getLoggedUser();
+                // trace line title skin
+                var traceLineTitleSkin:TraceLineTitleSkin = event.value as TraceLineTitleSkin;
+                var traceLine:TraceLine = traceLineTitleSkin.hostComponent.tl;
+                // check has property owner, only for TraceLineGroup
+                if(traceLine.owner && traceLine.owner is TraceLineGroup )
+                {
+                    var traceLineGroup:TraceLineGroup = traceLine.owner as TraceLineGroup;
+                    // id user trace
+                    var idUserTrace:int = traceLineGroup.trace.uid;
+                    if(traceLine.selector)
+                    {
+                        // check traceline "Marker" by regexp 
+                        if((traceLine.selector as SelectorRegexp).regexp == "Marker") 
+                        {
+                            if(idUserTrace == loggedUser.id_user)
+                            {
+                                // set titre for logged user
+                                traceLineTitleSkin.setStyle("title", fxgt.gettext("Mes marqueurs"));
+                            }else
+                            {
+                                traceLineTitleSkin.setStyle("title", fxgt.gettext("Marqueurs"));
+                            }
+                        }   
+                    }
+                }
+            }
+			
+			/**
+			 * set user name in comment TraceLine
+			 */
+			public function onAddNewTraceLine( event : TimelineEvent ) : void
+			{
+				var generatorName:String = event.value.generator.name;
+				var obsel:Obsel = event.value.obsel;
+				var userId:int = 0;
+				var nameUser:String = "";
+				
+				if ( generatorName == 'commentsGenerator' )
+				{
+					userId = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
+					if(userId != 0)
+					{
+						nameUser = StringUtil.substitute(fxgt.gettext("Commentaires à propos de {0}"),
+                                                         VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true));
+					} else
+					{
+						nameUser = fxgt.gettext("Commentaires à propos de la séance");
+					}
+				}
+				else if ( generatorName == 'markersGenerator' )
+				{
+					userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+					if(userId != 0)
+					{
+						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					}else
+					{
+						nameUser = fxgt.gettext("Marqueurs à propos de la séance");
+					}
+					
+				}else if( generatorName  == 'videosGenerator')
+				{
+					nameUser = '"' + obsel.props[TraceModel.TEXT] + '"';
+				}
+                else if(generatorName  == 'chatsGenerator')
+                {
+                    userId = obsel.props[TraceModel.SENDER];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = fxgt.gettext("Messages pour tous");
+                    }
+                }
+                else if(generatorName  == 'documentGenerator')
+                {
+                    userId = obsel.props[TraceModel.SENDER];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = "???";
+                    }
+                }
+					
+				var traceLine:TraceLine = event.value.traceline;
+				traceLine.title = nameUser;
+			}
+			
+			private function removeTimerRetroDocumentSegment():void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{	
+					if(timerRetroDocumentSegment != null)
+					{
+						timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+						timerRetroDocumentSegment = null;
+					}
+				}
+			}
+			
+			private function startTimerRetroDocumentSegment(value:Number):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{	
+					if(timerRetroDocumentSegment != null)
+					{
+						timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+						timerRetroDocumentSegment = null;
+					}
+					timerRetroDocumentSegment = new Timer(value,0);
+					timerRetroDocumentSegment.addEventListener(TimerEvent.TIMER, endVideoSegment);
+					timerRetroDocumentSegment.start();
+                    onUpdatePlayerStatus(true);
+				}
+			}
+			
+			private function endVideoSegment(event:TimerEvent = null):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// set time to current video segment 
+					if(this.currentRetroDocumentSegmentPlaying != null)
+					{
+						var tempCurrentRetroDocumentSegment:SegmentVideoAdvanced = this.currentRetroDocumentSegmentPlaying;
+						// set curentRetroDocumentSegment to null
+						this.setCurrentRetroDocumentSegmentPlaying(null);
+						tempCurrentRetroDocumentSegment.setBeginEndTime();
+						
+						if(!clickOnTimeLine)
+						{
+							// pause video if end playing video segment only
+						//	this.pauseVideo();
+                            onUpdatePlayerStatus(false);
+						}
+					}
+					// check if timerRetroDocumentSegment not null, can be null if user see the VidoSegment => click on tileLine
+					if(timerRetroDocumentSegment)
+					{
+						timerRetroDocumentSegment.stop();
+						timerRetroDocumentSegment.removeEventListener(TimerEvent.TIMER, endVideoSegment);
+						timerRetroDocumentSegment = null;
+					}
+					// init flag click on tume line
+					clickOnTimeLine = false;
+				}
+			}
+				
+			private function updateLabelTimer(value:Number):String
+			{
+				var totalSecond:int = value/1000;
+				var hourNumber:int = new int(totalSecond/3600);
+				var minNumber:int = new int(totalSecond/60);
+				var seconds:Number = totalSecond - minNumber * 60;
+				var hourString:String="";
+				var minString:String="";
+				var secString:String="";
+
+				secString = seconds.toString();
+				if(seconds < 10)
+				{
+					secString = "0"+secString;
+				}
+				var min:Number = minNumber - hourNumber*60;
+				minString = min.toString();
+				if(min < 10)
+				{
+					minString = "0" + minString;
+				}
+				hourString = hourNumber.toString();
+				if(hourNumber < 10)
+				{
+					hourString = "0"+hourString;	
+				}
+				return  hourString+":"+minString+":"+secString;
+				
+			}
+
+			private function setObsels():void{
+				// add obsels traceLine 
+				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
+				if (listObsels != null)
+				{	
+					var nbrObsels:int = listObsels.length;
+					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
+					{
+						var obsel:Obsel = listObsels[nObsel] as Obsel;
+                        // 
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                        case TraceModel.PLAY_VIDEO :
+                            addPlayVideoObsel(obsel);
+                            break;
+                        case TraceModel.PAUSE_VIDEO :
+                        case TraceModel.STOP_VIDEO :
+                        case TraceModel.END_VIDEO :
+                        case TraceModel.RELEASE_SLIDER_VIDEO :
+                            // add obsel pause/stop/end/release obsels
+                            checkPauseStopEndObsel(obsel);
+                            break;
+                        case TraceModel.SESSION_EXIT :
+                            // FIXME : add gestion show playVideoObsel when broken session
+                            break;
+                        }
+						Model.getInstance().addObsel(obsel);
+					}
+				}
+			} 
+            /**
+            * add "PlayVideoObsel"
+            */ 
+            private function addPlayVideoObsel(value:Obsel):void
+            {
+                this._listPlayVideoObsel.addItem(value);
+            }
+            /**
+            * Set duration obsel "PlayVideoDocument"
+            */
+            private function checkPauseStopEndObsel(value:Obsel):void
+            {
+                var index:int = -1;
+                var nbrObsel:int = this._listPlayVideoObsel.length;
+                for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = this._listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
+                        obsel.props[TraceModel.SENDER] == value.props[TraceModel.SENDER] )
+                    {
+                        index = nObsel;
+                        obsel.end = value.begin;
+                    }
+                }
+                if(index > -1)
+                {
+                    this._listPlayVideoObsel.removeItemAt(index);
+                }
+            }
+            /**
+             * Event handler added skin obsel PlayVideoDocument on timeline
+             */
+            private function onAddedPlayVideoSkinOnTimeLine(event:TimelineSkinEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    var obselSkin:Object = event.obselSkin as Object;
+                    var obsel:Obsel = obselSkin.obsel;
+                    if(obsel.begin != obsel.end)
+                    {
+                        obselSkin.setSkinStop(obsel.end);
+                    }
+                }
+            }
+			//_____________________________________________________________________
+			//
+			// RetroDocument
+			//
+			//_____________________________________________________________________
+			private function loadListRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					documentarisation.listRetroDocumentVO = event.listRetroDocument;
+				}
+			}
+				
+			private function showRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					setRetroDocument(event.retroDocument, event.listUser);
+				}
+			}
+			
+			//_____________________________________________________________________
+			//
+			// Listeners RetroDocumentView
+			//
+			//_____________________________________________________________________			
+			private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
+					var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
+					retroDocumentVO.lastModified = dateLastModify;
+					var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
+					updateRetrodocument.retroDocumentVO = retroDocumentVO;
+					updateRetrodocument.listUser = event.listUser;
+					this.dispatchEvent(updateRetrodocument);		
+				}
+			}
+			
+			private function onClickButtonSwitch(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var switchModuleEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO);
+					switchModuleEvent.sessionId = event.sessionId;
+					switchModuleEvent.idRetroDocument = event.idRetroDocument;
+					this.dispatchEvent(switchModuleEvent);
+				}
+			}
+
+			protected function addRetroDocument_clickHandler(event:MouseEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
+					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
+					retroDocumentVO.documentId = 0;
+					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
+					var createurUser:User = Model.getInstance().getLoggedUser();
+					retroDocumentVO.ownerId = createurUser.id_user;
+					retroDocumentVO.sessionId = this.currentSessionId;
+					retroDocumentVO.title = fxgt.gettext("Nouveau bilan");
+	
+					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
+					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
+					retroDocumentVO.xml = stringXML;
+					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
+					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
+					createRetroDocumentVOEvent.sessionId = this.currentSessionId;
+					this.dispatchEvent(createRetroDocumentVOEvent);
+				}
+			}
+			//_____________________________________________________________________
+			//
+			// Listeners PanelDocumentarisation
+			//
+			//_____________________________________________________________________
+			private function setRetroDocument(retroDocument:RetroDocument, listUser:Array ):void
+			{
+				documentarisation.setRetroDocument(retroDocument, listUser,  Model.getInstance().getCurrentSessionRetroModule());
+			}
+			/**
+			 * set id the retrodocument
+			 */ 
+			protected function updateAddedRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					documentarisation.updateIdRetroDocument(event.idRetroDocument);
+					// remove cursor
+					CursorManager.removeBusyCursor();
+				}
+			}
+			
+			protected function documentarisation_addRetroDocumentHandler(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
+					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
+					retroDocumentVO.documentId = 0;
+					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
+					var createurUser:User = Model.getInstance().getLoggedUser();
+					retroDocumentVO.ownerId = createurUser.id_user;
+					retroDocumentVO.sessionId = this.currentSessionId;
+					retroDocumentVO.title = StringUtil.substitute(fxgt.gettext('Bilan sur la séance "{0}"'),
+                                                                  Model.getInstance().getCurrentSessionRetroModule().theme);
+					
+					var nomCreateur:String = createurUser.lastname + " " + createurUser.firstname;
+					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
+					retroDocumentVO.xml = stringXML;
+					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
+					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
+					this.dispatchEvent(createRetroDocumentVOEvent);
+					
+					// set mouse cursor
+					CursorManager.setBusyCursor();
+					// set new RetroDocument
+					documentarisation.listRetroDocument.dataProvider.addItem(retroDocumentVO);
+					documentarisation.listRetroDocument.selectedItem = retroDocumentVO;
+					var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
+					retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
+					setRetroDocument(retroDocument, new Array());
+				}
+			}
+			//_____________________________________________________________________
+			//
+			// Listeners ListRetroDocument
+			//
+			//_____________________________________________________________________
+			private function dispatchLoadRetroDocument(value:RetroDocumentVO):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
+					loadRetroDocument.idRetroDocument =  value.documentId
+					loadRetroDocument.editabled = true;				
+					this.dispatchEvent(loadRetroDocument);
+				}
+			}
+			
+			private function loadedAllUsers(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					this.documentarisation.listAllUsers = event.listUser;
+				}
+			}
+			
+			//_____________________________________________________________________
+			//
+			// Drag/Drop video
+			//
+			//_____________________________________________________________________
+			private function onMouseMoveOverVisuVideo(event:MouseEvent):void
+			{
+				var x:Number  = event.stageX-panelVideo.x;
+				var y:Number = event.stageY-panelVideo.y-45;
+				var point:Point = new Point(x,y)
+				var globalPoint:Point = this.localToGlobal(point);
+				var xGlobale:Number = globalPoint.x;
+				var yGlobale:Number = globalPoint.y;
+				var ds:DragSource = new DragSource();
+				var obsel:Obsel =  Obsel.fromRDF("");
+				obsel.begin = currentTimeSessionMilliseconds;
+				ds.addData(obsel,"obsel");
+				ds.addData("video","textObsel");	
+				var imageProxy:Image = new Image();
+				imageProxy.source = IconEnum.getIconByName('retroDocumentSegmentAdd');
+				imageProxy.height=15;
+				imageProxy.width=15;     
+				
+				DragManager.doDrag(this.visio,ds,event,imageProxy, -x, -y, 1.00);
+			}
+			
+			private function setListenerDragVideo():void
+			{
+				// checking if has drag listener
+				if(this.visio == null) return;
+				var hasListener:Boolean = this.visio.hasEventListener(MouseEvent.MOUSE_MOVE);
+				if(!hasListener)
+				{
+					// add drag listener
+//					this.visio.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveOverVisuVideo);
+				}
+			}
+            
+            /**
+            * play current block video
+            */
+			private function playRetroDocument(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var segmentVideoAdvanced : SegmentVideoAdvanced = event.target as SegmentVideoAdvanced;
+					if(segmentVideoAdvanced)
+					{
+						var deltaTimePause:Number = 0;
+						var beginTime:Number = event.beginTime;
+						var endTime:Number   = event.endTime;
+						// pause on button play/pause in the segment
+						// set current retroDocumentSegment playing
+						setCurrentRetroDocumentSegmentPlaying(segmentVideoAdvanced);
+						
+						this.beginTimeCurrentSegment = beginTime;
+						var dt:Number = beginTime 
+							//- this.testTimeLine.startTimeSession;
+						
+						prePlayVideoFlux(dt+deltaTimePause);
+						// set timer
+						var durationVideoSegment:Number = endTime - beginTime;
+						if(durationVideoSegment < 0)
+						{
+							durationVideoSegment = 0;
+						}
+						this.startTimerRetroDocumentSegment(durationVideoSegment);
+					}
+				}
+			}
+			/**
+            * Pause current block video
+            */
+            private function pauseRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    onCheckSeekStream();
+                    // set status pause 
+                    onUpdatePlayerStatus(false);
+                }
+            }
+			
+            /**
+             * play/pause of the streams
+             */
+            private function onCheckSeekStream(event:* = null):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // set currentRetrocumentSegmentPlaying to null
+                    setCurrentRetroDocumentSegmentPlaying(null);
+                    // remove timer RetroDocumentSegment
+                    removeTimerRetroDocumentSegment();
+                }
+            }
+			
+			private function pauseVideo():void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					this.visio.pauseStreams();
+				}
+			}
+
+			/**
+			 * Play/pause video by click on component
+			 */
+			private function visio_clickPanelVideoHandler(event:VisuVisioAdvancedEvent):void
+			{
+				if(currentRetroDocumentSegmentPlaying)
+				{
+					this.currentRetroDocumentSegmentPlaying.setPause();
+				}
+				onCheckSeekStream();
+                
+                var isPlaying:Boolean = true;
+                if(visio.status == VisuVisioAdvanced.STATUS_REPLAY)
+                {
+                    isPlaying = false;
+                }
+                onUpdatePlayerStatus(isPlaying);
+			}
+			
+			//////////////
+			//////   Timeline handlers
+			/////////////
+            /**
+             * Listener the tab navigator
+             */
+            protected function tnTimeline_changeHandler(event:IndexChangedEvent):void
+            {
+                var index:int = event.newIndex;
+                var navigatorContent:NavigatorContent = event.relatedObject as NavigatorContent;
+                var timeline:Timeline = navigatorContent.getChildAt(0) as Timeline;
+                if(index > 0 &&  timeline == null)
+                {
+                    navigatorContent.removeAllElements();
+                    navigatorContent.addElement( _progressBarBlueLine );
+                    // dispatcher for getting list obsel the retro room
+                    var getObselRetroRoomEvent:TracageEvent = new TracageEvent(TracageEvent.GET_LIST_OBSEL_RETRO_ROOM);
+                    getObselRetroRoomEvent.sessionId = Model.getInstance().getCurrentSessionRetroModule().id_session;
+                    getObselRetroRoomEvent.userId = new int(navigatorContent.name);
+                    dispatchEvent(getObselRetroRoomEvent);
+                }
+            }
+            /**
+             * Resiving the obsels retro trace line handler
+             */
+            private function onReciveListObselRetroRoom(event:TracageEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // check if has obsels
+                    var listObselVO:Array = event.listObselRetroRoom;
+                    if(listObselVO && listObselVO.length > 0)
+                    {
+                        var userIdString:String = event.userId.toString();
+                        var navigatorContent:NavigatorContent =  tnTimeline.getChildByName(userIdString) as NavigatorContent;
+                        
+                        // timelina activity
+                        var timeLineTracage:Timeline = new Timeline();
+                        timeLineTracage.percentHeight = 100;
+                        timeLineTracage.percentWidth = 100;
+                        timeLineTracage.setStyle("timeMode","relative");
+                        timeLineTracage.contextFollowCursor = false;
+                        timeLineTracage.setStyle("cursorMode","auto");
+                        // show export button 
+                        timeLineTracage.setStyle("showExportButton", true);
+                        timeLineTracage.setStyle("showSearchBox", true);
+                       // timeLineTracage.setStyle("adminMode","false");
+                       // timeLineTracage.showPlayButton = false;
+                        timeLineTracage.addEventListener(FlexEvent.CREATION_COMPLETE, timeLineTracage_creationCompleteHandler);
+                        timeLineTracage.name = userIdString;
+                        // add timeline tracage
+                        navigatorContent.addElement(timeLineTracage);
+                        
+                        // set timeLine and list obsels
+                        if(timeLineStorage == null)
+                        {
+                            timeLineStorage = new Object();
+                        }
+                        
+                        timeLineStorage[userIdString] = listObselVO;
+                    }else
+                    {
+                        var navigatorContent:NavigatorContent = _progressBarBlueLine.owner as NavigatorContent;
+                        // remove progress bar
+                        navigatorContent.removeElement( _progressBarBlueLine );
+                        var label:Label = new Label();
+                        label.setStyle("verticalCenter",0);
+                        label.setStyle("horizontalCenter",0);
+                        label.text = fxgt.gettext("Pas d'activité dans le salon de rétrospection");
+                        navigatorContent.addElement(label);
+                    }
+                    
+                }
+            }
+            
+            /**
+             * Timeline retro create handler
+             */
+            private function timeLineTracage_creationCompleteHandler(event:FlexEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    var timeLineRetrospectionActivity: Timeline = event.currentTarget as Timeline;
+                    var traceRetrospectionActivity:Trace = new Trace(new int(timeLineRetrospectionActivity.name), "");
+                    var listObselVO:Array = timeLineStorage[timeLineRetrospectionActivity.name];
+                    var nbrObsel:int = listObselVO.length;
+
+                    for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                    {
+                        // FIXME: the ObselVO should not be used in
+                        // the application, it is an internal
+                        // mechanism of the Traces API.
+                        var obselVO : SGBDObsel = listObselVO[nObsel];
+                       // var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+                        // FIXME : replace static method fromRDF by constructor Obsel, only for show obsels, not for parsing, 
+                        //         hasn't parametr "props"
+                        traceRetrospectionActivity.trace(obselVO.type, {rdf: obselVO.rdf}, obselVO.begin.time, obselVO.begin.time);
+                    }
+                    
+                    // create timeLineTracage
+                    timeLineRetrospectionActivity.layoutXML 		= new XML( loaderTracage.data );
+                    timeLineRetrospectionActivity.timelineLayout = new Layout( timeLineRetrospectionActivity ); 
+                    
+                    var traceLineGroup:TraceLineGroup = timeLineRetrospectionActivity.addTrace(traceRetrospectionActivity);
+                    timeLineRetrospectionActivity.makeTracelineGroupVisible(traceLineGroup, false);
+                    
+                    var user:User = Model.getInstance().getUserPlateformeByUserId(new int(timeLineRetrospectionActivity.name));
+                    var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+                    
+                    traceLineGroup.setStyle("title", lastNameUser );				
+                    traceLineGroup.setStyle("bgColor", "#cedbef");
+                    traceLineGroup.setStyle("icon", user.avatar );	
+                    // remove progress bar
+                    (_progressBarBlueLine.owner as NavigatorContent).removeElement( _progressBarBlueLine );
+                  
+                }
+            }
+            /**
+             * Timeline create handler
+             * @event
+             */
+            protected function timeLine_creationCompleteHandler(event:FlexEvent):void
+            {      
+                // set image on timeLine 
+                onUpdatePlayerStatus(true);
+                // try start retro room tracing 
+                startRetroRoomTracing();
+            }
+
+            /**
+             * Obsel collection Timeline handler
+             */
+            protected function tracageTimeline_obselChangeHandler(event: CollectionEvent):void
+            {
+                switch (event.kind)
+                {
+                case CollectionEventKind.ADD :
+                {
+                    var timeLineTracageEvent: TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_TIME_LINE);
+                    // get new obsel
+                    // FIXME: will break if more than 1 obsel is added at a time.
+                    timeLineTracageEvent.obsel = event.items[0];
+                    TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(timeLineTracageEvent);
+                    break;
+                }
+                    
+                default:
+                }
+            }
+
+            
+			//////////////
+			//////   Handlers the create/edit/delete comments
+			/////////////
+			/**
+			 * Show EditCommentDialog when user edit existing comment obsel
+			 */ 
+			protected function onPreAddCommentBySkinComment(event:ObselEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var obsel:Obsel = event.obsel;
+					var userId:int = obsel.props[TraceModel.COMMENT_FOR_USER_ID];
+					var user:User = null;
+					if(userId != 0)
+					{
+						user = Model.getInstance().getUserPlateformeByUserId(userId);						
+					}
+					var currentCommentObselSkin:Object = event.target;
+					// set init userId 
+					userIdInitEditCommentDialog = userId;
+					// set enabled false all obsels with same timestamp
+                    var timestamp:Number = obsel.props[TraceModel.TIMESTAMP];
+					showDialogAddCommentObsel(user, obsel, currentCommentObselSkin, RetroTraceModel.OBSEL);
+				}
+			}
+			
+			/**
+			 * Show EditCommentDialog when user click on boutton the TimeLine
+			 */ 
+			protected function onPreAddComment(event:TimelineEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// add comment for session
+					showDialogAddCommentObsel(null, null, null, RetroTraceModel.TIMELINE);
+				}
+			}
+			
+			/**
+			 * Show EditCommentDialog when user click on boutton the VideoPanel
+			 */ 
+			protected function visio_clickButtonCommentHandler(event:VisuVisioAdvancedEvent):void
+			{	
+				var user:User = event.user;
+				// add comment for user
+				showDialogAddCommentObsel(user, null, null, RetroTraceModel.BUTTON);
+			}
+			
+            /**
+             * Add on stage the EditCommentDialog
+             */
+            private function showDialogAddCommentObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null, initBy:String = null):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // check if editing commmnet obsel
+                    if(obsel && isEditCommentDialogOnStage(obsel))
+                    {
+                        // do nothing
+                        return;
+                    }
+                    
+                    var editCommentDialog:EditCommentDialog = new EditCommentDialog();
+                    editCommentDialog.user = value;
+                    
+                    editCommentDialog.currentObselSkin = currentObselSkin;
+                    editCommentDialog.obsel = obsel;
+                    
+                    // add edit comment dialog
+                    addEditCommentDialog(editCommentDialog);
+                    
+                    editCommentDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+                    // set origin the init dialog
+                    editCommentDialog.origin = initBy;
+                    // set userId the video panel where was clicked button add comments
+                    if(initBy == RetroTraceModel.BUTTON)
+                    {
+                        editCommentDialog.userIdVideoPanel = value.id_user
+                    }
+                    
+                    PopUpManager.addPopUp(editCommentDialog, this);
+                    PopUpManager.centerPopUp(editCommentDialog);
+                    editCommentDialog.y -= editCommentDialog.height - _listEditCommentDialog.length*DELTA_X_Y;
+                    editCommentDialog.x -=  - _listEditCommentDialog.length*DELTA_X_Y;
+                    editCommentDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveCommentDialog );
+                    
+                }
+            }
+			
+
+			
+			private function onUpdateDurationObselComment(event:ObselEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var obsel:Obsel = event.obsel;
+					var updateDurationObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+					
+					updateDurationObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+					updateDurationObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+					updateDurationObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+					
+					updateDurationObselComment.textComment = obsel.props[TraceModel.TEXT];
+					updateDurationObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+					updateDurationObselComment.typeObsel  = TraceModel.UPDATE_TEXT_COMMENT;
+					updateDurationObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+					updateDurationObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+					updateDurationObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+					dispatchEvent(updateDurationObselComment);
+				}
+			}
+
+			//////////////////////
+			////// Listeners of the ObselSkin
+			/////////////////////
+			
+			/**
+			 * listener Mouse Down ObselSkin
+			 */
+			private function onMouseDownObsel(event:ObselEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// set current ObselSkin
+					currentObselSkin = event.value as ObselSkin;
+                    click_x_position = mouseX;
+                    click_y_position = mouseY;
+					// set timer play video from obsel
+					timerMouseDownObsel = new Timer(MAX_DURATION_MOUSE_DOWN_OBSEL_SKIN,0);
+					timerMouseDownObsel.addEventListener(TimerEvent.TIMER, endDurationMouseDownObselSkin);
+					timerMouseDownObsel.start();
+					// add Mouse move listener 
+					currentObselSkin.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveObsel); 
+					// add mouse up listener
+					this.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpRetroModuleView);
+				}
+			}
+			
+			private function endDurationMouseDownObselSkin(event:TimerEvent):void
+			{
+                var dist: Number = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
+                if (dist > MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN)
+                   return;
+				timerMouseDownObsel.stop();
+				trace("will play");
+				// stop play RetroDocumentSegment if playing
+				clickOnTimeLine = true;
+				// stop play video segment
+				endVideoSegment();
+				var begiTimeObsel:Number = currentObselSkin.obsel.begin;
+				// pre play video flux
+				prePlayVideoFlux(begiTimeObsel);	
+			}
+			
+			/**
+			 * listener on the stage Mouse Up 
+			 */
+			private function onMouseUpRetroModuleView(event:MouseEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					// remove mouse up listener from the stage
+					this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpRetroModuleView);
+					// remove listenet mouse move
+					currentObselSkin.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveObsel);
+					// update currentObselSkin
+					currentObselSkin = null;
+					// dispatcher stop dragging
+					var mouseUpObsel:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL);
+					mouseUpObsel.event = event;
+					dispatchEvent(mouseUpObsel);
+					// stop timer Mouse down obsel
+					timerMouseDownObsel.stop();
+				}
+			}
+            /**
+             * Remove EditCommentDialog from the stage
+             */
+            private function onRemoveCommentDialog(event:Event):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // get text for tracage the activity user
+                    var text:String = "";
+                    if(event.currentTarget.textComment)
+                    {
+                        text = event.currentTarget.textComment;
+                    }
+                    var obsel:Obsel = event.currentTarget.obsel;
+                    if(obsel)
+                    {
+                        removeEditCommentDialog(obsel);
+                    }
+                    
+                   // update obsel only by click on buttons  save, delete
+                   if(event.currentTarget.closeDialog == RetroTraceModel.SAVE || event.currentTarget.closeDialog == RetroTraceModel.DELETE || event.currentTarget.closeDialog == RetroTraceModel.CANCEL )
+                   {
+                       var updateObselComment:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_COMMENT_OBSEL);
+                       updateObselComment.traceComment = Model.getInstance().getCurrentCommentTraceId()
+                       updateObselComment.traceParent = Model.getInstance().getCurrentTraceId();
+                       updateObselComment.sessionId = Model.getInstance().getCurrentSessionId();
+                       
+                       
+                       var typeObsel:String = TraceModel.SET_TEXT_COMMENT;
+                       if (event.currentTarget.confirm)
+                       {						
+                           var durationObselCommentMs:Number = 10*1000;
+                           var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+                           var beginTime:String = currentTime.toString();
+                           var endTime:String = (currentTime + durationObselCommentMs).toString();					
+                           
+                           var timeStamp:Number = 0
+                           var forUserId:int = 0;
+                           // set properties for existing obsel
+                           if(event.currentTarget.user)
+                           {
+                               forUserId = event.currentTarget.user.id_user;
+                           }
+                           // edition the comment obsel
+                           if(event.currentTarget.currentObselSkin)
+                           {
+                               beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                               endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                               forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+                               timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                               typeObsel = TraceModel.UPDATE_TEXT_COMMENT;
+                               
+                               text = obsel.props[TraceModel.TEXT];
+                           }
+                           
+                           if(userIdInitEditCommentDialog > -1 && userIdInitEditCommentDialog != forUserId)
+                           {
+                               // suppression old obsel
+                               typeObsel = TraceModel.DELETE_TEXT_COMMENT;
+                               forUserId = userIdInitEditCommentDialog;
+                           }
+                           // set property to send to serveur for adding obsel
+                           updateObselComment.textComment = text;
+                           updateObselComment.timeStamp = timeStamp;
+                           updateObselComment.typeObsel  = typeObsel;
+                           updateObselComment.beginTime = beginTime;
+                           updateObselComment.endTime = endTime;
+                           updateObselComment.forUserId = forUserId;
+                       }
+                       if(event.currentTarget.deleting)
+                       {
+                           updateObselComment.textComment = obsel.props[TraceModel.TEXT];
+                           updateObselComment.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                           updateObselComment.typeObsel  = TraceModel.DELETE_TEXT_COMMENT;
+                           updateObselComment.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                           updateObselComment.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                           updateObselComment.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+                       }
+                       // send obsel to serveur
+                       dispatchEvent(updateObselComment);
+                       
+                       // check if change only COMMENT_FOR_USER_ID
+                       if( obsel && userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
+                       {
+                           var setCommentObsel:TraceLineEvent = updateObselComment.cloneMe()
+                           setCommentObsel.timeStamp = 0;
+                           setCommentObsel.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
+                           setCommentObsel.typeObsel = TraceModel.SET_TEXT_COMMENT;
+                           // send second obsel 
+                           dispatchEvent(setCommentObsel);
+                       }
+                    }
+                    // enabled skin edited obsel
+/*                     if(event.currentTarget.currentObselSkin)
+                    {
+                        event.currentTarget.currentObselSkin.enabled = true;
+                    } */
+                   
+                    // init var userIdInitEditCommentDialog
+                    userIdInitEditCommentDialog = -1; 
+                }
+                // tracage add/edit comments
+                var editCommentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_USER_VIDEO);
+                editCommentTracageEvent.typeActivity = RetroTraceModel.USER_VIDEO_ADD_COMMENT;
+                editCommentTracageEvent.text = text;
+                editCommentTracageEvent.forUserId = forUserId;
+                // can close dialog by buttons : close window, save, cancel, delete
+                editCommentTracageEvent.closeDialog = event.currentTarget.closeDialog;
+                editCommentTracageEvent.origin = event.currentTarget.origin;
+                if(event.currentTarget.origin == RetroTraceModel.BUTTON)
+                {
+                    editCommentTracageEvent.userId =  event.currentTarget.userIdVideoPanel;
+                }
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(editCommentTracageEvent);
+            }		
+			/**
+			 * listener when start move obsel
+			 */
+			private function onMouseMoveObsel(event:MouseEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+                    var dist:Number = (mouseX - click_x_position) * (mouseX - click_x_position) + (mouseY - click_y_position) * (mouseY - click_y_position);
+                    if (dist <= MAX_SQUARE_DISTANCE_MOUSE_DOWN_OBSEL_SKIN)
+                       return;
+					var obselSkin:ObselSkin = event.currentTarget as ObselSkin;
+					// dispatcher 
+					var mouseDownObsel:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL);
+					mouseDownObsel.value = obselSkin;
+					mouseDownObsel.event = event;
+					dispatchEvent(mouseDownObsel);
+					// stop timer
+					timerMouseDownObsel.stop();
+				}
+			}
+		
+			private function prePlayVideoFlux(value:Number,delta:Number = 0):void
+			{
+				if(delta != 0)
+				{
+					value = delta + this.timeLine.begin;
+				}else
+				{
+					delta = value;
+					value = value +  this.timeLine.begin;
+				}
+				trace("prePlayVideoFlux value= "+value.toString());
+				trace("prePlayVideoFlux delta= "+delta.toString());
+				
+				this.pickCheryClick = value;
+				// jump session on position delta in millesonds
+				this.visio.seekSession = delta;
+				
+				// add obsel User Action
+				var actionVideoPlayer:SalonRetroEvent = new SalonRetroEvent(SalonRetroEvent.ACTION_ON_VIDEO_PLAYER);
+				actionVideoPlayer.typeAction = TraceModel.RETRO_VIEDO_GO_TO_TIME_EVENT;
+				// choosing time by user
+				actionVideoPlayer.timePlayer = this.pickCheryClick;
+				this.dispatchEvent(actionVideoPlayer);
+			}
+			
+			private function onUpdateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					var sessionId:int = event.sessionId;
+					// enabled button "salon synchrone
+					if(Model.getInstance().getCurrentSession() != null && Model.getInstance().getCurrentSession().id_session == sessionId)
+					{
+						Model.getInstance().setCurrentSession(null);
+						Model.getInstance().setEnabledButtonSalonTutorat(false);
+					}
+				}
+			}
+            
+            /**
+            * update status video player
+            */
+            private function onUpdatePlayerStatus(value:Boolean):void
+            {
+                if (value)
+                {
+                    timeLine.isPlaying = true;
+                    this.visio.resumeStreams();
+                }else
+                {
+                    timeLine.isPlaying = false;
+                    pauseVideo();
+                }
+            }
+
+			//_____________________________________________________________________
+			//
+			// Debug mode
+			//
+			//_____________________________________________________________________
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var listUser:Array = Model.getInstance().getListUserIdPresentOnTimeLine();
+				var ar:Array = new Array();
+				var nbrUser:int = listUser.length;
+				for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
+				{
+					var name:String = listUser[nUser];
+					var info:String = "+/- (sec)";
+					if(nUser == 0)
+					{
+						info = "currentTime(sec)";
+					}
+					var dgc:DataGridColumn = new DataGridColumn(name);
+					
+					dgc.headerText = "UserId  = "+ name+", "+info;
+					dgc.dataField = "a"+ name;
+					ar.push(dgc);
+				}
+				
+//				dataDebug.columns = ar;
+				
+				var html:XML = new XML("<html/>");
+				var body:XML = new XML("<body/>");
+				html.appendChild(body);
+				var table:XML = new XML("<table border='1' />");
+				body.appendChild(table);
+				
+				var list:ArrayCollection = Model.getInstance().getFrameSplit();
+				
+				var cloneList:ArrayCollection = new ArrayCollection();
+				cloneList.addAll(list);
+				var array:Array = new Array();
+				array = cloneList.source as Array;
+				array.reverse();
+				
+				var nbrFrame:int = array.length;
+				for(var nFrame:int = 0; nFrame < nbrFrame ; nFrame++)
+				{
+					var obj:Object = array[nFrame] as Object;
+					var trTag:XML = getTimeByUserId(obj, listUser);
+					table.appendChild(trTag);
+				}
+
+				var xmlList:XMLList = html.body.table.tr as XMLList;
+//				dataDebug.dataProvider = xmlList;
+				
+				function getTimeByUserId(value:Object, listUser:Array):XML
+				{
+					var result:XML = new XML("<tr/>");
+					var nbrUser:int = listUser.length;
+					var tempTime:Number = 0;
+					var frameSec:String = "";
+					for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
+					{
+						var userId:String = listUser[nUser].toString();
+						if(value.hasOwnProperty(userId))
+						{
+							var time:Number = value[userId];
+							if (nUser == 0)
+							{
+								tempTime = time;
+								frameSec = tempTime.toString();
+							}
+							else
+							{
+								time = time - tempTime;
+								var secMylt10in2:int = int(time * 100 );
+								var sec:int = secMylt10in2/100;
+								var secAfterPoint:int = secMylt10in2 - sec*100;
+								var plusMinus:String = "";
+								if(time < 0)
+								{
+									plusMinus = "-";
+									secAfterPoint = secAfterPoint * -1;
+								}
+								frameSec = plusMinus + sec.toString()+"."+secAfterPoint.toString();
+								
+							}
+							var td:XML = new XML("<a"+userId+">"+frameSec+"</a"+userId+">");
+							result.appendChild(td);
+						}else
+						{
+							var tdEmpty:XML = new XML("<td>-----------</td>");
+							result.appendChild(tdEmpty);
+						}
+						
+					}
+					return result;
+				}
+			}
+
+			protected function numStepplerIntervelDecolageFlux_changeHandler(event:Event):void
+			{
+				// update max interval the decalage
+				this.maxIntervalDecalage = (event.currentTarget as NumericStepper).value;	
+			}
+
+			protected function numStepplerIntervalCheckDecalageFlux_changeHandler(event:Event):void
+			{
+				this.intervalCheckDecalage = (event.currentTarget as NumericStepper).value;
+				timerSynchro.delay = this.intervalCheckDecalage*1000;
+			}
+
+			protected function visio_updateTimeHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var beginTime:Number = event.beginTime;
+				
+				timeLine.currentTime = timeLine.begin + beginTime ;
+				
+				var currentTime:String = updateLabelTimer(beginTime);
+				if( this.currentRetroDocumentSegmentPlaying != null)
+				{
+					this.currentRetroDocumentSegmentPlaying.currentTime = beginTime;
+				}
+				
+				// set current time for drag/drop video to retroDocument
+				this.currentTimeSessionMilliseconds = beginTime + this.timeLine.begin;
+				
+				this.documentarisation.currentTime = beginTime;
+			}
+
+			protected function panelVideo_clickButtonMuteVolumeHandler(event:PanelButtonEvent):void
+			{
+				// update mute volume
+				this.visio.setVolumeMute(event.mute);
+                
+                // tracage mode mute
+                var videoPanelSessionTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_SESSION_VIDEO);
+                videoPanelSessionTracageEvent.typeActivity = RetroTraceModel.SESSION_VIDEO_MUTE;
+                videoPanelSessionTracageEvent.modeMute = event.mute.toString();
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelSessionTracageEvent);
+			}
+
+			protected function panelVideo_clickButtonModeMaxHandler(event:PanelButtonEvent):void
+			{
+				panelVideo.buttonModeMaxEnabled = false;
+				panelVideo.buttonModeZoomEnabled = true;
+				visio.zoomMax = true;
+                traceButtonModeZoom(visio.zoomMax);
+			}
+
+			protected function panelVideo_clickButtonModeZoomHandler(event:*):void
+			{
+				panelVideo.buttonModeMaxEnabled = true;
+				panelVideo.buttonModeZoomEnabled = false;
+				visio.zoomMax = false;
+                traceButtonModeZoom(visio.zoomMax);
+			}
+            /**
+            * tracage activity on the buttons zoom max/optimized
+            */ 
+            protected function traceButtonModeZoom(value:Boolean):void
+            {
+                // tracage button zoom max/opimazed
+                var videoPanelSessionTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_SESSION_VIDEO);
+                videoPanelSessionTracageEvent.typeActivity = RetroTraceModel.SESSION_VIDEO_ZOOM_MODE;
+                videoPanelSessionTracageEvent.modeZoomMax = value;
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(videoPanelSessionTracageEvent);
+            }
+            
+			protected function timeLine_timeRulerClickHandler(event:TimelineEvent):void
+			{
+				// stop play RetroDocumentSegment if playing
+				this.clickOnTimeLine = true;
+				// stop play video segment
+				endVideoSegment();
+				// pre play video flux
+				prePlayVideoFlux(event.value);
+                // update stats button, video
+                onCheckSeekStream();
+                onUpdatePlayerStatus(true)
+			}
+
+			protected function timeLine_playButtonClickHandler(event:TimelineEvent = null):void
+			{
+				onCheckSeekStream();
+                onUpdatePlayerStatus(true)
+			}
+
+			protected function timeLine_pauseButtonClickHandler(event:TimelineEvent = null):void
+			{
+				onCheckSeekStream();
+                onUpdatePlayerStatus(false);
+			} 
+            
+            
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________	
+            
+            /**
+            * add edit comment dialog
+            */
+            private function addEditCommentDialog(value:EditCommentDialog):void
+            {
+                _listEditCommentDialog.addItem(value);
+            }
+            /**
+            * remove edit comment dialog
+            */
+            private function removeEditCommentDialog(value:Obsel):void
+            {
+                // window will move
+                var willMove:Boolean = false;
+                // index the edit comment dialog
+                var indexRemovingCommentDialog:int = -1;
+                var nbrCommentDialog:int = _listEditCommentDialog.length;
+                for(var nCommentDialog:int = 0; nCommentDialog < nbrCommentDialog; nCommentDialog++)
+                {
+                    var comentDialog:EditCommentDialog = _listEditCommentDialog.getItemAt(nCommentDialog) as EditCommentDialog;
+                    if( comentDialog.obsel == value)
+                    {
+                        indexRemovingCommentDialog = nCommentDialog;
+                        willMove = true;
+                    }
+                    // change position other edit comment dialogs
+                    if(willMove && indexRemovingCommentDialog < nCommentDialog)
+                    {
+                        comentDialog.x -= DELTA_X_Y;
+                        comentDialog.y -= DELTA_X_Y;
+                    }
+                } 
+                // remove edit comment dialog 
+                if(indexRemovingCommentDialog > -1)
+                {
+                        _listEditCommentDialog.removeItemAt(indexRemovingCommentDialog);
+                }
+            }
+            
+            /**
+            * check if edit comment dialog on stage
+            */
+            private function isEditCommentDialogOnStage(value:Obsel):Boolean
+            {
+                for each (var commentDilog:EditCommentDialog in _listEditCommentDialog)
+                {
+                    if(commentDilog.obsel == value)
+                    {
+                        // set focus for this commentDialog
+                        PopUpManager.bringToFront(commentDilog);
+                        commentDilog.textInfo.setFocus();    
+                        commentDilog.textInfo.selectAll();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            /**
+            * remove all edit comment dialogs from the stage
+            */
+            private function removeFromStageEditCommentDialog():void
+            {
+                for each (var commentDialog:EditCommentDialog in _listEditCommentDialog)
+                {
+                    PopUpManager.removePopUp(commentDialog);
+                }
+                
+            }
+            
+            /**
+            * start tracing Retrospection room/module
+            */
+            private function startRetroRoomTracing(event:* = null):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    // do tracege if has timeline
+                    // do tracage if do not start yet
+                    // do tracage if it has retro room trace id 
+                    if(timeLine && !timeLine.activity && Model.getInstance().getTraceIdRetrospectionActivity())
+                    {
+                        var traceVisu: Trace = TraceManager.initTrace("visu");
+                        // automatically synchronize with the KTBS/BDD
+                        traceVisu.autosync = true;
+                        // traceId Retro room
+                        traceVisu.uri = Model.getInstance().getTraceIdRetrospectionActivity();
+                        // set subject
+                        traceVisu.uid = Model.getInstance().getLoggedUser().id_user;
+                        
+                        var traceTimeline: Trace = new Trace();
+                        traceTimeline.uid = Model.getInstance().getLoggedUser().id_user;
+                        // do not automatically synchronize with the KTBS/BDD
+                        traceTimeline.autosync = false;
+                        // add listener on collection obsels 
+                        traceTimeline.obsels.addEventListener(CollectionEvent.COLLECTION_CHANGE, tracageTimeline_obselChangeHandler);
+                        
+                        // start activity tracing on TimeLine, store in traceTimeline
+                        timeLine.startActivityTracing(traceTimeline);                    
+                    }   
+                }
+            }
+            
+			/**
+			 * notify , ready for use
+			 */
+			private function notifyReadyForUse():void
+			{
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.RETROSPECTION_MODULE;
+				this.dispatchEvent(event);
+			}
+			// For debaging mode
+			private function alertListStreamObsel():void
+			{
+				var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
+				var nbrStreams:int = listStreamObsel.length;
+				var result:String = "";
+				for (var nStream:int = 0 ; nStream < nbrStreams; nStream++)
+				{
+					var stObsel:StreamObsel= listStreamObsel[nStream] as StreamObsel;
+					result = result + stObsel.pathStream + "   ";
+				}
+				Alert.show(result,"info");
+				var nbrObsel:int = Model.getInstance().getListObsels().length;
+				
+				Alert.show(nbrObsel.toString(), "nbr Obsel");
+			}
+			
+			private function createTimeLine():void
+			{
+				timeLine = new Timeline();
+				timeLineGroup.removeAllElements();
+				// set property the TimeLine
+				timeLine.percentHeight = 100;
+				timeLine.percentWidth = 100;
+				timeLine.setStyle("timeMode","relative");
+				timeLine.contextFollowCursor = false;
+				timeLine.setStyle("cursorMode","auto");
+				timeLine.setStyle("showPlayButton", true);
+                if(Model.getInstance().getModeExpert())
+                {
+                    timeLine.setStyle("showExportButton", true);
+                    timeLine.setStyle("showSearchBox", true);
+                }
+
+                // listeners
+                timeLine.addEventListener(TimelineEvent.PLAY, timeLine_playButtonClickHandler);
+                timeLine.addEventListener(TimelineEvent.PAUSE, timeLine_pauseButtonClickHandler);
+                timeLine.addEventListener(TimelineEvent.TIMERULER_CLICK, timeLine_timeRulerClickHandler);
+                timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, timeLine_creationCompleteHandler);
+                // set listener add comment by click on button on timeline
+                timeLine.addEventListener(TimelineEvent.PRE_ADD_COMMENT_OBSEL, onPreAddComment, true);
+                // listener add playVideoSkin on stage
+                timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onAddedPlayVideoSkinOnTimeLine);
+				timeLineGroup.addElement(timeLine);
+
+                
+			}
+			
+			private function getObsels():void
+			{
+				var getListObselEvent:SessionEvent = new SessionEvent(SessionEvent.GET_LIST_OBSEL_CLOSED_SESSION);  
+				getListObselEvent.sessionId = selectedSessionIdWhenInit;
+				dispatchEvent(getListObselEvent); 
+			}
+
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
+
+
+            protected function panelVideo_clickButtonAddHandler(event:PanelButtonEvent):void
+            {
+                // TODO Auto-generated method stub
+            }
+
+		]]>
+	</fx:Script>
+	<modules:states>
+		<s:State name="State1"/>
+		<s:State name="vciel"/>
+		<s:State name="debug"/>
+	</modules:states>
+	<fx:Declarations>
+		<maps:RetrospectionMap id="retrospectionMap"  dispatcher="{this}"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_RETRO}"  method="updateTimeLine"/>
+		<mate:Listener type="{RetroDocumentEvent.LOAD_LIST_RETRO_DOCUMENT}"  method="loadListRetroDocument"/>
+		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
+		<mate:Listener type="{RetroDocumentEvent.UPDATE_ADDED_RETRO_DOCUMENT}"  method="updateAddedRetroDocument"/>
+		<mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="playRetroDocument" />
+		<mate:Listener type="{RetroDocumentEvent.PAUSE_RETRO_SEGMENT}"  method="pauseRetroDocument" />
+		<mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+
+		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_COMMENT_BY_SKIN_COMMENT}"  method="onPreAddCommentBySkinComment" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.UPDATE_DURATION_OBSEL_COMMENT}"  method="onUpdateDurationObselComment" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
+		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
+		<mate:Listener type="{SalonRetroEvent.LOAD_TRACE_ID_RETRO_ROOM}"  method="startRetroRoomTracing"/>
+	</fx:Declarations>
+	<mx:VDividedBox width="100%" height="100%">
+		<mx:HDividedBox width="100%" height="60%">
+<!-- VIDEO -->
+			<components:PanelButton height="100%" width="100%" id="panelVideo" minWidth="450"
+				buttonVolumeVisible="true"
+				buttonMuteMicroVisible="false"
+				buttonModeMaxVisible="true"
+				buttonModeZoomVisible="true"
+				buttonModeZoomEnabled="false"
+				buttonModeMaxEnabled="true"
+				clickButtonMuteVolume="panelVideo_clickButtonMuteVolumeHandler(event)"
+				clickButtonModeMax="panelVideo_clickButtonModeMaxHandler(event)"
+				clickButtonModeZoom="panelVideo_clickButtonModeZoomHandler(event)"
+                >
+				<mx:VDividedBox width="100%" height="100%">
+					<s:Group height="75%" width="100%" id="groupeVideo">
+						<video:VisuVisioAdvanced id="visio" width="100%"  height="100%"
+							quality="80"
+							updateTime="visio_updateTimeHandler(event)"
+							clickPanelVideo="visio_clickPanelVideoHandler(event)"
+							clickButtonComment="visio_clickButtonCommentHandler(event)"
+							clickButtonZoom="panelVideo_clickButtonModeZoomHandler(event)"
+							buttonChatEnabled="false"
+							buttonMarkerEnabled="false"
+							buttonCommentEnabled="true"
+							buttonMode="true"
+							bandwidth="15000" autoPlay="true"
+							loggedUser="{Model.getInstance().getLoggedUser()}">
+						</video:VisuVisioAdvanced>
+						<s:HGroup gap="3"  includeIn="debug" width="100%">
+							<mx:Spacer width="100%"/>
+							<s:Button id="buttomTraceFrame" label="{fxgt.gettext('Update split')}" click="button1_clickHandler(event)"/>
+							<s:Label text="{fxgt.gettext('Décalage max. autorisé')}" paddingTop="7"/>
+							<s:NumericStepper stepSize="0.1" minimum="0.1" maximum="5.0" value="{this.maxIntervalDecalage}" width="55" id="numStepplerIntervelDecolageFlux" change="numStepplerIntervelDecolageFlux_changeHandler(event)"/>
+							<s:Label text="{fxgt.gettext('Période de vérification')}" paddingTop="7"/>
+							<s:NumericStepper stepSize="1" minimum="1" maximum="25" value="{this.intervalCheckDecalage}" width="45" id="numStepplerIntervalCheckDecalageFlux" change="numStepplerIntervalCheckDecalageFlux_changeHandler(event)"/>
+						</s:HGroup>
+					</s:Group>
+                   <mx:TabNavigator id="tnTimeline" width="100%" height="100%" change="tnTimeline_changeHandler(event)">
+                        <s:NavigatorContent label="{fxgt.gettext('Timeline salon')}" id="ncTimeline">
+    					    <s:Group id="timeLineGroup" width="100%" height="100%"/>
+                        </s:NavigatorContent>
+                    </mx:TabNavigator>
+				</mx:VDividedBox>
+			</components:PanelButton>
+<!-- DOCUMENTARISATION -->		
+			<documentarisation:Documentarisation height="100%" width="335"
+				 id="documentarisation"
+				 dragOwnerObject="{this}"
+				 addRetroDocument="documentarisation_addRetroDocumentHandler(event)">				 
+			</documentarisation:Documentarisation>
+		</mx:HDividedBox>
+	</mx:VDividedBox>
+</modules:VisuModuleBase>

@@ -1,0 +1,35 @@
+Test master
+#! /bin/sh
+
+#
+# Fetch, compile and deploy visu server + client
+#
+
+BAR="=============================================="
+
+echo $BAR
+echo "Updating visu"
+echo $BAR
+#git pull || exit 1
+
+#ARCH=`dirname $0`/archive/`date "+%Y%m%d-%H%M%S"`
+
+echo $BAR
+echo "Archiving previous client version to $ARCH"
+echo $BAR
+
+mkdir -p ${ARCH}
+cp VisuClient/src/VisuClient.swf ${ARCH}
+
+echo $BAR
+echo "Compiling & deploying server"
+echo $BAR
+(cd visu ; ant ) || exit 1
+
+echo $BAR
+echo "Compiling client"
+echo $BAR
+(cd VisuClient ; make ) || exit 1
+
+echo $BAR
+echo "OK"

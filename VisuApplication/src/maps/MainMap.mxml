@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<mate:EventMap  		   
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo"
+        xmlns:mate="http://mate.asfusion.com/"
+        xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+
+    <fx:Script><![CDATA[
+        import business.MainManager;
+        
+        import com.asfusion.mate.utils.debug.Debugger;
+        import com.flashdevs.mateExt.rtmpService.RtmpService;
+        import com.flashdevs.mateExt.rtmpService.events.RtmpDataEvent;
+        import com.flashdevs.mateExt.rtmpService.events.RtmpStatusEvent;
+        import com.ithaca.visu.controls.login.event.LoginFormEvent;
+        import com.ithaca.visu.events.AuthenticationEvent;
+        import com.ithaca.visu.events.MessageEvent;
+        import com.ithaca.visu.events.SessionEvent;
+        import com.ithaca.visu.events.SessionSharedEvent;
+        import com.ithaca.visu.events.SessionUserEvent;
+        import com.ithaca.visu.events.ShortMarkerEvent;
+        import com.ithaca.visu.events.TraceLineEvent;
+        import com.ithaca.visu.model.Model;
+        
+        import mx.events.FlexEvent;
+
+        ]]></fx:Script>
+
+    <fx:Declarations>
+        <s:RemoteObject
+            id="remoteUser"
+            endpoint="{Model.getInstance().AMFServer}"
+            destination="UserService"
+            makeObjectsBindable="true"
+            showBusyCursor="true">
+        </s:RemoteObject>	
+        
+		<mate:Injectors target="{MainManager}" debug="true">
+			<mate:PropertyInjector source="{RtmpService}"
+								   targetKey="netConnection" sourceKey="netConnection"/>
+		</mate:Injectors>
+        
+        
+        <mate:Debugger level="{Debugger.ALL}"/>
+		<!-- FlexEvent.CREATION_COMPLETE __________________________________________________________________ -->		
+		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
+			<mate:ObjectBuilder generator="{RtmpService}" constructorArguments="{scope.dispatcher}"/>
+			<mate:ObjectBuilder generator="{MainManager}" constructorArguments="{scope.dispatcher}"/>
+		</mate:EventHandlers>
+
+        <mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="getConnectedClients"   arguments="{[]}" />
+				<!--<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="getConnectedClients" arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>		
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>-->
+			</rtmp:RtmpServiceInvoker>	
+        </mate:EventHandlers>
+
+		<mate:EventHandlers type="{'clientInfo'}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true">
+				<mate:Request action="getClientInfo"   arguments="{[]}" />
+<!--				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="onGetClientInfo" arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>		
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{MainManager}"
+										method="onError" arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>-->
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+ 
+        <mate:EventHandlers type="{LoginFormEvent.CHECK_ACTIVATED_KEY}" debug="true">
+            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="getUserByActivatedKey" arguments="{[event.activatedKey]}">
+                <mate:resultHandlers>
+                    <mate:MethodInvoker generator="{MainManager}"
+                        method="onLoadUserActivatedKey" arguments="{[resultObject]}"/>
+                </mate:resultHandlers>
+            </mate:RemoteObjectInvoker>	
+        </mate:EventHandlers>
+        
+        <!-- Set password , delete activate key-->
+        <mate:EventHandlers type="{LoginFormEvent.SET_PASSWORD}" debug="true" useCapture="true">
+            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="setUserPassword" arguments="{[event.userId, event.password]}">
+                <mate:resultHandlers>
+                    <mate:MethodInvoker generator="{MainManager}"
+                        method="onSetUserPassword" arguments="{[resultObject]}"/>
+                </mate:resultHandlers>
+            </mate:RemoteObjectInvoker>	
+        </mate:EventHandlers>
+        
+		
+		<mate:EventHandlers type="{'clientInfo'}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselSessionExitSessionPause"   arguments="{[]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.GET_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getSessionById"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+
+		<mate:EventHandlers type="{SessionEvent.GET_SESSION_SALON_RETRO}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getSessionByIdSalonRetro"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+
+        <mate:EventHandlers type="{AuthenticationEvent.CONNECT}" debug="true">
+			<mate:MethodInvoker generator="{RtmpService}"   
+								method="connect"  arguments="{[event.rtmpSever,event.params]}"/>
+			<rtmp:CallbackRegistrator action="joinDeck" target="{MainManager}" method="onJoinDeck"/>
+			<rtmp:CallbackRegistrator action="outDeck" target="{MainManager}" method="onOutDeck"/>
+			<rtmp:CallbackRegistrator action="checkPrivateMessage" target="{MainManager}" method="onResivePrivateMessage" />
+			<rtmp:CallbackRegistrator action="checkPublicMessage" target="{MainManager}" method="onResivePublicMessage" />
+			<rtmp:CallbackRegistrator action="setLoggedUser" target="{MainManager}" method="onSetLoggedUser" />
+			<rtmp:CallbackRegistrator action="checkListUser" target="{MainManager}" method="onCheckListUser" />
+			<rtmp:CallbackRegistrator action="checkUpdateSessionListUser" target="{MainManager}" method="onCheckUpdateSessionListUser" />
+			<rtmp:CallbackRegistrator action="joinSession" target="{MainManager}" method="onJoinSession"/>
+			<rtmp:CallbackRegistrator action="outSession" target="{MainManager}" method="onOutSession"/>
+			<rtmp:CallbackRegistrator action="sameUserId" target="{MainManager}" method="onSameUserId"/>
+			<rtmp:CallbackRegistrator action="startRecording" target="{MainManager}" method="onStartRecording"/>
+			<rtmp:CallbackRegistrator action="setStatusRecording" target="{MainManager}" method="onSetStatusRecording"/>
+			<rtmp:CallbackRegistrator action="stopRecording" target="{MainManager}" method="onStopRecording"/>
+			<rtmp:CallbackRegistrator action="setStatusStop" target="{MainManager}" method="onSetStatusStop"/>
+			<rtmp:CallbackRegistrator action="checkSharedInfo" target="{MainManager}" method="onCheckSharedInfo"/>
+			<rtmp:CallbackRegistrator action="checkListDates" target="{MainManager}" method="onCheckListDates"/>
+			<rtmp:CallbackRegistrator action="checkListSession" target="{MainManager}" method="onCheckListSession"/>
+			<rtmp:CallbackRegistrator action="checkAddSession" target="{MainManager}" method="onCheckAddSession"/>
+			<rtmp:CallbackRegistrator action="checkUpdateSession" target="{MainManager}" method="onCheckUpdateSession"/>
+			<rtmp:CallbackRegistrator action="checkDeleteSession" target="{MainManager}" method="onCheckDeleteSession"/>
+			<rtmp:CallbackRegistrator action="checkListActiveObsel" target="{MainManager}" method="onCheckListActiveObsel"/>
+			<rtmp:CallbackRegistrator action="checkListObselStartSession" target="{MainManager}" method="onCheckListObselStartSession"/>
+			<rtmp:CallbackRegistrator action="checkListUserObsel" target="{MainManager}" method="onCheckListUserObsel"/>
+			<rtmp:CallbackRegistrator action="checkListClosedSession" target="{MainManager}" method="onCheckListClosedSession"/>
+			<rtmp:CallbackRegistrator action="checkListObselClosedSession" target="{MainManager}" method="onCheckListObselClosedSession"/>
+
+			<rtmp:CallbackRegistrator action="checkListObselClosedSessionViaKtbs" target="{MainManager}" method="checkListObselClosedSessionViaKtbs"/>
+			
+			<rtmp:CallbackRegistrator action="checkListObselSessionExitSessionPause" target="{MainManager}" method="onCheckListObselSessionExitSessionPause"/>
+			<rtmp:CallbackRegistrator action="checkLastSession" target="{MainManager}" method="onCheckLastSession"/>
+			<rtmp:CallbackRegistrator action="checkUpdatedMarker" target="{MainManager}" method="onCheckUpdatedMarker"/>
+			<rtmp:CallbackRegistrator action="checkSessionSalonRetro" target="{MainManager}" method="onCheckSessionSalonRetro"/>
+			<rtmp:CallbackRegistrator action="checkAddObselComment" target="{MainManager}" method="onCheckAddObselComment"/>
+			<rtmp:CallbackRegistrator action="checkListRetroDocument" target="{MainManager}" method="onCheckListRetroDocument"/>
+			<rtmp:CallbackRegistrator action="checkRetroDocument" target="{MainManager}" method="onCheckRetroDocument"/>
+			<rtmp:CallbackRegistrator action="checkConnectedClients" target="{MainManager}" method="getConnectedClients"/>
+			<rtmp:CallbackRegistrator action="checkClientInfo" target="{MainManager}" method="onCheckClientInfo"/>
+			<rtmp:CallbackRegistrator action="checkListObselSessioExitSessionPause" target="{MainManager}" method="onCheckListObselSessioExitSessionPause"/>
+			<rtmp:CallbackRegistrator action="checkListRetroDocumentBySessionId" target="{MainManager}" method="onCheckListRetroDocumentBySessionId"/>
+			<rtmp:CallbackRegistrator action="bilanListRetrieved" target="{MainManager}" method="onBilanListRetrieved"/>
+			<rtmp:CallbackRegistrator action="checkUpdateAddedRetrodocument" target="{MainManager}" method="onCheckUpdateAddedRetrodocument"/>
+			<rtmp:CallbackRegistrator action="checkTracesIdRetroRoom" target="{MainManager}" method="onCheckTracesIdRetroRoom"/>
+			<rtmp:CallbackRegistrator action="checkListObselRetroRoom" target="{MainManager}" method="onCheckListObselRetroRoom"/>
+			<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
+        </mate:EventHandlers>
+
+		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
+			<mate:MethodInvoker generator="{MainManager}"
+								method="onError" arguments="{[currentEvent]}"/>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.OUT_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="checkOutSession"
+							  arguments="{[event.userId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+        <mate:EventHandlers type="{MessageEvent.SEND_PRV_MESSAGE}">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}">
+                <mate:Request action="sendPrivateMessage"
+                              arguments="{[event.senderUserId, event.message, event.resiverUserId]}"/>              
+            </rtmp:RtmpServiceInvoker>
+       </mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.SEND_PUB_MESSAGE}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="sendPublicMessage"
+							  arguments="{[event.senderUserId, event.message]}"/>             
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.START_RECORDING}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="recorder.startRecordRoom"
+							  arguments="{[event.sessionId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{MessageEvent.STOP_RECORDING}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="recorder.stopRecordRoom"
+							  arguments="{[event.sessionId,event.sessionStatus]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="shared.sendSharedInfo"
+							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor, event.beginTime, event.endTime, event.typeShortMarker]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{TraceLineEvent.UPDATE_MARKER_OBSEL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="shared.sendEditedMarker"
+							  arguments="{[ event.info, event.listUsers, event.timeStamp, event.action, event.forUserId, event.beginTime, event.endTime]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionUserEvent.UPDATE_SESSION_USER}">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="updateSessionUserApplication"
+							  arguments="{[event.oldSessionUser, event.newSessionUser]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{TraceLineEvent.UPDATE_COMMENT_OBSEL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.addObselComment"   arguments="{[event.traceComment, event.traceParent, event.typeObsel,
+							  event.textComment, event.beginTime, event.endTime, event.forUserId, event.sessionId, event.timeStamp]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+        
+        <mate:EventHandlers type="{ShortMarkerEvent.SAVE_SHORT_MARKER}" debug="true">
+            <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+                <mate:Request action="obselInfo.addObselSaveShortMarker"   arguments="{[event.loggedUserId, event.listText, event.listColor]}" />
+            </rtmp:RtmpServiceInvoker>
+        </mate:EventHandlers>
+        
+        <mate:EventHandlers type="{RtmpDataEvent.DATA}" debug="true"/>
+		
+
+    </fx:Declarations>
+
+</mate:EventMap>

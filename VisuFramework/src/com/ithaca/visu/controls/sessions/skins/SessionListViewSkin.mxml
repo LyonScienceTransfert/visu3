@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.sessions.SessionListView")]
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.utils.VisuUtils;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
+			
+
+			private function labelFunctionOwnerSession(item:Object, column:Object):String
+			{
+				var result:String = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(item.id_user),true);
+				return result;
+			}
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="plan" />
+		<s:State name="session" />
+	</s:states>
+	<!-- SkinParts
+	name=filterText, type=spark.components.TextInput, required=false
+	name=newSessionButton, type=spark.components.Button, required=false
+	name=newPlanButton, type=spark.components.Button, required=false
+	name=sharingMineButton, type=spark.components.RadioButton, required=false
+	name=planList, type=spark.components.List, required=false
+	name=comingButton, type=spark.components.RadioButton, required=false
+	name=allButton, type=spark.components.RadioButton, required=false
+	name=sessionList, type=spark.components.List, required=false
+	name=sharingAllButton, type=spark.components.RadioButton, required=false
+	name=sharingOtherButton, type=spark.components.RadioButton, required=false
+	name=pastButton, type=spark.components.RadioButton, required=false
+	-->
+	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+		<s:Group width="100%">
+			<s:Rect id="filterAreaBorder" width="100%" height="100%" radiusX="5">
+				<s:stroke >
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" alpha="0.5625" />
+						<s:GradientEntry color="0x000000" alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+				<s:fill>
+					<s:SolidColor id="solidColorFilter" color="0x000000"/>
+				</s:fill>
+			</s:Rect>
+			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+				<s:Label  id="filterLabel" text="Filtre:"/>
+				<s:VGroup id="filterSessionButtonsGroup" width="100%" verticalAlign="middle" includeIn="session">
+					<s:RadioButton groupName="timeFilter" 
+								   id="allButton"
+								   label="Toutes les séances" 
+								   selected="true"
+								   />
+					<s:RadioButton groupName="timeFilter" 
+								   id="pastButton"
+								   label="Séances passées" 
+								   />
+					<s:RadioButton groupName="timeFilter" 
+								   id="comingButton"
+								   label="Séances à venir" 
+								   />
+				</s:VGroup>
+				<s:VGroup id="filterPlanButtonsGroup" width="100%" verticalAlign="middle" includeIn="plan">
+					<s:RadioButton groupName="sharingFilter" 
+								   id="sharingAllButton"
+								   label="Tous les plans de séance" 
+								   selected="true"
+								   />
+					<s:RadioButton groupName="sharingFilter" 
+								   id="sharingMineButton"
+								   label="Mes plans de séance (créés par moi)"
+								   toolTip="Afficher uniquement les plans de séance que j'ai créés"/>
+					<s:RadioButton groupName="sharingFilter" 
+								   id="sharingOtherButton"
+								   label="Autres plans de séance partagés (créés par d'autres)" 
+								   toolTip="Afficher uniquement les plans de séance créés et partagés par d'autres utilisateurs"/>	
+				</s:VGroup>	
+				<s:HGroup id="filterGroup" width="100%" verticalAlign="middle">
+					<s:Label  text="Contient le Texte:"/>
+					<s:TextInput width="100%" text="" id="filterText"/>
+					<s:Group id="clearIcon" right="3" verticalCenter="-1" visible="{filterText.text.length>0}" includeInLayout="{filterText.text.length>0}">
+						<s:Path 
+							winding="{GraphicsPathWinding.EVEN_ODD}"
+							data="M 4 5 L 5 4 L 8 7 L 11 4 L 12 5 L 9 8 L 12 11 L 11 12 L 8 9 L 5 12 L 4 11 L 7 8 L 4 5 Z M 1 8 C 1 12 4 15 8 15 C 12 15 15 12 15 8 C 15 4 12 1 8 1 C 4 1 1 4 1 8 Z " 
+							blendMode="normal" 
+							alpha="0.7">
+							<s:fill>
+								<s:LinearGradient x = "7" y = "0" scaleX = "14" rotation = "90">
+									<s:GradientEntry color="#666666" ratio="0" alpha="1"/>
+									<s:GradientEntry color="#999999" ratio="1" alpha="1"/>
+								</s:LinearGradient>
+							</s:fill>
+							<s:filters>
+								<s:DropShadowFilter angle="90" color="#000000" distance="1" alpha="0.65" quality="0" inner="true"/>
+								<s:DropShadowFilter angle="90" color="#ffffff" distance="1" alpha="0.7" quality="0"/>
+							</s:filters>
+						</s:Path>
+					</s:Group>
+				</s:HGroup>
+			</s:VGroup>
+		</s:Group>
+		
+		<s:Group width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" x.session="0">
+				<s:HGroup verticalAlign="bottom" width="100%" horizontalAlign="center">
+					<s:Group id="newPlanSessionButtonsGroup">
+						<s:Button id="newPlanButton" label="Nouveau plan" toolTip="Créer un nouveau plan de séance vide" includeIn="plan"/>
+						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Créer une nouvelle séance avec un plan de séance vide" includeIn="session" x="0"/>
+					</s:Group>
+				</s:HGroup>
+				<mx:DataGrid id="planDataGrid" width="100%" height="100%" includeIn="plan">
+					<mx:columns>
+						<mx:DataGridColumn dataField="theme" showDataTips="true" dataTipField="theme">
+							<mx:headerText>Titre de séance</mx:headerText>			
+						</mx:DataGridColumn>
+						<mx:DataGridColumn dataField="id_user" labelFunction="labelFunctionOwnerSession" width="100">
+							<mx:headerText>Propriétaire de séance</mx:headerText>			
+						</mx:DataGridColumn>
+					</mx:columns>
+				</mx:DataGrid>
+				<s:List id="planList" width="100%" height="100%"  excludeFrom="plan,session">
+					<s:itemRenderer>
+						<fx:Component>
+							<s:ItemRenderer width="100%">
+								<fx:Script>
+									<![CDATA[
+										import com.ithaca.utils.VisuUtils;
+										import com.ithaca.visu.model.Model;
+									]]>
+								</fx:Script>
+								<s:HGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5"  left="0" right="0" verticalAlign="middle" height="20">
+									<s:Label width="50%" maxDisplayedLines="1" text="{data.theme}" toolTip="{data.theme}"/>
+									<mx:Spacer width="2%"/>
+									<s:HGroup width="48%" right="1">
+										<!-- move Model from here -->
+										<s:Label  width="55%" maxDisplayedLines="1" text="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}"/>
+										<s:Label  width="45%" visible="{data.share}" text="(partagé)" right="1"/>
+									</s:HGroup>
+								</s:HGroup>
+							</s:ItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+				</s:List>
+				<mx:DataGrid id="sessionDataGrid" width="100%" height="100%" includeIn="session">
+					<mx:columns>
+						<mx:DataGridColumn id="dateSessionDataGrid" dataField="date_session" width="80">
+							<mx:headerText>Date prévue</mx:headerText>			
+						</mx:DataGridColumn>
+						<mx:DataGridColumn dataField="theme">
+							<mx:headerText>Titre de séance</mx:headerText>			
+						</mx:DataGridColumn>
+						<mx:DataGridColumn dataField="id_user" labelFunction="labelFunctionOwnerSession" width="80">
+							<mx:headerText>Propriétaire de séance</mx:headerText>			
+						</mx:DataGridColumn>
+					</mx:columns>
+				</mx:DataGrid>
+				<s:List id="sessionList" width="100%" height="100%" excludeFrom="plan,session">
+					<s:itemRenderer>
+						<fx:Component>
+							<s:ItemRenderer width="100%">
+								<fx:Script>
+									<![CDATA[
+										import com.ithaca.utils.UtilFunction;
+										import com.ithaca.utils.VisuUtils;
+										import com.ithaca.visu.model.Model;
+									]]>
+								</fx:Script>
+								<s:HGroup  paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" left="0" right="0" verticalAlign="middle" height="20">
+									<s:Label width="23%" text="{UtilFunction.getDateMonthHourMin(data.date_session)}" maxDisplayedLines="1"/>
+									<mx:Spacer width="2%"/>
+									<s:HGroup  width="75%">
+										<s:Label  width="65%" text="{data.theme}" toolTip="{data.theme}" maxDisplayedLines="1"/>
+										<s:Label width="35%" text="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" toolTip="{VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(data.id_user),true)}" maxDisplayedLines="1"/>
+									</s:HGroup>
+								</s:HGroup>
+							</s:ItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+				</s:List>
+			</s:VGroup>		
+		</s:Group>
+	</s:VGroup>
+</s:Skin>

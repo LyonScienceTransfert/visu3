@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    preinitialize="skin1_preinitializeHandler(event)">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.messagerie.DialogMessageItem")]
+    </fx:Metadata>
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.events.FlexEvent;
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+
+        protected function skin1_preinitializeHandler(event:FlexEvent):void
+        {
+            // initialisation gettext
+            fxgt = FxGettext;
+        }
+
+    ]]>
+    </fx:Script>
+    <s:VGroup  id="groupDialogMessage" width="100%">
+        <s:HGroup>
+            <s:VGroup id="groupDialogInfo">
+                <s:HGroup verticalAlign="middle">
+                    <mx:Image width="70" height="70"/>
+                    <s:VGroup>
+                        <s:HGroup>
+                            <s:Label >
+                                <s:text>Prenom :</s:text>
+                            </s:Label>
+                            <s:Label  id="lastName">
+                               <s:text>Gosa</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                        <s:HGroup>
+                            <s:Label>
+                                <s:text>Nom :</s:text>
+                            </s:Label>
+                            <s:Label  id="firstName">
+                               <s:text>Petrov</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                        <s:HGroup>
+                            <s:Label >
+                                <s:text>Status :</s:text>
+                            </s:Label>
+                            <s:Label>
+                               <s:text>connected</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                        <s:HGroup>
+                            <s:Label >
+                                <s:text>Where :</s:text>
+                            </s:Label>
+                            <s:Label>
+                               <s:text>Retrospection</s:text>
+                            </s:Label>
+                        </s:HGroup>
+                    </s:VGroup>
+                </s:HGroup>
+                <s:HGroup>
+                    <s:Label >
+                        <s:text>Role :</s:text>
+                    </s:Label>
+                    <s:Label id="roleUser">
+                        <s:text>Administrateur</s:text>
+                    </s:Label>
+                </s:HGroup>
+            </s:VGroup>
+        </s:HGroup>
+        <s:Scroller width="100%" height="100%" id="scrollerPanelDialogMessage"> 
+            <s:VGroup id="groupMessageItem" top="0" left="10" width="100%"/>
+        </s:Scroller> 
+        <s:HGroup width="100%" paddingLeft="3" paddingRight="3" paddingTop="5" paddingBottom="5">
+            <s:TextArea    id="textChatMessage" enabled="true" height="25" width="100%" >				
+            </s:TextArea>
+            <mx:Button id="buttonChatMessage" icon="{IconEnum.getIconByName('chat')}" height="25" >
+                <mx:label>Envoyer le message</mx:label>
+            </mx:Button>
+        </s:HGroup>	
+    </s:VGroup>
+</s:Skin>

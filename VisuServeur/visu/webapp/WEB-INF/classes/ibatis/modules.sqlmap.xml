@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="modules">
+
+	<typeAlias alias="module"
+		type="com.lyon2.visu.domain.model.Module" />
+	    <cacheModel id="cache" type="LRU" readOnly="false">
+	        <flushInterval hours="24"/>
+	        <property name="cache-size" value="1000"/>
+	    </cacheModel>
+
+
+	<resultMap class="com.lyon2.visu.domain.model.Module"
+		id="moduleResult">
+		<result column="name" jdbcType="LONGVARCHAR" property="name" />
+		<result column="label" jdbcType="LONGVARCHAR" property="label" />
+        <result column="url" jdbcType="LONGVARCHAR" property="url" />
+		<result column="css" jdbcType="LONGVARCHAR" property="css" />
+        <result column="profileUser" jdbcType="INTEGER" property="profileUser" />
+	</resultMap>
+
+	<sql id="selectBase">
+		SELECT name,label,url,css,profileUser	</sql>
+	
+	<select id="getModules" resultMap="moduleResult" cacheModel="cache">
+		<include refid="selectBase" />
+		FROM modules 
+	</select>
+
+</sqlMap>

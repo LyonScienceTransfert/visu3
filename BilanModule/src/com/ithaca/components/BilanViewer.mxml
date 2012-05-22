@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Group 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    	xmlns:s="library://ns.adobe.com/flex/spark" 
+    	xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:ithaca="com.ithaca.components.*"
+		xmlns:controls="com.lyon2.controls.*"
+		xmlns:mate="http://mate.asfusion.com/" xmlns:video="com.ithaca.visu.view.video.*" xmlns:components="com.ithaca.utils.components.*"
+        creationComplete="group1_creationCompleteHandler(event)"
+	    >
+    <fx:Script>
+        <![CDATA[
+			import com.ithaca.documentarisation.RetroDocumentConst;
+			import com.ithaca.documentarisation.SegmentVideoAdvanced;
+			import com.ithaca.documentarisation.model.RetroDocument;
+			import com.ithaca.documentarisation.model.Segment;
+			import com.ithaca.documentarisation.renderer.BlocCommentAudioBilanRenderer;
+			import com.ithaca.documentarisation.renderer.BlocTitleBilanRenderer;
+			import com.ithaca.documentarisation.renderer.BlocVideoBilanRenderer;
+			import com.ithaca.visu.events.BilanEvent;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			
+			private var logger : ILogger = Log.getLogger('com.ithaca.components.BilanViewer');
+			
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
+
+			[Bindable]
+			private var timer:Timer;
+			
+			
+			[Bindable]
+			public var bilan:RetroDocument = null;
+            
+			// start session in ms from 1970 year
+			// for calculate seekSession, beginSegment has time ms from 1970
+			private var sessionStart:Number;
+			private var currentRetroDocumentSegmentPlaying:SegmentVideoAdvanced = null;
+            // show info label
+            private var _showLabelInfo:Boolean;
+
+            public function set showBilanByInitApplication(value:Boolean):void
+            {
+                _showLabelInfo = value;
+                group1_creationCompleteHandler();
+            }
+            
+			public function stop():void {
+				if(this.visio) {
+					logger.debug("Removing all streams from the video player in bilan module");
+					this.visio.removeAllStreams();
+				}
+					
+				if(this.timer) {
+					logger.debug("Stopping the timer in bilanViewer");
+					this.timer.stop();
+					this.timer = null;
+				} 
+			}
+
+			public function setNewBilan(bilan:RetroDocument):void {
+				// remove all empty segments  : empty text , durationCommentAudio = 0
+				var listSegmentClean:ArrayCollection = new ArrayCollection();
+				var listSegment:ArrayCollection = bilan.listSegment as ArrayCollection;
+				var nbrSegment:int = listSegment.length;
+				for(var nSegment:int = 0; nSegment < nbrSegment; nSegment++)
+				{
+					var segment:Segment = listSegment.getItemAt(nSegment) as Segment;
+                    var typeSegment:String = segment.typeSource;
+					if(!(segment.comment == "" && segment.durationCommentAudio == 0) ||
+                        (typeSegment == RetroDocumentConst.VIDEO_SEGMENT))
+					{
+						listSegmentClean.addItem(segment);
+					}
+				}
+				bilan.listSegment = listSegmentClean;
+				
+				this.bilan = bilan;
+						
+				if(this.visio!=null) 
+					this.visio.removeAllStreams();
+				logger.debug("Setting a new bilan to the bilan viewer");
+				logger.debug("id: {0}",bilan.id);
+				logger.debug("creation date: {0}",bilan.creationDateAsDate);
+				logger.debug("modification date: {0}",bilan.modifyDateAsDate);
+				logger.debug("creation date (str): {0}",bilan.creationDate);
+				logger.debug("modification date (str): {0}",bilan.modifyDate);
+				logger.debug("title: {0}",bilan.title);
+				logger.debug("description: {0}",bilan.description);
+                if(bilan.session)
+                {
+    				logger.debug("session id: {0}",bilan.session.id_session);	
+    				logger.debug("session theme: {0}",bilan.session.theme);
+    				logger.debug("session owner id: {0}",bilan.session.id_user);
+                }
+				
+				if(bilan != null) {
+					var event:BilanEvent = new BilanEvent(BilanEvent.BILAN_LOADED);
+					event.sessionId = bilan.sessionId;
+					logger.info("Sending the request for the obsel list of session {0}", bilan.sessionId);
+					logger.info("The attached session object is {0}", bilan.session);
+					this.dispatchEvent(event);
+				}
+			}
+			
+			protected function buttonPlay_clickHandler(event:* = null):void
+			{
+				if( buttonPlay.label == fxgt.gettext("Play"))
+				{
+					buttonPlay.label = fxgt.gettext("Pause");
+					this.visio.resumeStreams();
+					this.visio.status = VisuVisioAdvanced.STATUS_REPLAY;
+				}else
+				{
+					buttonPlay.label = fxgt.gettext("Play");
+					this.visio.pauseStreams();
+					this.visio.status = VisuVisioAdvanced.STATUS_PAUSE;
+				}
+			}
+			protected function buttonMute_clickHandler(event:* = null):void
+			{
+				if (buttonMute.label == fxgt.gettext("Couper le son"))
+				{
+					buttonMute.label = fxgt.gettext("Activer le son");
+					this.visio.setVolumeMute(true);
+				}else
+				{
+					buttonMute.label = fxgt.gettext("Couper le son");
+					this.visio.setVolumeMute(false);
+				}
+			}
+			
+			public function initButtons(value:Boolean):void
+			{
+				var label:String = fxgt.gettext("Couper le son");
+				if(!value)
+				{
+					label = fxgt.gettext("Activer le son");
+				}
+				buttonMute.label = label;
+				buttonMute_clickHandler();
+				buttonPlay.enabled = false;
+				buttonPlay.label = fxgt.gettext("Pause");
+				buttonPlay_clickHandler();
+			}
+			
+			private function setRendererSegmentFunction(item:Object):ClassFactory
+			{
+				var className:Class = BlocTitleBilanRenderer;
+				
+				if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+				{
+					className = BlocCommentAudioBilanRenderer;
+				}else
+					if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+					{
+						className = BlocVideoBilanRenderer;
+					}
+				return new ClassFactory( className);
+			}
+
+			////////////
+			// Handlers videoSegment
+			//////////
+			public function playRetroSegment(value:Object, beginTime:Number, endTime:Number):void
+			{
+				var segmentVideo:SegmentVideoAdvanced = value as SegmentVideoAdvanced;
+				if(segmentVideo)
+				{
+					// set status play 
+					visio.status = VisuVisioAdvanced.STATUS_REPLAY;
+					
+					// set timer
+					var durationVideoSegment:Number = endTime - beginTime;
+					if(durationVideoSegment < 0)
+					{
+						durationVideoSegment = 0;
+					}
+					// init timer
+					startTimerRetroDocumentSegment(durationVideoSegment);
+					
+					if(currentRetroDocumentSegmentPlaying == null)
+					{
+						// set current video segment
+						currentRetroDocumentSegmentPlaying = segmentVideo;
+						visio.autoPlay = true;
+						visio.seekSession = beginTime;
+					}
+					else if(currentRetroDocumentSegmentPlaying == segmentVideo)
+					{
+						this.timer.start();
+						visio.resumeStreams();
+					}
+					else
+					{
+						// set current video segment
+						currentRetroDocumentSegmentPlaying = segmentVideo;
+						visio.autoPlay = true;
+						visio.seekSession = beginTime;
+					}
+					// enabled button play/pause
+					buttonPlay.enabled = true;
+					buttonPlay.label = fxgt.gettext("Pause");
+				}else
+				{
+					// click on button "play" the AudioRecorder
+					stopRetroSegment();
+				}
+			}
+			public function pauseRetroSegment():void
+			{
+				if(currentRetroDocumentSegmentPlaying)
+				{
+					currentRetroDocumentSegmentPlaying.setPause();
+				}
+				// set status play 
+				visio.status = VisuVisioAdvanced.STATUS_PAUSE;
+				// do plause segment
+				visio.pauseStreams();
+				timer.stop();
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				buttonPlay.label = fxgt.gettext("Play");
+			}
+			
+			public function stopRetroSegment():void
+			{
+				endTimerRetroDocumentSegment();
+
+				// set status play 
+				if(visio.status != VisuVisioAdvanced.STATUS_NONE)
+				{
+					visio.status = VisuVisioAdvanced.STATUS_PAUSE;
+				}
+				// do plause segment
+				visio.pauseStreams();
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				buttonPlay.label = fxgt.gettext("Play");
+			}
+			/**
+			 * set timer for video segment
+			 */
+			private function startTimerRetroDocumentSegment(value:Number):void
+			{
+				if(timer != null)
+				{
+					timer.removeEventListener(TimerEvent.TIMER, endTimerRetroDocumentSegment);
+					timer = null;
+				}
+				timer = new Timer(value,0);
+				timer.addEventListener(TimerEvent.TIMER, endTimerRetroDocumentSegment);
+				timer.start();
+			}
+			
+			/**
+			 * remove timer video segment
+			 */
+			private function endTimerRetroDocumentSegment(event:TimerEvent = null):void
+			{
+				// set time to current video segment 
+				if(currentRetroDocumentSegmentPlaying != null)
+				{
+					currentRetroDocumentSegmentPlaying.setBeginEndTime();
+					// set curentRetroDocumentSegment to null
+					currentRetroDocumentSegmentPlaying = null;
+				}
+				if(timer)
+				{
+					timer.stop();
+					timer.removeEventListener(TimerEvent.TIMER, endTimerRetroDocumentSegment);
+					timer = null;
+				}
+				// do plause segment
+				visio.pauseStreams();
+				// set status play 
+				visio.status = VisuVisioAdvanced.STATUS_NONE;
+				// enabled button play/pause
+				buttonPlay.enabled = true;
+				buttonPlay.label = fxgt.gettext("Play");
+			}
+			//////////////
+			/// Handlers VisuVisioAdvanced
+			/////////////
+			protected function visio_updateTimeHandler(event:VisuVisioAdvancedEvent):void
+			{
+				var beginTime:Number = event.beginTime;
+				if( currentRetroDocumentSegmentPlaying != null)
+				{
+					currentRetroDocumentSegmentPlaying.currentTime = beginTime;
+				}
+			}
+
+			protected function visio_clickPanelVideoHandler(event:VisuVisioAdvancedEvent):void
+			{
+				buttonPlay_clickHandler();
+			}
+
+			protected function visio_creationCompleteHandler(event:FlexEvent):void
+			{
+				visio.connection = Model.getInstance().getNetConnection();
+				visio.addVideoStream("void",null, 0.0, true);
+			}
+
+
+            protected function group1_creationCompleteHandler(event:*=null):void
+            {
+                fxgt = FxGettext;
+                
+                if(infoLabel)
+                {
+                    if(_showLabelInfo)
+                    {
+                        infoLabel.text = fxgt.gettext("Vous n'avez pas les droits suffisants pour accéder au bilan, contactez le propriétaire pour qu'il vous donne les droits");
+                    }else
+                    {
+                        infoLabel.text = fxgt.gettext("Aucun bilan sélectionné");
+                    }
+                }
+            }
+
+        ]]>
+    </fx:Script>
+    <s:states>
+        <s:State name="normal"/>
+    </s:states>
+    <s:VGroup includeInLayout="{!bilan}" visible="{!bilan}" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+    	<s:Label id="infoLabel" fontSize="14" fontStyle="italic"/>
+    </s:VGroup>
+ 
+	<s:VGroup includeInLayout="{bilan}" visible="{bilan}" width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+				<s:HGroup paddingTop="5" paddingBottom="5" paddingRight="5" paddingLeft="5" width="100%" verticalAlign="middle" height="100%">
+						<s:VGroup 
+							minWidth="150"
+							width="50%"
+							height="100%">
+								<s:HGroup width="100%" gap="2"> 
+									<s:Label 
+										fontSize="20"
+										fontWeight="bold"
+										lineBreak="toFit"
+										width="100%"
+										text="{bilan.title}"/>
+									<mx:Spacer width="2"/>
+								</s:HGroup>
+								<s:Label 
+									fontSize="12"
+									lineBreak="toFit"
+									width="100%"
+									fontStyle="italic"
+									 visible="false"
+									text="{bilan.description}"/>
+								
+								<s:List id="segmentList" 
+									borderVisible="false" width="100%" height="100%"  
+									dataProvider="{bilan.listSegment}" 
+									itemRendererFunction="setRendererSegmentFunction" 
+									>
+								</s:List>
+						</s:VGroup>
+						<s:VGroup 
+							width="50%"
+							height="100%"
+							paddingTop="5"
+							paddingBottom="5" paddingRight="5" paddingLeft="5" horizontalAlign="center" verticalAlign="middle"> 
+							<video:VisuVisioAdvanced id="visio" width="100%" height="100%"
+										quality="80"
+										bandwidth="15000" autoPlay="false" 
+										creationComplete="visio_creationCompleteHandler(event)"
+										updateTime="visio_updateTimeHandler(event)"
+								        clickPanelVideo="visio_clickPanelVideoHandler(event)"/>
+							<mx:Spacer height="5"/>
+							<s:HGroup width="100%" horizontalAlign="center">
+								<s:Button id="buttonPlay" click="buttonPlay_clickHandler(event)" enabled="false">
+	                              <s:label>{fxgt.gettext('Pause')}</s:label>
+								</s:Button>
+								<s:Button id="buttonMute" click="buttonMute_clickHandler(event)">
+                                  <s:label>{fxgt.gettext('Couper le son')}</s:label>
+								</s:Button>
+							</s:HGroup>
+							<mx:Spacer height="5"/>
+						</s:VGroup>
+				</s:HGroup>
+	</s:VGroup>
+</s:Group>

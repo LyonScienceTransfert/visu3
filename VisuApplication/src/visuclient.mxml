@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<core:VisuApplication
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:core="com.ithaca.visu.core.*"
+	xmlns:map = "maps.*"
+	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:vo="com.ithaca.visu.model.vo.*"
+
+	minWidth="1010" minHeight="500"
+	preinitialize="visuapplication1_preinitializeHandler(event)"
+	creationComplete="visuapplication1_creationCompleteHandler(event)"
+	>
+	<fx:Declarations>
+		<map:MainMap id="mainMap"/>
+		<mate:Listener type="{LoginFormEvent.GET_USER_ACTIVATED_KEY}"  method="updateActivatedForm"/>
+		<mate:Listener type="{LoginFormEvent.UPDATE_PASSWORD_DELETE_ACTIVATED_KEY}"  method="showLoginForm"/>
+		<mate:Listener type="{VisuModuleEvent.LOAD_LIST_MODULES}"  method="userLoggedIN"/>
+		<mate:Listener type="{SessionEvent.JOIN_SESSION}"  method="joinSession"/>
+		<mate:Listener type="{SessionEvent.EDIT_SESSION}"  method="editSession"/>
+		<mate:Listener type="{SessionEvent.GO_HOME_MODULE}"  method="goHome"/>
+		<mate:Listener type="{SessionEvent.GO_RETROSPECTION_MODULE}"  method="goRetrospection"/>
+		<mate:Listener type="{SessionEvent.GO_BILAN_MODULE}"  method="goBilan"/>
+		<mate:Listener type="{RetroDocumentEvent.GO_BILAN_MODULE_FROM_RETRO}"  method="goBilanFromRetrospection"/>
+		<mate:Listener type="{RetroDocumentEvent.GO_BILAN_MODULE_FROM_SESSION}"  method="goBilanFromSession"/>
+		<mate:Listener type="{RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN}"  method="goRetroFromBilan"/>
+		<mate:Listener type="{RetroDocumentEvent.GO_RETRO_MODULE_FROM_SESSION}"  method="goRetroFromSession"/>
+		<mate:Listener type="{ApplicationMenuEvent.CLOSE_CONNECTION}"  method="onCloseConnection"/>
+		<mate:Listener type="{ObselEvent.DELETE_OBSEL}"  method="onDeleteObselMarker" useWeakReference="true"/>
+		<mate:Listener type="{ObselEvent.EDIT_OBSEL}"  method="onEditObselMarker" useWeakReference="true"/>
+		
+		<mate:Listener type="{ObselEvent.EDIT_OBSEL}"  method="onShowWindowEditObsel"/>
+       
+		<vo:ProfileDescriptionVO />
+		
+		 <mx:TraceTarget level="0" 
+            includeDate="true" 
+            includeTime="true" 
+            includeCategory="true" 
+            includeLevel="true">
+            <mx:filters>
+                <fx:Array>
+                    <fx:String>*</fx:String>
+                </fx:Array>
+            </mx:filters>
+        </mx:TraceTarget>
+		
+		
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+            import com.ithaca.documentarisation.events.RetroDocumentEvent;
+            import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.model.TraceModel;
+            import com.ithaca.utils.EditObselMarkerTitleWindow;
+            import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+            import com.ithaca.visu.controls.login.event.LoginFormEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.SessionSharedEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.vo.UserVO;
+            import com.ithaca.visu.ui.utils.ActionObselEnum;
+            import com.ithaca.visu.ui.utils.RoleEnum;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext.ISO_3166;
+            import gnu.as3.gettext.ISO_639_1;
+            import gnu.as3.gettext.Locale;
+            import gnu.as3.gettext._FxGettext;
+            import gnu.as3.gettext.services.IGettextService;
+            import gnu.as3.gettext.services.URLLoaderService;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.core.FlexGlobals;
+            import mx.events.CloseEvent;
+            import mx.events.FlexEvent;
+            import mx.utils.URLUtil;
+            
+            import spark.components.RichText;
+			
+			[Bindable]
+			private var fxgt: _FxGettext = FxGettext;
+			private var currentObselEdit:Obsel = null;
+			private var currentTextEdit:String="";
+			private var NBR_LETTERS_FOR_ID_COMMITS_GIT:int = 10;
+            
+            private var activatedKey = null;
+			
+			private var listLang:ArrayCollection = new ArrayCollection();
+			
+			protected function visuapplication1_creationCompleteHandler(event:FlexEvent):void
+			{
+				this.setListLang();
+				menu.listLang = listLang;
+				menu.addEventListener(ApplicationMenuEvent.CHANGE_LANGUAGE, onChangeLanguage);
+				menu.addEventListener(ApplicationMenuEvent.DISCONNECT, onDisconnect);
+				// set info about local/remote versions
+				Model.getInstance().setLocalVersionGit(localversion.substr(0, NBR_LETTERS_FOR_ID_COMMITS_GIT));
+				Model.getInstance().setRemoteVersionGit(remoteversion.substr(0, NBR_LETTERS_FOR_ID_COMMITS_GIT));	
+
+				Model.getInstance().setDateCompiled(datecompiled);
+                
+                
+                // check activated key
+                if(activatedKey)
+                {
+                    // set endpoint for RemoteObject remoteUser
+                    this.mainMap.remoteUser.endpoint = Model.getInstance().AMFServer;;
+                    checkActivatedKey();
+                }
+			}
+
+			protected function onChangeLanguage(event:ApplicationMenuEvent):void
+			{
+				var language:String = event.moduleName as String;
+				setlocale(Locale.LC_MESSAGES, language);
+			}
+			
+			protected function onCloseConnection(event:ApplicationMenuEvent):void{
+				Alert.show(fxgt.gettext("Vous n'êtes plus connecté au serveur."), fxgt.gettext("Information"));
+				this.reloadApplication();			
+			}
+			protected function onDisconnect(event:ApplicationMenuEvent):void
+			{
+				Alert.yesLabel = fxgt.gettext("Oui");
+				Alert.noLabel = fxgt.gettext("Non");
+				Alert.show(fxgt.gettext("Voulez-vous quitter l'application ?"),
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, logOutConfirmed); 
+			}		
+			
+			protected function logOutConfirmed(event:CloseEvent):void
+			{
+				if( event.detail == Alert.YES )
+				{				
+					// TODO : gestion the Trace
+					//VisuTrace.trace("PresenceEnd");
+					this.reloadApplication();				
+				}
+			}
+			protected function reloadApplication():void
+			{
+				if (Capabilities.playerType == "StandAlone")
+				{
+					fscommand("quit");
+				}
+				else if (ExternalInterface.available)
+				{
+					try{
+						// get url the instance without link on the module
+						var urlPageReload:String = Model.getInstance().urlServeur;
+						var commandCalling:String = "window.open("+"'"+urlPageReload+"'"+",'_self')";
+						ExternalInterface.call(commandCalling);
+					} catch (error:Error) {
+						
+						navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
+					}
+				}
+				else
+				{
+					navigateToURL( new URLRequest(FlexGlobals.topLevelApplication.url), "_self" );
+				}		
+			}
+			
+			protected function visuapplication1_preinitializeHandler(event:FlexEvent):void
+			{	
+				fxgt = FxGettext;
+				var a: Array;			
+				/* Initialisation de différents paramètres via
+				les arguments passés dans l'URL */ 
+				
+				/* Initialise model.server with URL hostname */
+ 				 var appUrl:String = FlexGlobals.topLevelApplication.url;
+				Model.getInstance().server = URLUtil.getServerName( appUrl);
+				Model.getInstance().port   = URLUtil.getPort( appUrl );
+                // INFO : if change name of application(add timestamp) then with "appUrl.match" can't get name app
+				/**
+                a = appUrl.match(/\/(\w+)\/visuclient.swf/);
+				if (a)
+					Model.getInstance().appName = a[1];	  
+                */
+                 var appUrlSplit:Array = appUrl.split('/');
+                 // get app name that before last element of the array
+                 var appName:String= appUrlSplit[appUrlSplit.length-2];
+                 // set app name
+                 Model.getInstance().appName = appName;
+				
+				// we set the locale for the messages category to fr_FR
+				setlocale(Locale.LC_MESSAGES, mklocale(ISO_639_1.FR,ISO_3166.FR));				
+				
+				// prepare the service to load the translations.
+				// We assume the swf is at the root 
+				// of the ./FlexHelloWorld directory
+				var service:IGettextService = new URLLoaderService(".");
+				service.addEventListener(Event.COMPLETE, onServiceComplete);
+				service.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				
+				// You can listen to this event, but it is not required in 
+				// MXML files: the labels are automatically updated at startup 
+				// and when the locale changes
+				fxgt.addEventListener(Event.COMPLETE, onComplete);
+						
+				// Binds the messages of the helloword domain to the 
+				// default directory (locale)
+				fxgt.bindtextdomain("Visu2", null, service);
+				
+				// We select helloworld to be the default domain. 
+				fxgt.textdomain("Visu2");
+				
+				// detection if application in mode debug 
+				if(ExternalInterface.available)
+				{
+					var queryString:String = ExternalInterface.call("window.location.search.substring", 1);
+					if(queryString)
+					{
+						var params:Array = queryString.split('&');
+						var length:uint = params.length;
+						for (var i:uint=0,index:int=-1; i<length; i++) 
+						{
+							var kvPair:String = params[i];
+							if((index = kvPair.indexOf("=")) > 0)
+							{
+								var key:String = kvPair.substring(0,index);
+								var value:String = kvPair.substring(index+1);
+								params[key] = value;
+								if(params.hasOwnProperty('debugFlux'))
+								{
+						
+									if(params['debugFlux']=='true')
+										Model.getInstance().setModeDebug(true);
+								}
+								if(params.hasOwnProperty('frameratesplit'))
+								{
+									var frameRateSplit:Number = int(params['frameratesplit']);
+									if( frameRateSplit > 100 )
+										Model.getInstance().setFrameRateSplit(frameRateSplit);
+								}
+                                if(params.hasOwnProperty('module'))
+                                {
+                                    // set init module
+                                    Model.getInstance().setInitModule(params['module']);
+                                    // set init session id
+                                    Model.getInstance().setInitSessionId(params['sessionId']);
+                                    // set init bilan id
+                                    Model.getInstance().setInitBilanId(params['bilanId']);
+                                }
+                                // check mode expert
+                                if(params.hasOwnProperty('mode'))
+                                {
+                                    if(params['mode']=='expert')
+                                    {
+                                        Model.getInstance().setModeExpert(true);
+                                    }
+                                }
+                                // check property activation_key
+                                if(params.hasOwnProperty('activation_key'))
+                                {
+                                    // set activation_key
+                                    activatedKey = params['activation_key']
+                                }
+                            }
+						}
+					}
+				}else
+				{
+					// mode standalone
+					if(FlexGlobals.topLevelApplication.parameters.hasOwnProperty('debug'))
+					{
+						if(FlexGlobals.topLevelApplication.parameters.debug == 'true')
+							Model.getInstance().setModeDebug(true);
+					}
+				}
+			}
+			
+			private function onServiceComplete(event:Event):void
+			{
+				// do some stuff here, if needed.
+				var eventUpdateLanguage:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.UPDATE_LANGUAGE);
+				this.dispatchEvent(eventUpdateLanguage);
+			}
+			
+			private function onIOError(event:IOErrorEvent):void
+			{
+				// an error occured while loading the catalog
+				// it probably means there is no translations for this locale
+				// or the base path to the translations is incorrect.
+				trace(event);
+			}
+			
+			private function onComplete(event:Event):void
+			{
+				// update labels of the buttons at all modules
+				this.updateListLabelModule();
+			}
+
+			private function setListLang():void
+			{
+				listLang.addItem({labelLang:"Français", data: "fr_FR"});
+				//listLang.addItem({labelLang:"Deutsch", data: "de_DE"});
+				listLang.addItem({labelLang:"English", data: "en_US"});
+				//listLang.addItem({labelLang:"Русский", data: "ru_RU"}); 
+				listLang.addItem({labelLang:"Debug", data: "mm_MM"});
+			}
+			
+			private function updateListLabelModule():void{
+				// FIXME : maybe other way to update the labels
+				var listModulsButton:Array = menu.listModulesButton;
+				if(listModulsButton.home != null)
+				{
+					listModulsButton.home.label = fxgt.gettext("Accueil");
+					if(listModulsButton.user != null)
+					{
+						listModulsButton.user.label = fxgt.gettext("Utilisateurs");
+					}
+					if(listModulsButton.session != null)
+					{
+						listModulsButton.session.label = fxgt.gettext("Séances");
+					}
+					if(listModulsButton.tutorat != null)
+					{
+						listModulsButton.tutorat.label = fxgt.gettext("Salon synchrone");
+					}
+					if(listModulsButton.retrospection != null)
+					{
+						listModulsButton.retrospection.label = fxgt.gettext("Salon de rétrospection");
+					}
+				}
+			}
+			
+			/**
+			 * add marker "UpdateMarker" on the serveur
+			 */
+			private function onEditObselMarker(event:ObselEvent):void
+			{
+				var obsel:Obsel = event.obsel;
+				var sessionId:int = 0;
+				var listUsersId:Array;
+				var session:Session = Model.getInstance().getCurrentSession();
+				if(session != null)
+				{
+					sessionId = session.id_session;
+				}else return;
+				
+				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+				{
+					// student will shared markers only with Tuter, Responsable, Admin 
+					// will shared if session paused or recording
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+				}else
+				{
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+				}
+				
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
+				var message:String = obsel.props[TraceModel.TEXT];
+                // remove all char new line
+                message = message.split("\n").join("");
+                
+				sessionSharedEvent.info = message;
+				sessionSharedEvent.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.action = ActionObselEnum.EDIT_TEXT_OBSEL;
+				dispatchEvent(sessionSharedEvent);
+			}			 
+			
+			/**
+			 * delete obsel marker
+			 */
+			protected function onDeleteObselMarker(event:ObselEvent):void
+			{
+				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var listUsersId:Array;
+				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+				{
+					// student will shared markers only with Tuter, Responsable, Admin 
+					// will shared if session paused or recording
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+				}else
+				{
+					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+				}
+				// obsel to delete
+				var obsel:Obsel = event.obsel;
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_EDITED_MARKER);
+				sessionSharedEvent.info = "";
+				sessionSharedEvent.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.action = ActionObselEnum.DELETE_OBSEL;
+				dispatchEvent(sessionSharedEvent);				
+			}
+            
+            private function onShowWindowEditObsel(event:ObselEvent):void
+            {
+                // set current edit obsel 
+                currentObselEdit = event.obsel;
+                currentTextEdit = "";
+                var editObselMarker:EditObselMarkerTitleWindow = EditObselMarkerTitleWindow(PopUpManager.createPopUp( 
+                    this, EditObselMarkerTitleWindow , true) as spark.components.TitleWindow);
+                // Calculate position of TitleWindow in Application's coordinates. 
+                var point1:Point = new Point();
+                point1.x=this.width/2;
+                point1.y=this.height/2;             
+                editObselMarker.x=point1.x+25;
+                editObselMarker.y=point1.y+25;
+                
+                editObselMarker.textMarker.text = "";
+                editObselMarker.tempRichText = markerEdited;
+                // set focus
+                stage.focus = editObselMarker;
+                // set listener delete obsel
+                editObselMarker.addEventListener(ObselEvent.DELETE_OBSEL, onDeleteObselMarker);
+            }
+            
+            /**
+            * update activated form 
+            */
+            private function updateActivatedForm(event:LoginFormEvent):void
+            {
+                var userVO:UserVO = event.userVO;
+                
+                activatedForm.loggedUser = userVO;
+            }
+            
+            /**
+            * show login form
+            */
+            private function showLoginForm(event:LoginFormEvent):void
+            {
+                authentified = activated = false;
+            }
+            
+            /**
+            * check if user has activated key
+            * 
+            */
+            private function checkActivatedKey():void
+            {
+                // set skin activated 
+                activated = true;
+                var checkActivatedKeyEvent:LoginFormEvent = new LoginFormEvent(LoginFormEvent.CHECK_ACTIVATED_KEY);
+                checkActivatedKeyEvent.activatedKey = activatedKey;
+                dispatchEvent(checkActivatedKeyEvent);
+            }
+		]]>
+	</fx:Script>
+	
+	
+	
+	<fx:Script source="memory.as" />
+	<fx:Style source="styles.css" />
+	<s:Label visible="false">
+		<fx:String source="../../.git/refs/heads/master" id="localversion" />
+	</s:Label>
+	<s:Label visible="false">
+		<fx:String source="../../.git/refs/remotes/origin/master" id="remoteversion" />
+	</s:Label>	
+	<s:Label visible="false">
+		<fx:String source="../../comp-info.properties" id="datecompiled" />
+	</s:Label>	
+	<s:RichText id="markerEdited" width="100%" color="0x323232" text="Waiting..." visible="false"/>	
+</core:VisuApplication>

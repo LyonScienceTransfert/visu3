@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="/WEB-INF/red5-web.properties"/>
+    </bean>
+    <!--
+    <import resource="classpath:ktbs4j-context.xml"/>
+    -->
+    <!--
+    Defines a properties file for dereferencing variables
+    IMPORTANT : this override the default properties set in ktbs4j.properties
+    -->
+    
+<!--
+        Defines the web context
+    -->
+    
+    <bean id="web.context" class="org.red5.server.Context" autowire="byType"/>
+<!--
+        
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driver}" />
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+        </bean>
+        
+        <property name="dataSource" ref="dataSource" />
+        
+    -->
+    <bean id="sqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" singleton="false">
+        <property name="configLocation" value="classpath:ibatis/sqlMapConfig.xml"/>
+    </bean>
+<!--   
+        Defines the web scopes
+    -->
+    <bean id="web.scope" class="org.red5.server.WebScope" init-method="register">
+        <property name="server" ref="red5.server"/>
+        <property name="parent" ref="global.scope"/>
+        <property name="context" ref="web.context"/>
+        <property name="handler" ref="web.handler"/>
+        <property name="contextPath" value="${webapp.contextPath}"/>
+        <property name="virtualHosts" value="${webapp.virtualHosts}"/>
+    </bean>
+<!--
+        Defines the web handler which acts as an applications endpoint
+    -->
+<!--   
+    <bean id="ktbsHelper" 
+    	class="com.lyon2.visu.ktbs.KtbsApplicationHelper" 
+    	lazy-init="true" destroy-method="destroy">
+        <property name="clientFactory" ref="clientFactory"/>
+        <property name="rootUri" value="${ktbs.root.uri}"/>
+        <property name="sharedUsername" value="${ktbs.root.username}"/>
+        <property name="visuTraceModelName" value="${ktbs.model.visu}"/>
+        <property name="retroRoomTraceModelName" value="${ktbs.model.retroroom}"/>
+    </bean>
+-->
+    <bean id="web.handler" class="com.lyon2.visu.Application" singleton="false">
+        <property name="sqlMapClient" ref="sqlMap"/>
+        <property name="smtpServer" value="${visu.smtpServer}" />
+     <!--
+     <property name="ktbsService" ref="ktbs.service" />
+      -->
+    </bean>
+
+<!--  DAO Definitions  -->
+    <bean id="userDao" class="com.lyon2.visu.domain.dao.impl.UserDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="sessionDao" class="com.lyon2.visu.domain.dao.impl.SessionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="sessionUserDao" class="com.lyon2.visu.domain.dao.impl.SessionUserDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="profileDescriptionDao" class="com.lyon2.visu.domain.dao.impl.ProfileDescriptionDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="activityDao" class="com.lyon2.visu.domain.dao.impl.ActivityDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="activityElementDao" class="com.lyon2.visu.domain.dao.impl.ActivityElementDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="obselDao" class="com.ithaca.domain.dao.impl.ObselDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+    <bean id="retroDocumentDao" class="com.ithaca.domain.dao.impl.RetroDocumentDAOImpl">
+        <property name="sqlMapClient" ref="sqlMap"/>
+    </bean>
+<!--  Service Definitions  -->
+<!-- Stream -->
+    <bean id="recorder.service" class="com.lyon2.visu.red5.StreamRecorder">
+        <property name="application" ref="web.handler"/>
+    </bean>
+<!-- Shared -->
+    <bean id="shared.service" class="com.lyon2.visu.red5.SharedInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
+ <!--  Session -->
+     <bean id="sessionInfo.service" class="com.lyon2.visu.red5.SessionInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
+<!--  Obsel -->
+     <bean id="obselInfo.service" class="com.lyon2.visu.red5.ObselInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
+ <!-- Obsel by ktbs -->
+ <!--
+     <bean id="ktbsObselInfo.service" class="com.lyon2.visu.ktbs.KtbsObselInfo">
+        <property name="application" ref="web.handler"/>
+        <property name="ktbsService" ref="ktbs.service"/>
+    </bean>
+-->
+<!--  RetroRoomActiv -->
+     <bean id="retroRoom.service" class="com.lyon2.visu.red5.RetroRoomUserAction">
+        <property name="application" ref="web.handler"/>
+    </bean>
+     <bean id="retroDocument.service" class="com.lyon2.visu.red5.RetroDocumentInfo">
+        <property name="application" ref="web.handler"/>
+        <property name="retroDocumentService" ref="retroDocumentService.service"/>
+    </bean>
+<!-- Users -->
+     <bean id="userInfo.service" class="com.lyon2.visu.red5.UserInfo">
+        <property name="application" ref="web.handler"/>
+    </bean>
+<!-- BDD -->
+<!--
+    <bean id="ktbs.service" class="com.lyon2.visu.ktbs.KtbsService">
+ 		<property name="pluggedToKtbs" value="${visu.ktbs.plug}"/>
+        <property name="ktbsHelper" ref="ktbsHelper"/>
+    </bean>
+-->       
+    <bean id="user.service" class="com.lyon2.visu.service.impl.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+    <bean id="obsel.service" class="com.ithaca.service.impl.ObselServiceImpl">
+        <property name="obselDao" ref="obselDao"/>
+    </bean>
+    <bean id="session.service" class="com.lyon2.visu.service.impl.SessionServiceImpl">
+        <property name="sessionDao" ref="sessionDao"/>
+    </bean>
+    <bean id="sessionUser.service" class="com.lyon2.visu.service.impl.SessionUserServiceImpl">
+        <property name="sessionUserDao" ref="sessionUserDao"/>
+    </bean>
+    <bean id="activity.service" class="com.lyon2.visu.service.impl.ActivityServiceImpl">
+        <property name="activityDao" ref="activityDao"/>
+    </bean>
+    <bean id="activityElement.service" class="com.lyon2.visu.service.impl.ActivityElementServiceImpl">
+        <property name="activityElementDao" ref="activityElementDao"/>
+    </bean>
+ 	<bean id="retroDocumentService.service" class="com.lyon2.visu.service.impl.RetroDocumentServiceImpl">
+        <property name="retroDocumentDao" ref="retroDocumentDao"/>
+    </bean>     
+    <bean id="profileDescription.service" class="com.lyon2.visu.service.impl.ProfileDescriptionServiceImpl">
+        <property name="profileDescriptionDao" ref="profileDescriptionDao"/>
+    </bean>    
+<!-- enable support for mx:RemoteObject requests -->
+    <bean id="flexMessaging.service" class="org.red5.server.net.remoting.FlexMessagingService">
+        <property name="serviceInvoker" ref="global.serviceInvoker"/>
+        <property name="endpoints">
+            <map>
+                <entry key="UserService">
+                    <ref bean="user.service"/>
+                </entry>
+                <entry key="ObselService">
+                    <ref bean="obsel.service"/>
+                </entry>
+                <entry key="SessionService">
+                    <ref bean="session.service"/>
+                </entry>
+                <entry key="SessionUserService">
+                    <ref bean="sessionUser.service"/>
+                </entry>
+                <entry key="ActivityService">
+                    <ref bean="activity.service"/>
+                </entry>
+                <entry key="ActivityElementService">
+                    <ref bean="activityElement.service"/>
+                </entry>
+                <entry key="ProfileDescriptionService">
+                    <ref bean="profileDescription.service"/>
+                </entry>
+				 <entry key="RetroDocumentServiceService">
+                    <ref bean="retroDocumentService.service"/>
+                </entry> 
+            </map>
+        </property>
+    </bean>
+<!-- security sandbox violation --> 
+<!-- inactive bean, destroy add key-frame in FVL file -->   
+<!--  
+    <bean id="rtmpSampleAccess" class="org.red5.server.stream.RtmpSampleAccess">
+   		<property name="audioAllowed" value="true"/>
+    	<property name="videoAllowed" value="true"/>
+	</bean>
+-->     
+</beans>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+        creationComplete="skin1_creationCompleteHandler(event)">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.SessionViewSalonRetro")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+            import mx.events.FlexEvent;
+
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			[Bindable]
+			private var fxgt: _FxGettext = FxGettext;
+
+			protected function skin1_creationCompleteHandler(event:FlexEvent):void
+			{
+                // initialisation gettext
+                fxgt = FxGettext;
+			}
+		]]>
+	</fx:Script>
+
+	<!-- SkinParts
+	name=dateTitleLabel, type=spark.components.Label, required=false
+	name=ownerTitleLabel, type=spark.components.Label, required=false
+	name=themeTitleLabel, type=spark.components.Label, required=false
+	name=dateLabel, type=spark.components.Label, required=false
+	name=ownerNameLabel, type=spark.components.Label, required=false
+	name=themeLabel, type=spark.components.Label, required=false
+	name=ownerImage, type=mx.controls.Image, required=false
+	-->
+	<s:Group width="100%" minWidth="300">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%" height="100%">
+			<s:Rect id="fill" radiusX="10"
+					left="2" right="2" top="1" bottom="1">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" id="gradientEntryFrom"/>
+						<s:GradientEntry color="0xD8D8D8"  id="gradientEntryTo"/>
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="border" radiusX="10"
+					left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.5625"/>
+						<s:GradientEntry color="0x000000" 
+										 alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<s:HGroup top="2" bottom="2" right="3" left="3">
+				<s:Group height="100%" width="80" verticalCenter="0">
+					<s:Label id="themeTitleLabel" right="0">
+	                <s:text>{fxgt.gettext("Titre :")}</s:text>
+					</s:Label>
+					<s:Label id="dateTitleLabel" right="0" top="18">
+	                    <s:text>{fxgt.gettext("Date :")}</s:text>
+					</s:Label>
+					<s:Label id="ownerTitleLabel" right="0" top="45">
+	                    <s:text>{fxgt.gettext("Propriétaire :")}</s:text>
+					</s:Label>	
+				</s:Group>
+				<s:VGroup height="100%" width="100%" gap="5" horizontalAlign="left" verticalAlign="middle">
+					<s:Label id="themeLabel" maxDisplayedLines="1" lineBreak="toFit"  width="100%">
+						<s:text>THEME</s:text>
+					</s:Label>
+					<s:Label id="dateLabel" maxDisplayedLines="1" lineBreak="toFit" >
+						<s:text>DATE</s:text>
+					</s:Label>
+					<s:HGroup width="100%"  verticalAlign="middle">
+						<mx:Image id="ownerImage" width="40" height="40"/>
+						<s:Label id="ownerNameLabel" maxDisplayedLines="1" lineBreak="toFit" width="100%" >
+							<s:text>.....</s:text>
+						</s:Label>						
+					</s:HGroup>
+				</s:VGroup>
+			</s:HGroup>
+	<!-- TEXT -->   	
+			<!-- THEME-->
+			<!-- DATE-->
+			<!-- OWNER -->	
+
+		</s:Group>
+	</s:Group>
+</s:Skin>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    preinitialize="skin1_preinitializeHandler(event)"
+    creationComplete="skin1_creationCompleteHandler(event)"
+    addedToStage="skin1_addedToStageHandler(event)"
+    removedFromStage="skin1_removedFromStageHandler(event)">
+    <!-- host component -->
+    <fx:Metadata>
+        [HostComponent("com.ithaca.timeline.ObselSkin")]
+    </fx:Metadata>
+    
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.timeline.ObselSkin;
+        import com.ithaca.timeline.TimeRange;
+        import com.ithaca.timeline.TraceLine;
+        import com.ithaca.timeline.events.TimelineEvent;
+        import com.ithaca.timelineskins.events.TimelineSkinEvent;
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.TraceModel;
+        import com.ithaca.utils.UtilFunction;
+        
+        import mx.events.FlexEvent;
+        import mx.events.PropertyChangeEvent;
+        
+        import spark.components.BorderContainer;
+        
+        private var timer:Timer;
+        private var interval:int = 1;
+        private var borderColorChange:Boolean = false;
+        private var _obsel : Obsel;
+        private var stop:Boolean;
+        // current time videoPlayer when start play video
+        private var timeStartPlayVideo:int;
+
+        //////////////////////
+        /// setters/getters
+        /////////////////////
+        public function set obsel(value:Obsel):void
+        {
+            _obsel = value;
+            timeStartPlayVideo = new int(_obsel.props[TraceModel.CURRENT_TIME_PLAYER]);
+        }
+        public function get obsel():Obsel
+        {
+            return _obsel;
+        }
+        public function setSkinStop(value:Number):void
+        {
+            // set skin stop after creation the skin
+            stop = true;
+            if(value > 0)
+            {
+                hostComponent.obsel.end = value;
+            }
+            setViewSkinStop();
+            updateWidth( null );
+        }
+        public function isSkinPlay():Boolean
+        {
+            return stop;
+        }
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            var pathIcon = hostComponent.getStyle( "icon" );
+            icon.width = 20;
+            icon.source = pathIcon;
+            
+            hostComponent.traceline._timeline.zoomContext.cursorRange.addEventListener(TimelineEvent.TIMERANGES_CHANGE, updateWidth);
+            
+            updateWidth( null );
+            
+            obsel.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
+            
+            if(!stop)
+            {
+                this.currentState = "play";
+                timer = new Timer(interval*1000,0);
+                timer.addEventListener(TimerEvent.TIMER, updateTimer);
+                timer.start(); 
+            }else
+            {
+                setViewSkinStop();
+            }
+        }
+        
+        private function setViewSkinStop():void
+        {
+            if(timer)
+            {
+                timer.removeEventListener(TimerEvent.TIMER, updateTimer);
+                timer.stop();
+            }
+                currentState = "stop";
+                icon.alpha = 1.0;
+                var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
+                var fromTime:int = new int(obsel.props[TraceModel.CURRENT_TIME_PLAYER]);
+                var toTime:int = fromTime + duration;
+                
+                labelTC.text = UtilFunction.getMinSec(fromTime) +"-"+ UtilFunction.getMinSec(toTime);
+                this.toolTip =  labelTC.text;
+                borderContainer.setStyle("backgroundAlpha","0.0");
+                borderContainer.setStyle("borderVisible","true");
+                
+                obsel.removeEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onObselChange);
+        }
+        
+        private function updateTimer(event:TimerEvent):void
+        {
+            if(borderColorChange)
+            {
+                icon.alpha = 1.0;
+            }else
+            {
+                icon.alpha = 0.2;
+            }
+            borderColorChange = !borderColorChange;
+            
+        }
+        
+        public function updateWidth( event : Event ) :  void
+        {
+            var traceline 		: TraceLine = hostComponent.traceline;
+            var timeRange		: TimeRange = traceline._timeline.zoomContext.cursorRange;				
+            var startPosition 	: Number 	= timeRange.timeToPosition( Math.max( hostComponent.obsel.begin , timeRange.begin ),	traceline.width - 2 * Stylesheet.renderersSidePadding);
+            var endPosition 	: Number 	= timeRange.timeToPosition( Math.min( hostComponent.obsel.end , timeRange.end), 	traceline.width - 2 * Stylesheet.renderersSidePadding);
+            
+            width  	= (endPosition - startPosition);
+            
+            checkShowElement();
+        }
+        
+        protected function onObselChange( event : PropertyChangeEvent ) : void
+        {				
+            var y : Number 	= hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.end , (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );				
+            hostComponent.x = hostComponent.traceline._timeline.zoomContext.cursorRange.timeToPosition( hostComponent.obsel.begin, (hostComponent.traceline.width - 2 * Stylesheet.renderersSidePadding ) );
+            width 	= y - hostComponent.x ;
+            
+            checkShowElement();
+            
+            var duration:int = (hostComponent.obsel.end - hostComponent.obsel.begin)/1000;
+            labelTC.text = UtilFunction.getMinSec(duration + timeStartPlayVideo);
+            this.toolTip =  labelTC.text;
+        }
+        
+        private function checkShowElement():void
+        {
+            if(width < 52)
+            {
+                labelTC.visible = false;
+            }else
+            {
+                labelTC.visible = true;
+            }
+        }
+
+
+        protected function skin1_preinitializeHandler(event:FlexEvent):void
+        {
+            obsel = hostComponent.obsel;
+        }
+
+        protected function skin1_addedToStageHandler(event:Event):void
+        {
+            obsel = hostComponent.obsel;
+            
+            
+            var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE);
+            addedToStageEvent.obselSkin = this;
+            this.dispatchEvent(addedToStageEvent);
+        }
+        
+        protected function skin1_removedFromStageHandler(event:Event):void
+        {
+            var addedToStageEvent:TimelineSkinEvent = new TimelineSkinEvent(TimelineSkinEvent.OBSEL_SKIN_REMOVED_FROM_STAGE);
+            addedToStageEvent.obselSkin = this;
+            this.dispatchEvent(addedToStageEvent);
+        }
+
+    ]]>
+    </fx:Script>
+    <s:states>
+        <s:State name="play"/>
+        <s:State name="stop"/>
+    </s:states>
+    <s:BorderContainer id="borderContainer" height="12" width="100%" backgroundColor="#c1f2c2" borderVisible="false" minWidth="1" minHeight="1">
+        <mx:Image id="icon" top="-3" left="-3"/>
+        <s:Label id="labelTC" text="00:20" right="0" top="1" fontStyle="italic" fontSize="10"/>
+    </s:BorderContainer>
+</s:Skin>

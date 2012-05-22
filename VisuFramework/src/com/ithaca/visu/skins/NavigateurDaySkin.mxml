@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<!--- The default skin class for the Spark DropDownList component. 
+      The skin for the anchor button for a DropDownList component 
+      is defined by the DropDownListButtonSkin class.  
+      
+      <p>In a custom skin class that uses transitions, set the 
+      <code>itemDestructionPolicy</code> property to <code>none</code>
+      for the PopUpAnchor defined by the popUp property.</p>      
+        
+      @see spark.components.DropDownList        
+      @see spark.skins.spark.DropDownListButtonSkin
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled=".5"  creationComplete="init()" > 
+
+    <!-- host component -->
+    <fx:Metadata>
+    <![CDATA[ 
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
+        [HostComponent("com.ithaca.visu.controls.NavigateurDay")]
+    ]]>
+    </fx:Metadata> 
+
+    <fx:Script fb:purpose="styling">
+        <![CDATA[            
+            
+            /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
+            static private const contentFill:Array = ["bgFill"];
+            
+            /**
+             * @private
+             */
+            override public function get contentItems():Array {return contentFill};
+                        /**
+             * @private
+             */
+            override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+            {
+                if (getStyle("borderVisible") == false)
+                {
+                    if (border)
+                        border.visible = false;
+                    if (background)
+                    {
+                        background.left = background.top = background.right = background.bottom = 0;
+                    }
+                    if (scroller)
+                        scroller.minViewportInset = 0;
+                }
+                else
+                {
+                    if (border)
+                        border.visible = true;
+                    if (background)
+                    {
+                        background.left = background.top = background.right = background.bottom = 1;
+                    }
+                    if (scroller)
+                        scroller.minViewportInset = 1;
+                }
+                
+                if (dropShadow)
+                    dropShadow.visible = getStyle("dropShadowVisible");
+                
+                openButton.setStyle("cornerRadius", getStyle("cornerRadius"));
+                
+                if (borderStroke)
+                {
+                    borderStroke.color = getStyle("borderColor");
+                    borderStroke.alpha = getStyle("borderAlpha");
+                }
+                super.updateDisplayList(unscaledWidth, unscaledHeight);
+            }
+			private function init():void{
+				hostComponent.leftButton = this.leftButton ;
+				hostComponent.rightButton = this.rightButton;
+			}
+        ]]>
+    </fx:Script>
+    
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="open" />
+        <s:State name="disabled" />
+    </s:states>
+    
+    <!--- 
+        The PopUpAnchor control that opens the drop-down list. 
+        
+        <p>In a custom skin class that uses transitions, set the 
+        <code>itemDestructionPolicy</code> property to <code>none</code>.</p>
+    -->
+    <s:PopUpAnchor id="popUp"  displayPopUp.normal="false" displayPopUp.open="true" includeIn="open"
+        left="30" right="30" top="0" bottom="0" itemDestructionPolicy="auto"
+        popUpPosition="below" popUpWidthMatchesAnchorWidth="true">
+			
+        <!--- 
+              This includes borders, background colors, scrollers, and filters.
+              @copy spark.components.supportClasses.DropDownListBase#dropDown
+        -->
+        <s:Group id="dropDown" maxHeight="134" minHeight="22" >
+        
+            <!--- @private -->
+            <s:RectangularDropShadow id="dropShadow" blurX="20" blurY="20" alpha="0.45" distance="7" 
+                 angle="90" color="#000000" left="0" top="0" right="0" bottom="0"/>
+        
+            <!--- @private -->
+            <s:Rect id="border" left="0" right="0" top="0" bottom="0">
+                <s:stroke>
+                    <!--- border stroke @private -->
+                    <s:SolidColorStroke id="borderStroke" weight="1"/>
+                </s:stroke>
+            </s:Rect>
+            
+            <!-- fill -->
+            <!--- Defines the appearance of drop-down list's background fill. -->
+            <s:Rect id="background" left="1" right="1" top="1" bottom="1" >
+                <s:fill>
+                <!---  
+                    The color of the drop down's background fill.
+                    The default color is 0xFFFFFF.
+                -->
+                    <s:SolidColor id="bgFill" color="0xFFFFFF" />
+                </s:fill>
+            </s:Rect>
+            
+            <!--- @private -->
+            <s:Scroller id="scroller" left="0" top="0" right="0" bottom="0" hasFocusableChildren="false" minViewportInset="1">
+                <!--- @copy spark.components.SkinnableDataContainer#dataGroup-->
+                <s:DataGroup id="dataGroup" itemRenderer="spark.skins.spark.DefaultItemRenderer">
+                    <s:layout>
+                        <s:VerticalLayout gap="0" horizontalAlign="contentJustify"/>
+                    </s:layout>
+                </s:DataGroup> 
+            </s:Scroller>			
+        </s:Group>
+    </s:PopUpAnchor>
+    
+    <!---  The default skin is DropDownListButtonSkin. 
+            @copy spark.components.supportClasses.DropDownListBase#openButton
+            @see spark.skins.spark.DropDownListButtonSkin -->
+    <s:Button id="openButton" left="30" right="30" top="0" bottom="0" focusEnabled="false"
+        skinClass="spark.skins.spark.DropDownListButtonSkin" />  
+        
+    <!--- @copy spark.components.DropDownList#labelDisplay -->
+    <s:Label id="labelDisplay" verticalAlign="middle" maxDisplayedLines="1" 
+        mouseEnabled="false" mouseChildren="false"
+        top="2" bottom="2" verticalCenter="1" width.disabled="75" top.normal="2" bottom.normal="2" verticalCenter.normal="1" left.open="37" left.disabled="37" right.open="60" right.disabled="60" left.normal="37" right.normal="60" top.open="2" bottom.open="2" horizontalCenter.open="0" verticalCenter.open="1" horizontalCenter.normal="0"/> 
+	
+	<s:Button  id="leftButton"  skinClass="com.ithaca.visu.skins.ButtonArrowSkin"  rotation="90" left="0" width="20" top.normal="0" left.normal="0" bottom.normal="0" top.open="0" left.open="0" bottom.open="0" top.disabled="0" left.disabled="0" bottom.disabled="0"/>
+	<s:Button  id="rightButton" skinClass="com.ithaca.visu.skins.ButtonArrowSkin"  rotation="270" right="0" width="20" top.normal="0" right.normal="0" bottom.normal="0" top.open="0" right.open="0" bottom.open="0" top.disabled="0" right.disabled="0" bottom.disabled="0"/>
+
+</s:SparkSkin>

@@ -1,0 +1,444 @@
+/* CSS file */
+@namespace s 		"library://ns.adobe.com/flex/spark";
+@namespace mx 		"library://ns.adobe.com/flex/mx";
+@namespace 			"com.ithaca.visu.controls.*"; 
+@namespace nav 		"com.ithaca.visu.controls.globalNavigation.*"; 
+@namespace core 	"com.ithaca.visu.core.*"; 
+@namespace login	"com.ithaca.visu.controls.login.*";
+@namespace sessions	"com.ithaca.visu.controls.sessions.*";
+@namespace trace	"com.ithaca.visu.controls.timeline.*";
+@namespace plan 	"com.ithaca.visu.view.session.controls.*";
+@namespace sessionView 	"com.ithaca.visu.view.session.*";
+@namespace user 	"com.ithaca.visu.view.user.*";
+@namespace ws 		"ws.tink.spark.containers.*";
+@namespace documentarisation 		"com.ithaca.documentarisation.*";
+@namespace utils 		"com.ithaca.utils.*";
+@namespace video 		"com.ithaca.visu.view.video.*";
+@namespace components 		"com.ithaca.utils.components.*";
+@namespace timeline		"com.ithaca.timeline.*"; 
+
+timeline|ObselSkin.PlayDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.PlayVideoSkin");
+	icon : Embed("images/iconPlayGreen_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.PauseDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/iconPauseYellow_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.EndDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/iconStopYellow_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.SliderReleaseDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/iconRealeaseSlider_16x16.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.StopDocumentVideoDisconnectingUser
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/PlayWalkOutVer5.png");
+	tooltipProp : 'currenttime';
+}
+timeline|ObselSkin.StopDocumentVideo
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/PlayWalkOutVer5.png");
+	tooltipProp : 'currenttime';
+}
+
+timeline|Timeline
+{
+	skin-class: ClassReference("com.ithaca.timeline.skins.TimelineSkin");
+}
+
+timeline|TraceLineGroup
+{
+	skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupSkin");
+	fillColors : #FFA6A8, #C6FFC9, #AED7FF, #FAFFB7, #FFDFB0, #E1B7F9 ;
+	headerHeight : 15;
+	bottom 		 : 1;
+	bgColor		:#FFA6A8;
+}
+
+timeline|TraceLineGroup.comments
+{
+	headerHeight : 7;
+}
+
+timeline|TraceLineGroupTitle
+{
+	skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupTitleSkin");
+	bgColor		:#FFA6A8;
+}
+
+timeline|TraceLineGroupTitle.comments
+{
+	skin-class : ClassReference("com.ithaca.timeline.skins.TraceLineGroupTitleCommentsSkin");
+	icon 		: Embed("images/CommentAddVer1.png");
+	bgColor		:#FFA6A8;
+}
+
+timeline|TraceLine
+{
+	borderVisible  : false;
+	rendererHeight : 25;
+	rendererGap	   : 0;
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineSkin");
+}
+
+timeline|TraceLine.background
+{
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineBackgroundSkin");
+}
+
+timeline|TraceLineTitle
+{
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineTitleSkin");
+}
+
+timeline|TraceLine.comments
+{
+	rendererHeight : 45;
+	rendererGap	   : 0;
+	skin-class: ClassReference("com.ithaca.timeline.skins.TraceLineSkin");	
+}
+
+timeline|TraceLine.viewMsgText timeline|ObselSkin.Message
+{
+	skin-class		: ClassReference("com.ithaca.timeline.skins.IconTextSkin");
+	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
+	backgroundColor 	: #FFFFB3;
+}
+
+timeline|ZoomContext
+{
+	skin-class			: ClassReference("com.ithaca.timeline.skins.ZoomContextSkin");
+	backgroundColor 	: #F5F5F5; 
+	allowZoom           : false;
+	allowCut            : false;
+}
+
+timeline|ObselSkin
+{
+	skin-class		: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon 			: Embed("images/iconInfo_16x16.png");	
+}
+
+
+timeline|ObselSkin.Message
+{
+	skin-class		: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon 			: Embed("images/chatMessageVisu2_20x20.png");	
+	tooltipProp : 'content';
+}
+
+
+timeline|ObselSkin.Message mx|Label
+{
+	fontSize : 11;
+}
+
+timeline|ObselSkin.Document
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon : Embed("images/fichierVisu2_20x20.png");
+	tooltipProp : 'text';
+}
+
+timeline|ObselSkin.Instructions
+{
+	skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+	icon: Embed("images/consigneVisu2_20x20.png");
+	tooltipProp : 'instructions';
+}
+
+timeline|ObselSkin.Keyword
+{
+skin-class: ClassReference("com.ithaca.timelineskins.IconSkin");
+icon : Embed("images/motCleVisu2_20x20.png");
+tooltipProp : 'keyword';
+}
+
+timeline|ObselSkin.Comment
+{
+skin-class: ClassReference("com.ithaca.timelineskins.CommentSkin");	
+icon :Embed("images/consigneVisu2_20x20.png");
+tooltipProp : 'text';
+}
+
+/*timeline|ObselSkin.Activity
+{
+skin-class: ClassReference("com.ithaca.timelineskins.ActivitySkin");
+icon :Embed("images/StartActivity.png");
+}*/
+timeline|ObselSkin.Activity
+{
+skin-class: ClassReference("com.ithaca.timelineskins.ActivitySkin");
+icon :Embed("images/StartActivity.png");
+}
+
+timeline|ObselSkin.Marker
+{
+skin-class	: ClassReference("com.ithaca.timelineskins.MarkerSkin");	
+icon 		: Embed("images/marqueurBlanc-bas-20px.png");
+tooltipProp : 'text';	
+}
+
+
+components|SegmentVideoOwnerObselDNDToolTip
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.SegmentVideoOwnerObselDNDToolTipSkin");	
+}
+components|BilanSharedUserToolTip
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.BilanSharedUserToolTipSkin");	
+}
+components|BilanSummaryToolTip
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.BilanSummaryToolTipSkin");	
+}
+documentarisation|Documentarisation
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.DocumentarisationSkin");
+}
+documentarisation|RetroDocumentListItemSimple
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentListItemSimpleSkin");
+}
+components|IconInfoSegment
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.IconInfoSegmentSkin");	
+}
+documentarisation|SegmentVideoAdvanced
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoAdvancedSkin");
+}
+documentarisation|SegmentTitle
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentTitleSkin");
+}
+documentarisation|SegmentCommentAudio
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentCommentAudioSkin");
+}
+documentarisation|AudioRecorder
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.AudioRecorderSimpleSkin");
+}
+components|PanelButton
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.PanelButtonSkin");	
+}
+components|IconButton
+{
+	skin-class:ClassReference("com.ithaca.utils.components.skins.IconButtonSkin");	
+}
+video|NameUser
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.NameUserSkin");	
+}
+video|PanelEditInfo
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.PanelEditInfoSkin");	
+}
+video|ImageVolume
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.ImageVolumeSkin");	
+}
+video|VisuVisioAdvanced
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VisuVisioAdvancedSkin");	
+}
+video|VideoPanel
+{
+	skin-class:ClassReference("com.ithaca.visu.view.video.skins.VideoPanelSkin");	
+}
+
+sessions|SessionBilanFormView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionBilanFormViewSkin");	
+}
+sessions|SessionEditFormView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionEditFormViewSkin");	
+}
+sessions|SessionSummaryView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionSummaryViewSkin");	
+}
+sessions|SessionDetailView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionDetailViewSkin");	
+}
+sessions|SessionListView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionListViewSkin");	
+}
+sessions|SessionManagerView
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionManagerViewSkin");	
+}
+
+utils|VisuToolTip
+{
+	skin-class: ClassReference("com.ithaca.utils.skins.VisuToolTipSkin");
+}
+user|ShareUser
+{
+	skin-class: ClassReference("com.ithaca.visu.view.user.skins.ShareUserSkin");
+}
+
+
+documentarisation|RetroDocumentTreeToolTip
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentTreeToolTipSkin");
+}
+
+documentarisation|RetroDocumentView
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentViewSkin");
+}
+
+documentarisation|RetroDocumentSegment
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.RetroDocumentSegmentSkin");
+}
+
+documentarisation|SegmentVideo
+{
+	skinClass: ClassReference("com.ithaca.documentarisation.skins.SegmentVideoSkin");
+}
+
+ConnectionLight
+{
+	skinClass: ClassReference("com.ithaca.visu.skins.ConnectionLightSkin");
+}
+
+ConnectedUser
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.ConnectedUserSkin");
+	corner-radius:10px;
+}
+
+/*SessionHomeElement
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.SessionHomeElementSkin");
+}*/
+
+AdvancedTextInput
+{
+	skin-class : ClassReference( "com.ithaca.visu.controls.skins.AdvancedTextInputSkin" );
+}
+
+nav|ApplicationMenu
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.ApplicationMenuSkin");	
+}
+core|VisuApplication
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.VisuAppSkin");	
+}
+login|LoginForm
+{
+	skin-class:ClassReference("com.ithaca.visu.skins.LoginFormSkin");	
+}
+login|ActivateForm
+{
+    skin-class:ClassReference("com.ithaca.visu.controls.login.skins.ActivateFormSkin");	
+}
+sessions|ActivityDetail
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin");	
+}
+sessions|ActivityDetailB
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.ActivityDetailBSkin");	
+}
+sessions|SessionPlan
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionPlanSkin");	
+}
+sessions|SessionPlanB
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SessionPlanBSkin");	
+}
+sessions|ActivityElementDetail
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.StatementSkin");	
+}
+sessions|SharedElementChat
+{
+	skin-class:ClassReference("com.ithaca.visu.controls.sessions.skins.SharedElementChatSkin");	
+}
+
+plan|SessionDetail
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.SessionDetailSkin");
+}
+
+plan|SessionPlanEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.SessionPlanEditSkin");
+}
+
+plan|ActivityDetailEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.ActivityDetailEditSkin");
+}
+
+plan|StatementEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.StatementEditSkin");
+}
+
+plan|KeywordEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.KeywordEditSkin");
+}
+
+plan|DocumentEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.DocumentEditSkin");
+}
+
+plan|UserEdit
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.controls.skins.UserEditSkin");
+}
+
+user|MessageUser
+{
+	skin-class: ClassReference("com.ithaca.visu.view.user.skins.MessageUserSkin");
+}
+
+sessionView|SessionManagement
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionManagementSkin");
+}
+sessionView|SessionViewSalonRetro
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonRetroSkin");
+}
+
+sessionView|SessionViewSalonSession
+{
+	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonSessionSkin");
+}
+
+ws|Form
+{
+	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormSkin" );
+}
+
+ws|FormItem
+{
+	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormItemSkin" );
+}

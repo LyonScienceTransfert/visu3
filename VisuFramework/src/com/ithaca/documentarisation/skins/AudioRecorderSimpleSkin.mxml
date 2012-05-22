@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.documentarisation.AudioRecorder")]
+	</fx:Metadata>
+	<s:transitions>
+		<!--1 From normal to over -->
+		<s:Transition fromState="normal" toState="over" >
+			<s:Sequence>
+				<s:Parallel targets="{[imagePlay, imageRecord]}">
+					<s:AddAction/>
+					<s:Fade/>
+				</s:Parallel>
+			</s:Sequence>
+		</s:Transition>
+		<!--2 From over to normal -->
+		<s:Transition fromState="over" toState="normal">
+			<s:Sequence>
+					<s:RemoveAction/>
+					<s:Fade targets="{[imagePlay, imageRecord]}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--3 From over to play -->
+		<s:Transition fromState="over" toState="play">
+			<s:Sequence>
+				<s:Fade targets="{[imagePlay, imageRecord]}"/>
+				<s:RemoveAction/>
+				<s:AddAction target="{imageStop}"/>
+				<s:Fade  target="{imageStop}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--4 From play to over -->
+		<s:Transition fromState="play" toState="over">
+			<s:Sequence>
+				<s:Fade target="{imageStop}"/>
+				<s:RemoveAction target="{imageStop}"/>
+				<s:AddAction targets="{[imagePlay, imageRecord]}"/>
+				<s:Fade targets="{[imagePlay, imageRecord]}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--5 From overEmpty to record -->
+		<s:Transition fromState="overEmpty" toState="record">
+			<s:Sequence>
+				<s:Fade target="{imageRecord}"/>
+				<s:RemoveAction target="{imageRecord}"/>
+				<s:AddAction target="{imageStop}"/>
+				<s:Fade target="{imageStop}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--6 From normalEmpty to overEmpty -->
+		<s:Transition fromState="normalEmpty" toState="overEmpty">
+			<s:Sequence>
+				<s:AddAction/>
+				<s:Fade target="{imageRecord}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--7 From overEmpty to normalEmpty -->
+		<s:Transition fromState="overEmpty" toState="normalEmpty">
+			<s:Sequence>
+				<s:RemoveAction/>
+				<s:Fade target="{imageRecord}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--8 From over to record -->
+		<s:Transition fromState="over" toState="record">
+			<s:Sequence>
+				<s:Fade targets="{[imageRecord, imagePlay]}"/>
+				<s:RemoveAction targets="{[imageRecord, imagePlay]}"/>
+				<s:AddAction target="{imageStop}"/>
+				<s:Fade target="{imageStop}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--9 From record to over -->
+		<s:Transition fromState="record" toState="over">
+			<s:Sequence>
+				<s:Fade target="{imageStop}"/>
+				<s:RemoveAction target="{imageStop}"/>
+				<s:AddAction targets="{[imagePlay, imageRecord]}"/>
+				<s:Fade targets="{[imagePlay, imageRecord]}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--10 From play to normal -->
+		<s:Transition fromState="play" toState="normal">
+			<s:Sequence>
+				<s:Fade target="{imageStop}"/>
+				<s:RemoveAction target="{imageStop}"/>
+			</s:Sequence>
+		</s:Transition>
+		<!--10 From record to normal -->
+		<s:Transition fromState="record" toState="normal">
+			<s:Sequence>
+				<s:Fade target="{imageStop}"/>
+				<s:RemoveAction target="{imageStop}"/>
+			</s:Sequence>
+		</s:Transition>
+	</s:transitions>
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+	]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="normalEmpty"/>
+		<s:State name="normal"/>
+		<s:State name="overEmpty"/>
+		<s:State name="over"/>
+		<s:State name="play" />
+		<s:State name="record" />
+		<s:State name="overShare"/>
+		<s:State name="overShareEmpty"/>
+	</s:states>
+	<s:HGroup width="100%" height="50%" verticalAlign="middle" horizontalAlign="center" gap="1">
+		<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
+		<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
+			<s:Label id="labelCurrnetTime" includeIn="play,record" color.record="#E73A3A">
+				
+			</s:Label>
+			<s:Label id="labelInfo" text.normal="Durée" text.normalEmpty="Pas d'audio" text.overEmpty="Pas d'audio" text.over="Durée" text.play="/" text.record="/" color.record="#FF2B2B" text.overShare="Durée" text.overShareEmpty="Pas d'audio">
+				
+			</s:Label>
+			<s:Label id="lableDuration" includeIn="normal,over,overShare,play,record" color.record="#ED3030">
+				
+			</s:Label>
+		</s:HGroup>
+		<!-- IMAGE PLAY --> 
+		<mx:Image id="imagePlay" 
+			buttonMode="true" 
+			source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="over,overShare">
+			<mx:toolTip>Ecouter</mx:toolTip>
+		</mx:Image>
+		<!-- IMAGE STOP -->
+		<mx:Image id="imageStop"
+			buttonMode="true"
+			includeIn="play,record"
+			source.play="{IconEnum.getIconByName('iconStopYellow_16x16')}"
+			source.record="{IconEnum.getIconByName('iconStopRed_16x16')}">
+			<mx:toolTip>Arrêter</mx:toolTip>
+		</mx:Image>
+		<!-- IMAGE RECORD -->
+		<mx:Image id="imageRecord"
+			buttonMode="true"
+			source="{IconEnum.getIconByName('iconRecordBorder_16x16')}" includeIn="over,overEmpty">
+			<mx:toolTip>Enregistrer</mx:toolTip>		
+		</mx:Image>
+	</s:HGroup>	
+</s:Skin>

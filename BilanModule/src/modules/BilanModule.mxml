@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	   xmlns:s="library://ns.adobe.com/flex/spark" 
+	   xmlns:mx="library://ns.adobe.com/flex/mx" 
+	   xmlns:modules="com.ithaca.visu.modules.*" 
+	   xmlns:maps="maps.*"
+	   xmlns:mate="http://mate.asfusion.com/"
+	   xmlns:controls="com.ithaca.visu.controls.*"
+	   configure="configureHandler(event)"
+	   top="0" bottom="0" left="0" right="0" 
+	   xmlns:vo="com.ithaca.visu.model.vo.*" 
+	   xmlns:ithaca="com.ithaca.components.*"
+	   creationComplete="initBilanModule(event)"
+       currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
+       xmlns:components="com.ithaca.utils.components.*"
+	   >
+	<fx:Declarations>
+		<s:ArrayList id="segmentList"/>
+		<maps:BilanMap dispatcher="{this}"/>
+		<mate:Listener type="{BilanEvent.SHOW_RETRIEVED_BILAN_LIST}"  method="showRetrievedBilanList"/>
+		<mate:Listener type="{RetroDocumentEvent.SHOW_RETRO_DOCUMENT}"  method="showRetroDocument"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL_BILAN}"  method="initVisio"/>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+            import com.ithaca.documentarisation.events.RetroDocumentEvent;
+            import com.ithaca.documentarisation.model.RetroDocument;
+            import com.ithaca.events.SelectionEvent;
+            import com.ithaca.utils.ShareUserTitleWindow;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.visu.events.BilanEvent;
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.PanelButtonEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.UserEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.RetroDocumentVO;
+            import com.ithaca.visu.model.vo.SessionVO;
+            import com.ithaca.visu.ui.utils.RoleEnum;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
+            import mx.events.StateChangeEvent;
+            import mx.logging.ILogger;
+            import mx.logging.Log;
+            import mx.managers.CursorManager;
+            import mx.managers.PopUpManager;
+            import mx.utils.StringUtil;
+			
+			private var logger : ILogger = Log.getLogger('modules.BilanModule');
+			
+			private var selectedSessionIdWhenInit:Number = -1;
+			private var selectedRetroDocumentIdWhenInit:Number = -1;
+            // list shared users bilan
+            private var listShareUser:Array;
+            // flag show bilan by init application 
+            private var showBilanByInitApplication:Boolean = false;
+            
+            [Bindable]
+            private var fxgt: _FxGettext = FxGettext;
+			
+			private function showRetroDocument(event:RetroDocumentEvent):void {
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					if(bilanViewer == null) {
+						logger.warn("Undesired call to BilanModule.showRetroDocument");
+						return;
+					}
+				
+					logger.debug("Displaying the retro document {0} received", event.retroDocument.id);
+					
+					var doc:RetroDocument = event.retroDocument;
+                    // set list shared users
+                    listShareUser = event.listUser;
+	
+					var i:int; 
+					for (i = 0; i < this.bilanComp.bilanCollection.length; i++) 
+					{ 
+						var retroDoc:RetroDocument = this.bilanComp.bilanCollection.getItemAt(i) as RetroDocument;
+						if(retroDoc.id == doc.id) {
+							logger.debug("Passing the session object to the retro document {0} to be displayed. Session: {1} (Session.ownerId: {2})", 
+								event.retroDocument.id, 
+								retroDoc.session,
+								retroDoc.session.id_user
+								);
+							doc.session = retroDoc.session;
+						}
+					}
+					
+					// set current session
+					var currentSession:Session = doc.session;
+					Model.getInstance().setCurrentSession(currentSession);
+					
+					bilanViewer.setNewBilan(doc);
+					// set enabled edit bilan if logged user owner of the bilan
+					var canEditBilan:Boolean = false;
+					if(doc.ownerId == Model.getInstance().getLoggedUser().id_user)
+					{
+						canEditBilan = true;
+					}
+					panelButtonBilan.buttonSwitchEnabled = panelButtonBilan.buttonShareEnabled = canEditBilan;
+					panelButtonBilan.title = StringUtil.substitute(fxgt.gettext('Bilan de "{0}"'), doc.title);
+					panelButtonBilan.retroDocument = doc;
+				}
+			}
+			
+			private function initVisio(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					this.bilanViewer.stop();			
+					this.bilanViewer.visio.removeTimer();
+					
+					var startTimeSession:Number = event.dateStartRecording.time;
+					this.bilanViewer.visio.startTimeSession = startTimeSession;
+					// set dataProvider with collection the StreamObsel
+					var listStreamObsel:ArrayCollection = Model.getInstance().getListStreamObsel();
+					this.bilanViewer.visio.dataProvider = listStreamObsel;
+					// init button mute volume and button play/pause
+					this.bilanViewer.initButtons(this.bilanViewer.visio.getVolumeMute())	
+					this.bilanViewer.visio.startTimer();
+					this.bilanViewer.visio.autoPlay = false;
+				}
+				
+			}
+			
+			private function onRemovedModuleFromStage(event:Event):void {
+				logger.info("Removing the BilanModule from stage");
+				if(this.bilanViewer) {
+					logger.debug("Stopping the bilan viewer");
+					this.bilanViewer.stop();			
+					this.bilanViewer.visio.removeTimer();
+				}
+					
+				// add obsel user walk out from retro room
+				var outFromBilanModule:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.WALK_OUT_MODULE);
+				this.dispatchEvent(outFromBilanModule);
+				
+				// set current module null
+				Model.getInstance().setCurrentBilanModule(null);
+			}
+			
+			private function showRetrievedBilanList(event:BilanEvent):void 
+			{
+				
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					logger.debug("showRetrievedBilanList. {0} docs and {1} filter sessions", event.retroDocuments.length, event.filterSessionCollection.length);
+					
+					if(bilanComp) {
+						logger.debug("showRetrievedBilanList. bilanComp NOT NULL");
+						var filterSessionCollection:ArrayList = new ArrayList();
+						for each (var session:SessionVO in event.filterSessionCollection) 
+						{
+							filterSessionCollection.addItem(new Session(session));
+						}
+						logger.debug("bilanComp {0}", bilanComp);
+						logger.debug("filterSessionCollection {0}", filterSessionCollection);
+						bilanComp.setFilterSessionList(filterSessionCollection);
+	
+						var bilanCollection:ArrayCollection = new ArrayCollection();
+						for each(var vo:RetroDocumentVO in event.retroDocuments) {
+							var retroDocument:RetroDocument = new RetroDocument(vo);
+							bilanCollection.addItem(retroDocument);
+						}
+	
+						logger.debug("bilanCollection {0}", bilanCollection);
+						bilanComp.setBilanCollection(bilanCollection);
+						
+						logger.debug("Select the right session in the session list if any");
+						if(selectedSessionIdWhenInit != -1) {
+							logger.debug("Ask for the selection of retroDocument {0} in the bilan component", selectedSessionIdWhenInit);
+							bilanComp.selectRetroDocument(selectedRetroDocumentIdWhenInit);
+							logger.debug("Ask for the selection of session {0} in the bilan component", selectedSessionIdWhenInit);
+							bilanComp.selectSession(selectedSessionIdWhenInit);
+						}
+					} else 
+						logger.warn("showRetrievedBilanList. bilanComp NULL");
+				// notify that module ready for use
+				notifyReadyForUse();
+				}
+			}
+
+			protected function configureHandler(event:VisuModuleEvent):void
+			{	
+				logger.debug("BilanModule.configureHandler");
+                // set label 
+                showBilanByInitApplication = false;
+				if((event.currentTarget as BilanModule).parameters != null)
+				{
+					logger.debug("There are parameters passed to BilanModule");
+					var param:Array = (event.currentTarget as BilanModule).parameters as Array ;
+					logger.debug("param: {0}", param);
+					var cameFromModule:String = param[0];
+					switch (cameFromModule)
+					{
+						case "CameFromHomeModule" :
+							// 
+							break;
+						case "CameFromSessionModule" :
+							this.selectedRetroDocumentIdWhenInit = param[2];
+							break;
+						case "CameFromRetroModule" :
+							this.selectedRetroDocumentIdWhenInit = param[2];
+							break;
+                        // came on init application 
+                        case "CameOnInitApplication" :
+                            this.selectedRetroDocumentIdWhenInit = param[2];
+                            // set flag came by init application
+                            showBilanByInitApplication = true;
+                            break;
+					}
+					// set selected sessionId
+					this.selectedSessionIdWhenInit = param[1];
+					
+					logger.debug("selectedSessionIdWhenInit: {0}", this.selectedSessionIdWhenInit);
+				} else
+					logger.debug("No parameter passed to the module");
+					
+				// set current module
+				Model.getInstance().setCurrentBilanModule(this);
+				var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_BILAN);
+				this.dispatchEvent(initMapEvent); 
+			}
+			
+            private function initBilanModule(event:*):void {
+                
+                // init internationalisation
+                fxgt = FxGettext;
+                // set focus
+                this.setFocus();
+                
+                logger.debug("Dispatching BILAN_MODULE_LOADED");
+                
+                this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+                
+                bilanComp.addEventListener("SelectionEvent", onBilanSelected);
+                var moduleLoadedEvent:BilanEvent = new BilanEvent(BilanEvent.BILAN_MODULE_LOADED); 
+                // logged user
+                var loggedUser:User = Model.getInstance().getLoggedUser();
+                // logged user id
+                var userId:int = loggedUser.id_user;
+                moduleLoadedEvent.userId = userId;		
+                this.dispatchEvent(moduleLoadedEvent);
+                
+                // set cursor 
+                CursorManager.removeBusyCursor(); 
+                
+                // set titre the panel
+                panelButtonExplorateur.title =  fxgt.gettext("Explorateur");
+                // set label
+                bilanViewer.showBilanByInitApplication = showBilanByInitApplication;
+            }
+
+
+			private function  onBilanSelected(event:SelectionEvent):void {
+				var bilanId = event.selectedId;
+				if(bilanId == -1) {
+					bilanViewer.bilan = null;
+				} else {
+					logger.debug("The bilan {0} is selected from the bilan list. Dispatching BilanEvent...", bilanId);
+					var bilanSelectedEvent:BilanEvent = new BilanEvent(BilanEvent.NEW_BILAN_SELECTED);  
+					bilanSelectedEvent.bilanId=bilanId;
+					this.dispatchEvent(bilanSelectedEvent);
+				}
+			}
+            
+            /////////
+            // Listeners the panel
+            ////////
+            protected function panelButtonBilan_clickButtonSwitchHandler(event:PanelButtonEvent):void
+            {
+                var bilan:RetroDocument = bilanViewer.bilan;
+                var switchModuleEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.GO_RETRO_MODULE_FROM_BILAN);
+                switchModuleEvent.session = bilan.session;
+                switchModuleEvent.idRetroDocument = bilan.id;
+                this.dispatchEvent(switchModuleEvent);
+            }
+            
+            protected function panelButtonBilan_clickButtonShareHandler(event:PanelButtonEvent):void
+            {
+                var loadListUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_LIST_USERS);
+                this.dispatchEvent(loadListUsers);
+            }
+            
+			/////////
+			// Listeners the segments
+			////////
+			private function onPlayRetroSegment(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					bilanViewer.playRetroSegment(event.target, event.beginTime, event.endTime);
+				}
+				
+			}
+			private function onPauseRetroSegment(event:RetroDocumentEvent):void
+			{
+				if(Model.getInstance().getCurrentBilanModule() == this)
+				{
+					bilanViewer.pauseRetroSegment();
+				}
+			}
+            
+            private function loadedAllUsers(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentBilanModule() == this)
+                {
+                    
+                    var listUserShow:Array = this.getListUserShow(event.listUser);
+                    var shareUser:ShareUserTitleWindow = ShareUserTitleWindow(PopUpManager.createPopUp( 
+                        this, ShareUserTitleWindow , true) as spark.components.TitleWindow);
+                    shareUser.addEventListener(UserEvent.SELECTED_USER, onSelectUser);
+                    shareUser.x = (this.parentApplication.width - shareUser.width)/2;
+                    shareUser.y = (this.parentApplication.height - shareUser.height)/2;		
+                    shareUser.shareUserManagement.listShareUser = listShareUser;
+                    shareUser.shareUserManagement.users = listUserShow;
+                    shareUser.shareUserManagement.profiles = Model.getInstance().profiles;
+                    // exemple of the link : http://visu-tutorat.org/visudev/visuclient.html?module=bilan&bilanId=135
+                    var urlBilan:String = Model.getInstance().urlServeur+"/visuclient.html?module=bilan&bilanId="+bilanViewer.bilan.id.toString();
+                    shareUser.shareUserManagement.urlBilan = urlBilan;
+                }
+            }
+            
+            private function onSelectUser(event:UserEvent):void
+            {
+                // update list shared users of selected bilan
+                listShareUser = event.listUser;
+               
+                var retroDocument:RetroDocument = bilanViewer.bilan;
+                // update retroDocument
+                var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+                var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
+                retroDocumentVO.lastModified = dateLastModify;
+                
+                retroDocumentVO.documentId = retroDocument.id;
+                retroDocumentVO.title = retroDocument.title;
+                retroDocumentVO.description = retroDocument.description;
+                retroDocumentVO.ownerId = retroDocument.ownerId;
+                var xml:String = retroDocument.getRetroDocumentXMLtoSTRING();
+                retroDocumentVO.xml = xml;
+                retroDocumentVO.sessionId = retroDocument.sessionId;
+                var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
+                updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
+                updateRetroDocumentEvent.listUser = listShareUser;
+                this.dispatchEvent(updateRetroDocumentEvent);
+            }
+            
+            
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________		
+			/**
+			 * notify , ready for use
+			 */
+			private function notifyReadyForUse():void
+			{
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.BILAN_MODULE;
+				this.dispatchEvent(event);
+			}
+            
+            private function getListUserShow(value:Array):Array
+            {
+                var result:Array = new Array();
+                var nbrUser:int = value.length;
+                for(var nUser:int= 0; nUser < nbrUser ; nUser++)
+                {
+                    var user:User = value[nUser];
+                    if(user.id_user != bilanViewer.bilan.ownerId)
+                    {
+                        // add all admins
+                        if(user.role > RoleEnum.RESPONSABLE-1)
+                        {
+                            result.push(user);
+                        }else
+                        {
+                            // add only users was recording
+                            var hasUser:Boolean = hasUserInSession(user.id_user, Model.getInstance().getListUserIdPresentOnTimeLine())
+                            if(hasUser)
+                            {
+                                result.push(user);
+                            }		
+                        }
+                    }
+                }
+                return result;
+                
+                function hasUserInSession(id:int, list:Array):Boolean
+                {
+                    var nbrUser:int = list.length;
+                    for(var nUser:int = 0 ; nUser < nbrUser; nUser++)
+                    {
+                        var userId:int = list[nUser];
+                        if (id == userId)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+               this.setFocus();
+            }
+
+
+
+            protected function panelbutton1_clickButtonReturnHandler(event:PanelButtonEvent):void
+            {
+              
+            }
+
+
+		]]>
+	</fx:Script>
+    <fx:Declarations>
+        <mate:Listener type="{RetroDocumentEvent.PLAY_RETRO_SEGMENT}"  method="onPlayRetroSegment" />
+        <mate:Listener type="{RetroDocumentEvent.PAUSE_RETRO_SEGMENT}"  method="onPauseRetroSegment" />
+        <mate:Listener type="{RetroDocumentEvent.LOADED_ALL_USERS}"  method="loadedAllUsers"/>
+    </fx:Declarations>
+	<mx:HDividedBox width="100%" height="100%">
+        <components:PanelButton id="panelButtonExplorateur" width="40%" minWidth="400" height="100%"
+            buttonReturnVisible="false"
+            buttonReturnEnabled="false"
+            clickButtonReturn="panelbutton1_clickButtonReturnHandler(event)"
+            >            
+			<s:VGroup width="100%" height="100%">
+				<ithaca:BilanList 
+					id="bilanComp"
+					showNewButton="false"
+					showFilterButtons="true"
+					showFilterText="true"
+					width="100%"
+					height="100%"
+					/>
+			</s:VGroup>
+        </components:PanelButton> 
+	   <!-- </s:Panel>   -->
+	
+        <components:PanelButton width="60%" height="100%" minWidth="570"
+            id="panelButtonBilan"
+            buttonSwitchEnabled="false"
+            buttonSwitchVisible="true"
+            buttonShareEnabled="false"
+            buttonShareVisible="true"
+            imageInfoVisible="true"
+            clickButtonSwitch="panelButtonBilan_clickButtonSwitchHandler(event)"
+            clickButtonShare="panelButtonBilan_clickButtonShareHandler(event)">
+            <ithaca:BilanViewer
+                id="bilanViewer"
+                width="100%"
+                height="100%"
+                />
+        </components:PanelButton>	
+	</mx:HDividedBox>   
+</modules:VisuModuleBase>

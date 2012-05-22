@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+    creationComplete="skin1_creationCompleteHandler(event)">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.view.session.controls.StatementEdit")]
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="close"/>
+		<s:State name="open" />
+	</s:states>
+	
+	<fx:Script>
+	<![CDATA[
+		import com.ithaca.visu.ui.utils.IconEnum;
+		
+		import gnu.as3.gettext.FxGettext;
+		import gnu.as3.gettext._FxGettext;
+		
+		import mx.controls.Alert;
+		import mx.events.CloseEvent;
+		import mx.events.FlexEvent;
+
+		[Bindable]
+		private var widthAppendix:int = 70;
+		private var currentMouseCursor:String;
+
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+
+		// click on label edit
+		protected function label1_clickHandler(event:MouseEvent):void
+		{
+			this.currentState = "open";
+			this.editableContent.text = this.textContent.text;
+			stage.focus = this.editableContent;
+		}
+		// on click butoon cancel
+		protected function onClickButtonCancel(event:MouseEvent):void
+		{
+			this.currentState = "normal";
+		}
+		// on click butoon valider
+		protected function onClickButtonValider(event:*=null):void
+		{
+			this.currentState = "normal";
+			if(this.textContent.text != this.editableContent.text){
+				this.textContent.text = this.editableContent.text;
+				this.hostComponent.updateStatement(this.textContent.text);
+			}
+		}
+		
+		protected function buttonDelete_clickHandler(event:MouseEvent):void
+		{
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer la consigne ?"),
+				       fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteStatementConfirmed);
+		}
+		private function deleteStatementConfirmed(event:CloseEvent):void{
+			if( event.detail == Alert.YES)
+			{
+				this.hostComponent.deleteStatement();
+			}
+		}
+		
+		protected function editableContent_focusOutHandler(event:FocusEvent):void
+		{
+			editableContent.removeEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+			if (!event.isRelatedObjectInaccessible){
+				this.onClickButtonValider();
+			}else
+				if ((event.relatedObject as Object).id != "buttonCancel")
+				{
+					this.onClickButtonValider();
+				}
+		}
+		
+		protected function editableContent_focusInHandler(event:FocusEvent):void
+		{
+			editableContent.addEventListener(FocusEvent.FOCUS_OUT, editableContent_focusOutHandler);
+		}
+
+        protected function skin1_creationCompleteHandler(event:FlexEvent):void
+        {
+            // initialisation gettext
+            fxgt = FxGettext;
+        }
+
+	]]>
+	</fx:Script>
+	<s:Group width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="4"/>
+		</s:layout>
+		<s:Group width="100%">
+			<s:Rect id="fill" radiusX="5"
+				left="2" right="2" top="1" bottom="1" minHeight="25">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="border" radiusX="5"
+				left="2" right="2" top="0" bottom="0">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000"
+							alpha="0.5625"/>
+						<s:GradientEntry color="0x000000"
+							alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<!-- APPENDIX LEFT SIDE -->
+			<s:Rect id="fillOpen" radiusX="5" topRightRadiusX="0" bottomRightRadiusX="0"
+				left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16" includeIn="normal">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Rect id="borderOpen" radiusX="5" topRightRadiusX="0" bottomRightRadiusX="0"
+				left="{-widthAppendix}" width="{widthAppendix+2}" top="12" height="16" includeIn="normal">
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0x000000"
+							alpha="0.5625"/>
+						<s:GradientEntry color="0x000000"
+							alpha="0.75" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			<!-- ALFA VERTICAL LINE APPENDIX -->
+			<s:Line includeIn="normal" left="2" top="12" height="16" >
+				<s:stroke>
+					<!--<s:SolidColorStroke color="0xFFFFFF" weight="1" joints="miter"/>-->
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0xFFFFFF"/>
+						<s:GradientEntry color="0xD8D8D8"/>
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Line>
+			
+			<!-- BUTTONS -->
+			<s:HGroup top="13" paddingLeft="{-widthAppendix+7}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
+				<mx:Image id="buttonUp" source="{IconEnum.getIconByName('up')}" width="12" height="12"/>
+				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('down')}" width="12" height="12"/>
+				<mx:Image id="buttonDelete" source="{IconEnum.getIconByName('delete')}" width="16"
+					click="buttonDelete_clickHandler(event)"/>
+				<s:Line height="11" >
+					<s:stroke>
+						<s:SolidColorStroke color="#6370D7"/>
+					</s:stroke>
+				</s:Line>
+				<!--<s:Label text=" editer" color="#6370D7" click="label1_clickHandler(event)"/>-->
+				<mx:Image id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}" height="16" width="16" click="label1_clickHandler(event)"/>
+				
+			</s:HGroup>
+			<s:RichText includeIn="normal,close" id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
+				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+			<s:TextArea id="editableContent" includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
+				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+				focusIn="editableContent_focusInHandler(event)"/>
+			
+		</s:Group>
+		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">
+			<s:Button includeIn="open" click="onClickButtonValider(event)">
+				<s:label>Valider</s:label>
+			</s:Button>
+			<s:Button id="buttonCancel" click="onClickButtonCancel(event)">
+				<s:label>Annuler</s:label>
+			</s:Button>
+		</s:HGroup>
+	</s:Group>
+</s:Skin>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="false" xmlns:controls="com.ithaca.visu.controls.*"
+				creationComplete="itemrenderer1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.ithaca.visu.dataStrutures.UserSwapList;
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.ithaca.visu.model.User;
+			
+			import mx.collections.IList;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+
+			import spark.components.DataGroup;
+			import spark.events.DropDownEvent;
+			import spark.events.IndexChangeEvent;
+			
+			private var doUpdate:Boolean = true;
+			private var selectedUser:User = null;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			[Bindable]
+			private var fxgt: _FxGettext = FxGettext;
+
+			protected function list_changeHandler(event:IndexChangeEvent):void
+			{
+				var newUser:User = data.swapList.getItemAt( event.newIndex );
+				var oldUser:User = data.swapList.getItemAt( event.oldIndex );
+				doUpdate = true;
+				selectedUser = null;
+				// try find selected user in this session
+				var arrUsersSwapList:IList = (parent as DataGroup).dataProvider;
+				var nbrObject:uint = arrUsersSwapList.length;
+				for(var nObject:uint = 0; nObject < nbrObject ; nObject++)
+				{
+					var userSwapList:UserSwapList = arrUsersSwapList.getItemAt(nObject) as UserSwapList;
+					var userId:int = userSwapList.user.id_user;
+					if(userId == newUser.id_user)
+					{	
+						// set old index in DropDownList
+						(event.currentTarget as DropDownList).selectedIndex=event.oldIndex;
+						doUpdate = false;
+						selectedUser = newUser;
+						break;
+					}
+				}
+			 	if (doUpdate)
+				{
+				updateStyle( newUser );
+				statusIcon.status = newUser.status;
+				var sessionHomeElementEvent:SessionHomeElementEvent = new SessionHomeElementEvent(SessionHomeElementEvent.CHANGE_SESSION_USER);
+				sessionHomeElementEvent.oldSessionUser = oldUser;
+				sessionHomeElementEvent.newSessionUser = newUser;
+				parent.dispatchEvent(sessionHomeElementEvent);
+				}else{
+					updateStyle( oldUser );
+					list.addEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);	
+				}
+				
+			}
+
+			protected function onDropDropDownListClose(event:DropDownEvent):void
+			{
+				list.removeEventListener(DropDownEvent.CLOSE, onDropDropDownListClose);
+				//show message
+				if (!doUpdate)
+                    Alert.show(StringUtil.substitute(fxgt.gettext("L'utilisateur {0} est déjà en séance."),
+                                                     selectedUser.firstname),fxgt.gettext("Information"));
+			}
+
+			protected function list_creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data != null){
+					for each(var u:User in data.swapList)
+					{
+						if( data.user.mail == u.mail) 
+						{
+							list.selectedItem = u;						
+							updateStyle( u );
+							statusIcon.status = u.status;
+							return;
+						}
+					}
+				}
+			}
+			protected function updateStyle(user:User):void
+			{
+				if( user.role > RoleEnum.STUDENT )
+					
+					list.setStyle("fontWeight","bold")
+				else
+					list.setStyle("fontWeight","normal")						
+			}
+
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+                // initialisation gettext
+                fxgt = FxGettext;
+			}
+
+		]]>
+	</fx:Script>	 
+	<s:DropDownList 
+		id="list"
+		dataProvider="{data.swapList}"
+		itemRenderer="com.ithaca.visu.renderer.ConnectedUserListRenderer"
+		skinClass="com.ithaca.visu.skins.ConnectedUserDropDownSkin"
+		cornerRadius="10"
+		labelField="firstname"
+		creationComplete="list_creationCompleteHandler(event)"
+		change="list_changeHandler(event)"
+		/>
+	<controls:ConnectionLight
+		id="statusIcon" 
+		left="5" width="10" height="10" verticalCenter="-1"
+		/>
+</s:ItemRenderer>

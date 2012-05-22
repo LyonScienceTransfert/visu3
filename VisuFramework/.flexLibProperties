@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="com.ithaca.visu.controls.ConnectedUser"/>
+    <classEntry path="com.ithaca.visu.controls.ConnectionLight"/>
+    <classEntry path="com.ithaca.visu.ui.utils.ConnectionStatus"/>
+    <classEntry path="com.ithaca.visu.skins.ConnectionLightSkin"/>
+    <classEntry path="com.ithaca.visu.controls.SessionHomeElement"/>
+    <classEntry path="com.ithaca.visu.skins.ConnectedUserSkin"/>
+    <classEntry path="com.ithaca.visu.test.ConnectedUser"/>
+    <classEntry path="com.ithaca.visu.test.ConnectedUserSkin"/>
+    <classEntry path="com.ithaca.visu.renderer.ConnectedUserListRenderer"/>
+    <classEntry path="com.ithaca.visu.skins.ConnectedUserDropDownSkin"/>
+    <classEntry path="com.ithaca.visu.skins.SessionHomeElementSkin"/>
+    <classEntry path="com.ithaca.visu.renderer.ConnectedUserRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.ConnectedUserWithListRenderer"/>
+    <classEntry path="com.ithaca.visu.dataStrutures.UserSwapList"/>
+    <classEntry path="com.ithaca.visu.controls.login.LoginForm"/>
+    <classEntry path="com.ithaca.visu.skins.LoginFormSkin"/>
+    <classEntry path="com.ithaca.visu.controls.globalNavigation.ApplicationMenu"/>
+    <classEntry path="com.ithaca.visu.skins.VisuAppSkin"/>
+    <classEntry path="com.ithaca.visu.skins.ApplicationMenuSkin"/>
+    <classEntry path="com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent"/>
+    <classEntry path="com.ithaca.visu.ui.utils.RightStatus"/>
+    <classEntry path="com.ithaca.visu.ui.utils.RoleEnum"/>
+    <classEntry path="com.ithaca.visu.events.VisuActivityEvent"/>
+    <classEntry path="com.lyon2.visu.model.Activity"/>
+    <classEntry path="com.ithaca.visu.events.VisuActivityElementEvent"/>
+    <classEntry path="com.lyon2.visu.model.ActivityElement"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.SessionPlan"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.SessionPlanSkin"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.ActivityDetail"/>
+    <classEntry path="com.lyon2.visu.model.ActivityElementType"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.ActivityDetailSkin"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.ActivityElementDetail"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.StatementSkin"/>
+    <classEntry path="com.ithaca.visu.controls.sessions.skins.KeywordSkin"/>
+    <classEntry path="com.ithaca.visu.controls.timeline.TimeLine"/>
+    <classEntry path="com.ithaca.visu.events.ActivityElementEvent"/>
+    <classEntry path="com.ithaca.messagerie.AccordionMessagerie"/>
+    <classEntry path="com.ithaca.messagerie.skins.AccordionMessagerieSkin"/>
+    <classEntry path="com.ithaca.timelineskins.PlayVideoSkin"/>
+    <classEntry path="com.ithaca.timelineskins.events.TimelineSkinEvent"/>
+    <classEntry path="com.ithaca.utils.components.BilanSharedUserToolTip"/>
+    <classEntry path="com.ithaca.utils.components.skins.BilanSharedUserToolTipSkin"/>
+    <classEntry path="com.ithaca.visu.renderer.DateBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.DateSessionRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.InfosBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.TitreSessionRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.TitreBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.ActionBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.model.Notification"/>
+    <classEntry path="com.ithaca.utils.components.MessageNotification"/>
+    <classEntry path="com.ithaca.utils.components.skins.MessageNotificationSkin"/>
+    <classEntry path="com.ithaca.visu.renderer.ShareBilanRenderer"/>
+    <classEntry path="com.ithaca.visu.renderer.OwnerBilanRenderer"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>
+  </includeResources>
+  <namespaceManifests/>
+</flexLibProperties>

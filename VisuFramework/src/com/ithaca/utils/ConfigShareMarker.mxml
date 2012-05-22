@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    creationComplete="titlewindow1_creationCompleteHandler(event)"
+    close="PopUpManager.removePopUp(this);"
+    width="330" height="300">
+    <s:title>{fxgt.gettext("Dialog de configuration les marqueurs partagé")}</s:title>
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="enabled"/>
+    </s:states>
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.visu.events.SessionSharedEvent;
+        import com.ithaca.visu.model.Model;
+        import com.ithaca.visu.model.User;
+        import com.ithaca.visu.renderer.PartisipantSessionRenderer;
+        import com.ithaca.visu.renderer.RoleRenderer;
+        import com.ithaca.visu.renderer.ShareMarkerRenderer;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.events.FlexEvent;
+        import mx.managers.PopUpManager;
+        
+        
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        private var _user:User;
+        private var userChange:Boolean;
+        private var _listIdUser:ArrayCollection;
+        private var listIdUserChange:Boolean;
+        
+        private var _model:Model;
+        
+        ////////////////////
+        ////// setters/getters
+        ////////////////////
+        public function set user(value:User):void
+        {
+            _user = value;
+            userChange = true;
+            invalidateProperties();
+        }
+        public function get user():User
+        {
+            return _user;
+        }
+        public function set listIdUser(value:ArrayCollection):void
+        {
+            _listIdUser = value;
+            listIdUserChange = true;
+            invalidateProperties();
+        }
+        public function get listIdUser():ArrayCollection
+        {
+            return _listIdUser;
+        }	
+        public function set model (value:Model):void
+        {
+            _model = value;
+        }
+        public function get model ():Model
+        {
+            return _model;
+        }
+        
+        //_____________________________________________________________________
+        //
+        // Overriden Methods
+        //
+        //_____________________________________________________________________
+        
+        override protected function commitProperties():void
+        {
+            super.commitProperties();	
+            if(userChange)
+            {
+                userChange = false;
+                if(user)
+                {
+                    if(imageUser != null)
+                    {
+                        imageUser.source = user.avatar;
+                    }
+                }
+            }
+            if(listIdUserChange)
+            {
+                listIdUserChange = false;
+                if(listIdUser)
+                {
+                    var listUser:ArrayCollection = new ArrayCollection();
+                    for each(var elm:Object in listIdUser)
+                    {
+                        var user:User = model.getUserPlateformeByUserId(elm.idUser);
+                        user.shareMarker = elm.share;
+                        listUser.addItem(user);
+                    }
+                    markerShareComponenet.dataProvider = listUser;
+                    
+                }else
+                {
+                   // TODO message 
+                }
+            }
+        }
+        
+        //_____________________________________________________________________
+        //
+        // Listeners
+        //
+        //_____________________________________________________________________
+        
+        protected function markerShareComponenet_creationCompleteHandler(event:FlexEvent):void
+        {
+            markerShareComponenet.addEventListener(SessionSharedEvent.UPDATE_SHARE_MARKER, onUpdateShareMarker, true);
+/*             dataGridPartisipant.width = 70;
+            dataGridRole.width = 70; */
+            dataGridShare.width = 30; 
+            dataGridShare.minWidth = 30; 
+            
+        }
+        private function onUpdateShareMarker(event:SessionSharedEvent):void
+        {
+            var idUser:int = event.idUserFor;
+            var shareMarker:Boolean = event.shareMarker;
+            // update value share in list user
+            for each(var elm:Object in listIdUser)
+            {
+                if(elm.idUser == idUser)
+                {
+                    elm.share = shareMarker;
+                }
+            }
+        }
+
+        
+        
+        protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+        }
+       
+        
+        //////////////
+        // Utils
+        //////////////
+       
+        
+
+    ]]>
+    </fx:Script>
+    <s:VGroup width="100%" height="100%" gap="10" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+        <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10" gap="5">
+            <mx:Image id="imageUser" width="50" height="50"/>
+            <s:VGroup width="100%" height="100%" horizontalAlign="left" verticalAlign="middle">
+                    <s:Label id="firstNameUser" fontWeight.normal="bold">
+                        <s:text>{fxgt.gettext("Je vais partagé mes marqueurs avec :")}</s:text>
+                    </s:Label>
+            </s:VGroup>
+        </s:HGroup>
+        <mx:DataGrid id="markerShareComponenet" creationComplete="markerShareComponenet_creationCompleteHandler(event)" width="100%"  height="100%">
+            <mx:columns>
+                <mx:DataGridColumn  id="dataGridPartisipant" itemRenderer="com.ithaca.visu.renderer.PartisipantSessionRenderer">
+                    <mx:headerText>{fxgt.gettext("Participants")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn  id="dataGridRole" itemRenderer="com.ithaca.visu.renderer.RoleRenderer">
+                    <mx:headerText>{fxgt.gettext("Role")}</mx:headerText>
+                </mx:DataGridColumn>
+                <mx:DataGridColumn  id="dataGridShare" itemRenderer="com.ithaca.visu.renderer.ShareMarkerRenderer">
+                    <mx:headerText>{fxgt.gettext("Partagé")}</mx:headerText>
+                </mx:DataGridColumn>
+            </mx:columns>
+        </mx:DataGrid>
+    </s:VGroup>
+</s:TitleWindow>

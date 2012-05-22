@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<mate:LocalEventMap 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	xmlns:mate="http://mate.asfusion.com/"
+	xmlns:rtmp="com.flashdevs.mateExt.rtmpService.mate.*">
+	<fx:Script><![CDATA[
+		import business.SessionManager;
+		
+		import com.asfusion.mate.utils.debug.Debugger;
+		import com.flashdevs.mateExt.rtmpService.RtmpService;
+		import com.ithaca.visu.controls.sessions.SessionDetailView;
+		import com.ithaca.visu.controls.sessions.SessionManagerView;
+		import com.ithaca.visu.events.SessionEvent;
+		import com.ithaca.visu.events.SessionUserEvent;
+		import com.ithaca.visu.events.VisuActivityElementEvent;
+		import com.ithaca.visu.events.VisuActivityEvent;
+		import com.ithaca.visu.model.Model;
+		import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+		
+		import mx.events.FlexEvent;
+		
+	]]></fx:Script>	
+	<fx:Declarations>
+		<mate:Debugger level="{Debugger.ALL}"/>
+		
+		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}" debug="true">
+			<mate:ObjectBuilder generator="{SessionManager}" constructorArguments="{scope.dispatcher}"/>
+				<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+					<mate:Request action="sessionInfo.getListSessionsAndPlans" />				
+					<rtmp:resultHandlers>
+						<mate:MethodInvoker generator="{SessionManager}"
+											method="setSessionAndPlan" 
+											arguments="{[currentEvent.data]}" />
+					</rtmp:resultHandlers>
+					
+					<rtmp:faultHandlers>
+						<mate:MethodInvoker generator="{SessionManager}" 
+											method="error" 
+											arguments="{[currentEvent]}"/>
+					</rtmp:faultHandlers>
+				</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{FlexEvent.CREATION_COMPLETE}" debug="true">
+			<mate:MethodInvoker generator="{SessionManager}" method="notifyOutSession" />
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.OUT_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="checkOutSession" arguments="{[event.userId]}"/>              
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+<!-- REMOTE-->		
+		<s:RemoteObject
+			id="remoteActivity"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="ActivityService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>						
+		
+		<s:RemoteObject
+			id="remoteActivityElement"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="ActivityElementService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+		
+		<s:RemoteObject
+			id="remoteSession"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="SessionService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+		
+		<s:RemoteObject
+			id="remoteUser"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="UserService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+		
+		<s:RemoteObject
+			id="remoteSessionUser"
+			endpoint="{Model.getInstance().AMFServer}"
+			destination="SessionUserService"
+			makeObjectsBindable="true"
+			showBusyCursor="true">
+		</s:RemoteObject>
+		
+		
+		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}" useCapture="true" debug="true">
+			<mate:MethodInvoker generator="{SessionManager}" method="setCurrentSessionId" arguments="{event.sessionId}"/>
+			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="getSessionActivities" arguments="{event.sessionId}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onLoadListActivity" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS}">
+			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="getActivityElements" arguments="{event.activityId}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onLoadListActivityElement" arguments="{[resultObject, event.activityId]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+<!-- SESSION USERS -->
+		<mate:EventHandlers type="{SessionUserEvent.ADD_SESSION_USER}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.addSessionUser" arguments="{[event.newSessionUser]}"/>     				
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="onUpdateSession" 
+										arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>			
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionUserEvent.REMOVE_SESSION_USER}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.removeSessionUser" arguments="{[event.newSessionUser]}"/>     				
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="onUpdateSession" 
+										arguments="{[currentEvent.data]}"/>
+				</rtmp:resultHandlers>			
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>	
+
+<!-- USERS -->
+		<mate:EventHandlers type="{SessionEditEvent.LOAD_LIST_USERS}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="userInfo.getListUser"/>     				
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+<!-- SESSION -->		
+		<mate:EventHandlers type="{SessionEvent.UPDATE_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.updateSession" arguments="{[event.sessionWitOutListUserVO]}"/>     				
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.ADD_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId]}"/>     				
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.ADD_EMPTY_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.addSession" arguments="{[event.sessionWitOutListUserVO, event.userId]}"/>     				
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+
+		
+		<mate:EventHandlers type="{SessionEvent.DELETE_SESSION}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.deleteSession" arguments="{[event.sessionId, Model.getInstance().getLoggedUser().id_user]}"/>     						
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
+		
+<!-- ACTIVITY -->
+		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_SESSION}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="updateActivity" arguments="{event.activityVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onUpdateActivity" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.DELETE_ACTIVITY}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="deleteActivity" arguments="{event.activityVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onDeleteActivity" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.ADD_ACTIVITY}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="addActivity" arguments="{event.activityVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onAddActivity" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+<!-- ACTIVITY ELEMENT -->
+		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_ELEMENT_SESSION}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="updateActivityElement" arguments="{event.activityElementVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onUpdateActivityElement" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+
+		<mate:EventHandlers type="{SessionEvent.DELETE_ACTIVITY_ELEMENT}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="deleteActivityElement" arguments="{event.activityElementVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onDeleteActivityElement" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionEvent.ADD_ACTIVITY_ELEMENT}" debug="true">
+			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="addActivityElement" arguments="{event.activityElementVO}">
+				<mate:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" method="onAddActivityElement" arguments="{[resultObject]}"/>
+				</mate:resultHandlers>
+				<mate:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="error" arguments="{[currentEvent]}"/>
+				</mate:faultHandlers>
+			</mate:RemoteObjectInvoker>
+		</mate:EventHandlers>
+		
+		<mate:EventHandlers type="{SessionUserEvent.GET_LIST_SESSION_USER}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getListPresentUserInSession" arguments="{[event.sessionId]}" />				
+				<rtmp:resultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}"
+										method="loadListPresentUserInSession" 
+										arguments="{[currentEvent.data]}" />
+				</rtmp:resultHandlers>			
+				<rtmp:faultHandlers>
+					<mate:MethodInvoker generator="{SessionManager}" 
+										method="error" 
+										arguments="{[currentEvent]}"/>
+				</rtmp:faultHandlers>
+			</rtmp:RtmpServiceInvoker>
+			
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="obselInfo.getObselByTypeSessionExitSessionPause"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
+			
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="retroDocument.getRetrodocumentsBySessionIdForUser"   arguments="{[event.sessionId]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+		
+		<mate:Injectors target="{SessionManager}">
+			<mate:PropertyInjector targetKey="model" source="{Model.getInstance()}" />
+		</mate:Injectors>
+		
+		<mate:Injectors target="{SessionManagerView}" >
+			<mate:PropertyInjector source="{SessionManager}"
+								   sourceKey="sessions"
+								   targetKey="sessions"
+								   />
+		</mate:Injectors>
+		<mate:Injectors target="{SessionDetailView}">
+			<mate:PropertyInjector source="{SessionManager}"
+								   targetKey="activities" sourceKey="listActivities"/>
+		</mate:Injectors>
+		<mate:Injectors targets="{[SessionDetailView]}">
+			<mate:PropertyInjector source="{Model.getInstance()}"
+								   sourceKey="profiles"
+								   targetKey="profiles"
+								   />
+		</mate:Injectors>
+		
+	</fx:Declarations>
+</mate:LocalEventMap>

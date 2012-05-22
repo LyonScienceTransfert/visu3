@@ -1,0 +1,2671 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						xmlns:s="library://ns.adobe.com/flex/spark" 
+						xmlns:mx="library://ns.adobe.com/flex/mx" 
+						xmlns:modules="com.ithaca.visu.modules.*" 
+						xmlns:maps="maps.*"
+						xmlns:mate="http://mate.asfusion.com/"
+						configure="visumodulebase1_configureHandler(event)"
+						creationComplete="visumodulebase1_creationCompleteHandler(event)"
+                        currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
+						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
+						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*" xmlns:controls1="com.ithaca.visu.controls.*">
+	<fx:Script>
+		<![CDATA[
+            import com.ithaca.timeline.Layout;
+            import com.ithaca.timeline.SelectorRegexp;
+            import com.ithaca.timeline.Timeline;
+            import com.ithaca.timeline.TraceLine;
+            import com.ithaca.timeline.TraceLineGroup;
+            import com.ithaca.timeline.events.TimelineEvent;
+            import com.ithaca.timeline.skins.TraceLineTitleSkin;
+            import com.ithaca.timelineskins.events.TimelineSkinEvent;
+            import com.ithaca.traces.Obsel;
+            import com.ithaca.traces.events.ObselEvent;
+            import com.ithaca.traces.model.RetroTraceModel;
+            import com.ithaca.traces.model.TraceModel;
+            import com.ithaca.traces.model.vo.SGBDObsel;
+            import com.ithaca.utils.ConfigShareMarker;
+            import com.ithaca.utils.EditChatDialog;
+            import com.ithaca.utils.EditMarkerDialog;
+            import com.ithaca.utils.UtilFunction;
+            import com.ithaca.utils.VisuUtils;
+            import com.ithaca.utils.components.MessageNotification;
+            import com.ithaca.utils.components.skins.MessageNotificationSkin;
+            import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+            import com.ithaca.visu.controls.sessions.ActivityDetailB;
+            import com.ithaca.visu.controls.sessions.SharedElementChat;
+            import com.ithaca.visu.controls.skins.SendMarkerAnimationSkin;
+            import com.ithaca.visu.events.ActivityElementEvent;
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.MarkerEvent;
+            import com.ithaca.visu.events.MessageEvent;
+            import com.ithaca.visu.events.PanelButtonEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.SessionSharedEvent;
+            import com.ithaca.visu.events.ShortMarkerEvent;
+            import com.ithaca.visu.events.TraceLineEvent;
+            import com.ithaca.visu.events.VisuActivityEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.interfaces.IDocument;
+            import com.ithaca.visu.model.Activity;
+            import com.ithaca.visu.model.ActivityElement;
+            import com.ithaca.visu.model.ActivityElementType;
+            import com.ithaca.visu.model.DocumentActionType;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.Notification;
+            import com.ithaca.visu.model.Session;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.ui.utils.ActionObselEnum;
+            import com.ithaca.visu.ui.utils.ConnectionStatus;
+            import com.ithaca.visu.ui.utils.IconEnum;
+            import com.ithaca.visu.ui.utils.RoleEnum;
+            import com.ithaca.visu.ui.utils.SessionStatusEnum;
+            import com.ithaca.visu.ui.utils.SoundEnum;
+            import com.ithaca.visu.view.video.PanelEditInfo;
+            import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+            import com.lyon2.controls.ImageDocument;
+            import com.lyon2.controls.YoutubePlayer;
+            import com.youtube.player.events.PlayerEvent;
+            import com.youtube.player.events.PlayerSharedEvent;
+            
+            import gnu.as3.gettext.FxGettext;
+            import gnu.as3.gettext._FxGettext;
+            
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.controls.Image;
+            import mx.core.DragSource;
+            import mx.core.IUIComponent;
+            import mx.events.CloseEvent;
+            import mx.events.CollectionEvent;
+            import mx.events.DragEvent;
+            import mx.events.FlexEvent;
+            import mx.events.ResizeEvent;
+            import mx.events.StateChangeEvent;
+            import mx.managers.DragManager;
+            import mx.managers.PopUpManager;
+            
+            import spark.components.Button;
+            import spark.components.Label;
+
+            /* When reaching the end of the timeline, how much time should we add ? */
+			private var DURATION_EXTENSION: Number = 60 * 1000; /* 1 minute */
+            private var TIME_UPDATE_MESSAGE_NOTIFICATION:Number = 1000; /* in ms */ 
+            private var DURATION_SHOW_NOTIFICATION_ADD_MARKER:Number = 1000 * 10; /* in ms */ 
+
+			private var currentSession:Session = null;
+			private var _stopTimeRecording:Number = 0;
+			private var DELTA_STICH:int = 20;
+			
+			private var _currentActivityElement:ActivityElement = null;
+			
+			private var listObjectMedia:ArrayCollection = new ArrayCollection();
+			private var _listObjectMediaPlaying:ArrayCollection = new ArrayCollection();
+			private var _listTempViewObselSessionOut:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			public var listActivities:ArrayCollection;
+			
+			[Bindable]
+			private var fxgt: _FxGettext = FxGettext;
+					
+			[Bindable]
+			[Embed("images/fichierVisu2_20x20.png")]
+			private var fichierIconVisu1:Class;
+			
+			[Bindable]
+			private var timer:Timer;
+			
+			private var pointPanelEditInfo:Point;
+			
+			private var muteVolume:Boolean = false;
+			
+			private var timeLine:Timeline;
+			private var _isTimeLineAddedOnStage:Boolean = false;
+			
+			private var listUserIdPresentTimeLine:ArrayCollection = new ArrayCollection();
+			// init EditComentDialog with this userId
+			private var userIdInitEditMarkerDialog:int = -1;
+            // loged user
+            var loggedUser:User;
+            // list editing marker obsel
+            private var _listEditMarkerDialog:ArrayCollection;
+            // pixels between windodws editMarkerDialog
+            private var DELTA_X_Y:int = 15;
+            // list playVideoObsels
+            private var _listPlayVideoObselSkin:ArrayCollection = new ArrayCollection();
+            // list obsel playVideoObsel
+            private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            // list remover Pause/Stop/End video obsel
+            private var _listPauseStopEndObsel:ArrayCollection = new ArrayCollection();
+            // list session exit obsels
+            private var _listSessionExitObsel:ArrayCollection = new ArrayCollection();
+            // timer playVideoObsel
+            private var _timerPlayVideoObsel:Timer;
+			// list message notification
+            private var _listMessageNotification:ArrayCollection;
+            // timer update show message notification 
+            private var _timerShowMessageNotification:Timer;
+            // list view message notification
+            private var _listViewMessageNotification:ArrayCollection;
+            
+			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
+			{
+				//if((event.currentTarget as TutoratModule).parameters != null  || Model.getInstance().getCurrentSession() != null )
+				if(Model.getInstance().getCurrentSessionTutoratModule() != null )
+				{
+					/* var session:Session = (event.currentTarget as TutoratModule).parameters as Session;
+					if(session == null)
+					{
+						session = Model.getInstance().getCurrentSession(); 
+					} */
+				//	this.currentSession = session;
+					this.currentSession = Model.getInstance().getCurrentSessionTutoratModule();
+					// set current session in the model for checking if new use join this session  
+					Model.getInstance().setCurrentSession(this.currentSession);
+					// update button "salon synchrone"
+					Model.getInstance().setEnabledButtonSalonTutorat(true);
+					// FIXME many instance of TutoratModul
+					Model.getInstance().setCurrentTutoratModule(this);
+					// init list traceLines
+					Model.getInstance().initListTraceLine();
+                    // set logged user
+                    loggedUser = Model.getInstance().getLoggedUser();
+                    
+					var initMapEvent:InitMapEvent = new InitMapEvent(InitMapEvent.INIT_MAP_TUTORAT);
+					this.dispatchEvent(initMapEvent);
+					// set current state
+					if(Model.getInstance().getLoggedUser().role > RoleEnum.STUDENT)
+					{
+						this.setCurrentState("MainState");				
+					}else
+					{
+						this.setCurrentState("StudentState");		
+					}		
+				}
+				else{
+					// TODO : Alert error d'entre ici
+					this.setCurrentState("BlankState");
+				}
+			}
+			
+			protected function visumodulebase1_creationCompleteHandler(event:FlexEvent):void
+			{
+                // set focus
+                this.setFocus();
+                
+				//if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSession() != null) ){
+				if((this.currentState != "BlankState") && (Model.getInstance().getCurrentSessionTutoratModule() != null) ){
+					
+					fxgt = FxGettext;
+					// set group setMarker enabled for all users
+					this.setEnabledGroupSetMarker(false);
+					if(buttonStartRecording != null){
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
+						this.buttonCloseSession.enabled = true;
+						if (this.currentSession.statusSession == SessionStatusEnum.SESSION_OPEN || this.currentSession.statusSession == SessionStatusEnum.SESSION_RECORDING )
+						{
+							this.buttonCloseSession.enabled = false;
+						}
+						// checking if used has trace
+						var obj:Object = Model.getInstance().getTraceLineByUserId(Model.getInstance().getLoggedUser().id_user);
+						if(obj != null)
+						{
+							this.buttonCloseSession.enabled = true;
+						}
+						// set buttons startActivity enabled = false
+						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_NONE);
+					}
+					
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.CONNECTED);
+					var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
+				//	visuActivityEvent.sessionId = Model.getInstance().getCurrentSession().id_session;					
+					visuActivityEvent.sessionId = this.currentSession.id_session;					
+					dispatchEvent(visuActivityEvent);
+					
+					this.visio.connection = Model.getInstance().getNetConnection();
+					this.visio.streamID = Model.getInstance().getUserIdClient();
+					
+					var user:User = Model.getInstance().getLoggedUser();
+					this.visio.addLocalDevice(user);
+					if(panelPlanSession != null)
+					{
+//						panelPlanSession.title = panelPlanSession.title +' : '+ Model.getInstance().getCurrentSession().theme;
+						panelPlanSession.title = panelPlanSession.title +' : '+ this.currentSession.theme;
+					}
+					// add streams of other users from this session
+				//	var listIdClient:Array = Model.getInstance().getListIdClient(Model.getInstance().getCurrentSession().id_session);
+					var listIdClient:Array = Model.getInstance().getListIdClient(this.currentSession.id_session);
+					if(listIdClient != null)
+					{
+						// FIXME : if session end recording and for logged user status = 0 , this status by default add to all streams, it's no good!!!
+						this.visio.addVideoStreams(listIdClient, muteVolume);	
+					}
+					// set logged user
+					this.visio.loggedUser = Model.getInstance().getLoggedUser();
+					// removing module from the stage
+					this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+					// notify that module ready for use
+					notifyReadyForUse();
+                    
+                    // init list editing comment obsel
+                    _listEditMarkerDialog = new ArrayCollection();
+                    // init list message notification
+                    _listMessageNotification = new ArrayCollection();
+                    // add listener message notification
+                    _listMessageNotification.addEventListener(CollectionEvent.COLLECTION_CHANGE, onChangeCollectionMessageNotification);
+                    // init list view message notification
+                    _listViewMessageNotification = new ArrayCollection();
+                    
+                    // set list userSharedMarker
+                    // idSession: {idUser,shared}
+                    for each(var user:User in this.currentSession.participants)
+                    {
+                       
+                        if(user.id_user !=  this.loggedUser.id_user)
+                        {
+                            // add userId how share markers 
+                            Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, user.id_user, false)
+                        }
+                    }
+				}
+			}
+			
+			/**
+			 * Removing all streams and local devices
+			 */
+			private function onRemovedModuleFromStage(event:Event):void{
+				if(this.visio != null)
+				{
+					this.visio.removeAllStreams();
+					this.visio.removeLocalDevice();				
+				}
+				Model.getInstance().setCurrentTutoratModule(null);
+				Model.getInstance().setCurrentSessionSalonSession(currentSession);
+				this._listTempViewObselSessionOut = new ArrayCollection();
+				// remove all images from panelMediaSession
+				if(this.panelMediaSession != null)
+				{ 	
+					var player:YoutubePlayer;
+					for each(player in this.listObjectMedia)
+					{
+						var isPlaying:Boolean = player.isPlaying();
+						if(isPlaying)
+						{
+							// shared info : student walk out from session  
+							//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+							var sessionId:int = this.currentSession.id_session;
+							var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+							sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
+							// this information will add to the obsel
+							sessionSharedEvent.info = event.target.toolTip;
+							sessionSharedEvent.listUsers = listUsersIds;
+							sessionSharedEvent.senderUserId = 	player.getSenderId();
+							sessionSharedEvent.info = player.toolTip;
+							// set status record for add obsel sharedPlayerAction when session on Paused
+							sessionSharedEvent.status = VisuVisioAdvanced.STATUS_RECORD;	
+							sessionSharedEvent.url = player.url;
+							sessionSharedEvent.idDocument = player.getIdDocument();
+							sessionSharedEvent.currentTimeVideoPlayer = player.getCurrentTime();
+							sessionSharedEvent.action = TraceModel.STOP_VIDEO;
+							dispatchEvent(sessionSharedEvent);	
+							// set pause video
+							player.pauseVideo();
+						}
+					}
+					this.panelMediaSession.removeAllElements();
+				}
+				// stop timer
+				if(this.timer)
+				{
+					this.timer.stop();		
+					this.timer = null;
+				}
+                // remove edit marker dialogs
+                removeFromStageEditMarkerDialog();
+			}
+			
+            /**
+            * New user join to the session
+            */
+            private function onNewUserJoinSession(event:SessionEvent):void{	
+            // check if user in current session
+                var currentSession:Session = this.currentSession;
+                if(currentSession != null)
+                {
+                    if(currentSession.id_session == event.sessionId)
+                    {
+                        var module:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                        if(module == this && module.visio != null)
+                        {
+                            var user:User = Model.getInstance().getUserPlateformeByUserId(event.userId);
+                            module.visio.addVideoStream(event.userIdClient, user, 1.0, muteVolume);
+                            // FIXME: VisuVisio.STATUS_RECORD not the same value ConnectionStatus.RECORDING
+                            if(event.status == ConnectionStatus.RECORDING)
+                            {
+                                module.visio.status = VisuVisioAdvanced.STATUS_RECORD;
+                            }
+                            // add id user share marker, not logged user
+                            if(event.userId != this.loggedUser.id_user)
+                            {
+                                Model.getInstance().addUserIdShareMarkerBySessionId(this.currentSession.id_session, event.userId, false);
+                            }
+                            // status session
+                            var statusSession:int = currentSession.statusSession;
+                            if(statusSession != SessionStatusEnum.SESSION_OPEN )
+                            {								
+                                if(statusSession == SessionStatusEnum.SESSION_PAUSE)
+                                {   
+                                    var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.userId)
+                                    // TODO gestion currentTime
+                                    Model.getInstance().addViewObselSessionOut(new Date().time , event.userId);
+                                }else
+                                {   
+                                    // remove viwSessionOut
+                                    var isUserSecondTimeEnterSession:Boolean = Model.getInstance().removeViewObselSessionOut(event.userId);
+                                    // will false when user enter first time in the session
+                                    if(!isUserSecondTimeEnterSession)
+                                    {
+                                        // FIXME : remove gestion "SessionOut"
+                                        /* var viewObsel:ObselSessionOut = new ObselSessionOut();
+                                        viewObsel.setOwner(event.userId);
+                                        viewObsel.setBegin(currentSession.date_start_recording.time);
+                                        // TODO gestion currentTime
+                                        viewObsel.setEnd(new Date().time);
+                                        // add viewObsel in temp list before adding to traceLine, traveLine don't ready now
+                                        this._listTempViewObselSessionOut.addItem(viewObsel); */
+                                    }																
+                                }
+                            }	
+                        }
+                    }							
+                }
+            }
+
+            /**
+			 * Old user walk out from the session
+			 */
+			private function onOldUserOutSession(event:SessionEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					// streamId of the user 
+					var streamId:String = event.userIdClient;
+					// remove video of the user
+					currentModule.visio.removeVideoStream(streamId);
+					// add message in the chat for not logged users 
+					// TODO icon for this event
+					if(event.userId != Model.getInstance().getLoggedUser().id_user)
+					{
+						this.initChatPanel(event.userId, fxgt.gettext("a quitté la séance"),"");	
+						// add viewObsel "SessionOut"
+						// FIXME gestion time
+						Model.getInstance().addViewObselSessionOut(new Date().time,event.userId)
+					}
+                    // disconnection the client  
+                    removePlayVideoObselDisconnectedUser(event.userId);
+				}	
+			}
+
+			/**
+			 * Update status on recording mode
+			 */
+			private function onStartRecordingSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() as TutoratModule == this)
+				{
+					if(this.visio != null)
+					{
+						this.visio.status = VisuVisioAdvanced.STATUS_RECORD;
+						// set group setMarker enabled for all users
+						this.setEnabledGroupSetMarker(true);
+						// update label button on view tutorat
+						if(buttonStartRecording != null){			
+							buttonStartRecording.label = fxgt.gettext("Suspendre la séance");	
+							buttonCloseSession.enabled = false;
+							// set buttons startActivity enabled = true
+							this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_RECORD);							
+						}
+						// current session
+						var session:Session = this.currentSession;
+						// remove all user paused presentred in the session
+						Model.getInstance().removeObselSessionOutCurrentUser(session.id_session);
+						
+						// update time start recording
+						this.currentSession.date_start_recording = new Date(null,null,null,null,null,null,event.timeStartStop);
+						// create timeLine
+						if(event.typeRecording == "startRecordingSession")
+						{
+							createTimeLine();
+						}
+					}
+				}
+			}
+			
+			private function startTimer():void
+			{
+				if(!timer)
+				{
+					timer = new Timer(1000,0);
+					timer.addEventListener(TimerEvent.TIMER, updateTime);
+				}
+				
+				timer.start();
+			}
+			
+			private function updateTime(event:TimerEvent):void
+			{
+				var currentTimeServeur:Number = Model.getInstance().getTimeServeur();
+				var beginTime:Number =  currentTimeServeur - this.currentSession.date_start_recording.time;			
+				//timeLine.changeCursorValue( timeLine.begin + beginTime );
+				timeLine.currentTime = timeLine.begin + beginTime ;
+			}
+
+			/**
+			 * Update status on stop recording session
+			 */
+			private function onStopRecordingSession(event:SessionEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					this.visio.status = VisuVisioAdvanced.STATUS_NONE;
+					// set group setMarker enabled for all users
+					this.setEnabledGroupSetMarker(false);
+					// update label button on view tutorat
+					if(buttonStartRecording != null){
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
+						buttonCloseSession.enabled = true;
+						// TODO make that obsel "OutSession" will getting wight
+						this._stopTimeRecording = event.timeStartStop;
+						//this.timer.stop();
+						// set buttons startActivity enabled = false
+						this.sessionPlan.setSessionStatus(VisuVisioAdvanced.STATUS_NONE);
+					}
+					// current session
+					//var session:Session = Model.getInstance().getCurrentSession();
+					var session:Session = this.currentSession;
+					if (session != null)
+					{
+						// add obsel "SessionOut" for user in the session
+						Model.getInstance().setObselSessionOutForCurrentUser(session.id_session);
+					}
+					
+				}
+			}
+			
+			private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					var idDocument:Number=0;
+					// obselVO will be null only if session paused or not started
+					var obselVO:SGBDObsel = event.obselVO as SGBDObsel;
+					if( obselVO != null)
+					{
+						// set obsel to the model
+						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+						//this.addObsel(obsel);
+						Model.getInstance().addObsel(obsel);
+						// get id document
+						idDocument = obsel.props[TraceModel.ID_DOCUMENT];
+                        // set videoPlayObsel
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                            case TraceModel.PLAY_VIDEO :
+                                // start timer 
+                                startTimerPlayVideoObsel();
+                                break;
+                            case TraceModel.PAUSE_VIDEO :
+                            case TraceModel.STOP_VIDEO :
+                            case TraceModel.END_VIDEO :
+                            case TraceModel.RELEASE_SLIDER_VIDEO :
+                                // add obsels
+                                removePlayVideoObsel(obsel);
+                                break;
+                        }
+					}
+                    
+					// update the buttons on planSession, view tutorat
+					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
+					{
+						var obselStartSession:Obsel = Obsel.fromRDF(obselVO.rdf);
+						var aa:String = obselStartSession.props[TraceModel.ACTIVITY_ID]; 
+						var activityId:int = new int(aa);
+						
+						this.sessionPlan.setCurrentActivityId(activityId);
+					}
+					
+					var pathAvatar:String = "";
+					var name:String = "";
+					var sourceImageInfo:* = null;
+					var senderUser:User = Model.getInstance().getUserPlateformeByUserId(event.senderUserId);
+					if(senderUser != null)
+					{
+						pathAvatar = senderUser.avatar;
+						name = senderUser.firstname + " "+ senderUser.lastname;						
+					}
+					
+					if(((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER)) && ((event.typeInfo as int) != DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO)))
+					{
+						switch (event.typeInfo as int) 
+						{
+							case ActivityElementType.valueOf(ActivityElementType.VIDEO) :
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
+								// set players on paused than add new player and than start playing(without shared info)
+								if(this.listObjectMedia.length > 0)
+								{
+									var playerOnStage:YoutubePlayer;
+									for each(playerOnStage in this.listObjectMedia)
+									{
+										var isPlaying:Boolean = playerOnStage.isPlaying();
+										if(isPlaying)
+										{
+											playerOnStage.pauseVideo();
+											this._listObjectMediaPlaying.addItem(playerOnStage);
+										}
+									}
+								}
+								var player:YoutubePlayer = new YoutubePlayer();
+								// set id of the sender user 
+								player.setSenderId(event.senderUserId);
+								player.setIdDocument(idDocument);
+								player.url = event.url;
+								player.percentWidth = 100;
+								player.height = 225;
+								player.toolTip = event.info;
+								player.addEventListener(PlayerEvent.READY, loadComplete);
+								player.addEventListener(FlexEvent.UPDATE_COMPLETE, onPlayerUpdateComplete);
+								if(this.panelMediaSession != null)
+								{
+									this.panelMediaSession.addElementAt(player, 0);
+								}
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.IMAGE) :
+								sourceImageInfo = event.url;
+								var image:ImageDocument = new ImageDocument();
+								// set id of the sender user
+								image.setSenderId(event.senderUserId);
+								image.setIdDocument(idDocument);
+								image.load(event.url);
+								image.toolTip = event.info;
+								image.percentWidth = 100;	
+								image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
+								if(this.panelMediaSession != null)
+								{
+									this.panelMediaSession.addElementAt(image, 0);
+								}
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.MESSAGE) :
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE);
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.KEYWORD) :
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_KEYWORD);; 
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.STATEMENT) :
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_INSTRUCTIONS);
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE) :
+								sourceImageInfo = fichierIconVisu1;
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO) :
+								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
+								break;
+							case ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY) :
+								sourceImageInfo = fichierIconVisu1;
+								break;
+						}
+						// check if "message" for logged user or logged user sent message
+						var idLoggedUser:int = Model.getInstance().getLoggedUser().id_user;
+						if(event.idUserFor == 0 || event.idUserFor == idLoggedUser || event.senderUserId == idLoggedUser)
+						{
+							var sharedElementChat:SharedElementChat = new SharedElementChat();
+							// default color of component SharedElementChatSkin 
+							// only for chat messages sent before start session(hasn't info about users)
+							var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
+							var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
+							if(traceLine != null)
+							{
+								userColor = traceLine.userColor;
+							}
+							sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo, userColor);
+							sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
+							this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+							this.panelChatSession.addElement(sharedElementChat);
+						}
+					}
+				}
+			}
+			
+			private function onSharedActionPlayer(event:PlayerSharedEvent):void
+			{
+				var player:YoutubePlayer = event.target as YoutubePlayer;
+				var action:String = event.action;
+				var currentTime:Number = event.currentTime;
+				var idDocument:Number = player.getIdDocument();
+				this.panelPlanSession.title = action+ " "+ int(currentTime).toString();
+//				var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int =this.currentSession.id_session;
+				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
+				// this information will add to the obsel
+				sessionSharedEvent.info = event.target.toolTip;
+				sessionSharedEvent.listUsers = listUsersIds;
+				sessionSharedEvent.senderUserId = 	player.getSenderId();
+				// set status record for add obsel sharedPlayerAction when session on Paused
+				sessionSharedEvent.status = VisuVisioAdvanced.STATUS_RECORD;	
+				sessionSharedEvent.url = player.url;
+				sessionSharedEvent.idDocument = idDocument;
+				sessionSharedEvent.currentTimeVideoPlayer = currentTime;
+				sessionSharedEvent.action = action;
+				dispatchEvent(sessionSharedEvent);			
+			}
+
+			public function loadComplete(event:Event):void
+			{
+				var player:YoutubePlayer = event.target as YoutubePlayer;
+				if(player != null){
+					trace('loadComplete');
+					resizeMe(event.target);
+					this.listObjectMedia.addItem(player);
+					player.addEventListener(PlayerSharedEvent.SHARED, onSharedActionPlayer);
+				} 
+				// send message to serveur(all users of current session exclus me/loggedUser) that user can see recived Document
+ 				var url:String= "";
+				var typeInfo:int=-1;
+				if(event.target.className == "ImageDocument")
+				{
+					url = event.target.source as String;
+					typeInfo = ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE);
+				}else{
+					url = event.target.url as String;
+					typeInfo = ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO);
+				}
+				var senderUserId:int = (event.target as IDocument).getSenderId();
+				var idDocument:Number = (event.target as IDocument).getIdDocument();
+				// get list users id without logged user
+				// logged user can't partage info with himself 
+				var listUsersIds:Array = Model.getInstance().getListUsersIdByRecordingSession(this.currentSession.id_session, RoleEnum.STUDENT, true);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = typeInfo;
+				// this information will add to the obsel
+				sessionSharedEvent.info = event.target.toolTip;
+				sessionSharedEvent.listUsers = listUsersIds;
+				sessionSharedEvent.senderUserId = senderUserId;
+				sessionSharedEvent.status = this.visio.status;	
+				sessionSharedEvent.url = url;
+				sessionSharedEvent.idDocument = idDocument;
+				dispatchEvent(sessionSharedEvent);			
+			}
+			
+			public function resizeMe(o:Object):void
+			{
+				var ratio:Number;
+				if(o is Image)
+				{
+					ratio= o.contentWidth/o.contentHeight;
+				}
+				if( o is YoutubePlayer )
+				{
+					ratio = 4/3;
+				}
+				o.height =  o.width / ratio ;			
+			}
+			
+			private function onPlayerUpdateComplete(event:FlexEvent):void
+			{
+				var player:YoutubePlayer = event.target as YoutubePlayer;
+				player.removeEventListener(FlexEvent.UPDATE_COMPLETE, onPlayerUpdateComplete);
+				if (scrollerPanelMediaSession != null){
+					scrollerPanelMediaSession.viewport.verticalScrollPosition = 0;
+				}
+				this.setPlyingAllPlayerWasPaused();
+			}
+			
+			private function setPlyingAllPlayerWasPaused():void
+			{
+				if(this._listObjectMediaPlaying.length > 0)
+				{
+					var playerPaused:YoutubePlayer;
+					for each (playerPaused in this._listObjectMediaPlaying)
+					{
+						playerPaused.playVideo();
+					}
+					this._listObjectMediaPlaying.removeAll();
+				}
+			}
+			protected function onUpdateChatSession(event:FlexEvent):void{
+				// remove listener
+				this.panelChatSession.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+				// update scroll possition
+				scrollerPanelChatSession.viewport.verticalScrollPosition = scrollerPanelChatSession.viewport.contentHeight - scrollerPanelChatSession.height;
+			}
+			
+			private function doShareActivityElement(value:ActivityElement):void
+			{
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
+				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(value.type_element);
+				sessionSharedEvent.info = value.data;
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.status = this.visio.status;	
+				sessionSharedEvent.url = value.url_element;
+				dispatchEvent(sessionSharedEvent);	
+			}
+			protected function shareActivityElement(event:ActivityElementEvent):void
+			{
+				trace("shareActivityElement");
+				if( this.visio.status != VisuVisioAdvanced.STATUS_RECORD)
+				{
+					Alert.show(fxgt.gettext("Poser un marqueur, une consigne, ou un mot-clé est autorisé uniquement après avoir démarré la séance.") , fxgt.gettext("Confirmation"));
+				}else
+				{
+					// check if activityElement from current activity or activityElement is Keyword
+					var activityIdOfChoosenActivityElement:int = event.element.id_activity;
+					var currentActivityId:int = this.sessionPlan.getCurrentActivityId();
+					if(activityIdOfChoosenActivityElement == currentActivityId)
+					{
+						// shared activityElement
+						this.doShareActivityElement(event.element)
+					}else
+					{
+						_currentActivityElement = event.element;
+						Alert.yesLabel = fxgt.gettext("Oui");
+						Alert.noLabel = fxgt.gettext("Non");
+						Alert.show(fxgt.gettext("Voulez-vous changer d'activité ?"),
+							fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, changeActivityConfirmed); 
+					}
+				}
+			}
+			
+			private function changeActivityConfirmed(event:CloseEvent):void{
+				if( event.detail == Alert.YES )
+				{
+					var newActivityId:int = this._currentActivityElement.id_activity;
+					var activityDetail:ActivityDetailB = this.sessionPlan.getActivityDetailById(newActivityId);
+					// for interdir click on the button start the new activity
+					activityDetail.startButton.enabled = false;
+					this.shareStartActivity(activityDetail.activity);	
+					// change activity, shared Activity
+					this.doShareActivityElement(this._currentActivityElement);
+					// shared activityElement
+				}
+			}
+			
+			protected function startActivity(event:VisuActivityEvent):void
+			{
+				//dispatchEvent 
+				event.stopPropagation();
+				trace("TODO : start activity "+event.activity.id_activity + ":"+ event.activity.title);
+				// set button start activity enabled = false , 
+				// for interdir click again before end all of action on server side
+				var activityDetail:ActivityDetailB = event.target as ActivityDetailB;
+				activityDetail.startButton.enabled = false;
+				// shared start activity
+				this.shareStartActivity(event.activity);
+			}
+			
+			private function shareStartActivity(value:Activity):void
+			{
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
+				var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY);
+				sessionSharedEvent.info = value.title;
+				sessionSharedEvent.listUsers = listUsersId;
+				// use url variable for sending id activity
+				sessionSharedEvent.url = value.id_activity.toString();
+				sessionSharedEvent.status = this.visio.status;	
+				sessionSharedEvent.senderUserId = Model.getInstance().getLoggedUser().id_user;	
+				dispatchEvent(sessionSharedEvent);
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				if(this.visio != null)
+				{
+					if (this.visio.status == VisuVisioAdvanced.STATUS_RECORD){
+						//stop recording	
+						// conformation for closing the session
+						Alert.yesLabel = fxgt.gettext("Oui");
+						Alert.noLabel = fxgt.gettext("Non");
+						Alert.show(fxgt.gettext("Voulez-vous mettre en pause l'enregistrement (vous pourrez le reprendre plus tard) ?"),
+						fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, stopRecordingConfirmed); 	
+					}else{
+						
+						//start recording
+						var eventStartRecording:MessageEvent = new MessageEvent(MessageEvent.START_RECORDING);
+						eventStartRecording.sessionId = this.currentSession.id_session;
+						dispatchEvent(eventStartRecording);	
+					}
+				}
+			}
+			
+			/**
+			 * Stop recording conformation 
+			 */
+			protected function stopRecordingConfirmed(event:CloseEvent):void
+			{
+				var sessionStatus:int = -1;
+				if( event.detail == Alert.YES )
+				{				
+					//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+					var sessionId:int = this.currentSession.id_session;
+					// shared stop activity
+					if(this.sessionPlan != null)
+					{
+						// check if currentActivity not 0 
+						var currentActivityId:int = this.sessionPlan.getCurrentActivityId();
+						if(currentActivityId != 0)
+						{
+							var listUsersId:Array = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+							sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.STOP_ACTIVITY);
+							// info == "void", we have title activity in obsel start activity
+							sessionSharedEvent.info = fxgt.gettext("a suspendu la séance.");	
+							sessionSharedEvent.listUsers = listUsersId;
+							// use url variable for sending id activity
+							sessionSharedEvent.url = currentActivityId.toString();
+							sessionSharedEvent.status = this.visio.status;	
+							sessionSharedEvent.senderUserId = Model.getInstance().getLoggedUser().id_user;	
+							dispatchEvent(sessionSharedEvent);
+						}
+					}
+					// stop recording
+					sessionStatus =  SessionStatusEnum.SESSION_PAUSE;				
+					var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
+					eventStopRecording.sessionId = this.currentSession.id_session;
+					eventStopRecording.sessionStatus = sessionStatus;
+					dispatchEvent(eventStopRecording);		
+				}
+			}
+			
+			
+			
+			/**
+			 * Other tuteur close session
+			 */
+			protected function onCloseSession(event:SessionEvent):void
+			{
+				if(buttonStartRecording != null)
+				{
+					buttonStartRecording.enabled = false;
+					buttonCloseSession.enabled = false;
+					var sessionId:int = event.sessionId;
+					//var currentSession:Session = Model.getInstance().getCurrentSession();
+					var currentSession:Session = this.currentSession;
+					if(currentSession != null)
+					{
+						var currentSessionId:int = currentSession.id_session;
+						if(currentSessionId == sessionId)
+						{
+							Model.getInstance().setCurrentSession(null);
+							Model.getInstance().setEnabledButtonSalonTutorat(false);						
+						}
+						
+					}
+				}
+			}
+			
+			protected function updateLabelsModule(event:ApplicationMenuEvent):void
+			{
+				if(buttonStartRecording != null){
+					if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
+					{				
+						buttonStartRecording.label = fxgt.gettext("Démarrer la séance");
+						buttonStartRecording.toolTip = fxgt.gettext("Démarrer (ou redémarrer) l'enregistrement de la séance");
+					} 
+                    else 
+                    {
+						buttonStartRecording.label = fxgt.gettext("Mettre en pause");
+						buttonStartRecording.toolTip = fxgt.gettext("Mettre en pause l'enregistrement de la séance");
+					}
+					// update labels the button start activity for translating
+					this.sessionPlan.setCurrentActivityId(0);
+				}
+			}
+			
+			/**
+			 * Checking that sending the message by click on button or click by "enter"
+			 */
+			protected function onSendMessage(event: *): void
+			{
+				var message: String = textChatMessage.text.replace("\n", "").replace("\r", "");
+
+                if (event is MouseEvent ||
+                    (event is KeyboardEvent && event.keyCode == Keyboard.ENTER)) {
+                    sendMessage(message);
+                }
+			}
+			
+			/**
+			 * Sending message
+			 */
+			private function sendMessage(message:String, idUserFor:int = 0):void
+			{
+				var listUsersId:Array = new Array();
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				var sessionId:int = this.currentSession.id_session;
+				if (this.visio.status == VisuVisioAdvanced.STATUS_NONE)
+				{
+					// all connected users
+					listUsersId = Model.getInstance().getListUsersIdByConnectedSession(sessionId);
+					sessionSharedEvent.status = -1;	
+				}else
+				{
+                    // send message to all recording users
+                    if(idUserFor == 0)
+                    {
+                        listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId);
+                    }else
+                    {
+                        // send message to one user, message private
+                        listUsersId.push(idUserFor);
+                    }
+					sessionSharedEvent.status = this.visio.status;
+				}
+				
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MESSAGE);
+               
+				// check if message empty
+				if(UtilFunction.isEmptyMessage(message))
+				{
+					// don't send empty message
+					return;
+				}
+				sessionSharedEvent.info = message;
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.idUserFor = idUserFor;
+				dispatchEvent(sessionSharedEvent);
+                // empty text message
+                textChatMessage.text = "";
+			}
+			
+			/**
+			 * Checking that sending the marker by click on button or click by "enter"
+			 */
+			protected function onSetMyMarker(event:*):void
+			{
+				// var message:String = textChatMarker.text; 
+				 var message:String = ""; 
+				if(event is MouseEvent){
+					this.sendMarker(false, message);
+				}else if (event is KeyboardEvent) 
+				{
+					if(event.keyCode == Keyboard.ENTER)
+					{
+						this.sendMarker(true, message);
+					}
+				}
+			}
+			/**
+			 *  Sending marker
+			 */
+			private function sendMarker(cutLastCharMessage:Boolean, message:String, idUserFor:int = 0, typeShortMarker:String="void", beginTime:String = "", endTime:String = "" ):void
+			{
+				//var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+				var sessionId:int = this.currentSession.id_session;
+				var listUsersId:Array;
+                if(true)
+                {
+                    listUsersId = Model.getInstance().getListIdUserByRecordingSessionShareMarker(this.currentSession.id_session);
+                    
+                }else
+                {
+    				if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+    				{
+    					// student will shared markers only with Tuter, Responsable, Admin
+    					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT );
+    				}else
+    				{
+    					listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR );
+    				}
+                }
+				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
+				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.MARKER);
+                if (message)
+                {
+				    message = message.replace("\n", "").replace("\r", "");
+                } else 
+                {
+                    message="";
+                }
+
+                sessionSharedEvent.info = message;
+				sessionSharedEvent.status = this.visio.status;
+				sessionSharedEvent.listUsers = listUsersId;
+				sessionSharedEvent.idUserFor = idUserFor;
+				sessionSharedEvent.typeShortMarker = typeShortMarker;
+				if(beginTime != "")
+				{
+					sessionSharedEvent.beginTime = beginTime;
+				}
+				if(endTime != "")
+				{
+					sessionSharedEvent.endTime = endTime;
+				}
+				dispatchEvent(sessionSharedEvent);
+				// update text
+				//textChatMarker.text = "";
+			}
+			
+ 			protected function panelPlanSession_resizeHandler(event:ResizeEvent):void
+			{
+				event.target.addEventListener(FlexEvent.UPDATE_COMPLETE, resizeChildren);
+			} 
+
+ 			public function resizeChildren(event:FlexEvent):void
+			{
+				event.target.removeEventListener(FlexEvent.UPDATE_COMPLETE, resizeChildren);
+				var child:IUIComponent; 
+				for each(child in  this.listObjectMedia)
+				{
+					resizeMe(child);
+				}
+			} 
+
+			protected function buttonCloseSession_clickHandler(event:MouseEvent):void
+			{
+				if(this.visio != null)
+				{
+					// conformation for closing the session
+					Alert.yesLabel = fxgt.gettext("Oui");
+					Alert.noLabel = fxgt.gettext("Non");
+					Alert.show(fxgt.gettext("Voulez-vous clôturer la séance ? (il ne sera plus possible d'y rentrer à nouveau)"),
+					fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, closeSessionConfirmed); 	
+				}
+			}
+			
+			/**
+			 * Close session conformation 
+			 */
+			protected function closeSessionConfirmed(event:CloseEvent):void
+			{
+				var sessionStatus:int = -1;
+				if( event.detail == Alert.YES )
+				{				
+					// stop recording and close session
+					sessionStatus =  SessionStatusEnum.SESSION_CLOSE;	
+					if(buttonStartRecording != null)
+					{
+						// can't start session
+						buttonStartRecording.enabled = false;
+						buttonCloseSession.enabled = false;
+					}
+					var eventStopRecording:MessageEvent = new MessageEvent(MessageEvent.STOP_RECORDING);
+					eventStopRecording.sessionId = this.currentSession.id_session;
+					eventStopRecording.sessionStatus = sessionStatus;
+					dispatchEvent(eventStopRecording);			
+				}
+			}
+		
+			private function onClickDebugButton(event:Event):void{
+				var msg:MessageEvent = new MessageEvent(MessageEvent.GET_SETMARCK);
+				//msg.message = "<trace-20100928183134-25>";
+				msg.message = "<trace-20101006153326-7>";
+				this.dispatchEvent(msg);
+			}
+			
+			
+			private function addTraceLineOnViewTraceLineGroup(traceGroup:Object):void
+			{
+				var userId:int = traceGroup.userId;		
+				// add userId in the list present traceGroup
+				listUserIdPresentTimeLine.addItem(userId);
+				
+				var tlg :TraceLineGroup = timeLine.addTrace(traceGroup.userTrace);	
+				
+				// get user
+				var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
+				var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+				
+				tlg.setStyle("title", lastNameUser );
+				tlg.setStyle("bgColor", traceGroup.userColor);
+				tlg.setStyle("icon", traceGroup.userAvatar );	
+				// TODO Nom + prenomof the user
+				//var userName:String = VisuUtils.getUserLabel(traceGroup.user, true);
+				//tlg.setStyle("title", traceGroup.userName );					
+			}
+					
+			/**
+			 * Update current activity in list activity, update label the button "start" to "en cours"
+			 */
+			private function onUpdateViewActivity(event:VisuActivityEvent):void{
+				var activityId:int = event.activityId;
+				if(this.sessionPlan != null)
+				{
+					this.sessionPlan.setCurrentActivityId(activityId);
+				}
+			}
+			
+			private function onUpdateViewTimeLine(event:SessionEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					var userId:int = event.userId;
+					var traceGroup : Object = Model.getInstance().getTraceGroupByUserId( userId );
+					if( traceGroup != null && !hasUserIdPresentTimeLine( userId ) && isTimeLineAddedOnStage())
+					{																	
+                        // user can add to time line
+                        var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+                        // check if user can be on time line
+                        if(VisuUtils.isAddTraceSalonSynchrone(loggedUser, user, true))
+                        {
+                            this.addTraceLineOnViewTraceLineGroup(traceGroup);
+                        } 
+					}
+				}
+			}
+			
+			private function onShowViewTimeLine(event:SessionEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					// init trace, set obsels
+					// if session didn't start => hasn't timeLine
+					if(setObsels())
+					{
+						createTimeLine();
+					}
+				}
+			}
+			
+            private function createTimeLine():void
+            {
+                if(!timeLine)
+                {
+                    timeLine = new Timeline();
+                    // remove message from panle resume
+                    panelTimeLine.removeAllElements();
+                    timeLine.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompleteTimeLine);
+                    timeLine.addEventListener(TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine);
+                    // add listener added TraceLineTitle on the stage
+                    timeLine.addEventListener(TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
+                    timeLine.addEventListener(TimelineEvent.END_REACHED, onTimelineEndReached);
+                    // listener add playVideoSkin on stage
+                    timeLine.addEventListener(TimelineSkinEvent.OBSEL_SKIN_ADDED_TO_STAGE , onAddedPlayVideoSkinOnTimeLine);
+                    timeLine.percentWidth = 100;
+                    timeLine.percentHeight = 100;
+                    timeLine.contextFollowCursor = true;
+                    timeLine.setStyle("timeMode","relative");
+                    timeLine.setStyle("cursorMode","auto");
+                    timeLine.setStyle("contextFollowCursor","false");
+                    
+                    panelTimeLine.addElement(timeLine);
+                }
+            }
+			
+            private function onCreationCompleteTimeLine(event:FlexEvent):void
+            {
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                    var loader:URLLoader=new URLLoader();			
+                    loader.addEventListener(Event.COMPLETE, onLoadLayoutComplete);
+                    // check xml layout for logged user
+                    var pathLayoutXml:String = Model.getInstance().getPathLayoutXml(VisuModuleEvent.TUTORAT_MODULE);
+                    loader.load(new URLRequest(pathLayoutXml));	
+                    // add listener 
+                    panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+                }
+            }
+            
+			/**
+			 * Initialisation Title the TraceLine(name user)
+			 */
+			private function onAddNewTraceLine(event:TimelineEvent):void
+			{	
+				var generatorName:String = event.value.generator.name;
+				var obsel:Obsel = event.value.obsel;
+				var userId:int = 0;
+				var nameUser:String = "";
+
+				if ( generatorName == 'markersGenerator' )
+				{
+					userId = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+					if(userId != 0)
+					{
+						nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+					}else
+					{
+						nameUser = "Marqueur sur la séance";
+					}
+					
+				}else if( generatorName  == 'videosGenerator')
+				{
+					nameUser = '"' + obsel.props[TraceModel.TEXT] + '"';
+				} else if(generatorName  == 'chatsGenerator')
+                {
+                    userId = obsel.props[TraceModel.SENDER];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = "Message pour tous";
+                    }
+                }
+                else if(generatorName  == 'documentGenerator')
+                {
+                    userId = obsel.props[TraceModel.SENDER];
+                    if(userId != 0)
+                    {
+                        nameUser = VisuUtils.getUserLabelLastName(Model.getInstance().getUserPlateformeByUserId(userId),true);	
+                    }else
+                    {
+                        nameUser = "???";
+                    }
+                }
+				
+				var traceLine:TraceLine = event.value.traceline;
+				traceLine.title = nameUser;
+			}
+
+            /**
+            * Event handler added skin obsel PlayVideoDocument on timeline
+            */
+            private function onAddedPlayVideoSkinOnTimeLine(event:TimelineSkinEvent):void
+            {
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                   var obselSkin:Object = event.obselSkin as Object;
+                   addPlayVideoObselSkin(obselSkin);
+                }
+            }
+            
+            
+            /**
+             ** Event handler added TraceLineTitre on the stage
+             */
+            private function onAddedTraceLineOnStage(event:TimelineEvent):void
+            {
+                // logged user
+                var loggedUser:User = Model.getInstance().getLoggedUser();
+                // trace line title skin
+                var traceLineTitleSkin:TraceLineTitleSkin = event.value as TraceLineTitleSkin;
+                var traceLine:TraceLine = traceLineTitleSkin.hostComponent.tl;
+                // check has property owner, only for TraceLineGroup
+                if(traceLine.owner && traceLine.owner is TraceLineGroup )
+                {
+                    var traceLineGroup:TraceLineGroup = traceLine.owner as TraceLineGroup;
+                    // id user trace
+                    var idUserTrace:int = traceLineGroup.trace.uid;
+                    if(traceLine.selector)
+                    {
+                        // check traceline "Marker" by regexp 
+                        if((traceLine.selector as SelectorRegexp).regexp == "Marker") 
+                        {
+                            if(idUserTrace == loggedUser.id_user)
+                            {
+                                // set titre for logged user
+                                traceLineTitleSkin.setStyle("title", fxgt.gettext("Mes marqueurs"));
+                            }else
+                            {
+                                traceLineTitleSkin.setStyle("title", fxgt.gettext("Marqueurs"));
+                            }
+                        }   
+                    }
+                }
+            }
+
+            /* 
+             * Handle predefined session time overrun
+             */
+            private function onTimelineEndReached(event:TimelineEvent): void
+            {
+                timeLine.range.addTime(timeLine.begin, timeLine.end + DURATION_EXTENSION, true);
+            }
+
+            private function onLoadLayoutComplete(event:Event):void 
+            {
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                    //we init the trace object
+                    
+                    var loader:URLLoader=event.target as URLLoader;
+                    timeLine.layoutXML 		= new XML( loader.data );
+                    timeLine.timelineLayout = new Layout( timeLine );
+                    _isTimeLineAddedOnStage = true;
+                    
+                    var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
+                    if(listTraceGroup != null)
+                    {											
+                        var nbrTraceGroup:int = listTraceGroup.length;
+                        for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+                        {												
+                            var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+                            var userId:int  = traceGroup.userId;
+                            if( traceGroup != null && !hasUserIdPresentTimeLine(userId))
+                            {				
+                                // user can add to time line
+                                // FIXME : if user connected after set list user plateform, 
+                                // TODO : update list user plateforme after new user join plateforme
+                                var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+                                // check if user can be on time line
+                                if(user == null || VisuUtils.isAddTraceSalonSynchrone(loggedUser, user, true))
+                                {
+                                    this.addTraceLineOnViewTraceLineGroup(traceGroup);
+                                } 
+                            }
+                        }
+                    }	
+                    // set star and end session
+                    var beginTime:Number = this.currentSession.date_start_recording.time;
+                    var duration: Number = this.currentSession.duration_session;
+                    var endSession:Number = beginTime + duration;
+                    timeLine.range.addTime(beginTime, endSession );
+                    
+                    this.startTimer();
+                }
+            }
+			
+			private function setObsels():Boolean
+			{
+				var result:Boolean = false;
+				var listObsels:ArrayCollection = Model.getInstance().getListObsels();
+				if (listObsels != null)
+				{	
+					var nbrObsels:int = listObsels.length;
+					// check if has any trace, session has status recording 
+					if (nbrObsels > 0){result = true;}
+					for(var nObsel:int = 0 ; nObsel < nbrObsels; nObsel++)
+					{
+						var obsel:Obsel = listObsels[nObsel] as Obsel;
+                        
+                        // check obsels : pause, stop, end video
+                        var typeObsel:String = obsel.type;
+                        switch (typeObsel)
+                        {
+                        case TraceModel.PAUSE_VIDEO :
+                        case TraceModel.STOP_VIDEO :
+                        case TraceModel.END_VIDEO :
+                        case TraceModel.RELEASE_SLIDER_VIDEO :
+                            // add obsel
+                            addPauseStopEndObsel(obsel);
+                            break;
+                        case TraceModel.SESSION_EXIT :
+                          //  var userId:int = obsel.uid;
+                            addObselDisconnectedUser(obsel);
+                            break;
+                        }
+                        
+						var arrayInfoObsel:Array = Model.getInstance().addObsel(obsel);
+						if(arrayInfoObsel.length > 0)
+						{
+							var infoObsel:Object = arrayInfoObsel[0];
+							var senderObsel:int = infoObsel.senderId;
+							var textObsel:String = infoObsel.textObsel; 
+							// source can be class or paths the type String
+							var source = infoObsel.source; 
+							initChatPanel(senderObsel, textObsel, source);
+							// add documents on the panel the student
+							if(obsel.type == TraceModel.RECEIVE_DOCUMENT)
+							{
+								// get id document
+								var idDocument:Number = obsel.props[TraceModel.ID_DOCUMENT];
+								switch (obsel.props[TraceModel.TYPE_DOCUMENT])
+								{
+									case ActivityElementType.VIDEO :
+										var player:YoutubePlayer = new YoutubePlayer();
+										// set id of the sender user 
+										player.setSenderId(infoObsel.senderId);
+										player.url = obsel.props[TraceModel.URL];
+										player.percentWidth = 100;
+										player.height = 225;
+										player.toolTip = obsel.props[TraceModel.TEXT];
+										player.setIdDocument(idDocument);
+										player.addEventListener(PlayerEvent.READY, loadComplete);
+										if(this.panelMediaSession != null)
+										{
+											this.panelMediaSession.addElementAt(player, 0);
+										}
+										break;
+									
+									case ActivityElementType.IMAGE :
+										var image:ImageDocument = new ImageDocument();
+										// set id of the sender user
+										image.setSenderId(infoObsel.senderId);
+										image.load(obsel.props[TraceModel.URL]);
+										image.toolTip = obsel.props[TraceModel.TEXT];
+										image.percentWidth = 100;	
+										image.setIdDocument(idDocument);
+										image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
+										if(this.panelMediaSession != null)
+										{
+											this.panelMediaSession.addElementAt(image, 0);
+										}
+										break;
+								}
+							}						
+						}						
+					}
+				}
+				return result;
+			}
+
+			private function initChatPanel(ownerObsel:int, textObsel:String, iconSourceClass:*):void
+			{
+				// exclus the obsel "Start activity"
+				if( ownerObsel != 0)
+				{
+					var traceLine:Object = Model.getInstance().getTraceLineByUserId(ownerObsel); 
+					if(traceLine != null)
+					{
+						var userAvatar:String = traceLine.userAvatar as String;
+						var userName:String = traceLine.userName as String;
+						var userColor:uint = traceLine.userColor;
+						var sharedElementChat:SharedElementChat = new SharedElementChat();
+						sharedElementChat.setElementChat(userAvatar , userName, textObsel , iconSourceClass, userColor);
+						sharedElementChat.statVciel = Model.getInstance().checkServeurVisuVciel();
+						if(this.panelChatSession != null && this == Model.getInstance().getCurrentTutoratModule() as TutoratModule)
+						{
+							this.panelChatSession.addElement(sharedElementChat);
+						}
+					}
+				}
+			}
+			
+			// remove element traceLine
+			private function onRemoveTraceLineElement(event:TraceLineEvent):void
+			{
+				Model.getInstance().setUnvisibleElementTraceLineByUser(event.idElement, event.userId);
+			}
+			
+			private function setEnabledGroupSetMarker(value:Boolean):void
+			{
+                sendMarkerAnimation.enabled = groupSetMarkerConst.enabled = value;
+				if(!value)
+				{
+                    sendMarkerAnimation.text = fxgt.gettext("Pose de marqueur non autorisée");
+					// hide button set marcker on composant VideoPanel 
+					visio.buttonMarkerEnabled = false;
+				}else
+				{
+                    sendMarkerAnimation.text = "";
+					// show button set marker on composant VideoPanel 
+					visio.buttonMarkerEnabled = true;
+				}
+			} 
+
+            /**
+            * Init bouttons short markers
+            */
+            private function onInitShortMarker(event:ShortMarkerEvent):void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    var saveShortMarkerEvent:ShortMarkerEvent = new ShortMarkerEvent(ShortMarkerEvent.SAVE_SHORT_MARKER);
+                    var listColor:Array = new Array();
+                    listColor.push("#DB6E6E");
+                    listColor.push("#DFE549");
+                    listColor.push("#92DD56");
+                    listColor.push("#55B3DE");
+                    listColor.push("#92DD56");
+                    listColor.push("#DB6E6E");
+                    saveShortMarkerEvent.listColor = listColor;
+                    
+                    var listText:Array = new Array();
+                    listText.push("comp");
+                    listText.push("pron");
+                    listText.push("sens");
+                    listText.push("inte");
+                    listText.push("posi");
+                    listText.push("nega");
+                    saveShortMarkerEvent.listText = listText;
+                    
+                    saveShortMarkerEvent.loggedUserId = Model.getInstance().getLoggedUser().id_user;
+                    
+                    dispatchEvent(saveShortMarkerEvent);
+                }
+            }                             
+            
+			private function onUpdateDeletedSession(event:SessionEvent):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+					var sessionId:int = event.sessionId;
+					var userId:int = event.userId;
+					var user:User = Model.getInstance().getUserPlateformeByUserId(userId);
+					var nameUser:String = user.lastname + " " +user.firstname;
+					// check if user in the session that will deleting
+					var session:Session = Model.getInstance().getCurrentSession();
+					if(	session != null &&  session.id_session  == sessionId)
+					{
+						Alert.show("La séance va être supprimer par "+ nameUser + ", vous aller redirige ver Accueil.","Information", Alert.YES, null, goHomeModule);	
+					}	
+				}
+			}
+			
+			private function goHomeModule(evet:Event):void
+			{
+				Model.getInstance().setCurrentSession(null);
+				Model.getInstance().setEnabledButtonSalonTutorat(false);	
+				
+				var goHomeModuleEvent:SessionEvent = new SessionEvent(SessionEvent.GO_HOME_MODULE);
+				this.dispatchEvent(goHomeModuleEvent);
+				
+			}
+            
+            //////////////
+            ////// Handler the short markers 
+            //////////////
+            protected function groupSetMarkerConst_clickHandler(event:MouseEvent):void
+            {
+                var currentButton:spark.components.Button = event.currentTarget as spark.components.Button;
+                sendMarkerAnimation.textMarkerAnimation = currentButton.label;
+                sendMarkerAnimation.textMarkerAnimationColor = currentButton.getStyle("chromeColor");
+                sendMarkerAnimation.goAnimation();
+                
+                var buttonId:String = currentButton.id;
+                // set message notification
+                // setMessageNotification(message);
+                // set marker
+                
+                this.sendMarker(false, currentButton.label+ " : "+ sendMarkerAnimation.text, 0, buttonId);
+            }
+
+
+			//////////////
+			//////   Handlers the create/edit/delete markers
+			/////////////
+			/**
+			 * Show EditMarkerDialog when user edit existing comment obsel
+			 */ 
+			protected function onPreAddMarkerBySkinMarker(event:ObselEvent):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+					var obsel:Obsel = event.obsel;
+					var ownerObsel:int = obsel.props[TraceModel.SENDER];
+					if(Model.getInstance().getLoggedUser().id_user == ownerObsel)
+					{
+						var userId:int = obsel.props[TraceModel.MARKER_FOR_USER_ID];
+						var user:User = null;
+						if(userId != 0)
+						{
+							user = Model.getInstance().getUserPlateformeByUserId(userId);						
+						}
+						var currentCommentObselSkin:Object = event.target;
+						// set init userId 
+						userIdInitEditMarkerDialog = userId;
+						
+						showDialogAddMarkerObsel(user, obsel, currentCommentObselSkin);
+					}
+				}
+			}
+			
+			/**
+			 * Show EditMarkerDialog when user click on boutton the VideoPanel
+			 */ 
+			protected function visio_clickButtonMarkerHandler(event:VisuVisioAdvancedEvent):void
+			{	
+				var user:User = event.user;
+				// add comment for user
+				showDialogAddMarkerObsel(user);
+			}
+			
+			/**
+			 * Add on stage the EditMarkerDialog
+			 */
+			private function showDialogAddMarkerObsel(value:User = null, obsel:Obsel = null, currentObselSkin:Object = null):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+                    // check if editing commmnet obsel
+                    if(obsel && isEditMarkerDialogOnStage(obsel))
+                    {
+                        // do nothing
+                        return;
+                    }
+					var editMarkerDialog:EditMarkerDialog = new EditMarkerDialog();
+					editMarkerDialog.user = value;
+					
+					editMarkerDialog.currentObselSkin = currentObselSkin;
+					editMarkerDialog.obsel = obsel;
+					
+                    // add edit marker dialog
+                    addEditMarkerDialog(editMarkerDialog);
+                    
+					editMarkerDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+					
+					PopUpManager.addPopUp(editMarkerDialog, this);
+					PopUpManager.centerPopUp(editMarkerDialog);
+					editMarkerDialog.y -= editMarkerDialog.height - _listEditMarkerDialog.length*DELTA_X_Y;
+                    editMarkerDialog.x -=  - _listEditMarkerDialog.length*DELTA_X_Y;
+					editMarkerDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveMarkerDialog );
+					// enabled double click on obsel
+					/* if(currentObselSkin)
+					{
+						editMarkerDialog.currentObselSkin.enabled = false;
+					} */
+				}
+			}
+			
+			/**
+			 * Remove EditMarkerDialog from the stage
+			 */
+			private function onRemoveMarkerDialog(event:Event):void
+			{
+				if(Model.getInstance().getCurrentTutoratModule() == this)
+				{
+                    // update obsel only by click on buttons  save, delete
+                    if(event.currentTarget.closeDialog == RetroTraceModel.SAVE || event.currentTarget.closeDialog == RetroTraceModel.DELETE )
+                    {
+                        var updateObselMarker:TraceLineEvent = new TraceLineEvent(TraceLineEvent.UPDATE_MARKER_OBSEL);
+                        // FIXME : can change this line by this.currentSession
+                        updateObselMarker.sessionId = Model.getInstance().getCurrentSessionId();
+                        
+                        var text:String = "";
+                        var typeObsel:String = TraceModel.SET_MARKER;
+                        var obsel:Obsel = event.currentTarget.obsel;
+                        if(obsel)
+                        {
+                            removeEditMarkerDialog(obsel);
+                        }
+                        var action: String = ActionObselEnum.EDIT_TEXT_OBSEL;
+                        
+                        var currentTime:Number = UtilFunction.getNumberEntier(timeLine.currentTime);
+                        var beginTime:String = currentTime.toString();
+                        var endTime:String = beginTime;		
+                        
+                        var sessionId:int = 0;
+                        var listUsersId:Array;
+                        
+                        if (event.currentTarget.confirm)
+                        {						
+                            var timeStamp:Number = 0
+                            var forUserId:int = 0;
+                            // set properties for existing obsel
+                            if(event.currentTarget.user)
+                            {
+                                forUserId = event.currentTarget.user.id_user;
+                            }
+                            // edition the comment obsel
+                            if(event.currentTarget.currentObselSkin)
+                            {
+                                beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                                endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                                forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
+                                timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                                typeObsel = TraceModel.UPDATE_MARKER;
+                                
+                                text = obsel.props[TraceModel.TEXT];
+                            }else
+                            {
+                                text = event.currentTarget.textComment;
+                            }
+                            
+                            if(userIdInitEditMarkerDialog > -1 && userIdInitEditMarkerDialog != forUserId)
+                            {
+                                // suppression old obsel
+                                typeObsel = TraceModel.DELETE_MARKER;
+                                action = ActionObselEnum.DELETE_OBSEL;
+                                forUserId = userIdInitEditMarkerDialog;
+                            }
+                            // set property to send to serveur for adding obsel
+                            updateObselMarker.textComment = text;
+                            updateObselMarker.timeStamp = timeStamp;
+                            updateObselMarker.typeObsel  = typeObsel;
+                            updateObselMarker.beginTime = beginTime;
+                            updateObselMarker.endTime = endTime;
+                            updateObselMarker.forUserId = forUserId;
+                            
+                            //	var session:Session = Model.getInstance().getCurrentSession();
+                            var session:Session = this.currentSession;
+                            if(session != null)
+                            {
+                                sessionId = session.id_session;
+                            }else return;
+                            
+                            if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+                            {
+                                // student will shared markers only with Tuter, Responsable, Admin 
+                                // will shared if session paused or recording
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+                            }else
+                            {
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+                            }
+                            
+                            updateObselMarker.info = text;
+                            updateObselMarker.action = action
+                            updateObselMarker.listUsers = listUsersId;
+                        }
+                        // delete marker obsel
+                        if(event.currentTarget.deleting)
+                        {
+                            updateObselMarker.textComment = obsel.props[TraceModel.TEXT];
+                            updateObselMarker.timeStamp = obsel.props[TraceModel.TIMESTAMP];
+                            updateObselMarker.typeObsel  = TraceModel.DELETE_MARKER;
+                            updateObselMarker.beginTime = UtilFunction.getNumberEntier(obsel.begin).toString();
+                            updateObselMarker.endTime = UtilFunction.getNumberEntier(obsel.end).toString();
+                            updateObselMarker.forUserId = new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]);
+                            
+                            //var sessionId:int = Model.getInstance().getCurrentSession().id_session;
+                            var sessionId:int = this.currentSession.id_session;
+                            var listUsersId:Array;
+                            if(Model.getInstance().getLoggedUser().role < RoleEnum.TUTEUR)
+                            {
+                                // student will shared markers only with Tuter, Responsable, Admin 
+                                // will shared if session paused or recording
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.STUDENT, true);
+                            }else
+                            {
+                                listUsersId = Model.getInstance().getListUsersIdByRecordingSession(sessionId, RoleEnum.TUTEUR, true);
+                            }
+                            
+                            updateObselMarker.info = obsel.props[TraceModel.TEXT];
+                            updateObselMarker.action = ActionObselEnum.DELETE_OBSEL;
+                            updateObselMarker.listUsers = listUsersId;
+                        }
+                        
+                        // check if user click on PanelVideo, this case new obsel 
+                        if(event.currentTarget.currentObselSkin)
+                        {
+                            // send updated obsel to serveur
+                            dispatchEvent(updateObselMarker);
+                        }else
+                        {
+                            // set new marker, set beginTime, endTime on server side
+                            sendMarker(false, text, forUserId)	
+                        }
+                        
+                        // check if change only COMMENT_FOR_USER_ID
+                        if(userIdInitEditMarkerDialog > -1 && !event.currentTarget.deleting && userIdInitEditMarkerDialog != new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]) ) 
+                        {
+                            var typeShortMarker:String = obsel.props[TraceModel.TYPE_SHORT_MARKER];
+                            if(typeShortMarker == null)
+                            {
+                                typeShortMarker ="void";
+                            }
+                            // set new marker
+                            sendMarker(false, text, new Number(obsel.props[TraceModel.MARKER_FOR_USER_ID]), typeShortMarker , beginTime, endTime )
+                        }
+                    }
+                        
+					// enabled skin edited obsel
+					if(event.currentTarget.currentObselSkin)
+					{
+						event.currentTarget.currentObselSkin.enabled = true;
+					}
+					// init var userIdInitEditCommentDialog
+					userIdInitEditMarkerDialog = -1;
+				}
+			}
+			
+			//_____________________________________________________________________
+			//
+			// EvenHandlers : click on button chat
+			//
+			//_____________________________________________________________________
+			
+			private function removePanelEditInfo(panelEditInfo:*):void
+			{
+				groupeVideo.removeElement(panelEditInfo);
+			}
+			//////////////////////////////////
+            
+            protected function visio_clickButtonChatHandler(event:VisuVisioAdvancedEvent):void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    var editChatDialog:EditChatDialog = new EditChatDialog();
+                    editChatDialog.user = event.user;
+                    
+                    editChatDialog.listUser = Model.getInstance().getListUserPresentOnTimeLine();
+                    
+                    PopUpManager.addPopUp(editChatDialog, this);
+                    PopUpManager.centerPopUp(editChatDialog);
+                    editChatDialog.y -= editChatDialog.height;
+                    editChatDialog.addEventListener( Event.REMOVED_FROM_STAGE, onRemoveChatDialog );
+                }
+            }
+ 
+            /**
+             * Remove onRemoveChatDialog from the stage
+             */
+            private function onRemoveChatDialog(event:Event):void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    var text:String = "";
+                    if (event.currentTarget.confirm)
+                    {						
+                        var forUserId:int = 0;
+                        if(event.currentTarget.user)
+                        {
+                            forUserId = event.currentTarget.user.id_user;
+                        }
+
+                        text = event.currentTarget.textComment;
+                        // send message
+                        sendMessage( text, forUserId);
+                    }
+                }
+            }            
+			
+			//_____________________________________________________________________
+			//
+			// EvenHandlers of the video panel
+			//
+			//_____________________________________________________________________
+			
+			private function mouseMoveHandler(event:MouseEvent):void
+			{
+				var dragSource:DragSource;
+				
+				if(event.currentTarget is PanelEditInfo)
+				{
+					var dragInitiatorPanelEditInfo:PanelEditInfo = PanelEditInfo(event.currentTarget);
+					dragSource = new DragSource(); 
+					dragSource.addData(dragInitiatorPanelEditInfo, "panelEditInfo");
+					DragManager.doDrag(dragInitiatorPanelEditInfo, dragSource, event);
+				}
+				
+				
+			}
+			
+			private function dragDropHandler(event:DragEvent):void 
+			{
+				var panel:Panel = Panel(event.currentTarget);
+				var panelEditInfo = event.dragInitiator;
+				var delta:int = 35;
+				var pt:Point = new Point(panel.mouseX, panel.mouseY);
+				pt = panel.localToGlobal(pt);
+				pt = panel.globalToLocal(pt);
+				
+				panelEditInfo.x =
+					pt.x - pointPanelEditInfo.x;
+				panelEditInfo.y =
+					pt.y - pointPanelEditInfo.y - delta;
+			}
+			
+			private function dragEnterHandler(event:DragEvent):void 
+			{
+				if (event.dragSource.hasFormat("panelEditInfo") || event.dragSource.hasFormat("panelEditChatMessage"))
+				{
+					pointPanelEditInfo = new Point(event.dragInitiator.mouseX, event.dragInitiator.mouseY);
+					DragManager.acceptDragDrop(Panel(event.currentTarget));
+				}
+			}
+			
+			
+			//_____________________________________________________________________
+			//
+			// EvenHandlers of the PanelButton
+			//
+			//_____________________________________________________________________
+			protected function panelbutton1_clickButtonMuteVolumeHandler(event:PanelButtonEvent):void
+			{
+				// set mute volume
+				muteVolume = event.mute;
+				// update mute volume
+				this.visio.setVolumeMute(muteVolume);
+			}
+
+			protected function panelbutton1_clickButtonMuteMicroHandler(event:PanelButtonEvent):void
+			{
+				var mute:Boolean = event.mute;
+				// set micro at mute
+				this.visio.mute = mute;
+				// play sound
+				if(mute)
+				{
+				 	SoundEnum.getSoundByName("blubup").play();
+				}
+			}
+
+			protected function panelbutton1_clickButtonModeMaxHandler(event:PanelButtonEvent):void
+			{
+				panelVideo.buttonModeMaxEnabled = false;
+				panelVideo.buttonModeZoomEnabled = true;
+				visio.zoomMax = true;
+			}
+
+			protected function panelbutton1_clickButtonModeZoomHandler(event:*):void
+			{
+				panelVideo.buttonModeMaxEnabled = true;
+				panelVideo.buttonModeZoomEnabled = false;
+				visio.zoomMax = false;
+			}
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________
+            /**
+            * Add obsel PlayVideoSkin
+            */
+            private function addPlayVideoObsel(value:Obsel):void
+            {
+                if(!hasObsel(value,_listPlayVideoObsel))
+                {
+                    _listPlayVideoObsel.addItem(value);
+                }
+                // check if has obsel in collection 
+                function hasObsel(value:Obsel, list:ArrayCollection):Boolean
+                {
+                    var nbrObsel:int = list.length;
+                    for(var nObsel:int = 0; nObsel < nbrObsel; nObsel++)
+                    {
+                        var obsel:Obsel = list.getItemAt(nObsel) as Obsel;
+                        if(obsel == value)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            
+
+            /**
+            * Remove skin PlayVideoSkin
+            */
+            private function removePlayVideoObselSkin(value:Object):void
+            {
+                for each(var skin:Object in _listPlayVideoObselSkin)
+                {
+                    if(skin == value)
+                    {
+                        var index:int = _listPlayVideoObselSkin.getItemIndex(skin);
+                        _listPlayVideoObselSkin.removeItemAt(index);
+                    }
+                }
+            }
+            
+            /**
+             * Add skin PlayVideoSkin
+             */
+            private function addPlayVideoObselSkin(value:Object):void
+            {
+                var obsel:Obsel = value.obsel;
+                // check if skin has duration > 0
+                if(obsel.begin == obsel.end)
+                {
+                    _listPlayVideoObselSkin.addItem(value);
+                    addPlayVideoObsel(obsel);
+                    // check if has obsels stop/pause/end video
+                    if(!checkPauseStopEndObsel())
+                    {
+                        // FIXME : check order of the obsels
+                        // check obsel sessionexit
+                        //checkStopPlayVideoDocumentWhenUserDisconnected();
+                    }
+                }else
+                {
+                    // check if skin in play 
+                    if(!isSkinStatePlying(obsel))
+                    {
+                        value.setSkinStop(obsel.end);
+                    }else
+                    {
+                        _listPlayVideoObselSkin.addItem(value);
+                    }
+                  //  trace("obsel playing ="+obselPlaying);
+                }
+            }
+            
+            private function isSkinStatePlying(value:Obsel):Boolean
+            {
+                for each(var object:Object in _listPlayVideoObselSkin)
+                {
+                    var obsel:Obsel = object.obsel;
+                    if(obsel == value)
+                    {
+                        if(!object.isSkinPlay())
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            /**
+             * Update PlayVideoSkin
+             */
+            private function updatePlayVideoObselSkin(value:Obsel, obselStopPlayTimestamp:Number):void
+            {
+                var listIndexToRemove:ArrayCollection = new ArrayCollection();
+                var nbrSkin:int = _listPlayVideoObselSkin.length;
+                 for(var nSkin:int = 0; nSkin < nbrSkin; nSkin++)
+                {
+                    var skin:Object = _listPlayVideoObselSkin.getItemAt(nSkin) as Object;
+                    var obsel:Obsel = skin.obsel;
+                    if(obsel == value)
+                    {
+                        skin.setSkinStop(obselStopPlayTimestamp);
+                        listIndexToRemove.addItem(nSkin);
+                    }
+                } 
+                
+                if(listIndexToRemove.length > 0)
+                {
+                    var nbrSkinRemove:int = listIndexToRemove.length;
+                    for(var nSkinRemove:int = nbrSkinRemove -1 ; nSkinRemove >= 0; nSkinRemove--)
+                    {
+                        var index:int = listIndexToRemove.getItemAt(nSkinRemove) as int;
+                        _listPlayVideoObselSkin.removeItemAt(index);
+                    }
+                } 
+            }
+            
+            /**
+             * Add obsels Pause, Stop, End 
+             */
+            private function addPauseStopEndObsel(value:Obsel):void
+            {
+                _listPauseStopEndObsel.addItem(value);
+            }
+            
+            /**
+             * Check obsels Pause, Stop, End 
+             */
+            private function checkPauseStopEndObsel():Boolean
+            {
+                if(_listPauseStopEndObsel.length > 0)
+                {
+                    for each(var obsel:Obsel in _listPauseStopEndObsel)
+                    {
+                        if(removePlayVideoObsel(obsel))
+                        {
+                            var indexObselRemove:int =  _listPauseStopEndObsel.getItemIndex(obsel);
+                            _listPauseStopEndObsel.removeItemAt(indexObselRemove);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            /**
+            * Add obsel disconnected user 
+            */
+            private function addObselDisconnectedUser(value:Obsel):void
+            {
+                _listSessionExitObsel.addItem(value);
+            }
+            /**
+            * Set obsel playVideoDocument in state stop for users was disconnected when watched player youtube
+            */ 
+            private function checkStopPlayVideoDocumentWhenUserDisconnected():void
+            {
+                var nbrObsel:int = _listSessionExitObsel.length;
+                for(var nObsel:int = 0; nObsel < nbrObsel ; nObsel++)
+                {
+                    var obsel:Obsel = _listSessionExitObsel.getItemAt(nObsel) as Obsel;
+                    var userId:int = obsel.props[TraceModel.UID];
+                    if(removePlayVideoObselDisconnectedUser(userId))
+                    {
+                        _listSessionExitObsel.removeItemAt(nObsel);
+                        return;
+                    }
+                }
+            }
+            /**
+            * Remove playVideoObsel if user disconnect from the plateforme
+            */ 
+            private function removePlayVideoObselDisconnectedUser(value:int):Boolean
+            {
+                var index:int = -1;
+                var obselRemoved:Obsel;
+                var nbrObsel:int = _listPlayVideoObsel.length;
+                for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    // UID - id deconnected user
+                    if(obsel.props[TraceModel.SENDER] == value.toString())
+                    {
+                        index = nObsel;
+                        obselRemoved = obsel;
+                    }
+                }
+                if(index > -1)
+                {
+                    _listPlayVideoObsel.removeItemAt(index);
+                    // change state skins of playVideoSkin
+                    updatePlayVideoObselSkin(obselRemoved, -1);
+                    // add obsel on timeline
+                    var obselSessionExitWhenPlayVideo:Obsel = obselRemoved.clone();
+                    obselSessionExitWhenPlayVideo.type = TraceModel.STOP_VIDEO_DISCONNECTING_USER;
+                    Model.getInstance().addObsel(obselSessionExitWhenPlayVideo);
+                    return true;
+                }
+                return false;
+            }
+            
+            
+            /**
+            * Remove playVideoObsel => stop add duration
+            */
+            private function removePlayVideoObsel(value:Obsel):Boolean
+            {
+                var index:int = -1;
+                var obselRemoved:Obsel;
+                var nbrObsel:int = _listPlayVideoObsel.length;
+                for(var nObsel:int = 0 ; nObsel < nbrObsel; nObsel++)
+                {
+                    var obsel:Obsel = _listPlayVideoObsel.getItemAt(nObsel) as Obsel;
+                    if(obsel.props[TraceModel.ID_DOCUMENT] == value.props[TraceModel.ID_DOCUMENT] &&
+                    obsel.props[TraceModel.SENDER] == value.props[TraceModel.SENDER] )
+                    {
+                        index = nObsel;
+                        obselRemoved = obsel;
+                    }
+                }
+                if(index > -1)
+                {
+                    _listPlayVideoObsel.removeItemAt(index);
+                    // change state skins of playVideoSkin
+                    updatePlayVideoObselSkin(obselRemoved, value.begin);
+                    return true;
+                }
+                return false;
+            }
+            
+            /**
+             * Start timer PlayVideoSkin
+             */
+            private function startTimerPlayVideoObsel():void
+            {
+                if(Model.getInstance().getCurrentTutoratModule() == this)
+                {
+                    if(!_timerPlayVideoObsel)
+                    {
+                        _timerPlayVideoObsel = new Timer(1000,0);
+                        _timerPlayVideoObsel.addEventListener(TimerEvent.TIMER, updateTimerPlayVideoObsel);
+                        _timerPlayVideoObsel.start();
+                    }
+                }
+            }
+            
+            /**
+             * Update timer PlayVideoSkin
+             */
+           private function updateTimerPlayVideoObsel(event:TimerEvent):void
+           {
+               if(Model.getInstance().getCurrentTutoratModule() == this)
+               {
+                   if(_listPlayVideoObsel.length > 0)
+                   {
+                       for each(var obsel:Obsel in _listPlayVideoObsel)
+                       {
+                          obsel.end += 1000;
+                       }
+                   }
+               }
+           }
+               
+            /**
+             * add edit marker dialog
+             */
+            private function addEditMarkerDialog(value:EditMarkerDialog):void
+            {
+                _listEditMarkerDialog.addItem(value);
+            }
+            /**
+             * remove edit marker dialog
+             */
+            private function removeEditMarkerDialog(value:Obsel):void
+            {
+                // window will move
+                var willMove:Boolean = false;
+                // index the edit comment dialog
+                var indexRemovingMarkerDialog:int = -1;
+                var nbrMarkerDialog:int = _listEditMarkerDialog.length;
+                for(var nMarkerDialog:int = 0; nMarkerDialog < nbrMarkerDialog; nMarkerDialog++)
+                {
+                    var markerDialog:EditMarkerDialog = _listEditMarkerDialog.getItemAt(nMarkerDialog) as EditMarkerDialog;
+                    if( markerDialog.obsel == value)
+                    {
+                        indexRemovingMarkerDialog = nMarkerDialog;
+                        willMove = true;
+                    }
+                    // change position other edit marker dialogs
+                    if(willMove && indexRemovingMarkerDialog < nMarkerDialog)
+                    {
+                        markerDialog.x -= DELTA_X_Y;
+                        markerDialog.y -= DELTA_X_Y;
+                    }
+                } 
+                // remove edit marker dialog 
+                if(indexRemovingMarkerDialog > -1)
+                {
+                    _listEditMarkerDialog.removeItemAt(indexRemovingMarkerDialog);
+                }
+            }
+            
+            /**
+             * check if edit marker dialog on stage
+             */
+            private function isEditMarkerDialogOnStage(value:Obsel):Boolean
+            {
+                for each (var markerDilog:EditMarkerDialog in _listEditMarkerDialog)
+                {
+                    if(markerDilog.obsel == value)
+                    {
+                        // set focus for this commentDialog
+                        PopUpManager.bringToFront(markerDilog);
+                        markerDilog.textInfo.setFocus();    
+                        markerDilog.textInfo.selectAll();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            /**
+             * remove all edit comment dialogs from the stage
+             */
+            private function removeFromStageEditMarkerDialog():void
+            {
+                for each (var markerDialog:EditMarkerDialog in _listEditMarkerDialog)
+                {
+                    PopUpManager.removePopUp(markerDialog);
+                }
+                
+            }
+			private function hasUserIdPresentTimeLine(value:int):Boolean
+			{
+				var result:Boolean = false;
+				for each (var userId : int in listUserIdPresentTimeLine)
+				{
+					if(userId == value )
+					{
+						result = true;
+					}
+				}
+				return result;
+			}
+			private function isTimeLineAddedOnStage():Boolean
+			{
+				return _isTimeLineAddedOnStage;
+			}
+			
+			/**
+			 * notify , ready for use
+			 */
+			private function notifyReadyForUse():void
+			{
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.TUTORAT_MODULE;
+				this.dispatchEvent(event);
+			}
+            
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+                this.setFocus();
+            }
+            /**
+            * Set message notification 
+            */
+            private function setMessageNotification(value:String):void
+            {
+                if(!_timerShowMessageNotification)
+                {
+                    _timerShowMessageNotification = new Timer(TIME_UPDATE_MESSAGE_NOTIFICATION,0);
+                    _timerShowMessageNotification.addEventListener(TimerEvent.TIMER, updateTimeMessageNotification);
+                    _timerShowMessageNotification.start();
+                }
+                var notification:Notification = new Notification();
+                notification.duration = DURATION_SHOW_NOTIFICATION_ADD_MARKER;
+                notification.message = value;
+                notification.titreNotification = fxgt.gettext("Vous poser le marqueur :");
+                notification.sourceIcon = IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER);
+                // add notification
+                _listMessageNotification.addItem(notification);
+                
+            }
+            /**
+            * Update timer message notification
+            */
+            private function updateTimeMessageNotification(event:TimerEvent):void
+            {
+                var nbrNotification:int = this._listMessageNotification.length;
+                for(var nNotification:int = 0; nNotification < nbrNotification; nNotification++)
+                {
+                    var notification:Notification = _listMessageNotification.getItemAt(nNotification) as Notification;
+                    if (notification.duration > 0)
+                    {
+                        notification.duration -= TIME_UPDATE_MESSAGE_NOTIFICATION;
+                    }else
+                    {
+                        _listMessageNotification.removeItemAt(nNotification);
+                        nbrNotification --;
+                        nNotification --;
+                    }
+                }
+            }
+            /**
+            * Handler change collection message notification
+            */
+            private function onChangeCollectionMessageNotification(event:CollectionEvent):void
+            {
+                // remove all notification from stage
+                removeMessageNotification();
+                
+                // add all notification
+                addMessageNotification();
+            }
+            /**
+            * Remove all view message notification
+            */
+            private function removeMessageNotification():void
+            {
+                for each(var messageNotification:MessageNotification in _listViewMessageNotification)
+                {
+                    this.removeElement(messageNotification);
+                }
+            }
+            /**
+            * Add message notification
+            */
+            private function addMessageNotification():void
+            {
+                // remove all view message notification
+                _listViewMessageNotification.removeAll();
+                var nbrMessageNotification:int = _listMessageNotification.length;
+                
+                for(var nMessageNotification:int = 0; nMessageNotification < nbrMessageNotification ; nMessageNotification++)
+                {
+                    var notification:Notification = this._listMessageNotification.getItemAt(nMessageNotification) as Notification;
+                    var messageNotification:MessageNotification = new MessageNotification();
+                    messageNotification.setStyle("skinClass", MessageNotificationSkin);
+                    messageNotification.notification = notification;
+                    messageNotification.addEventListener(CloseEvent.CLOSE, onClickCloseMessageNotification);
+                    _listViewMessageNotification.addItem(messageNotification);
+                    messageNotification.y = nMessageNotification * 65 + 40; 
+                    messageNotification.x = this.width - 200 - 5;
+                    this.addElement(messageNotification)
+                }
+            }
+            
+            /**
+            * Event handler close notification
+            */
+            private function onClickCloseMessageNotification(event:CloseEvent):void
+            {
+                var messageNotification:MessageNotification = event.currentTarget as MessageNotification;
+                var notification: Notification = messageNotification.notification;
+                notification.duration = -1;
+            }
+            
+            /**
+            * Send mrker by click on button or textarea
+            */
+            protected function sendMarkerAnimation_sendMarkerHandler(event:MarkerEvent):void
+            {
+                var message:String = event.text;
+                sendMarker(false, message);
+            }
+            
+            /**
+            * Event handler start animation send short marker
+            */
+            protected function sendMarkerAnimation_startAnimationSendMarkerHandler(event:MarkerEvent):void
+            {
+                groupSetMarkerConst.enabled = false;
+                sendMarkerAnimation.enabled = false;
+            }
+            
+            /**
+            * Event handler stop animation send short marker
+            */
+            protected function sendMarkerAnimation_stopAnimationSendMarkerHandler(event:MarkerEvent):void
+            {
+                groupSetMarkerConst.enabled = true;
+                sendMarkerAnimation.enabled = true;
+            }
+
+            protected function panelVideo_clickButtonAdvancedDataGridHandler(event:PanelButtonEvent):void
+            {
+                var configShareMarker:ConfigShareMarker = new ConfigShareMarker();
+                configShareMarker.model = Model.getInstance();
+                configShareMarker.user = Model.getInstance().getLoggedUser();
+                
+                // list id users
+                var listIdUser:ArrayCollection = Model.getInstance().getListIdUsersBySessionId(this.currentSession.id_session);
+                
+                configShareMarker.listIdUser = listIdUser;
+                
+                PopUpManager.addPopUp(configShareMarker, this);
+                PopUpManager.centerPopUp(configShareMarker);
+            }
+
+		]]>
+	</fx:Script>
+	<modules:states>
+		<s:State name="MainState"/>
+		<s:State name="StudentState"/>
+	</modules:states>
+	<fx:Declarations>
+		<maps:TutoratMap id="tutoratMap" dispatcher="{this}"/>
+		<mate:Listener type="{ApplicationMenuEvent.UPDATE_LANGUAGE}"  method="updateLabelsModule"/>
+		<mate:Listener type="{SessionEvent.NEW_USER_JOIN_SESSION}"  method="onNewUserJoinSession"/>
+		<mate:Listener type="{SessionEvent.OLD_USER_OUT_SESSION}"  method="onOldUserOutSession"/>
+		<mate:Listener type="{SessionEvent.START_RECORDING_SESSION}"  method="onStartRecordingSession"/>
+		<mate:Listener type="{SessionEvent.STOP_RECORDING_SESSION}"  method="onStopRecordingSession"/>
+		<mate:Listener type="{SessionEvent.CLOSE_SESSION}"  method="onCloseSession"/>
+		<mate:Listener type="{SessionSharedEvent.RECEIVE_SHARED_INFO}"  method="onUpdateViewChatPanelSession"/>
+		<mate:Listener type="{SessionEvent.LOAD_LIST_OBSEL}"  method="onShowViewTimeLine"/>
+		<mate:Listener type="{SessionEvent.UPDATE_LIST_VIEW_TRACELINE}"  method="onUpdateViewTimeLine"/>
+		<mate:Listener type="{VisuActivityEvent.UPDATE_ACTIVITY}"  method="onUpdateViewActivity"/>
+		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
+		
+        <mate:Listener type="{ShortMarkerEvent.INIT_SHORT_MARKER}"  method="onInitShortMarker"/>
+
+		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_MARKER_BY_SKIN_MARKER}"  method="onPreAddMarkerBySkinMarker" useWeakReference="true"/>
+
+	</fx:Declarations>
+	<mx:HDividedBox width="100%" height="100%">
+		<s:VGroup width="33%" height="100%" minWidth="200">
+			<mx:Spacer height="5" />
+			<s:HGroup width="100%">
+				<s:Button id="buttonCloseSession" includeIn="MainState" width="50%" height="30"
+						   click="buttonCloseSession_clickHandler(event)">
+					<s:label>{fxgt.gettext("Clôturer la séance")}</s:label>
+				</s:Button>
+				<s:Button  id="buttonStartRecording" width="50%" includeIn="MainState" height="30" 
+						  click="button1_clickHandler(event)">
+				</s:Button>
+			</s:HGroup>
+				<!-- Démarrer la séance -->
+			<s:Panel height="100%" width="100%" id="panelPlanSession" resize="panelPlanSession_resizeHandler(event)">
+				<s:title>Plan de séance</s:title>
+				<s:title.StudentState>Media de la séance</s:title.StudentState>
+				<s:Group includeIn="StudentState" width="100%" height="100%">
+					<s:Scroller left="1" right="1" top="1" bottom="1"  id="scrollerPanelMediaSession">    
+						<s:Group id="panelMediaSession"   width="100%"  height="100%">
+							<s:layout>
+								<s:VerticalLayout gap="15"/>
+							</s:layout>
+						</s:Group>
+					</s:Scroller>
+				</s:Group>
+				<sessions:SessionPlanB  id="sessionPlan" height="100%" width="100%" 
+									  shareElement="shareActivityElement(event)"
+									  startActivity="startActivity(event)"
+									   includeIn="MainState"/>
+			</s:Panel>
+		</s:VGroup>
+<!-- VIDEO -->		 
+		<mx:VDividedBox width="77%" height="100%" minHeight="400" minWidth="550">
+			<mx:HDividedBox width="100%" height="65%">
+                <components:PanelButton  id="panelVideo" height="100%" width="70%" title="{'Video : '+ Model.getInstance().getLoggedUser().firstname}" minWidth="500" minHeight="200"
+                    dragEnter="dragEnterHandler(event);"
+                    dragDrop="dragDropHandler(event);"
+                    buttonMuteMicroVisible="true"
+                    buttonModeMaxVisible="true"
+                    buttonModeZoomVisible="true"
+                    buttonModeZoomEnabled="false"
+                    buttonModeMaxEnabled="true"
+                    buttonAdvancedDataGridEnabled="true"
+                    buttonAdvancedDataGridVisible="false"
+                    clickButtonMuteVolume="panelbutton1_clickButtonMuteVolumeHandler(event)"
+                    clickButtonMuteMicro="panelbutton1_clickButtonMuteMicroHandler(event)"
+                    clickButtonModeMax="panelbutton1_clickButtonModeMaxHandler(event)"
+                    clickButtonModeZoom="panelbutton1_clickButtonModeZoomHandler(event)"
+                    clickButtonAdvancedDataGrid="panelVideo_clickButtonAdvancedDataGridHandler(event)"
+                    >
+					<s:VGroup  id="groupeVideo" height="100%" width="100%" paddingBottom="3">
+						<video:VisuVisioAdvanced id="visio" width="100%"
+											quality="80"
+											bandwidth="15000" autoPlay="True"  height="100%" 
+											buttonChatEnabled="true" 
+											buttonMarkerEnabled="true"
+											clickButtonMarker="visio_clickButtonMarkerHandler(event)"
+											clickButtonChat="visio_clickButtonChatHandler(event)"
+                                            clickButtonZoom="panelbutton1_clickButtonModeZoomHandler(event)"/>
+                        <s:HGroup width="100%" id="groupSetMarkerConst" horizontalAlign="center" verticalAlign="middle" gap="20">
+                            <s:Button id="posi"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#92DD56">
+                                <s:label>{fxgt.gettext("positif")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : positif")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="nega"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DB6E6E">
+                                <s:label>{fxgt.gettext("négatif")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : négatif")}</s:toolTip>
+                            </s:Button>
+                           <!-- <s:Button id="comp"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DB6E6E">
+                                <s:label>{fxgt.gettext("compréhension")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : compréhension")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="pron"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DFE549">
+                                <s:label>{fxgt.gettext("prononciation")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : prononciation")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="sens"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#92DD56">
+                                <s:label>{fxgt.gettext("sens")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : sens")}</s:toolTip>
+                            </s:Button>
+                            <s:Button id="inte"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#55B3DE">
+                                <s:label>{fxgt.gettext("interaction")}</s:label>
+                                <s:toolTip>{fxgt.gettext("marqueur prédéfini : interaction")}</s:toolTip>
+                            </s:Button>-->
+                        </s:HGroup>
+                        <controls1:SendMarkerAnimation id="sendMarkerAnimation" width="100%" skinClass="com.ithaca.visu.controls.skins.SendMarkerAnimationSkin"
+                             sendMarker="sendMarkerAnimation_sendMarkerHandler(event)"
+                             startAnimationSendMarker="sendMarkerAnimation_startAnimationSendMarkerHandler(event)"
+                             stopAnimationSendMarker="sendMarkerAnimation_stopAnimationSendMarkerHandler(event)"/>
+<!--                        <s:HGroup width="100%" includeInLayout="false" id="groupSetMarker" paddingLeft="5" paddingRight="5">
+                            <mx:TextArea  id="textChatMarker" keyUp="onSetMyMarker(event)" enabled="true" height="22" width="100%"/>				
+                            <mx:Button icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" click="onSetMyMarker(event)" width="150">
+                                <mx:label>{fxgt.gettext("Poser un marqueur")}</mx:label>
+                            </mx:Button>
+                        </s:HGroup>	-->
+					</s:VGroup>
+				</components:PanelButton>
+<!-- CHAT -->
+				<s:Panel   height="100%" width="30%" minWidth="300">
+					<s:title>Chat</s:title>
+					<s:VGroup height="100%" width="100%" paddingBottom="3">
+						<s:Group  width="100%"  height="100%">
+							<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
+								<s:Group id="panelChatSession"   width="100%"  top="0">
+									<s:layout>
+										<s:VerticalLayout  gap="5"/>
+									</s:layout>
+								</s:Group>
+							</s:Scroller> 
+						</s:Group>
+						<s:HGroup width="100%" paddingLeft="5" paddingRight="5">
+							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true" height="22" width="100%"/>				
+							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" width="180">
+								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
+							</mx:Button>
+						</s:HGroup>	
+					</s:VGroup>
+				</s:Panel>
+			</mx:HDividedBox>
+<!-- TIMELINE -->
+			<s:Panel width="100%" height="35%" id="panelTimeLine">
+				<s:title>{fxgt.gettext("Résumé de l'activité")}</s:title>
+				<s:Label text="La séance n'est pas encore démarrée " horizontalCenter="0" verticalCenter="0"/>
+			</s:Panel>
+		</mx:VDividedBox>	
+	</mx:HDividedBox>	
+</modules:VisuModuleBase>

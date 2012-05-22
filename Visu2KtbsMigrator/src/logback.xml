@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration  -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
+<!--                                                                -->
+<!-- For professional support please see                            -->
+<!--    http://www.qos.ch/shop/products/professionalSupport         -->
+<!--                                                                -->
+<configuration  scan="true" scanPeriod="30 seconds" debug="true">
+  <appender name="S" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c [%p] %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+  <appender name="R" class="ch.qos.logback.core.FileAppender">
+    <Append>false</Append>
+    <File>visu-to-ktbs.log</File>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c [%p] %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+  </appender>
+  <appender name="W" class="ch.qos.logback.core.FileAppender">
+    <Append>false</Append>
+    <File>visu-to-ktbs-error.log</File>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c [%p] %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+  </appender>
+  
+  <logger name="com.ibatis" level="WARN"/>
+  <logger name="org.liris.ktbs" level="WARN"/>
+  <logger name="org.liris.ktbs.dao.rest" level="WARN"/>
+  <logger name="java.sql" level="WARN"/>
+  <logger name="org.liris.ktbs.visu.vo.ObselVO" level="WARN"/>
+  <logger name="org.liris.ktbs.visu.model" level="DEBUG"/>
+  <logger name="org.liris.ktbs.dao.ResourceProxy" level="WARN"/>
+  <logger name="org.liris.ktbs.visu.VisuToKtbs" level="INFO"/>
+  
+  <root level="WARN">
+    <appender-ref ref="S"/>
+    <appender-ref ref="R"/>
+    <appender-ref ref="W"/>
+  </root>
+  
+</configuration>

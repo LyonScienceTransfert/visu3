@@ -1,0 +1,58 @@
+
+* Installation red5
+  The server has been tested and deployed on red5 0.8.0.
+
+* Database initialisation
+
+  Configure the mysql connnection in
+  VisuServeur/visu/webapp/WEB-INF/classes/ibatis/sqlMapConfig.xml
+
+	<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu"/>
+	<property name="JDBC.Username" value="HERE"/>
+	<property name="JDBC.Password" value="HERE"/>
+	
+  Create a "visu" database with the appropriate login/password credentials.
+
+  Create an admin user from VisuServeur/dump/admin_db.sql:
+   mysql -u_login_ -p visu < VisuServeur/dump/admin_db.sql
+
+* Configure variables in files :
+
+   Copy the build.properties.template to build.properties and update
+   its contents to match your local configuration.
+
+   build.properties(webapp.name=instance_name)
+   VisuServeur/visu/webapp/WEB-INF/red5-web.properties (webapp.contextPath = instance_name)
+   
+
+* Compilation and deployment
+	
+	Set extended memory :
+	export ANT_OPTS="-Xms768m -Xmx1024m -XX:MaxPermSize=512m"
+	ant 
+		if you has message "Erreur: PermGen space", can try 
+		compiled the modules one by one(the list off all projects : ant -p)
+	ant build-framework
+	ant build-visuclient-swf
+		if you has message "Erreur: Probléme lors de la recherche du fichier externe : ../../.git/refs/remotes/origin/master",
+		have to create fichier master in folder .git/refs/remotes/origin/
+	ant build-bilan-module 
+	ant build-home-module
+	ant build-retrospection-module
+	ant build-session-module
+	ant build-tutorat-module
+	ant build-user-module
+	ant html-wrapper
+	ant build-test-page
+	ant deploy-client 
+	ant build-and-deploy-server
+
+* Run server red5
+
+	sudo sh red5.sh
+	
+* Run application
+
+    http://path_red5/instance_name
+
+

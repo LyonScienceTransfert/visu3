@@ -1,0 +1,26 @@
+#!/bin/sh
+
+DIR=$(dirname $0)
+APPNAME=visu2 
+BACKUP_DIR=sauvegarde_$APPNAME
+RED5_DIR=/Applications/red5
+USER_DIR=users
+
+cd "$DIR"
+echo "Cr<C3><A9>ation du repertoire $BACKUP_DIR"
+[ -d "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d") ] || mkdir -p "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d")
+
+echo "Backup de la base"
+mysqldump -u root -p ${APPNAME} > "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d")/"$APPNAME"_$(date "+%Y-%m-%d").sql
+
+echo "backup des vid<E9>os et audios"
+cp -r ${RED5_DIR}/webapps/${APPNAME}/${USER_DIR}/* "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d")/${USER_DIR}
+
+echo "backup des avatars"
+cp -r ${RED5_DIR}/webapps/${APPNAME}/streams/* "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d")
+
+echo "Targzip du repertoire"
+tar zcf "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d").tar.gz "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d")
+
+echo "Clean du repertoire"
+rm -rf "$BACKUP_DIR"/"$APPNAME"_$(date "+%Y-%m-%d")

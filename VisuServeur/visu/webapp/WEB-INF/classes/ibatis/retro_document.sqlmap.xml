@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="rd">
+	
+	<typeAlias alias="retroDocument" type="com.ithaca.domain.model.RetroDocument"/>	
+	
+	<resultMap class="retroDocument" id="retroDocument-result-map-without-xml">
+		<result column="id_retro_document" property="documentId"  />
+        <result column="id_owner" property="ownerId"  />
+        <result column="id_session" property="sessionId"  />
+        <result column="creation_date" property="creationDate"  />
+        <result column="last_modification_date" property="lastModified"  />
+		<result column="title" property="title" />
+		<result column="description" property="description" />
+	</resultMap>
+	
+    <resultMap class="retroDocument" id="retroDocument-result-map-without-xml-with-session-and-inviteeId-list"  groupBy="documentId">
+       <result column="id_retro_document" property="documentId"  />
+       <result column="id_owner" property="ownerId"  />
+       <result column="id_session" property="sessionId"  />
+       <result column="creation_date" property="creationDate"  />
+       <result column="last_modification_date" property="lastModified"  />
+       <result column="title" property="title" />
+       <result column="description" property="description" />
+       <result resultMap="rd.userIdResult" property="inviteeIds" />
+       <result resultMap="rd.sessionResult" property="session" />
+    </resultMap>
+	
+	<resultMap class="retroDocument" id="retroDocument-result-map-with-session-and-inviteeId-list"  groupBy="documentId">
+		<result column="id_retro_document" property="documentId"  />
+		<result column="id_owner" property="ownerId"  />
+		<result column="id_session" property="sessionId"  />
+		<result column="creation_date" property="creationDate"  />
+		<result column="last_modification_date" property="lastModified"  />
+		<result column="title" property="title" />
+		<result column="description" property="description" />
+		<result column="xml" property="xml" />
+		<result resultMap="rd.userIdResult" property="inviteeIds" />
+		<result resultMap="rd.sessionResult" property="session" />
+	</resultMap>
+	
+	<resultMap class="retroDocument" id="retroDocument-result-map">
+		<result column="id_retro_document" property="documentId"  />
+        <result column="id_owner" property="ownerId"  />
+        <result column="id_session" property="sessionId"  />
+        <result column="creation_date" jdbcType="DATETIME" property="creationDate"  />
+        <result column="last_modification_date" jdbcType="DATETIME" property="lastModified"  />
+		<result column="title" property="title" />
+		<result column="description" property="description" />
+		<result column="xml" property="xml" />
+	</resultMap>
+	
+	<resultMap class="java.lang.Integer" id="userIdResult">
+		<result column="id_user" jdbcType="BIGINT" property="value" />
+	</resultMap>
+	
+	<resultMap class="java.lang.Integer" id="attendeeIdResult">
+		<result column="id_attendee" jdbcType="BIGINT" property="value" />
+	</resultMap>
+	
+	<resultMap class="com.lyon2.visu.domain.model.Session"
+		id="sessionResult" groupBy="id_session">		
+		<result column="id_session" jdbcType="INTEGER" property="id_session" />
+		<result column="session_user_id" jdbcType="INTEGER" property="id_user" />
+        <result column="theme" jdbcType="LONGVARCHAR" property="theme" />
+		<result column="isModel" property="isModel" />
+		<result column="description" jdbcType="LONGVARCHAR" property="description" />
+		<result column="date_session" jdbcType="DATETIME" property="date_session" />
+        <result column="start_recording" jdbcType="DATETIME" property="start_recording" />
+        <result resultMap="rd.attendeeIdResult" property="attendeeIds" />
+	</resultMap>
+
+	<select id="getDocuments" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document
+	</select>
+	
+	<select id="getDocumentsWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+	</select>
+	
+	<select id="getDocumentsWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+	</select>
+	
+	<select id="getDocumentsByOwnerIdAndSessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description
+		FROM retro_document 
+		WHERE id_owner=#ownerId# AND id_session=#sessionId#
+	</select>
+	
+	<select id="getDocumentsByOwnerIdAndSessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE id_owner=#ownerId# AND s.id_session=#sessionId#
+	</select>
+
+	<select id="getDocumentById" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document WHERE id_retro_document=#value#
+	</select>
+
+	<select id="countDocuments" resultClass="java.lang.Integer">
+		SELECT count(*) FROM retro_document
+	</select>
+
+	<select id="getDocumentsByOwnerIdAndSessionId" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document WHERE id_owner=#ownerId# AND id_session=#sessionId#
+	</select>
+
+	<select id="getDocumentsByOwner" resultMap="retroDocument-result-map">
+		SELECT * FROM retro_document WHERE id_owner=#value#
+	</select>
+	
+	<select id="getInviteesByDocumentId" resultClass="java.lang.Integer">
+		SELECT id_user FROM retro_document_access WHERE id_retro_document=#value#
+	</select>
+
+	<select id="getDocumentsByInviteeId" resultClass="java.lang.Integer">
+		SELECT id_retro_document 
+		FROM retro_document_access 
+		WHERE id_user=#value#
+	</select>
+
+	<select id="getDocumentsByInviteeIdAndSessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
+		FROM retro_document_access as rda, retro_document as rd
+		WHERE rda.id_user=#inviteeId# and rd.id_session=#sessionId# and rda.id_retro_document = rd.id_retro_document
+	</select>
+
+	<select id="getDocumentsByInviteeIdAndSessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE rda.id_user=#inviteeId# and r.id_session=#sessionId# and rda.id_retro_document = r.id_retro_document
+	</select>
+
+	<select id="getDocumentsBySessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT id_retro_document, id_owner, id_session, creation_date, last_modification_date, title, description
+		FROM retro_document 
+		WHERE id_session=#sessionId#
+	</select>
+
+	<select id="getDocumentsBySessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE s.id_session=#sessionId#
+	</select>
+
+	<select id="getDocumentsSharedBySessionIdWithoutXML" resultMap="retroDocument-result-map-without-xml">
+		SELECT DISTINCT rd.id_retro_document, rd.id_owner, rd.id_session, rd.creation_date, rd.last_modification_date, rd.title, rd.description
+		FROM retro_document_access AS rda, retro_document AS rd
+		WHERE rd.id_session=#sessionId#
+		AND rda.id_retro_document = rd.id_retro_document
+	</select>
+	
+	<select id="getDocumentsSharedBySessionIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE r.id_session=#sessionId# and rda.id_retro_document = r.id_retro_document
+	</select>
+	
+	<select id="getDocumentsAndInviteeListAndSessionByOwnerIdWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE id_owner=#value#
+	</select>
+	
+	<select id="getDocumentsAndInviteeListAndSessionByOwnerIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE id_owner=#value#
+	</select>
+
+	<select id="getDocumentsAndInviteeListAndSessionByInviteeIdWithoutXML" resultMap="retroDocument-result-map-without-xml-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE rda.id_user=#value#
+	</select>
+
+	<select id="getDocumentsAndInviteeListAndSessionByInviteeIdWithXML" resultMap="retroDocument-result-map-with-session-and-inviteeId-list">
+		SELECT r.id_retro_document, r.id_owner, r.id_session, r.creation_date, r.last_modification_date, r.title, r.description,
+		rda.id_user, s.description, s.date_session, s.theme, s.id_user as session_user_id, s.start_recording, s.isModel, su.id_user as id_attendee, r.xml
+		FROM retro_document r
+		LEFT OUTER JOIN retro_document_access rda ON r.id_retro_document = rda.id_retro_document
+		JOIN sessions s ON r.id_session = s.id_session
+		LEFT OUTER JOIN session_users su ON su.id_session = s.id_session
+		WHERE rda.id_user=#value#
+	</select>
+	
+	<delete id="deleteDocument">
+		DELETE from retro_document WHERE id_retro_document = #value#
+	</delete>
+	
+	<delete id="deleteAllInvitations">
+		DELETE from retro_document_access WHERE id_retro_document = #value#
+	</delete>
+
+	<delete id="deleteInvitation">
+		DELETE from retro_document_access 
+		WHERE id_retro_document = #documentId:INTEGER#
+		AND id_user = #userId:INTEGER#
+	</delete>
+
+	<insert id="insertInvitation">
+		INSERT INTO retro_document_access 
+		SET id_retro_document=#documentId:INTEGER#,
+			id_user=#userId:INTEGER#
+	</insert>
+		
+	<insert id="insertDocument" parameterClass="retroDocument">
+		INSERT INTO retro_document
+		SET 
+		    id_owner = #ownerId#,
+		    id_session = #sessionId#,
+		    creation_date = now(),
+		    last_modification_date = now(),
+		    title = #title#,
+		    description = #description#,
+		    xml = #xml#
+
+		<selectKey keyProperty="documentId" resultClass="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<update id="updateDocument" parameterClass="retroDocument">
+		UPDATE retro_document
+			SET 
+		    id_owner = #ownerId#,
+		    id_session = #sessionId#,
+		    last_modification_date = now(),
+		    title = #title#,
+		    description = #description#,
+		    xml = #xml#
+		where id_retro_document = #documentId:INTEGER#
+	</update>
+</sqlMap>

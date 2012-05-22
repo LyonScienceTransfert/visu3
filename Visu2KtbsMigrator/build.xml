@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+
+	<property name="ktbs.dist.path" location="/home/dcram/dev/ws-visu2/ktbs4j/dist"/>
+	<property name="migrator.lib" location="lib"/>
+		
+	<property name="user.name" value="Damien Cram"/>
+	<property name="organisation" value="LIRIS UMR 5205 CNRS"/>
+	<property name="version" value="0.1"/>
+	<property name="title" value="Visu to KTBS Migrator"/>
+	
+	<property name="migrator.propfilename" value="visu2ktbs.properties"/>
+	<property name="ktbs.properties.filename" value="ktbs4j.properties"/>
+	<property name="logback.properties.filename" value="logback.xml"/>
+	<property name="run.filename" value="run.sh"/>
+	<property name="createmodels.filename" value="create-visu-model.sh"/>
+	
+	<target name="main">
+	 	<delete dir="dist"/>
+	 	<mkdir dir="dist"/>
+		<copy file="${run.filename}" todir="dist"/>
+		<copy file="${createmodels.filename}" todir="dist"/>
+		<copy file="src/${migrator.propfilename}" todir="dist"/>
+		<copy file="src/${ktbs.properties.filename}" todir="dist"/>
+		<copy file="src/${logback.properties.filename}" todir="dist"/>
+	 	<antcall target="package-3rd-party-libs"/>
+	 	<antcall target="jar-classes"/>
+	 </target>
+	
+	<target name="jar-classes" >
+	<jar destfile="dist/visu-to-ktbs.jar">
+	 	  <fileset dir="bin"/>
+	 	  <manifest>
+	 		   <attribute name="Built-By" value="${user.name}"/>
+		 	   <attribute name="Main-Class" value="org.liris.ktbs.visu.VisuToKtbs"/>
+	 		   <section name="common">
+	 		     <attribute name="Specification-Title" value="${title}"/>
+	 		     <attribute name="Specification-Version" value="${version}"/>
+	 		     <attribute name="Specification-Vendor" value="${organisation}"/>
+	 		     <attribute name="Implementation-Title" value="${title}"/>
+	 		     <attribute name="Implementation-Version" value="${version} ${TODAY}"/> 
+	 		     <attribute name="Implementation-Vendor" value="${organisation}"/>
+	 		   </section>
+	 		</manifest>
+	 	 </jar>
+	</target>
+		
+	<target name="package-3rd-party-libs" >
+		<copy  todir="dist/lib">
+			<fileset dir="${ktbs.dist.path}">
+			    <include name="ktbs4j-*.jar"/>
+			</fileset>
+			<fileset dir="${migrator.lib}">
+			    <include name="*.jar"/>
+			</fileset>
+			<fileset dir="${ktbs.dist.path}/lib">
+			    <include name="*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

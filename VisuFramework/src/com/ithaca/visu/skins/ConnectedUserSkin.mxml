@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:visu="com.ithaca.visu.*" 
+		xmlns:controls="com.ithaca.visu.controls.*"
+		>
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.ithaca.visu.controls.ConnectedUser")]
+	</fx:Metadata>
+	
+	<fx:Script fb:purpose="styling">
+		<![CDATA[
+			import com.ithaca.visu.renderer.ConnectedUserListRenderer;
+			
+			import spark.skins.spark.DropDownListSkin;
+			private var cornerRadius:Number = 2;
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
+			{
+				var cr:Number = getStyle("cornerRadius");
+				
+				if (cornerRadius != cr)
+				{
+					cornerRadius = cr;
+					
+					
+				}
+				if (fill) fill.radiusX = cornerRadius;
+				if (border) border.radiusX = cornerRadius;
+				if (users) users.setStyle("cornerRadius",cornerRadius);
+
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+			}
+		]]>
+	</fx:Script>
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="editable" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<!-- SkinParts
+	name=statusIcon, type=com.ithaca.visu.ConnectionLight, required=false
+	name=users, type=spark.components.DataGroup, required=false
+	name=userLabel, type=spark.components.supportClasses.TextBase, required=false
+	-->
+	<s:DropDownList 
+		id="users" 
+		includeIn="editable" 
+		itemRenderer="com.ithaca.visu.renderer.ConnectedUserListRenderer"
+		skinClass="com.ithaca.visu.skins.ConnectedUserDropDownSkin"
+		/>
+	
+	<!-- layer 2: fill -->
+	<!--- @private -->
+	<s:Rect id="fill" includeIn="normal"
+			left="1" right="1" top="1" bottom="1">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xFFFFFF" />
+				<s:GradientEntry color="0xD8D8D8" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<!-- layer 7: border - put on top of the fill so it doesn't disappear when scale is less than 1 -->
+	<!--- @private -->
+	<s:Rect id="border" includeIn="normal"
+			left="0" right="0" top="0" bottom="0" height="20" >
+		<s:stroke>
+			<s:LinearGradientStroke rotation="90" weight="1">
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.5625"/>
+				<s:GradientEntry color="0x000000" 
+								 alpha="0.75" />
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Label id="userLabel" includeIn="normal" 
+		left="20" verticalCenter="0" right="15"
+		/>
+	
+	
+	
+	<controls:ConnectionLight
+		id="statusIcon" 
+		left="5" width="10" height="10" verticalCenter="-1"
+		/> 
+</s:Skin>

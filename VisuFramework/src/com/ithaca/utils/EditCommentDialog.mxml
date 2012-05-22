@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	creationComplete="titlewindow1_creationCompleteHandler(event)"
+    close="titlewindow1_closeHandler(event)">
+	<s:title>{fxgt.gettext("Édition de commentaire")}</s:title>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="enabled"/>
+	</s:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+	<![CDATA[
+        import com.ithaca.traces.Obsel;
+        import com.ithaca.traces.model.RetroTraceModel;
+        import com.ithaca.traces.model.TraceModel;
+        import com.ithaca.visu.model.User;
+        import com.ithaca.visu.model.vo.UserVO;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.collections.ArrayCollection;
+        import mx.controls.Alert;
+        import mx.core.INavigatorContent;
+        import mx.events.CloseEvent;
+        import mx.events.FlexEvent;
+        import mx.managers.PopUpManager;
+        
+        import spark.events.IndexChangeEvent;
+		
+		[Bindable]
+		private var fxgt: _FxGettext = FxGettext;
+		
+		private var _user:User;
+		private var userChange:Boolean;
+		private var _listUser:ArrayCollection;
+		private var listUserChange:Boolean;
+		private var _obsel:Obsel;
+		private var obselChange:Boolean;
+		
+		public var confirm : Boolean = false;	
+		public var deleting : Boolean = false;
+		public var textComment:String;
+		private var _currentObselSkin:Object = null;
+        
+        private var _origin:String = "";
+        private var _closeDialog:String = "";
+        private var _userIdVideoPanel:int;
+        
+		////////////////////
+		////// setters/getters
+		////////////////////
+		public function set user(value:User):void
+		{
+			_user = value;
+			userChange = true;
+			invalidateProperties();
+		}
+		public function get user():User
+		{
+			return _user;
+		}
+		public function set listUser(value:ArrayCollection):void
+		{
+			_listUser = value;
+			listUserChange = true;
+			invalidateProperties();
+		}
+		public function get listUser():ArrayCollection
+		{
+			return _listUser;
+		}
+		public function set obsel(value:Obsel):void
+		{
+			_obsel = value;
+			obselChange = true;
+			invalidateProperties();
+		}
+		public function get obsel():Obsel
+		{
+			return _obsel;
+		}		
+			
+		public function set currentObselSkin(value:Object):void
+		{
+			_currentObselSkin = value;
+		}
+        public function get currentObselSkin():Object
+        {
+			return _currentObselSkin;
+		}		
+		public function set origin(value:String):void
+        {
+            _origin = value;
+        }
+        public function get origin():String
+        {
+            return _origin;
+        }	
+        public function set closeDialog(value:String):void
+        {
+            _closeDialog = value;
+        }
+        public function get closeDialog():String
+        {
+            return _closeDialog;
+        }		
+        public function set userIdVideoPanel(value:int):void
+        {
+            _userIdVideoPanel = value;
+        }
+        public function get userIdVideoPanel():int
+        {
+            return _userIdVideoPanel;
+        }		
+		
+		
+		
+		//_____________________________________________________________________
+		//
+		// Overriden Methods
+		//
+		//_____________________________________________________________________
+		
+		override protected function commitProperties():void
+		{
+			super.commitProperties();	
+			if(userChange)
+			{
+				userChange = false;
+				if(user)
+				{
+					if(imageUser != null)
+					{
+						imageUser.source = user.avatar;
+					}
+					/* if(nameUser != null)
+					{
+						nameUser.text = VisuUtils.getUserLabel(user, true);	
+					} */
+				}else
+				{
+					imageUser.source = IconEnum.getPathByName("commentForSession");
+				}
+			}
+			if(listUserChange)
+			{
+				listUserChange = false;
+				if(listUser)
+				{
+					
+					
+					
+					dropDownListUser.dataProvider = listUser;
+					dropDownListUser.labelFunction = setNameUserDromDownList;
+					// add virtual user = comment for session
+					var virtualUser:User = addVirtualUser(listUser);
+					if(user)
+					{
+						dropDownListUser.selectedItem = user;
+					}else
+					{
+						dropDownListUser.selectedItem = virtualUser;
+					}
+				}
+			}
+			
+			if(obselChange)
+			{
+				obselChange = false;
+				var text:String = fxgt.gettext("texte de commentaire ici");
+				if(obsel)
+				{
+                    // check if text the obsel is empty
+                    if(obsel.props[TraceModel.TEXT] != "" )
+                    {
+    					text = obsel.props[TraceModel.TEXT];
+                    }
+					buttonDelete.enabled = true;
+				}
+				textInfo.text = text;
+			}
+		}
+
+		//_____________________________________________________________________
+		//
+		// Listeners
+		//
+		//_____________________________________________________________________
+		
+		private function onHandlerButtonOkAndEnterTextArea(event:*):void
+		{
+            closeDialog = RetroTraceModel.SAVE;
+			confirm = true;
+			// comment text 
+			var commentText:String = textInfo.text;
+			if(event is MouseEvent){
+				setMyComment(false, commentText);
+			}else if (event is KeyboardEvent) 
+			{
+				if(event.keyCode == Keyboard.ENTER)
+				{
+					setMyComment(true, commentText);
+				}
+			}
+		}
+		
+		private function setMyComment(cutLastCharMessage:Boolean, message:String):void
+		{
+			// cut char new line if was click on button "Enter"
+			if(cutLastCharMessage)
+			{
+                message = message.split("\n").join("");
+			}
+			// check if text with promt message
+			if(message == fxgt.gettext("texte de commentaire ici"))
+			{
+				message = "";
+			}
+			// check if it's new comment or update existing
+			if(obsel)
+			{
+				obsel.props[TraceModel.TEXT] = message;
+			}else
+			{
+				textComment = message;
+			}
+			
+			PopUpManager.removePopUp(this);
+		}
+		
+		private function onClickButtonCancel(event:MouseEvent):void
+		{
+          
+            closeDialog = RetroTraceModel.CANCEL;
+			textComment = textInfo.text;
+			PopUpManager.removePopUp(this);
+		}
+		private function onClickButtonDelete(event:MouseEvent):void
+		{
+			Alert.yesLabel = fxgt.gettext("Oui");
+			Alert.noLabel = fxgt.gettext("Non");
+			Alert.show(fxgt.gettext("Voulez-vous supprimer le commentaire ?"),
+				fxgt.gettext("Confirmation"), Alert.YES|Alert.NO, null, deleteObselConfirmed); 	
+		}
+		
+		protected function deleteObselConfirmed(event:CloseEvent):void
+		{
+			if( event.detail == Alert.YES )
+			{
+                closeDialog = RetroTraceModel.DELETE;
+				deleting = true;
+                textComment = textInfo.text;
+				PopUpManager.removePopUp(this);
+			}
+		}
+
+        protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+            textInfo.setFocus();    
+            textInfo.selectAll();
+        }
+		protected function dropDownListUser_changeHandler(event:IndexChangeEvent):void
+		{
+			var index:int = event.newIndex;
+			// update user
+			user = listUser.getItemAt(index) as User;
+			imageUser.source = user.avatar;
+            
+			// update comment for user if it's not new comment
+			if(obsel)
+			{
+				obsel.props[TraceModel.COMMENT_FOR_USER_ID] = user.id_user;
+			}
+		}
+        protected function titlewindow1_closeHandler(event:CloseEvent):void
+        {
+            closeDialog = RetroTraceModel.CLOSE_WINDOW;
+            textComment = textInfo.text;
+            PopUpManager.removePopUp(this);
+        }
+		////////
+		// Utils
+		//////////////
+		private function setNameUserDromDownList(item:Object):String
+		{
+			var result:String="void";
+			var user:User = item as User;
+			result = VisuUtils.getUserLabelLastName(user, true);
+			return result;
+		}
+		private function addVirtualUser(list:ArrayCollection):User
+		{
+			var userVO:UserVO= new UserVO();
+			userVO.avatar =  IconEnum.getPathByName("commentForSession");
+			userVO.id_user = 0;
+			userVO.firstname = "";
+			userVO.lastname = fxgt.gettext("la séance");
+			
+			var user:User = new User(userVO);
+			list.addItem(user);
+			return user;
+		}
+
+
+	]]>
+    </fx:Script>
+    <s:VGroup width="100%" height="100%">
+        <s:HGroup width="100%" paddingLeft="10" paddingTop="5" verticalAlign="middle" verticalCenter="0">
+            <mx:Image  source="{IconEnum.getIconByTypeObsel(TraceModel.SET_TEXT_COMMENT)}"/>
+            <s:Label  id="labelCommentFor" fontWeight="bold"  text="{fxgt.gettext('Votre commentaire à propos de...')}"/>
+        </s:HGroup>
+        <s:HGroup  id="groupUser" width="100%" paddingLeft="10" verticalAlign="middle" paddingRight="10">
+            <mx:Image id="imageUser" width="50" height="50"/>
+            <s:DropDownList id="dropDownListUser" width="150" change="dropDownListUser_changeHandler(event)"/>
+        </s:HGroup>
+        <s:HGroup width="100%" paddingLeft="10" paddingRight="10">
+		    <s:RichEditableText  id="textInfo" keyUp="onHandlerButtonOkAndEnterTextArea(event)" height="45" width.enabled="100%" width.normal="230"/>
+        </s:HGroup>
+        <s:HGroup width="100%" horizontalAlign="right" paddingRight="10" paddingBottom="5" paddingLeft="10" paddingTop.normal="3" paddingBottom.normal="3">
+            <s:Button id="buttonDelete" click="onClickButtonDelete(event)" enabled="false">
+                <s:label>Supprimer</s:label>
+            </s:Button>
+            <s:Button id="buttonOk" click="onHandlerButtonOkAndEnterTextArea(event)">
+                <s:label>Valider</s:label>
+            </s:Button>
+            <s:Button id="buttonCancel" click="onClickButtonCancel(event)">
+                <s:label>Annuler</s:label>
+            </s:Button>
+        </s:HGroup>
+    </s:VGroup>
+</s:TitleWindow>

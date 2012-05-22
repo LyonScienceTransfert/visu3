@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+  either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+ - GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+ - CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+ - End of licenses
+
+-->
+<modules:VisuModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx" 
+		   xmlns:modules="com.ithaca.visu.modules.*" 
+		   xmlns:maps="maps.*"
+		   xmlns:mate="http://mate.asfusion.com/"
+		   xmlns:controls="com.ithaca.visu.controls.*"
+		   configure="configureHandler(event)"
+		   creationComplete="creationCompleteHandler(event)"
+           currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
+		   top="0" bottom="0" left="0" right="0" 
+		   xmlns:vo="com.ithaca.visu.model.vo.*" 
+		   xmlns:user="com.ithaca.visu.view.user.*" 
+		   >
+	<fx:Declarations>
+		<maps:UserMap dispatcher="{this}"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+            import com.ithaca.visu.events.InitMapEvent;
+            import com.ithaca.visu.events.SessionEvent;
+            import com.ithaca.visu.events.VisuModuleEvent;
+            import com.ithaca.visu.model.Model;
+            import com.ithaca.visu.model.User;
+            import com.ithaca.visu.model.vo.UserVO;
+            import com.ithaca.visu.ui.utils.ConnectionStatus;
+            import com.ithaca.visu.view.user.skins.UserManagementSkin;
+            
+            import mx.events.FlexEvent;
+            import mx.events.StateChangeEvent;			
+
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+                // set focus
+                this.setFocus();
+				trace("InitMapEvent.INIT_MAP_USER");
+				dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
+			}
+			
+			protected function configureHandler(event:VisuModuleEvent):void
+			{				
+				if((event.currentTarget as UserModule).parameters != null)
+				{
+					var param:Object = (event.currentTarget as UserModule).parameters ;
+				}
+				
+				Model.getInstance().setCurrentUserModule(this);
+				
+				var loggedUser:User =  Model.getInstance().getLoggedUser();
+				var statusLoggedUser:int =loggedUser.status; 
+				if(statusLoggedUser == ConnectionStatus.CONNECTED)
+				{
+					// update status connected user
+					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
+					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
+					outSession.userId = loggedUser.id_user;
+					this.dispatchEvent(outSession);
+				}
+				// notify thac can use module
+				notifyReadyForUse();
+			}
+			
+			public function setModeEditUpdatedUser(userVOUpdated:UserVO):void{
+				if(userManagement != null && userManagement.userDetail != null )
+				{
+					// updated user
+					var nbrUser:uint = userManagement.userCollection.length;
+					for(var nUser:uint = 0; nUser < nbrUser; nUser++)
+					{
+						var user:User =  userManagement.userCollection[nUser] as User;
+						if(user.id_user == userVOUpdated.id_user)
+						{
+							// update property 
+							user.firstname = userVOUpdated.firstname;
+							user.lastname = userVOUpdated.lastname;
+							user.mail = userVOUpdated.mail;
+							user.profil = userVOUpdated.profil;
+							// set state normal
+							userManagement.userDetail.setStateNormal();
+							return;
+						}
+					}
+						
+				}
+			}
+			
+			public function setModeEditAddedUser(userVOAdded:UserVO):void{
+				if(userManagement != null && userManagement.userDetail != null )
+				{
+					// added user
+					var user:User = new User(userVOAdded);
+					userManagement.userCollection.addItem(user);
+					// set state normal
+					userManagement.userDetail.setStateNormal();
+				}
+			}
+			
+			public function setModeEditDeletedUser(userId:int):void{
+				if(userManagement != null && userManagement.userDetail != null )
+				{
+					// set state normal
+
+					var nbrUser:uint = userManagement.userCollection.length;
+					for(var nUser:uint = 0; nUser < nbrUser; nUser++)
+					{
+						var user:User =  userManagement.userCollection[nUser] as User;
+						if(user.id_user == userId)
+						{
+							// remove user
+							//userManagement.userCollection.removeItemAt[nUser];
+							return;
+						}
+					}
+						
+				}
+			}
+			
+			protected function visumodulebase1_initializeHandler(event:FlexEvent):void
+			{
+				//dispatchEvent( new InitMapEvent(InitMapEvent.INIT_MAP_USER) );
+			}
+			
+			//_____________________________________________________________________
+			//
+			// Utils
+			//
+			//_____________________________________________________________________		
+			/**
+			 * notify , ready for use
+			 */
+			private function notifyReadyForUse():void
+			{
+				var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.READY_FOR_USE);
+				event.moduleName = VisuModuleEvent.USER_MODULE;
+				this.dispatchEvent(event);
+			}
+            
+            ////////////////////////////////////////////////////////
+            // INFO : have to set focus, runtime error SDK 4.5    //
+            ////////////////////////////////////////////////////////
+            protected function visumodulebase1_currentStateChangeHandler(event:StateChangeEvent):void
+            {
+               this.setFocus();
+            }
+
+		]]>
+	</fx:Script>
+
+	<user:UserManagement  id="userManagement" top="0" left="0" right="0" bottom="0"
+						  skinClass="com.ithaca.visu.view.user.skins.UserManagementSkin"
+						  />
+</modules:VisuModuleBase>

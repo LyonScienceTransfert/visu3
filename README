@@ -1,0 +1,43 @@
+Visu is a videoconferencing software mainly aimed at foreign language
+courses.
+
+It consists in a red5 server webapplication (using a MySQL database)
+accessed through a flex-based frontend.
+
+* Projects organisation 
+   
+   The project is divided in several FlashBuilder sub-projects
+
+   * AssetsLib 
+   A library project wich gather all embed stuff like mp3, image, css 
+   and later theme
+
+   * ComponentsLib
+   A library with generic components,  3rd party library
+
+   * UtilsLib
+   A set of usefull actionscript class
+
+   * VisuFramework
+   A library with our visu related componenents
+
+   * VisuApplication
+   The Visu Application 
+
+   * UserModule
+   A module for user management.
+
+   * SessionModule
+   A module for session management.
+
+We plan to add 2 other modules
+
+   * The Live tutoring module 
+   Aims to ease the work of a tutor during a live session.
+   
+   * Debriefing module 
+   Aims to ease the work of a tutor after a session. 
+   He can watch a previous session, select part, and add note for the student.
+
+
+The Red5 part is coming...
