@@ -65,13 +65,14 @@ package com.ithaca.documentarisation
 import com.ithaca.documentarisation.events.AudioRecorderEvent;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.Segment;
+import com.ithaca.internationalisation.InternationalisationEvent;
+import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconDelete;
+import com.ithaca.visu.model.Model;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
 import com.ithaca.visu.traces.events.TracageEvent;
 import com.ithaca.visu.ui.utils.IconEnum;
-import com.ithaca.internationalisation.InternationalisationEvent;
-import com.ithaca.internationalisation.InternationalisationEventDispatcherFactory;
 
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -95,6 +96,7 @@ import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
+import spark.primitives.Line;
 
 public class SegmentCommentAudio extends SkinnableComponent
 {
@@ -115,8 +117,12 @@ public class SegmentCommentAudio extends SkinnableComponent
 
 	[SkinPart("true")]
 	public var groupAudioRecorder:HGroup;
+    
 	[SkinPart("true")]
 	public var groupText:HGroup;
+    
+	[SkinPart("true")]
+	public var lineBottom:Line;
 
 	private var _text:String;
 	private var textChange:Boolean;
@@ -161,6 +167,8 @@ public class SegmentCommentAudio extends SkinnableComponent
     private var _tracageTimer:Timer;
     // cursor id
     private var _cursorID:int;
+    // mockup
+    private var _bilanModule:Object
 	//_____________________________________________________________________
 	//
 	// Setter/getter
@@ -299,7 +307,9 @@ public class SegmentCommentAudio extends SkinnableComponent
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
         // set change language listener
         InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
-	}
+        // set bilanModule 
+        _bilanModule = Model.getInstance().getCurrentBilanModule();
+    }
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -361,6 +371,25 @@ public class SegmentCommentAudio extends SkinnableComponent
             }else
             {
                 iconSegment.toolTip = fxgt.gettext("Bloc audio");
+            }
+            
+            if(_bilanModule == null)
+            {
+                iconSegment.includeInLayout = iconSegment.visible = false;
+            }
+        }
+        if(instance == groupAudioRecorder)
+        {
+            if(_bilanModule == null)
+            {
+                groupAudioRecorder.paddingLeft = 10;      
+            }
+        }
+        if(instance == lineBottom)
+        {
+            if(_bilanModule == null)
+            {
+                lineBottom.includeInLayout = lineBottom.visible = false;
             }
         }
 	}

@@ -98,6 +98,7 @@ import mx.collections.ArrayCollection;
 import mx.collections.IList;
 import mx.controls.Alert;
 import mx.controls.Button;
+import mx.controls.DataGrid;
 import mx.controls.Menu;
 import mx.controls.PopUpButton;
 import mx.core.ClassFactory;
@@ -149,6 +150,9 @@ public class RetroDocumentView extends SkinnableComponent
     
     [SkinPart("true")]
     public var dropContainer:BorderContainer;
+    
+    [SkinPart("true")]
+    public var dataGridListSegment:DataGrid;
     
     private var _labelRetroDocument:String;
     private var normal:Boolean = true;
@@ -311,6 +315,10 @@ public class RetroDocumentView extends SkinnableComponent
             titleDocumentTextInput.addEventListener(TextOperationEvent.CHANGE, titleDocumentTextInput_changeHandler);
             titleDocumentTextInput.addEventListener(FlexEvent.CREATION_COMPLETE, onCreatioCompleteTextInput);
         }	
+        if(instance == dataGridListSegment)
+        {
+            dataGridListSegment.dataProvider = this._retroDocument.listSegment;
+        }
         if(instance == groupSegment)
         {
             //groupSegment.dataProvider = listSegment;
@@ -403,6 +411,7 @@ public class RetroDocumentView extends SkinnableComponent
             _labelRetroDocument = this._retroDocument.title;
             // set list segments
             groupSegment.dataProvider = this._retroDocument.listSegment;
+            dataGridListSegment.dataProvider = this._retroDocument.listSegment;
             
             if(titleDocument != null)
             {
@@ -640,6 +649,8 @@ public class RetroDocumentView extends SkinnableComponent
         // set updated listSegment
         _retroDocument.listSegment.addItem(value);
         groupSegment.dataProvider = _retroDocument.listSegment;
+        
+        dataGridListSegment.dataProvider = this._retroDocument.listSegment;
         
         // update retroDocument
         updateRetroDocument();

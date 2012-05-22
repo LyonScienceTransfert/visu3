@@ -14,10 +14,10 @@ Visu is a free software subjected to a double license.
 You can redistribute it and/or modify since you respect the terms of either 
 (at least one of the both license) :
 - the GNU Lesser General Public License as published by the Free Software Foundation; 
-  either version 3 of the License, or any later version. 
+either version 3 of the License, or any later version. 
 - the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
 
- - GNU LGPL license
+- GNU LGPL license
 
 Visu is free software: you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as
@@ -32,7 +32,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
 
- - CeCILL-C license
+- CeCILL-C license
 
 This software is governed by the CeCILL-C license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -60,70 +60,45 @@ same conditions as regards security.
 The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
 
- - End of licenses
+- End of licenses
 
 -->
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
-	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.ithaca.utils.components.*"
-	 currentStateChange="skin1_currentStateChangeHandler(event)">
-	<!-- host component -->
-	<fx:Metadata>
-		[HostComponent("com.ithaca.documentarisation.SegmentTitle")]
-	</fx:Metadata>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    xmlns:documentarisation="com.ithaca.documentarisation.*"
+    focusEnabled="true">
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.documentarisation.RetroDocumentConst;
+        import com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        override public function set data(value:Object):void 
+        {
+            super.data = value;
+            if (value != null) 
+                var iconName:String = "iconLettre_t_16x16";
+            
+                if(data.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+                {
+                    iconName = 'iconAudio_16x16';
+                }else
+                if(data.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+                {
+                    iconName = 'iconVideo_16x16';
+                }else
+                if(RetroDocumentConst.TITLE_SEGMENT)
+                {
+                    iconName = "iconLettre_T_16x16";
+                }
+                // set icon the bloc
+                iconSegment.source=IconEnum.getIconByName(iconName);
+        } 
 
-	<fx:Script>
-	<![CDATA[
-		import mx.events.StateChangeEvent;
-
-		protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
-		{
-			if(this.currentState == "editSelected")
-			{
-				this.hostComponent.onFocusInRichEditableText();
-			}else if(this.currentState == "edit")
-			{
-				this.hostComponent.onFocusOutRichEditableText();
-			}
-		}
-
-	]]>
-	</fx:Script>
-	<s:states>
-		<s:State name="edit"/>
-		<s:State name="editSelected"/>
-		<s:State name="normal"/>
-	</s:states>
-	<s:VGroup width="100%" gap="1" verticalAlign="top">
-		<s:mouseOver.edit>
-		<![CDATA[
-			iconDelete.visible = true;
-		]]>
-		</s:mouseOver.edit>
-		<s:mouseOut.edit>
-		<![CDATA[
-			iconDelete.visible = false;
-		]]>
-		</s:mouseOut.edit>
-		<s:HGroup width="100%"  id="groupBloc" gap="1" verticalAlign="top"  paddingTop="3" paddingBottom="2">
-			<!-- ICON SEGMENT -->
-			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
-			<!-- TEXTAREA -->
-			<s:RichEditableText id="textSegment" width="100%" 
-				backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"
-                editable.normal="false" selectable="true" selectionHighlighting="whenActive"/>		
-			<!-- DELETE ICON -->
-			<components:IconDelete id="iconDelete"
-				visible.edit="false"
-				buttonMode="true"
- 				includeIn=" edit, editSelected"
-				height="16">
-			</components:IconDelete>
-		</s:HGroup>
-		<s:Line width="100%" id="lineBottom" includeIn="edit, editSelected">
-			<s:stroke>
-				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
-			</s:stroke>
-		</s:Line>
-	</s:VGroup>
-</s:Skin>
+    ]]>
+    </fx:Script>
+    <s:VGroup width="100%" horizontalAlign="center" verticalAlign="top" paddingTop="5">
+        <mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true"/>
+    </s:VGroup>
+</s:MXDataGridItemRenderer>

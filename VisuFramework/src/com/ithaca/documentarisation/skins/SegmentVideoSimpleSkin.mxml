@@ -106,13 +106,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:State name="editPlay"/>
 		<s:State name="editPause"/>
 	</s:states>
-	<s:VGroup width="330" gap="1">
+	<s:VGroup width="100%" gap="1">
 		<s:HGroup width="100%" gap="1" verticalAlign="middle"
 			>
 			<!-- SPACER FOR BILAN MODULE-->
 			<mx:Spacer width="35" includeIn="shared,sharedOver,sharedPause,sharedPlay"/>
             <!-- part vertical : icon segment-->
-            <s:VGroup height="100%" verticalAlign="top">
+            <s:VGroup height="100%" id="vgroupIconBloc" verticalAlign="top">
     			<!-- ICON SEGMENT -->
     			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" source="{IconEnum.getIconByName('iconVideo_16x16')}"/>
             </s:VGroup>
@@ -222,7 +222,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:HGroup>
 
 		<!-- LINE HORISONTALE -->
-		<s:Line width="100%" includeIn="edit,editOver,editPause,editPlay,editSelected">
+		<s:Line width="100%" id="lineBottom" includeIn="edit,editOver,editPause,editPlay,editSelected">
 			<s:stroke>
 				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
 			</s:stroke>
