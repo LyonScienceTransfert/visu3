@@ -508,7 +508,8 @@ public class SegmentCommentAudio extends SkinnableComponent
 	// richText
 	public function onFocusInRichEditableText(event:*=null):void
 	{
-		if(richEditableText.text == fxgt.gettext("Cliquer ici pour enregistrer un commentaire"));
+//		if(richEditableText.text == fxgt.gettext("Cliquer ici pour enregistrer un commentaire"))
+		if(segment.comment == "")
 		{
 			richEditableText.text = "";
 			richEditableText.setStyle("fontStyle","normal");
