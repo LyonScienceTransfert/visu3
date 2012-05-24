@@ -68,6 +68,7 @@ import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.utils.components.PanelButton;
 import com.ithaca.visu.events.PanelButtonEvent;
+import com.ithaca.visu.model.Model;
 import com.ithaca.visu.model.Session;
 import com.ithaca.visu.model.vo.RetroDocumentVO;
 import com.ithaca.visu.traces.TracageEventDispatcherFactory;
@@ -213,8 +214,9 @@ public class Documentarisation extends SkinnableComponent
         _retroDocument.session = session;
 		_listUser = listUser ;
 
-		edit = true;
-		this.invalidateSkinState();
+        edit = true;
+        addRetroDocument = false;
+        invalidateSkinState();
 	}
 
     /**
@@ -311,6 +313,7 @@ public class Documentarisation extends SkinnableComponent
                 retroDocumentView.profiles = _listProfil;
                 retroDocumentView.listShareUser = _listUser;
                 retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
+                
                 if(listAllUsersChange)
                 {
                     listAllUsersChange = false;
@@ -339,7 +342,7 @@ public class Documentarisation extends SkinnableComponent
 
 	override protected function getCurrentSkinState():String
 	{
-		return !enabled? "disabled" : edit? "editRetroDocument" : "listRetroDocument";
+		return !enabled? "disabled" : edit? "editRetroDocument" : addRetroDocument? "addRetroDocument" : "listRetroDocument";
 	}
 	//_____________________________________________________________________
 	//
@@ -404,19 +407,28 @@ public class Documentarisation extends SkinnableComponent
 	//		CursorManager.setBusyCursor();
 	}
     
-	private function onReturnPanelListRetroDocument(event:PanelButtonEvent):void
+	private function onReturnPanelListRetroDocument(event:PanelButtonEvent = null):void
 	{
+        panelEditRetroDocument.removeElement(retroDocumentView);
 
 		edit = false;
+        addRetroDocument = true;
+        // set skin "list retroDocument"
+        if(event)
+        {
+            addRetroDocument = false;
+        }
 		invalidateSkinState();
         
         // dispatch event remove retroDocument from Stage
+        // desativation the button add block video on VideoPanel
         var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.REMOVE_FROM_STAGE_RETRO_DOCUMENT);
         this.dispatchEvent(retroDocumentAddOnStage);
 	}
 	private function onAddRetroDocument(event:PanelButtonEvent):void
 	{
-		edit = true;
+		edit = false;
+        addRetroDocument = true;
 		invalidateSkinState();
 
 		var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT);
