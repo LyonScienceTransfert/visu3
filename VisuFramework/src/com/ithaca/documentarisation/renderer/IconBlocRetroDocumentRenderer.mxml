@@ -88,7 +88,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 {
                     iconName = 'iconVideo_16x16';
                 }else
-                if(RetroDocumentConst.TITLE_SEGMENT)
+                if(data.typeSource == RetroDocumentConst.TITLE_SEGMENT)
                 {
                     iconName = "iconLettre_T_16x16";
                 }
