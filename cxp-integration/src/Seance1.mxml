@@ -455,19 +455,27 @@
 									</s:HGroup>
 									<s:HGroup>
 										<s:Label width="115" text="Participants :" textAlign="right"/>
-										<!-- Liste des séances -->
-										<s:List width="220" height="170" contentBackgroundAlpha="0.0"
-												itemRenderer="skins.Seance.Participants">
+										<s:VGroup>
 											
-											<!-- données du calendrier -->
-											<s:dataProvider>
-												<mx:ArrayCollection>
-													
-													<fx:Object time="11:20" title="Titre de la séance" participants="Tuteur 1, Etudiant 1, Étudiant 2" />
-													
-												</mx:ArrayCollection>
-											</s:dataProvider>
-										</s:List>
+											<!-- Participants list -->
+											<s:List width="220" height="170" contentBackgroundAlpha="0.0">
+												
+												<s:dataProvider>
+													<mx:ArrayCollection>
+														
+														<fx:String>Étudiant 1</fx:String>
+														<fx:String>Étudiant 28</fx:String>
+														<fx:String>Étudiant 15</fx:String>
+														
+													</mx:ArrayCollection>
+												</s:dataProvider>
+											</s:List>
+											<s:HGroup>
+												<s:Button skinClass="skins.Components.Button" icon="images/Seance/ico_add.png" label="Ajouter"/>
+												<s:Button skinClass="skins.Components.Button" icon="images/Seance/ico_delete.png" label="Suppimer"/>
+											</s:HGroup>
+											
+										</s:VGroup>
 										
 									</s:HGroup>
 								</s:VGroup>

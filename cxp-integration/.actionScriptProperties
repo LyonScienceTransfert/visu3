@@ -17,6 +17,8 @@
     <application path="Visu3.mxml"/>
     <application path="Home.mxml"/>
     <application path="Seance1.mxml"/>
+    <application path="Seance3.mxml"/>
+    <application path="Utilisateurs.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
