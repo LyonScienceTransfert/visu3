@@ -317,35 +317,43 @@ public class RetroDocumentView extends SkinnableComponent
         }	
         if(instance == dataGridListSegment)
         {
-            dataGridListSegment.dataProvider = this._retroDocument.listSegment;
+            if(_retroDocument)
+            {
+                dataGridListSegment.dataProvider = this._retroDocument.listSegment;
+                
+                dataGridListSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
+                dataGridListSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
+            }
         }
         if(instance == groupSegment)
         {
-            //groupSegment.dataProvider = listSegment;
-            groupSegment.dataProvider = this._retroDocument.listSegment;
-            groupSegment.itemRendererFunction = function(item:Object):ClassFactory
+            if(_retroDocument)
             {
-                var className:Class = SegmentTitleRenderer;
-                
-                if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+                groupSegment.dataProvider = this._retroDocument.listSegment;
+                groupSegment.itemRendererFunction = function(item:Object):ClassFactory
                 {
-                    className = SegmentCommentAudioRenderer;
-                }else
-                    if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+                    var className:Class = SegmentTitleRenderer;
+                    
+                    if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
                     {
-                        className = SegmentVideoRenderer;
-                    }
-                return new ClassFactory( className);
-            };
-            
-            groupSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
-            groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
-            
-            groupSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
-            groupSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
-            // set listener on Tutorat Module
-            dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
-            dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
+                        className = SegmentCommentAudioRenderer;
+                    }else
+                        if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+                        {
+                            className = SegmentVideoRenderer;
+                        }
+                    return new ClassFactory( className);
+                };
+                
+                groupSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
+                groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
+                
+                groupSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
+                groupSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
+                // set listener on Tutorat Module
+                dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
+                dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
+            }
         }
         
         if(instance == dropContainer)
