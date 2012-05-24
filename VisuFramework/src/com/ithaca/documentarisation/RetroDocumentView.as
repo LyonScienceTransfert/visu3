@@ -263,6 +263,10 @@ public class RetroDocumentView extends SkinnableComponent
     public function set dragOwnerObject(value:Object):void
     {
         _dragOwnerObject = value;
+        
+        // set listener on Tutorat Module
+        dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
+        dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
     }
     public function get dragOwnerObject():Object
     {
