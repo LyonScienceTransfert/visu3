@@ -99,10 +99,11 @@ public class Documentarisation extends SkinnableComponent
 
 	[SkinPart("true")]
 	public var panelEditRetroDocument:PanelButton;
-	[SkinPart("true")]
+    
 	public var retroDocumentView:RetroDocumentView;
 
 	private var edit:Boolean;
+	private var addRetroDocument:Boolean;
 
 	private var _listRetroDocumentVO:ArrayCollection;
 	private var listRetroDocumentVOChange:Boolean;
@@ -280,18 +281,6 @@ public class Documentarisation extends SkinnableComponent
 			panelEditRetroDocument.addEventListener(Event.ADDED_TO_STAGE, onAddedOnStagePanelEditRetroDocument)
             
 		}
-		if(instance == retroDocumentView)
-		{
-			retroDocumentView.setEditabled(true);
-			retroDocumentView.retroDocument = _retroDocument;
-			retroDocumentView.startDateSession = _dateRecordingSession.time;
-			retroDocumentView.durationSession = _durationSession;
-			retroDocumentView.profiles = _listProfil;
-			retroDocumentView.listShareUser = _listUser;
-			retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
-			retroDocumentView.addEventListener(RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT, onUpdateTitreRetroDocument);
-			retroDocumentView.dragOwnerObject = dragOwnerObject;
-		}
 	}
 
 	override protected function commitProperties():void
@@ -442,6 +431,7 @@ public class Documentarisation extends SkinnableComponent
 	{
 		panelEditRetroDocument.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelEditRetroDocument);
 		panelEditRetroDocument.title = fxgt.gettext("Édition de bilan");
+        
         // update id retrodocument
         if(idUpdatedRetrodocumentChange)
         {
@@ -449,6 +439,33 @@ public class Documentarisation extends SkinnableComponent
             retroDocumentView.updateIdRetroDocument(_idUpdatedRetroDocument);
         }
 	}
+    /**
+    * Add on stage retroDocumentView
+    */  
+    private function onAddedOnStagePanelEditRetroDocument(event:Event = null):void
+    {
+        retroDocumentView = new RetroDocumentView();
+        retroDocumentView.percentHeight =100;
+        retroDocumentView.percentWidth = 100;
+        
+        retroDocumentView.setEditabled(true);
+        retroDocumentView.retroDocument = _retroDocument;
+        retroDocumentView.startDateSession = _dateRecordingSession.time;
+        retroDocumentView.durationSession = _durationSession;
+        retroDocumentView.profiles = _listProfil;
+        retroDocumentView.listShareUser = _listUser;
+        retroDocumentView.listUsersPresentOnTimeLine = _listUserPresentsOnTimeLine;
+        retroDocumentView.addEventListener(RetroDocumentEvent.UPDATE_TITLE_RETRO_DOCUMENT, onUpdateTitreRetroDocument);
+        retroDocumentView.dragOwnerObject = dragOwnerObject;
+        retroDocumentView.addEventListener(RetroDocumentEvent.ADD_RETRO_SEGMENT, onAddSegment);
+        retroDocumentView.addEventListener(RetroDocumentEvent.REMOVE_RETRO_SEGMENT, onRemoveSegment);
+        
+        panelEditRetroDocument.addElement(retroDocumentView);
+        
+        // dispatch event add retroDocument on Stage
+        var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT);
+        this.dispatchEvent(retroDocumentAddOnStage);
+    }
 	private function onDeleteRetroDocumen(event:RetroDocumentEvent):void
 	{
 		var nbrRetroDocument:int = listRetroDocumentVO.length;
