@@ -69,7 +69,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
     xmlns:components="com.ithaca.utils.components.*" 
     xmlns:documentarisation="com.ithaca.documentarisation.*"
     creationComplete="skin1_creationCompleteHandler(event)"
-     currentStateChange="skin1_currentStateChangeHandler(event)">
+    currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.Documentarisation")]
@@ -101,8 +101,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:states>
 		<s:State name="listRetroDocument" />
 		<s:State name="editRetroDocument" />
+		<s:State name="addRetroDocument" />
 	</s:states>
-	<s:transitions>
+	<!--<s:transitions>
 		<s:Transition fromState="listRetroDocument" toState="editRetroDocument">
 			<s:Sequence>
 				<s:Parallel targets="{[panelListRetroDocument,panelEditRetroDocument]}">
