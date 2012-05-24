@@ -147,34 +147,32 @@ public class Documentarisation extends SkinnableComponent
 	{
 		return _listRetroDocumentVO;
 	}
-	public function updateIdRetroDocument(value:int):void
+	public function updateIdRetroDocument(value:RetroDocumentVO):void
 	{
-		// update id retroDocument
-		if(retroDocumentView)
-		{
-			retroDocumentView.updateIdRetroDocument(value);
-		}else
-        {
-            _idUpdatedRetroDocument = value;
-            idUpdatedRetrodocumentChange = true;
-        }
-		var nbrRetroDocumentVO:int = listRetroDocumentVO.length;
-		for(var nRetroDocumentVO:int = 0; nRetroDocumentVO < nbrRetroDocumentVO; nRetroDocumentVO++)
-		{
-			var retroDocumentVO:RetroDocumentVO = listRetroDocumentVO.getItemAt(nRetroDocumentVO) as RetroDocumentVO;
-			if(retroDocumentVO.documentId == 0)
-			{
-				retroDocumentVO.documentId = value;
-				break;
-			}
-		}
+
+        listRetroDocument.dataProvider.addItem(value);
+        listRetroDocument.selectedItem = value;
+        var retroDocument:RetroDocument = new RetroDocument(value);
+        retroDocument.setRetroDocumentXML(value.xml);
+        setRetroDocument(retroDocument, new Array(), Model.getInstance().getCurrentSessionRetroModule()); 
 
         // tracage add retrodocument
         var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
         retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_CREATE;
-        retroDocumentTracageEvent.retroDocumentId = value;
+        retroDocumentTracageEvent.retroDocumentId = value.documentId;
         TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
 	}
+    /**
+    * 
+    */
+    public function updateViewRetroDocument():void
+    {
+        edit = true;
+        addRetroDocument = false;
+        invalidateSkinState();
+        
+        onAddedOnStagePanelEditRetroDocument();  
+    }
 	public function updateListSegment(value:String):void
 	{
 		var index:int = listRetroDocument.selectedIndex;
