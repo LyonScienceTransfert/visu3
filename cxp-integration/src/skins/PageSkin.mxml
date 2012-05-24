@@ -109,8 +109,8 @@
 			<s:Button y="0" x="93" label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
 			<s:Button y="0" x="186" label="Séances" skinClass="skins.MenuButton.Seance"/>
 			<s:Button y="0" x="279" label="Bilans" skinClass="skins.MenuButton.Bilan"/>
-			<s:Button y="0" x="372" label="Salon synchrone" skinClass="skins.MenuButton.SalonSync"/>
-			<s:Button y="0" x="465" label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro"/>
+			<s:Button y="0" x="372" label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
+			<s:Button x="465" y="0" label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
 		</s:Group>
 	</s:Group>
         
