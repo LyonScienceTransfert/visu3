@@ -375,7 +375,23 @@ public class Documentarisation extends SkinnableComponent
             }
        }
     }
-
+    /**
+    * Add bloc to retroDocument
+    */
+    private function onAddSegment(event:RetroDocumentEvent):void
+    {
+        // TODO label 
+        onReturnPanelListRetroDocument();
+    }
+    /**
+    * Remove bloc from retroDocument
+    */
+    private function onRemoveSegment(event:RetroDocumentEvent):void
+    {
+        // TODO label
+        onReturnPanelListRetroDocument();
+    }
+    
 	private function onUpdateCompete(event:FlexEvent):void
 	{
 		this.removeEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateCompete);

@@ -667,6 +667,10 @@ public class RetroDocumentView extends SkinnableComponent
         retroDocumentAddBlockTracageEvent.obsel = obsel;
         
         TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentAddBlockTracageEvent);
+        
+        // change skin add segment to retroDocument
+        var addBlockEvent:RetroDocumentEvent = new RetroDocumentEvent( RetroDocumentEvent.ADD_RETRO_SEGMENT);
+        this.dispatchEvent(addBlockEvent);
     }
     
     // dispatcher when change list the blocs
@@ -717,10 +721,16 @@ public class RetroDocumentView extends SkinnableComponent
             }else
             {
                 listSegment.removeItemAt(indexSegment);
+                
+                
                 // update the retroDocument
-                this.updateRetroDocument();
+                updateRetroDocument(VisuUtils.DELETE_BLOC);
                 // notify change list segment
                 notifyChangeListSegment();
+                
+                // change skin remove segment from retroDocument
+                var removeBlockEvent:RetroDocumentEvent = new RetroDocumentEvent( RetroDocumentEvent.REMOVE_RETRO_SEGMENT);
+                dispatchEvent(removeBlockEvent);
             }
             
             // tracage removing segment

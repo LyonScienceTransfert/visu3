@@ -109,6 +109,9 @@ package  com.ithaca.documentarisation.events
 		static public const READY_TO_DRAG_DROP_SEGMENT : String = 'readyToDragDropSegment';
 		static public const READY_TO_DRAG_DROP_OBSEL : String = 'readyToDragDropObsel';
 		static public const STOP_TO_DRAG_DROP_OBSEL : String = 'stopToDragDropObsel';
+		
+        static public const ADD_RETRO_SEGMENT : String = 'addRetroSegment';
+        static public const REMOVE_RETRO_SEGMENT : String = 'removeRetroSegment';
 		// properties
 		public var segment  :Segment;
 		public var xmlRetrodocument:String;
@@ -125,6 +128,7 @@ package  com.ithaca.documentarisation.events
 		public var titleRetrodocument:String;
 		public var statusPlaySegment:Boolean;
 		public var streamPathAudioCommentSegment:String;
+		public var typeUpdate:String = "voidFromClassRetroDocumentEvent";
 		
 		public var value:Object;
 		public var event:Object;
