@@ -69,7 +69,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
         xmlns:components="com.ithaca.utils.components.*"
         xmlns:utils="com.ithaca.utils.*"
         creationComplete="skin1_creationCompleteHandler(event)" 
-        currentStateChange="skin1_currentStateChangeHandler(event)">
+        currentStateChange="skin1_currentStateChangeHandler(event)"
+        addedToStage="skin1_addedToStageHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.RetroDocumentView")]
@@ -121,6 +122,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 iconSegment.width = 35;
             }
 
+
+            protected function skin1_addedToStageHandler(event:Event):void
+            {
+                dataGridSegment.itemRenderer =  new ClassFactory(BlocRetroDocumentRenderer);
+            }
+
 		]]>
 	</fx:Script>
 	<s:Rect id="background" left="0" right="0" top="0" bottom="0">
@@ -150,7 +157,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 <mx:DataGridColumn id="iconSegment" itemRenderer="com.ithaca.documentarisation.renderer.IconBlocRetroDocumentRenderer">
                    <mx:headerText>Type</mx:headerText>
                 </mx:DataGridColumn>
-                <mx:DataGridColumn id="dataGridSegment" itemRenderer="com.ithaca.documentarisation.renderer.BlocRetroDocumentRenderer">
+                <mx:DataGridColumn id="dataGridSegment">
                     <mx:headerText>{fxgt.gettext("Bloc")}</mx:headerText>
                 </mx:DataGridColumn>
             </mx:columns>
