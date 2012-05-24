@@ -88,6 +88,10 @@ package com.ithaca.utils
         private static var fxgt: _FxGettext = FxGettext;
         
 		public static var FOLDER_AUDIO_COMMENT_FILES:String = "usersAudioRetroDocument";
+		public static const ADD_BLOC:String = "addBlock";
+		public static const DELETE_BLOC:String = "delBlock";
+		public static const VOID:String = "void";
+        
 		
 		private static var logger:ILogger = Log.getLogger("com.ithaca.utils.VisuUtils");
 		
