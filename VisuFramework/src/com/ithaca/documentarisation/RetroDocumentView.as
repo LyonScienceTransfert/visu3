@@ -646,14 +646,15 @@ public class RetroDocumentView extends SkinnableComponent
     
     private function addSegment(value:Segment, createType:String, obsel:Obsel, sourceType:String):void
     {
+       
         // set updated listSegment
         _retroDocument.listSegment.addItem(value);
         groupSegment.dataProvider = _retroDocument.listSegment;
         
-        dataGridListSegment.dataProvider = this._retroDocument.listSegment;
+        dataGridListSegment.dataProvider = _retroDocument.listSegment;
         
         // update retroDocument
-        updateRetroDocument();
+        updateRetroDocument(VisuUtils.ADD_BLOC);  
         
         // notify change list segment 
         notifyChangeListSegment();
@@ -871,7 +872,7 @@ public class RetroDocumentView extends SkinnableComponent
     //
     //_____________________________________________________________________	
     // update retroDocument
-    private function updateRetroDocument(event:*=null):void
+    private function updateRetroDocument(typeUpdate:String = VisuUtils.VOID):void
     {
         var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
         retroDocumentVO.documentId = _retroDocument.id;
@@ -884,6 +885,8 @@ public class RetroDocumentView extends SkinnableComponent
         var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT);
         updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
         updateRetroDocumentEvent.listUser = this._listUser;
+        // type update
+        updateRetroDocumentEvent.typeUpdate = typeUpdate;
         this.dispatchEvent(updateRetroDocumentEvent);
     }
     // remove retroDocument
