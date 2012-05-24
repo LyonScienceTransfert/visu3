@@ -69,6 +69,7 @@ import com.ithaca.timeline.events.TimelineEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.traces.model.vo.SGBDObsel;
+import com.ithaca.utils.VisuUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.controls.login.event.LoginFormEvent;
 import com.ithaca.visu.events.BilanEvent;
@@ -440,11 +441,16 @@ public class MainManager
 		this.dispatcher.dispatchEvent(retroDocumentEvent);
 	}
 	/**
-	 * get notify updated retroDocument by owner, in this case logged user is shared for this document 
+	 * Notify updated retroDocument by owner
 	 */
-	public function onCheckUpdateRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array):void
+	public function onCheckUpdateRetroDocument(msgTypeUpdateRetrodocument:String):void
 	{
-		// TODO check if logged user looking for this document
+		
+        if(msgTypeUpdateRetrodocument == VisuUtils.ADD_BLOC || msgTypeUpdateRetrodocument == VisuUtils.DELETE_BLOC)
+        {
+            var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
+            this.dispatcher.dispatchEvent(updateRetrodocument);
+        }
 	}
 	/**
 	 * get list obsels "SessionExit", "SessionPause" for updating button "Salon Tutorat"
