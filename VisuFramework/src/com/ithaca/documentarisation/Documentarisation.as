@@ -277,6 +277,8 @@ public class Documentarisation extends SkinnableComponent
 		{
 			panelEditRetroDocument.addEventListener(PanelButtonEvent.CLICK_BUTTON_RETURN, onReturnPanelListRetroDocument);
 			panelEditRetroDocument.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelEditRetroDocument);
+			panelEditRetroDocument.addEventListener(Event.ADDED_TO_STAGE, onAddedOnStagePanelEditRetroDocument)
+            
 		}
 		if(instance == retroDocumentView)
 		{
