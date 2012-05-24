@@ -117,37 +117,44 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				</s:Parallel>
 			</s:Sequence>
 		</s:Transition>
-	</s:transitions>
-	<components:PanelButton width="100%" height="100%" 
-		id="panelListRetroDocument"
-		buttonAddVisible="true"
-		buttonDeleteVisible="false"
-		buttonShareVisible="false"
-		buttonMuteMicroVisible="false"
-		buttonVolumeVisible="false"
-		buttonReturnVisible="false"
-		includeIn="listRetroDocument"
-		>
-		<s:List width="100%" height="100%"
-			id="listRetroDocument" 
-		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
-	</components:PanelButton>
-	
-	<components:PanelButton width="100%" height="100%" 
-		id="panelEditRetroDocument"
-		buttonAddVisible="false"
-		buttonDeleteVisible="false"
-		buttonShareVisible="false"
-		buttonShareEnabled="false"
-		buttonMuteMicroVisible="false"
-		buttonVolumeVisible="false"
-		buttonReturnVisible="true"
-		buttonReturnEnabled="true"
-		includeIn="editRetroDocument"
-		>
-		<documentarisation:RetroDocumentView width="100%" height="100%"
-			id="retroDocumentView">
-			
-		</documentarisation:RetroDocumentView>
- 	</components:PanelButton>
+	</s:transitions>-->
+    <s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+    	<components:PanelButton width="100%" height="100%" 
+    		id="panelListRetroDocument"
+    		buttonAddVisible="true"
+    		buttonDeleteVisible="false"
+    		buttonShareVisible="false"
+    		buttonMuteMicroVisible="false"
+    		buttonVolumeVisible="false"
+    		buttonReturnVisible="false"
+    		includeIn="listRetroDocument"
+    		>
+    		<s:List width="100%" height="100%"
+    			id="listRetroDocument" 
+    		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
+    	</components:PanelButton>
+    	
+    	<components:PanelButton width="100%" height="100%" 
+    		id="panelEditRetroDocument"
+    		buttonAddVisible="false"
+    		buttonDeleteVisible="false"
+    		buttonShareVisible="false"
+    		buttonShareEnabled="false"
+    		buttonMuteMicroVisible="false"
+    		buttonVolumeVisible="false"
+    		buttonReturnVisible="true"
+    		buttonReturnEnabled="true"
+    		includeIn="editRetroDocument"
+    		>
+    		<!--<documentarisation:RetroDocumentView width="100%" height="100%"
+    			id="retroDocumentView">
+    			
+    		</documentarisation:RetroDocumentView>-->
+     	</components:PanelButton>
+        <s:Panel width="100%" height="100%" includeIn="addRetroDocument" title="info">
+            <s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+                <s:Label id="labelAddRetrodocument" text="Adding retrodocument"/>
+            </s:HGroup>
+        </s:Panel>
+    </s:VGroup>
 </s:Skin>
