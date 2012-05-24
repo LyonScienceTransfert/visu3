@@ -263,7 +263,10 @@ public class SegmentCommentAudio extends SkinnableComponent
 		{
 			edit = false;
 		}
-		audioRecorder.skinNormal();
+        if(audioRecorder)
+        {
+    		audioRecorder.skinNormal();
+        }
 		invalidateSkinState();
 	}
 	public function rendererOver():void
