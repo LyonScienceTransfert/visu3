@@ -911,7 +911,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 if(Model.getInstance().getCurrentRetroModule() == this)
                 {
                     newRetroDocumentVO.documentId = event.idRetroDocument;
-                    documentarisation.updateIdRetroDocument(newRetroDocumentVO);
+                    documentarisation.updateAddedRetroDocument(newRetroDocumentVO);
                     // remove cursor
                     CursorManager.removeBusyCursor();
                 }
