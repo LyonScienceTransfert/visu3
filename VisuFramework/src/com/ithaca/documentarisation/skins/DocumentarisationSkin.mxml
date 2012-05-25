@@ -94,6 +94,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
         protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
         {
             this.setFocus();
+            if(this.currentState == "addRetroDocument" )
+            {
+                // set new label info
+                labelAddRetrodocument.text = hostComponent.labelAddRetrodocumentInfo;
+            }
         }
 
 	]]>
@@ -147,14 +152,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
     		buttonReturnEnabled="true"
     		includeIn="editRetroDocument"
     		>
-    		<!--<documentarisation:RetroDocumentView width="100%" height="100%"
-    			id="retroDocumentView">
-    			
-    		</documentarisation:RetroDocumentView>-->
      	</components:PanelButton>
-        <s:Panel width="100%" height="100%" includeIn="addRetroDocument" title="info">
+        <s:Panel id="panelAddRetroDocument" width="100%" height="100%" includeIn="addRetroDocument">
             <s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-                <s:Label id="labelAddRetrodocument" text="Adding retrodocument"/>
+                <s:Label id="labelAddRetrodocument" text="{this.hostComponent.labelAddRetrodocumentInfo}"/>
             </s:HGroup>
         </s:Panel>
     </s:VGroup>

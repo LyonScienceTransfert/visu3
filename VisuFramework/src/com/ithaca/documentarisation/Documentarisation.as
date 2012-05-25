@@ -83,7 +83,9 @@ import gnu.as3.gettext._FxGettext;
 import mx.collections.ArrayCollection;
 import mx.events.FlexEvent;
 
+import spark.components.Label;
 import spark.components.List;
+import spark.components.Panel;
 import spark.components.supportClasses.SkinnableComponent;
 
 [Event(name="addRetroDocument", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
@@ -95,11 +97,18 @@ public class Documentarisation extends SkinnableComponent
 
 	[SkinPart("true")]
 	public var panelListRetroDocument:PanelButton;
+    
 	[SkinPart("true")]
 	public var listRetroDocument:List;
 
 	[SkinPart("true")]
 	public var panelEditRetroDocument:PanelButton;
+    
+	[SkinPart("true")]
+	public var panelAddRetroDocument:Panel;
+    
+	[SkinPart("true")]
+	public var labelAddRetrodocument:Label;
     
 	public var retroDocumentView:RetroDocumentView;
 
@@ -127,12 +136,15 @@ public class Documentarisation extends SkinnableComponent
 
     private var _idUpdatedRetroDocument:int = -1;
     private var idUpdatedRetrodocumentChange:Boolean;
+    private var _labelAddRetrodocument:String;
 
 	public function Documentarisation()
 	{
 		super();
 		_listRetroDocumentVO = new ArrayCollection();
         fxgt = FxGettext;
+        
+        _labelAddRetrodocument = fxgt.gettext("Création de bilan");
 	}
 	//_____________________________________________________________________
 	//
@@ -251,6 +263,14 @@ public class Documentarisation extends SkinnableComponent
         this.invalidateProperties();
     }
 
+    public function get labelAddRetrodocumentInfo():String
+    {
+        return _labelAddRetrodocument;
+    }
+    public function set labelAddRetrodocumentInfo(value:String):void
+    {
+        _labelAddRetrodocument = value;
+    }
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -281,8 +301,11 @@ public class Documentarisation extends SkinnableComponent
 			panelEditRetroDocument.addEventListener(PanelButtonEvent.CLICK_BUTTON_RETURN, onReturnPanelListRetroDocument);
 			panelEditRetroDocument.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelEditRetroDocument);
 			panelEditRetroDocument.addEventListener(Event.ADDED_TO_STAGE, onAddedOnStagePanelEditRetroDocument)
-            
 		}
+		if(instance == panelAddRetroDocument)
+		{
+            panelAddRetroDocument.title = fxgt.gettext("Information");
+        }
 	}
 
 	override protected function commitProperties():void
@@ -372,7 +395,8 @@ public class Documentarisation extends SkinnableComponent
     */
     private function onAddSegment(event:RetroDocumentEvent):void
     {
-        // TODO label 
+        // label info
+        labelAddRetrodocumentInfo = fxgt.gettext("Ajouter le bloc");
         onReturnPanelListRetroDocument();
     }
     /**
@@ -380,7 +404,8 @@ public class Documentarisation extends SkinnableComponent
     */
     private function onRemoveSegment(event:RetroDocumentEvent):void
     {
-        // TODO label
+        // label info
+        labelAddRetrodocumentInfo = fxgt.gettext("Suppression le bloc");
         onReturnPanelListRetroDocument();
     }
     
