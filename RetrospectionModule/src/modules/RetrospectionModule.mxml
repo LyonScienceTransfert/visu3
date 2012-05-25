@@ -869,31 +869,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					this.dispatchEvent(switchModuleEvent);
 				}
 			}
-
-			protected function addRetroDocument_clickHandler(event:MouseEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
-					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
-					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
-					retroDocumentVO.documentId = 0;
-					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
-					var createurUser:User = Model.getInstance().getLoggedUser();
-					retroDocumentVO.ownerId = createurUser.id_user;
-					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = fxgt.gettext("Nouveau bilan");
-	
-					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
-					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
-					retroDocumentVO.xml = stringXML;
-					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
-					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
-					createRetroDocumentVOEvent.sessionId = this.currentSessionId;
-					this.dispatchEvent(createRetroDocumentVOEvent);
-				}
-			}
             
             /**
             * Add retroDocument on stage
@@ -956,12 +931,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					
 					// set mouse cursor
 					CursorManager.setBusyCursor();
-					// set new RetroDocument
-					documentarisation.listRetroDocument.dataProvider.addItem(retroDocumentVO);
-					documentarisation.listRetroDocument.selectedItem = retroDocumentVO;
-					var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
-					retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-					setRetroDocument(retroDocument, new Array());
 				}
 			}
 			//_____________________________________________________________________
