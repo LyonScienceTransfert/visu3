@@ -72,6 +72,7 @@ import com.ithaca.timeline.ObselSkin;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.ShareUserTitleWindow;
+import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.model.Model;
@@ -84,7 +85,6 @@ import com.ithaca.visu.ui.utils.RoleEnum;
 import com.ithaca.visu.view.video.VisuVisioAdvanced;
 
 import flash.events.Event;
-import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
@@ -100,10 +100,8 @@ import mx.controls.Alert;
 import mx.controls.Button;
 import mx.controls.DataGrid;
 import mx.controls.Menu;
-import mx.controls.PopUpButton;
 import mx.core.ClassFactory;
 import mx.core.DragSource;
-import mx.core.FlexBitmap;
 import mx.events.CloseEvent;
 import mx.events.DragEvent;
 import mx.events.FlexEvent;
@@ -114,9 +112,11 @@ import mx.managers.PopUpManager;
 import mx.utils.StringUtil;
 
 import spark.components.BorderContainer;
+import spark.components.Grid;
 import spark.components.Label;
 import spark.components.List;
 import spark.components.TextInput;
+import spark.components.gridClasses.GridColumn;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
@@ -423,6 +423,8 @@ public class RetroDocumentView extends SkinnableComponent
             _labelRetroDocument = this._retroDocument.title;
             // set list segments
             groupSegment.dataProvider = this._retroDocument.listSegment;
+            
+            dataGridListSegment.dataProvider = null;
             dataGridListSegment.dataProvider = this._retroDocument.listSegment;
             
             if(titleDocument != null)
@@ -447,10 +449,6 @@ public class RetroDocumentView extends SkinnableComponent
             {
                 _updatedIdRetroDocument = 0;
             }
-            
-            // dispatch event add retroDocument on Stage
-            var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT);
-            this.dispatchEvent(retroDocumentAddOnStage);
         }
         
         if(idRetroDocumentChange)
@@ -472,11 +470,6 @@ public class RetroDocumentView extends SkinnableComponent
             {
                 buttonMenuAddSegment.enabled = this._buttonEnabled;
             }   
-            if(_retroDocument.id == 0)
-            {
-                _retroDocument.id = _updatedIdRetroDocument;
-                this._buttonEnabled = true;
-            }
         }
     }
     
@@ -497,19 +490,22 @@ public class RetroDocumentView extends SkinnableComponent
      */
     private function checkTracage(event:* = null):void
     {
-        trace("check tracage retro document => "+this.retroDocument.id);
-        
-        // check modifications the comment
-        if(retroDocument.title != _tracedTitle)
+        if(this.retroDocument)
         {
-            // tracage modifications the audio block
-            var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
-            retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE;
-            retroDocumentTracageEvent.retroDocumentId = retroDocument.id;
-            retroDocumentTracageEvent.title= retroDocument.title;
-            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
+            trace("check tracage retro document => "+this.retroDocument.id);
             
-            _tracedTitle = retroDocument.title;
+            // check modifications the comment
+            if(retroDocument.title != _tracedTitle)
+            {
+                // tracage modifications the audio block
+                var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+                retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE;
+                retroDocumentTracageEvent.retroDocumentId = retroDocument.id;
+                retroDocumentTracageEvent.title= retroDocument.title;
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
+                
+                _tracedTitle = retroDocument.title;
+            }
         }
     }
     
