@@ -73,6 +73,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
     <fx:Script>
     <![CDATA[
         import com.ithaca.documentarisation.RetroDocumentConst;
+        import com.ithaca.documentarisation.SegmentCommentAudio;
+        import com.ithaca.documentarisation.SegmentTitle;
+        import com.ithaca.documentarisation.SegmentVideoAdvanced;
+        import com.ithaca.documentarisation.model.Segment;
+        import com.ithaca.documentarisation.skins.SegmentCommentAudioSkin;
+        import com.ithaca.documentarisation.skins.SegmentTitleSkin;
         import com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin;
         import com.ithaca.visu.model.Model;
         
@@ -83,44 +89,63 @@ knowledge of the CeCILL-C license and that you accept its terms.
         private var _video:Boolean;
         private var _text:Boolean;
         
+        private var segmentTitle:SegmentTitle;
+        private var segmentVideo:SegmentVideoAdvanced;
+        private var segmentCommentAudio:SegmentCommentAudio;
+        
+        private var groupSegment:VGroup;
+        
                 
         override public function set data(value:Object):void 
         {
             super.data = value;
-            if (value != null) 
-                if(data.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+            if (value != null && groupSegment == null)
+            {
+                groupSegment = new VGroup();
+                groupSegment.percentWidth = 100;
+                
+                switch (value.typeSource)
                 {
-                    segmentCommentAudio.includeInLayout = segmentCommentAudio.visible = true;
-                    segmentVideo.includeInLayout = segmentVideo.visible = false;
-                    segmentTitle.includeInLayout = segmentTitle.visible = false;
-                    _audio = true;
-                }else if(data.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
-                {
-                    segmentVideo.includeInLayout = segmentVideo.visible = true;
-                    segmentCommentAudio.includeInLayout = segmentCommentAudio.visible = false;
-                    segmentTitle.includeInLayout = segmentTitle.visible = false;
-                    _video = true;
-                }else
-                {
-                    segmentTitle.includeInLayout = segmentTitle.visible = true;
-                    segmentVideo.includeInLayout = segmentVideo.visible = false;
-                    segmentCommentAudio.includeInLayout = segmentCommentAudio.visible = false;
-                    _text = true;
+                    case RetroDocumentConst.COMMENT_AUDIO_SEGMENT:
+                        segmentCommentAudio = new SegmentCommentAudio();
+                        segmentCommentAudio.percentWidth = 100;
+                        segmentCommentAudio.segment = value as Segment;
+                        segmentCommentAudio.streamId = Model.getInstance().getUserIdClient();
+                        segmentCommentAudio.userId = Model.getInstance().getLoggedUser().id_user.toString();
+                        segmentCommentAudio.connection = Model.getInstance().getNetConnection();
+                        segmentCommentAudio.modeEdit = true;
+                        segmentCommentAudio.setStyle("skinClass", SegmentCommentAudioSkin); 
+                        // add segment on stage
+                        groupSegment.addElement(segmentCommentAudio);
+                        _audio = true;
+                        break;
+                    case RetroDocumentConst.VIDEO_SEGMENT:
+                        segmentVideo = new SegmentVideoAdvanced();
+                        segmentVideo.percentWidth = 100;
+                        segmentVideo.modeEdit = true;
+                        segmentVideo.segment = value as Segment;
+                        segmentVideo.setStyle("skinClass", SegmentVideoSimpleSkin);
+                        // add segment on stage
+                        groupSegment.addElement(segmentVideo);
+                        _video = true;
+                        break;
+                    case RetroDocumentConst.TITLE_SEGMENT: 
+                    case RetroDocumentConst.TEXT_SEGMENT:
+                        segmentTitle = new SegmentTitle();
+                        segmentTitle.percentWidth = 100; 
+                        segmentTitle.percentHeight = 100; 
+                        segmentTitle.segment = value as Segment;
+                        segmentTitle.editabled = true;
+                        segmentTitle.setStyle("skinClass", SegmentTitleSkin); 
+                        // add segment on stage
+                        groupSegment.addElement(segmentTitle);
+                        _text = true;
+                        break;
                 }
+                groupContainer.addElement(groupSegment);
+            }
         } 
-        
-        /* if(_audio)
-        {
-            segmentCommentAudio.includeInLayout = segmentCommentAudio.visible = true;
-        }else if(_video)
-        {
-            segmentVideo.includeInLayout = segmentVideo.visible = true;
-        }else
-        {
-            segmentTitle.includeInLayout = segmentTitle.visible = true;
-        } */
-        
-
+ 
         protected function mxdatagriditemrenderer1_currentStateChangeHandler(event:StateChangeEvent):void
         {
             if(_text)
@@ -165,8 +190,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     break;
                 }
             }
-            
-           
         }
     ]]>
     </fx:Script>
@@ -175,34 +198,5 @@ knowledge of the CeCILL-C license and that you accept its terms.
         <s:State name="selected" />
         <s:State name="hovered" />
     </s:states>
-    <s:VGroup width="100%" >
-        <documentarisation:SegmentTitle  
-            id="segmentTitle" 
-            width="100%" 
-            height="100%"
-            segment="{data}" 
-            editabled="true" 
-            skinClass="com.ithaca.documentarisation.skins.SegmentTitleSkin"
-            includeInLayout="false"
-            visible="false"/>
-        <documentarisation:SegmentVideoAdvanced 
-            width="100%" 
-            id="segmentVideo"
-            modeEdit="true" 
-            segment="{data}"
-            skinClass="com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin"
-            includeInLayout="false"
-            visible="false"/>
-        <documentarisation:SegmentCommentAudio 
-            width="100%" 
-            id="segmentCommentAudio"
-            segment="{data}" 
-            streamId="{Model.getInstance().getUserIdClient()}" 
-            userId="{Model.getInstance().getLoggedUser().id_user.toString()}"
-            connection="{Model.getInstance().getNetConnection()}"
-            modeEdit="true"
-            skinClass="com.ithaca.documentarisation.skins.SegmentCommentAudioSkin"
-            includeInLayout="false"
-            visible="false"/>
-    </s:VGroup>
+    <s:VGroup width="100%" id="groupContainer"/>
 </s:MXDataGridItemRenderer>
