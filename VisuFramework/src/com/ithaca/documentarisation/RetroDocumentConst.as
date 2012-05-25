@@ -90,5 +90,6 @@ package com.ithaca.documentarisation {
          public static const UPDATE_LIST_BLOC:String = "updateListBlock";
          public static const VOID:String = "void";
          public static const ADD_RETRO_DOCUMENT:String = "addRetroDocument";
+         public static const LOAD_RETRO_DOCUMENT:String = "loadRetroDocument";
 	}
 }

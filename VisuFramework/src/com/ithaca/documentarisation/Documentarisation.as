@@ -289,6 +289,9 @@ public class Documentarisation extends SkinnableComponent
          case RetroDocumentConst.UPDATE_LIST_BLOC : 
              labelAddRetrodocument.text =  fxgt.gettext("Mise à jour la liste des blocs");
              break;
+         case RetroDocumentConst.LOAD_RETRO_DOCUMENT : 
+             labelAddRetrodocument.text =  fxgt.gettext("Сhargé de bilan");
+             break;
          default:
              _stateCallServer = RetroDocumentConst.VOID;
         }
@@ -575,6 +578,13 @@ public class Documentarisation extends SkinnableComponent
 			loadRetroDocument.editabled = true;
 			dispatchEvent(loadRetroDocument);
 
+            // set skin load retrodocument
+            
+            _stateCallServer = RetroDocumentConst.LOAD_RETRO_DOCUMENT;
+            
+            edit = false;
+            addRetroDocument = true;
+            invalidateSkinState();
 		}
 	}
 }
