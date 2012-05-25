@@ -286,6 +286,9 @@ public class Documentarisation extends SkinnableComponent
          case RetroDocumentConst.ADD_RETRO_DOCUMENT : 
              labelAddRetrodocument.text =  fxgt.gettext("Création de bilan");
              break;
+         case RetroDocumentConst.UPDATE_LIST_BLOC : 
+             labelAddRetrodocument.text =  fxgt.gettext("Mise à jour la liste des blocs");
+             break;
          default:
              _stateCallServer = RetroDocumentConst.VOID;
         }
@@ -425,6 +428,14 @@ public class Documentarisation extends SkinnableComponent
         _stateCallServer = RetroDocumentConst.DELETE_BLOC;
         onReturnPanelListRetroDocument();
     }
+    /**
+    * Update list the blocs the retroDocument
+    */
+    private function onUpdateListSegment(event:RetroDocumentEvent):void
+    {
+        _stateCallServer = RetroDocumentConst.UPDATE_LIST_BLOC;
+        onReturnPanelListRetroDocument();
+    }
     
 	private function onUpdateCompete(event:FlexEvent):void
 	{
@@ -518,6 +529,7 @@ public class Documentarisation extends SkinnableComponent
         retroDocumentView.dragOwnerObject = dragOwnerObject;
         retroDocumentView.addEventListener(RetroDocumentEvent.ADD_RETRO_SEGMENT, onAddSegment);
         retroDocumentView.addEventListener(RetroDocumentEvent.REMOVE_RETRO_SEGMENT, onRemoveSegment);
+        retroDocumentView.addEventListener(RetroDocumentEvent.UPDATE_LIST_RETRO_SEGMENT, onUpdateListSegment);
         
         panelEditRetroDocument.addElement(retroDocumentView);
         

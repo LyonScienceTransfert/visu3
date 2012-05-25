@@ -448,7 +448,7 @@ public class MainManager
 	public function onCheckUpdateRetroDocument(msgTypeUpdateRetrodocument:String):void
 	{
 		
-        if(msgTypeUpdateRetrodocument == RetroDocumentConst.ADD_BLOC || msgTypeUpdateRetrodocument == RetroDocumentConst.DELETE_BLOC)
+        if(msgTypeUpdateRetrodocument == RetroDocumentConst.ADD_BLOC || msgTypeUpdateRetrodocument == RetroDocumentConst.DELETE_BLOC || msgTypeUpdateRetrodocument == RetroDocumentConst.UPDATE_LIST_BLOC )
         {
             var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
             this.dispatcher.dispatchEvent(updateRetrodocument);

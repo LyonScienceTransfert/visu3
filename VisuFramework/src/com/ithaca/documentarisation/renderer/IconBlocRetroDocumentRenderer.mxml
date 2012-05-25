@@ -67,38 +67,89 @@ knowledge of the CeCILL-C license and that you accept its terms.
     xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:mx="library://ns.adobe.com/flex/mx" 
     xmlns:documentarisation="com.ithaca.documentarisation.*"
-    focusEnabled="true">
+    focusEnabled="true"
+     preinitialize="mxdatagriditemrenderer1_preinitializeHandler(event)">
     <fx:Script>
     <![CDATA[
         import com.ithaca.documentarisation.RetroDocumentConst;
-        import com.ithaca.documentarisation.skins.SegmentVideoSimpleSkin;
+        import com.ithaca.documentarisation.events.RetroDocumentEvent;
         import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.controls.Image;
+        import mx.events.FlexEvent;
+        import mx.managers.CursorManager;
+               
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        // cursor id
+        private var _cursorID:int;
         
         override public function set data(value:Object):void 
         {
             super.data = value;
             if (value != null) 
                 var iconName:String = "iconLettre_t_16x16";
-            
+                var toolTipText: String = fxgt.gettext("Glisser-déplacer ce bloc");
+                var typeBloc:String = fxgt.gettext("texte");
+                
                 if(data.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
                 {
                     iconName = 'iconAudio_16x16';
+                    typeBloc = fxgt.gettext("audio");
                 }else
                 if(data.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
                 {
                     iconName = 'iconVideo_16x16';
+                    typeBloc = fxgt.gettext("vidéo");
                 }else
                 if(data.typeSource == RetroDocumentConst.TITLE_SEGMENT)
                 {
                     iconName = "iconLettre_T_16x16";
+                    typeBloc = fxgt.gettext("titre");
                 }
                 // set icon the bloc
                 iconSegment.source=IconEnum.getIconByName(iconName);
+                // toolTip bloc
+                iconSegment.toolTip = toolTipText + " " + typeBloc;
         } 
+
+
+        protected function iconSegment_mouseDownHandler(event:MouseEvent):void
+        {
+            CursorManager.removeCursor(_cursorID);
+            _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_close'));
+            var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
+            dispatchEvent(mouseDownIconSegment);
+        }
+
+
+        protected function iconSegment_mouseOverHandler(event:MouseEvent):void
+        {
+            _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_open'));
+        }
+
+
+        protected function iconSegment_mouseOutHandler(event:MouseEvent):void
+        {
+            CursorManager.removeCursor(_cursorID);
+        }
+
+
+        protected function mxdatagriditemrenderer1_preinitializeHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+        }
 
     ]]>
     </fx:Script>
     <s:VGroup width="100%" horizontalAlign="center" verticalAlign="top" paddingTop="5">
-        <mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true"/>
+        <mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" 
+            mouseDown="iconSegment_mouseDownHandler(event)"
+            mouseOver="iconSegment_mouseOverHandler(event)"
+            mouseOut="iconSegment_mouseOutHandler(event)"/>
     </s:VGroup>
 </s:MXDataGridItemRenderer>
