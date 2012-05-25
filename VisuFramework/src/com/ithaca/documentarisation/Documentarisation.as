@@ -455,7 +455,7 @@ public class Documentarisation extends SkinnableComponent
     private function onAddRetroDocument(event:PanelButtonEvent):void
     {
         // set label add new bilan
-        labelAddRetrodocument = fxgt.gettext("Création de bilan");
+        labelAddRetrodocumentInfo = fxgt.gettext("Création de bilan");
         
         edit = false;
         addRetroDocument = true;
