@@ -84,5 +84,10 @@ package com.ithaca.documentarisation {
 		 public static const TITLE_SEGMENT:String = "TitleBlock";
 		 public static const COMMENT_AUDIO_SEGMENT:String = "CommentAudioBlock";
 		 public static const VIDEO_SEGMENT:String = "VideoBlock";
+         
+         public static const ADD_BLOC:String = "addBlock";
+         public static const DELETE_BLOC:String = "delBlock";
+         public static const VOID:String = "void";
+         public static const ADD_RETRO_DOCUMENT:String = "addRetroDocument";
 	}
 }

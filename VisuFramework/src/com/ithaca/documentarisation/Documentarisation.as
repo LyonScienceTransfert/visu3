@@ -137,6 +137,8 @@ public class Documentarisation extends SkinnableComponent
     private var _idUpdatedRetroDocument:int = -1;
     private var idUpdatedRetrodocumentChange:Boolean;
     private var _labelAddRetrodocument:String;
+    
+    private var _stateCallServer:String;
 
 	public function Documentarisation()
 	{
@@ -270,6 +272,24 @@ public class Documentarisation extends SkinnableComponent
     {
         _labelAddRetrodocument = value;
     }
+    
+    public function setLabelInfo():void
+    {
+        switch (_stateCallServer)
+        {
+         case RetroDocumentConst.ADD_BLOC : 
+             labelAddRetrodocument.text =  fxgt.gettext("Ajouter le bloc");
+             break;
+         case RetroDocumentConst.DELETE_BLOC : 
+             labelAddRetrodocument.text =  fxgt.gettext("Suppression le bloc");
+             break;
+         case RetroDocumentConst.ADD_RETRO_DOCUMENT : 
+             labelAddRetrodocument.text =  fxgt.gettext("Création de bilan");
+             break;
+         default:
+             _stateCallServer = RetroDocumentConst.VOID;
+        }
+    }
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
@@ -394,8 +414,7 @@ public class Documentarisation extends SkinnableComponent
     */
     private function onAddSegment(event:RetroDocumentEvent):void
     {
-        // label info
-        labelAddRetrodocumentInfo = fxgt.gettext("Ajouter le bloc");
+        _stateCallServer = RetroDocumentConst.ADD_BLOC;
         onReturnPanelListRetroDocument();
     }
     /**
@@ -403,8 +422,7 @@ public class Documentarisation extends SkinnableComponent
     */
     private function onRemoveSegment(event:RetroDocumentEvent):void
     {
-        // label info
-        labelAddRetrodocumentInfo = fxgt.gettext("Suppression le bloc");
+        _stateCallServer = RetroDocumentConst.DELETE_BLOC;
         onReturnPanelListRetroDocument();
     }
     
@@ -454,8 +472,7 @@ public class Documentarisation extends SkinnableComponent
     */ 
     private function onAddRetroDocument(event:PanelButtonEvent):void
     {
-        // set label add new bilan
-        labelAddRetrodocumentInfo = fxgt.gettext("Création de bilan");
+        _stateCallServer = RetroDocumentConst.ADD_RETRO_DOCUMENT;
         
         edit = false;
         addRetroDocument = true;
