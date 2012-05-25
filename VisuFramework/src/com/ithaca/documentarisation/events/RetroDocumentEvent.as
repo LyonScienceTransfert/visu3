@@ -112,6 +112,7 @@ package  com.ithaca.documentarisation.events
 		
         static public const ADD_RETRO_SEGMENT : String = 'addRetroSegment';
         static public const REMOVE_RETRO_SEGMENT : String = 'removeRetroSegment';
+        static public const UPDATE_LIST_RETRO_SEGMENT : String = 'updateListRetroSegment';
 		// properties
 		public var segment  :Segment;
 		public var xmlRetrodocument:String;

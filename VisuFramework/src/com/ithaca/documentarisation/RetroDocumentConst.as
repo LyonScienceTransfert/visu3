@@ -87,6 +87,7 @@ package com.ithaca.documentarisation {
          
          public static const ADD_BLOC:String = "addBlock";
          public static const DELETE_BLOC:String = "delBlock";
+         public static const UPDATE_LIST_BLOC:String = "updateListBlock";
          public static const VOID:String = "void";
          public static const ADD_RETRO_DOCUMENT:String = "addRetroDocument";
 	}
