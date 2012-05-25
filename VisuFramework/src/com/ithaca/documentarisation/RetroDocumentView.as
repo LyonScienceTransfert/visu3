@@ -327,6 +327,9 @@ public class RetroDocumentView extends SkinnableComponent
                 
                 dataGridListSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
                 dataGridListSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
+                
+                dataGridListSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
+                dataGridListSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
             }
         }
         if(instance == groupSegment)
@@ -738,7 +741,7 @@ public class RetroDocumentView extends SkinnableComponent
                 notifyChangeListSegment();
                 
                 // change skin remove segment from retroDocument
-                var removeBlockEvent:RetroDocumentEvent = new RetroDocumentEvent( RetroDocumentEvent.REMOVE_RETRO_SEGMENT);
+                var removeBlockEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.REMOVE_RETRO_SEGMENT);
                 dispatchEvent(removeBlockEvent);
             }
             
@@ -784,7 +787,13 @@ public class RetroDocumentView extends SkinnableComponent
     private function onDragCompleteSegment(event:DragEvent):void
     {
         setDragDropEnabled(false);
-        needUpdateRetroDocument = true;
+        
+        updateRetroDocument(RetroDocumentConst.UPDATE_LIST_BLOC);
+        //needUpdateRetroDocument = true;
+        
+        // change skin remove segment from retroDocument
+        var removeBlockEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_LIST_RETRO_SEGMENT);
+        dispatchEvent(removeBlockEvent);
         
         // tracage order the blocks
         var retroDocumentOrderTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
