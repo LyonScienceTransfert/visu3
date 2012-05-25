@@ -94,6 +94,8 @@ import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
 
+import com.ithaca.documentarisation.RetroDocumentConst;
+
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.net.NetConnection;
@@ -446,7 +448,7 @@ public class MainManager
 	public function onCheckUpdateRetroDocument(msgTypeUpdateRetrodocument:String):void
 	{
 		
-        if(msgTypeUpdateRetrodocument == VisuUtils.ADD_BLOC || msgTypeUpdateRetrodocument == VisuUtils.DELETE_BLOC)
+        if(msgTypeUpdateRetrodocument == RetroDocumentConst.ADD_BLOC || msgTypeUpdateRetrodocument == RetroDocumentConst.DELETE_BLOC)
         {
             var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_SEGMENT);
             this.dispatcher.dispatchEvent(updateRetrodocument);

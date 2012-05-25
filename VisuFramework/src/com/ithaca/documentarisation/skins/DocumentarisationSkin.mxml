@@ -97,7 +97,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
             if(this.currentState == "addRetroDocument" )
             {
                 // set new label info
-                labelAddRetrodocument.text = hostComponent.labelAddRetrodocumentInfo;
+                hostComponent.setLabelInfo();
             }
         }
 

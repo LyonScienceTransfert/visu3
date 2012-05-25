@@ -662,7 +662,7 @@ public class RetroDocumentView extends SkinnableComponent
         dataGridListSegment.dataProvider = _retroDocument.listSegment;
         
         // update retroDocument
-        updateRetroDocument(VisuUtils.ADD_BLOC);  
+        updateRetroDocument(RetroDocumentConst.ADD_BLOC); 
         
         // notify change list segment 
         notifyChangeListSegment();
@@ -733,7 +733,7 @@ public class RetroDocumentView extends SkinnableComponent
                 
                 
                 // update the retroDocument
-                updateRetroDocument(VisuUtils.DELETE_BLOC);
+                updateRetroDocument(RetroDocumentConst.DELETE_BLOC);
                 // notify change list segment
                 notifyChangeListSegment();
                 
@@ -880,7 +880,7 @@ public class RetroDocumentView extends SkinnableComponent
     //
     //_____________________________________________________________________	
     // update retroDocument
-    private function updateRetroDocument(typeUpdate:String = VisuUtils.VOID):void
+    private function updateRetroDocument(typeUpdate:String = RetroDocumentConst.VOID):void
     {
         var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
         retroDocumentVO.documentId = _retroDocument.id;
@@ -1000,9 +1000,15 @@ public class RetroDocumentView extends SkinnableComponent
     
     private function setDragDropEnabled(value:Boolean):void
     {
+        // set DND for groupSegment
         groupSegment.dragEnabled = value;
         groupSegment.dragMoveEnabled = value;
         groupSegment.dropEnabled = value;
+        
+        // set DND for dataGrid
+        dataGridListSegment.dragEnabled = value;
+        dataGridListSegment.dragMoveEnabled = value;
+        dataGridListSegment.dropEnabled = value;
     }
     
     /**
