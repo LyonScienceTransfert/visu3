@@ -273,13 +273,19 @@ public class SegmentCommentAudio extends SkinnableComponent
 	{
 		if(modeEdit)
 		{
-			audioRecorder.skinOver();
+            if(audioRecorder)
+            {
+    			audioRecorder.skinOver();
+            }
 			initSkinVars();
 			editOver = true;
 			invalidateSkinState();
 		}else
 		{
-			audioRecorder.skinOverShare();
+            if(audioRecorder)
+            {
+    			audioRecorder.skinOverShare();
+            }
 			initSkinVars();
 			editOver = false;
 			invalidateSkinState();
@@ -289,7 +295,10 @@ public class SegmentCommentAudio extends SkinnableComponent
 	{
 		if(modeEdit)
 		{
-			audioRecorder.skinOver();
+            if(audioRecorder)
+            {
+    			audioRecorder.skinOver();
+            }
 			initSkinVars();
 			selected = true;
 			invalidateSkinState();
