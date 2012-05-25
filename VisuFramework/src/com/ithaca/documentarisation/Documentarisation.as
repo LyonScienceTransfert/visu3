@@ -142,9 +142,8 @@ public class Documentarisation extends SkinnableComponent
 	{
 		super();
 		_listRetroDocumentVO = new ArrayCollection();
+        // init internationalisation
         fxgt = FxGettext;
-        
-        _labelAddRetrodocument = fxgt.gettext("Création de bilan");
 	}
 	//_____________________________________________________________________
 	//
@@ -450,15 +449,21 @@ public class Documentarisation extends SkinnableComponent
         var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.REMOVE_FROM_STAGE_RETRO_DOCUMENT);
         this.dispatchEvent(retroDocumentAddOnStage);
 	}
-	private function onAddRetroDocument(event:PanelButtonEvent):void
-	{
-		edit = false;
+    /**
+    * Add new bilan 
+    */ 
+    private function onAddRetroDocument(event:PanelButtonEvent):void
+    {
+        // set label add new bilan
+        labelAddRetrodocument = fxgt.gettext("Création de bilan");
+        
+        edit = false;
         addRetroDocument = true;
-		invalidateSkinState();
-
-		var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT);
-		dispatchEvent(addRetroDocumentEvent);
-	}
+        invalidateSkinState();
+        
+        var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT);
+        dispatchEvent(addRetroDocumentEvent);
+    }
 	private function onCreationCompletePanelListRetrodocument(event:FlexEvent):void
 	{
 		panelListRetroDocument.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelListRetrodocument);
