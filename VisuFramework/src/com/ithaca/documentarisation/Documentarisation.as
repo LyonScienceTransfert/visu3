@@ -149,7 +149,7 @@ public class Documentarisation extends SkinnableComponent
 	{
 		return _listRetroDocumentVO;
 	}
-	public function updateIdRetroDocument(value:RetroDocumentVO):void
+	public function updateAddedRetroDocument(value:RetroDocumentVO):void
 	{
 
         listRetroDocument.dataProvider.addItem(value);
