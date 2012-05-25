@@ -702,8 +702,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			protected function updateLanguageNavigateurDay(event:ApplicationMenuEvent):void
 			{
 				var selectedDate:Object = Model.getInstance().getSelectedItemNavigateurDayByLoggedUser();
-				this.navigateurDay.selectedIndex = -1;		
-				this.navigateurDay.selectedItem = selectedDate;				
+                if(navigateurDay)
+                {
+                    this.navigateurDay.selectedIndex = -1;		
+    				this.navigateurDay.selectedItem = selectedDate;				
+                }
 			}
 			
 			/**
