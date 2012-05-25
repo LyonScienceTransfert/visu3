@@ -829,25 +829,35 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					setRetroDocument(event.retroDocument, event.listUser);
 				}
 			}
-			
+            /**
+            * Update list blocs retrodocument 
+            */
+			private function updateListBlocsRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    documentarisation.updateViewRetroDocument();
+                }
+            }
 			//_____________________________________________________________________
 			//
 			// Listeners RetroDocumentView
 			//
 			//_____________________________________________________________________			
-			private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
-					var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
-					retroDocumentVO.lastModified = dateLastModify;
-					var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
-					updateRetrodocument.retroDocumentVO = retroDocumentVO;
-					updateRetrodocument.listUser = event.listUser;
-					this.dispatchEvent(updateRetrodocument);		
-				}
-			}
+            private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
+                    var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
+                    retroDocumentVO.lastModified = dateLastModify;
+                    var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
+                    updateRetrodocument.retroDocumentVO = retroDocumentVO;
+                    updateRetrodocument.listUser = event.listUser;
+                    updateRetrodocument.typeUpdate = event.typeUpdate;
+                    this.dispatchEvent(updateRetrodocument);		
+                }
+            }
 			
 			private function onClickButtonSwitch(event:RetroDocumentEvent):void
 			{
