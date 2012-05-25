@@ -213,6 +213,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
             private var DELTA_X_Y:int = 15;
             // list "PlayVideoObsel"
             private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            // new retroDocument will add in BD
+            private var newRetroDocumentVO:RetroDocumentVO;
             
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -2012,6 +2014,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
 		<mate:Listener type="{SalonRetroEvent.LOAD_TRACE_ID_RETRO_ROOM}"  method="startRetroRoomTracing"/>
+        
+		<mate:Listener type="{RetroDocumentEvent.UPDATE_RETRO_SEGMENT}"  method="updateListBlocsRetroDocument"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -2045,7 +2049,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							bandwidth="15000" autoPlay="true"
 							loggedUser="{Model.getInstance().getLoggedUser()}">
 						</video:VisuVisioAdvanced>
-						<s:HGroup gap="3"  includeIn="debug" width="100%">
+						<s:HGroup gap="3"  includeIn="debug" width="100%">   
 							<mx:Spacer width="100%"/>
 							<s:Button id="buttomTraceFrame" label="{fxgt.gettext('Update split')}" click="button1_clickHandler(event)"/>
 							<s:Label text="{fxgt.gettext('Décalage max. autorisé')}" paddingTop="7"/>
