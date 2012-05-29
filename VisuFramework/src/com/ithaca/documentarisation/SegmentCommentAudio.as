@@ -320,7 +320,8 @@ public class SegmentCommentAudio extends SkinnableComponent
         // set change language listener
         InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
         // set bilanModule 
-        _bilanModule = Model.getInstance().getCurrentBilanModule();
+        //_bilanModule = Model.getInstance().getCurrentBilanModule();
+        _bilanModule = new Object();
     }
 	//_____________________________________________________________________
 	//
