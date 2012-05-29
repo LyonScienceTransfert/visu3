@@ -32,10 +32,10 @@
 				<mx:HDividedBox width="100%" height="100%">
 					
 					<!-- Left side -->
-					<mx:VDividedBox width="70%" height="100%">
+					<mx:VDividedBox width="70%" height="100%" minWidth="400">
 						
 						<!-- Video panel -->
-						<s:Group width="100%" height="50%">
+						<s:Group width="100%" height="50%" minHeight="200">
 							
 							<!-- Header -->
 							<s:Group width="100%" height="26">
@@ -112,7 +112,7 @@
 						</s:Group>
 						
 						<!-- Timeline panel -->
-						<s:Group width="100%" height="50%">
+						<s:Group width="100%" height="50%" minHeight="150">
 							
 							<!-- Header -->
 							<s:Group width="100%" height="26">
@@ -148,7 +148,7 @@
 					
 					
 					<!-- Right side -->
-					<s:Group width="30%" height="100%">
+					<s:Group width="30%" height="100%" minWidth="280">
 						
 						<!-- header -->
 						<s:Group width="100%" height="26">
