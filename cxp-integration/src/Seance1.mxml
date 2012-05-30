@@ -26,10 +26,15 @@
 				</s:Rect>
 			</s:Group>
 			
+			
+			
 			<!-- Panneaux -->
-			<s:Group width="100%" height="100%">
-				
-				<s:Panel left="1" top="1" bottom="1" width="290" height="100%" skinClass="skins.FlexiblePanel" title="Explorer">
+			<mx:HDividedBox width="100%" height="100%">
+					
+				<s:Panel left="1" top="1" bottom="1" 
+						 width="290" height="100%" 
+						 minWidth="200"
+						 skinClass="skins.FlexiblePanel" title="Explorer">
 					
 					<!-- Onglets -->
 					<mx:TabNavigator left="1" right="1" top="7" width="100%" height="100%"
@@ -52,18 +57,19 @@
 									<s:RadioButton x="10" y="15" label="Toutes les séances"/>
 									<s:RadioButton x="10" y="30" label="Séances passés"/>
 									<s:RadioButton x="10" y="45" label="Séances à venir"/>
-									<s:HGroup bottom="0" left="10">
+									<s:HGroup left="10" right="10" bottom="0">
 										<s:Label height="20" text="Contient le texte :"
 												 verticalAlign="middle"/>
-										<s:TextInput height="18" bottom="0"/>
+										<s:TextInput bottom="0" width="100%" height="18"/>
 									</s:HGroup>
 								</s:Group>
 								
 								<!-- Bouton nouvelle séance -->
-								<s:Button label="Nouvelle séance"
-										  x="76" bottom="1"
+								<s:Group x="0" bottom="1" width="100%">
+								<s:Button label="Nouvelle séance" horizontalCenter="0"
 										  icon="images/Seance/ico_new_seance.png"
 										  skinClass="skins.Components.Button"/>
+								</s:Group>
 								
 							</s:Group>
 							
@@ -104,7 +110,10 @@
 				</s:Panel>
 				
 				<!-- Panneau détail de la séance -->
-				<s:Panel right="1" top="1" bottom="1" width="694" height="100%" skinClass="skins.FlexiblePanel" title="Détail de la séance">
+				<s:Panel right="1" top="1" bottom="1" 
+						 width="694" height="100%" 
+						 minWidth="450"
+						 skinClass="skins.FlexiblePanel" title="Détail de la séance">
 					<s:HGroup right="5" top="-30">
 						<s:Button label="Sauvegarder la séance" icon="images/Seance/ico_save_seance.png"
 								  skinClass="skins.Components.Button"/>
@@ -181,7 +190,7 @@
 										<!-- Title and management -->
 										<s:HGroup right="5" left="5">
 											<!-- button open/close -->
-											<s:Button label="▼" skinClass="skins.Components.Button"/>
+											<s:Button skinClass="skins.Components.TreeButton" />
 											
 											<!-- Titling activity -->
 											<s:Label height="21" verticalAlign="middle" text="Titre d'activité :" />
@@ -390,7 +399,7 @@
 									<s:Group width="100%">
 										<s:HGroup right="5" left="5">
 											<!-- button open/close -->
-											<s:Button label="►" skinClass="skins.Components.Button"/>
+											<s:Button skinClass="skins.Components.TreeButton" />
 	
 											<!-- Titling activity -->
 											<s:Label height="21" verticalAlign="middle" text="Titre d'activité :" />
@@ -455,19 +464,27 @@
 									</s:HGroup>
 									<s:HGroup>
 										<s:Label width="115" text="Participants :" textAlign="right"/>
-										<!-- Liste des séances -->
-										<s:List width="220" height="170" contentBackgroundAlpha="0.0"
-												itemRenderer="skins.Seance.Participants">
+										<s:VGroup>
 											
-											<!-- données du calendrier -->
-											<s:dataProvider>
-												<mx:ArrayCollection>
-													
-													<fx:Object time="11:20" title="Titre de la séance" participants="Tuteur 1, Etudiant 1, Étudiant 2" />
-													
-												</mx:ArrayCollection>
-											</s:dataProvider>
-										</s:List>
+											<!-- Participants list -->
+											<s:List width="220" height="170" contentBackgroundAlpha="0.0">
+												
+												<s:dataProvider>
+													<mx:ArrayCollection>
+														
+														<fx:String>Étudiant 1</fx:String>
+														<fx:String>Étudiant 28</fx:String>
+														<fx:String>Étudiant 15</fx:String>
+														
+													</mx:ArrayCollection>
+												</s:dataProvider>
+											</s:List>
+											<s:HGroup>
+												<s:Button skinClass="skins.Components.Button" icon="images/Seance/ico_add.png" label="Ajouter"/>
+												<s:Button skinClass="skins.Components.Button" icon="images/Seance/ico_delete.png" label="Suppimer"/>
+											</s:HGroup>
+											
+										</s:VGroup>
 										
 									</s:HGroup>
 								</s:VGroup>
@@ -479,7 +496,7 @@
 					</mx:TabNavigator>
 				</s:Panel>
 				
-			</s:Group>
+			</mx:HDividedBox>
 			<!-- Fin Group Panneaux -->
 		</s:Group>
 		<!-- Fin Group Container -->
