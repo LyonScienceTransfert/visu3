@@ -80,8 +80,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			import mx.events.FlexEvent;
 			
-			import ws.tink.spark.containers.*;
-			
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
 
