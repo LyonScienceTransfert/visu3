@@ -317,7 +317,7 @@ or by setting the following environment variable:
 				<include-file name="images/Page/btn_chat_off.png" path="${framework.images}/Page/btn_chat_off.png"/>
 				<include-file name="images/Page/topbar_wave.png" path="${framework.images}/Page/topbar_wave.png"/>
 				<include-file name="images/Page/profile_ico.png" path="${framework.images}/Page/profile_ico.png"/>
-				<include-file name="images/Page/topbar_wave.png" path="${framework.images}/Page/topbar_wave.png"/>
+				<include-file name="images/Page/logout_ico.png" path="${framework.images}/Page/logout_ico.png"/>
 				<!-- integration corexpert end-->
 				
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
