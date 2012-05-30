@@ -970,9 +970,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			</s:Panel>
 			
 			
-			<!-- FLUX ACTIVITY -->
-			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global">
-			
+			<!-- Chat -->
+			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global" skinClass="com.ithaca.visu.skins.FixedPanel">
+				<s:Image x="10" y="-25" source="images/Home/ico_panel_chat.png"/>
 					<s:VGroup width="100%" height="100%" id="vGroupFluxActivity">
 	
 						<s:List 

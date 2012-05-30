@@ -320,6 +320,7 @@ or by setting the following environment variable:
 				<include-file name="images/Page/logout_ico.png" path="${framework.images}/Page/logout_ico.png"/>
 				<include-file name="images/Home/panel-top.png" path="${framework.images}/Home/panel-top.png"/>
 				<include-file name="images/Home/ico_panel_calendar.png" path="${framework.images}/Home/ico_panel_calendar.png"/>
+				<include-file name="images/Home/ico_panel_chat.png" path="${framework.images}/Home/ico_panel_chat.png"/>
 				<!-- integration corexpert end-->
 				
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
