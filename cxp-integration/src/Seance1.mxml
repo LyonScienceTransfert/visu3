@@ -29,18 +29,18 @@
 			
 			
 			<!-- Panneaux -->
-			<mx:HDividedBox width="100%" height="100%">
+			<mx:HDividedBox height="100%" top="2" left="2" right="2">
 					
 				<s:Panel left="1" top="1" bottom="1" 
 						 width="290" height="100%" 
 						 minWidth="200"
 						 skinClass="skins.FlexiblePanel" title="Explorer">
 					
-					<!-- Onglets -->
+					<!-- Tabs -->
 					<mx:TabNavigator left="1" right="1" top="7" width="100%" height="100%"
 									 minHeight="200" paddingBottom="2">
 						
-						<!-- Onglet Séances -->
+						<!-- Tab Séances -->
 						<s:NavigatorContent width="100%" height="100%" label="Séances">
 							
 							<!-- Filtres -->
@@ -78,9 +78,10 @@
 								
 							
 								
-								<mx:AdvancedDataGrid id="adg1" width="100%" height="100%"
+								<mx:AdvancedDataGrid width="100%" height="100%"
 													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
 													 designViewDataType="flat">
+									
 									<mx:dataProvider>
 										<mx:ArrayCollection>
 											
@@ -95,6 +96,70 @@
 									</mx:dataProvider>
 									<mx:columns>
 										<mx:AdvancedDataGridColumn headerText="Date prévu" dataField="date"/>
+										<mx:AdvancedDataGridColumn headerText="Titre de séance" dataField="titre"/>
+										<mx:AdvancedDataGridColumn headerText="Propriétaire de séance" dataField="proprietaire"/>
+									</mx:columns>
+									
+								</mx:AdvancedDataGrid>
+								
+							</s:Group>
+							
+						</s:NavigatorContent>
+						
+						<!-- Tab  Plan de Séance -->
+						<s:NavigatorContent width="100%" height="100%" label="Séances">
+							
+							<!-- Filtres -->
+							<s:Group width="100%" height="120" top="0" left="2" right="2">
+								<s:Group width="100%" height="81">
+									
+									<s:Rect width="100%" height="100%" radiusX="2">
+										<s:fill>
+											<s:SolidColor color="0xfff4df" />
+										</s:fill>
+									</s:Rect>
+									
+									<s:Label x="10" y="5" text="Filtres :"/>
+									<s:RadioButton x="10" y="15" label="Toutes les séances"/>
+									<s:RadioButton x="10" y="30" label="Séances passés"/>
+									<s:RadioButton x="10" y="45" label="Séances à venir"/>
+									<s:HGroup left="10" right="10" bottom="0">
+										<s:Label height="20" text="Contient le texte :"
+												 verticalAlign="middle"/>
+										<s:TextInput bottom="0" width="100%" height="18"/>
+									</s:HGroup>
+								</s:Group>
+								
+								<!-- Bouton nouvelle séance -->
+								<s:Group x="0" bottom="1" width="100%">
+									<s:Button label="Nouvelle séance" horizontalCenter="0"
+											  icon="images/Seance/ico_new_seance.png"
+											  skinClass="skins.Components.Button"/>
+								</s:Group>
+								
+							</s:Group>
+							
+							<!-- Tableau des séances programmées -->
+							<s:Group y="120" left="2" right="2" width="100%" height="100%">
+								
+								
+								
+								<mx:AdvancedDataGrid id="adg1" width="100%" height="100%"
+													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
+													 designViewDataType="flat">
+									<mx:dataProvider>
+										<mx:ArrayCollection>
+											
+											<!-- données du  -->
+											<fx:Object proprietaire="Tuteur 1" titre="Introduction au cinéma" />
+											<fx:Object proprietaire="Tuteur 4" titre="Les stéréotypes" />
+											<fx:Object proprietaire="Tuteur 1" titre="Les journaux" />
+											<fx:Object proprietaire="Tuteur 8" titre="" />
+											<fx:Object proprietaire="Tuteur 7" titre="Bonjour." />
+											
+										</mx:ArrayCollection>
+									</mx:dataProvider>
+									<mx:columns>
 										<mx:AdvancedDataGridColumn headerText="Titre de séance" dataField="titre"/>
 										<mx:AdvancedDataGridColumn headerText="Propriétaire de séance" dataField="proprietaire"/>
 									</mx:columns>
