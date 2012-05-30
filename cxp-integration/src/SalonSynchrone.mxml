@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Group top="68" width="1024" minHeight="667" horizontalCenter="0">
+		<!-- container -->
+		<s:Group width="1004" height="100%" horizontalCenter="0">
+			
+			<!-- background -->
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:fill>
+						<s:SolidColor color="0xffefd1" />
+					</s:fill>
+				</s:Rect>
+				
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:stroke>
+						<s:SolidColorStroke color="0x9f9f9f" />
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			
+			<!-- Pannels -->
+			<s:Group width="100%" height="100%" left="2" top="2" right="2" bottom="2">
+				<mx:HDividedBox width="100%" height="100%">
+					
+					<!-- Left side -->
+					<s:Group minWidth="280" width="30%" height="100%">
+						<!-- header -->
+						<s:Group width="100%" height="26">
+							<s:Rect width="100%" height="100%" radiusX="5">
+								<s:fill>
+									<s:LinearGradient rotation="90">
+										<s:GradientEntry color="0xfabf30" />
+										<s:GradientEntry color="0xffae00" />
+									</s:LinearGradient>
+								</s:fill>
+							</s:Rect>
+							<s:Rect width="100%" height="5" bottom="0">
+								<s:fill>
+									<s:SolidColor color="0xffae00" />
+								</s:fill>
+							</s:Rect>
+							
+							<!-- group of buttons -->
+							<s:HGroup left="2" right="2" gap="2" verticalCenter="0">
+								<s:Button skinClass="skins.Components.Button" height="22" width="100%" label="Clôturer la séance" enabled="false" />
+								<s:Button skinClass="skins.Components.Button" height="22" width="100%" label="Démarrer la séance" />
+							</s:HGroup>
+						</s:Group>
+						
+						<!-- content -->
+						<s:Group top="27" width="100%" height="100%">
+							
+							<!-- subheader -->
+							<s:Group width="100%" height="26">
+								<s:Rect width="100%" height="100%" radiusX="5">
+									<s:fill>
+										<s:LinearGradient rotation="90">
+											<s:GradientEntry color="0xfabf30" />
+											<s:GradientEntry color="0xffae00" />
+										</s:LinearGradient>
+									</s:fill>
+								</s:Rect>
+								<s:Rect width="100%" height="5" bottom="0">
+									<s:fill>
+										<s:SolidColor color="0xffae00" />
+									</s:fill>
+								</s:Rect>
+								<s:Group left="5" right="5" clipAndEnableScrolling="true">
+									<s:Label height="26"
+											 text="Plan de séance : Les stéréotypes de la bourgeoisie"
+											 verticalAlign="middle"/>
+								</s:Group>
+							</s:Group>
+							<!-- content -->
+							<s:Group height="100%" width="100%" top="26">
+								<s:Rect width="100%" height="100%">
+									<s:fill>
+										<s:SolidColor color="0xFFFFFF" />
+									</s:fill>
+									<s:stroke>
+										<s:SolidColorStroke color="0xffb311" />
+									</s:stroke>
+								</s:Rect>
+								
+								<mx:VBox width="100%" height="607" left="1" right="1" top="2" verticalScrollPolicy="auto">
+									<!-- opened -->
+									<s:Group width="100%">
+										<!-- title -->
+										<s:Group width="100%">
+											<s:Group width="100%" height="20">
+												<s:Rect width="100%" height="100%">
+													<s:fill>
+														<s:LinearGradient rotation="90">
+															<s:GradientEntry color="0xf0f0f0" />
+															<s:GradientEntry color="0xe5e5e5" />
+														</s:LinearGradient>
+													</s:fill>
+												</s:Rect>
+												<s:HGroup left="3" right="3" top="1" bottom="1" gap="2"
+														  verticalAlign="baseline">
+													<s:Button skinClass="skins.Components.TreeButton" />
+													<s:Group width="100%" clipAndEnableScrolling="true">
+														<s:Label width="100%" height="14" fontSize="13"
+																 fontWeight="bold"
+																 text="1. Les bourgeois-bohème"
+																 verticalAlign="middle"/>
+													</s:Group>
+												</s:HGroup>
+											</s:Group>
+											<s:VGroup left="3" right="3" top="20" width="100%"
+													  gap="3">
+												<!-- Scheduled duration -->
+												<s:Group width="100%">
+													<s:Label fontSize="11" paddingBottom="0"
+															 paddingLeft="5" paddingRight="5"
+															 paddingTop="5"
+															 text="durée prévue : 15min"/>
+												</s:Group>
+												
+												<!-- Text segment -->
+												<s:Group width="100%">
+													<s:Rect width="100%" height="100%" radiusX="2">
+														<s:fill>
+															<s:LinearGradient rotation="90">
+																<s:GradientEntry color="0xf0f0f0" />
+																<s:GradientEntry color="0xe5e5e5" />
+															</s:LinearGradient>
+														</s:fill>
+													</s:Rect>
+													<s:Label width="100%" fontSize="11"
+															 paddingBottom="5" paddingLeft="5"
+															 paddingRight="5" paddingTop="5"
+															 text="Cette catégorie sociale (les bourgeois-bohème /bobos) existe en France. Est-ce le cas aux Etats- Unis ?"
+															 verticalAlign="middle"/>
+												</s:Group>
+												
+												<!-- Text segment -->
+												<s:Group width="100%">
+													<s:Rect width="100%" height="100%" radiusX="2">
+														<s:fill>
+															<s:LinearGradient rotation="90">
+																<s:GradientEntry color="0xf0f0f0" />
+																<s:GradientEntry color="0xe5e5e5" />
+															</s:LinearGradient>
+														</s:fill>
+													</s:Rect>
+													<s:Label width="100%" fontSize="11"
+															 paddingBottom="5" paddingLeft="5"
+															 paddingRight="5" paddingTop="5"
+															 text="D’autres catégories de personnes existent-elles dans votre université, par exemple ?"
+															 verticalAlign="middle"/>
+												</s:Group>
+												
+												<!-- separator -->
+												<s:Rect width="100%" height="1">
+													<s:fill>
+														<s:SolidColor color="#e6e6e6" />
+													</s:fill>
+												</s:Rect>
+												
+												<!-- Media -->
+												<s:HGroup width="100%">
+													<s:Image source="http://media.techtarget.com/digitalguide/images/Book/Cover_Images/book_cover_gregg_lab.jpg" height="50" maxWidth="38" />
+													<s:Image source="http://www.whats-thebigidea.com/2012-Book-Cover-Front.jpg" height="50" maxWidth="38" />
+												</s:HGroup>
+												
+												<!-- separator -->
+												<s:Rect width="100%" height="1">
+													<s:fill>
+														<s:SolidColor color="#e6e6e6" />
+													</s:fill>
+												</s:Rect>
+												
+												<!-- Keywords/tags -->
+												<s:TileGroup width="100%"
+															 clipAndEnableScrolling="true"
+															 horizontalAlign="left"
+															 horizontalGap="3" orientation="rows"
+															 verticalAlign="top" verticalGap="3">
+												<!-- word -->
+													<s:Group height="14">
+														<s:Rect width="100%" height="100%"
+																radiusX="7">
+															<s:fill>
+																<s:SolidColor color="#e5e5e5" />
+															</s:fill>
+														</s:Rect>
+														<s:Label width="100%" height="100%"
+																 fontSize="11" paddingLeft="5"
+																 paddingRight="5" text="bio"
+																 textAlign="center"
+																 verticalAlign="middle"/>
+													</s:Group>
+													<!-- word -->
+													<s:Group height="14">
+														<s:Rect width="100%" height="100%"
+																radiusX="7">
+															<s:fill>
+																<s:SolidColor color="#e5e5e5" />
+															</s:fill>
+														</s:Rect>
+														<s:Label width="100%" height="100%"
+																 fontSize="11" paddingLeft="5"
+																 paddingRight="5" text="éthnique"
+																 textAlign="center"
+																 verticalAlign="middle"/>
+													</s:Group>
+													<!-- word -->
+													<s:Group height="14">
+														<s:Rect width="100%" height="100%"
+																radiusX="7">
+															<s:fill>
+																<s:SolidColor color="#e5e5e5" />
+															</s:fill>
+														</s:Rect>
+														<s:Label width="100%" height="100%"
+																 fontSize="11" paddingLeft="5"
+																 paddingRight="5"
+																 text="nature et découverte"
+																 textAlign="center"
+																 verticalAlign="middle"/>
+													</s:Group>
+													<!-- word -->
+													<s:Group height="14">
+														<s:Rect width="100%" height="100%"
+																radiusX="7">
+															<s:fill>
+																<s:SolidColor color="#e5e5e5" />
+															</s:fill>
+														</s:Rect>
+														<s:Label width="100%" height="100%"
+																 fontSize="11" paddingLeft="5"
+																 paddingRight="5" text="les marques"
+																 textAlign="center"
+																 verticalAlign="middle"/>
+													</s:Group>
+												</s:TileGroup>
+												
+												<!-- separator -->
+												<s:Rect width="100%" height="1">
+													<s:fill>
+														<s:SolidColor color="#e6e6e6" />
+													</s:fill>
+												</s:Rect>
+												
+												<!-- separator -->
+												<s:Group width="100%">
+													<s:Label width="100%" color="#737373"
+															 fontSize="11" fontStyle="italic"
+															 text="Garder en tête que les questions sont là pour expliquer l’expression «boboo» et la devise entre guillemets; Re-contextualiser le document (..."/>
+												</s:Group>
+												
+											</s:VGroup>
+											
+										</s:Group>
+									</s:Group>
+									
+									<!-- closed -->
+									<s:Group width="100%">
+										<!-- title -->
+										<s:Group width="100%" height="20">
+											<s:Rect width="100%" height="100%">
+												<s:fill>
+													<s:LinearGradient rotation="90">
+														<s:GradientEntry color="0xf0f0f0" />
+														<s:GradientEntry color="0xe5e5e5" />
+													</s:LinearGradient>
+												</s:fill>
+											</s:Rect>
+											<s:HGroup left="3" right="3" top="1" bottom="1" gap="2"
+													  verticalAlign="baseline">
+												<s:Button skinClass="skins.Components.TreeButton" />
+												<s:Group width="100%" clipAndEnableScrolling="true">
+													<s:Label width="100%" height="14" fontSize="13"
+															 fontWeight="bold"
+															 text="2. Les nappies : la jeunesse dorée des bourgeois"
+															 verticalAlign="middle"/>
+												</s:Group>
+											</s:HGroup>
+										</s:Group>
+									</s:Group>
+									
+									<!-- closed -->
+									<s:Group width="100%">
+										<!-- title -->
+										<s:Group width="100%" height="20">
+											<s:Rect width="100%" height="100%">
+												<s:fill>
+													<s:LinearGradient rotation="90">
+														<s:GradientEntry color="0xf0f0f0" />
+														<s:GradientEntry color="0xe5e5e5" />
+													</s:LinearGradient>
+												</s:fill>
+											</s:Rect>
+											<s:HGroup left="3" right="3" top="1" bottom="1" gap="2"
+													  verticalAlign="baseline">
+												<s:Button skinClass="skins.Components.TreeButton" />
+												<s:Group width="100%" clipAndEnableScrolling="true">
+													<s:Label width="100%" height="14" fontSize="13"
+															 fontWeight="bold"
+															 text="3. Le style bling-bling"
+															 verticalAlign="middle"/>
+												</s:Group>
+											</s:HGroup>
+										</s:Group>
+									</s:Group>
+									
+								</mx:VBox>
+							</s:Group>
+						<!-- End of content of left side -->
+						</s:Group>
+						
+					<!-- End of Left side -->
+					</s:Group>
+					
+					
+					<!-- Right side -->
+					<mx:VDividedBox width="70%" height="100%" minWidth="400">
+						<mx:HDividedBox width="100%" height="50%" minHeight="200">
+							
+							<!-- Video panel -->
+							<s:Group width="70%" height="100%" minWidth="300">
+								
+								<!-- Header -->
+								<s:Group width="100%" height="26">
+									<s:Rect width="100%" height="100%" radiusX="5">
+										<s:fill>
+											<s:LinearGradient rotation="90">
+												<s:GradientEntry color="0xfabf30" />
+												<s:GradientEntry color="0xffae00" />
+											</s:LinearGradient>
+										</s:fill>
+									</s:Rect>
+									<s:Rect width="100%" height="5" bottom="0">
+										<s:fill>
+											<s:SolidColor color="0xffae00" />
+										</s:fill>
+									</s:Rect>
+									<s:Label left="5" height="26" fontSize="14" fontWeight="bold"
+											 text="Vidéo: Nom_utilisateur" verticalAlign="middle"/>
+									
+									<!-- group of buttons -->
+									<s:HGroup right="2" gap="2" verticalCenter="0">
+										<s:Button skinClass="skins.Components.Button" height="22" width="28" icon="images/Salon/ico_05.png"/>
+										<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_screen.png"/>
+										<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_micro.png"/>
+									</s:HGroup>
+								</s:Group>
+								
+								<!-- Content -->
+								<s:Group width="100%" height="100%" top="26">
+									<s:Rect width="100%" height="100%">
+										<s:fill>
+											<s:LinearGradient rotation="90">
+												<s:GradientEntry color="0xffffff" />
+												<s:GradientEntry color="0xffeecf" />
+											</s:LinearGradient>
+										</s:fill>
+										<s:stroke>
+											<s:SolidColorStroke color="0xffb311" />
+										</s:stroke>
+									</s:Rect>
+									
+									<s:VGroup width="100%" height="100%" left="2" right="2" top="2" bottom="2">
+										<s:Group bottom="55" width="100%" height="100%"
+												 horizontalCenter="0">
+											
+											<s:Group height="100%" horizontalCenter="0">
+												<!-- video display -->
+												<s:Group height="100%">
+													<s:Image source="http://www.psdgraphics.com/wp-content/uploads/2010/08/webcam.jpg" height="100%" width="340" />
+													<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_play.png" top="1" left="3"/>
+													<s:HGroup top="1" right="3" height="20">
+														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_sound.png"/>
+														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_write.png"/>
+														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_screen.png"/>
+														<!-- User name -->
+														<s:Group>
+															<s:Group top="3" height="14">
+																<s:Rect width="100%" height="100%" radiusX="5">
+																	<s:fill>
+																		<s:SolidColor color="0xffaf04" />
+																	</s:fill>
+																</s:Rect>
+																<s:HGroup verticalCenter="0" left="3" right="3">
+																	<s:Image source="images/Home/ico_user_tuteur.png" />
+																	<s:Label text="S.Serguei" fontSize="10" height="100%" verticalAlign="middle" />
+																</s:HGroup>
+															</s:Group>
+														</s:Group>
+													</s:HGroup>
+												</s:Group>
+											</s:Group>
+											
+										</s:Group>
+										<s:Group width="100%" height="55">
+											<s:HGroup horizontalCenter="0">
+												<s:Button skinClass="skins.Salon.ButtonPositive" label="Positif" icon="images/Salon/pin_positive.png" width="96" height="20" />
+												<s:Button skinClass="skins.Salon.ButtonNegative" label="Négatif" icon="images/Salon/pin_negative.png" width="96" height="20" />
+											</s:HGroup>
+											<s:HGroup horizontalCenter="0" width="100%" left="2" right="2" bottom="2">
+												<s:TextInput width="100%" height="20" />
+												<s:Button skinClass="skins.Components.Button" label="Poser un marqueur" icon="images/Salon/pin_add.png"  />
+											</s:HGroup>
+										</s:Group>
+									</s:VGroup>
+									
+								</s:Group>
+							</s:Group>
+							
+							<!-- Chat panel -->
+							<s:Group width="30%" height="100%" minWidth="160">
+								<!-- Header -->
+								<s:Group width="100%" height="26">
+									<s:Rect width="100%" height="100%" radiusX="5">
+										<s:fill>
+											<s:LinearGradient rotation="90">
+												<s:GradientEntry color="0xfabf30" />
+												<s:GradientEntry color="0xffae00" />
+											</s:LinearGradient>
+										</s:fill>
+									</s:Rect>
+									<s:Rect width="100%" height="5" bottom="0">
+										<s:fill>
+											<s:SolidColor color="0xffae00" />
+										</s:fill>
+									</s:Rect>
+									<s:Label left="5" height="26" fontSize="14" fontWeight="bold"
+											 text="Chat" verticalAlign="middle"/>
+								</s:Group>
+								
+								<!-- Content -->
+								<s:Group x="0" top="26" width="100%" height="100%">
+									<s:Rect width="100%" height="100%">
+										<s:fill>
+											<s:SolidColor color="0xFFFFFF" />
+										</s:fill>
+									</s:Rect>
+									<s:Rect width="28" height="100%">
+										<s:fill>
+											<s:SolidColor color="0xe4e4e4" />
+										</s:fill>
+									</s:Rect>
+									<s:Rect width="100%" height="100%">
+										<s:stroke>
+											<s:SolidColorStroke color="0xffb311" />
+										</s:stroke>
+									</s:Rect>
+									<!-- Chat log -->
+									<mx:VBox height="100%" width="100%" bottom="50"
+											 dropShadowVisible="false" verticalScrollPolicy="auto">
+										
+										<s:List id="box" width="100%" height="100%" skinClass="skins.Home.ListSkin"
+												contentBackgroundAlpha="0.0" itemRenderer="skins.Salon.Chat">
+											<s:dataProvider>
+												<mx:ArrayCollection>
+													
+													<!-- données du chat -->
+													<fx:Object name="Tuteur 1 a rejoint visu" text="" time="11:17" />
+													<fx:Object name="Etudiant 1 a rejoint visu" text="" time="11:18" />
+													<fx:Object name="Tuteur 1" text="Bonjour tout le monde" time="11:18" />
+													<fx:Object name="Etudiant 2 a rejoint visu" text="" time="11:19" />
+													<fx:Object name="Etudiant 1" text="Bonjour." time="11:20" />
+													
+												</mx:ArrayCollection>
+											</s:dataProvider>
+										</s:List>
+									</mx:VBox>
+									
+									<!-- Answer box -->
+									<s:Group left="3" right="3" bottom="2" height="47">
+										
+										<s:Group height="23" width="23">
+											<s:Rect height="23" width="23">
+												<s:stroke>
+													<s:SolidColorStroke weight="1" color="0xa2a2a2" />
+												</s:stroke>
+											</s:Rect>
+											<s:Image top="1" bottom="1" left="1" right="1" source="images/Home/profile.png"/>
+										</s:Group>
+										<s:TextArea left="25" top="0" width="100%" height="25"/>
+										<s:Button skinClass="skins.Components.Button" label="Envoyer votre message" bottom="0" right="0" />
+									</s:Group>
+									
+								</s:Group>
+							</s:Group>
+							
+						</mx:HDividedBox>
+						
+						<!-- Timeline panel -->
+						<s:Group width="100%" height="50%" minHeight="150">
+							
+							<!-- Header -->
+							<s:Group width="100%" height="26">
+								<s:Rect width="100%" height="100%" radiusX="5">
+									<s:fill>
+										<s:LinearGradient rotation="90">
+											<s:GradientEntry color="0xfabf30" />
+											<s:GradientEntry color="0xffae00" />
+										</s:LinearGradient>
+									</s:fill>
+								</s:Rect>
+								<s:Rect width="100%" height="5" bottom="0">
+									<s:fill>
+										<s:SolidColor color="0xffae00" />
+									</s:fill>
+								</s:Rect>
+								<s:Label left="5" height="26" fontSize="14" fontWeight="bold"
+										 text="Résumé de l'activité" verticalAlign="middle"/>
+							</s:Group>
+							
+							<!-- Content -->
+							<s:Rect width="100%" height="100%" top="26">
+								<s:fill>
+									<s:SolidColor color="0xFFFFFF" />
+								</s:fill>
+								<s:stroke>
+									<s:SolidColorStroke color="0xffb311" />
+								</s:stroke>
+							</s:Rect>
+							
+						</s:Group>
+					
+					<!-- End of Right side -->
+					</mx:VDividedBox>
+					
+				</mx:HDividedBox>
+			</s:Group>
+			
+		</s:Group>
+	</s:Group>
+	
+</s:Application>
