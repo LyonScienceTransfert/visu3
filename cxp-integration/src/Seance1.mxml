@@ -181,7 +181,7 @@
 										<!-- Title and management -->
 										<s:HGroup right="5" left="5">
 											<!-- button open/close -->
-											<s:Button label="▼" skinClass="skins.Components.Button"/>
+											<s:Button skinClass="skins.Components.TreeButton" />
 											
 											<!-- Titling activity -->
 											<s:Label height="21" verticalAlign="middle" text="Titre d'activité :" />
@@ -390,7 +390,7 @@
 									<s:Group width="100%">
 										<s:HGroup right="5" left="5">
 											<!-- button open/close -->
-											<s:Button label="►" skinClass="skins.Components.Button"/>
+											<s:Button skinClass="skins.Components.TreeButton" />
 	
 											<!-- Titling activity -->
 											<s:Label height="21" verticalAlign="middle" text="Titre d'activité :" />
