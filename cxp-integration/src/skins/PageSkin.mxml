@@ -104,14 +104,26 @@
 				 top.disabledWithControlBar="20"
 				 x.normal="20" y.normal="20" fontSize.normal="24"
 				 top.normalWithControlBar="20"/>
+		<s:HGroup right="300" top="10" height="48"
+				  right.normal="250" top.normal="10" gap.normal="5">
+			<s:Button label="Accueil" skinClass="skins.MenuButton.Home"/>
+			<s:Button label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
+			<s:Button label="Séances" skinClass="skins.MenuButton.Seance"/>
+			<s:Button label="Profil" skinClass="skins.MenuButton.Profil"/>
+			<s:Button label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
+			<s:Button label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
+			<s:Button label="Bilans" skinClass="skins.MenuButton.Bilan"/>
+		</s:HGroup>
+		<!--
 		<s:Group width="600" height="48" y="10" x="230" >
 			<s:Button y="0" x="0" label="Accueil" skinClass="skins.MenuButton.Home"/>
 			<s:Button y="0" x="93" label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
 			<s:Button y="0" x="186" label="Séances" skinClass="skins.MenuButton.Seance"/>
-			<s:Button y="0" x="279" label="Bilans" skinClass="skins.MenuButton.Bilan"/>
-			<s:Button y="0" x="372" label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
-			<s:Button x="465" y="0" label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
+			<s:Button y="0" x="279" label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
+			<s:Button y="0" x="372" label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
+			<s:Button y="0" x="465" label="Bilans" skinClass="skins.MenuButton.Bilan"/>
 		</s:Group>
+		-->
 	</s:Group>
         
     <s:Group left="0" right="0" top="0" bottom="0" height="100%" width="100%">
