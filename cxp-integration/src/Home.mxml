@@ -11,8 +11,33 @@
 		<s:Panel id="panelCalendar" x="10" y="68" skinClass="skins.FixedPanel" title="Calendar">
 			<s:Image x="10" y="-25" source="images/Home/ico_panel_calendar.png"/>
 			
+			
+			<s:HGroup id="calendarNav" left="1" right="1" top="1" height="20" gap="1">
+				<s:Button skinClass="skins.Components.ButtonLeft" height="20" width="20" />
+				<s:Group width="100%">
+					<!--
+					<s:Image id="calendarNavCenter" source="images/Home/nav-center.png"/>
+					<s:Label id="calendatNavLabel" x="5" y="0" width="250" height="20"
+							 fontFamily="Arial" fontSize="12" fontWeight="normal" text="Mardi 4 Avril"
+							 verticalAlign="middle"/>
+					-->
+					<s:DropDownList width="100%" height="20" selectedIndex="0"
+									skinClass="skins.Components.DropDownList">
+						<s:dataProvider>
+							<mx:ArrayCollection>
+								
+								<fx:String>Mardi 4 avril</fx:String>
+								
+							</mx:ArrayCollection>
+						</s:dataProvider>
+					</s:DropDownList>
+				</s:Group>
+				<s:Button skinClass="skins.Components.ButtonRight" height="20" width="20" />
+			</s:HGroup>
 			<!-- navigation dans le calendrier des séances -->
+			<!--
 			<s:Group id="calendarNav" x="1" y="1" width="321" height="20">
+				
 				<s:Image id="calendarNavLeft" x="0" y="0" source="images/Home/nav-left.png"/>
 				<s:Image id="calendarNavCenter" x="20" y="0" source="images/Home/nav-center.png"/>
 				<s:Image id="calendarNavRight" x="302" y="0" source="images/Home/nav-right.png"/>
@@ -20,6 +45,7 @@
 						 fontFamily="Arial" fontSize="12" fontWeight="normal" text="Mardi 4 Avril"
 						 verticalAlign="middle"/>
 			</s:Group>
+			-->
 			
 			<!-- Contenu du calendrier des séances -->
 			<mx:VBox id="calendarContent" x="1" y="22"
