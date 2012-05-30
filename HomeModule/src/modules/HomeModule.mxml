@@ -99,6 +99,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
@@ -1000,7 +1005,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				-->
 			</s:Panel>
 			
-			<s:Panel id="userPanel" width="30%" height="100%" title="Utilisateurs">
+			<!-- Utilisateurs -->
+			<s:Panel id="userPanel" width="30%" height="100%" title="Utilisateurs" skinClass="com.ithaca.visu.skins.FixedPanel">
+				<s:Image x="10" y="-25" source="images/Home/ico_panel_users.png"/>
 				<s:VGroup width="100%" height="100%" id="vGroupUserList">
 			
 					<mx:MenuBar id="userMenu" width="100%" labelField="@label"
