@@ -103,6 +103,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.events.SessionEvent;
 			import com.ithaca.visu.events.SessionHomeElementEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.model.User;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
