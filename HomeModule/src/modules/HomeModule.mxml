@@ -69,7 +69,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:mate="http://mate.asfusion.com/" xmlns:controls="com.ithaca.visu.controls.*"
 	configure="configureHandler(event)" creationComplete="creationCompleteHandler(event)"
     currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-	top="15" bottom="5" left="5" right="5" height="100%">
+	top="15" bottom="5" left="5" right="5" height="100%"
+    >
 	<fx:Declarations>
 
 		<maps:HomeMap id="homeMap" dispatcher="{this}" />
@@ -967,7 +968,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 	
 	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"
-		top="0" bottom="0" left="0" right="0" maxWidth="1024">
+		top="0" bottom="20" left="0" right="0" maxWidth="1024">
 
 		<s:HGroup width="100%" height="50" horizontalAlign="left"
 			gap="30" verticalAlign="bottom">
