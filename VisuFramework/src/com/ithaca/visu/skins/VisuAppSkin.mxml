@@ -42,11 +42,13 @@
         A rectangle with a solid color fill that forms the background of the application.
         The color of the fill is set to the Application's backgroundColor property.
     -->
-    <s:Rect id="backgroundRect" left="0" right="0" top="0" bottom="0"  >
-        <s:fill>
-            <!--- @private -->
-            <s:SolidColor id="bgRectFill" color="#FFFFFF"/>
-        </s:fill>
+    <s:Rect left="0" right="0" top="0" bottom="0"  >
+		<s:fill>
+			<s:LinearGradient rotation="90" id="bgRectFill">
+				<s:GradientEntry color="0xFFDE9F" />
+				<s:GradientEntry color="0xFFFFFF" />
+			</s:LinearGradient>
+		</s:fill>
     </s:Rect>
         
     <s:Group left="0" right="0" top="0" bottom="0">
@@ -74,4 +76,19 @@
         <login:ActivateForm includeIn="activated" id="activatedForm" horizontalCenter="0" verticalCenter="0" />
 		</s:Group>
     </s:Group> 
+	
+	<!--  Label on bottom --> 
+	<s:Group width="100%" height="100%" bottom="0">
+		<s:Rect width="100%" height="20" bottom="0">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0x535353" />
+					<s:GradientEntry color="0x000000" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Label width="100%" color="0xFFFFFF" horizontalCenter="0"
+				 text="2012 - VISU - Université Lyon 1" textAlign="center"
+				 verticalAlign="middle" bottom="3"/>
+	</s:Group>
 </s:Skin>
