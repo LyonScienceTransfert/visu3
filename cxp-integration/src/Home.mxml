@@ -75,28 +75,20 @@
 				</s:List>
 			</mx:VBox>
 			
-			<!-- Boite réponse -->
-			<s:Group bottom="1" height="61" width="100%">
+			<!-- Answer box -->
+			<s:Group left="3" right="3" bottom="2" height="61">
 				
-				<!-- avatar de l'utilisateur de Visu -->
-				<s:Group x="7" y="0" height="25" width="25">
-					<s:Rect height="25" width="25">
+				<s:Group left="7" width="23" height="23">
+					<s:Rect height="23" width="23">
 						<s:stroke>
 							<s:SolidColorStroke weight="1" color="0xa2a2a2" />
 						</s:stroke>
 					</s:Rect>
 					<s:Image top="1" bottom="1" left="1" right="1" source="images/Home/profile.png"/>
 				</s:Group>
-				<!-- zone de saisie -->
-				<s:TextArea left="39" right="1" top="0" width="100%" height="40"/>
-				<!-- boutton envoyer -->
-				<s:Group x="39" y="41">
-					<s:Image source="images/Home/send-message.png"/>
-					<s:Label height="20" width="100%" color="0x373737"
-							 fontFamily="Arial" fontSize="11" fontWeight="normal" text="Envoyer votre message"
-							 verticalAlign="middle" textAlign="center"/>
-				</s:Group>
-				
+				<s:TextArea left="38" top="0" width="100%" height="40"/>
+				<s:Button left="38" right="0" bottom="0" label="Envoyer votre message"
+						  skinClass="skins.Components.Button"/>
 			</s:Group>
 			
 		</s:Panel>
