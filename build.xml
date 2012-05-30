@@ -299,7 +299,24 @@ or by setting the following environment variable:
 				<include-file name="images/normalViewDataGrid_16x16.png" path="${framework.images}/normalViewDataGrid_16x16.png"/>
 				<include-file name="images/marqueurBlancTrans.png" path="${framework.images}/marqueurBlancTrans.png"/>
 				<include-file name="images/marqueurFondBlanc.png" path="${framework.images}/marqueurFondBlanc.png"/>
-
+				
+				<!-- integration corexpert begin-->
+				<include-file name="images/Menu/HomeOff.png" path="${framework.images}/Menu/HomeOff.png"/>
+				<include-file name="images/Menu/HomeOn.png" path="${framework.images}/Menu/HomeOn.png"/>				
+				<include-file name="images/Menu/RetroOn.png" path="${framework.images}/Menu/RetroOn.png"/>
+				<include-file name="images/Menu/RetroOff.png" path="${framework.images}/Menu/RetroOff.png"/>
+				<include-file name="images/Menu/SyncOn.png" path="${framework.images}/Menu/SyncOn.png"/>
+				<include-file name="images/Menu/SyncOff.png" path="${framework.images}/Menu/SyncOff.png"/>				
+				<include-file name="images/Menu/UsersOff.png" path="${framework.images}/Menu/UsersOff.png"/>
+				<include-file name="images/Menu/UsersOn.png" path="${framework.images}/Menu/UsersOn.png"/>
+				<include-file name="images/Menu/SeanceOff.png" path="${framework.images}/Menu/SeanceOff.png"/>
+				<include-file name="images/Menu/SeanceOn.png" path="${framework.images}/Menu/SeanceOn.png"/>
+				<include-file name="images/Menu/BilanOn.png" path="${framework.images}/Menu/BilanOn.png"/>
+				<include-file name="images/Menu/BilanOff.png" path="${framework.images}/Menu/BilanOff.png"/>
+				<include-file name="images/Page/btn_chat_on.png" path="${framework.images}/Page/btn_chat_on.png"/>
+				<include-file name="images/Page/btn_chat_off.png" path="${framework.images}/Page/btn_chat_off.png"/>
+				<!-- integration corexpert end-->
+				
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>
