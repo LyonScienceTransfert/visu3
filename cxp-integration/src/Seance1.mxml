@@ -29,7 +29,7 @@
 			
 			
 			<!-- Panneaux -->
-			<mx:HDividedBox width="100%" height="100%">
+			<mx:HDividedBox height="100%" top="2" left="2" right="2">
 					
 				<s:Panel left="1" top="1" bottom="1" 
 						 width="290" height="100%" 
