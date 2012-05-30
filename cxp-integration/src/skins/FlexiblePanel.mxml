@@ -99,12 +99,15 @@ in accordance with the terms of the license agreement accompanying it.
                 <!--- @private -->
                 <s:Rect id="tbFill" left="0" right="0" top="0" bottom="1" radiusX="5">
                     <s:fill>
-                        <s:SolidColor color="0xffb311" />
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="0xfabf30"/>
+							<s:GradientEntry color="0xffae00"/>
+						</s:LinearGradient>
                     </s:fill>
                 </s:Rect>
-				<s:Rect left="0" right="0" top="10" bottom="1">
+				<s:Rect left="0" right="0" bottom="1" height="5">
 					<s:fill>
-						<s:SolidColor color="0xffb311" />
+						<s:SolidColor color="0xffae00" />
 					</s:fill>
 				</s:Rect>
                 
