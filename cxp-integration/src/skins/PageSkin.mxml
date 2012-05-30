@@ -2,23 +2,23 @@
 
 <!--
 
-    ADOBE SYSTEMS INCORPORATED
-    Copyright 2008 Adobe Systems Incorporated
-    All Rights Reserved.
+ADOBE SYSTEMS INCORPORATED
+Copyright 2008 Adobe Systems Incorporated
+All Rights Reserved.
 
-    NOTICE: Adobe permits you to use, modify, and distribute this file
-    in accordance with the terms of the license agreement accompanying it.
+NOTICE: Adobe permits you to use, modify, and distribute this file
+in accordance with the terms of the license agreement accompanying it.
 
 -->
 
 <!--- The default skin class for the Spark Application component. 
-        
-       @see spark.components.Application
-        
-      @langversion 3.0
-      @playerversion Flash 10
-      @playerversion AIR 1.5
-      @productversion Flex 4
+
+@see spark.components.Application
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
 -->
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
 		xmlns:s="library://ns.adobe.com/flex/spark"
@@ -26,156 +26,159 @@
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		alpha.disabled="0.5"
 		alpha.disabledWithControlBar="0.5" xmlns:skins="skins.*">
-
-    <fx:Metadata>
-    <![CDATA[ 
-        /** 
-         * A strongly typed property that references the component to which this skin is applied.
-         */
-        [HostComponent("spark.components.Application")]
-    ]]>
-    </fx:Metadata>
-    
-    <s:states>
-        <s:State name="normal" />
-        <s:State name="disabled" />
-        <s:State name="normalWithControlBar" />
-        <s:State name="disabledWithControlBar" />
-    </s:states>
-    
-    <!-- fill -->
-    <!--- 
-        A rectangle with a solid color fill that forms the background of the application.
-        The color of the fill is set to the Application's backgroundColor property.
-    -->
-    <s:Rect id="backgroundRect" left="0" right="0" top="0" bottom="0" minHeight="768" minWidth="1024" >
-        <s:fill>
+	
+	<fx:Metadata>
+		<![CDATA[ 
+		/** 
+		* A strongly typed property that references the component to which this skin is applied.
+		*/
+		[HostComponent("spark.components.Application")]
+		]]>
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+		<s:State name="normalWithControlBar" />
+		<s:State name="disabledWithControlBar" />
+	</s:states>
+	
+	<!-- fill -->
+	<!--- 
+	A rectangle with a solid color fill that forms the background of the application.
+	The color of the fill is set to the Application's backgroundColor property.
+	-->
+	<s:Rect id="backgroundRect" left="0" right="0" top="0" bottom="0"  >
+		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="0xFFDE9F" />
 				<s:GradientEntry color="0xFFFFFF" />
 			</s:LinearGradient>
-        </s:fill>
-    </s:Rect>
+		</s:fill>
+	</s:Rect>
 	
-	<!-- barre noire en haut -->
-	<s:Group width="100%" height="58"
-			 horizontalCenter.normal="0">
+	<s:Group minHeight="768" minWidth="1024" width="100%">
 		<s:Rect left="0" right="0" top="0" height="6" width="100%" >
 			<s:fill>
 				<s:SolidColor color="0x000000" />
 			</s:fill>
 		</s:Rect>
-		<s:Group width="1024" horizontalCenter="0">
-			<s:Group right="0">
-				<s:Image left="0" source="images/Page/topbar_wave.png"/>
-				<s:Rect left="15" right="0" top="0" height="21" width="100%">
-					<s:fill>
-						<s:LinearGradient rotation="90">
-							<s:GradientEntry color="0x000000" />
-							<s:GradientEntry color="0x535353" />
-						</s:LinearGradient>
-					</s:fill>
-				</s:Rect>
-				<s:HGroup left="20" right="10" height="21" y="2">
-					<s:Image source="images/Page/profile_ico.png" />
-					<s:Label height="20" text="Nom Utilisateur"
-							 verticalAlign="middle" color="#FFFFFF" 
-							 fontSize="11" fontWeight="bold"/>
-					<s:Label height="20" text="/"
-							 verticalAlign="middle" color="#FFFFFF" 
-							 fontSize="11" fontWeight="bold"/>
-					<s:Image source="images/Page/logout_ico.png" />
-					<s:Label height="20" text="Déconnexion"
-							 verticalAlign="middle" color="#FFFFFF" 
-							 fontSize="11" fontWeight="bold"/>
+	</s:Group>
+	<s:Group width="1024" horizontalCenter="0"
+			 height="58">
+		<s:HGroup width="1024" height="58">
+			
+			<s:Label color="0x2e2e2e" text="VISU"
+					 top="20" fontSize.normal="24" paddingTop="20" paddingLeft="10"/>
+			<s:Group width="100%">
+				<s:HGroup right="0" height="48"
+						  gap.normal="5" paddingTop.normal="10" textAlign.normal="right">
+					<s:Button label="Accueil" skinClass="skins.MenuButton.Home"/>
+					<s:Button label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
+					<s:Button label="Séances" skinClass="skins.MenuButton.Seance"/>
+					<s:Button label="Profil" skinClass="skins.MenuButton.Profil"/>
+					<s:Button label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
+					<s:Button label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
+					<s:Button label="Bilans" skinClass="skins.MenuButton.Bilan"/>
 				</s:HGroup>
 			</s:Group>
-			<s:Group right="10" top="30">
-				<s:Button label="Chat privé" skinClass="skins.Page.ChatButton"/>
+			
+			<s:Group height="58">
+				<s:Group right="0" height="33">
+					<s:Image left="0" source="images/Page/topbar_wave.png"/>
+					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
+						<s:fill>
+							<s:LinearGradient rotation="90">
+								<s:GradientEntry color="0x000000" />
+								<s:GradientEntry color="0x535353" />
+							</s:LinearGradient>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup y="2" left="20" right="10" height="100%"
+							  y.normal="0">
+						<s:Image source="images/Page/profile_ico.png" />
+						<s:Label height="20" text="Nom Utilisateur"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+						<s:Label height="20" text="/"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+						<s:Image source="images/Page/logout_ico.png" />
+						<s:Label height="20" text="Déconnexion"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+					</s:HGroup>
+					<!-- Language -->
+					<s:HGroup right.normal="10" bottom.normal="2" gap.normal="2"
+							  verticalAlign.normal="baseline">
+						<s:Label text="Langue:" color="#FFFFFF" fontSize="10"/>
+						<s:DropDownList skinClass="skins.Page.DropDownLanguage" selectedIndex="0" width="90">
+							<s:dataProvider>
+								<mx:ArrayCollection>
+									<fx:String>Français</fx:String>
+									<fx:String>English</fx:String>
+								</mx:ArrayCollection>
+							</s:dataProvider>
+						</s:DropDownList>
+					</s:HGroup>
+				</s:Group>
+				<s:Group right="10" bottom="0">
+					<s:Button label="Chat privé" skinClass="skins.Page.ChatButton"/>
+				</s:Group>
 			</s:Group>
-		</s:Group>
+		</s:HGroup>
 	</s:Group>
 	
-	<!-- menu -->
-	<s:Group width="1024" height="58"
-			 horizontalCenter.normal="0">
-		<s:Label color="0x2e2e2e" text="VISU"
-				 top.disabled="20"
-				 top.disabledWithControlBar="20"
-				 x.normal="20" y.normal="20" fontSize.normal="24"
-				 top.normalWithControlBar="20"/>
-		<s:HGroup right="300" top="10" height="48"
-				  right.normal="250" top.normal="10" gap.normal="5">
-			<s:Button label="Accueil" skinClass="skins.MenuButton.Home"/>
-			<s:Button label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
-			<s:Button label="Séances" skinClass="skins.MenuButton.Seance"/>
-			<s:Button label="Profil" skinClass="skins.MenuButton.Profil"/>
-			<s:Button label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
-			<s:Button label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
-			<s:Button label="Bilans" skinClass="skins.MenuButton.Bilan"/>
-		</s:HGroup>
-		<!--
-		<s:Group width="600" height="48" y="10" x="230" >
-			<s:Button y="0" x="0" label="Accueil" skinClass="skins.MenuButton.Home"/>
-			<s:Button y="0" x="93" label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
-			<s:Button y="0" x="186" label="Séances" skinClass="skins.MenuButton.Seance"/>
-			<s:Button y="0" x="279" label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
-			<s:Button y="0" x="372" label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
-			<s:Button y="0" x="465" label="Bilans" skinClass="skins.MenuButton.Bilan"/>
-		</s:Group>
+	<s:Group left="0" right="0" top="0" bottom="0" height="100%" width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="0" horizontalAlign="justify" />
+		</s:layout>
+		
+		<!--- 
+		@private
+		Application Control Bar
 		-->
-	</s:Group>
-        
-    <s:Group left="0" right="0" top="0" bottom="0" height="100%" width="100%">
-        <s:layout>
-            <s:VerticalLayout gap="0" horizontalAlign="justify" />
-        </s:layout>
-
-        <!--- 
-            @private
-            Application Control Bar
-        -->
-        <s:Group id="topGroup" minWidth="0" minHeight="0"
-                    includeIn="normalWithControlBar, disabledWithControlBar" >
-
-            <!-- layer 0: control bar highlight -->
-            <s:Rect left="0" right="0" top="0" bottom="1" >
-               <s:stroke>
-                    <s:LinearGradientStroke rotation="90" weight="1">
-                        <s:GradientEntry color="0xFFFFFF" />
-                        <s:GradientEntry color="0xD8D8D8" />
-                    </s:LinearGradientStroke>
-               </s:stroke>
-            </s:Rect>
-
-            <!-- layer 1: control bar fill -->
-            <s:Rect left="1" right="1" top="1" bottom="2" >
-               <s:fill>
-                    <s:LinearGradient rotation="90">
-                        <s:GradientEntry color="0xEDEDED" />
-                        <s:GradientEntry color="0xCDCDCD" />
-                    </s:LinearGradient>
-               </s:fill>
-            </s:Rect>
-
-            <!-- layer 2: control bar divider line -->
-            <s:Rect left="0" right="0" bottom="0" height="1" alpha="0.55">
-                <s:fill>
-                    <s:SolidColor color="0x000000" />
-                </s:fill>
-            </s:Rect>
-
-            <!-- layer 3: control bar -->
-            <!--- @copy spark.components.Application#controlBarGroup -->
-            <s:Group id="controlBarGroup" left="0" right="0" top="1" bottom="1" minWidth="0" minHeight="0">
-                <s:layout>
-                    <s:HorizontalLayout paddingLeft="10" paddingRight="10" paddingTop="7" paddingBottom="7" gap="10" />
-                </s:layout>
-            </s:Group>
-        </s:Group>
-
-        <!--- @copy spark.components.SkinnableContainer#contentGroup -->
-        <s:Group id="contentGroup" width="100%" height="100%" >
+		<s:Group id="topGroup" minWidth="0" minHeight="0"
+				 includeIn="normalWithControlBar, disabledWithControlBar" >
+			
+			<!-- layer 0: control bar highlight -->
+			<s:Rect left="0" right="0" top="0" bottom="1" >
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			
+			<!-- layer 1: control bar fill -->
+			<s:Rect left="1" right="1" top="1" bottom="2" >
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xEDEDED" />
+						<s:GradientEntry color="0xCDCDCD" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			
+			<!-- layer 2: control bar divider line -->
+			<s:Rect left="0" right="0" bottom="0" height="1" alpha="0.55">
+				<s:fill>
+					<s:SolidColor color="0x000000" />
+				</s:fill>
+			</s:Rect>
+			
+			<!-- layer 3: control bar -->
+			<!--- @copy spark.components.Application#controlBarGroup -->
+			<s:Group id="controlBarGroup" left="0" right="0" top="1" bottom="1" minWidth="0" minHeight="0">
+				<s:layout>
+					<s:HorizontalLayout paddingLeft="10" paddingRight="10" paddingTop="7" paddingBottom="7" gap="10" />
+				</s:layout>
+			</s:Group>
+		</s:Group>
+		
+		<!--- @copy spark.components.SkinnableContainer#contentGroup -->
+		<s:Group id="contentGroup" width="100%" height="100%" >
 		</s:Group>
 		
 		<s:Group width="100%" height="20" bottom="0" >
@@ -191,7 +194,7 @@
 					 text="2012 - VISU - Université Lyon 1" textAlign="center"
 					 verticalAlign="middle" bottom="3"/>
 		</s:Group>
-
-    </s:Group>
-
+		
+	</s:Group>
+	
 </s:Skin>

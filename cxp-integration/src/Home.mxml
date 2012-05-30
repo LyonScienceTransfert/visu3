@@ -35,19 +35,217 @@
 			<mx:VBox id="calendarContent" x="1" y="22"
 					 width="321" minHeight="400"
 					 dropShadowVisible="false" verticalScrollPolicy="auto">
-				<!-- Liste des séances -->
-				<s:List width="100%" height="610" skinClass="skins.Home.ListSkin"
-						contentBackgroundAlpha="0.0" itemRenderer="skins.Home.Calendar">
-					
-					<!-- données du calendrier -->
-					<s:dataProvider>
-						<mx:ArrayCollection>
-							
-							<fx:Object time="11:20" title="Titre de la séance" participants="Tuteur 1, Etudiant 1, Étudiant 2" />
-							
-						</mx:ArrayCollection>
-					</s:dataProvider>
-				</s:List>
+				
+				
+				<!-- Session -->
+				<s:Group minHeight="42" width="100%">
+					<s:Group width="100%" left="2" right="2">
+						<s:HGroup width="100%" bottom="3" top="2" gap="3">
+							<!-- horaire -->
+							<s:Group width="37" height="37">
+								<s:Rect left="0" right="0" top="0" bottom="0" height="100%" width="100%">
+									<s:fill>
+										<s:SolidColor color="0xe4e4e4" />
+									</s:fill>
+								</s:Rect>
+								<s:Label x="0" y="0" height="20" width="100%" color="0x272727"
+										 fontFamily="Arial" fontSize="12" fontWeight="normal" text="10:20"
+										 verticalAlign="middle"/>
+							</s:Group>
+							<!-- détails -->
+							<s:VGroup top="1" bottom="1" width="100%" height="100%" gap="0">
+								<s:Label height="18" width="100%" color="0x363636"
+										 fontFamily="Arial" fontSize="12" fontWeight="normal" text="Titre de la séance"
+										 verticalAlign="middle"/>
+								<s:Label height="18" width="100%" color="0x737373"
+										 fontFamily="Arial" fontSize="11" fontWeight="normal" text="Tuteur 1, Etudiant 1, Étudiant 2"
+										 verticalAlign="middle"/>
+							</s:VGroup>
+						</s:HGroup>
+						<s:Rect bottom="0" height="1" width="100%">
+							<s:fill>
+								<s:SolidColor color="0xbfc2c7" />
+							</s:fill>
+						</s:Rect>
+					</s:Group>
+				</s:Group>
+				
+				<!-- Selected and opened session -->
+				<s:Group minHeight="42" width="100%">
+					<s:Group width="100%" left="2" right="2">
+						<s:HGroup width="100%" bottom="3" top="2" gap="3">
+							<!-- horaire -->
+							<s:Group width="37" height="37">
+								<s:Rect left="0" right="0" top="0" bottom="0" height="100%" width="100%">
+									<s:fill>
+										<s:SolidColor color="0xe4e4e4" />
+									</s:fill>
+								</s:Rect>
+								<s:Label x="0" y="0" height="20" width="100%" color="0x272727"
+										 fontFamily="Arial" fontSize="12" fontWeight="normal" text="11:40"
+										 verticalAlign="middle"/>
+							</s:Group>
+							<!-- détails -->
+							<s:Group top="1" bottom="1" width="100%" height="100%">
+								<s:Rect height="100%" width="100%">
+									<s:fill>
+										<s:LinearGradient rotation="90">
+											<s:GradientEntry color="0xfdfeff" />
+											<s:GradientEntry color="0xffe6b6" />
+										</s:LinearGradient>
+									</s:fill>
+								</s:Rect>
+								<s:VGroup width="100%" height="100%" gap="0">
+									<!-- Title -->
+									<s:Label height="18" width="100%" color="0x363636"
+											 fontFamily="Arial" fontSize="12" fontWeight="normal" text="Titre de la séance"
+											 verticalAlign="middle"/>
+									
+									<!-- Participants -->
+									<s:TileGroup width="100%">
+										<!-- Student -->
+										<s:Group>
+											<s:Rect width="100%" height="14" radiusX="7">
+												<s:fill>
+													<s:SolidColor color="#ffaf04"/>
+												</s:fill>
+											</s:Rect>
+											<s:HGroup left="3" right="3" gap="2"
+													  verticalAlign="baseline">
+												<s:Image source="images/Home/ico_user_etudiant.png"/>												
+												<s:Label fontSize="10" text="Étudiant 1"
+														 verticalAlign="middle" verticalCenter="0"/>
+											</s:HGroup>
+										</s:Group>
+										<!-- Teacher -->
+										<s:Group>
+											<s:Rect width="100%" height="14" radiusX="7">
+												<s:fill>
+													<s:SolidColor color="#ffaf04"/>
+												</s:fill>
+											</s:Rect>
+											<s:HGroup left="3" right="3" gap="2"
+													  verticalAlign="baseline">
+												<s:Image source="images/Home/ico_user_tuteur.png"/>												
+												<s:Label fontSize="10" text="Tuteur 1"
+														 verticalAlign="middle" verticalCenter="0"/>
+											</s:HGroup>
+										</s:Group>
+									</s:TileGroup>
+									
+									<!-- Session status -->
+									<s:Label width="100%" color="#373737" fontFamily="Arial"
+											 fontSize="12" fontWeight="normal" paddingTop="5"
+											 text="La séance est ouverte" textAlign="center"
+											 verticalAlign="middle"/>
+									
+									<!-- Management buttons -->
+									<s:HGroup gap="1" width="100%">
+										<s:Button skinClass="skins.Components.Button" label="Supprimer" fontSize="11" />
+										<s:Button skinClass="skins.Components.Button" label="Modifier" fontSize="11" />
+										<s:Group width="100%"></s:Group>
+										<s:Button skinClass="skins.Components.Button" label="Rejoindre la séance" fontSize="11" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:Group>
+						</s:HGroup>
+						<s:Rect bottom="0" height="1" width="100%">
+							<s:fill>
+								<s:SolidColor color="0xbfc2c7" />
+							</s:fill>
+						</s:Rect>
+					</s:Group>
+					<!-- End of Selected and opened session -->
+				</s:Group>
+				
+				<!-- Selected and closed session -->
+				<s:Group minHeight="42" width="100%">
+					<s:Group width="100%" left="2" right="2">
+						<s:HGroup width="100%" bottom="3" top="2" gap="3">
+							<!-- horaire -->
+							<s:Group width="37" height="37">
+								<s:Rect left="0" right="0" top="0" bottom="0" height="100%" width="100%">
+									<s:fill>
+										<s:SolidColor color="0xe4e4e4" />
+									</s:fill>
+								</s:Rect>
+								<s:Label x="0" y="0" height="20" width="100%" color="0x272727"
+										 fontFamily="Arial" fontSize="12" fontWeight="normal" text="11:40"
+										 verticalAlign="middle"/>
+							</s:Group>
+							<!-- détails -->
+							<s:Group top="1" bottom="1" width="100%" height="100%">
+								<s:Rect height="100%" width="100%">
+									<s:fill>
+										<s:LinearGradient rotation="90">
+											<s:GradientEntry color="0xfdfeff" />
+											<s:GradientEntry color="0xffe6b6" />
+										</s:LinearGradient>
+									</s:fill>
+								</s:Rect>
+								<s:VGroup width="100%" height="100%" gap="0">
+									<!-- Title -->
+									<s:Label height="18" width="100%" color="0x363636"
+											 fontFamily="Arial" fontSize="12" fontWeight="normal" text="Titre de la séance"
+											 verticalAlign="middle"/>
+									
+									<!-- Participants -->
+									<s:TileGroup width="100%">
+										<!-- Student -->
+										<s:Group>
+											<s:Rect width="100%" height="14" radiusX="7">
+												<s:fill>
+													<s:SolidColor color="#ffaf04"/>
+												</s:fill>
+											</s:Rect>
+											<s:HGroup left="3" right="3" gap="2"
+													  verticalAlign="baseline">
+												<s:Image source="images/Home/ico_user_etudiant.png"/>												
+												<s:Label fontSize="10" text="Étudiant 1"
+														 verticalAlign="middle" verticalCenter="0"/>
+											</s:HGroup>
+										</s:Group>
+										<!-- Teacher -->
+										<s:Group>
+											<s:Rect width="100%" height="14" radiusX="7">
+												<s:fill>
+													<s:SolidColor color="#ffaf04"/>
+												</s:fill>
+											</s:Rect>
+											<s:HGroup left="3" right="3" gap="2"
+													  verticalAlign="baseline">
+												<s:Image source="images/Home/ico_user_tuteur.png"/>												
+												<s:Label fontSize="10" text="Tuteur 1"
+														 verticalAlign="middle" verticalCenter="0"/>
+											</s:HGroup>
+										</s:Group>
+									</s:TileGroup>
+									
+									<!-- Session status -->
+									<s:Label width="100%" color="#373737" fontFamily="Arial"
+											 fontSize="12" fontWeight="normal" paddingTop="5"
+											 text="La séance est fermée" textAlign="center"
+											 verticalAlign="middle"/>
+									
+									<!-- Management buttons -->
+									<s:HGroup gap="1" width="100%">
+										<s:Group width="100%"></s:Group>
+										<s:Button skinClass="skins.Components.Button" label="Rétrospection" fontSize="11" />
+										<s:Button skinClass="skins.Components.Button" label="Bilans" fontSize="11" />
+									</s:HGroup>
+								</s:VGroup>
+							</s:Group>
+						</s:HGroup>
+						<s:Rect bottom="0" height="1" width="100%">
+							<s:fill>
+								<s:SolidColor color="0xbfc2c7" />
+							</s:fill>
+						</s:Rect>
+					</s:Group>
+					<!-- End of Selected and opened session -->
+				</s:Group>
+				
+				
 			</mx:VBox>
 			
 		</s:Panel>
@@ -96,9 +294,9 @@
 					</s:Rect>
 					<s:Image top="1" bottom="1" left="1" right="1" source="images/Home/profile.png"/>
 				</s:Group>
-				<s:TextArea left="38" top="0" width="100%" height="40"/>
+				<s:TextArea left="38" top="0" width="100%" height="38" skinClass="TextInput"/>
 				<s:Button left="38" right="0" bottom="0" label="Envoyer votre message"
-						  skinClass="skins.Components.Button"/>
+						  skinClass="skins.Components.Button" fontSize="11"/>
 			</s:Group>
 			
 		</s:Panel>
