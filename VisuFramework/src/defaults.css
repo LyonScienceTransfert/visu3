@@ -432,13 +432,3 @@ sessionView|SessionViewSalonSession
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonSessionSkin");
 }
-
-ws|Form
-{
-	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormSkin" );
-}
-
-ws|FormItem
-{
-	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormItemSkin" );
-}

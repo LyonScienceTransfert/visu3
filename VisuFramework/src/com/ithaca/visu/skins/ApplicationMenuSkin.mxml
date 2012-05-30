@@ -67,13 +67,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		currentStateChange="skin1_currentStateChangeHandler(event)"
-        preinitialize="skin1_preinitializeHandler(event)">
+        preinitialize="skin1_preinitializeHandler(event)"
+		>
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.globalNavigation.ApplicationMenu")]
 	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.skins.MenuButton.Home;
+			import com.ithaca.visu.skins.Page.ChatButton;
+			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
@@ -114,7 +118,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	name=disconnect, type=spark.components.Button, required=false
 	name=home, type=spark.components.Button, required=false
 	-->
-	<s:Group left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
+	<s:Group left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0" includeInLayout="false" visible="false">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" />
 		</s:layout>
@@ -139,9 +143,67 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:Button id="chat" includeIn="authentified" enabled="false">
 			<s:label>{fxgt.gettext("Chat")}</s:label>
 		</s:Button>	
-		<s:Label id="labelLoggedUser"  includeIn="authentified" fontWeight="bold"/>
+		<s:Label text="Nom Utilisateur" includeIn="authentified" fontWeight="bold"/>
 		<s:Button id="disconnect" includeIn="authentified" >
 			<s:label>{fxgt.gettext("Déconnexion")}</s:label>
 		</s:Button>	
 	</s:Group>
+	<!-- barre noire en haut -->
+	<s:Group width="100%" height="58"
+			 horizontalCenter="0"
+			 includeIn="authentified">
+		<s:Rect left="0" right="0" top="0" height="6" width="100%" >
+			<s:fill>
+				<s:SolidColor color="0x000000" />
+			</s:fill>
+		</s:Rect>
+		<s:Group width="1024" horizontalCenter="0">
+			<s:Group right="0">
+				<s:Image left="0" source="images/Page/topbar_wave.png"/>
+				<s:Rect left="15" right="0" top="0" height="21" width="100%">
+					<s:fill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="0x000000" />
+							<s:GradientEntry color="0x535353" />
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:HGroup left="20" right="10" height="21" y="2">
+					<s:Image source="images/Page/profile_ico.png" />
+					<s:Label id="labelLoggedUser"
+							 height="20" text="Nom Utilisateur"
+							 verticalAlign="middle" color="#FFFFFF" 
+							 fontSize="11" fontWeight="bold"/>
+					<s:Label height="20" text="/"
+							 verticalAlign="middle" color="#FFFFFF" 
+							 fontSize="11" fontWeight="bold"/>
+					<s:Image source="images/Page/logout_ico.png" />
+					<s:Label height="20" text="Déconnexion"
+							 verticalAlign="middle" color="#FFFFFF" 
+							 fontSize="11" fontWeight="bold"/>
+				</s:HGroup>
+			</s:Group>
+			<s:Group right="10" top="30">
+				<s:Button label="Chat privé" skinClass="com.ithaca.visu.skins.Page.ChatButton" />
+			</s:Group>
+		</s:Group>
+	</s:Group>
+	<!-- menu -->
+	<s:BorderContainer width="1024" height="58"
+			 horizontalCenter="0"
+			 backgroundAlpha="0.0"
+			 borderAlpha="0.0">
+		<s:Label color="0x2e2e2e"  text="VISU"
+				 top="20"
+				 x="20" y="20" fontSize="24"
+				/>
+		<s:Group width="600" height="48" y="10" x="230" includeIn="authentified">
+			<s:Button y="0" x="0" label="Accueil" skinClass="com.ithaca.visu.skins.MenuButton.Home"/>
+			<s:Button y="0" x="93" label="Utilisateurs" skinClass="com.ithaca.visu.skins.MenuButton.Users"/>
+			<s:Button y="0" x="186" label="Séances" skinClass="com.ithaca.visu.skins.MenuButton.Seance"/>
+			<s:Button y="0" x="279" label="Bilans" skinClass="com.ithaca.visu.skins.MenuButton.Bilan"/>
+			<s:Button y="0" x="372" label="Salon synchrone" skinClass="com.ithaca.visu.skins.MenuButton.SalonSync" enabled="false"/>
+			<s:Button x="465" y="0" label="Salon de retrospection" skinClass="com.ithaca.visu.skins.MenuButton.SalonRetro" enabled="false"/>
+		</s:Group>
+	</s:BorderContainer>
 </s:Skin>
