@@ -299,13 +299,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					
 					<s:itemRenderer>
                     <fx:Component>
-                        <s:ItemRenderer>
+                        <s:ItemRenderer autoDrawBackground="false">
                             <s:states>
                                 <s:State name="normal" />
                             </s:states>
-                            <s:Rect id="fill" radiusX="10"
+                            <s:Rect id="fill" height="14" radiusX="7"
 								left="1" right="1" top="1" bottom="1">
 								<s:fill>
+									<s:SolidColor color="#ffaf04"/>
 								</s:fill>
 							</s:Rect>
                             <myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
