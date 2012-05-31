@@ -306,10 +306,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
                             <s:Rect id="fill" radiusX="10"
 								left="1" right="1" top="1" bottom="1">
 								<s:fill>
-									<s:LinearGradient rotation="90">
-										<s:GradientEntry color="0xFFFFFF" />
-										<s:GradientEntry color="0xD8D8D8" />
-									</s:LinearGradient>
 								</s:fill>
 							</s:Rect>
                             <myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
