@@ -260,11 +260,11 @@
 									<!-- Management buttons -->
 									<s:HGroup gap="1" width="100%">
 										<s:Group width="100%"></s:Group>
-										<s:Button label="Rétrospection" fontSize="11" height="18"
+										<s:Button label="Rétrospection" fontSize="11"
 												  icon="images/Home/ico_salon_retro.png"
 												  skinClass="skins.Components.Button"/>
-										<s:Button label="Bilans" fontSize="11" height="18"
-												  icon="images/Home/ico_salon_synchro.png"
+										<s:Button label="Bilans" fontSize="11"
+												  icon="images/Home/ico_bilans.png"
 												  skinClass="skins.Components.Button"/>
 									</s:HGroup>
 								</s:VGroup>
@@ -330,7 +330,7 @@
 					<s:Image top="1" bottom="1" left="1" right="1" source="images/Home/profile.png"/>
 				</s:Group>
 				<s:TextArea left="38" top="0" width="100%" height="38" chromeColor="#FFCC5E"
-							focusColor="#FFCC5E" skinClass="TextInput"/>
+							focusColor="#FFCC5E" skinClass="skins.Components.TextInput"/>
 				<s:Button left="38" right="0" bottom="0" label="Envoyer votre message"
 						  skinClass="skins.Components.Button" fontSize="11"/>
 			</s:Group>
