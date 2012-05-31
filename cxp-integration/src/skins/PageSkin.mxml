@@ -84,7 +84,7 @@ in accordance with the terms of the license agreement accompanying it.
 			</s:Group>
 			
 			<s:Group height="58">
-				<s:Group right="0" height="33">
+				<s:Group right="0" height="35">
 					<s:Image left="0" source="images/Page/topbar_wave.png"/>
 					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
 						<s:fill>
@@ -94,8 +94,7 @@ in accordance with the terms of the license agreement accompanying it.
 							</s:LinearGradient>
 						</s:fill>
 					</s:Rect>
-					<s:HGroup y="2" left="20" right="10" height="100%"
-							  y.normal="0">
+					<s:HGroup y="1" left="20" right="10" height="100%">
 						<s:Image source="images/Page/profile_ico.png" />
 						<s:Label height="20" text="Nom Utilisateur"
 								 verticalAlign="middle" color="#FFFFFF" 
@@ -109,10 +108,12 @@ in accordance with the terms of the license agreement accompanying it.
 								 fontSize="11" fontWeight="bold"/>
 					</s:HGroup>
 					<!-- Language -->
-					<s:HGroup right.normal="10" bottom.normal="2" gap.normal="2"
-							  verticalAlign.normal="baseline">
+					<s:HGroup right="10" bottom="4" gap="2" verticalAlign="baseline">
 						<s:Label text="Langue:" color="#FFFFFF" fontSize="10"/>
-						<s:DropDownList skinClass="skins.Page.DropDownLanguage" selectedIndex="0" width="90">
+						<s:DropDownList width="90" selectedIndex="0"
+										skinClass="skins.Page.DropDownLanguage"
+										focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+										selectionColor="#FFCC5E">
 							<s:dataProvider>
 								<mx:ArrayCollection>
 									<fx:String>Français</fx:String>

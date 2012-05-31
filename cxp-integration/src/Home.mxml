@@ -171,10 +171,10 @@
 									
 									<!-- Management buttons -->
 									<s:HGroup gap="1" width="100%">
-										<s:Button skinClass="skins.Components.Button" label="Supprimer" fontSize="11" />
-										<s:Button skinClass="skins.Components.Button" label="Modifier" fontSize="11" />
+										<s:Button skinClass="skins.Components.Button" label="Supprimer" fontSize="11" height="18" />
+										<s:Button skinClass="skins.Components.Button" label="Modifier" fontSize="11" height="18" />
 										<s:Group width="100%"></s:Group>
-										<s:Button skinClass="skins.Components.Button" label="Rejoindre la séance" fontSize="11" />
+										<s:Button skinClass="skins.Components.Button" label="Rejoindre la séance" fontSize="11" height="18" />
 									</s:HGroup>
 								</s:VGroup>
 							</s:Group>
@@ -260,8 +260,12 @@
 									<!-- Management buttons -->
 									<s:HGroup gap="1" width="100%">
 										<s:Group width="100%"></s:Group>
-										<s:Button skinClass="skins.Components.Button" label="Rétrospection" fontSize="11" />
-										<s:Button skinClass="skins.Components.Button" label="Bilans" fontSize="11" />
+										<s:Button label="Rétrospection" fontSize="11" height="18"
+												  icon="images/Home/ico_salon_retro.png"
+												  skinClass="skins.Components.Button"/>
+										<s:Button label="Bilans" fontSize="11" height="18"
+												  icon="images/Home/ico_salon_synchro.png"
+												  skinClass="skins.Components.Button"/>
 									</s:HGroup>
 								</s:VGroup>
 							</s:Group>
@@ -379,9 +383,11 @@
 						<s:dataProvider>
 							<mx:ArrayCollection>
 								
-								<fx:Object name="Tuteur 1" role="tuteur" />
-								<fx:Object name="Etudiant 1" role="etudiant" />
-								<fx:Object name="Etudiant 2" role="etudiant" />
+								<fx:Object name="Tuteur 1" role="tuteur" online="true" />
+								<fx:Object name="Etudiant 1" role="etudiant" online="true" />
+								<fx:Object name="Etudiant 2" role="etudiant" online="true" />
+								<fx:Object name="Etudiant déconnecté" role="etudiant" online="false" />
+								<fx:Object name="Tuteur déconnecté" role="tuteur" online="false" />
 								
 							</mx:ArrayCollection>
 						</s:dataProvider>
