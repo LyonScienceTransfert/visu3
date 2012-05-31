@@ -69,7 +69,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:mate="http://mate.asfusion.com/" xmlns:controls="com.ithaca.visu.controls.*"
 	configure="configureHandler(event)" creationComplete="creationCompleteHandler(event)"
     currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-	top="15" bottom="5" left="5" right="5" height="100%">
+	top="15" bottom="5" left="5" right="5" height="100%"
+    >
 	<fx:Declarations>
 
 		<maps:HomeMap id="homeMap" dispatcher="{this}" />
@@ -98,47 +99,39 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
-            import com.ithaca.messagerie.model.MessageVO;
-            import com.ithaca.utils.UtilFunction;
-            import com.ithaca.utils.VisuUtils;
-            import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
-            import com.ithaca.visu.events.InitMapEvent;
-            import com.ithaca.visu.events.MessageEvent;
-            import com.ithaca.visu.events.SessionEvent;
-            import com.ithaca.visu.events.SessionHomeElementEvent;
-            import com.ithaca.visu.events.SessionUserEvent;
-            import com.ithaca.visu.events.UserEvent;
-            import com.ithaca.visu.events.VisuModuleEvent;
-            import com.ithaca.visu.model.Model;
-            import com.ithaca.visu.model.Session;
-            import com.ithaca.visu.model.User;
-            import com.ithaca.visu.model.vo.SessionUserVO;
-            import com.ithaca.visu.model.vo.UserVO;
-            import com.ithaca.visu.renderer.FluxActivityRenderer;
-            import com.ithaca.visu.ui.utils.ConnectionStatus;
-            import com.ithaca.visu.ui.utils.RightStatus;
-            import com.ithaca.visu.ui.utils.RoleEnum;
-            import com.ithaca.visu.view.user.MessageUser;
-            
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
-            
-            import mx.collections.ArrayCollection;
-            import mx.collections.Sort;
-            import mx.collections.SortField;
-            import mx.controls.Alert;
-            import mx.core.IVisualElement;
-            import mx.events.CloseEvent;
-            import mx.events.CollectionEvent;
-            import mx.events.DragEvent;
-            import mx.events.FlexEvent;
-            import mx.events.StateChangeEvent;
-            import mx.logging.ILogger;
-            import mx.logging.Log;
-            import mx.managers.CursorManager;
-            
-            import spark.components.supportClasses.GroupBase;
-            import spark.events.IndexChangeEvent;
+			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.utils.VisuUtils;
+			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.MessageEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionHomeElementEvent;
+			import com.ithaca.visu.events.UserEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.renderer.FluxActivityRenderer;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.RightStatus;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			import mx.managers.CursorManager;
+			
+			import spark.events.IndexChangeEvent;
+
 			
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
@@ -967,20 +960,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 	
 	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"
-		top="0" bottom="0" left="0" right="0" maxWidth="1024">
-
-		<s:HGroup width="100%" height="50" horizontalAlign="left"
-			gap="30" verticalAlign="bottom">
-			<mx:Image source="{Model.getInstance().getLoggedUser().avatar}"
-				width="50" height="50" />
-			<s:Label
-				text="{Model.getInstance().getLoggedUser().lastname + ' '+ Model.getInstance().getLoggedUser().getFirstName()}"
-				fontSize="20" />
-		</s:HGroup>
-		
-		
+		top="0" bottom="20" left="0" right="0" maxWidth="1024">
 		<s:HGroup width="100%" height="100%">
-			<s:Panel id="calendarPanel" width="40%" height="100%" title="Calendrier">
+			<!-- Calendar -->
+			<s:Panel id="calendarPanel" width="40%" height="100%" title="Calendrier" skinClass="com.ithaca.visu.skins.FixedPanel">
+				<s:Image x="10" y="-25" source="images/Home/ico_panel_calendar.png"/>
 				<s:VGroup  width="100%" height="100%" id="vGroupListSession">
 						<controls:NavigateurDay id="navigateurDay"
 							dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"
@@ -995,6 +979,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								dataProvider="{sessionsList}"
 								creationComplete="initSessionList(event)"								
 								itemRenderer="com.ithaca.visu.view.session.renderer.HomeSessionRenderer"
+								rollOverColor="#FFCC5E"
+								selectionColor="#FFFFFF"
 								/>
 					<s:HGroup verticalAlign="middle" horizontalAlign="center" visible="{sessionsList.length==0}" includeInLayout="{sessionsList.length==0}" width="100%" height="100%">
 							<s:Label text="Aucune séance pour cette date"/>
@@ -1003,9 +989,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			</s:Panel>
 			
 			
-			<!-- FLUX ACTIVITY -->
-			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global">
-			
+			<!-- Chat -->
+			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global" skinClass="com.ithaca.visu.skins.FixedPanel">
+				<s:Image x="10" y="-25" source="images/Home/ico_panel_chat.png"/>
 					<s:VGroup width="100%" height="100%" id="vGroupFluxActivity">
 	
 						<s:List 
@@ -1033,7 +1019,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				-->
 			</s:Panel>
 			
-			<s:Panel id="userPanel" width="30%" height="100%" title="Utilisateurs">
+			<!-- Utilisateurs -->
+			<s:Panel id="userPanel" width="30%" height="100%" title="Utilisateurs" skinClass="com.ithaca.visu.skins.FixedPanel">
+				<s:Image x="10" y="-25" source="images/Home/ico_panel_users.png"/>
 				<s:VGroup width="100%" height="100%" id="vGroupUserList">
 			
 					<mx:MenuBar id="userMenu" width="100%" labelField="@label"

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Group top="68" width="1024" minHeight="667" horizontalCenter="0">
+		
+		<!-- container -->
+		<s:Group width="100%" height="100%" horizontalCenter="0">
+			<!-- background
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:fill><s:SolidColor color="0xffefd1" /></s:fill>
+				</s:Rect>
+			</s:Group>
+			-->
+
+			
+			<!-- Pannels -->
+			<s:Group width="100%" height="100%" left="10" right="10">
+				<s:HGroup width="100%" height="100%" gap="10">
+					
+					<!-- Pannel "display filter" -->
+					<s:Group width="225" height="100%">
+						<s:Rect width="100%" height="100%" radiusX="5">
+							<s:fill>
+								<s:SolidColor color="0xFFFFFF" />
+							</s:fill>
+						</s:Rect>
+						<!-- header -->
+						<s:Group width="100%" height="26">
+							<s:Rect width="100%" height="100%" radiusX="5">
+								<s:fill>
+									<s:LinearGradient rotation="90">
+										<s:GradientEntry color="0xfabf30" />
+										<s:GradientEntry color="0xffae00" />
+									</s:LinearGradient>
+								</s:fill>
+							</s:Rect>
+							<s:Rect width="100%" height="5" bottom="0">
+								<s:fill>
+									<s:SolidColor color="0xffae00" />
+								</s:fill>
+							</s:Rect>
+							<s:Label text="Afficher" left="5" height="26" verticalAlign="middle" fontWeight="bold"/>
+						</s:Group>
+						
+						
+						<s:List left="2" right="2" top="28" bottom="5" width="100%" height="100%"
+								borderAlpha="0" contentBackgroundAlpha="0" focusColor="#FFCC5E"
+								rollOverColor="#FFCC5E" selectionColor="#FFCC5E">
+							
+							<s:dataProvider>
+								<mx:ArrayCollection>
+									
+									<fx:String>Tous les utilisateurs</fx:String>
+									<fx:String>Étudiants</fx:String>
+									<fx:String>Tuteurs</fx:String>
+									<fx:String>Responsables</fx:String>
+									<fx:String>Administrateurs</fx:String>
+									
+								</mx:ArrayCollection>
+							</s:dataProvider>
+						</s:List>
+						
+						<!-- border -->
+						<s:Rect width="100%" height="100%" radiusX="5">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9f9f9f" />
+							</s:stroke>
+						</s:Rect>
+						
+						<!-- End of Pannel "display filter" -->
+					</s:Group>
+					
+					<!-- Pannel "User list" -->
+					<s:Group width="315" height="100%">
+						<s:Rect width="100%" height="100%" radiusX="5">
+							<s:fill>
+								<s:SolidColor color="0xFFFFFF" />
+							</s:fill>
+						</s:Rect>
+						<!-- header -->
+						<s:Group width="100%" height="26">
+							<s:Rect width="100%" height="100%" radiusX="5">
+								<s:fill>
+									<s:LinearGradient rotation="90">
+										<s:GradientEntry color="0xfabf30" />
+										<s:GradientEntry color="0xffae00" />
+									</s:LinearGradient>
+								</s:fill>
+							</s:Rect>
+							<s:Rect width="100%" height="5" bottom="0">
+								<s:fill>
+									<s:SolidColor color="0xffae00" />
+								</s:fill>
+							</s:Rect>
+							<s:Label text="Liste des utilisateurs" left="5" height="26" verticalAlign="middle" fontWeight="bold"/>
+							<s:Button right="5" top="2" label="Ajouter un utilisateur"
+									  icon="images/Utillisateurs/ico_add.png"
+									  skinClass="skins.Components.Button"/>
+						</s:Group>
+						
+						
+						<s:Group width="100%" height="20" top="28" left="2" right="2">
+							<s:TextInput width="100%" height="100%" />
+							<s:Button right="2" top="2" skinClass="skins.Seance.CloseButton"/>
+						</s:Group>
+						<s:List left="2" right="2" top="48" bottom="5" width="100%" height="100%"
+								borderAlpha="0" contentBackgroundAlpha="0" focusColor="#FFCC5E"
+								rollOverColor="#FFCC5E" selectionColor="#FFCC5E">
+							
+							<s:dataProvider>
+								<mx:ArrayCollection>
+									
+									<fx:String>Eshoo Inannabelle</fx:String>
+									<fx:String>V McMahon</fx:String>
+									<fx:String>Lauren B</fx:String>
+									<fx:String>Suan Sing Yim</fx:String>
+									<fx:String>Lee Mo Yin</fx:String>
+									<fx:String>Lao Schmith</fx:String>
+									
+								</mx:ArrayCollection>
+							</s:dataProvider>
+						</s:List>
+						
+						<!-- border -->
+						<s:Rect width="100%" height="100%" radiusX="5">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9f9f9f" />
+							</s:stroke>
+						</s:Rect>
+						
+						<!-- End of Pannel "User list" -->
+					</s:Group>
+					
+					<!-- Pannel "User info" -->
+					<s:Group width="445" height="100%">
+						<s:Rect width="100%" height="100%" radiusX="5">
+							<s:fill>
+								<s:SolidColor color="0xFFFFFF" />
+							</s:fill>
+						</s:Rect>
+						<!-- header -->
+						<s:Group width="100%" height="26">
+							<s:Rect width="100%" height="100%" radiusX="5">
+								<s:fill>
+									<s:LinearGradient rotation="90">
+										<s:GradientEntry color="0xfabf30" />
+										<s:GradientEntry color="0xffae00" />
+									</s:LinearGradient>
+								</s:fill>
+							</s:Rect>
+							<s:Rect width="100%" height="5" bottom="0">
+								<s:fill>
+									<s:SolidColor color="0xffae00" />
+								</s:fill>
+							</s:Rect>
+							<s:Label text="Profil (Vinh Dat Nguyen)" left="5" height="26" verticalAlign="middle" fontWeight="bold"/>
+							<s:HGroup right="5" top="2">
+								<s:Button label="Éditer"
+										  icon="images/Utillisateurs/ico_edit.png"
+										  skinClass="skins.Components.Button"/>
+								<s:Button label="Supprimer"
+										  icon="images/Utillisateurs/ico_delete.png"
+										  skinClass="skins.Components.Button"/>
+							</s:HGroup>
+						</s:Group>
+						
+						<!-- User information -->
+						<s:Group width="100%" height="100%" left="5" top="30" right="5">
+							<s:VGroup width="100%" height="100%">
+								<s:HGroup width="100%" height="110">
+									<s:Group width="75">
+										<s:Rect width="100%" height="100%">
+											<s:stroke>
+												<s:SolidColorStroke color="0xa2a2a2" />
+											</s:stroke>
+										</s:Rect>
+										<s:Image width="100%" minHeight="5" left="1" top="1" right="1" bottom="1" source="" />
+									</s:Group>
+									<s:Group width="100%" height="100%">
+										<s:VGroup width="100%" height="100%" gap="0">
+											<s:HGroup width="100%">
+												<s:Label width="105" height="22" fontWeight="bold"
+														 text="Nom :" textAlign="left"
+														 verticalAlign="middle"/>
+												<s:TextInput height="20" text="Nguyen" width="100%" />
+											</s:HGroup>
+											<s:HGroup width="100%">
+												<s:Label width="105" height="22" fontWeight="bold"
+														 text="Prénom :" textAlign="left"
+														 verticalAlign="middle"/>
+												<s:TextInput height="20" text="Vihn Dat" width="100%" />
+											</s:HGroup>
+											<s:HGroup width="100%">
+												<s:Label width="105" height="22" fontWeight="bold"
+														 text="Email :" textAlign="left"
+														 verticalAlign="middle"/>
+												<s:TextInput height="20" text="" width="100%" />
+											</s:HGroup>
+											<s:HGroup width="100%">
+												<s:Label width="105" height="22" fontWeight="bold"
+														 text="Mot de passe :" textAlign="left"
+														 verticalAlign="middle"/>
+												<s:TextInput height="20" text="" width="100%" />
+											</s:HGroup>
+											<s:HGroup width="100%">
+												<s:Label width="105" height="22" fontWeight="bold"
+														 text="Rôle :" textAlign="left"
+														 verticalAlign="middle"/>
+												<s:DropDownList selectedIndex="0" width="100%">
+													<mx:ArrayCollection>
+														<fx:String>Étudiant</fx:String>
+														<fx:String>Tuteurs</fx:String>
+														<fx:String>Responsables</fx:String>
+														<fx:String>Administrateurs</fx:String>
+													</mx:ArrayCollection>
+												</s:DropDownList>
+												
+											</s:HGroup>
+										</s:VGroup>
+									</s:Group>
+								</s:HGroup>
+								<s:HGroup width="100%" height="25">
+									<s:Button label="Sauvegarder"
+											  icon="images/Utillisateurs/ico_save.png"
+											  skinClass="skins.Components.Button"/>
+									<s:Button label="Annuler"
+											  skinClass="skins.Components.Button"/>
+								</s:HGroup>
+							</s:VGroup>
+						</s:Group>
+						
+						<!-- border -->
+						<s:Rect width="100%" height="100%" radiusX="5">
+							<s:stroke>
+								<s:SolidColorStroke color="0x9f9f9f" />
+							</s:stroke>
+						</s:Rect>
+						
+						<!-- End of Pannel "User info" -->
+					</s:Group>
+				</s:HGroup>
+				<!-- End of Pannels -->
+				
+			</s:Group>
+			<!-- Fin Group Panneaux -->
+		</s:Group>
+		<!-- Fin Group Container -->
+	</s:Group>
+	
+</s:Application>

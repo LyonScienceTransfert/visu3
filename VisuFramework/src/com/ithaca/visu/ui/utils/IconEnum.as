@@ -308,6 +308,10 @@ package com.ithaca.visu.ui.utils
 		[Bindable]
 		[Embed("images/advancedViewDataGrid_16x16.png")]
 		static private var advancedViewDataGrid_16x16:Class;
+		[Embed("images/Home/ico_user_etudiant.png")]
+		static private var ico_user_etudiant:Class;
+		[Embed("images/Home/ico_user_tuteur.png")]
+		static private var ico_user_tuteur:Class;
 		
 		public static function getPathByName(code:String):String
 		{
@@ -545,6 +549,24 @@ package com.ithaca.visu.ui.utils
 					icon = advancedViewDataGrid_16x16;
 					break;
 				default :
+					break;				
+			}
+			return icon;
+		}
+		public static function getIconByRoleUser(code:int):Class
+		{
+			var icon:Class;
+			
+			switch (code)
+			{
+				case RoleEnum.STUDENT  : 
+					icon = ico_user_etudiant;
+					break;
+				case RoleEnum.TUTEUR  : 
+					icon = ico_user_tuteur;
+					break;
+				default :
+					icon = ico_user_etudiant;
 					break;				
 			}
 			return icon;
