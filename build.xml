@@ -323,11 +323,11 @@ or by setting the following environment variable:
 				<include-file name="images/Home/ico_panel_calendar.png" path="${framework.images}/Home/ico_panel_calendar.png"/>
 				<include-file name="images/Home/ico_panel_chat.png" path="${framework.images}/Home/ico_panel_chat.png"/>
 				<include-file name="images/Home/ico_panel_users.png" path="${framework.images}/Home/ico_panel_users.png"/>
+					<!-- calendrier -->
+				<include-file name="images/Components/left.png" path="${framework.images}/Components/left.png"/>
+				<include-file name="images/Components/right.png" path="${framework.images}/Components/right.png"/>
+				<include-file name="images/Components/down.png" path="${framework.images}/Components/down.png"/>
 				
-				
-				
-				
-		
 				
 				<!-- integration corexpert end-->
 				
