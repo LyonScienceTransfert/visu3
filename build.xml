@@ -328,6 +328,10 @@ or by setting the following environment variable:
 				<include-file name="images/Components/right.png" path="${framework.images}/Components/right.png"/>
 				<include-file name="images/Components/down.png" path="${framework.images}/Components/down.png"/>
 				
+				<include-file name="images/Home/ico_user_tuteur.png" path="${framework.images}/Home/ico_user_tuteur.png"/>
+				<include-file name="images/Home/ico_user_etudiant.png" path="${framework.images}/Home/ico_user_etudiant.png"/>
+				
+				
 				
 				<!-- integration corexpert end-->
 				
