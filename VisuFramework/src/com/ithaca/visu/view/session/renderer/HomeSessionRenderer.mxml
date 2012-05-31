@@ -299,30 +299,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					
 					<s:itemRenderer>
                     <fx:Component>
-                        <s:ItemRenderer>
+                        <s:ItemRenderer autoDrawBackground="false">
                             <s:states>
                                 <s:State name="normal" />
                             </s:states>
-                            <s:Rect id="fill" radiusX="10"
+                            <s:Rect id="fill" height="14" radiusX="7"
 								left="1" right="1" top="1" bottom="1">
 								<s:fill>
-									<s:LinearGradient rotation="90">
-										<s:GradientEntry color="0xFFFFFF" />
-										<s:GradientEntry color="0xD8D8D8" />
-									</s:LinearGradient>
+									<s:SolidColor color="#ffaf04"/>
 								</s:fill>
-							</s:Rect>
-							
-							<s:Rect id="border" radiusX="10"
-									left="0" right="0" top="0" bottom="0" height="20" >
-								<s:stroke>
-									<s:LinearGradientStroke rotation="90" weight="1">
-										<s:GradientEntry color="0x000000" 
-														 alpha="0.5625"/>
-										<s:GradientEntry color="0x000000" 
-														 alpha="0.75" />
-									</s:LinearGradientStroke>
-								</s:stroke>
 							</s:Rect>
                             <myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
                         </s:ItemRenderer>

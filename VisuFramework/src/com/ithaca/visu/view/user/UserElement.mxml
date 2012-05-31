@@ -68,38 +68,42 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:visu="com.ithaca.visu.controls.*"
 	verticalAlign="middle">
-	<fx:Declarations>
-
-	</fx:Declarations>
-
-
 	
 	<fx:Script>
 		<![CDATA[
-				import com.ithaca.utils.StringUtils;
-				import com.ithaca.utils.VisuUtils;
-				import com.ithaca.visu.model.User;
+			import com.ithaca.utils.StringUtils;
+			import com.ithaca.utils.VisuUtils;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			
-				[Bindable]
-				public var user:User;
-				
-				[Bindable]
-				public var firstNameInitials:Boolean = false;
-				
-				[Bindable]
-				public var statusIconWidth:int = 16;
-
-				[Bindable]
-				public var showStatusIcon:Boolean = true;
-
-				[Bindable]
-				public var showRoleInParentheses:Boolean = false;
-				
+			[Bindable]
+			public var user:User;
+			
+			[Bindable]
+			public var firstNameInitials:Boolean = false;
+			
+			[Bindable]
+			public var statusIconWidth:int = 16;
+			
+			[Bindable]
+			public var showStatusIcon:Boolean = false;
+			
+			[Bindable]
+			public var showRoleInParentheses:Boolean = false;
+			
 		]]>
 	</fx:Script>
-
-	<mx:Image id="statusIcon" visible="{showStatusIcon}" width="{statusIconWidth}" height="{statusIconWidth}" includeInLayout="{showStatusIcon}" source="{VisuUtils.getStatusImageSource(user.status)}" /> 
+	<s:Image id="roleIcon" 
+			 source="{IconEnum.getIconByRoleUser( VisuUtils.getRoleConstantValue(user.getRole()))}"/>
+	<mx:Image id="statusIcon" 
+			  visible="{showStatusIcon}" 
+			  width="{statusIconWidth}" 
+			  height="{statusIconWidth}" 
+			  includeInLayout="{showStatusIcon}"
+			  source="{VisuUtils.getStatusImageSource(user.status)}"/> 
 	<!--<visu:ConnectionLight width="{statusIconWidth}" height="{statusIconWidth}"  id="statusIcon" visible="{showStatusIcon}" includeInLayout="{showStatusIcon}" status="{user.status}" />-->
-	<s:Label text="{firstNameInitials?StringUtils.firstLetterCap(user.lastname):StringUtils.cap(user.lastname)}{firstNameInitials?'.':''} {StringUtils.cap(user.firstname)}"/>
-	<s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"/>
+	<s:Label text="{firstNameInitials?StringUtils.firstLetterCap(user.lastname):StringUtils.cap(user.lastname)}{firstNameInitials?'.':''} {StringUtils.cap(user.firstname)}"
+			 fontSize="10"/>
+	<s:Label visible="{showRoleInParentheses}" includeInLayout="{showRoleInParentheses}" text="({VisuUtils.getRoleLabel(user.getRole())})"
+			 fontSize="10"/>
 </s:HGroup>
