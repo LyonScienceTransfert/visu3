@@ -80,7 +80,9 @@
 								
 								<mx:AdvancedDataGrid width="100%" height="100%"
 													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
-													 designViewDataType="flat">
+													 borderColor="#FFB311" designViewDataType="flat"
+													 focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+													 selectionColor="#FFCC5E">
 									
 									<mx:dataProvider>
 										<mx:ArrayCollection>
@@ -146,7 +148,9 @@
 								
 								<mx:AdvancedDataGrid id="adg1" width="100%" height="100%"
 													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
-													 designViewDataType="flat">
+													 borderColor="#FFB311" designViewDataType="flat"
+													 focusColor="#FFB311" rollOverColor="#FFB311"
+													 selectionColor="#FFB311">
 									<mx:dataProvider>
 										<mx:ArrayCollection>
 											
