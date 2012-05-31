@@ -485,7 +485,8 @@
 											</s:Rect>
 											<s:Image top="1" bottom="1" left="1" right="1" source="images/Home/profile.png"/>
 										</s:Group>
-										<s:TextArea left="25" top="0" width="100%" height="25"/>
+										<s:TextArea left="25" top="0" width="100%" height="25"
+													chromeColor="#FFCC5E" focusColor="#FFCC5E"/>
 										<s:Button left="27" right="0" bottom="0"
 												  label="Envoyer votre message" fontSize="11"
 												  skinClass="skins.Components.Button"/>
