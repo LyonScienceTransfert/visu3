@@ -69,7 +69,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:mate="http://mate.asfusion.com/" xmlns:controls="com.ithaca.visu.controls.*"
 	configure="configureHandler(event)" creationComplete="creationCompleteHandler(event)"
     currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-	top="15" bottom="5" left="5" right="5" height="100%"
+	top="15" bottom="25" left="5" right="5"
     >
 	<fx:Declarations>
 
