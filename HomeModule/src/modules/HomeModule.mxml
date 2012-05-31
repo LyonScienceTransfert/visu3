@@ -979,6 +979,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								dataProvider="{sessionsList}"
 								creationComplete="initSessionList(event)"								
 								itemRenderer="com.ithaca.visu.view.session.renderer.HomeSessionRenderer"
+								rollOverColor="#FFCC5E"
+								selectionColor="#FFFFFF"
 								/>
 					<s:HGroup verticalAlign="middle" horizontalAlign="center" visible="{sessionsList.length==0}" includeInLayout="{sessionsList.length==0}" width="100%" height="100%">
 							<s:Label text="Aucune séance pour cette date"/>
