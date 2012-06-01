@@ -534,6 +534,7 @@ public class RetroDocumentView extends SkinnableComponent
         var xml:XML = new XML(str);
         
         var menuAddSegment:Menu = Menu.createMenu(null, xml, false);
+		menuAddSegment.setStyle("styleName","corexpert");
         menuAddSegment.iconFunction = setIconMenuAddSegmentFunction;
         menuAddSegment.labelFunction= setLabelMenuAddSegmentFunction;
         menuAddSegment.addEventListener(MenuEvent.ITEM_CLICK, onClickMenuAddSegment);
