@@ -240,13 +240,15 @@ package com.ithaca.visu.ui.utils
 		static private var ScreenShot80x60:Class;
 		
 		[Bindable]
-		[Embed("images/iconVideo_16x16.png")]
+		[Embed("images/Salon/ico_video.png")]
+		//[Embed("images/iconVideo_16x16.png")]
 		static private var iconVideo_16x16:Class;
 		[Bindable]
 		[Embed("images/iconEdit_16x16.png")]
 		static private var iconEdit_16x16:Class;
 		[Bindable]
-		[Embed("images/iconAudio_16x16.png")]
+		[Embed("images/Salon/ico_audio.png")]
+		//[Embed("images/iconAudio_16x16.png")]
 		static private var iconAudio_16x16:Class;
 		[Bindable]
 		[Embed("images/iconMinimaze_16x16.png")]

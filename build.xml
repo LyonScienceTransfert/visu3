@@ -344,26 +344,8 @@ or by setting the following environment variable:
 				<include-file name="images/Salon/ico_ppl.png" path="${framework.images}/Salon/ico_ppl.png"/>
 				<include-file name="images/Salon/ico_view.png" path="${framework.images}/Salon/ico_view.png"/>
 				<include-file name="images/Salon/ico_06.png" path="${framework.images}/Salon/ico_06.png"/>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-	
-				
-				
-				
+				<include-file name="images/Salon/ico_video.png" path="${framework.images}/Salon/ico_video.png"/>
+				<include-file name="images/Salon/ico_audio.png" path="${framework.images}/Salon/ico_audio.png"/>
 				
 				
 				<!-- integration corexpert end-->
