@@ -69,7 +69,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
     xmlns:components="com.ithaca.utils.components.*" 
     xmlns:documentarisation="com.ithaca.documentarisation.*"
     creationComplete="skin1_creationCompleteHandler(event)"
-     currentStateChange="skin1_currentStateChangeHandler(event)">
+    currentStateChange="skin1_currentStateChangeHandler(event)"
+	>
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.Documentarisation")]
@@ -130,7 +131,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		>
 		<s:List width="100%" height="100%"
 			id="listRetroDocument" 
-		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
+		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"
+			styleName="corexpert"/>
 	</components:PanelButton>
 	
 	<components:PanelButton width="100%" height="100%" 
