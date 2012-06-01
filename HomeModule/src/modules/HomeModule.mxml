@@ -971,7 +971,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:VGroup  width="100%" height="100%" id="vGroupListSession">
 						<controls:NavigateurDay id="navigateurDay"
 							dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"
-							visible="true" change="navigateurDay_changeHandler(event)" width="100%" />
+							visible="true" change="navigateurDay_changeHandler(event)" width="100%"
+							styleName="corexpert"/>
 							<s:List 
 								id="sessionList"
 								includeInLayout="{sessionsList.length!=0}"
@@ -982,7 +983,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								dataProvider="{sessionsList}"
 								creationComplete="initSessionList(event)"								
 								itemRenderer="com.ithaca.visu.view.session.renderer.HomeSessionRenderer"
-								rollOverColor="#FFCC5E"
+								styleName="corexpert"
 								selectionColor="#FFFFFF"
 								/>
 					<s:HGroup verticalAlign="middle" horizontalAlign="center" visible="{sessionsList.length==0}" includeInLayout="{sessionsList.length==0}" width="100%" height="100%">
@@ -1005,12 +1006,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						 dropShadowVisible="false" verticalScrollPolicy="auto">
 					
 					<s:List id="listFluxActivity" width="100%" height="100%" contentBackgroundAlpha="0.0"
-							focusColor="#FFCC5E" itemRenderer="com.ithaca.visu.skins.Home.Chat"   rollOverColor="#FFCC5E"
-							selectionColor="#FFCC5E" skinClass="com.ithaca.visu.skins.Home.ListSkin"
+							itemRenderer="com.ithaca.visu.skins.Home.Chat"  
+							skinClass="com.ithaca.visu.skins.Home.ListSkin"
 							dataProvider="{fluxActivity}" 
 							creationComplete="refreshUserList()"
-							updateComplete="listFluxActivity_updateCompleteHandler(event)">
-						
+							updateComplete="listFluxActivity_updateCompleteHandler(event)"
+							styleName="corexpert">
 					</s:List>
 				</mx:VBox>
 				<!-- Answer box -->
@@ -1040,7 +1041,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:VGroup width="100%" height="100%" id="vGroupUserList">
 			
 					<mx:MenuBar id="userMenu" width="100%" labelField="@label"
-						itemClick="menuHandler(event);">
+						itemClick="menuHandler(event);" styleName="corexpert">
 						<fx:XMLList>
 							<!-- 
 								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
@@ -1080,9 +1081,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						dataProvider="{usersList}"
 						borderVisible="false"
 						itemRenderer="com.ithaca.visu.view.user.renderer.UserRenderer"
+						rollOverColor="#FFCC5E"
+						focusColor="#FFCC5E"
+						selectionColor="#FFFFFF"
 						/>
-   
-					
 				</s:VGroup>
 			</s:Panel>
 		</s:HGroup>

@@ -17,6 +17,12 @@
 @namespace components 		"com.ithaca.utils.components.*";
 @namespace timeline		"com.ithaca.timeline.*"; 
 
+.corexpert { 
+	selectionColor: #FFCC5E;
+	focusColor: #FDE0A1;
+	rollOverColor: #f8e9c8;
+}
+
 timeline|ObselSkin.PlayDocumentVideo
 {
 	skin-class: ClassReference("com.ithaca.timelineskins.PlayVideoSkin");
