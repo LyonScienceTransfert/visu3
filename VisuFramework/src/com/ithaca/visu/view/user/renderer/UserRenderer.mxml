@@ -67,7 +67,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx"
 				xmlns:myviews="com.ithaca.visu.view.user.*"
-				maxWidth="{width}">
+				maxWidth="{width}" autoDrawBackground="false">
 
 	<s:states>
 		<s:State name="normal" />
