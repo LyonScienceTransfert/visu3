@@ -295,7 +295,7 @@ package com.ithaca.visu.view.video
 			}
 			if (instance == labelUserZoomOut)
 			{	
-				labelUserZoomOut.lastFirstNameUser = VisuUtils.getUserLabelLastName(_ownerFluxVideo, true);
+				labelUserZoomOut.user = _ownerFluxVideo;
 			}
 			if (instance == buttonMarker)
 			{	
@@ -381,7 +381,7 @@ package com.ithaca.visu.view.video
 				ownerFluxVideoChange = false;
 				if(labelUserZoomOut != null)
 				{
-					labelUserZoomOut.lastFirstNameUser = VisuUtils.getUserLabelLastName(_ownerFluxVideo, true);
+					labelUserZoomOut.user = _ownerFluxVideo;
 				}
 			}
 			if(buttonChatEnabledChange)
