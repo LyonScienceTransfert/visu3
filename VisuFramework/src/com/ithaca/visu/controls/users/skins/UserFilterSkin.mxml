@@ -74,5 +74,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<!-- SkinParts
 	name=list, type=spark.components.List, required=false
 	-->
-	<s:List id="list" top="0" left="0" right="0" bottom="0"/>
+	<s:List id="list" top="0" left="0" right="0" bottom="0"
+			styleName="corexpert"/>
 </s:Skin>
