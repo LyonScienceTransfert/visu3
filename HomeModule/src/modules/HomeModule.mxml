@@ -69,7 +69,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	xmlns:mate="http://mate.asfusion.com/" xmlns:controls="com.ithaca.visu.controls.*"
 	configure="configureHandler(event)" creationComplete="creationCompleteHandler(event)"
     currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-	top="15" bottom="5" left="5" right="5" height="100%"
+	top="15" bottom="25" left="5" right="5"
     >
 	<fx:Declarations>
 
@@ -112,6 +112,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
 			import com.ithaca.visu.renderer.FluxActivityRenderer;
+			import com.ithaca.visu.skins.Components.Button;
+			import com.ithaca.visu.skins.Home.Chat;
+			import com.ithaca.visu.skins.Home.ListSkin;
 			import com.ithaca.visu.ui.utils.ConnectionStatus;
 			import com.ithaca.visu.ui.utils.RightStatus;
 			
@@ -960,15 +963,16 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 	
 	<s:VGroup gap="5" horizontalAlign="center" horizontalCenter="0"
-		top="0" bottom="20" left="0" right="0" maxWidth="1024">
+		top="0" bottom="0" left="0" right="0" maxWidth="1024">
 		<s:HGroup width="100%" height="100%">
 			<!-- Calendar -->
-			<s:Panel id="calendarPanel" width="40%" height="100%" title="Calendrier" skinClass="com.ithaca.visu.skins.FixedPanel">
+			<s:Panel id="calendarPanel" width="35%" height="100%" title="Calendrier" skinClass="com.ithaca.visu.skins.FixedPanel">
 				<s:Image x="10" y="-25" source="images/Home/ico_panel_calendar.png"/>
 				<s:VGroup  width="100%" height="100%" id="vGroupListSession">
 						<controls:NavigateurDay id="navigateurDay"
 							dataProvider="{this.listDateForNavigateurDay}" labelFunction="showLabalNavigateurDay"
-							visible="true" change="navigateurDay_changeHandler(event)" width="100%" />
+							visible="true" change="navigateurDay_changeHandler(event)" width="100%"
+							styleName="corexpert"/>
 							<s:List 
 								id="sessionList"
 								includeInLayout="{sessionsList.length!=0}"
@@ -979,7 +983,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								dataProvider="{sessionsList}"
 								creationComplete="initSessionList(event)"								
 								itemRenderer="com.ithaca.visu.view.session.renderer.HomeSessionRenderer"
-								rollOverColor="#FFCC5E"
+								styleName="corexpert"
 								selectionColor="#FFFFFF"
 								/>
 					<s:HGroup verticalAlign="middle" horizontalAlign="center" visible="{sessionsList.length==0}" includeInLayout="{sessionsList.length==0}" width="100%" height="100%">
@@ -990,33 +994,45 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			
 			<!-- Chat -->
-			<s:Panel id="fluxGroup" width="30%" height="100%" title="Chat global" skinClass="com.ithaca.visu.skins.FixedPanel">
+			<s:Panel id="fluxGroup" width="35%" height="100%" title="Chat global" skinClass="com.ithaca.visu.skins.FixedPanel">
 				<s:Image x="10" y="-25" source="images/Home/ico_panel_chat.png"/>
-					<s:VGroup width="100%" height="100%" id="vGroupFluxActivity">
-	
-						<s:List 
+				<s:Rect left="1" top="1" bottom="1" height="100%" width="37">
+					<s:fill>
+						<s:SolidColor color="0xe4e4e4" />
+					</s:fill>
+				</s:Rect>	
+				<!-- log du chat -->
+				<mx:VBox id="vBox" left="2" right="2" top="2" bottom="61" width="100%" height="100%"
+						 dropShadowVisible="false" verticalScrollPolicy="auto">
+					
+					<s:List id="listFluxActivity" width="100%" height="100%" contentBackgroundAlpha="0.0"
+							itemRenderer="com.ithaca.visu.skins.Home.Chat"  
+							skinClass="com.ithaca.visu.skins.Home.ListSkin"
 							dataProvider="{fluxActivity}" 
-							itemRenderer="com.ithaca.visu.renderer.FluxActivityRenderer"
-							width="{vGroupFluxActivity.width}"
-							height="100%"
-							id="listFluxActivity"
-							borderVisible="false"
 							creationComplete="refreshUserList()"
-							updateComplete="listFluxActivity_updateCompleteHandler(event)"/>
-
-						<s:HGroup paddingTop="5" paddingRight="5" paddingLeft="5" paddingBottom="5" gap="5" verticalAlign="middle" width="100%"
-							horizontalAlign="center">
-							<s:TextInput id="textToSend" width="100%"
-								height="{navigateurDay.height}" keyUp="onKeyUp(event)" />
-							<s:Button height="{navigateurDay.height}"
-								click="sendAll_clickHandler()">
-								<s:label>{fxgt.gettext("Envoyer")}</s:label>
-							</s:Button>
-						</s:HGroup>
-					</s:VGroup>
-					<!--
-				</s:HGroup>
-				-->
+							updateComplete="listFluxActivity_updateCompleteHandler(event)"
+							styleName="corexpert">
+					</s:List>
+				</mx:VBox>
+				<!-- Answer box -->
+				<s:Group id="vGroupFluxActivity" left="3" right="3" bottom="2" height="58">
+					<s:Group left="7" width="23" height="23">
+						<s:Rect height="23" width="23">
+							<s:stroke>
+								<s:SolidColorStroke weight="1" color="0xa2a2a2" />
+							</s:stroke>
+						</s:Rect>
+						<s:Image top="1" bottom="1" left="1" right="1" source="images/Home/profile.png"/>
+					</s:Group>
+					<s:TextArea id="textToSend" left="38" top="0" width="100%" height="35" chromeColor="#FFCC5E"
+								focusColor="#FFCC5E"
+								keyUp="onKeyUp(event)"/>
+					<s:Button left="38" right="0" bottom="0"
+							  click="sendAll_clickHandler()" 
+							   skinClass="com.ithaca.visu.skins.Components.Button" fontSize="11">
+						<s:label>{fxgt.gettext("Envoyer votre message")}</s:label>
+						</s:Button>
+				</s:Group>
 			</s:Panel>
 			
 			<!-- Utilisateurs -->
@@ -1025,7 +1041,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:VGroup width="100%" height="100%" id="vGroupUserList">
 			
 					<mx:MenuBar id="userMenu" width="100%" labelField="@label"
-						itemClick="menuHandler(event);">
+						itemClick="menuHandler(event);" styleName="corexpert">
 						<fx:XMLList>
 							<!-- 
 								Must provide an "id" attribute for EACH menuitem, otherwise, the XML navigation in actionscript will throw an error
@@ -1065,9 +1081,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						dataProvider="{usersList}"
 						borderVisible="false"
 						itemRenderer="com.ithaca.visu.view.user.renderer.UserRenderer"
+						rollOverColor="#FFCC5E"
+						focusColor="#FFCC5E"
+						selectionColor="#FFFFFF"
 						/>
-   
-					
 				</s:VGroup>
 			</s:Panel>
 		</s:HGroup>

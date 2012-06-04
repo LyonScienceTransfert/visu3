@@ -291,6 +291,8 @@ public class SegmentCommentAudio extends SkinnableComponent
         this.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
         // check tracage when block remove from the stage
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+		
+		fxgt =  FxGettext ;
 	}
 	//_____________________________________________________________________
 	//

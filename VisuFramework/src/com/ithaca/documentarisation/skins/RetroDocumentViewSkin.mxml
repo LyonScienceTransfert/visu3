@@ -69,7 +69,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
         xmlns:components="com.ithaca.utils.components.*"
         xmlns:utils="com.ithaca.utils.*"
         creationComplete="skin1_creationCompleteHandler(event)" 
-        currentStateChange="skin1_currentStateChangeHandler(event)">
+        currentStateChange="skin1_currentStateChangeHandler(event)"
+		>
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.RetroDocumentView")]
@@ -124,7 +125,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:VGroup width="100%" height="100%">
 		<s:HGroup  width="100%" gap="3" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5">
 			<s:Label text="balbla" id="titleDocument" minWidth="100" width="100%" includeIn="normal" fontWeight="bold" paddingLeft="5"/>
-			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited, dropped" fontSize="12"/>
+			<s:TextInput text="aze" minWidth="100" width="100%" id="titleDocumentTextInput" includeIn="edited, dropped" fontSize="12" styleName="corexpert"/>
 			<mx:Button icon="{IconEnum.getIconByName('delete')}" id="removeButton" width="30" includeIn="edited, dropped"/>
 			<!--<mx:PopUpButton  icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}" id="addPopUpButton" width="41" includeIn="edited" buttonMode="true"/>-->
 			<components:IconButton id="buttonMenuAddSegment" icon="{IconEnum.getIconByName('RetroDocumentAddSegmentWithArrow_16x16')}"  width="29"/>
