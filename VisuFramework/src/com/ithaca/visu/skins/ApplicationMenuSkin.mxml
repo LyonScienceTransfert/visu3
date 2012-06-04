@@ -166,24 +166,25 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					 x="20" y="20" fontSize="24"
 					 paddingTop="20" paddingLeft="10"
 					/>
-			<s:Group width="100%" horizontalCenter="0" includeIn="authentified">
+			<s:HGroup width="100%" horizontalAlign="center"  includeIn="authentified">
 				<s:HGroup right="0" height="48"
 						  gap="5" 
 						  paddingTop="10" 
-						  textAlign="right">
-					<s:Button label="Accueil" skinClass="com.ithaca.visu.skins.MenuButton.Home"/>
-					<s:Button label="Utilisateurs" skinClass="com.ithaca.visu.skins.MenuButton.Users"/>
-					<s:Button label="Séances" skinClass="com.ithaca.visu.skins.MenuButton.Seance"/>
-					<s:Button label="Profil" skinClass="com.ithaca.visu.skins.MenuButton.Profil"/>
-					<s:Button label="Bilans" skinClass="com.ithaca.visu.skins.MenuButton.Bilan"/>
-					<s:Button label="Salon synchrone" skinClass="com.ithaca.visu.skins.MenuButton.SalonSync" enabled="false"/>
-					<s:Button label="Salon de retrospection" skinClass="com.ithaca.visu.skins.MenuButton.SalonRetro" enabled="false"/>
+						  textAlign="right" horizontalAlign="center">
+					<!-- hide buttons : includeInLayout="false" visible="false" -->
+					<s:Button id="buttonHomeModule" label="Accueil" skinClass="com.ithaca.visu.skins.MenuButton.Home"/>
+					<s:Button id="buttonUserModule" label="Utilisateurs" skinClass="com.ithaca.visu.skins.MenuButton.Users" includeInLayout="false" visible="false"/>
+					<s:Button id="buttonSessionModule" label="Séances" skinClass="com.ithaca.visu.skins.MenuButton.Seance" includeInLayout="false" visible="false"/>
+					<s:Button id="buttonProfilModule" label="Profil" skinClass="com.ithaca.visu.skins.MenuButton.Profil"/>
+					<s:Button id="buttonBilanModule" label="Bilans" skinClass="com.ithaca.visu.skins.MenuButton.Bilan"/>
+					<s:Button id="buttonTutoratModule" label="Salon synchrone" skinClass="com.ithaca.visu.skins.MenuButton.SalonSync" enabled="false"/>
+					<s:Button id="buttonRetrospectionModule" label="Salon de retrospection" skinClass="com.ithaca.visu.skins.MenuButton.SalonRetro" enabled="false"/>
 				</s:HGroup>
-			</s:Group>
+			</s:HGroup>
 			
 			<s:Group height="58"  includeIn="authentified">
 				<s:Group right="0" height="35">
-					<s:Image left="0" source="images/Page/topbar_wave.png"/>
+					<s:Image left="5" toolTip="1" source="images/Page/topbar_wave.png"/>
 					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
 						<s:fill>
 							<s:LinearGradient rotation="90">
