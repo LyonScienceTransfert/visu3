@@ -88,7 +88,7 @@ public class MailerFacade
     public static void setSmtpServer(String server)
     {
         log.debug("Setting SMTP server to {}", server);
-        smtpserver=server;
+        smtpserver = server;
     }
     
     public static String getSmtpServer()
@@ -144,7 +144,7 @@ public class MailerFacade
         }
         catch (MessagingException mex)
         {
-            log.error("fail to send mail to {}", recipients);
+            log.error("Failed to send mail to {}", recipients);
             mex.printStackTrace();
             Exception ex = mex.getNextException();
             if (ex != null)
