@@ -94,9 +94,12 @@ public class NameUser extends SkinnableComponent
 
 	public function set user(value:User):void
 	{
-		_user = value;
-		userChange = true;
-		invalidateProperties();
+		if(value)
+		{
+			_user = value;
+			userChange = true;
+			invalidateProperties();
+		}
 	}
 	public function get user():User
 	{
