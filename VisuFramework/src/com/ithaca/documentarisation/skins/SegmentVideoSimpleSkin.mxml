@@ -220,7 +220,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:RichEditableText id="richEditableText"
 				editable.sharedOver="false" editable.shared="false"
 				width="100%" 
-				color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false" selectable="true" selectionHighlighting="whenActive">
+				color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false" selectable="true" selectionHighlighting="whenActive"
+				styleName="corexpert">
 				<s:text>votre text ici</s:text>
 			</s:RichEditableText>	
 		</s:HGroup>

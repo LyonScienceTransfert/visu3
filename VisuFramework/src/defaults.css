@@ -17,6 +17,13 @@
 @namespace components 		"com.ithaca.utils.components.*";
 @namespace timeline		"com.ithaca.timeline.*"; 
 
+.corexpert { 
+	selectionColor: #FFCC5E;
+	focusColor: #FDE0A1;
+	rollOverColor: #f8e9c8;
+	focusedTextSelectionColor: #FFCC5E;
+}
+
 timeline|ObselSkin.PlayDocumentVideo
 {
 	skin-class: ClassReference("com.ithaca.timelineskins.PlayVideoSkin");
@@ -431,14 +438,4 @@ sessionView|SessionViewSalonRetro
 sessionView|SessionViewSalonSession
 {
 	skin-class: ClassReference("com.ithaca.visu.view.session.skin.SessionViewSalonSessionSkin");
-}
-
-ws|Form
-{
-	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormSkin" );
-}
-
-ws|FormItem
-{
-	skin-class : ClassReference( "ws.tink.spark.skins.containers.FormItemSkin" );
 }
