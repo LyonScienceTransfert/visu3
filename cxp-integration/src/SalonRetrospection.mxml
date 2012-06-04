@@ -58,7 +58,7 @@
 								<!-- group of buttons -->
 								<s:HGroup right="2" gap="2" verticalCenter="0">
 									<s:Button skinClass="skins.Components.Button" height="22" width="28" icon="images/Salon/ico_05.png"/>
-									<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_screen.png"/>
+									<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_screen_zoom.png"/>
 									<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_micro.png"/>
 								</s:HGroup>
 							</s:Group>
@@ -96,9 +96,12 @@
 																<s:SolidColor color="0xffaf04" />
 															</s:fill>
 														</s:Rect>
-														<s:HGroup verticalCenter="0" left="3" right="3">
+														<s:HGroup left="3" right="3"
+																  verticalAlign="middle"
+																  verticalCenter="0">
 															<s:Image source="images/Home/ico_user_tuteur.png" />
-															<s:Label text="S.Serguei" fontSize="10" height="100%" verticalAlign="middle" />
+															<s:Label fontSize="10" text="S.Serguei"
+																	 verticalAlign="bottom"/>
 														</s:HGroup>
 													</s:Group>
 												</s:Group>
