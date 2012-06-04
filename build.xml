@@ -313,6 +313,8 @@ or by setting the following environment variable:
 				<include-file name="images/Menu/SeanceOn.png" path="${framework.images}/Menu/SeanceOn.png"/>
 				<include-file name="images/Menu/BilanOn.png" path="${framework.images}/Menu/BilanOn.png"/>
 				<include-file name="images/Menu/BilanOff.png" path="${framework.images}/Menu/BilanOff.png"/>
+				<include-file name="images/Menu/ProfilOff.png" path="${framework.images}/Menu/ProfilOff.png"/>
+				<include-file name="images/Menu/ProfilOn.png" path="${framework.images}/Menu/ProfilOn.png"/>
 				<include-file name="images/Page/btn_chat_on.png" path="${framework.images}/Page/btn_chat_on.png"/>
 				<include-file name="images/Page/btn_chat_off.png" path="${framework.images}/Page/btn_chat_off.png"/>
 				<include-file name="images/Page/topbar_wave.png" path="${framework.images}/Page/topbar_wave.png"/>
@@ -331,6 +333,19 @@ or by setting the following environment variable:
 				<include-file name="images/Home/ico_user_tuteur.png" path="${framework.images}/Home/ico_user_tuteur.png"/>
 				<include-file name="images/Home/ico_user_etudiant.png" path="${framework.images}/Home/ico_user_etudiant.png"/>
 				
+				<include-file name="images/Salon/ico_05.png" path="${framework.images}/Salon/ico_05.png"/>
+				<include-file name="images/Salon/ico_screen.png" path="${framework.images}/Salon/ico_screen.png"/>
+				<include-file name="images/Salon/ico_micro.png" path="${framework.images}/Salon/ico_micro.png"/>
+				<include-file name="images/Salon/ico_sound.png" path="${framework.images}/Salon/ico_sound.png"/>
+				<include-file name="images/Salon/ico_bilan_add.png" path="${framework.images}/Salon/ico_bilan_add.png"/>
+				<include-file name="images/Salon/ico_back.png" path="${framework.images}/Salon/ico_back.png"/>
+				<include-file name="images/Salon/ico_write.png" path="${framework.images}/Salon/ico_write.png"/>
+				<include-file name="images/Salon/ico_bilan_delete.png" path="${framework.images}/Salon/ico_bilan_delete.png"/>
+				<include-file name="images/Salon/ico_ppl.png" path="${framework.images}/Salon/ico_ppl.png"/>
+				<include-file name="images/Salon/ico_view.png" path="${framework.images}/Salon/ico_view.png"/>
+				<include-file name="images/Salon/ico_06.png" path="${framework.images}/Salon/ico_06.png"/>
+				<include-file name="images/Salon/ico_video.png" path="${framework.images}/Salon/ico_video.png"/>
+				<include-file name="images/Salon/ico_audio.png" path="${framework.images}/Salon/ico_audio.png"/>
 				
 				
 				<!-- integration corexpert end-->

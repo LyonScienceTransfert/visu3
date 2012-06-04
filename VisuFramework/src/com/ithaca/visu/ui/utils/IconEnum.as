@@ -105,7 +105,8 @@ package com.ithaca.visu.ui.utils
 		static private var comment:Class;
 
 		[Bindable]
-		[Embed("images/CommentAddVer1.png")]
+		[Embed("images/Salon/ico_write.png")]
+		//[Embed("images/CommentAddVer1.png")]
 		static private var commentAdd:Class;
 				
 		[Bindable]
@@ -138,19 +139,23 @@ package com.ithaca.visu.ui.utils
 		static private var arrowDown:Class;
 
 		[Bindable]
-		[Embed("images/Poubelle.png")]
+		[Embed("images/Salon/ico_bilan_delete.png")]
+		//[Embed("images/Poubelle.png")]
 		static private var poubelle:Class;
 
 		[Bindable]
-		[Embed("images/RetroDocumentAddVer1.png")]
+		[Embed("images/Salon/ico_bilan_add.png")]
+		//[Embed("images/RetroDocumentAddVer1.png")]  
 		static private var retroDocumentAdd:Class;
 		
 		[Bindable]
-		[Embed("images/share_icon20x20.png")]
+		[Embed("images/Salon/ico_ppl.png")]
+		//[Embed("images/share_icon20x20.png")]
 		static private var retroDocumentShared:Class;
 		
 		[Bindable]
-		[Embed("images/share_icon.png")]
+		[Embed("images/Salon/ico_ppl.png")]
+		//[Embed("images/share_icon.png")]
 		static private var commentForSession:Class;
 
 		[Bindable]
@@ -182,7 +187,8 @@ package com.ithaca.visu.ui.utils
 		static private var ballGreen:Class;
 		
 		[Bindable]
-		[Embed("images/iconZoom_16x16.png")]
+		[Embed("images/Salon/ico_screen.png")]
+		//[Embed("images/iconZoom_16x16.png")]
 		static private var zoom16x16:Class;
 		
 		[Bindable]
@@ -190,7 +196,8 @@ package com.ithaca.visu.ui.utils
 		static private var chat16x16:Class;
 		
 		[Bindable]
-		[Embed("images/iconVolume_16x16.png")]
+		[Embed("images/Salon/ico_sound.png")]
+		//[Embed("images/iconVolume_16x16.png")]  
 		static private var volume16x16:Class;
 		
 		[Bindable]
@@ -198,7 +205,8 @@ package com.ithaca.visu.ui.utils
 		static private var mute16x16:Class;
 		
 		[Bindable]
-		[Embed("images/mic_on.png")]
+		//[Embed("images/mic_on.png")]
+		[Embed("images/Salon/ico_micro.png")]
 		static private var mic_on:Class;
 		
 		[Bindable]
@@ -206,7 +214,8 @@ package com.ithaca.visu.ui.utils
 		static private var mic_off:Class;
 		
 		[Bindable]
-		[Embed("images/iconMax_16x16.png")]
+		//[Embed("images/iconMax_16x16.png")]
+		[Embed("images/Salon/ico_05.png")]
 		static private var iconMax_16x16:Class;
 		
 		[Bindable]
@@ -231,13 +240,15 @@ package com.ithaca.visu.ui.utils
 		static private var ScreenShot80x60:Class;
 		
 		[Bindable]
-		[Embed("images/iconVideo_16x16.png")]
+		[Embed("images/Salon/ico_video.png")]
+		//[Embed("images/iconVideo_16x16.png")]
 		static private var iconVideo_16x16:Class;
 		[Bindable]
 		[Embed("images/iconEdit_16x16.png")]
 		static private var iconEdit_16x16:Class;
 		[Bindable]
-		[Embed("images/iconAudio_16x16.png")]
+		[Embed("images/Salon/ico_audio.png")]
+		//[Embed("images/iconAudio_16x16.png")]
 		static private var iconAudio_16x16:Class;
 		[Bindable]
 		[Embed("images/iconMinimaze_16x16.png")]
@@ -273,19 +284,22 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/iconLettre_T_16x16.png")]
 		static private var iconLettre_T_16x16:Class;
 		[Bindable]
-		[Embed("images/iconReturnLeft_16x16.png")]
+		[Embed("images/Salon/ico_back.png")]
+		//[Embed("images/iconReturnLeft_16x16.png")]
 		static private var iconReturnLeft_16x16:Class;
 		[Bindable]
 		[Embed("images/iconInfo_16x16.png")]
 		static private var iconInfo_16x16:Class;
 		[Bindable]
-		[Embed("images/RetroDocumentAddSegmentWithArrow_16x16.png")]
+		[Embed("images/Salon/ico_06.png")]
+		//[Embed("images/RetroDocumentAddSegmentWithArrow_16x16.png")]
 		static private var RetroDocumentAddSegmentWithArrow_16x16:Class;
 		[Bindable]
 		[Embed("images/loaderBlueLine.swf")]
 		static private var loaderBlueLine:Class;
 		[Bindable]
-		[Embed("images/iconEye_16x16.png")]
+		[Embed("images/Salon/ico_view.png")]
+		//[Embed("images/iconEye_16x16.png")]
 		static private var iconEye_16x16:Class;
 		[Bindable]
 		[Embed("images/iconAnnuler_16x16.png")]

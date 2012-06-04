@@ -62,6 +62,12 @@
  */
 package com.ithaca.visu.view.video
 {
+import com.ithaca.utils.StringUtils;
+import com.ithaca.utils.VisuUtils;
+import com.ithaca.visu.model.User;
+import com.ithaca.visu.ui.utils.IconEnum;
+
+import spark.components.Image;
 import spark.components.Label;
 import spark.components.supportClasses.SkinnableComponent;
 
@@ -70,8 +76,11 @@ public class NameUser extends SkinnableComponent
 	[SkinPart("true")]
 	public var labelNameUser:Label;
 	
-	private var _name:String="void";
-	private var nameUserChange:Boolean;
+	[SkinPart("true")]
+	public var roleIcon:Image;
+	
+	private var _user:User;
+	private var userChange:Boolean;
 	
 	public function NameUser()
 	{
@@ -82,16 +91,19 @@ public class NameUser extends SkinnableComponent
 	// Setter/getter
 	//
 	//_____________________________________________________________________
-	
-	public function set lastFirstNameUser(value:String):void
+
+	public function set user(value:User):void
 	{
-		_name = value;
-		nameUserChange = true;
-		invalidateProperties();
+		if(value)
+		{
+			_user = value;
+			userChange = true;
+			invalidateProperties();
+		}
 	}
-	public function get lastFirstNameUser():String
+	public function get user():User
 	{
-		return this._name;
+		return _user;
 	}
 	
 
@@ -106,20 +118,33 @@ public class NameUser extends SkinnableComponent
 		super.partAdded(partName,instance);
 		if (instance == labelNameUser)
 		{
-			labelNameUser.text = _name;
+			if(user)
+			{
+				labelNameUser.text = StringUtils.firstLetterCap(user.lastname)+'.'+StringUtils.cap(user.firstname);
+			}
 		}
-		
+		if (instance == roleIcon)
+		{
+			if(user)
+			{
+				roleIcon.source = IconEnum.getIconByRoleUser( VisuUtils.getRoleConstantValue(user.getRole()));
+			}
+		}
 	}
 	
 	override protected function commitProperties():void
 	{
 		super.commitProperties();	
-		if(nameUserChange)
+		if(userChange)
 		{
-			nameUserChange = false;
+			userChange = false;
 			if(labelNameUser)
 			{
-				labelNameUser.text = _name;
+				labelNameUser.text = StringUtils.firstLetterCap(user.lastname)+'.'+StringUtils.cap(user.firstname);
+			}
+			if(roleIcon)
+			{
+				roleIcon.source = IconEnum.getIconByRoleUser( VisuUtils.getRoleConstantValue(user.getRole()));
 			}
 		}
 	}

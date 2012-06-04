@@ -66,7 +66,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
-	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*" currentStateChange="itemrenderer1_currentStateChangeHandler(event)">
+	autoDrawBackground="true" xmlns:documentarisation="com.ithaca.documentarisation.*" currentStateChange="itemrenderer1_currentStateChangeHandler(event)"
+	styleName="corexpert">
 	<fx:Script>
 	<![CDATA[
 		import com.ithaca.documentarisation.skins.SegmentCommentAudioSkin;
