@@ -59,7 +59,7 @@
 								<s:HGroup right="2" gap="2" verticalCenter="0">
 									<s:Button skinClass="skins.Components.Button" height="22" width="28" icon="images/Salon/ico_05.png"/>
 									<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_screen_zoom.png"/>
-									<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_micro.png"/>
+									<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/micro_off.png"/>
 								</s:HGroup>
 							</s:Group>
 							
@@ -86,7 +86,7 @@
 											<s:Image top="1" left="3" source="images/Salon/btn_play.png"/>
 											<!--<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="@Embed('images/Salon/ico_play.png')" top="1" left="3"/>-->
 											<s:HGroup top="1" right="3" height="20">
-												<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_sound.png"/>
+												<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/audio_on.png"/>
 												<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_write.png"/>
 												<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_screen.png"/>
 												<!-- User name -->
