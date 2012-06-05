@@ -40,7 +40,7 @@ in accordance with the terms of the license agreement accompanying it.
 		<s:State name="up" />
 		<s:State name="over" />
 		<s:State name="down" />
-		<s:State name="active" />
+		<s:State name="selected" />
 		<s:State name="disabled" />
 	</s:states>
 	
@@ -84,7 +84,7 @@ in accordance with the terms of the license agreement accompanying it.
 		</s:fill>
 	</s:Rect>
 	<!-- Active -->
-	<s:Rect left="1" right="1" top="1" bottom="1" radiusX="2" includeIn="active">
+	<s:Rect left="1" right="1" top="1" bottom="1" radiusX="2" includeIn="selected">
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="0xffff5a" 
@@ -121,7 +121,7 @@ in accordance with the terms of the license agreement accompanying it.
 	</s:Rect>
 	
 	<s:Image horizontalCenter="0" source="images/Components/right.png" verticalCenter="0"
-			 source.active="images/Components/down.png"/>
+			 source.selected="images/Components/down.png"/>
 	
 	
 </s:SparkButtonSkin>

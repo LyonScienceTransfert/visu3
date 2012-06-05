@@ -106,61 +106,50 @@
 									<!-- Participants -->
 									<s:TileGroup width="100%">
 										<!-- Student -->
-										<s:Group>
-											<s:Rect width="100%" height="14" radiusX="7">
-												<s:fill>
-													<s:SolidColor color="#ffaf04"/>
-												</s:fill>
-											</s:Rect>
-											<s:HGroup left="3" right="3" gap="2"
-													  verticalAlign="baseline">
-												<s:Image source="images/Home/ico_user_etudiant.png"/>												
-												<s:Label fontSize="10" text="Étudiant 1"
-														 verticalAlign="middle" verticalCenter="0"/>
-											</s:HGroup>
-										</s:Group>
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_connected.png"/>
+											<s:Label fontSize="12" text="Étudiant 1" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
 										<!-- Teacher -->
-										<s:Group>
-											<s:Rect width="100%" height="14" radiusX="7">
-												<s:fill>
-													<s:SolidColor color="#ffaf04"/>
-												</s:fill>
-											</s:Rect>
-											<s:HGroup left="3" right="3" gap="2"
-													  verticalAlign="baseline">
-												<s:Image source="images/Home/ico_user_tuteur.png"/>												
-												<s:Label fontSize="10" text="Tuteur 1"
-														 verticalAlign="middle" verticalCenter="0"/>
-											</s:HGroup>
-										</s:Group>
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_connected.png"/>
+											<s:Label fontSize="12" text="Tuteur 1" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
 										<!-- Student not connected -->
-										<s:Group alpha="0.5">
-											<s:Rect width="100%" height="14" radiusX="7">
-												<s:fill>
-													<s:SolidColor color="#ffaf04"/>
-												</s:fill>
-											</s:Rect>
-											<s:HGroup left="3" right="3" gap="2"
-													  verticalAlign="baseline">
-												<s:Image source="images/Home/ico_user_etudiant.png"/>												
-												<s:Label fontSize="10" text="Étudiant 2"
-														 verticalAlign="middle" verticalCenter="0"/>
-											</s:HGroup>
-										</s:Group>
-										<!-- Teacher not connected -->
-										<s:Group alpha="0.5">
-											<s:Rect width="100%" height="14" radiusX="7">
-												<s:fill>
-													<s:SolidColor color="#ffaf04"/>
-												</s:fill>
-											</s:Rect>
-											<s:HGroup left="3" right="3" gap="2"
-													  verticalAlign="baseline">
-												<s:Image source="images/Home/ico_user_tuteur.png"/>												
-												<s:Label fontSize="10" text="Tuteur 2"
-														 verticalAlign="middle" verticalCenter="0"/>
-											</s:HGroup>
-										</s:Group>
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_deconnected.png"/>
+											<s:Label fontSize="12" text="Étudiant 2" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
+										<!-- Student recording -->
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_recording.png"/>
+											<s:Label fontSize="12" text="Étudiant 3" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
+										<!-- Teacher not in session -->
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_session.png"/>
+											<s:Label fontSize="12" text="Tuteur 3" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
 									</s:TileGroup>
 									
 									<!-- Session status -->
@@ -170,11 +159,17 @@
 											 verticalAlign="middle"/>
 									
 									<!-- Management buttons -->
-									<s:HGroup gap="1" width="100%">
-										<s:Button skinClass="skins.Components.Button" label="Supprimer" fontSize="11" height="18" />
-										<s:Button skinClass="skins.Components.Button" label="Modifier" fontSize="11" height="18" />
+									<s:HGroup gap="1" width="100%" clipAndEnableScrolling="true">
+										<s:Button height="18" label="Supprimer" fontSize="11"
+												  icon="images/Home/ico_edit.png"
+												  skinClass="skins.Components.Button"/>
+										<s:Button height="18" label="Modifier" fontSize="11"
+												  icon="images/Home/ico_delete.png"
+												  skinClass="skins.Components.Button"/>
 										<s:Group width="100%"></s:Group>
-										<s:Button skinClass="skins.Components.Button" label="Rejoindre la séance" fontSize="11" height="18" />
+										<s:Button height="18" label="Rejoindre la séance"
+												  fontSize="11" icon="images/Home/ico_goto.png"
+												  skinClass="skins.Components.Button"/>
 									</s:HGroup>
 								</s:VGroup>
 							</s:Group>
@@ -200,7 +195,7 @@
 									</s:fill>
 								</s:Rect>
 								<s:Label x="0" y="0" height="20" width="100%" color="0x272727"
-										 fontFamily="Arial" fontSize="12" fontWeight="normal" text="11:40"
+										 fontFamily="Arial" fontSize="12" fontWeight="normal" text="14:40"
 										 verticalAlign="middle"/>
 							</s:Group>
 							<!-- détails -->
@@ -222,33 +217,23 @@
 									<!-- Participants -->
 									<s:TileGroup width="100%">
 										<!-- Student -->
-										<s:Group>
-											<s:Rect width="100%" height="14" radiusX="7">
-												<s:fill>
-													<s:SolidColor color="#ffaf04"/>
-												</s:fill>
-											</s:Rect>
-											<s:HGroup left="3" right="3" gap="2"
-													  verticalAlign="baseline">
-												<s:Image source="images/Home/ico_user_etudiant.png"/>												
-												<s:Label fontSize="10" text="Étudiant 1"
-														 verticalAlign="middle" verticalCenter="0"/>
-											</s:HGroup>
-										</s:Group>
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_connected.png"/>
+											<s:Label fontSize="12" text="Étudiant 3" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
 										<!-- Teacher -->
-										<s:Group>
-											<s:Rect width="100%" height="14" radiusX="7">
-												<s:fill>
-													<s:SolidColor color="#ffaf04"/>
-												</s:fill>
-											</s:Rect>
-											<s:HGroup left="3" right="3" gap="2"
-													  verticalAlign="baseline">
-												<s:Image source="images/Home/ico_user_tuteur.png"/>												
-												<s:Label fontSize="10" text="Tuteur 1"
-														 verticalAlign="middle" verticalCenter="0"/>
-											</s:HGroup>
-										</s:Group>
+										<s:HGroup left="3" right="3" gap="2" height="100%"
+												  verticalAlign="middle">
+											<s:Image source="images/Home/ico_connected.png"/>
+											<s:Label fontSize="12" text="Tuteur 3" color="#373737"
+													 verticalAlign="bottom" verticalCenter="0"/>
+											<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
+													 verticalAlign="bottom" verticalCenter="0"/>
+										</s:HGroup>
 									</s:TileGroup>
 									
 									<!-- Session status -->
@@ -258,8 +243,8 @@
 											 verticalAlign="middle"/>
 									
 									<!-- Management buttons -->
-									<s:HGroup gap="1" width="100%">
-										<s:Group width="100%"></s:Group>
+									<s:HGroup width="100%" gap="1" horizontalAlign="right"
+											  verticalAlign="middle">
 										<s:Button label="Rétrospection" fontSize="11"
 												  icon="images/Home/ico_salon_retro.png"
 												  skinClass="skins.Components.Button"/>
@@ -345,18 +330,6 @@
 			<s:Group x="0" y="0" width="100%" height="100%">
 				
 				<!-- barre de tri -->
-				<!--
-				<s:Group width="100%">
-				
-				
-				
-					<mx:PopUpButton x="10" y="0" label="Tri"/>
-				
-				
-				
-				
-				</s:Group>
-				-->
 				<s:Group x="1" y="1">
 					<s:Image source="images/Home/users_filter.png"/>
 					<s:HGroup left="5" top="5">
@@ -383,15 +356,16 @@
 						<s:dataProvider>
 							<mx:ArrayCollection>
 								
-								<fx:Object name="Tuteur 1" role="tuteur" online="true" />
-								<fx:Object name="Etudiant 1" role="etudiant" online="true" />
-								<fx:Object name="Etudiant 2" role="etudiant" online="true" />
-								<fx:Object name="Etudiant déconnecté" role="etudiant" online="false" />
-								<fx:Object name="Tuteur déconnecté" role="tuteur" online="false" />
+								<fx:Object name="Tuteur 1" role="tut" status="connected" />
+								<fx:Object name="Etudiant 1" role="étu" status="connected" />
+								<fx:Object name="Etudiant 2" role="étu" status="deconnected" />
+								<fx:Object name="Etudiant 3" role="étu" status="recording" />
+								<fx:Object name="Admin" role="adm" status="session" />
 								
 							</mx:ArrayCollection>
 						</s:dataProvider>
 					</s:List>
+					
 				</mx:VBox>
 				
 			</s:Group>
