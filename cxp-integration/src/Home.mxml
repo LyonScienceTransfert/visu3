@@ -245,12 +245,26 @@
 									<!-- Management buttons -->
 									<s:HGroup width="100%" gap="1" horizontalAlign="right"
 											  verticalAlign="middle">
+										<mx:LinkButton label="Rétrospection" color="#000000" focusColor="#FFFFFFFF"
+													   fontSize="11" fontWeight="bold" paddingBottom="3"
+													   paddingLeft="0" paddingRight="0" paddingTop="0"
+													   rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+													   textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
+													   height="15" textAlign="center"/>
+										<mx:LinkButton label="Bilans" color="#000000" focusColor="#FFFFFFFF"
+													   fontSize="11" fontWeight="bold" paddingBottom="3"
+													   paddingLeft="0" paddingRight="0" paddingTop="0"
+													   rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+													   textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
+													   height="15" textAlign="center"/>
+										<!--
 										<s:Button label="Rétrospection" fontSize="11"
 												  icon="images/Home/ico_salon_retro.png"
 												  skinClass="skins.Components.Button"/>
 										<s:Button label="Bilans" fontSize="11"
 												  icon="images/Home/ico_bilans.png"
 												  skinClass="skins.Components.Button"/>
+										-->
 									</s:HGroup>
 								</s:VGroup>
 							</s:Group>
