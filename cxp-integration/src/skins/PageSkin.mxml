@@ -85,8 +85,13 @@ in accordance with the terms of the license agreement accompanying it.
 			
 			<s:Group height="58">
 				<s:Group right="0" height="35">
-					<s:Image left="0" source="images/Page/topbar_wave.png"/>
-					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
+					<s:Image left="0" source="images/Page/topbar_wave.png"
+							 left.normal="0" source.normal="images/Page/topbar_wave.png"/>
+					<s:Rect left="15" right="0" top="0" height="100%"
+							width.disabled="100%"
+							width.disabledWithControlBar="100%"
+							left.normal="17" right.normal="0" top.normal="0"
+							width.normalWithControlBar="100%">
 						<s:fill>
 							<s:LinearGradient rotation="90">
 								<s:GradientEntry color="0x000000" />
@@ -103,9 +108,12 @@ in accordance with the terms of the license agreement accompanying it.
 								 verticalAlign="middle" color="#FFFFFF" 
 								 fontSize="11" fontWeight="bold"/>
 						<s:Image source="images/Page/logout_ico.png" />
-						<s:Label height="20" text="Déconnexion"
-								 verticalAlign="middle" color="#FFFFFF" 
-								 fontSize="11" fontWeight="bold"/>
+						<mx:LinkButton label="Déconnexion" color="#FFFFFF" focusColor="#FFFFFFFF"
+									   fontSize="11" fontWeight="bold" paddingBottom="3"
+									   paddingLeft="0" paddingRight="0" paddingTop="0"
+									   rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+									   textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
+									   height="15" textAlign="center"/>
 					</s:HGroup>
 					<!-- Language -->
 					<s:HGroup right="10" bottom="4" gap="2" verticalAlign="baseline">
