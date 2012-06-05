@@ -350,7 +350,7 @@
 									<s:HGroup right="2" gap="2" verticalCenter="0">
 										<s:Button skinClass="skins.Components.Button" height="22" width="28" icon="images/Salon/ico_05.png"/>
 										<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_screen.png"/>
-										<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/ico_micro.png"/>
+										<s:Button skinClass="skins.Components.Button" height="22" width="29" icon="images/Salon/micro_on.png"/>
 									</s:HGroup>
 								</s:Group>
 								
@@ -378,7 +378,7 @@
 													<s:Image source="http://www.psdgraphics.com/wp-content/uploads/2010/08/webcam.jpg" height="100%" width="340" />
 													<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_play.png" top="1" left="3"/>
 													<s:HGroup top="1" right="3" height="20">
-														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_sound.png"/>
+														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/audio_on.png"/>
 														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_write.png"/>
 														<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_screen.png"/>
 														<!-- User name -->
