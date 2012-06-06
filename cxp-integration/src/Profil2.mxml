@@ -27,27 +27,16 @@
 			</s:stroke>
 		</s:Rect>
 		
-		<s:HGroup left="10" top="10" width="170" height="180" horizontalAlign="center"
-				  verticalAlign="middle">
-			<s:Image source="images/Profil/avatar.png" />
-		</s:HGroup>
+		<s:Label top="50" color="#363636" fontFamily="Arial" fontSize="14" horizontalCenter="0"
+				 text="Changer le mot de passe"/>
+		<s:TextInput left="170" top="105" width="130" height="20"/>
 		
+		<s:Label right="165" top="110" color="#363636" fontFamily="Arial" fontSize="12"
+				 text="Nouveau mot de passe :" textAlign="right"/>
+		<s:TextInput left="170" top="140" width="130" height="20"/>
 		
-		<s:Label x="185" y="78" color="#363636" fontFamily="Arial" fontSize="14" text="Utilisateur"/>
-		<s:Label x="185" y="100" color="#363636" fontFamily="Arial" fontSize="14" text="Utilisateur"/>
-		
-		
-		<s:Label right="210" top="200" color="#363636" fontFamily="Arial" fontSize="12"
-				 text="mail/login :" textAlign="right"/>
-		<s:Label left="120" top="200" color="#363636" text="utilisateur@mail.fr"/>
-		
-		<s:Label right="210" top="220" color="#363636" text="röle :" textAlign="right"/>
-		<s:Label left="120" top="220" color="#363636" text="Administrateur"/>
-		
-		
-		<s:Label x="20" y="275" color="#363636" fontFamily="Arial" fontSize="14"
-				 text="Mot de passe :"/>
-		<s:Button right="20" bottom="20" width="180" height="25" label="Changer le mot de passe"
+		<s:Label right="165" top="145" color="#363636" text="Confirmer mot de passe :" textAlign="right"/>
+		<s:Button right="25" top="200" width="180" height="25" label="Changer le mot de passe"
 				  skinClass="skins.Components.Button"/>
 		
 		
