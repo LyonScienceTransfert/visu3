@@ -38,6 +38,7 @@
 		<s:Label right="165" top="145" color="#363636" text="Confirmer mot de passe :" textAlign="right"/>
 		<s:Button right="25" top="200" width="180" height="25" label="Changer le mot de passe"
 				  skinClass="skins.Components.Button"/>
+		<s:Button right="10" top="10" label="Button" skinClass="skins.Seance.CloseButton"/>
 		
 		
 	</s:Group>
