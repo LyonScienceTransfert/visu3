@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<!-- Login -->
+	<s:Group width="325" height="312" verticalCenter="0" horizontalCenter="0">
+		<s:Rect left="0" right="0" top="0" bottom="0" radiusX="5">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xf0f0f0" />
+					<s:GradientEntry color="0xe5e5e5" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Rect left="2" right="2" top="2" bottom="2" radiusX="5">
+			<s:stroke>
+				<s:SolidColorStroke color="#FFFFFF" />
+			</s:stroke>
+		</s:Rect>
+		<s:Rect left="1" right="1" top="1" bottom="1" radiusX="5">
+			<s:stroke>
+				<s:SolidColorStroke color="#9f9f9f" />
+			</s:stroke>
+		</s:Rect>
+		
+		<s:HGroup left="10" top="10" width="170" height="180" horizontalAlign="center"
+				  verticalAlign="middle">
+			<s:Image source="images/Profil/avatar.png" />
+		</s:HGroup>
+		<s:Label x="185" y="78" color="#363636" fontFamily="Arial" fontSize="14" text="Utilisateur"/>
+		<s:Label x="185" y="100" color="#363636" fontFamily="Arial" fontSize="14" text="Utilisateur"/>
+		<s:Label right="210" top="200" color="#363636" fontFamily="Arial" fontSize="12"
+				 text="mail/login :" textAlign="right"/>
+		<s:Label left="120" top="200" text="utilisateur@mail.fr"/>
+		<s:Label right="210" top="220" text="röle :" textAlign="right"/>
+		<s:Label left="120" top="220" text="Administrateur"/>
+		<s:Label x="20" y="275" fontFamily="Arial" fontSize="14" text="Mot de passe :"/>
+		<s:Button right="20" bottom="20" width="180" height="25" label="Changer le mot de passe"
+				  skinClass="skins.Components.Button"/>
+		
+		
+	</s:Group>
+	
+	<!-- footer -->
+	<s:Group width="100%" height="20" bottom="0" >
+		<s:Rect width="100%" height="20" bottom="0" >
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0x535353" />
+					<s:GradientEntry color="0x000000" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Label width="100%" color="0xFFFFFF" horizontalCenter="0"
+				 text="2012 - VISU - Université Lyon 1" textAlign="center"
+				 verticalAlign="middle" bottom="3"/>
+	</s:Group>
+	
+</s:Application>
