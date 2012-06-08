@@ -99,9 +99,11 @@
 														<s:HGroup left="3" right="3"
 																  verticalAlign="middle"
 																  verticalCenter="0">
-															<s:Image source="images/Home/ico_user_tuteur.png" />
+															
 															<s:Label fontSize="10" text="S.Serguei"
 																	 verticalAlign="bottom"/>
+															<s:Label fontSize="10" text="(admin)" color="#a6a6a6"
+																	 verticalAlign="bottom" verticalCenter="0"/>
 														</s:HGroup>
 													</s:Group>
 												</s:Group>
