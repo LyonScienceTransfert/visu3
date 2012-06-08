@@ -390,8 +390,10 @@
 																	</s:fill>
 																</s:Rect>
 																<s:HGroup verticalCenter="0" left="3" right="3">
-																	<s:Image source="images/Home/ico_user_tuteur.png" />
+																	
 																	<s:Label text="S.Serguei" fontSize="10" height="100%" verticalAlign="middle" />
+																	<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
+																			 verticalAlign="bottom" verticalCenter="0"/>
 																</s:HGroup>
 															</s:Group>
 														</s:Group>
