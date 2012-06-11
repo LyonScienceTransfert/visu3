@@ -67,13 +67,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		currentStateChange="skin1_currentStateChangeHandler(event)"
-        preinitialize="skin1_preinitializeHandler(event)">
+        preinitialize="skin1_preinitializeHandler(event)"
+		>
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.visu.controls.globalNavigation.ApplicationMenu")]
 	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.skins.MenuButton.Home;
+			import com.ithaca.visu.skins.Page.ChatButton;
+			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
@@ -114,7 +118,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	name=disconnect, type=spark.components.Button, required=false
 	name=home, type=spark.components.Button, required=false
 	-->
-	<s:Group left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
+	<s:Group left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0" includeInLayout="false" visible="false">
 		<s:layout>
 			<s:HorizontalLayout verticalAlign="middle" />
 		</s:layout>
@@ -139,9 +143,89 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:Button id="chat" includeIn="authentified" enabled="false">
 			<s:label>{fxgt.gettext("Chat")}</s:label>
 		</s:Button>	
-		<s:Label id="labelLoggedUser"  includeIn="authentified" fontWeight="bold"/>
+		<s:Label text="Nom Utilisateur" includeIn="authentified" fontWeight="bold"/>
 		<s:Button id="disconnect" includeIn="authentified" >
 			<s:label>{fxgt.gettext("Déconnexion")}</s:label>
 		</s:Button>	
+	</s:Group>	
+	<s:Group minWidth="1024" width="100%"  top="0" height="6">
+		<s:Rect left="0" right="0" top="0" height="6" width="100%" >
+			<s:fill>
+				<s:SolidColor color="0x000000" />
+			</s:fill>
+		</s:Rect>
 	</s:Group>
+	<!-- menu -->
+	<s:BorderContainer width="1024" height="58"
+			 horizontalCenter="0"
+			 backgroundAlpha="0.0"
+			 borderAlpha="0.0">
+		<s:HGroup width="1024" height="58">
+			<s:Label color="0x2e2e2e"  text="VISU"
+					 top="20"
+					 x="20" y="20" fontSize="24"
+					 paddingTop="20" paddingLeft="10"
+					/>
+			<s:HGroup width="100%" horizontalAlign="center"  includeIn="authentified">
+				<s:HGroup right="0" height="48"
+						  gap="5" 
+						  paddingTop="10" 
+						  textAlign="right" horizontalAlign="center">
+					<!-- hide buttons : includeInLayout="false" visible="false" -->
+					<s:Button id="buttonHomeModule" label="Accueil" skinClass="com.ithaca.visu.skins.MenuButton.Home"/>
+					<s:Button id="buttonUserModule" label="Utilisateurs" skinClass="com.ithaca.visu.skins.MenuButton.Users" includeInLayout="false" visible="false"/>
+					<s:Button id="buttonSessionModule" label="Séances" skinClass="com.ithaca.visu.skins.MenuButton.Seance" includeInLayout="false" visible="false"/>
+					<s:Button id="buttonProfilModule" label="Profil" skinClass="com.ithaca.visu.skins.MenuButton.Profil"/>
+					<s:Button id="buttonBilanModule" label="Bilans" skinClass="com.ithaca.visu.skins.MenuButton.Bilan"/>
+					<s:Button id="buttonTutoratModule" label="Salon synchrone" skinClass="com.ithaca.visu.skins.MenuButton.SalonSync" enabled="false"/>
+					<s:Button id="buttonRetrospectionModule" label="Salon de retrospection" skinClass="com.ithaca.visu.skins.MenuButton.SalonRetro" enabled="false"/>
+				</s:HGroup>
+			</s:HGroup>
+			
+			<s:Group height="58"  includeIn="authentified">
+				<s:Group right="0" height="35">
+					<s:Image left="5" top="-3" source="images/Page/topbar_wave.png"/>
+					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
+						<s:fill>
+							<s:LinearGradient rotation="90">
+								<s:GradientEntry color="0x000000" />
+								<s:GradientEntry color="0x535353" />
+							</s:LinearGradient>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup y="1" left="20" right="10" height="100%">
+						<s:Image source="images/Page/profile_ico.png" />
+						<s:Label id="labelLoggedUser" 
+								 height="20" text="Nom Utilisateur"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+						<s:Label height="20" text="/"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+						<s:Image source="images/Page/logout_ico.png" />
+						<s:Label height="20" text="Déconnexion"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+					</s:HGroup>
+					<!-- Language -->
+					<s:HGroup right="10" bottom="4" gap="2" verticalAlign="baseline">
+						<s:Label text="Langue:" color="#FFFFFF" fontSize="10"/>
+						<s:DropDownList width="90" selectedIndex="0"
+										skinClass="com.ithaca.visu.skins.Page.DropDownLanguage"
+										 styleName="corexpert">
+							<s:dataProvider>
+								<mx:ArrayCollection>
+									<fx:String>Français</fx:String>
+									<fx:String>English</fx:String>
+								</mx:ArrayCollection>
+							</s:dataProvider>
+						</s:DropDownList>
+					</s:HGroup>
+				</s:Group>
+				<s:Group right="10" bottom="0">
+					<s:Button label="Chat privé" skinClass="com.ithaca.visu.skins.Page.ChatButton"/>
+				</s:Group>
+			</s:Group>
+		</s:HGroup>
+	</s:BorderContainer>
 </s:Skin>
