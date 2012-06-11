@@ -197,7 +197,8 @@
     <s:RichEditableText id="textDisplay"
               verticalAlign="middle"
               widthInChars="10"
-              left="1" right="20" top="1" bottom="1" />
+              left="1" right="20" top="1" bottom="1"
+			   styleName="corexpert"/>
 	<s:Label id="_promptDisplay"
 			 verticalAlign="middle" color="{getStyle('promptColor')}" 
 			 fontStyle="italic" 
