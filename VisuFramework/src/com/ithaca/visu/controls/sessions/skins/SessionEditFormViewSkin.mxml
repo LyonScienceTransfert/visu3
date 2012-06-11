@@ -90,7 +90,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:HGroup paddingLeft="5" paddingRight="5" 
 			paddingTop="5" paddingBottom="5" >		
 		<mx:Form>
-			<mx:FormItem label="Date de la séance:" width="100%">
+			<mx:FormItem label="Date de la séance:" width="100%" styleName="corexpert">
 				<s:HGroup verticalAlign="middle">
 					<mx:DateField 
 						width="100%" 
@@ -102,19 +102,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				</s:HGroup>
 			</mx:FormItem>
 			
-			<mx:FormItem  label=" à partir de:" width="100%">
+			<mx:FormItem  label=" à partir de:" width="100%"  styleName="corexpert">
 				<s:HGroup verticalAlign="middle" horizontalAlign="left">
 					<s:DropDownList id="startDDL" 
 									width="100"
-									labelField="string"/>
+									labelField="string"  styleName="corexpert"/>
 				</s:HGroup>
 			</mx:FormItem>
-			<mx:FormItem  label=" jusqu'à:" width="100%">
+			<mx:FormItem  label=" jusqu'à:" width="100%"  styleName="corexpert">
 				<s:HGroup verticalAlign="middle" horizontalAlign="left">
 					<s:Label id="labelEndSession"/>
 				</s:HGroup>
 			</mx:FormItem>
-			<mx:FormItem  label=" durée:" width="100%">
+			<mx:FormItem  label=" durée:" width="100%"  styleName="corexpert">
 				<s:HGroup verticalAlign="middle" horizontalAlign="left">
 					<s:Label id="labelDuration"/>
 				</s:HGroup>
@@ -127,7 +127,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:List id="participantList" width="100%" height="150">
 				<s:itemRenderer>
 					<fx:Component>
-						<s:ItemRenderer>
+						<s:ItemRenderer  styleName="corexpert">
 							<fx:Script>
 								<![CDATA[
 									import com.ithaca.utils.VisuUtils;

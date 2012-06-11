@@ -76,6 +76,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	</fx:Metadata>
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.skins.FixedPanel;
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
 			
 			import gnu.as3.gettext.FxGettext;
@@ -189,7 +190,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					<s:Group height="100%" width="40%" includeIn="accessRetrospection,normal,normalEditable">
 						<s:RichEditableText  id="themeSession" height="44" left="5" right="5" verticalCenter="0" backgroundColor="#FFFFFF" change="themeSession_changeHandler(event)"
 											  focusOut="themeSession_focusOutHandler(event)"
-											   focusIn="themeSession_focusInHandler(event)" textAlign="center" verticalAlign="middle" enabled="true" includeIn="normalEditable">
+											  focusIn="themeSession_focusInHandler(event)" textAlign="center" verticalAlign="middle" enabled="true" includeIn="normalEditable"
+											  styleName="corexpert">
 							<s:text>L</s:text>
 						</s:RichEditableText>
 
@@ -199,11 +201,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						<s:RichEditableText  id="descriptionSession" height="44"  left="5" right="5"  bottom="5" backgroundColor="#FFFFFF"
 											  change="descriptionSession_changeHandler(event)" 
 											  focusOut="descriptionSession_focusOutHandler(event)"
-											  focusIn="descriptionSession_focusInHandler(event)" fontStyle="italic" textAlign="center" verticalAlign="middle" includeIn="normalEditable">
+											  focusIn="descriptionSession_focusInHandler(event)" fontStyle="italic" textAlign="center" verticalAlign="middle" includeIn="normalEditable"
+											  styleName="corexpert">
 							<s:text>description</s:text>
 						</s:RichEditableText> 
-						<s:RichText includeIn="normal,accessRetrospection" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"/>
-						<s:RichText includeIn="normal,accessRetrospection" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"/>
+						<s:RichText includeIn="normal,accessRetrospection" right="5" horizontalCenter="0" verticalCenter="0" left="5" height="44" verticalAlign="top" textAlign="center" id="themeSessionLabel" fontSize="14" paddingTop="5"
+									styleName="corexpert"/>
+						<s:RichText includeIn="normal,accessRetrospection" right="5" bottom="5" left="5" height="44" verticalAlign="top" textAlign="center" id="descriptionSessionLabel" fontSize="14"
+									styleName="corexpert"/>
 						<s:Group  includeIn="normal,accessRetrospection" left="0" top="5" height="22">
 							<s:Label  id="dateLabel" verticalCenter="0" left="0" fontSize="14"/>
 							<s:Label text="{fxgt.gettext('à')}" verticalCenter="0" left="75" fontSize="14"/>
@@ -217,7 +222,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						<s:Button  id="buttonAddUser" left="5" right="5" top="5" enabled.normal="false" enabled.normalEditable="true" enabled.accessRetrospection="false">
 	                    <s:label>{fxgt.gettext("Ajouter un nouvel utilisateur")}</s:label>
 						</s:Button>
-						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%">
+						<s:Scroller left="5" right="5" top="30" bottom="5" height="100%" width="100%"
+									styleName="corexpert">
 							<s:Group id="groupUser">
 								<s:layout.normal>
 									<s:VerticalLayout gap="5" />
@@ -243,7 +249,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:Label includeIn="accessRetrospection" text="Durée de la séance :  45:55" fontWeight="bold" fontSize="14" left="382" bottom="40"/>
 			<s:Label includeIn="accessRetrospection" text="Date d'enregistrement : 23-03-2011" fontWeight="bold" fontSize="14" left="382" bottom="66"/>
 			<s:Label includeIn="accessRetrospection" text="Utilisateurs enregistrés :" fontWeight="bold" fontSize="14" bottom="66" left="14"/>
-			<s:Scroller left="10" right="460" bottom="2" height="64" includeIn="accessRetrospection">
+			<s:Scroller left="10" right="460" bottom="2" height="64" includeIn="accessRetrospection"
+						styleName="corexpert">
 				<s:Group width="100%" height="100%" id="groupRecordedUser">
 					<s:layout>
 						<s:VerticalLayout>
