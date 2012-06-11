@@ -183,15 +183,15 @@
 						 width="694" height="100%" 
 						 minWidth="450"
 						 skinClass="skins.FlexiblePanel" title="Détail de la séance">
-					<s:HGroup right="5" top="-30">
-						<s:Button label="Sauvegarder la séance" icon="images/Seance/ico_save_seance.png"
-								  skinClass="skins.Components.Button"/>
-						<s:Button label="Supprimer la séance" icon="images/Seance/ico_delete_seance.png"
-								  skinClass="skins.Components.Button"/>
-					</s:HGroup>
 					<!-- Détail informations sur la séance -->
 					<s:Group width="100%" left="5" right="5" top="5">
-						<s:Label text="La séance a été sauvegardée à 18h43 (il y a 8 minutes)" y="0" width="100%" textAlign="right" />
+						<s:HGroup right="0" top="0">
+							<s:Button label="Sauvegarder la séance" icon="images/Seance/ico_save_seance.png"
+									  skinClass="skins.Components.Button"/>
+							<s:Button label="Supprimer la séance" icon="images/Seance/ico_delete_seance.png"
+									  skinClass="skins.Components.Button"/>
+						</s:HGroup>
+						<s:Label text="La séance a été sauvegardée à 18h43 (il y a 8 minutes)" y="30" width="100%" textAlign="right" />
 						<s:VGroup>
 							<s:HGroup>
 								<s:Label text="Titre :" fontWeight="bold" />
