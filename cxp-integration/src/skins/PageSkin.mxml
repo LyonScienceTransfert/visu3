@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+ADOBE SYSTEMS INCORPORATED
+Copyright 2008 Adobe Systems Incorporated
+All Rights Reserved.
+
+NOTICE: Adobe permits you to use, modify, and distribute this file
+in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for the Spark Application component. 
+
+@see spark.components.Application
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		alpha.disabled="0.5"
+		alpha.disabledWithControlBar="0.5" xmlns:skins="skins.*">
+	
+	<fx:Metadata>
+		<![CDATA[ 
+		/** 
+		* A strongly typed property that references the component to which this skin is applied.
+		*/
+		[HostComponent("spark.components.Application")]
+		]]>
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+		<s:State name="normalWithControlBar" />
+		<s:State name="disabledWithControlBar" />
+	</s:states>
+	
+	<!-- fill -->
+	<!--- 
+	A rectangle with a solid color fill that forms the background of the application.
+	The color of the fill is set to the Application's backgroundColor property.
+	-->
+	<s:Rect id="backgroundRect" left="0" right="0" top="0" bottom="0"  >
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xFFDE9F" />
+				<s:GradientEntry color="0xFFFFFF" />
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Group minHeight="768" minWidth="1024" width="100%">
+		<s:Rect left="0" right="0" top="0" height="6" width="100%" >
+			<s:fill>
+				<s:SolidColor color="0x000000" />
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+	<s:Group width="1024" horizontalCenter="0"
+			 height="58">
+		<s:HGroup width="1024" height="58">
+			
+			<s:Label color="0x2e2e2e" text="VISU"
+					 top="20" fontSize.normal="24" paddingTop="20" paddingLeft="10"/>
+			<s:Group width="100%">
+				<s:HGroup right="0" height="48"
+						  gap.normal="5" paddingTop.normal="10" textAlign.normal="right">
+					<s:Button label="Accueil" skinClass="skins.MenuButton.Home"/>
+					<s:Button label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
+					<s:Button label="Séances" skinClass="skins.MenuButton.Seance"/>
+					<s:Button label="Profil" skinClass="skins.MenuButton.Profil"/>
+					<s:Button label="Salon synchrone" skinClass="skins.MenuButton.SalonSync" enabled="false"/>
+					<s:Button label="Salon de retrospection" skinClass="skins.MenuButton.SalonRetro" enabled="false"/>
+					<s:Button label="Bilans" skinClass="skins.MenuButton.Bilan"/>
+				</s:HGroup>
+			</s:Group>
+			
+			<s:Group height="58">
+				<s:Group right="0" height="35">
+					<s:Image left="0" source="images/Page/topbar_wave.png"
+							 left.normal="0" source.normal="images/Page/topbar_wave.png"/>
+					<s:Rect left="15" right="0" top="0" height="100%"
+							width.disabled="100%"
+							width.disabledWithControlBar="100%"
+							left.normal="17" right.normal="0" top.normal="0"
+							width.normalWithControlBar="100%">
+						<s:fill>
+							<s:LinearGradient rotation="90">
+								<s:GradientEntry color="0x000000" />
+								<s:GradientEntry color="0x535353" />
+							</s:LinearGradient>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup y="1" left="20" right="10" height="100%">
+						<s:Image source="images/Page/profile_ico.png" />
+						<s:Label height="20" text="Nom Utilisateur"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+						<s:Label height="20" text="/"
+								 verticalAlign="middle" color="#FFFFFF" 
+								 fontSize="11" fontWeight="bold"/>
+						<s:Image source="images/Page/logout_ico.png" />
+						<mx:LinkButton label="Déconnexion" color="#FFFFFF" focusColor="#FFFFFFFF"
+									   fontSize="11" fontWeight="bold" paddingBottom="3"
+									   paddingLeft="0" paddingRight="0" paddingTop="0"
+									   rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+									   textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
+									   height="15" textAlign="center"/>
+					</s:HGroup>
+					<!-- Language -->
+					<s:HGroup right="10" bottom="4" gap="2" verticalAlign="baseline">
+						<s:Label text="Langue:" color="#FFFFFF" fontSize="10"/>
+						<s:DropDownList width="90" selectedIndex="0"
+										skinClass="skins.Page.DropDownLanguage"
+										focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+										selectionColor="#FFCC5E">
+							<s:dataProvider>
+								<mx:ArrayCollection>
+									<fx:String>Français</fx:String>
+									<fx:String>English</fx:String>
+								</mx:ArrayCollection>
+							</s:dataProvider>
+						</s:DropDownList>
+					</s:HGroup>
+				</s:Group>
+				<s:Group right="10" bottom="0">
+					<s:Button label="Chat privé" skinClass="skins.Page.ChatButton"/>
+				</s:Group>
+			</s:Group>
+		</s:HGroup>
+	</s:Group>
+	
+	<s:Group left="0" right="0" top="0" bottom="0" height="100%" width="100%">
+		<s:layout>
+			<s:VerticalLayout gap="0" horizontalAlign="justify" />
+		</s:layout>
+		
+		<!--- 
+		@private
+		Application Control Bar
+		-->
+		<s:Group id="topGroup" minWidth="0" minHeight="0"
+				 includeIn="normalWithControlBar, disabledWithControlBar" >
+			
+			<!-- layer 0: control bar highlight -->
+			<s:Rect left="0" right="0" top="0" bottom="1" >
+				<s:stroke>
+					<s:LinearGradientStroke rotation="90" weight="1">
+						<s:GradientEntry color="0xFFFFFF" />
+						<s:GradientEntry color="0xD8D8D8" />
+					</s:LinearGradientStroke>
+				</s:stroke>
+			</s:Rect>
+			
+			<!-- layer 1: control bar fill -->
+			<s:Rect left="1" right="1" top="1" bottom="2" >
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0xEDEDED" />
+						<s:GradientEntry color="0xCDCDCD" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			
+			<!-- layer 2: control bar divider line -->
+			<s:Rect left="0" right="0" bottom="0" height="1" alpha="0.55">
+				<s:fill>
+					<s:SolidColor color="0x000000" />
+				</s:fill>
+			</s:Rect>
+			
+			<!-- layer 3: control bar -->
+			<!--- @copy spark.components.Application#controlBarGroup -->
+			<s:Group id="controlBarGroup" left="0" right="0" top="1" bottom="1" minWidth="0" minHeight="0">
+				<s:layout>
+					<s:HorizontalLayout paddingLeft="10" paddingRight="10" paddingTop="7" paddingBottom="7" gap="10" />
+				</s:layout>
+			</s:Group>
+		</s:Group>
+		
+		<!--- @copy spark.components.SkinnableContainer#contentGroup -->
+		<s:Group id="contentGroup" width="100%" height="100%" >
+		</s:Group>
+		
+		<s:Group width="100%" height="20" bottom="0" >
+			<s:Rect width="100%" height="20" bottom="0" >
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="0x535353" />
+						<s:GradientEntry color="0x000000" />
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+			<s:Label width="100%" color="0xFFFFFF" horizontalCenter="0"
+					 text="2012 - VISU - Université Lyon 1" textAlign="center"
+					 verticalAlign="middle" bottom="3"/>
+		</s:Group>
+		
+	</s:Group>
+	
+</s:Skin>

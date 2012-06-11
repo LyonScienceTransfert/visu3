@@ -94,6 +94,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
     <fx:Script fb:purpose="styling">
         <![CDATA[            
+			import com.ithaca.visu.skins.Components.ButtonLeft;
+			import com.ithaca.visu.skins.Components.DropDownListButtonSkin;
             
             /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
             static private const contentFill:Array = ["bgFill"];
@@ -210,15 +212,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
     <!---  The default skin is DropDownListButtonSkin. 
             @copy spark.components.supportClasses.DropDownListBase#openButton
             @see spark.skins.spark.DropDownListButtonSkin -->
-    <s:Button id="openButton" left="30" right="30" top="0" bottom="0" focusEnabled="false"
-        skinClass="spark.skins.spark.DropDownListButtonSkin" />  
+    <s:Button id="openButton" left="22" right="22" top="0" bottom="0" focusEnabled="false"
+         skinClass="com.ithaca.visu.skins.Components.DropDownListButtonSkin"/>  
         
     <!--- @copy spark.components.DropDownList#labelDisplay -->
     <s:Label id="labelDisplay" verticalAlign="middle" maxDisplayedLines="1" 
         mouseEnabled="false" mouseChildren="false"
         top="2" bottom="2" verticalCenter="1" width.disabled="75" top.normal="2" bottom.normal="2" verticalCenter.normal="1" left.open="37" left.disabled="37" right.open="60" right.disabled="60" left.normal="37" right.normal="60" top.open="2" bottom.open="2" horizontalCenter.open="0" verticalCenter.open="1" horizontalCenter.normal="0"/> 
 	
-	<s:Button  id="leftButton"  skinClass="com.ithaca.visu.skins.ButtonArrowSkin"  rotation="90" left="0" width="20" top.normal="0" left.normal="0" bottom.normal="0" top.open="0" left.open="0" bottom.open="0" top.disabled="0" left.disabled="0" bottom.disabled="0"/>
-	<s:Button  id="rightButton" skinClass="com.ithaca.visu.skins.ButtonArrowSkin"  rotation="270" right="0" width="20" top.normal="0" right.normal="0" bottom.normal="0" top.open="0" right.open="0" bottom.open="0" top.disabled="0" right.disabled="0" bottom.disabled="0"/>
+	<s:Button  id="leftButton"  skinClass="com.ithaca.visu.skins.Components.ButtonLeft" left="0" height="20" width="20" top.normal="0" left.normal="0" bottom.normal="0" top.open="0" left.open="0" bottom.open="0" top.disabled="0" left.disabled="0" bottom.disabled="0"/>
+	<s:Button  id="rightButton" skinClass="com.ithaca.visu.skins.Components.ButtonRight" right="0" height="20" width="20" top.normal="0" right.normal="0" bottom.normal="0" top.open="0" right.open="0" bottom.open="0" top.disabled="0" right.disabled="0" bottom.disabled="0"/>
 
 </s:SparkSkin>

@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Group top="68" width="1024" minHeight="667" horizontalCenter="0">
+		
+		<!-- container -->
+		<s:Group width="1004" height="100%" horizontalCenter="0">
+
+			<!-- background -->
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:fill>
+						<s:SolidColor color="0xffefd1" />
+					</s:fill>
+				</s:Rect>
+				
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:stroke>
+						<s:SolidColorStroke color="0x9f9f9f" />
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			
+			
+			
+			<!-- Panneaux -->
+			<mx:HDividedBox height="100%" top="2" left="2" right="2" bottom="2">
+					
+				<s:Panel left="1" top="1" bottom="1" 
+						 width="290" height="100%" 
+						 minWidth="200"
+						 skinClass="skins.FlexiblePanel" title="Explorer">
+					
+					<!-- Tabs -->
+					<mx:TabNavigator left="1" right="1" top="7" width="100%" height="100%"
+									 minHeight="200" paddingBottom="2">
+						
+						<!-- Tab Séances -->
+						<s:NavigatorContent width="100%" height="100%" label="Séances">
+							
+							<!-- Filtres -->
+							<s:Group width="100%" height="120" top="0" left="2" right="2">
+								<s:Group width="100%" height="81">
+									
+									<s:Rect width="100%" height="100%" radiusX="2">
+										<s:fill>
+											<s:SolidColor color="0xfff4df" />
+										</s:fill>
+									</s:Rect>
+									
+									<s:Label x="10" y="5" text="Filtres :"/>
+									<s:RadioButton x="10" y="15" label="Toutes les séances" selected="true"/>
+									<s:RadioButton x="10" y="30" label="Séances passés"/>
+									<s:RadioButton x="10" y="45" label="Séances à venir"/>
+									<s:HGroup left="10" right="10" bottom="0">
+										<s:Label height="20" text="Contient le texte :"
+												 verticalAlign="middle"/>
+										<s:TextInput bottom="0" width="100%" height="18"/>
+									</s:HGroup>
+								</s:Group>
+								
+								<!-- Bouton nouvelle séance -->
+								<s:Group x="0" bottom="1" width="100%">
+								<s:Button label="Nouvelle séance" horizontalCenter="0"
+										  icon="images/Seance/ico_new_seance.png"
+										  skinClass="skins.Components.Button"/>
+								</s:Group>
+								
+							</s:Group>
+							
+							<!-- Tableau des séances programmées -->
+							<s:Group y="120" left="2" right="2" width="100%" height="100%">
+								
+							
+								
+								<mx:AdvancedDataGrid width="100%" height="100%"
+													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
+													 borderColor="#FFB311" designViewDataType="flat"
+													 focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+													 selectionColor="#FFCC5E">
+									
+									<mx:dataProvider>
+										<mx:ArrayCollection>
+											
+											<!-- données du  -->
+											<fx:Object date="01/05/2012" proprietaire="Tuteur 1" titre="Introduction au cinéma" />
+											<fx:Object date="30/05/2012" proprietaire="Tuteur 4" titre="Les stéréotypes" />
+											<fx:Object date="15/05/2012" proprietaire="Tuteur 1" titre="Les journaux" />
+											<fx:Object date="29/05/2012" proprietaire="Tuteur 8" titre="" />
+											<fx:Object date="02/06/2012" proprietaire="Tuteur 7" titre="Bonjour." />
+											
+										</mx:ArrayCollection>
+									</mx:dataProvider>
+									<mx:columns>
+										<mx:AdvancedDataGridColumn headerText="Date prévu" dataField="date"/>
+										<mx:AdvancedDataGridColumn headerText="Titre de séance" dataField="titre"/>
+										<mx:AdvancedDataGridColumn headerText="Propriétaire de séance" dataField="proprietaire"/>
+									</mx:columns>
+									
+								</mx:AdvancedDataGrid>
+								
+							</s:Group>
+							
+						</s:NavigatorContent>
+						
+						<!-- Tab  Plan de Séance -->
+						<s:NavigatorContent width="100%" height="100%" label="Séances">
+							
+							<!-- Filtres -->
+							<s:Group width="100%" height="120" top="0" left="2" right="2">
+								<s:Group width="100%" height="81">
+									
+									<s:Rect width="100%" height="100%" radiusX="2">
+										<s:fill>
+											<s:SolidColor color="0xfff4df" />
+										</s:fill>
+									</s:Rect>
+									
+									<s:Label x="10" y="5" text="Filtres :"/>
+									<s:RadioButton x="10" y="15" label="Toutes les séances"/>
+									<s:RadioButton x="10" y="30" label="Séances passés"/>
+									<s:RadioButton x="10" y="45" label="Séances à venir"/>
+									<s:HGroup left="10" right="10" bottom="0">
+										<s:Label height="20" text="Contient le texte :"
+												 verticalAlign="middle"/>
+										<s:TextInput bottom="0" width="100%" height="18"/>
+									</s:HGroup>
+								</s:Group>
+								
+								<!-- Bouton nouvelle séance -->
+								<s:Group x="0" bottom="1" width="100%">
+									<s:Button label="Nouvelle séance" horizontalCenter="0"
+											  icon="images/Seance/ico_new_seance.png"
+											  skinClass="skins.Components.Button"/>
+								</s:Group>
+								
+							</s:Group>
+							
+							<!-- Tableau des séances programmées -->
+							<s:Group y="120" left="2" right="2" width="100%" height="100%">
+								
+								
+								
+								<mx:AdvancedDataGrid id="adg1" width="100%" height="100%"
+													 alternatingItemColors="[#FFFFFF, #FFF4DF]"
+													 borderColor="#FFB311" designViewDataType="flat"
+													 focusColor="#FFB311" rollOverColor="#FFB311"
+													 selectionColor="#FFB311">
+									<mx:dataProvider>
+										<mx:ArrayCollection>
+											
+											<!-- données du  -->
+											<fx:Object proprietaire="Tuteur 1" titre="Introduction au cinéma" />
+											<fx:Object proprietaire="Tuteur 4" titre="Les stéréotypes" />
+											<fx:Object proprietaire="Tuteur 1" titre="Les journaux" />
+											<fx:Object proprietaire="Tuteur 8" titre="" />
+											<fx:Object proprietaire="Tuteur 7" titre="Bonjour." />
+											
+										</mx:ArrayCollection>
+									</mx:dataProvider>
+									<mx:columns>
+										<mx:AdvancedDataGridColumn headerText="Titre de séance" dataField="titre"/>
+										<mx:AdvancedDataGridColumn headerText="Propriétaire de séance" dataField="proprietaire"/>
+									</mx:columns>
+									
+									
+								</mx:AdvancedDataGrid>
+							</s:Group>
+							
+						</s:NavigatorContent>
+						
+					</mx:TabNavigator>
+					
+				</s:Panel>
+				
+				<!-- Panneau détail de la séance -->
+				<s:Panel right="1" top="1" bottom="1" 
+						 width="694" height="100%" 
+						 minWidth="450"
+						 skinClass="skins.FlexiblePanel" title="Détail de la séance">
+					<!-- Détail informations sur la séance -->
+					<s:Group width="100%" left="5" right="5" top="5">
+						<s:HGroup right="0" top="0">
+							<s:Button label="Sauvegarder la séance" icon="images/Seance/ico_save_seance.png"
+									  skinClass="skins.Components.Button"/>
+							<s:Button label="Supprimer la séance" icon="images/Seance/ico_delete_seance.png"
+									  skinClass="skins.Components.Button"/>
+						</s:HGroup>
+						<s:Label text="La séance a été sauvegardée à 18h43 (il y a 8 minutes)" y="30" width="100%" textAlign="right" />
+						<s:VGroup>
+							<s:HGroup>
+								<s:Label text="Titre :" fontWeight="bold" />
+								<s:Label text="Les stéréotypes de la bourgeoisie" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Propriétaire :" fontWeight="bold" />
+								<s:Label text="Tuteur 1" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Date réelle/prévue :" fontWeight="bold" />
+								<s:Label text="24/06/2012 15:00 / 24/06/2012 16:00" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Durée réelle/prévue :" fontWeight="bold" />
+								<s:Label text="0h44min / 1h00m" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Nombre de participants réels/prévus :" fontWeight="bold" />
+								<s:Label text="3/4" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label text="Nombre de bilans pour cette séance :" fontWeight="bold" />
+								<s:Label text="2" />
+							</s:HGroup>
+						</s:VGroup>
+					</s:Group>
+					<mx:TabNavigator left="1" right="1" top="110" width="100%" height="100%"
+									 minHeight="200" paddingBottom="2">
+						
+						<!-- Onglet Séances -->
+						<s:NavigatorContent width="100%" height="100%" label="Plan de séance">
+							
+							<!-- Grey block at the top -->
+							<s:Group width="100%" height="48">
+								<!-- background -->
+								<s:Rect width="100%" height="48" left="1" right="1">
+									<s:fill><s:SolidColor color="0xe4e4e4" /></s:fill>
+								</s:Rect>
+								<!-- Title input -->
+								<s:HGroup left="5" right="5" top="5" verticalAlign="middle" height="18">
+									<s:Label text="Titre" />
+									<s:TextInput width="100%" height="20" />
+								</s:HGroup>
+								
+								<!-- buttons -->
+								<s:Button y="25" x="5" label="Ajouter une activité" skinClass="skins.Components.Button"/>
+								<s:HGroup right="5" top="25">
+									<s:Button label="Publier ce plan" skinClass="skins.Components.Button"/>
+									<s:Button label="Créer une séance" skinClass="skins.Components.Button"/>
+								</s:HGroup>
+								<!-- End grey block -->
+							</s:Group>
+							
+							<!-- Activities management list -->
+							<mx:VBox verticalScrollPolicy="auto"
+									 top="50" left="1" right="1" bottom="1"
+									 width="100%" height="100%">
+								
+								
+								<!-- Opened box activity -->
+								<mx:Box width="100%">
+									<s:Group width="100%">
+										
+										<!-- Title and management -->
+										<s:HGroup right="5" left="5">
+											<!-- button open/close -->
+											<s:Button skinClass="skins.Components.TreeButton" />
+											
+											<!-- Titling activity -->
+											<s:Label height="21" verticalAlign="middle" text="Titre d'activité :" />
+											<s:TextInput width="100%" height="21" />
+											
+											<!-- Management buttons -->
+											<s:HGroup gap="5" verticalAlign="middle">
+												<s:Button width="20" height="20"
+														  icon="images/Seance/ico_trash.png"
+														  skinClass="skins.Components.Button"/>
+												<s:Button width="20" height="20"
+														  icon="images/Seance/ico_down.png"
+														  skinClass="skins.Components.Button"/>
+												<s:Button width="20" height="20"
+														  icon="images/Seance/ico_up.png"
+														  skinClass="skins.Components.Button"/>
+												
+												<!-- Spinner: activity duration -->
+												<s:Label text="Durée :" verticalAlign="bottom"/>
+												<s:Group>
+													<s:Rect width="90%" height="100%" top="0" bottom="0">
+														<s:fill>
+															<s:SolidColor color="0xffffff" />
+														</s:fill>
+														<s:stroke>
+															<s:SolidColorStroke color="#a4a4a4" />
+														</s:stroke>
+													</s:Rect>
+													<mx:HBox left="2">
+														<s:Label height="23" text="{sp1.value}"
+																 verticalAlign="middle" textAlign="right"/>
+														<s:Spinner id="sp1"/>
+													</mx:HBox>
+												</s:Group>
+											</s:HGroup>
+										</s:HGroup>
+										
+										<!-- Activity content -->
+										<s:VGroup right="10" left="10" top="25">
+											
+											<!-- Instructions -->
+											<s:Group width="100%">
+												<s:Label text="Consignes :" />
+												<!-- Instructions list -->
+												<s:VGroup width="100%" right="20" left="20">
+													
+													<!-- Instruction #1 -->
+													<s:Group width="100%" minHeight="42">
+														<!-- Buttons -->
+														<s:Group x="0" width="75" verticalCenter="1">
+															<s:Rect width="100%" height="18" left="1" right="1" radiusX="2">
+																<s:fill><s:SolidColor color="0xe5e5e5" /></s:fill>
+															</s:Rect>
+															<s:HGroup x="3" y="3">
+																<s:Image source="images/Seance/ico_down.png" />
+																<s:Image source="images/Seance/ico_up.png" />
+																<s:Image source="images/Seance/ico_trash.png" />
+																<s:Image source="images/Seance/ico_pen.png" />
+															</s:HGroup>
+														</s:Group>
+														<!-- Text -->
+														<s:Group left="70" width="100%">
+															<s:Rect width="100%" minHeight="42" left="1" right="1" radiusX="2">
+																<s:fill>
+																	<s:LinearGradient rotation="90">
+																		<s:GradientEntry color="0xf0f0f0" />
+																		<s:GradientEntry color="0xe5e5e5" />
+																	</s:LinearGradient>
+																</s:fill>
+															</s:Rect>
+															<s:Label left="5" top="5" right="5" 
+																	 bottom="5"  width="100%" 
+																	 text="Consigne pour l'activité."/>
+														</s:Group>
+													</s:Group>
+													
+													<!-- add insctruction -->
+													<s:Group width="100%">
+														<s:HGroup left="70" width="100%">
+															<s:TextInput width="100%" height="21" />
+															<s:Button skinClass="skins.Components.Button" label="Valider"/>
+														</s:HGroup>
+													</s:Group>
+													
+												</s:VGroup>
+											</s:Group>
+										
+											
+											<!-- Documents -->
+											<s:Group width="100%">
+												<s:Label text="Documents :" />
+												
+												<s:VGroup width="100%" right="20">
+													<!-- Documents list -->
+													<s:Group width="100%">
+														<s:TileGroup left="55" width="100%">
+															<s:Group width="105">
+																<!-- document buttons -->
+																<s:Group width="40" verticalCenter="-15">
+																	<s:Rect width="100%" height="18" radiusX="2">
+																		<s:fill><s:SolidColor color="0xe4e4e4" /></s:fill>
+																	</s:Rect>
+																	<s:HGroup x="3" y="3">
+																		<!-- Delete document -->
+																		<s:Image source="images/Seance/ico_trash.png" />
+																		<!-- Edit document -->
+																		<s:Image source="images/Seance/ico_pen.png" />
+																	</s:HGroup>
+																</s:Group>
+																<!-- document thumbnail -->
+																<s:Group width="72" height="72" left="35">
+																	<s:Rect width="100%" height="100%" radiusX="2">
+																		<s:fill><s:SolidColor color="0xe4e4e4" /></s:fill>
+																	</s:Rect>
+																	<s:Group x="4" y="4">
+																		<s:Rect width="64" height="64">
+																			<s:fill><s:SolidColor color="0x808080" /></s:fill>
+																		</s:Rect>
+																		<s:Image x="1" y="1" width="62" height="62" source="images/Home/nav-left.png" />
+																		<s:Rect width="64" height="11">
+																			<s:fill><s:SolidColor color="0x808080" /></s:fill>
+																		</s:Rect>
+																		<s:Label left="1" height="11"
+																				 color="#FFFFFF"
+																				 fontSize="9"
+																				 text="Titre image"
+																				 verticalAlign="middle"/>
+																	</s:Group>
+																</s:Group>
+															</s:Group>
+														<!-- End of document list -->
+														</s:TileGroup>
+													</s:Group>
+													
+													<s:Group width="100%">
+														<s:HGroup width="100%" left="90">
+															<s:VGroup width="100%">
+																<s:HGroup width="100%">
+																	<s:Label height="20" text="Titre du document :" verticalAlign="middle"/>
+																	<s:TextInput height="20" width="100%" />
+																</s:HGroup>
+																<s:HGroup width="100%">
+																	<s:Label height="20" text="URL du document :" verticalAlign="middle"/>
+																	<s:TextInput height="20" width="100%" />
+																</s:HGroup>
+															</s:VGroup>
+															<s:Group>
+																<s:Button y="25"
+																		  label="Ajouter un document"
+																		  skinClass="skins.Components.Button"/>
+															</s:Group>
+														</s:HGroup>
+													</s:Group>
+												</s:VGroup>
+											<!-- End of Documents -->
+											</s:Group>
+											
+											<!-- Key words -->
+											<s:Group width="100%">
+												<s:Label text="Mots clés :" />
+												<s:VGroup width="100%" right="20">
+													
+													<!-- list of key words -->
+													<s:Group>
+														<s:TileGroup width="100%" left="60" top="20">
+															<s:Group>
+																<s:Rect width="100%" height="100%" radiusX="5">
+																	<s:fill><s:SolidColor color="0xe5e5e5"/></s:fill>
+																</s:Rect>
+																<s:HGroup left="5" right="5" top="2"
+																		  bottom="2">
+																	<!-- Delete key word -->
+																	<s:Image source="images/Seance/ico_trash.png" />
+																	<!-- Edit key word -->
+																	<s:Image source="images/Seance/ico_pen.png" />
+																	<s:Label text="Musique" fontSize="11" height="100%"
+																			 verticalAlign="middle"/>
+																</s:HGroup>
+															</s:Group>
+														</s:TileGroup>
+													</s:Group>
+													<s:Group width="100%">
+														<s:HGroup width="100%" left="90">
+															<s:TextInput width="100%" />
+															<s:Button y="25"
+																	  label="Valider"
+																	  skinClass="skins.Components.Button"/>
+														</s:HGroup>
+													</s:Group>
+												</s:VGroup>
+												<!-- End of key words -->
+											</s:Group>
+											
+											<!-- Memo -->
+											<s:Group width="100%">
+												<s:Label text="Mémo :" />
+												<s:Group width="100%" left="90" right="20">
+													<s:TextArea height="42" width="100%" />
+												</s:Group>
+											<!-- End of memo -->
+											</s:Group>
+											
+										</s:VGroup>
+										
+									</s:Group>
+								<!-- End of opened box activity  -->
+								</mx:Box>
+								
+								
+								<!-- Closed box activity -->
+								<mx:Box width="100%">
+									<s:Group width="100%">
+										<s:HGroup right="5" left="5">
+											<!-- button open/close -->
+											<s:Button skinClass="skins.Components.TreeButton" />
+	
+											<!-- Titling activity -->
+											<s:Label height="21" verticalAlign="middle" text="Titre d'activité :" />
+											<s:TextInput width="100%" height="21" />
+											
+											<!-- Management buttons -->
+											<s:HGroup gap="5">
+												<s:Button width="20" height="20"
+														  icon="images/Seance/ico_trash.png"
+														  skinClass="skins.Components.Button"/>
+												<s:Button width="20" height="20"
+														  icon="images/Seance/ico_down.png"
+														  skinClass="skins.Components.Button"/>
+												<s:Button width="20" height="20"
+														  icon="images/Seance/ico_up.png"
+														  skinClass="skins.Components.Button"/>
+												
+												<!-- Spinner: activity duration -->
+												<s:Label height="23" text="Durée :" verticalAlign="middle"/>
+												<s:Group>
+													<s:Rect width="90%" height="100%" top="0" bottom="0">
+														<s:fill>
+															<s:SolidColor color="0xffffff" />
+														</s:fill>
+														<s:stroke>
+															<s:SolidColorStroke color="#a4a4a4" />
+														</s:stroke>
+													</s:Rect>
+													<mx:HBox left="2">
+														<s:Label left="1" height="23" text="{sp2.value}"
+																 verticalAlign="middle" textAlign="right"/>
+														<s:Spinner id="sp2"/>
+													</mx:HBox>
+												</s:Group>
+											</s:HGroup>
+										</s:HGroup>
+									</s:Group>
+								</mx:Box>
+								
+								
+							</mx:VBox>
+							
+						<!-- End of seances tab -->	
+						</s:NavigatorContent>
+						
+						
+						
+						<!-- Dates and participants tab -->
+						<s:NavigatorContent width="100%" height="100%" label="Dates et participants">
+							
+							<s:Group width="340" left="5">
+								<s:VGroup width="100%">
+									<s:HGroup verticalAlign="baseline">
+										<s:Label width="115" text="Date de la séance :" textAlign="right"/>
+										<mx:DateField/>
+									</s:HGroup>
+									<s:HGroup verticalAlign="baseline">
+										<s:Label width="115" text="À partir de :" textAlign="right"/>
+										<s:DropDownList/>
+									</s:HGroup>
+									<s:HGroup verticalAlign="baseline">
+										<s:Label width="115" text="Jusqu'à :" textAlign="right"/>
+										<s:Label text="10h32min" />
+									</s:HGroup>
+									<s:HGroup verticalAlign="baseline">
+										<s:Label width="115" text="Durée :" textAlign="right"/>
+										<s:Label text="0h12min" />
+									</s:HGroup>
+									<s:HGroup>
+										<s:Label width="115" text="Participants :" textAlign="right"/>
+										<s:VGroup>
+											
+											<!-- Participants list -->
+											<s:List width="220" height="170" contentBackgroundAlpha="0.0">
+												
+												<s:dataProvider>
+													<mx:ArrayCollection>
+														
+														<fx:String>Étudiant 1</fx:String>
+														<fx:String>Étudiant 28</fx:String>
+														<fx:String>Étudiant 15</fx:String>
+														
+													</mx:ArrayCollection>
+												</s:dataProvider>
+											</s:List>
+											<s:HGroup>
+												<s:Button skinClass="skins.Components.Button" icon="images/Seance/ico_add.png" label="Ajouter"/>
+												<s:Button skinClass="skins.Components.Button" icon="images/Seance/ico_delete.png" label="Suppimer"/>
+											</s:HGroup>
+											
+										</s:VGroup>
+										
+									</s:HGroup>
+								</s:VGroup>
+							</s:Group>
+							
+						<!-- End of dates and participants tab -->	
+						</s:NavigatorContent>
+						
+					</mx:TabNavigator>
+				</s:Panel>
+				
+			</mx:HDividedBox>
+			<!-- Fin Group Panneaux -->
+		</s:Group>
+		<!-- Fin Group Container -->
+	</s:Group>
+</s:Application>
