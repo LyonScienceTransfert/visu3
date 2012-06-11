@@ -75,6 +75,7 @@ package com.ithaca.visu.controls.globalNavigation
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.controls.LinkButton;
 	import mx.events.ToolTipEvent;
 	import mx.managers.PopUpManager;
 	
@@ -98,7 +99,7 @@ package com.ithaca.visu.controls.globalNavigation
 	public class ApplicationMenu extends SkinnableContainer
 	{
 		[SkinPart("true")]
-		public var disconnect:Button;
+		public var disconnect:LinkButton;
 		
 		[SkinPart("false")]
 		public var chat:Button;
