@@ -70,7 +70,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			   close="button1_clickHandler()" 
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
                currentStateChange="titlewindow1_currentStateChangeHandler(event)"
-               height="260" width="550">
+               height="260" width="550" styleName="corexpert" chromeColor="#FFCC5E">
 	<s:title>{fxgt.gettext("Partage de bilan")}</s:title>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -119,5 +119,5 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	</fx:Script>
 	<user:ShareUserManagement  id="shareUserManagement"  height="100%" width="100%"
 							 skinClass="com.ithaca.visu.view.user.skins.ShareUserManagementSkin"
-							 />
+							  styleName="corexpert"/>
 </s:TitleWindow>
