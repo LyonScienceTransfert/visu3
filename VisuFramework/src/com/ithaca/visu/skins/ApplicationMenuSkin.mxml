@@ -144,9 +144,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:label>{fxgt.gettext("Chat")}</s:label>
 		</s:Button>	
 		<s:Label text="Nom Utilisateur" includeIn="authentified" fontWeight="bold"/>
-		<s:Button id="disconnect" includeIn="authentified" >
+<!--		<s:Button id="disconnect" includeIn="authentified" >
 			<s:label>{fxgt.gettext("Déconnexion")}</s:label>
-		</s:Button>	
+		</s:Button>	-->
 	</s:Group>	
 	<s:Group minWidth="1024" width="100%"  top="0" height="6">
 		<s:Rect left="0" right="0" top="0" height="6" width="100%" >
@@ -203,9 +203,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								 verticalAlign="middle" color="#FFFFFF" 
 								 fontSize="11" fontWeight="bold"/>
 						<s:Image source="images/Page/logout_ico.png" />
-						<s:Label height="20" text="Déconnexion"
+						<mx:LinkButton id="disconnect"
+									   fontSize="11" fontWeight="bold"
+									   height="15" textAlign="center"
+									   color="#FFFFFF" focusColor="#FFFFFFFF"
+									   rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+									   textRollOverColor="#ffaf04" textSelectedColor="#ffaf04">
+							<mx:label>{fxgt.gettext("Déconnexion")}</mx:label>
+						</mx:LinkButton>
+						<!--<s:Label height="20" text="Déconnexion"
 								 verticalAlign="middle" color="#FFFFFF" 
-								 fontSize="11" fontWeight="bold"/>
+								 fontSize="11" fontWeight="bold"/>-->
 					</s:HGroup>
 					<!-- Language -->
 					<s:HGroup right="10" bottom="4" gap="2" verticalAlign="baseline">
