@@ -49,16 +49,16 @@ in accordance with the terms of the license agreement accompanying it.
 	
 	<!-- layer 8: text -->
 	<!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
-	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/ProfilOff.png"
-			 source.active="@Embed('images/Menu/ProfilOn.png')"
-			 source.disabled="@Embed('images/Menu/ProfilOff.png')"
-			 source.down="@Embed('images/Menu/ProfilOn.png')"
-			 source.over="@Embed('images/Menu/ProfilOn.png')"
-			 source.up="@Embed('images/Menu/ProfilOff.png')"/>
+	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/ProfilUp.png"
+			 source.active="@Embed('images/Menu/ProfilDown.png')"
+			 source.disabled="@Embed('images/Menu/ProfilDisabled.png')"
+			 source.down="@Embed('images/Menu/ProfilDown.png')"
+			 source.over="@Embed('images/Menu/ProfilOver.png')"
+			 source.up="@Embed('images/Menu/ProfilUp.png')"/>
 	<s:Label id="labelDisplay" 
 			 maxDisplayedLines="1" textAlign="center" verticalAlign="middle"
 			 left="11" right="9" top="32" bottom="2" 
-			 color.up="#FFFFFF" color.disabled="#FFFFFF" color="#010101"
+			 color="#FFFFFF" color.active="#010101" color.down="#010101"
 			 fontSize="11" horizontalCenter="1" verticalCenter="15">
 	</s:Label>
 	
