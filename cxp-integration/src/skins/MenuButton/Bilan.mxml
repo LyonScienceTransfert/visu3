@@ -49,16 +49,16 @@
     
     <!-- layer 8: text -->
     <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
-	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/BilanOff.png"
-			 source.active="@Embed('images/Menu/BilanOn.png')"
-			 source.disabled="@Embed('images/Menu/BilanOff.png')"
-			 source.down="@Embed('images/Menu/BilanOn.png')"
-			 source.over="@Embed('images/Menu/BilanOn.png')"
-			 source.up="@Embed('images/Menu/BilanOff.png')"/>
+	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/BilanUp.png"
+			 source.active="@Embed('images/Menu/BilanDown.png')"
+			 source.disabled="@Embed('images/Menu/BilanDisabled.png')"
+			 source.down="@Embed('images/Menu/BilanDown.png')"
+			 source.over="@Embed('images/Menu/BilanOver.png')"
+			 source.up="@Embed('images/Menu/BilanUp.png')"/>
 	<s:Label id="labelDisplay" 
 			 maxDisplayedLines="1" textAlign="center" verticalAlign="middle"
 			 left="11" right="9" top="32" bottom="2" 
-			 color.up="#FFFFFF" color.disabled="#FFFFFF" color="#010101"
+			 color="#FFFFFF" color.active="#010101" color.down="#010101"
 			 fontSize="11" horizontalCenter="1" verticalCenter="15">
 	</s:Label>
     

@@ -49,16 +49,16 @@
     
     <!-- layer 8: text -->
     <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
-	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/RetroOff.png"
-			 source.active="@Embed('images/Menu/RetroOn.png')"
-			 source.disabled="@Embed('images/Menu/RetroOff.png')"
-			 source.down="@Embed('images/Menu/RetroOn.png')"
-			 source.over="@Embed('images/Menu/RetroOn.png')"
-			 source.up="@Embed('images/Menu/RetroOff.png')"/>
+	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/RetroUp.png"
+			 source.active="@Embed('images/Menu/RetroDown.png')"
+			 source.disabled="@Embed('images/Menu/RetroDisabled.png')"
+			 source.down="@Embed('images/Menu/RetroDown.png')"
+			 source.over="@Embed('images/Menu/RetroOver.png')"
+			 source.up="@Embed('images/Menu/RetroUp.png')"/>
 	<s:Label id="labelDisplay" 
 			 maxDisplayedLines="1" textAlign="center" verticalAlign="middle"
 			 left="11" right="9" top="32" bottom="2" 
-			 color.up="#FFFFFF" color.disabled="#FFFFFF" color="#010101"
+			 color="#FFFFFF" color.active="#010101" color.down="#010101"
 			 fontSize="11" horizontalCenter="1" verticalCenter="15">
 	</s:Label>
     
