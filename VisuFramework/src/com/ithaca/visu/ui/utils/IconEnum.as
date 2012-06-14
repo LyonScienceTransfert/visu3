@@ -327,6 +327,15 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/Home/ico_user_tuteur.png")]
 		static private var ico_user_tuteur:Class;
 		
+		[Embed("images/Home/role_etudiant.png")]
+		static private var role_etudiant:Class;
+		[Embed("images/Home/role_tuteur.png")]
+		static private var role_tuteur:Class;
+		[Embed("images/Home/role_responsable.png")]
+		static private var role_responsable:Class;
+		[Embed("images/Home/role_admin.png")]
+		static private var role_admin:Class;
+		
 		public static function getPathByName(code:String):String
 		{
 			var path:String = "";
@@ -574,16 +583,22 @@ package com.ithaca.visu.ui.utils
 			switch (code)
 			{
 				case RoleEnum.STUDENT  : 
-					icon = ico_user_etudiant;
+					icon = role_etudiant;
 					break;
 				case RoleEnum.TUTEUR  : 
-					icon = ico_user_tuteur;
+					icon = role_tuteur;
+					break;
+				case RoleEnum.RESPONSABLE  : 
+					icon = role_responsable;
+					break;
+				case RoleEnum.ADMINISTRATEUR  : 
+					icon = role_admin;
 					break;
 				default :
 					icon = ico_user_etudiant;
 					break;				
 			}
-			return icon;
+			return icon;			
 		}
 	}
 }
