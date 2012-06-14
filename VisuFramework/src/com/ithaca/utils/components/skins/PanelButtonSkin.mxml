@@ -243,14 +243,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 
                 <!-- layer 0: title bar fill -->
                 <!--- @private -->
-                <s:Rect id="tbFill" left="0" right="0" top="0" bottom="1">
-                    <s:fill>
-                        <s:LinearGradient rotation="90">
-                            <s:GradientEntry color="0xE2E2E2" />
-                            <s:GradientEntry color="0xD9D9D9" />
-                        </s:LinearGradient>
-                    </s:fill>
-                </s:Rect>
+				<s:Image id="tbFill" left="0" right="0" top="0" bottom="1" scaleMode="stretch" source="images/Home/panel-top.png" />
                 
                 <!-- layer 1: title bar highlight -->
                 <!--- @private -->

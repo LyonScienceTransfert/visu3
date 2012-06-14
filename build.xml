@@ -299,7 +299,57 @@ or by setting the following environment variable:
 				<include-file name="images/normalViewDataGrid_16x16.png" path="${framework.images}/normalViewDataGrid_16x16.png"/>
 				<include-file name="images/marqueurBlancTrans.png" path="${framework.images}/marqueurBlancTrans.png"/>
 				<include-file name="images/marqueurFondBlanc.png" path="${framework.images}/marqueurFondBlanc.png"/>
-
+				
+				<!-- integration corexpert begin-->
+				<include-file name="images/Menu/HomeOff.png" path="${framework.images}/Menu/HomeOff.png"/>
+				<include-file name="images/Menu/HomeOn.png" path="${framework.images}/Menu/HomeOn.png"/>				
+				<include-file name="images/Menu/RetroOn.png" path="${framework.images}/Menu/RetroOn.png"/>
+				<include-file name="images/Menu/RetroOff.png" path="${framework.images}/Menu/RetroOff.png"/>
+				<include-file name="images/Menu/SyncOn.png" path="${framework.images}/Menu/SyncOn.png"/>
+				<include-file name="images/Menu/SyncOff.png" path="${framework.images}/Menu/SyncOff.png"/>				
+				<include-file name="images/Menu/UsersOff.png" path="${framework.images}/Menu/UsersOff.png"/>
+				<include-file name="images/Menu/UsersOn.png" path="${framework.images}/Menu/UsersOn.png"/>
+				<include-file name="images/Menu/SeanceOff.png" path="${framework.images}/Menu/SeanceOff.png"/>
+				<include-file name="images/Menu/SeanceOn.png" path="${framework.images}/Menu/SeanceOn.png"/>
+				<include-file name="images/Menu/BilanOn.png" path="${framework.images}/Menu/BilanOn.png"/>
+				<include-file name="images/Menu/BilanOff.png" path="${framework.images}/Menu/BilanOff.png"/>
+				<include-file name="images/Menu/ProfilOff.png" path="${framework.images}/Menu/ProfilOff.png"/>
+				<include-file name="images/Menu/ProfilOn.png" path="${framework.images}/Menu/ProfilOn.png"/>
+				<include-file name="images/Page/btn_chat_on.png" path="${framework.images}/Page/btn_chat_on.png"/>
+				<include-file name="images/Page/btn_chat_off.png" path="${framework.images}/Page/btn_chat_off.png"/>
+				<include-file name="images/Page/topbar_wave.png" path="${framework.images}/Page/topbar_wave.png"/>
+				<include-file name="images/Page/profile_ico.png" path="${framework.images}/Page/profile_ico.png"/>
+				<include-file name="images/Page/logout_ico.png" path="${framework.images}/Page/logout_ico.png"/>
+				
+				<include-file name="images/Home/panel-top.png" path="${framework.images}/Home/panel-top.png"/>
+				<include-file name="images/Home/ico_panel_calendar.png" path="${framework.images}/Home/ico_panel_calendar.png"/>
+				<include-file name="images/Home/ico_panel_chat.png" path="${framework.images}/Home/ico_panel_chat.png"/>
+				<include-file name="images/Home/ico_panel_users.png" path="${framework.images}/Home/ico_panel_users.png"/>
+					<!-- calendrier -->
+				<include-file name="images/Components/left.png" path="${framework.images}/Components/left.png"/>
+				<include-file name="images/Components/right.png" path="${framework.images}/Components/right.png"/>
+				<include-file name="images/Components/down.png" path="${framework.images}/Components/down.png"/>
+				
+				<include-file name="images/Home/ico_user_tuteur.png" path="${framework.images}/Home/ico_user_tuteur.png"/>
+				<include-file name="images/Home/ico_user_etudiant.png" path="${framework.images}/Home/ico_user_etudiant.png"/>
+				
+				<include-file name="images/Salon/ico_05.png" path="${framework.images}/Salon/ico_05.png"/>
+				<include-file name="images/Salon/ico_screen.png" path="${framework.images}/Salon/ico_screen.png"/>
+				<include-file name="images/Salon/ico_micro.png" path="${framework.images}/Salon/ico_micro.png"/>
+				<include-file name="images/Salon/ico_sound.png" path="${framework.images}/Salon/ico_sound.png"/>
+				<include-file name="images/Salon/ico_bilan_add.png" path="${framework.images}/Salon/ico_bilan_add.png"/>
+				<include-file name="images/Salon/ico_back.png" path="${framework.images}/Salon/ico_back.png"/>
+				<include-file name="images/Salon/ico_write.png" path="${framework.images}/Salon/ico_write.png"/>
+				<include-file name="images/Salon/ico_bilan_delete.png" path="${framework.images}/Salon/ico_bilan_delete.png"/>
+				<include-file name="images/Salon/ico_ppl.png" path="${framework.images}/Salon/ico_ppl.png"/>
+				<include-file name="images/Salon/ico_view.png" path="${framework.images}/Salon/ico_view.png"/>
+				<include-file name="images/Salon/ico_06.png" path="${framework.images}/Salon/ico_06.png"/>
+				<include-file name="images/Salon/ico_video.png" path="${framework.images}/Salon/ico_video.png"/>
+				<include-file name="images/Salon/ico_audio.png" path="${framework.images}/Salon/ico_audio.png"/>
+				
+				
+				<!-- integration corexpert end-->
+				
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
 
 	  	  		<include-file name="locale/en_US/HumanDate.properties" path="${framework.locale}/en_US/HumanDate.properties"/>

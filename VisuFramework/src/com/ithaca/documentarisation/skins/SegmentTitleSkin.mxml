@@ -111,7 +111,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<!-- TEXTAREA -->
 			<s:RichEditableText id="textSegment" width="100%" 
 				backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"
-                editable.normal="false" selectable="true" selectionHighlighting="whenActive"/>		
+                editable.normal="false" selectable="true" selectionHighlighting="whenActive"
+  				styleName="corexpert"/>		
 			<!-- DELETE ICON -->
 			<components:IconDelete id="iconDelete"
 				visible.edit="false"

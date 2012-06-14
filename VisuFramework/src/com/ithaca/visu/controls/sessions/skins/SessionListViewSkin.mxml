@@ -123,34 +123,37 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								   id="allButton"
 								   label="Toutes les séances" 
 								   selected="true"
-								   />
+								   styleName="corexpert"/>
 					<s:RadioButton groupName="timeFilter" 
 								   id="pastButton"
 								   label="Séances passées" 
-								   />
+								   styleName="corexpert"/>
 					<s:RadioButton groupName="timeFilter" 
 								   id="comingButton"
 								   label="Séances à venir" 
-								   />
+								   styleName="corexpert"/>
 				</s:VGroup>
 				<s:VGroup id="filterPlanButtonsGroup" width="100%" verticalAlign="middle" includeIn="plan">
 					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingAllButton"
 								   label="Tous les plans de séance" 
 								   selected="true"
-								   />
+								   styleName="corexpert"/>
 					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingMineButton"
 								   label="Mes plans de séance (créés par moi)"
-								   toolTip="Afficher uniquement les plans de séance que j'ai créés"/>
+								   toolTip="Afficher uniquement les plans de séance que j'ai créés"
+								   styleName="corexpert"/>
 					<s:RadioButton groupName="sharingFilter" 
 								   id="sharingOtherButton"
 								   label="Autres plans de séance partagés (créés par d'autres)" 
-								   toolTip="Afficher uniquement les plans de séance créés et partagés par d'autres utilisateurs"/>	
+								   toolTip="Afficher uniquement les plans de séance créés et partagés par d'autres utilisateurs"
+								   styleName="corexpert"/>	
 				</s:VGroup>	
 				<s:HGroup id="filterGroup" width="100%" verticalAlign="middle">
 					<s:Label  text="Contient le Texte:"/>
-					<s:TextInput width="100%" text="" id="filterText"/>
+					<s:TextInput width="100%" text="" id="filterText"
+								 styleName="corexpert"/>
 					<s:Group id="clearIcon" right="3" verticalCenter="-1" visible="{filterText.text.length>0}" includeInLayout="{filterText.text.length>0}">
 						<s:Path 
 							winding="{GraphicsPathWinding.EVEN_ODD}"
@@ -181,7 +184,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						<s:Button id="newSessionButton" label="Nouvelle séance" toolTip="Créer une nouvelle séance avec un plan de séance vide" includeIn="session" x="0"/>
 					</s:Group>
 				</s:HGroup>
-				<mx:DataGrid id="planDataGrid" width="100%" height="100%" includeIn="plan">
+				<mx:DataGrid id="planDataGrid" width="100%" height="100%" includeIn="plan"
+							 styleName="corexpert">
 					<mx:columns>
 						<mx:DataGridColumn dataField="theme" showDataTips="true" dataTipField="theme">
 							<mx:headerText>Titre de séance</mx:headerText>			
@@ -191,7 +195,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						</mx:DataGridColumn>
 					</mx:columns>
 				</mx:DataGrid>
-				<s:List id="planList" width="100%" height="100%"  excludeFrom="plan,session">
+				<s:List id="planList" width="100%" height="100%"  excludeFrom="plan,session"
+						styleName="corexpert">
 					<s:itemRenderer>
 						<fx:Component>
 							<s:ItemRenderer width="100%">
@@ -214,7 +219,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						</fx:Component>
 					</s:itemRenderer>
 				</s:List>
-				<mx:DataGrid id="sessionDataGrid" width="100%" height="100%" includeIn="session">
+				<mx:DataGrid id="sessionDataGrid" width="100%" height="100%" includeIn="session"
+							 styleName="corexpert">
 					<mx:columns>
 						<mx:DataGridColumn id="dateSessionDataGrid" dataField="date_session" width="80">
 							<mx:headerText>Date prévue</mx:headerText>			
@@ -227,7 +233,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						</mx:DataGridColumn>
 					</mx:columns>
 				</mx:DataGrid>
-				<s:List id="sessionList" width="100%" height="100%" excludeFrom="plan,session">
+				<s:List id="sessionList" width="100%" height="100%" excludeFrom="plan,session"
+						styleName="corexpert">
 					<s:itemRenderer>
 						<fx:Component>
 							<s:ItemRenderer width="100%">

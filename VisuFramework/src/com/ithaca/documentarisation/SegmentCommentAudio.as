@@ -323,6 +323,7 @@ public class SegmentCommentAudio extends SkinnableComponent
         //_bilanModule = Model.getInstance().getCurrentBilanModule();
         _bilanModule = new Object();
     }
+    
 	//_____________________________________________________________________
 	//
 	// Overriden Methods
