@@ -137,7 +137,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
     		>
     		<s:List width="100%" height="100%"
     			id="listRetroDocument" 
-    		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
+    		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"
+    		    styleName="corexpert"/>
     	</components:PanelButton>
     	
     	<components:PanelButton width="100%" height="100%" 

@@ -75,6 +75,7 @@ package com.ithaca.visu.controls.globalNavigation
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.controls.LinkButton;
 	import mx.events.ToolTipEvent;
 	import mx.managers.PopUpManager;
 	
@@ -98,7 +99,7 @@ package com.ithaca.visu.controls.globalNavigation
 	public class ApplicationMenu extends SkinnableContainer
 	{
 		[SkinPart("true")]
-		public var disconnect:Button;
+		public var disconnect:LinkButton;
 		
 		[SkinPart("false")]
 		public var chat:Button;
@@ -114,6 +115,22 @@ package com.ithaca.visu.controls.globalNavigation
 		
 		[SkinPart("true")]
 		public var labelLoggedUser:Label;
+
+		[SkinPart("true")]
+		public var buttonHomeModule:Button;
+		[SkinPart("true")]
+		public var buttonUserModule:Button;
+		[SkinPart("true")]
+		public var buttonSessionModule:Button;
+		[SkinPart("true")]
+		public var buttonProfilModule:Button;
+		[SkinPart("true")]
+		public var buttonBilanModule:Button;
+		[SkinPart("true")]
+		public var buttonTutoratModule:Button;
+		[SkinPart("true")]
+		public var buttonRetrospectionModule:Button;
+		
 
 		public var listLang:ArrayCollection = new ArrayCollection()
 		public var listLabelModule:Array = new Array();
@@ -225,11 +242,6 @@ package com.ithaca.visu.controls.globalNavigation
                 // disactivate for Unidistance
 				dropListLang.enabled = true;
 			}
-/*			if (instance == home)
-			{
-				home.addEventListener(MouseEvent.CLICK, navigateToHome);
-			}*/
-			
 			if (instance == contentGroup)
 			{
 				if (moduleListChanged) 
@@ -256,6 +268,34 @@ package com.ithaca.visu.controls.globalNavigation
 			{
 				chat.addEventListener(MouseEvent.CLICK, onClickButtonChat);
 			}
+			if (instance == buttonHomeModule)
+			{
+				buttonHomeModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}
+			if (instance == buttonUserModule)
+			{
+				buttonUserModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}		
+			if (instance == buttonSessionModule)
+			{
+				buttonSessionModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}
+			if (instance == buttonProfilModule)
+			{
+				buttonProfilModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}
+			if (instance == buttonBilanModule)
+			{
+				buttonBilanModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}
+			if (instance == buttonTutoratModule)
+			{
+				buttonTutoratModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}
+			if (instance == buttonRetrospectionModule)
+			{
+				buttonRetrospectionModule.addEventListener(MouseEvent.CLICK, onClickButtonModule);
+			}
 		}
 		
 		/**
@@ -273,10 +313,6 @@ package com.ithaca.visu.controls.globalNavigation
 			{
 				dropListLang.removeEventListener(IndexChangeEvent.CHANGE, onChangeLange);
 			}
-/*			if (instance == home)
-			{
-				home.removeEventListener(MouseEvent.CLICK, navigateToHome);
-			}*/
 		}
 		
 		/**
@@ -334,6 +370,47 @@ package com.ithaca.visu.controls.globalNavigation
 			var bt:Button;
 			for each (var o:Object in _moduleList)
 			{
+                    switch(o.value)
+                    {
+                    case "home" :
+						buttonHomeModule.name = o.value;
+                        break;
+                    case "tutorat" :
+						buttonTutoratModule.name = o.value;
+						Model.getInstance().setButtonSalonTutorat(buttonTutoratModule);
+						Model.getInstance().setEnabledButtonSalonTutorat(false);
+                        break;
+                    case "profil" :
+						buttonProfilModule.name = o.value;
+                        break;
+                    case "retrospection" :
+						buttonRetrospectionModule.name = o.value;
+						Model.getInstance().setButtonSalonRetro(buttonRetrospectionModule);
+						Model.getInstance().setEnabledButtonSalonRetro(false);
+                        break;
+                    case "bilan" :
+						buttonBilanModule.name = o.value;
+                        break;
+                    case "user" :
+						buttonUserModule.name = o.value;
+						buttonUserModule.includeInLayout = buttonUserModule.visible = true;
+                        break;
+                    case "session" :
+						buttonSessionModule.name = o.value;
+						buttonSessionModule.includeInLayout = buttonSessionModule.visible = true;
+                        break;
+                    }
+			}			
+		}
+		/**
+		 * @private
+		 * add module navigation buttons
+		 */
+		protected function addModuleButtonOld():void
+		{
+			/*var bt:Button;
+			for each (var o:Object in _moduleList)
+			{
 				if (o is Array)
 				{
 					 
@@ -370,10 +447,10 @@ package com.ithaca.visu.controls.globalNavigation
                         buttonsModule.addItem(o.label);
                         break;
                     }
-				}
-			}
+				}*/
+		//	}
             // set buttonBar
-            buttonBarModules.dataProvider = buttonsModule;
+/*            buttonBarModules.dataProvider = buttonsModule;
             buttonBarModules.requireSelection = true;
             buttonBarModules.addEventListener(IndexChangeEvent.CHANGE, onChangeModule);
             addElement(buttonBarModules);
@@ -386,7 +463,7 @@ package com.ithaca.visu.controls.globalNavigation
             addElement(groupTutoratRetroButtons);
             
             // add button salon bilan
-            addElement(buttonSalonBilan);
+            addElement(buttonSalonBilan);*/
 			
 		}
 
@@ -439,6 +516,14 @@ package com.ithaca.visu.controls.globalNavigation
 		protected function navigateToModule(event:MouseEvent):void
 		{
 			navigate(event.target.name);
+		}
+		/**
+		 * Event handler click on button modules
+		 */
+		private function onClickButtonModule(event:MouseEvent):void
+		{
+			var nameModule:String = (event.currentTarget as Button).name;
+			navigate(nameModule);
 		}
 		/**
 		 * event handler the switche the modules

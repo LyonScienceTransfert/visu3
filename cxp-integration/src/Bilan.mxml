@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<s:RadioButtonGroup id="radiogroup1"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Group top="68" width="1024" minHeight="667" horizontalCenter="0">
+		
+		<!-- container -->
+		<s:Group width="1004" height="100%" horizontalCenter="0">
+			
+			<!-- background -->
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:fill>
+						<s:SolidColor color="0xffefd1" />
+					</s:fill>
+				</s:Rect>
+				
+				<s:Rect width="100%" height="100%" radiusX="5">
+					<s:stroke>
+						<s:SolidColorStroke color="0x9f9f9f" />
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			
+			<!-- Panneaux -->
+			<mx:HDividedBox height="100%" top="2" left="2" right="2" bottom="2">
+				
+				<!-- Panel explorer -->
+				<s:Panel left="1" top="1" bottom="1" 
+						 width="34%" height="100%" 
+						 minWidth="270"
+						 skinClass="skins.FlexiblePanel" title="Explorateur">
+					
+					<s:VGroup width="100%" height="100%" gap="5" left="3" top="3" right="3" bottom="3">
+						<s:Group width="100%" height="218">
+							<s:Rect width="100%" height="100%" radiusX="2">
+								<s:fill>
+									<s:SolidColor color="#fff4df" />
+								</s:fill>
+							</s:Rect>
+							
+							<s:VGroup width="100%" height="100%">
+								
+								<s:CheckBox label="Filtrer par séance" selected="true"/>
+								
+								<s:Group width="100%" height="109">
+									<mx:AdvancedDataGrid height="100%" left="20" right="20"
+														 alternatingItemColors="[#FFFFFF, #FFF4DF]"
+														 borderColor="#FFB311" designViewDataType="flat"
+														 focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+														 selectionColor="#FFCC5E">
+										
+										<mx:dataProvider>
+											<mx:ArrayCollection>
+												
+												<!-- data  -->
+												<fx:Object date="01/05/2012" proprietaire="Tuteur 1" titre="Introduction au cinéma" />
+												<fx:Object date="30/05/2012" proprietaire="Tuteur 4" titre="Les stéréotypes" />
+												<fx:Object date="15/05/2012" proprietaire="Tuteur 1" titre="Les journaux" />
+												<fx:Object date="29/05/2012" proprietaire="Tuteur 8" titre="" />
+												<fx:Object date="02/06/2012" proprietaire="Tuteur 7" titre="Bonjour." />
+												
+											</mx:ArrayCollection>
+										</mx:dataProvider>
+										<mx:columns>
+											<mx:AdvancedDataGridColumn headerText="Date prévu" dataField="date"/>
+											<mx:AdvancedDataGridColumn headerText="Titre de séance" dataField="titre"/>
+											<mx:AdvancedDataGridColumn headerText="Propriétaire de séance" dataField="proprietaire"/>
+										</mx:columns>
+										
+									</mx:AdvancedDataGrid>
+								</s:Group>
+	
+								<!-- filters -->
+								<s:Group width="100%">
+									<s:VGroup left="10" right="10" width="100%" gap="0" clipAndEnableScrolling="true">
+										<s:RadioButton label="Tous les bilans" fontSize="11"/>
+										<s:RadioButton label="Mes bilans (créés par moi)" fontSize="11"/>
+										<s:RadioButton label="Autres bilans (créés par d'autres) et partagés avec moi" fontSize="11"/>
+										<s:HGroup bottom="0" width="100%" gap="2">
+											<s:Label height="20" fontSize="11" text="Filtre :"
+													 verticalAlign="middle"/>
+											<s:TextInput bottom="0" width="100%" height="18"/>
+										</s:HGroup>
+									</s:VGroup>
+								</s:Group>
+							</s:VGroup>
+						</s:Group>
+								
+						<!-- list of bilans -->
+						<s:Group width="100%" height="100%">
+							<s:VGroup width="100%" height="100%" gap="3">
+								<s:Group left="3" right="3" top="3" width="100%" height="25"
+										 textAlign="right">
+									<s:HGroup right="0" height="100%" gap="3" textAlign="right"
+											  verticalAlign="middle">										
+										<s:Label text="Visualisation de la liste des bilans :" verticalAlign="bottom"/>
+										<s:Button width="24" height="24"
+												  icon="images/Bilan/ico_view_bilan.png"
+												  skinClass="skins.Components.Button"/>
+									</s:HGroup>
+									
+								</s:Group>
+								<s:Group width="100%" height="100%" left="3" top="3" right="3">
+									<mx:AdvancedDataGrid height="100%" width="100%"
+														 alternatingItemColors="[#FFFFFF, #FFF4DF]"
+														 borderColor="#FFB311" designViewDataType="flat"
+														 focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+														 selectionColor="#FFCC5E">
+										
+										<mx:dataProvider>
+											<mx:ArrayCollection>
+												
+												<!-- data  -->
+												<fx:Object date="01/05/2012" proprietaire="Tuteur 1" titre="Introduction au cinéma" />
+												<fx:Object date="30/05/2012" proprietaire="Tuteur 4" titre="Les stéréotypes" />
+												<fx:Object date="15/05/2012" proprietaire="Tuteur 1" titre="Les journaux" />
+												<fx:Object date="29/05/2012" proprietaire="Tuteur 8" titre="" />
+												<fx:Object date="02/06/2012" proprietaire="Tuteur 7" titre="Bonjour." />
+												
+											</mx:ArrayCollection>
+										</mx:dataProvider>
+										<mx:columns>
+											<mx:AdvancedDataGridColumn headerText="Date modification" dataField="date"/>
+											<mx:AdvancedDataGridColumn headerText="Titre du bilan" dataField="titre"/>
+											<mx:AdvancedDataGridColumn headerText="Propriétaire du bilan" dataField="proprietaire"/>
+										</mx:columns>
+										
+									</mx:AdvancedDataGrid>
+								</s:Group>
+							</s:VGroup>
+						</s:Group>
+								
+							
+					</s:VGroup>
+					
+					
+					
+				<!-- end of panel explorer -->
+				</s:Panel>
+				
+				
+				
+				<!-- Panel "Bilan" -->
+				<s:Panel left="1" top="1" bottom="1" 
+						 width="66%" height="100%" 
+						 minWidth="400"
+						 skinClass="skins.FlexiblePanel" title="Bilan de «L'identité nationale : visages de la France...»">
+				
+					<!-- group of buttons -->
+					<s:HGroup y="-28" right="3" gap="2" verticalAlign="middle">
+						<s:Button skinClass="skins.Components.Button" height="22" width="22" icon="images/Salon/ico_ppl.png"/>
+						<s:Button skinClass="skins.Components.Button" height="22" width="33" icon="images/Bilan/ico_edit_bilan.png"/>
+						<s:Image width="16" height="16" source="images/Bilan/ico_info.png" />
+					</s:HGroup>
+					
+					<s:Group width="100%" height="100%" left="3" top="3" right="3" bottom="3">
+						<s:HGroup width="100%" height="100%" gap="4">
+							
+							<!-- bilan details -->
+							<s:Group width="40%" height="100%">
+								<s:Rect width="100%" height="100%">
+									<s:fill>
+										<s:SolidColor color="#ebebec" />
+									</s:fill>
+								</s:Rect>
+								<s:Group width="100%" height="100%">
+									<s:VGroup width="100%" gap="5" left="5" top="5" right="5">
+										<s:Label width="100%" color="#373737" fontFamily="Arial"
+												 fontSize="12" fontWeight="bold" text="Titre 1"
+												 textAlign="center"/>
+										<s:Label width="100%" color="#373737" fontFamily="Arial"
+												 fontSize="12"
+												 text="Blalablablabliblabla Blablablabliblabla exemple de texte"/>
+										<s:HGroup width="100%" gap="4" verticalAlign="middle">
+											
+											<s:Group width="16" height="16">												
+												<s:Image source="images/Salon/ico_video.png"
+														 verticalCenter="0"/>
+											</s:Group>
+											<s:Label fontFamily="Arial" fontSize="10"
+													 text="Durée : 00:35" verticalAlign="bottom"/>
+											<s:Button width="15" height="15"
+													  icon="images/Salon/ico_play.png"
+													  skinClass="skins.Components.Button"/>
+											<s:Button width="15" height="15"
+													  icon="images/Salon/ico_stop.png"
+													  skinClass="skins.Components.Button"/>
+										</s:HGroup>
+										<s:HGroup width="100%" gap="4" verticalAlign="middle">
+											<s:Group width="16" height="16">												
+												<s:Image source="images/Salon/ico_audio.png"
+														 verticalCenter="0"/>
+											</s:Group>
+											<s:Label fontFamily="Arial" fontSize="10"
+													 text="Durée : 00:27" verticalAlign="bottom"/>
+											<s:Button width="15" height="15"
+													  icon="images/Salon/ico_play.png"
+													  skinClass="skins.Components.Button"/>
+										</s:HGroup>
+										
+									</s:VGroup>
+								</s:Group>
+							</s:Group>
+							
+							<!-- videos -->
+							<s:Group width="60%" height="100%">
+								<s:Group left="0" right="0" top="0" bottom="0">
+									<s:Group width="100%" height="100%" horizontalCenter="0">
+										
+										<!-- video display -->
+										<s:Group width="100%" height="235">
+											<s:Rect width="100%" height="100%">
+												<s:stroke>
+													<s:SolidColorStroke color="#a2a2a2" />
+												</s:stroke>
+											</s:Rect>
+											<s:Group left="1" top="1" right="1" bottom="1">
+												<s:Image source="http://www.psdgraphics.com/wp-content/uploads/2010/08/webcam.jpg" height="100%" width="100%" />
+												<s:Button skinClass="skins.Components.Button" height="20" width="21" icon="images/Salon/ico_play.png" top="1" left="3"/>
+												<s:HGroup top="1" right="3" height="20">
+													<!-- User name -->
+													<s:Group>
+														<s:Group top="3">
+															<s:Rect width="100%" height="100%" radiusX="7">
+																<s:fill>
+																	<s:SolidColor color="#ffaf04" />
+																</s:fill>
+															</s:Rect>
+															<s:HGroup left="3" right="3"
+																	  verticalAlign="middle"
+																	  verticalCenter="0">
+																<s:Label fontSize="10"
+																		 text="S.Serguei"
+																		 verticalAlign="bottom"/>
+																<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
+																		 verticalAlign="bottom" verticalCenter="0"/>
+															</s:HGroup>
+														</s:Group>
+													</s:Group>
+												</s:HGroup>
+											</s:Group>
+										</s:Group>
+										
+									</s:Group>
+								</s:Group>
+							</s:Group>
+							
+						</s:HGroup>
+					</s:Group>
+					
+				<!-- end of panel explorer -->
+				</s:Panel>
+			</mx:HDividedBox>
+				
+		<!-- end of container -->
+		</s:Group>
+		
+	</s:Group>
+</s:Application>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+ADOBE SYSTEMS INCORPORATED
+Copyright 2010 Adobe Systems Incorporated
+All Rights Reserved.
+
+NOTICE: Adobe permits you to use, modify, and distribute this file
+in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for the anchor button on a Spark DropDownList component.  
+
+@see spark.components.DropDownList        
+@see spark.skins.spark.DropDownListSkin
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" minWidth="20" minHeight="12">
+	
+	<fx:Metadata>
+		<![CDATA[ 
+		/** 
+		* @copy spark.skins.spark.ApplicationSkin#hostComponent
+		*/
+		[HostComponent("spark.components.Button")]
+		]]>
+	</fx:Metadata> 
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" />
+		<s:State name="down" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<!-- layer 1: shadow -->
+	<!--- @private -->
+	
+	<!-- layer 2: fill -->
+	<!--- @private -->
+	<s:Rect id="fill" left="0" right="0" top="0" bottom="0" radiusX="1">
+		<s:fill>
+			<s:SolidColor color="#636363" />
+		</s:fill>
+	</s:Rect>
+	
+	<!--- @private -->
+	<s:Rect left="0" right="0" top="0" bottom="0" radiusX="1">
+		<s:stroke>
+			<s:SolidColorStroke color="#7d7d7d" />
+		</s:stroke>
+	</s:Rect>
+	
+	
+	<!-- layer 2: stroke for down state -->
+	<!--- @private -->
+	<s:Rect left="1" right="1" top="1" bottom="1" radiusX="1" includeIn="down">
+		<s:stroke>
+			<s:LinearGradientStroke rotation="90" weight="1">
+				<s:GradientEntry color="0x000000" alpha="0.19" ratio="0.0" />
+				<s:GradientEntry color="0x000000" alpha="0.10" ratio="0.0001" />
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>    
+	
+	<!-- layer 8: arrow -->
+	<!--- The arrow graphic displayed in the anchor button. -->
+	<s:Path right="6" verticalCenter="0" id="arrow"
+			data="M 7.0 0.0 L 3.5 7.0 L 0.0 0.0">
+		<s:fill>
+			<s:RadialGradient rotation="90" focalPointRatio="1">   
+				<!--- @private
+				The first part of the arrow's gradient fill. 
+				The default alpha is .6. The default color if 0x000000. -->
+				<s:GradientEntry id="arrowFill1" color="0" alpha="1" />
+				<!--- @private
+				The second part of the arrow's gradient fill. 
+				The default alpha is .6. The default color if 0x000000. -->
+				<s:GradientEntry id="arrowFill2" color="0" alpha="1" />
+			</s:RadialGradient>
+		</s:fill>
+	</s:Path>
+</s:SparkSkin>
