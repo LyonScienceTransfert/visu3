@@ -78,6 +78,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
             import com.ithaca.traces.Obsel;
             import com.ithaca.traces.model.TraceModel;
             import com.ithaca.utils.UtilFunction;
+            import com.ithaca.utils.VisuUtils;
             import com.ithaca.visu.ui.utils.IconEnum;
             
             import gnu.as3.gettext.FxGettext;
@@ -88,58 +89,63 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			[Bindable]
 			private 	var fxgt : _FxGettext;
 		
-			protected function creationCompleteHandler(event:Event):void
-			{
-				fxgt = FxGettext;
-				
-				obsel = hostComponent.obsel;
-				
-				if ( hostComponent.getStyle( "tooltipProp" )  )
-					hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
-
-				var pathIcon = hostComponent.getStyle( "icon" );
-				switch (obsel.type)
-				{
-					case TraceModel.READ_DOCUMENT :
-						pathIcon = IconEnum.getPathByName('readVideo');
-						if (obsel.props[TraceModel.TYPE_DOCUMENT] == TraceModel.IMAGE)
-						{
-							pathIcon = obsel.props[TraceModel.URL];
-						}
-						icon.width = 20;
-						hostComponent.toolTip = fxgt.gettext("Affichage du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("chez l'apprenant");
-                        icon.left = -5;
-                        break;
-					case TraceModel.PLAY_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à partir de")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " + fxgt.gettext("secondes");
-						break;
-					case TraceModel.PAUSE_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Pause vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
-                        icon.top = -2;
-                        break;
-					case TraceModel.END_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Fin de la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
-                        icon.top = -2;
-                        break;
-					case TraceModel.RELEASE_SLIDER_VIDEO :
-						hostComponent.toolTip = fxgt.gettext("Déplacement vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("vers") + " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
-						break;
-					case TraceModel.RECEIVE_DOCUMENT :
-						hostComponent.toolTip = fxgt.gettext("Envoi du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
-						break;
-                    case TraceModel.STOP_VIDEO :
-                        hostComponent.toolTip = fxgt.gettext("Déconnexion de l'apprenant au moment de la lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
-                        icon.top = -8;
-                        break;
-					default :
-						
-						break;
-				}
-				
-				icon.source = pathIcon;
-				// set drag area
-				hostComponent.dragArea = icon;
-			}
+            protected function creationCompleteHandler(event:Event):void
+            {
+                fxgt = FxGettext;
+                
+                obsel = hostComponent.obsel;
+                
+                if ( hostComponent.getStyle( "tooltipProp" )  )
+                    hostComponent.toolTip =  obsel.props[ hostComponent.getStyle( "tooltipProp" ) ]; 
+                
+                var pathIcon = hostComponent.getStyle( "icon" );
+                switch (obsel.type)
+                {
+                case TraceModel.READ_DOCUMENT :
+                    pathIcon = IconEnum.getPathByName('readVideo');
+                    if (obsel.props[TraceModel.TYPE_DOCUMENT] == TraceModel.IMAGE)
+                    {
+                        pathIcon = obsel.props[TraceModel.URL];
+                    }else
+                    {
+                        // get first frame video 
+                        // FIXME : only for youtube, not for video the tuteur
+                        pathIcon = VisuUtils.getVideoYoutubeFirstFrame(obsel.props[TraceModel.URL]);
+                    }
+                    icon.width = 20;
+                    hostComponent.toolTip = fxgt.gettext("Affichage du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("chez l'apprenant");
+                    icon.left = -5;
+                    break;
+                case TraceModel.PLAY_VIDEO :
+                    hostComponent.toolTip = fxgt.gettext("Lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à partir de")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " + fxgt.gettext("secondes");
+                    break;
+                case TraceModel.PAUSE_VIDEO :
+                    hostComponent.toolTip = fxgt.gettext("Pause vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
+                    icon.top = -2;
+                    break;
+                case TraceModel.END_VIDEO :
+                    hostComponent.toolTip = fxgt.gettext("Fin de la vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+fxgt.gettext("à")+ " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
+                    icon.top = -2;
+                    break;
+                case TraceModel.RELEASE_SLIDER_VIDEO :
+                    hostComponent.toolTip = fxgt.gettext("Déplacement vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" '+ fxgt.gettext("vers") + " "+ UtilFunction.getMinSec(new int(hostComponent.toolTip)) + " " +fxgt.gettext("secondes");
+                    break;
+                case TraceModel.RECEIVE_DOCUMENT :
+                    hostComponent.toolTip = fxgt.gettext("Envoi du document :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
+                    break;
+                case TraceModel.STOP_VIDEO :
+                    hostComponent.toolTip = fxgt.gettext("Déconnexion de l'apprenant au moment de la lecture vidéo :") +' "'+ obsel.props[TraceModel.TEXT] +'" ';
+                    icon.top = -8;
+                    break;
+                default :
+                    
+                    break;
+                }
+                
+                icon.source = pathIcon;
+                // set drag area
+                hostComponent.dragArea = icon;
+            }
 		]]>        
     </fx:Script>
 	<s:states>
