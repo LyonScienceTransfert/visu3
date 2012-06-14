@@ -150,25 +150,29 @@ knowledge of the CeCILL-C license and that you accept its terms.
                         <s:Label id="firstnameDisplay" 
                             includeIn="normal" height="100%" verticalAlign="middle" 
                             fontWeight="bold"/> 
-                        <s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"/>
+                        <s:TextInput id="firstnameInput" minWidth="100" width="100%" includeIn="edit"
+									 styleName="corexpert"/>
                     </s:HGroup>
                     <s:HGroup verticalAlign="middle" width="100%">
                         <s:Label id="lastnameDisplay" fontWeight="bold" 
                             height="100%" verticalAlign="middle"
                             includeIn="normal" />
-                        <s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"/>
+                        <s:TextInput id="lastnameInput" minWidth="100" width="100%" includeIn="edit"
+									 styleName="corexpert"/>
                     </s:HGroup>
                     <s:HGroup verticalAlign="middle" width="100%">
                         <s:Label id="emailDisplay" 
                             height="100%" verticalAlign="middle"
                             includeIn="normal"/>
-                        <s:TextInput id="emailInput" minWidth="100" width="100%" includeIn="edit"/>
+                        <s:TextInput id="emailInput" minWidth="100" width="100%" includeIn="edit"
+									 styleName="corexpert"/>
                     </s:HGroup>
                     <s:HGroup verticalAlign="middle" width="100%">
                         <s:Label id="profileDisplay"  includeIn="normal" 
                             height="100%" verticalAlign="middle" />
                         <s:DropDownList id="profileList" labelField="short_description" 
-                            minWidth="100" includeIn="edit" />
+                            minWidth="100" includeIn="edit" 
+							styleName="corexpert"/>
                     </s:HGroup>
                     <s:HGroup verticalAlign="middle" width="100%" includeIn="edit">
                         <s:Button id="saveButton">

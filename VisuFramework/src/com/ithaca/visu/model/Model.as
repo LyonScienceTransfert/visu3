@@ -147,8 +147,8 @@ package  com.ithaca.visu.model
 		private var listSynchroRoomObsels:ArrayCollection;
 		private var traceComment:Trace;
 
-		private var _buttonSalonTutorat:ToggleButton; 
-		private var _buttonSalonRetro:ToggleButton; 
+		private var _buttonSalonTutorat:Button; 
+		private var _buttonSalonRetro:Button; 
 		
 		private var _listViewObselSessionOut:ArrayCollection = new ArrayCollection();
 		private var _listViewObselComment:ArrayCollection = new ArrayCollection();
@@ -508,7 +508,7 @@ package  com.ithaca.visu.model
 		/**
 		 * set the button salon Tutorat
 		 */
-		public function setButtonSalonTutorat(value:ToggleButton):void
+		public function setButtonSalonTutorat(value:Button):void
 		{
 			this._buttonSalonTutorat = value;
 		}
@@ -524,7 +524,7 @@ package  com.ithaca.visu.model
 		/**
 		 * set the button salon Retro
 		 */
-		public function setButtonSalonRetro(value:ToggleButton):void
+		public function setButtonSalonRetro(value:Button):void
 		{
 			this._buttonSalonRetro = value;
 		}
