@@ -63,6 +63,7 @@
 package com.ithaca.visu.controls.sessions
 {
 	import com.ithaca.utils.ExtendToolTip;
+	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
@@ -73,9 +74,9 @@ package com.ithaca.visu.controls.sessions
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-    import gnu.as3.gettext.FxGettext;
-    import gnu.as3.gettext._FxGettext;
-
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.events.ToolTipEvent;
@@ -246,25 +247,30 @@ package com.ithaca.visu.controls.sessions
 				statementGroup.addElement(s);
 			}
 		}
-		protected function addDocuments(list:IList):void
-		{
-			for each( var el:ActivityElement in list)
-			{
-				var image:ImageActivity = new ImageActivity()
-				var source:String = IconEnum.getPathByName("video");
-				if(el.type_element == "image")
-				{
-					source = el.url_element;
-				}
-				image.source = source;
-				image.toolTip = el.data;
-				image.activityElement = el;
-				image.doubleClickEnabled = true;
-				image.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onToolTipsCreate);
-				image.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipsShown);
-				documentGroup.addElement(image);
-			}
-		}
+        protected function addDocuments(list:IList):void
+        {
+            for each( var el:ActivityElement in list)
+            {
+                var image:ImageActivity = new ImageActivity()
+                // image par default
+                var source:String = IconEnum.getPathByName("video");
+                if(el.type_element == "image")
+                {
+                    source = el.url_element;
+                }else
+                {
+                    // get first frame video 
+                    source = VisuUtils.getVideoYoutubeFirstFrame(el.url_element);
+                }
+                image.source = source;
+                image.toolTip = el.data;
+                image.activityElement = el;
+                image.doubleClickEnabled = true;
+                image.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onToolTipsCreate);
+                image.addEventListener(ToolTipEvent.TOOL_TIP_SHOW, onToolTipsShown);
+                documentGroup.addElement(image);
+            }
+        }
 		private function onToolTipsCreate(event:ToolTipEvent):void{
 			event.toolTip = this.createTip(event.currentTarget.toolTip, event.currentTarget.source);
 		} 

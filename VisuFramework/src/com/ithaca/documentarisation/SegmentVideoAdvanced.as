@@ -98,8 +98,10 @@ import spark.components.HGroup;
 import spark.components.Label;
 import spark.components.RichEditableText;
 import spark.components.Spinner;
+import spark.components.VGroup;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
+import spark.primitives.Line;
 
 public class SegmentVideoAdvanced extends SkinnableComponent
 {		
@@ -146,6 +148,12 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 
     [SkinPart("true")]
     public var labelInfoEndSpinner:Label;
+    
+    [SkinPart("true")]
+    public var vgroupIconBloc:VGroup;
+    
+    [SkinPart("true")]
+    public var lineBottom:Line;
     
     // remove screen-shot
 	/*[SkinPart("true")]
@@ -205,6 +213,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
     private var _tracageTimer:Timer; 
     // cursor id
     private var _cursorID:int;
+    // mockup
+    private var _bilanModule:Object
 	
 	public function SegmentVideoAdvanced()
 	{
@@ -218,6 +228,9 @@ public class SegmentVideoAdvanced extends SkinnableComponent
         this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
         // set change language listener
         InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
+        // set bilanModule 
+        //_bilanModule = Model.getInstance().getCurrentBilanModule();
+        _bilanModule = new Object();
     }
 	//_____________________________________________________________________
 	//
@@ -376,6 +389,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             {
                 iconSegment.toolTip = fxgt.gettext("Bloc vidéo");
             }
+            if(_bilanModule == null)
+            {
+                iconSegment.includeInLayout = iconSegment.visible = false;
+            }
         }
 		
 		if(instance == startSpinner)
@@ -424,6 +441,20 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		{
             labelInfoEndSpinner.text = fxgt.gettext("Fin")+":";
 		}
+        if(instance == vgroupIconBloc)
+        {
+            if(_bilanModule == null)
+            {
+                vgroupIconBloc.paddingLeft = 10;
+            }
+        }
+        if(instance == lineBottom)
+        {
+            if(_bilanModule == null)
+            {
+                lineBottom.includeInLayout = lineBottom.visible = false;
+            }
+        }
 	}
 	
 	override protected function partRemoved(partName:String, instance:Object):void
@@ -485,7 +516,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
                 // tooltips 
                 hgroupDndOwnerObsel.addEventListener(ToolTipEvent.TOOL_TIP_CREATE, onCreateToopTipHgroupDndOwnerObsel);
             }
-            
         }
         if(currentTimeChange)
         {

@@ -80,6 +80,7 @@ package com.ithaca.utils
 	import mx.collections.ArrayCollection;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.utils.URLUtil;
     
 	public class VisuUtils
 	{
@@ -299,6 +300,34 @@ package com.ithaca.utils
 			}
 			return joinUserList(userList);
 		}
+        
+        /**
+         * 
+         * Youtube utils
+         * @ return id video youtube
+         */
+        public static function getVideoId(value:String):String
+        {
+            var ar:Array=value.split('?');
+            if(ar.length==2)
+            {
+                var params:Object = URLUtil.stringToObject(ar[1],"&");		 		
+                if( params.hasOwnProperty("v"))
+                {
+                    return params.v;
+                }
+            }
+            return null;
+        }
+        /**
+        * Get first image video youtube
+        */
+        public static function getVideoYoutubeFirstFrame(url:String):String
+        {
+            var videoid:String = getVideoId(url);
+            var result:String = "http://img.youtube.com/vi/"+ videoid +"/1.jpg";
+            return result;
+        }
 	}
 }
 						
