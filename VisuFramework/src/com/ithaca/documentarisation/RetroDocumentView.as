@@ -72,6 +72,7 @@ import com.ithaca.timeline.ObselSkin;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.RetroTraceModel;
 import com.ithaca.utils.ShareUserTitleWindow;
+import com.ithaca.utils.VisuUtils;
 import com.ithaca.utils.components.IconButton;
 import com.ithaca.visu.events.UserEvent;
 import com.ithaca.visu.model.Model;
@@ -84,7 +85,6 @@ import com.ithaca.visu.ui.utils.RoleEnum;
 import com.ithaca.visu.view.video.VisuVisioAdvanced;
 
 import flash.events.Event;
-import flash.events.FocusEvent;
 import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
@@ -98,11 +98,10 @@ import mx.collections.ArrayCollection;
 import mx.collections.IList;
 import mx.controls.Alert;
 import mx.controls.Button;
+import mx.controls.DataGrid;
 import mx.controls.Menu;
-import mx.controls.PopUpButton;
 import mx.core.ClassFactory;
 import mx.core.DragSource;
-import mx.core.FlexBitmap;
 import mx.events.CloseEvent;
 import mx.events.DragEvent;
 import mx.events.FlexEvent;
@@ -113,9 +112,11 @@ import mx.managers.PopUpManager;
 import mx.utils.StringUtil;
 
 import spark.components.BorderContainer;
+import spark.components.Grid;
 import spark.components.Label;
 import spark.components.List;
 import spark.components.TextInput;
+import spark.components.gridClasses.GridColumn;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.events.TextOperationEvent;
 
@@ -149,6 +150,9 @@ public class RetroDocumentView extends SkinnableComponent
     
     [SkinPart("true")]
     public var dropContainer:BorderContainer;
+    
+    [SkinPart("true")]
+    public var dataGridListSegment:DataGrid;
     
     private var _labelRetroDocument:String;
     private var normal:Boolean = true;
@@ -259,6 +263,10 @@ public class RetroDocumentView extends SkinnableComponent
     public function set dragOwnerObject(value:Object):void
     {
         _dragOwnerObject = value;
+        
+        // set listener on Tutorat Module
+        dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
+        dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
     }
     public function get dragOwnerObject():Object
     {
@@ -311,33 +319,48 @@ public class RetroDocumentView extends SkinnableComponent
             titleDocumentTextInput.addEventListener(TextOperationEvent.CHANGE, titleDocumentTextInput_changeHandler);
             titleDocumentTextInput.addEventListener(FlexEvent.CREATION_COMPLETE, onCreatioCompleteTextInput);
         }	
+        if(instance == dataGridListSegment)
+        {
+            if(_retroDocument)
+            {
+                dataGridListSegment.dataProvider = this._retroDocument.listSegment;
+                
+                dataGridListSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
+                dataGridListSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
+                
+                dataGridListSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
+                dataGridListSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
+            }
+        }
         if(instance == groupSegment)
         {
-            //groupSegment.dataProvider = listSegment;
-            groupSegment.dataProvider = this._retroDocument.listSegment;
-            groupSegment.itemRendererFunction = function(item:Object):ClassFactory
+            if(_retroDocument)
             {
-                var className:Class = SegmentTitleRenderer;
-                
-                if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+                groupSegment.dataProvider = this._retroDocument.listSegment;
+                groupSegment.itemRendererFunction = function(item:Object):ClassFactory
                 {
-                    className = SegmentCommentAudioRenderer;
-                }else
-                    if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+                    var className:Class = SegmentTitleRenderer;
+                    
+                    if(item.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
                     {
-                        className = SegmentVideoRenderer;
-                    }
-                return new ClassFactory( className);
-            };
-            
-            groupSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
-            groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
-            
-            groupSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
-            groupSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
-            // set listener on Tutorat Module
-            dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
-            dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
+                        className = SegmentCommentAudioRenderer;
+                    }else
+                        if(item.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+                        {
+                            className = SegmentVideoRenderer;
+                        }
+                    return new ClassFactory( className);
+                };
+                
+                groupSegment.addEventListener(RetroDocumentEvent.CHANGE_RETRO_SEGMENT, onChangeRetroSegment, true);
+                groupSegment.addEventListener(RetroDocumentEvent.PRE_REMOVE_SEGMENT, onRmoveSegment, true);
+                
+                groupSegment.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT, onReadyToDragSegment, true);
+                groupSegment.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompleteSegment);
+                // set listener on Tutorat Module
+                dragOwnerObject.addEventListener(RetroDocumentEvent.READY_TO_DRAG_DROP_OBSEL, onReadyToDragObsel);
+                dragOwnerObject.addEventListener(RetroDocumentEvent.STOP_TO_DRAG_DROP_OBSEL, onStopToDragObsel);
+            }
         }
         
         if(instance == dropContainer)
@@ -404,6 +427,9 @@ public class RetroDocumentView extends SkinnableComponent
             // set list segments
             groupSegment.dataProvider = this._retroDocument.listSegment;
             
+            dataGridListSegment.dataProvider = null;
+            dataGridListSegment.dataProvider = this._retroDocument.listSegment;
+            
             if(titleDocument != null)
             {
                 this.titleDocument.text  = this._labelRetroDocument;
@@ -426,10 +452,6 @@ public class RetroDocumentView extends SkinnableComponent
             {
                 _updatedIdRetroDocument = 0;
             }
-            
-            // dispatch event add retroDocument on Stage
-            var retroDocumentAddOnStage:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT);
-            this.dispatchEvent(retroDocumentAddOnStage);
         }
         
         if(idRetroDocumentChange)
@@ -451,11 +473,6 @@ public class RetroDocumentView extends SkinnableComponent
             {
                 buttonMenuAddSegment.enabled = this._buttonEnabled;
             }   
-            if(_retroDocument.id == 0)
-            {
-                _retroDocument.id = _updatedIdRetroDocument;
-                this._buttonEnabled = true;
-            }
         }
     }
     
@@ -476,19 +493,22 @@ public class RetroDocumentView extends SkinnableComponent
      */
     private function checkTracage(event:* = null):void
     {
-        trace("check tracage retro document => "+this.retroDocument.id);
-        
-        // check modifications the comment
-        if(retroDocument.title != _tracedTitle)
+        if(this.retroDocument)
         {
-            // tracage modifications the audio block
-            var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
-            retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE;
-            retroDocumentTracageEvent.retroDocumentId = retroDocument.id;
-            retroDocumentTracageEvent.title= retroDocument.title;
-            TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
+            trace("check tracage retro document => "+this.retroDocument.id);
             
-            _tracedTitle = retroDocument.title;
+            // check modifications the comment
+            if(retroDocument.title != _tracedTitle)
+            {
+                // tracage modifications the audio block
+                var retroDocumentTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
+                retroDocumentTracageEvent.typeActivity = RetroTraceModel.RETRO_DOCUMENT_EDIT_TITLE;
+                retroDocumentTracageEvent.retroDocumentId = retroDocument.id;
+                retroDocumentTracageEvent.title= retroDocument.title;
+                TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentTracageEvent);
+                
+                _tracedTitle = retroDocument.title;
+            }
         }
     }
     
@@ -637,12 +657,15 @@ public class RetroDocumentView extends SkinnableComponent
     
     private function addSegment(value:Segment, createType:String, obsel:Obsel, sourceType:String):void
     {
+       
         // set updated listSegment
         _retroDocument.listSegment.addItem(value);
         groupSegment.dataProvider = _retroDocument.listSegment;
         
+        dataGridListSegment.dataProvider = _retroDocument.listSegment;
+        
         // update retroDocument
-        updateRetroDocument();
+        updateRetroDocument(RetroDocumentConst.ADD_BLOC); 
         
         // notify change list segment 
         notifyChangeListSegment();
@@ -656,6 +679,10 @@ public class RetroDocumentView extends SkinnableComponent
         retroDocumentAddBlockTracageEvent.obsel = obsel;
         
         TracageEventDispatcherFactory.getEventDispatcher().dispatchEvent(retroDocumentAddBlockTracageEvent);
+        
+        // change skin add segment to retroDocument
+        var addBlockEvent:RetroDocumentEvent = new RetroDocumentEvent( RetroDocumentEvent.ADD_RETRO_SEGMENT);
+        this.dispatchEvent(addBlockEvent);
     }
     
     // dispatcher when change list the blocs
@@ -706,10 +733,16 @@ public class RetroDocumentView extends SkinnableComponent
             }else
             {
                 listSegment.removeItemAt(indexSegment);
+                
+                
                 // update the retroDocument
-                this.updateRetroDocument();
+                updateRetroDocument(RetroDocumentConst.DELETE_BLOC);
                 // notify change list segment
                 notifyChangeListSegment();
+                
+                // change skin remove segment from retroDocument
+                var removeBlockEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.REMOVE_RETRO_SEGMENT);
+                dispatchEvent(removeBlockEvent);
             }
             
             // tracage removing segment
@@ -754,7 +787,13 @@ public class RetroDocumentView extends SkinnableComponent
     private function onDragCompleteSegment(event:DragEvent):void
     {
         setDragDropEnabled(false);
-        needUpdateRetroDocument = true;
+        
+        updateRetroDocument(RetroDocumentConst.UPDATE_LIST_BLOC);
+        //needUpdateRetroDocument = true;
+        
+        // change skin remove segment from retroDocument
+        var removeBlockEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_LIST_RETRO_SEGMENT);
+        dispatchEvent(removeBlockEvent);
         
         // tracage order the blocks
         var retroDocumentOrderTracageEvent:TracageEvent = new TracageEvent(TracageEvent.ACTIVITY_RETRO_DOCUMENT);
@@ -850,7 +889,7 @@ public class RetroDocumentView extends SkinnableComponent
     //
     //_____________________________________________________________________	
     // update retroDocument
-    private function updateRetroDocument(event:*=null):void
+    private function updateRetroDocument(typeUpdate:String = RetroDocumentConst.VOID):void
     {
         var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
         retroDocumentVO.documentId = _retroDocument.id;
@@ -863,6 +902,8 @@ public class RetroDocumentView extends SkinnableComponent
         var updateRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT);
         updateRetroDocumentEvent.retroDocumentVO = retroDocumentVO;
         updateRetroDocumentEvent.listUser = this._listUser;
+        // type update
+        updateRetroDocumentEvent.typeUpdate = typeUpdate;
         this.dispatchEvent(updateRetroDocumentEvent);
     }
     // remove retroDocument
@@ -968,9 +1009,15 @@ public class RetroDocumentView extends SkinnableComponent
     
     private function setDragDropEnabled(value:Boolean):void
     {
+        // set DND for groupSegment
         groupSegment.dragEnabled = value;
         groupSegment.dragMoveEnabled = value;
         groupSegment.dropEnabled = value;
+        
+        // set DND for dataGrid
+        dataGridListSegment.dragEnabled = value;
+        dataGridListSegment.dragMoveEnabled = value;
+        dataGridListSegment.dropEnabled = value;
     }
     
     /**

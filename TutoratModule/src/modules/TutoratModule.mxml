@@ -560,150 +560,154 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				}
 			}
 			
-			private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
-			{
-				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
-				if(this == currentModule)
-				{
-					var idDocument:Number=0;
-					// obselVO will be null only if session paused or not started
-					var obselVO:SGBDObsel = event.obselVO as SGBDObsel;
-					if( obselVO != null)
-					{
-						// set obsel to the model
-						var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
-						//this.addObsel(obsel);
-						Model.getInstance().addObsel(obsel);
-						// get id document
-						idDocument = obsel.props[TraceModel.ID_DOCUMENT];
+            private function onUpdateViewChatPanelSession(event:SessionSharedEvent):void
+            {
+                var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+                if(this == currentModule)
+                {
+                    var idDocument:Number=0;
+                    // obselVO will be null only if session paused or not started
+                    var obselVO:SGBDObsel = event.obselVO as SGBDObsel;
+                    if( obselVO != null)
+                    {
+                        // set obsel to the model
+                        var obsel:Obsel = Obsel.fromRDF(obselVO.rdf);
+                        //this.addObsel(obsel);
+                        Model.getInstance().addObsel(obsel);
+                        // get id document
+                        idDocument = obsel.props[TraceModel.ID_DOCUMENT];
                         // set videoPlayObsel
                         var typeObsel:String = obsel.type;
                         switch (typeObsel)
                         {
-                            case TraceModel.PLAY_VIDEO :
-                                // start timer 
-                                startTimerPlayVideoObsel();
-                                break;
-                            case TraceModel.PAUSE_VIDEO :
-                            case TraceModel.STOP_VIDEO :
-                            case TraceModel.END_VIDEO :
-                            case TraceModel.RELEASE_SLIDER_VIDEO :
-                                // add obsels
-                                removePlayVideoObsel(obsel);
-                                break;
+                        case TraceModel.PLAY_VIDEO :
+                            // start timer 
+                            startTimerPlayVideoObsel();
+                            break;
+                        case TraceModel.PAUSE_VIDEO :
+                        case TraceModel.STOP_VIDEO :
+                        case TraceModel.END_VIDEO :
+                        case TraceModel.RELEASE_SLIDER_VIDEO :
+                            // add obsels
+                            removePlayVideoObsel(obsel);
+                            break;
                         }
-					}
+                    }
                     
-					// update the buttons on planSession, view tutorat
-					if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
-					{
-						var obselStartSession:Obsel = Obsel.fromRDF(obselVO.rdf);
-						var aa:String = obselStartSession.props[TraceModel.ACTIVITY_ID]; 
-						var activityId:int = new int(aa);
-						
-						this.sessionPlan.setCurrentActivityId(activityId);
-					}
-					
-					var pathAvatar:String = "";
-					var name:String = "";
-					var sourceImageInfo:* = null;
-					var senderUser:User = Model.getInstance().getUserPlateformeByUserId(event.senderUserId);
-					if(senderUser != null)
-					{
-						pathAvatar = senderUser.avatar;
-						name = senderUser.firstname + " "+ senderUser.lastname;						
-					}
-					
-					if(((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER)) && ((event.typeInfo as int) != DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO)))
-					{
-						switch (event.typeInfo as int) 
-						{
-							case ActivityElementType.valueOf(ActivityElementType.VIDEO) :
-								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
-								// set players on paused than add new player and than start playing(without shared info)
-								if(this.listObjectMedia.length > 0)
-								{
-									var playerOnStage:YoutubePlayer;
-									for each(playerOnStage in this.listObjectMedia)
-									{
-										var isPlaying:Boolean = playerOnStage.isPlaying();
-										if(isPlaying)
-										{
-											playerOnStage.pauseVideo();
-											this._listObjectMediaPlaying.addItem(playerOnStage);
-										}
-									}
-								}
-								var player:YoutubePlayer = new YoutubePlayer();
-								// set id of the sender user 
-								player.setSenderId(event.senderUserId);
-								player.setIdDocument(idDocument);
-								player.url = event.url;
-								player.percentWidth = 100;
-								player.height = 225;
-								player.toolTip = event.info;
-								player.addEventListener(PlayerEvent.READY, loadComplete);
-								player.addEventListener(FlexEvent.UPDATE_COMPLETE, onPlayerUpdateComplete);
-								if(this.panelMediaSession != null)
-								{
-									this.panelMediaSession.addElementAt(player, 0);
-								}
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.IMAGE) :
-								sourceImageInfo = event.url;
-								var image:ImageDocument = new ImageDocument();
-								// set id of the sender user
-								image.setSenderId(event.senderUserId);
-								image.setIdDocument(idDocument);
-								image.load(event.url);
-								image.toolTip = event.info;
-								image.percentWidth = 100;	
-								image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
-								if(this.panelMediaSession != null)
-								{
-									this.panelMediaSession.addElementAt(image, 0);
-								}
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.MESSAGE) :
-								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE);
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.KEYWORD) :
-								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_KEYWORD);; 
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.STATEMENT) :
-								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_INSTRUCTIONS);
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE) :
-								sourceImageInfo = fichierIconVisu1;
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO) :
-								sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
-								break;
-							case ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY) :
-								sourceImageInfo = fichierIconVisu1;
-								break;
-						}
-						// check if "message" for logged user or logged user sent message
-						var idLoggedUser:int = Model.getInstance().getLoggedUser().id_user;
-						if(event.idUserFor == 0 || event.idUserFor == idLoggedUser || event.senderUserId == idLoggedUser)
-						{
-							var sharedElementChat:SharedElementChat = new SharedElementChat();
-							// default color of component SharedElementChatSkin 
-							// only for chat messages sent before start session(hasn't info about users)
-							var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
-							var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
-							if(traceLine != null)
-							{
-								userColor = traceLine.userColor;
-							}
-							sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo, userColor);
-							sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
-							this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
-							this.panelChatSession.addElement(sharedElementChat);
-						}
-					}
-				}
-			}
+                    // update the buttons on planSession, view tutorat
+                    if(this.sessionPlan != null && obselVO != null && obselVO.type == TraceModel.ACTIVITY_START)
+                    {
+                        var obselStartSession:Obsel = Obsel.fromRDF(obselVO.rdf);
+                        var aa:String = obselStartSession.props[TraceModel.ACTIVITY_ID]; 
+                        var activityId:int = new int(aa);
+                        
+                        this.sessionPlan.setCurrentActivityId(activityId);
+                    }
+                    
+                    var pathAvatar:String = "";
+                    var name:String = "";
+                    var sourceImageInfo:* = null;
+                    var senderUser:User = Model.getInstance().getUserPlateformeByUserId(event.senderUserId);
+                    if(senderUser != null)
+                    {
+                        pathAvatar = senderUser.avatar;
+                        name = senderUser.firstname + " "+ senderUser.lastname;						
+                    }
+                    
+                    if(((event.typeInfo as int) != ActivityElementType.valueOf(ActivityElementType.MARKER)) && ((event.typeInfo as int) != DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO)))
+                    {
+                        switch (event.typeInfo as int) 
+                        {
+                        case ActivityElementType.valueOf(ActivityElementType.VIDEO) :
+                            //sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
+                            // set first frame from youtube.com
+                            sourceImageInfo = VisuUtils.getVideoYoutubeFirstFrame(event.url);
+                            // set players on paused than add new player and than start playing(without shared info)
+                            if(this.listObjectMedia.length > 0)
+                            {
+                                var playerOnStage:YoutubePlayer;
+                                for each(playerOnStage in this.listObjectMedia)
+                                {
+                                    var isPlaying:Boolean = playerOnStage.isPlaying();
+                                    if(isPlaying)
+                                    {
+                                        playerOnStage.pauseVideo();
+                                        this._listObjectMediaPlaying.addItem(playerOnStage);
+                                    }
+                                }
+                            }
+                            var player:YoutubePlayer = new YoutubePlayer();
+                            // set id of the sender user 
+                            player.setSenderId(event.senderUserId);
+                            player.setIdDocument(idDocument);
+                            player.url = event.url;
+                            player.percentWidth = 100;
+                            player.height = 225;
+                            player.toolTip = event.info;
+                            player.addEventListener(PlayerEvent.READY, loadComplete);
+                            player.addEventListener(FlexEvent.UPDATE_COMPLETE, onPlayerUpdateComplete);
+                            if(this.panelMediaSession != null)
+                            {
+                                this.panelMediaSession.addElementAt(player, 0);
+                            }
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.IMAGE) :
+                            sourceImageInfo = event.url;
+                            var image:ImageDocument = new ImageDocument();
+                            // set id of the sender user
+                            image.setSenderId(event.senderUserId);
+                            image.setIdDocument(idDocument);
+                            image.load(event.url);
+                            image.toolTip = event.info;
+                            image.percentWidth = 100;	
+                            image.addEventListener(Event.ADDED_TO_STAGE, loadComplete);
+                            if(this.panelMediaSession != null)
+                            {
+                                this.panelMediaSession.addElementAt(image, 0);
+                            }
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.MESSAGE) :
+                            sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_CHAT_MESSAGE);
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.KEYWORD) :
+                            sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_KEYWORD);; 
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.STATEMENT) :
+                            sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_INSTRUCTIONS);
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_IMAGE) :
+                            sourceImageInfo = fichierIconVisu1;
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.READ_DOCUMENT_VIDEO) :
+                            //sourceImageInfo = IconEnum.getIconByTypeObsel(TraceModel.SEND_DOCUMENT);
+                            // get first frame video from youtube.com
+                            sourceImageInfo = VisuUtils.getVideoYoutubeFirstFrame(event.url);
+                            break;
+                        case ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY) :
+                            sourceImageInfo = fichierIconVisu1;
+                            break;
+                        }
+                        // check if "message" for logged user or logged user sent message
+                        var idLoggedUser:int = Model.getInstance().getLoggedUser().id_user;
+                        if(event.idUserFor == 0 || event.idUserFor == idLoggedUser || event.senderUserId == idLoggedUser)
+                        {
+                            var sharedElementChat:SharedElementChat = new SharedElementChat();
+                            // default color of component SharedElementChatSkin 
+                            // only for chat messages sent before start session(hasn't info about users)
+                            var userColor:uint = sharedElementChat.defaultColorFullColorGradientExit;
+                            var traceLine:Object = Model.getInstance().getTraceLineByUserId(event.senderUserId);
+                            if(traceLine != null)
+                            {
+                                userColor = traceLine.userColor;
+                            }
+                            sharedElementChat.setElementChat(pathAvatar,name,event.info, sourceImageInfo, userColor);
+                            sharedElementChat.statVciel =  Model.getInstance().checkServeurVisuVciel();
+                            this.panelChatSession.addEventListener(FlexEvent.UPDATE_COMPLETE, onUpdateChatSession);
+                            this.panelChatSession.addElement(sharedElementChat);
+                        }
+                    }
+                }
+            }
 			
 			private function onSharedActionPlayer(event:PlayerSharedEvent):void
 			{

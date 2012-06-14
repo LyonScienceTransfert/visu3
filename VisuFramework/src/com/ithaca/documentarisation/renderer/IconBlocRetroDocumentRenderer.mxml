@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Copyright UniversitÃ© Lyon 1 / UniversitÃ© Lyon 2 (2009-2012)
+
+<ithaca@liris.cnrs.fr>
+
+This file is part of Visu.
+
+This software is a computer program whose purpose is to provide an
+enriched videoconference application.
+
+Visu is a free software subjected to a double license.
+You can redistribute it and/or modify since you respect the terms of either 
+(at least one of the both license) :
+- the GNU Lesser General Public License as published by the Free Software Foundation; 
+either version 3 of the License, or any later version. 
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
+
+- GNU LGPL license
+
+Visu is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+Visu is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with Visu.  If not, see <http://www.gnu.org/licenses/>.
+
+- CeCILL-C license
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+
+- End of licenses
+
+-->
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx" 
+    xmlns:documentarisation="com.ithaca.documentarisation.*"
+    focusEnabled="true"
+     preinitialize="mxdatagriditemrenderer1_preinitializeHandler(event)">
+    <fx:Script>
+    <![CDATA[
+        import com.ithaca.documentarisation.RetroDocumentConst;
+        import com.ithaca.documentarisation.events.RetroDocumentEvent;
+        import com.ithaca.visu.ui.utils.IconEnum;
+        
+        import gnu.as3.gettext.FxGettext;
+        import gnu.as3.gettext._FxGettext;
+        
+        import mx.controls.Image;
+        import mx.events.FlexEvent;
+        import mx.managers.CursorManager;
+               
+        [Bindable]
+        private var fxgt: _FxGettext = FxGettext;
+        
+        // cursor id
+        private var _cursorID:int;
+        
+        override public function set data(value:Object):void 
+        {
+            super.data = value;
+            if (value != null) 
+                var iconName:String = "iconLettre_t_16x16";
+                var toolTipText: String = fxgt.gettext("Glisser-déplacer ce bloc");
+                var typeBloc:String = fxgt.gettext("texte");
+                
+                if(data.typeSource == RetroDocumentConst.COMMENT_AUDIO_SEGMENT)
+                {
+                    iconName = 'iconAudio_16x16';
+                    typeBloc = fxgt.gettext("audio");
+                }else
+                if(data.typeSource == RetroDocumentConst.VIDEO_SEGMENT)
+                {
+                    iconName = 'iconVideo_16x16';
+                    typeBloc = fxgt.gettext("vidéo");
+                }else
+                if(data.typeSource == RetroDocumentConst.TITLE_SEGMENT)
+                {
+                    iconName = "iconLettre_T_16x16";
+                    typeBloc = fxgt.gettext("titre");
+                }
+                // set icon the bloc
+                iconSegment.source=IconEnum.getIconByName(iconName);
+                // toolTip bloc
+                iconSegment.toolTip = toolTipText + " " + typeBloc;
+        } 
+
+
+        protected function iconSegment_mouseDownHandler(event:MouseEvent):void
+        {
+            CursorManager.removeCursor(_cursorID);
+            _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_close'));
+            var mouseDownIconSegment:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.READY_TO_DRAG_DROP_SEGMENT);
+            dispatchEvent(mouseDownIconSegment);
+        }
+
+
+        protected function iconSegment_mouseOverHandler(event:MouseEvent):void
+        {
+            _cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_open'));
+        }
+
+
+        protected function iconSegment_mouseOutHandler(event:MouseEvent):void
+        {
+            CursorManager.removeCursor(_cursorID);
+        }
+
+
+        protected function mxdatagriditemrenderer1_preinitializeHandler(event:FlexEvent):void
+        {
+            fxgt = FxGettext;
+        }
+
+    ]]>
+    </fx:Script>
+    <s:VGroup width="100%" horizontalAlign="center" verticalAlign="top" paddingTop="5">
+        <mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" 
+            mouseDown="iconSegment_mouseDownHandler(event)"
+            mouseOver="iconSegment_mouseOverHandler(event)"
+            mouseOut="iconSegment_mouseOutHandler(event)"/>
+    </s:VGroup>
+</s:MXDataGridItemRenderer>

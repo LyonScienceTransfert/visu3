@@ -87,71 +87,70 @@ public class MailerFacade
 
     public static void setSmtpServer(String server)
     {
-	log.debug("Setting SMTP server to {}", server);
-	smtpserver=server;
+        log.debug("Setting SMTP server to {}", server);
+        smtpserver = server;
     }
-
+    
     public static String getSmtpServer()
     {
-	return smtpserver;
+        return smtpserver;
     }
-
+    
     public static void sendMail(String subject, String[] recipients, String sender, String message) throws MessagingException
     {
-	//Set the host smtp address
-	Properties props = new Properties();
-	props.put("mail.smtp.host", smtpserver);
-
-	// create some properties and get the default Session
-	Session session = Session.getDefaultInstance(props, null);
-
-	// create a message
-	Message msg = new MimeMessage(session);
-
-	// set the from and to address
-	InternetAddress addressFrom = new InternetAddress(sender);
-	msg.setFrom(addressFrom);
-
-	InternetAddress[] addressTo = new InternetAddress[recipients.length];
-	for (int i = 0; i < recipients.length; i++)
-	    {
-		addressTo[i] = new InternetAddress(recipients[i]);
-	    }
-	msg.setRecipients(Message.RecipientType.TO, addressTo);
-
-	// Optional : You can also set your custom headers in the Email if you Want
-	//msg.addHeader("MyHeaderName", "myHeaderValue");
-	msg.setHeader("X-Mailer", "msgsend");
-	msg.setSentDate(new Date());
-
-
-	// Setting the Subject and Content Type
-	msg.setSubject(subject);
-	msg.setText(message);
-
-	try
-	    {
-		log.debug("send mail to {}", recipients);
-		if ( smtpserver.equals("local") )
-		    {
-			// Local fallback: use log
-			log.debug("Pseudo-sendmail to {}:", recipients);
-			log.debug("-------------\n{}\n-------------\n", message);
-		    }
-		else
-		    {
-			Transport.send(msg);
-		    }
-	    }
-	catch (MessagingException mex)
-	    {
-		log.error("fail to send mail to {}", recipients);
-		mex.printStackTrace();
-		Exception ex = mex.getNextException();
-		if (ex != null)
-		    {
-			ex.printStackTrace();
-		    }
-	    }
+        //Set the host smtp address
+        Properties props = new Properties();
+        props.put("mail.smtp.host", smtpserver);
+        
+        // create some properties and get the default Session
+        Session session = Session.getDefaultInstance(props, null);
+        
+        // create a message
+        Message msg = new MimeMessage(session);
+        
+        // set the from and to address
+        InternetAddress addressFrom = new InternetAddress(sender);
+        msg.setFrom(addressFrom);
+        
+        InternetAddress[] addressTo = new InternetAddress[recipients.length];
+        for (int i = 0; i < recipients.length; i++)
+        {
+            addressTo[i] = new InternetAddress(recipients[i]);
+        }
+        msg.setRecipients(Message.RecipientType.TO, addressTo);
+        
+        // Optional : You can also set your custom headers in the Email if you Want
+        //msg.addHeader("MyHeaderName", "myHeaderValue");
+        msg.setHeader("X-Mailer", "Visu server");
+        msg.setSentDate(new Date());
+        
+        // Setting the Subject and Content Type
+        msg.setSubject(subject);
+        msg.setText(message);
+        
+        try
+        {
+            log.debug("send mail to {}", recipients);
+            if ( smtpserver.equals("local") )
+            {
+                // Local fallback: use log
+                log.debug("Pseudo-sendmail to {}:", recipients);
+                log.debug("-------------\n{}\n-------------\n", message);
+            }
+            else
+            {
+                Transport.send(msg);
+            }
+        }
+        catch (MessagingException mex)
+        {
+            log.error("Failed to send mail to {}", recipients);
+            mex.printStackTrace();
+            Exception ex = mex.getNextException();
+            if (ex != null)
+            {
+                ex.printStackTrace();
+            }
+        }
     }
 }
