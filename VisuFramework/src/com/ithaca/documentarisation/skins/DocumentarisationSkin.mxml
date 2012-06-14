@@ -69,7 +69,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
     xmlns:components="com.ithaca.utils.components.*" 
     xmlns:documentarisation="com.ithaca.documentarisation.*"
     creationComplete="skin1_creationCompleteHandler(event)"
-     currentStateChange="skin1_currentStateChangeHandler(event)">
+    currentStateChange="skin1_currentStateChangeHandler(event)">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.ithaca.documentarisation.Documentarisation")]
@@ -94,6 +94,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
         protected function skin1_currentStateChangeHandler(event:StateChangeEvent):void
         {
             this.setFocus();
+            if(this.currentState == "addRetroDocument" )
+            {
+                // set new label info
+                hostComponent.setLabelInfo();
+            }
         }
 
 	]]>
@@ -101,8 +106,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:states>
 		<s:State name="listRetroDocument" />
 		<s:State name="editRetroDocument" />
+		<s:State name="addRetroDocument" />
 	</s:states>
-	<s:transitions>
+	<!--<s:transitions>
 		<s:Transition fromState="listRetroDocument" toState="editRetroDocument">
 			<s:Sequence>
 				<s:Parallel targets="{[panelListRetroDocument,panelEditRetroDocument]}">
@@ -117,37 +123,40 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				</s:Parallel>
 			</s:Sequence>
 		</s:Transition>
-	</s:transitions>
-	<components:PanelButton width="100%" height="100%" 
-		id="panelListRetroDocument"
-		buttonAddVisible="true"
-		buttonDeleteVisible="false"
-		buttonShareVisible="false"
-		buttonMuteMicroVisible="false"
-		buttonVolumeVisible="false"
-		buttonReturnVisible="false"
-		includeIn="listRetroDocument"
-		>
-		<s:List width="100%" height="100%"
-			id="listRetroDocument" 
-		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
-	</components:PanelButton>
-	
-	<components:PanelButton width="100%" height="100%" 
-		id="panelEditRetroDocument"
-		buttonAddVisible="false"
-		buttonDeleteVisible="false"
-		buttonShareVisible="false"
-		buttonShareEnabled="false"
-		buttonMuteMicroVisible="false"
-		buttonVolumeVisible="false"
-		buttonReturnVisible="true"
-		buttonReturnEnabled="true"
-		includeIn="editRetroDocument"
-		>
-		<documentarisation:RetroDocumentView width="100%" height="100%"
-			id="retroDocumentView">
-			
-		</documentarisation:RetroDocumentView>
- 	</components:PanelButton>
+	</s:transitions>-->
+    <s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+    	<components:PanelButton width="100%" height="100%" 
+    		id="panelListRetroDocument"
+    		buttonAddVisible="true"
+    		buttonDeleteVisible="false"
+    		buttonShareVisible="false"
+    		buttonMuteMicroVisible="false"
+    		buttonVolumeVisible="false"
+    		buttonReturnVisible="false"
+    		includeIn="listRetroDocument"
+    		>
+    		<s:List width="100%" height="100%"
+    			id="listRetroDocument" 
+    		    itemRenderer="com.ithaca.documentarisation.renderer.RetroDocumentRenderer"/>
+    	</components:PanelButton>
+    	
+    	<components:PanelButton width="100%" height="100%" 
+    		id="panelEditRetroDocument"
+    		buttonAddVisible="false"
+    		buttonDeleteVisible="false"
+    		buttonShareVisible="false"
+    		buttonShareEnabled="false"
+    		buttonMuteMicroVisible="false"
+    		buttonVolumeVisible="false"
+    		buttonReturnVisible="true"
+    		buttonReturnEnabled="true"
+    		includeIn="editRetroDocument"
+    		>
+     	</components:PanelButton>
+        <s:Panel id="panelAddRetroDocument" width="100%" height="100%" includeIn="addRetroDocument">
+            <s:HGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+                <s:Label id="labelAddRetrodocument" text="{this.hostComponent.labelAddRetrodocumentInfo}"/>
+            </s:HGroup>
+        </s:Panel>
+    </s:VGroup>
 </s:Skin>

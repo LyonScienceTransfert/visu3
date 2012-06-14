@@ -213,6 +213,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
             private var DELTA_X_Y:int = 15;
             // list "PlayVideoObsel"
             private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
+            // new retroDocument will add in BD
+            private var newRetroDocumentVO:RetroDocumentVO;
             
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -274,79 +276,82 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			{
                 // set focus, runtime error SDK 4.5
                 this.setFocus();
-				// check status logged user
-				var loggedUser:User =  Model.getInstance().getLoggedUser();
-				var statusLoggedUser:int =loggedUser.status; 
-				if(statusLoggedUser == ConnectionStatus.CONNECTED)
-				{
-					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
-					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
-					outSession.userId = loggedUser.id_user;
-					this.dispatchEvent(outSession);
-				}
-				
- 				this.visio.connection = Model.getInstance().getNetConnection();
-				// removing module from the stage
-				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
-				// add obsel join retro room
-				var joinSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.GO_IN_MODULE);
-				this.dispatchEvent(joinSalonRetro);
-				
-				if( Model.getInstance().getModeDebug())
-				{
-					this.setCurrentState("debug");
-					
-					Model.getInstance().clearListFrameSplit();
-					buttomTraceFrame.visible = true;
-//					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
-//					this.visio.setDebugMode();
-				}
-				
-				timerSynchro = new Timer(intervalCheckDecalage*1000,0);
-				timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
-				timerSynchro.start(); 
-				
-				
-				// set the data of the session
-				documentarisation.initDataRetroDocument(
-					this.currentSessionDateRecording, 
-					this.currentSessionDuration,
-					Model.getInstance().profiles,
-					Model.getInstance().getListUserIdPresentOnTimeLine());
-				// set listeners
-				documentarisation.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch, true);
-				documentarisation.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument, true);
-				documentarisation.addEventListener(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT, onAddOnStageRetroDocument, true);
-				documentarisation.addEventListener(RetroDocumentEvent.REMOVE_FROM_STAGE_RETRO_DOCUMENT, onRemoveFromStageRetroDocument);
-				
-				// show retroDocument if was selected
-				if(selectedRetroDocumentIdWhenInit > 0)
-				{
-					documentarisation.selectedRetroDocument(selectedRetroDocumentIdWhenInit)
-				}
-				// set cursor 
-				CursorManager.removeBusyCursor();
-				if(Model.getInstance().getCurrentRetroModule() as RetrospectionModule == this)
-				{
-					// create TimeLine
-					createTimeLine();
-					// get the obsels 
-					getObsels();
-				}
-                
-                // init listener, activity on Timeline
-                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
-                // init listener, activity on user video
-                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
-                // init listener, activity on session video
-                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
-                // init listener, activity on retro document blocks
-                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
-                // init listener, activity on retro document 
-                TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
-
-                // init list editing comment obsel
-                _listEditCommentDialog = new ArrayCollection();
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+    				// check status logged user
+    				var loggedUser:User =  Model.getInstance().getLoggedUser();
+    				var statusLoggedUser:int =loggedUser.status; 
+    				if(statusLoggedUser == ConnectionStatus.CONNECTED)
+    				{
+    					Model.getInstance().updateStatusLoggedUser(ConnectionStatus.PENDING);
+    					var outSession:SessionEvent = new SessionEvent(SessionEvent.OUT_SESSION);
+    					outSession.userId = loggedUser.id_user;
+    					this.dispatchEvent(outSession);
+    				}
+    				
+     				this.visio.connection = Model.getInstance().getNetConnection();
+    				// removing module from the stage
+    				this.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedModuleFromStage);
+    				// add obsel join retro room
+    				var joinSalonRetro:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.GO_IN_MODULE);
+    				this.dispatchEvent(joinSalonRetro);
+    				
+    				if( Model.getInstance().getModeDebug())
+    				{
+    					this.setCurrentState("debug");
+    					
+    					Model.getInstance().clearListFrameSplit();
+    					buttomTraceFrame.visible = true;
+    //					this.visio.frameRateSplit = Model.getInstance().getFrameRateSplit();
+    //					this.visio.setDebugMode();
+    				}
+    				
+    				timerSynchro = new Timer(intervalCheckDecalage*1000,0);
+    				timerSynchro.addEventListener(TimerEvent.TIMER, updateTimerSynchro);
+    				timerSynchro.start(); 
+    				
+    				
+    				// set the data of the session
+    				documentarisation.initDataRetroDocument(
+    					this.currentSessionDateRecording, 
+    					this.currentSessionDuration,
+    					Model.getInstance().profiles,
+    					Model.getInstance().getListUserIdPresentOnTimeLine());
+    				// set listeners
+    				documentarisation.addEventListener(RetroDocumentEvent.CLICK_BUTTON_SWITCH, onClickButtonSwitch, true);
+    				documentarisation.addEventListener(RetroDocumentEvent.PRE_UPDATE_RETRO_DOCUMENT, onPreUpdateRetroDocument, true);
+    				documentarisation.addEventListener(RetroDocumentEvent.ADD_ON_STAGE_RETRO_DOCUMENT, onAddOnStageRetroDocument);
+    				documentarisation.addEventListener(RetroDocumentEvent.REMOVE_FROM_STAGE_RETRO_DOCUMENT, onRemoveFromStageRetroDocument);
+    				
+    				// show retroDocument if was selected
+    				if(selectedRetroDocumentIdWhenInit > 0)
+    				{
+    					documentarisation.selectedRetroDocument(selectedRetroDocumentIdWhenInit)
+    				}
+    				// set cursor 
+    				CursorManager.removeBusyCursor();
+    				if(Model.getInstance().getCurrentRetroModule() as RetrospectionModule == this)
+    				{
+    					// create TimeLine
+    					createTimeLine();
+    					// get the obsels 
+    					getObsels();
+    				}
+                    
+                    // init listener, activity on Timeline
+                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
+                    // init listener, activity on user video
+                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
+                    // init listener, activity on session video
+                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
+                    // init listener, activity on retro document blocks
+                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
+                    // init listener, activity on retro document 
+                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
+    
+                    // init list editing comment obsel
+                    _listEditCommentDialog = new ArrayCollection();
+                }
 			}
 			
 			private function updateTimerSynchro(event:TimerEvent):void
@@ -446,26 +451,28 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     // check xml layout for logged user
                     var pathLayoutXml:String = Model.getInstance().getPathLayoutXml(VisuModuleEvent.RETROSPECTION_MODULE);
                     loader.load(new URLRequest(pathLayoutXml));	
-				}
-				// add drag listener
-				setListenerDragVideo();
-				if(documentarisation)
-				{
-					// set the data of the session
-					documentarisation.initDataRetroDocument(
-						this.currentSessionDateRecording, 
-						this.currentSessionDuration,
-						Model.getInstance().profiles,
-						Model.getInstance().getListUserIdPresentOnTimeLine());
+                    
+    				// add drag listener
+    				setListenerDragVideo();
+    				if(documentarisation)
+    				{
+    					// set the data of the session
+    					documentarisation.initDataRetroDocument(
+    						this.currentSessionDateRecording, 
+    						this.currentSessionDuration,
+    						Model.getInstance().profiles,
+    						Model.getInstance().getListUserIdPresentOnTimeLine());
+    				}
 				}
 			}
 			private function onLoadLayoutComplete(event:Event):void 
 			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
+				if(Model.getInstance().getCurrentRetroModule() == this)  
 				{
 					//we init the trace object
 					var loader:URLLoader=event.target as URLLoader;
-					// create TImeLine
+					// create TimeLine
+                    // FIXME : timeLine == null when came from module bilan
 					timeLine.layoutXML 		= new XML( loader.data );
 					timeLine.timelineLayout = new Layout( timeLine ); 	
 					
@@ -829,25 +836,35 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					setRetroDocument(event.retroDocument, event.listUser);
 				}
 			}
-			
+            /**
+            * Update list blocs retrodocument 
+            */
+			private function updateListBlocsRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    documentarisation.updateViewRetroDocument();
+                }
+            }
 			//_____________________________________________________________________
 			//
 			// Listeners RetroDocumentView
 			//
 			//_____________________________________________________________________			
-			private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
-					var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
-					retroDocumentVO.lastModified = dateLastModify;
-					var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
-					updateRetrodocument.retroDocumentVO = retroDocumentVO;
-					updateRetrodocument.listUser = event.listUser;
-					this.dispatchEvent(updateRetrodocument);		
-				}
-			}
+            private function onPreUpdateRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    var dateLastModify:Date = new Date(null,null,null,null,null,null,Model.getInstance().getTimeServeur());
+                    var retroDocumentVO:RetroDocumentVO = event.retroDocumentVO;
+                    retroDocumentVO.lastModified = dateLastModify;
+                    var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
+                    updateRetrodocument.retroDocumentVO = retroDocumentVO;
+                    updateRetrodocument.listUser = event.listUser;
+                    updateRetrodocument.typeUpdate = event.typeUpdate;
+                    this.dispatchEvent(updateRetrodocument);		
+                }
+            }
 			
 			private function onClickButtonSwitch(event:RetroDocumentEvent):void
 			{
@@ -857,31 +874,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					switchModuleEvent.sessionId = event.sessionId;
 					switchModuleEvent.idRetroDocument = event.idRetroDocument;
 					this.dispatchEvent(switchModuleEvent);
-				}
-			}
-
-			protected function addRetroDocument_clickHandler(event:MouseEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
-					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
-					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
-					retroDocumentVO.documentId = 0;
-					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
-					var createurUser:User = Model.getInstance().getLoggedUser();
-					retroDocumentVO.ownerId = createurUser.id_user;
-					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = fxgt.gettext("Nouveau bilan");
-	
-					var nomCreateur:String = createurUser.lastname + " "+ createurUser.firstname;
-					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
-					retroDocumentVO.xml = stringXML;
-					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
-					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
-					createRetroDocumentVOEvent.sessionId = this.currentSessionId;
-					this.dispatchEvent(createRetroDocumentVOEvent);
 				}
 			}
             
@@ -906,52 +898,50 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			//_____________________________________________________________________
 			private function setRetroDocument(retroDocument:RetroDocument, listUser:Array ):void
 			{
-				documentarisation.setRetroDocument(retroDocument, listUser,  Model.getInstance().getCurrentSessionRetroModule());
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+    				documentarisation.setRetroDocument(retroDocument, listUser,  Model.getInstance().getCurrentSessionRetroModule());
+                }
 			}
-			/**
-			 * set id the retrodocument
-			 */ 
-			protected function updateAddedRetroDocument(event:RetroDocumentEvent):void
-			{
-				if(Model.getInstance().getCurrentRetroModule() == this)
-				{
-					documentarisation.updateIdRetroDocument(event.idRetroDocument);
-					// remove cursor
-					CursorManager.removeBusyCursor();
-				}
-			}
+            /**
+             * Set added retrodocument
+             */ 
+            protected function updateAddedRetroDocument(event:RetroDocumentEvent):void
+            {
+                if(Model.getInstance().getCurrentRetroModule() == this)
+                {
+                    newRetroDocumentVO.documentId = event.idRetroDocument;
+                    documentarisation.updateAddedRetroDocument(newRetroDocumentVO);
+                    // remove cursor
+                    CursorManager.removeBusyCursor();
+                }
+            }
 			
 			protected function documentarisation_addRetroDocumentHandler(event:RetroDocumentEvent):void
 			{
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
-					var retroDocumentVO:RetroDocumentVO = new RetroDocumentVO();
+					newRetroDocumentVO = new RetroDocumentVO();
 					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
-					retroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
-					retroDocumentVO.description = fxgt.gettext("Nouvelle description");
-					retroDocumentVO.documentId = 0;
-					retroDocumentVO.lastModified = retroDocumentVO.creationDate;
+					newRetroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+					newRetroDocumentVO.description = fxgt.gettext("Nouvelle description");
+					newRetroDocumentVO.documentId = 0;
+					newRetroDocumentVO.lastModified = newRetroDocumentVO.creationDate;
 					var createurUser:User = Model.getInstance().getLoggedUser();
-					retroDocumentVO.ownerId = createurUser.id_user;
-					retroDocumentVO.sessionId = this.currentSessionId;
-					retroDocumentVO.title = StringUtil.substitute(fxgt.gettext('Bilan sur la séance "{0}"'),
+					newRetroDocumentVO.ownerId = createurUser.id_user;
+					newRetroDocumentVO.sessionId = this.currentSessionId;
+					newRetroDocumentVO.title = StringUtil.substitute(fxgt.gettext('Bilan sur la séance "{0}"'),
                                                                   Model.getInstance().getCurrentSessionRetroModule().theme);
 					
 					var nomCreateur:String = createurUser.lastname + " " + createurUser.firstname;
-					var stringXML:String = UtilFunction.createRetroDocumentXML(retroDocumentVO.title, retroDocumentVO.description,nomCreateur,retroDocumentVO.creationDate,retroDocumentVO.creationDate)
-					retroDocumentVO.xml = stringXML;
+					var stringXML:String = UtilFunction.createRetroDocumentXML(newRetroDocumentVO.title, newRetroDocumentVO.description,nomCreateur,newRetroDocumentVO.creationDate,newRetroDocumentVO.creationDate)
+					newRetroDocumentVO.xml = stringXML;
 					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
-					createRetroDocumentVOEvent.retroDocumentVO = retroDocumentVO;
+					createRetroDocumentVOEvent.retroDocumentVO = newRetroDocumentVO;
 					this.dispatchEvent(createRetroDocumentVOEvent);
 					
 					// set mouse cursor
 					CursorManager.setBusyCursor();
-					// set new RetroDocument
-					documentarisation.listRetroDocument.dataProvider.addItem(retroDocumentVO);
-					documentarisation.listRetroDocument.selectedItem = retroDocumentVO;
-					var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
-					retroDocument.setRetroDocumentXML(retroDocumentVO.xml);
-					setRetroDocument(retroDocument, new Array());
 				}
 			}
 			//_____________________________________________________________________
@@ -2024,6 +2014,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<mate:Listener type="{ObselEvent.MOUSE_DOWN_OBSEL}"  method="onMouseDownObsel" useWeakReference="true"/>
 		<mate:Listener type="{TracageEvent.RECIVE_LIST_OBSEL_RETRO_ROOM}"  method="onReciveListObselRetroRoom"/>
 		<mate:Listener type="{SalonRetroEvent.LOAD_TRACE_ID_RETRO_ROOM}"  method="startRetroRoomTracing"/>
+        
+		<mate:Listener type="{RetroDocumentEvent.UPDATE_RETRO_SEGMENT}"  method="updateListBlocsRetroDocument"/>
 	</fx:Declarations>
 	<mx:VDividedBox width="100%" height="100%">
 		<mx:HDividedBox width="100%" height="60%">
@@ -2057,7 +2049,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							bandwidth="15000" autoPlay="true"
 							loggedUser="{Model.getInstance().getLoggedUser()}">
 						</video:VisuVisioAdvanced>
-						<s:HGroup gap="3"  includeIn="debug" width="100%">
+						<s:HGroup gap="3"  includeIn="debug" width="100%">   
 							<mx:Spacer width="100%"/>
 							<s:Button id="buttomTraceFrame" label="{fxgt.gettext('Update split')}" click="button1_clickHandler(event)"/>
 							<s:Label text="{fxgt.gettext('Décalage max. autorisé')}" paddingTop="7"/>

@@ -225,7 +225,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:CallbackRegistrator action="checkUpdateAddedRetrodocument" target="{MainManager}" method="onCheckUpdateAddedRetrodocument"/>
 			<rtmp:CallbackRegistrator action="checkTracesIdRetroRoom" target="{MainManager}" method="onCheckTracesIdRetroRoom"/>
 			<rtmp:CallbackRegistrator action="checkListObselRetroRoom" target="{MainManager}" method="onCheckListObselRetroRoom"/>
-			<!--			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>-->
+			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">

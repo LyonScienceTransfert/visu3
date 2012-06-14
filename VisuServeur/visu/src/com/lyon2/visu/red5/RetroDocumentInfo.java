@@ -200,9 +200,10 @@ public class RetroDocumentInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, int[] listUser) throws SQLException
+	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, int[] listUser, String typeUpdate) throws SQLException
 	{
-		log.warn("======== updateRetroDocument ");
+		log.warn("======== updateRetroDocument {}",retroDocument.getXml());
+
 		IClient client = conn.getClient();
 		IScope scope = conn.getScope();
 		try
@@ -262,6 +263,13 @@ public class RetroDocumentInfo {
 //				}	
 //			}			
 //		}	
+		// notification owner retroDocument, document was updated
+		IConnection connClient = (IConnection) client.getAttribute("connection");
+		Object[] argsRetroDocument = {typeUpdate};
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkUpdateRetroDocument", argsRetroDocument);
+		}	
 	}
 	
 	@SuppressWarnings("unchecked")

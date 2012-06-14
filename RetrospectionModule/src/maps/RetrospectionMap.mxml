@@ -221,7 +221,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</mate:EventHandlers>
 		<mate:EventHandlers type="{RetroDocumentEvent.UPDATE_RETRO_DOCUMENT}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
+				<mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO, event.listUser, event.typeUpdate]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 <!-- RECORD AUDIO -->

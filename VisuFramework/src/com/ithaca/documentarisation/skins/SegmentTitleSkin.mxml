@@ -94,7 +94,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:State name="editSelected"/>
 		<s:State name="normal"/>
 	</s:states>
-	<s:VGroup width="330" gap="1" verticalAlign="top">
+	<s:VGroup width="100%" gap="1" verticalAlign="top">
 		<s:mouseOver.edit>
 		<![CDATA[
 			iconDelete.visible = true;
@@ -105,7 +105,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			iconDelete.visible = false;
 		]]>
 		</s:mouseOut.edit>
-		<s:HGroup width="100%" gap="1" verticalAlign="top"  paddingTop="3" paddingBottom="2">
+		<s:HGroup width="100%"  id="groupBloc" gap="1" verticalAlign="top"  paddingTop="3" paddingBottom="2">
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
 			<!-- TEXTAREA -->
@@ -120,7 +120,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				height="16">
 			</components:IconDelete>
 		</s:HGroup>
-		<s:Line width="100%" includeIn="edit, editSelected">
+		<s:Line width="100%" id="lineBottom" includeIn="edit, editSelected">
 			<s:stroke>
 				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
 			</s:stroke>
