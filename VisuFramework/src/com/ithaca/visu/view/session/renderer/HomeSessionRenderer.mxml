@@ -277,14 +277,30 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	</fx:Script>
 
 
-	<s:Group width="100%">
+	<s:Group width="100%" left="2" right="2">
 	
-		<s:Rect width="100%" height="100%" radiusX="8" includeIn="selected">
-			<s:fill>
+		<s:HGroup width="100%" bottom="3" top="2" gap="3">
+			<!-- horaire -->
+			<s:Group width="37" height="37">
+				<s:Rect left="0" right="0" top="0" bottom="0" height="100%" width="100%">
+					<s:fill>
+						<s:SolidColor color="0xe4e4e4" />
+					</s:fill>
+				</s:Rect>
+				<s:Label id="hourDisplay" x="2" y="0" height="20" width="100%" color="0x272727"
+						 fontFamily="Arial" fontSize="12" fontWeight="normal" 
+						 text="{TimeUtils.formatHHMM(data.date_session)}"
+						 verticalAlign="middle"/>
+			</s:Group>
+			<!-- détails -->
+			<s:Group top="1" bottom="1" width="100%" height="100%">
+				<s:Rect height="100%" width="100%">
+					<s:fill>
 						<s:LinearGradient rotation="90">
-							<s:GradientEntry color="0xFFFFFF" />
-							<s:GradientEntry color="0xD8D8D8" />
+							<s:GradientEntry color="0xfdfeff" />
+							<s:GradientEntry color="0xffe6b6" />
 						</s:LinearGradient>
+						
 			</s:fill>
 			<s:stroke>
 				<s:LinearGradientStroke rotation="90" weight="1">
@@ -321,46 +337,49 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						dataProvider="{data.participants}">
 					<s:layout>
 						<layout1:FlowLayout />
-					</s:layout>
-					
-					<s:itemRenderer>
-                    <fx:Component>
-                        <s:ItemRenderer>
-                            <s:states>
-                                <s:State name="normal" />
-                            </s:states>
-                            <s:Rect id="fill" radiusX="10"
-								left="1" right="1" top="1" bottom="1">
-								<s:fill>
-									<s:LinearGradient rotation="90">
-										<s:GradientEntry color="0xFFFFFF" />
-										<s:GradientEntry color="0xD8D8D8" />
-									</s:LinearGradient>
-								</s:fill>
-							</s:Rect>
-							
-							<s:Rect id="border" radiusX="10"
-									left="0" right="0" top="0" bottom="0" height="20" >
-								<s:stroke>
-									<s:LinearGradientStroke rotation="90" weight="1">
-										<s:GradientEntry color="0x000000" 
-														 alpha="0.5625"/>
-										<s:GradientEntry color="0x000000" 
-														 alpha="0.75" />
-									</s:LinearGradientStroke>
-								</s:stroke>
-							</s:Rect>
-                            <myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
-                        </s:ItemRenderer>
-                    </fx:Component>
-                </s:itemRenderer>
-					
-				</s:DataGroup>
-			</s:Scroller>
-			
-			<s:HGroup id="actionGroup" includeIn="selected" width="100%">	
-				<s:HGroup width="100%" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+					</s:layout>	
+						<s:itemRenderer>
+							<fx:Component>
+								<s:ItemRenderer autoDrawBackground="false">
+									<s:states>
+										<s:State name="normal" />
+									</s:states>
+									<s:Rect id="fill" height="14" radiusX="7"
+											left="1" right="1" top="1" bottom="1">
+										<s:fill>
+											<s:SolidColor color="#ffaf04"/>
+										</s:fill>
+									</s:Rect>
+									<myviews:UserElement statusIconWidth="10" left="2" top="2" right="1" user="{data}" showRoleInParentheses="false" firstNameInitials="true"/>
+								</s:ItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
 						
+					</s:DataGroup>
+					
+					<s:HGroup id="actionGroup" includeIn="selected" width="100%">	
+						<s:HGroup width="100%" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+							
+							<mx:LinkButton 
+								id="cancelButton"
+								label="{fxgt.gettext('Supprimer')}"
+								toolTip="{fxgt.gettext('Supprimer définitivement cette séance')}"
+								click="doCancel(event)"
+								visible="{canCancelSession(data.statusSession)}"
+								includeInLayout="{canCancelSession(data.statusSession)}"
+								/>
+							
+							<mx:LinkButton 
+								id="editButton"
+								label="{fxgt.gettext('Modifier')}"
+								click="doEdit(event)"
+								toolTip="{fxgt.gettext('Modifier la date, les participants ou le plan de séance')}"
+								visible="{canModifySession(data.statusSession)}"
+								includeInLayout="{canModifySession(data.statusSession)}"
+								/>	
+						</s:HGroup>
+						
+<<<<<<< HEAD
 					<mx:LinkButton 
 						id="cancelButton"
 						label="{fxgt.gettext('Supprimer')}"
@@ -424,5 +443,47 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 <s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
             </s:HGroup>
 		</s:VGroup>
+=======
+						<s:HGroup width="100%" horizontalAlign="right" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">	
+							<mx:LinkButton 
+								id="connectButton"
+								label="{fxgt.gettext('Rejoindre')}"
+								click="doJoinSession(event)"
+								toolTip="{fxgt.gettext('Entrer dans le salon synchrone')}"
+								visible="{canJoinSession(data.statusSession)}"
+								includeInLayout="{canJoinSession(data.statusSession)}"
+								/>
+							
+							<mx:LinkButton 
+								id="retrospectionButton"
+								label="{fxgt.gettext('Rétrospection')}"
+								click="doRetrospection(event)"
+								toolTip="{fxgt.gettext('Entrer dans le salon de rétrospection')}"
+								visible="{canJoinRetrospection(data.statusSession)}"
+								includeInLayout="{canJoinRetrospection(data.statusSession)}"
+								/>
+							
+							<mx:LinkButton 
+								id="bilanButton"
+								label="{fxgt.gettext('Bilans')}"
+								click="doBilan(event)"
+								toolTip="{fxgt.gettext('Voir les bilans existants pour cette séance')}"
+								visible="{canJoinBilan(data.statusSession)}"
+								includeInLayout="{canJoinBilan(data.statusSession)}"
+								/>
+						</s:HGroup>
+					</s:HGroup>
+					<s:HGroup horizontalAlign="center" width="100%">
+						<s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
+					</s:HGroup>
+				</s:VGroup>
+			</s:Group>
+		</s:HGroup>
+		<s:Rect bottom="0" height="1" width="100%">
+			<s:fill>
+				<s:SolidColor color="0xbfc2c7" />
+			</s:fill>
+		</s:Rect>
+>>>>>>> 424bcc2c884ac553f02ad3d8cf9d5abc7c8dbb41
 	</s:Group>
 </s:ItemRenderer>

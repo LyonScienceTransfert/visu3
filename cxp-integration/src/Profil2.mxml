@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1024" minHeight="768" skinClass="skins.PageSkin">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<!-- Profile -->
+	<s:Group width="325" height="312" verticalCenter="0" horizontalCenter="0">
+		<s:Rect left="0" right="0" top="0" bottom="0" radiusX="5">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xf0f0f0" />
+					<s:GradientEntry color="0xe5e5e5" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Rect left="2" right="2" top="2" bottom="2" radiusX="5">
+			<s:stroke>
+				<s:SolidColorStroke color="#FFFFFF" />
+			</s:stroke>
+		</s:Rect>
+		<s:Rect left="1" right="1" top="1" bottom="1" radiusX="5">
+			<s:stroke>
+				<s:SolidColorStroke color="#9f9f9f" />
+			</s:stroke>
+		</s:Rect>
+		
+		<s:Label top="50" color="#363636" fontFamily="Arial" fontSize="14" horizontalCenter="0"
+				 text="Changer le mot de passe"/>
+		<s:TextInput left="170" top="105" width="130" height="20"/>
+		
+		<s:Label right="165" top="110" color="#363636" fontFamily="Arial" fontSize="12"
+				 text="Nouveau mot de passe :" textAlign="right"/>
+		<s:TextInput left="170" top="140" width="130" height="20"/>
+		
+		<s:Label right="165" top="145" color="#363636" text="Confirmer mot de passe :" textAlign="right"/>
+		<s:Button right="25" top="200" width="180" height="25" label="Changer le mot de passe"
+				  skinClass="skins.Components.Button"/>
+		<s:Button right="10" top="10" label="Button" skinClass="skins.Seance.CloseButton"/>
+		
+		
+	</s:Group>
+	
+	<!-- footer -->
+	<s:Group width="100%" height="20" bottom="0" >
+		<s:Rect width="100%" height="20" bottom="0" >
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0x535353" />
+					<s:GradientEntry color="0x000000" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Label width="100%" color="0xFFFFFF" horizontalCenter="0"
+				 text="2012 - VISU - Université Lyon 1" textAlign="center"
+				 verticalAlign="middle" bottom="3"/>
+	</s:Group>
+	
+</s:Application>
