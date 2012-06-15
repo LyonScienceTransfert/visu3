@@ -93,6 +93,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.renderer.ShareBilanRenderer;
 			import com.ithaca.visu.renderer.TitreBilanRenderer;
 			import com.ithaca.visu.renderer.TitreSessionRenderer;
+			import com.ithaca.visu.skins.Components.Button;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.lyon2.controls.utils.TimeUtils;
 			
@@ -446,11 +447,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				if(this.currentState == "normal")
 				{
 					this.currentState = "advanced";
-					buttonViewAdvanced.icon = IconEnum.getIconByName('normalViewDataGrid_16x16')
+					//buttonViewAdvanced.icon = IconEnum.getIconByName('normalViewDataGrid_16x16')
 				}else
 				{
 					this.currentState = "normal";
-					buttonViewAdvanced.icon = IconEnum.getIconByName('advancedViewDataGrid_16x16')
+					//buttonViewAdvanced.icon = IconEnum.getIconByName('advancedViewDataGrid_16x16')
 				}
 			} 
 			
@@ -463,15 +464,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:VGroup width="100%" height="100%" verticalAlign="top" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 		
 		<s:Group width="100%">
-			<s:Rect width="100%" height="100%" radiusX="5">
-				<s:stroke>
-					<s:LinearGradientStroke rotation="90" weight="1">
-						<s:GradientEntry color="0x000000" alpha="0.5625" />
-						<s:GradientEntry color="0x000000" alpha="0.75" />
-					</s:LinearGradientStroke>
-				</s:stroke>
+			<s:Rect id="filterAreaBorder" width="100%" height="100%" radiusX="2">
 				<s:fill>
-					<s:SolidColor color="0xf8e9c8" alpha="0.20" />
+					<s:SolidColor color="0xfff4df" />
 				</s:fill>
 			</s:Rect>
 			<s:VGroup width="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
@@ -548,11 +543,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:Label>
 				<s:text>{fxgt.gettext("Visualisation de la liste des bilans :")}</s:text>
 			</s:Label>
-			<components:IconButton id="buttonViewAdvanced" icon="{IconEnum.getIconByName('advancedViewDataGrid_16x16')}" width="22" height="22"
-								   click="buttonViewAdvanced_clickHandler(event)"/>
+	<!--		<components:IconButton id="buttonViewAdvanced" icon="{IconEnum.getIconByName('advancedViewDataGrid_16x16')}" width="22" height="22"
+								   click="buttonViewAdvanced_clickHandler(event)"/>-->
+			<s:Button id="buttonViewAdvanced" width="24" height="24"
+					  icon="{IconEnum.getIconByName('ico_view_bilan')}"
+					  skinClass="com.ithaca.visu.skins.Components.Button"
+					  click="buttonViewAdvanced_clickHandler(event)"/>
 		</s:HGroup>
 		<mx:DataGrid id="bilanGridComponenet" creationComplete="bilanGridComponenet_creationCompleteHandler(event)" width="100%" height="100%" dataProvider="{bilanCollection}"
-					 styleName="corexpert">
+					 focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+					 selectionColor="#FFCC5E"
+					 alternatingItemColors="[#FFFFFF, #FFF4DF]" borderColor="#FFB311">
 			<mx:columns>
 				<mx:DataGridColumn id="dataGridDateModification" dataField="modifyDateAsDate" itemRenderer="com.ithaca.visu.renderer.DateBilanRenderer">
 					<mx:headerText>{fxgt.gettext("Date modification")}</mx:headerText>
