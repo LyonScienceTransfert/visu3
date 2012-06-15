@@ -519,7 +519,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								buttonSwitchVisible="true"
 								buttonShareEnabled="false"
 								buttonShareVisible="true"
-								imageInfoVisible="true"
+								imageInfoVisible="false"
 								clickButtonSwitch="panelButtonBilan_clickButtonSwitchHandler(event)"
 								clickButtonShare="panelButtonBilan_clickButtonShareHandler(event)">
 			<ithaca:BilanViewer
