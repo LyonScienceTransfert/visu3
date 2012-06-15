@@ -168,7 +168,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
+						<s:GradientEntry color="0xfff4df" />
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
@@ -191,7 +191,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:HGroup width="100%" includeIn="open" gap="2" x="12" verticalAlign="middle">
 				<s:TextInput id="editableContent" text="..."
 							focusIn="editableContent_focusInHandler(event)"
-					        width="88"/>
+					        width="88"
+							styleName="corexpert"/>
 				<mx:Image width="16" height="16" source="{IconEnum.getIconByName('iconValider_16x16')}" click="onClickButtonValider(event)">
 					<mx:buttonMode>true</mx:buttonMode>
 	                <mx:toolTip>{fxgt.gettext("Valider")}</mx:toolTip>
@@ -203,10 +204,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<mx:Spacer width="4"/>
 			</s:HGroup>
 <!-- BOUTTONS -->
-			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16" height="16" left="10" top="3"
+			<mx:Image  includeIn="normal" id="buttonDelete" source="{IconEnum.getIconByName('ico_trash')}" left="10" top="5"
 					    click="buttonDelete_clickHandler(event)"/>
-			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}"  
-					    click="buttonEdit_clickHandler(event)" height="16" width="16" left="26" top="3"
+			<mx:Image  includeIn="normal" id="buttonEdit" source="{IconEnum.getIconByName('ico_pen')}"  
+					    click="buttonEdit_clickHandler(event)" left="26" top="5"
 				        />
 		</s:Group>
 		

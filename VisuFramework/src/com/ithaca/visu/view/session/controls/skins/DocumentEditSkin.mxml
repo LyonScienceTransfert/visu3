@@ -87,13 +87,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.utils.URLValidator;
 			import com.ithaca.utils.UtilFunction;
 			import com.ithaca.visu.model.ActivityElementType;
+			import com.ithaca.visu.skins.FixedPanel;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.lyon2.controls.YoutubePlayer;
 			import com.youtube.player.events.PlayerEvent;
 			
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
-
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -295,7 +296,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
+						<s:GradientEntry color="0xfff4df" />
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
@@ -316,7 +317,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
+						<s:GradientEntry color="0xfff4df" />
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
@@ -337,41 +338,44 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					<!--<s:SolidColorStroke color="0xFFFFFF" weight="1" joints="miter"/>-->
 					<s:LinearGradientStroke rotation="90" weight="1">
 						<s:GradientEntry color="0xFFFFFF"/>
-						<s:GradientEntry color="0xD8D8D8"/>
+						<s:GradientEntry color="0xfff4df"/>
 					</s:LinearGradientStroke>
 				</s:stroke>
 			</s:Line>
 			
 			<!-- BUTTONS -->
-			<s:HGroup top="13"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
-				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('delete')}"  width="16"
-						    click="buttonDelete_clickHandler(event)"/>
+			<s:HGroup top="15"  paddingLeft="{-widthAppendix+5}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
+				<mx:Image  id="buttonDelete" source="{IconEnum.getIconByName('ico_trash')}"
+						   click="buttonDelete_clickHandler(event)"/>
 				<s:Line height="11" >
 					<s:stroke>
 						<s:SolidColorStroke color="#6370D7"/>
 					</s:stroke>
 				</s:Line>
 				<!--<s:Label text="{fxgt.gettext('Éditer')}" color="#6370D7"  click="label1_clickHandler(event)"/>-->
-				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}"  
-					 width="16" height="16"  click="onClickButtonEdit(event)"/>
+				<mx:Image  id="buttonEdit" source="{IconEnum.getIconByName('ico_pen')}"  
+					       click="onClickButtonEdit(event)"/>
 				
 			</s:HGroup>
 			<s:Panel includeIn="normal,close"  id="panelContent"  title="Video Youtube"
 					 minHeight="100"  minWidth="160"  maxWidth="200" top="10" left="10" right="10" bottom="10"
-					 >
+					 skinClass="com.ithaca.visu.skins.FixedPanel">
 			</s:Panel>
 <!-- STATE EDIT -->
 			<s:Label includeIn="open" top="10" left="10">
 	        <s:text>{fxgt.gettext('Titre du document :')}</s:text>
 			</s:Label>
 			<s:TextArea id="editableContent"  includeIn="open" maxHeight="24" top="27" left="30" right="10" bottom="56"
-						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+						paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+						styleName="corexpert"/>
 			<s:Label includeIn="open" top="60" left="9" right="6">
 	        <s:text>{fxgt.gettext('Le lien est :')}</s:text>
 			</s:Label>
-			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"/>
+			<s:TextInput  includeIn="open" left="30" id="editableLien" top="79"  bottom="6" right="10"
+						  styleName="corexpert"/>
 <!-- STATE ERROR -->
-			<s:RichText  includeIn="error,errorMessage" top="10" horizontalCenter="0" right="10" left="10" top.errorMessage="40" left.errorMessage="10" right.errorMessage="10" horizontalCenter.errorMessage="0" bottom.errorMessage="40">
+			<s:RichText  includeIn="error,errorMessage" top="10" horizontalCenter="0" right="10" left="10" top.errorMessage="40" left.errorMessage="10" right.errorMessage="10" horizontalCenter.errorMessage="0" bottom.errorMessage="40"
+						 styleName="corexpert">
             <s:text>{fxgt.gettext("Le lien n'est pas valide.")}</s:text>
 			</s:RichText>
 			<s:Button includeIn="error" top="35" click="onClickButtonOkPanelError(event)" bottom="10" horizontalCenter="0">

@@ -76,6 +76,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.skins.Components.Button;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
 			
@@ -120,13 +123,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:Label id="labelLastTimeSave" text="12:88"/>
 				<s:Label id="labelSaveTimeAgo" text="(3 minute ago)"/>
 			</s:HGroup>
-			<s:Button id="saveButton"  includeIn="planMine,sessionComing">
+			<s:Button id="saveButton"  includeIn="planMine,sessionComing"
+					   skinClass="com.ithaca.visu.skins.Components.Button"
+					   icon="{IconEnum.getIconByName('ico_save_seance')}">
 				<s:label.planMine>Sauvegarder plan</s:label.planMine>
 				<s:label.sessionComing>Sauvegarder séance</s:label.sessionComing>
 			</s:Button>
-			<s:Button width="130" id="deleteButtonPlan" toolTip="Supprime ce plan de séance partagé" label="Supprimer plan" enabled.planOther="false" includeIn="planMine,planOther"/>
+			<s:Button width="130" id="deleteButtonPlan" toolTip="Supprime ce plan de séance partagé" label="Supprimer plan" enabled.planOther="false" includeIn="planMine,planOther"
+					  skinClass="com.ithaca.visu.skins.Components.Button"
+					  icon="{IconEnum.getIconByName('ico_delete_seance')}"/>
 			
-			<s:Button width="130" id="deleteButtonSession" toolTip="Supprime cette séance" label="Supprimer séance" enabled.sessionPast="false" includeIn="sessionComing,sessionPast"/>
+			<s:Button width="130" id="deleteButtonSession" toolTip="Supprime cette séance" label="Supprimer séance" enabled.sessionPast="false" includeIn="sessionComing,sessionPast"
+					  skinClass="com.ithaca.visu.skins.Components.Button"
+					  icon="{IconEnum.getIconByName('ico_delete_seance')}"/>
 		</s:HGroup>
 		
 		<sessions:SessionSummaryView   id="sessionSummaryView" excludeFrom="empty"

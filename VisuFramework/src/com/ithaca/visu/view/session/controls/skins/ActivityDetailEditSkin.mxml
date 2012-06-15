@@ -428,7 +428,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				left="{LIFT_EDITABLED_COMPONENT+5}" verticalScrollPolicy="auto" textAlign="justify"
 				focusIn="addStatement_focusInHandler(event)"
 				keyUp="addStatement_keyUpHandler(event)"
-				focusOut="addStatement_focusOutHandler(event)" includeIn="openEditable">
+				focusOut="addStatement_focusOutHandler(event)" includeIn="openEditable"
+				styleName="corexpert">
             <s:text>{NEW_STATEMENT_STRING}</s:text>
 			</s:TextArea>
 			<s:Button right="15" top="27" bottom="2" click="validStatementButton_clickHandler(event)" includeIn="openEditable">
@@ -452,7 +453,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:TextArea id="addTitreDocument" top="0" maxHeight="22" minWidth="290" textAlign="left"
 					fontStyle="italic" color="#BBBBBB"
 					focusOut="addTitreDocument_focusOutHandler(event)"
-					focusIn="addTitreDocument_focusInHandler(event)" includeIn="openEditable">
+					focusIn="addTitreDocument_focusInHandler(event)" includeIn="openEditable"
+					styleName="corexpert">
                 <s:text>{NEW_DOCUMENT_TITLE_STRING}</s:text>
 				</s:TextArea>
 				<mx:Spacer width="8"/>
@@ -463,7 +465,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:TextArea id="addLienDocument" right="140" maxHeight="22" minWidth="220"
 					fontStyle="italic" color="#BBBBBB"
 					focusIn="addLienDocument_focusInHandler(event)"
-					focusOut="addLienDocument_focusOutHandler(event)" includeIn="openEditable">
+					focusOut="addLienDocument_focusOutHandler(event)" includeIn="openEditable"
+					styleName="corexpert">
 					<s:text>{NEW_LINK_STRING}</s:text>
 				</s:TextArea>
 				<s:Button id="validButtonDocument"
@@ -488,7 +491,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				fontStyle="italic" color="#BBBBBB"
 				focusIn="addKeyword_focusInHandler(event)"
 				focusOut="addKeyword_focusOutHandler(event)"
-				keyUp="addKeyword_keyUpHandler(event)" includeIn="openEditable">
+				keyUp="addKeyword_keyUpHandler(event)" includeIn="openEditable"
+				styleName="corexpert">
 	        <s:text>{NEW_KEYWORD_STRING}</s:text>
 			</s:TextInput>
 			<s:Button right="15" bottom="2" click="validKeywordButton_clickHandler(event)" includeIn="openEditable">
@@ -504,7 +508,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					<s:fill>
 						<s:LinearGradient rotation="90">
 							<s:GradientEntry color="0xFFFFFF" />
-							<s:GradientEntry color="0xD8D8D8" />
+							<s:GradientEntry color="0xfff4df" />
 						</s:LinearGradient>
 					</s:fill>
 				</s:Rect>
@@ -524,7 +528,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					top="8" bottom="7" maxHeight="40"
 					focusIn="memoDisplay_focusInHandler(event)"
 					focusOut="memoDisplay_focusOutHandler(event)"
-					change="memoDisplay_changeHandler(event)" left="10" right="10" enabled.open="false">
+					change="memoDisplay_changeHandler(event)" left="10" right="10" enabled.open="false"
+					styleName="corexpert">
 				</s:RichEditableText>
 			</s:Group>
 		</s:Group>
