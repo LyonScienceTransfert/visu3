@@ -335,6 +335,17 @@ package com.ithaca.visu.ui.utils
 		static private var role_responsable:Class;
 		[Embed("images/Home/role_admin.png")]
 		static private var role_admin:Class;
+
+		[Embed("images/Utillisateurs/ico_add.png")]
+		static private var ico_add:Class;
+		[Embed("images/Utillisateurs/ico_delete.png")]
+		static private var ico_delete:Class;
+		[Embed("images/Utillisateurs/ico_edit.png")]
+		static private var ico_edit:Class;
+		[Embed("images/Utillisateurs/ico_save.png")]
+		static private var ico_save:Class;
+		
+		
 		
 		public static function getPathByName(code:String):String
 		{
@@ -570,6 +581,18 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "advancedViewDataGrid_16x16" : 
 					icon = advancedViewDataGrid_16x16;
+					break;
+				case "ico_add" : 
+					icon = ico_add;
+					break;
+				case "ico_edit" : 
+					icon = ico_edit;
+					break;
+				case "ico_delete" : 
+					icon = ico_delete;
+					break;
+				case "ico_save" : 
+					icon = ico_save;
 					break;
 				default :
 					break;				
