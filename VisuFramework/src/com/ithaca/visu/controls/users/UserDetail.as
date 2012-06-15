@@ -335,6 +335,9 @@ package com.ithaca.visu.controls.users
 				dispatchEvent( userEventUpdate );
 			}
 			invalidateSkinState();
+			// notification disabled button edit
+			var userSaveHandler:UserEvent = new UserEvent(UserEvent.NOTIFICTION_ADD_UPDATE_USER);
+			this.dispatchEvent(userSaveHandler);
 		}
 		
 		/**
