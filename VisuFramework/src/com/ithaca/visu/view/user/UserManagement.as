@@ -66,6 +66,7 @@ package com.ithaca.visu.view.user
 	import com.ithaca.visu.controls.users.UserDetail;
 	import com.ithaca.visu.controls.users.UserFilters;
 	import com.ithaca.visu.controls.users.event.UserFilterEvent;
+	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.UserVO;
@@ -73,6 +74,9 @@ package com.ithaca.visu.view.user
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
 	
 	import mx.collections.ArrayCollection;
 	import mx.events.FlexEvent;
@@ -85,9 +89,6 @@ package com.ithaca.visu.view.user
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
-    
-    import gnu.as3.gettext.FxGettext;
-    import gnu.as3.gettext._FxGettext;
 	
 	
 	public class UserManagement extends SkinnableComponent
@@ -108,8 +109,9 @@ package com.ithaca.visu.view.user
 		
 		[SkinPart("true")]
 		public var userDetail:UserDetail;
-
+		
         [SkinPart("true")]
+		public var editUserButton:Button;
         
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;
@@ -177,6 +179,7 @@ package com.ithaca.visu.view.user
 			if (instance == userDetail)
 			{
                 userDetail.user = null;
+				userDetail.addEventListener(UserEvent.NOTIFICTION_ADD_UPDATE_USER, onNotificationAddUpdateUser);
 			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
@@ -230,7 +233,6 @@ package com.ithaca.visu.view.user
 			
 			userDetail.editing = true;
 			userDetail.user = new User( new UserVO());
-            
 		}
 		
 		/**
@@ -239,6 +241,18 @@ package com.ithaca.visu.view.user
 		protected function userList_indexChangeHandler(event:IndexChangeEvent):void
 		{
 			userDetail.user = User(usersList.dataProvider.getItemAt(event.newIndex));
+			// set enabled button edit selected user 
+			editUserButton.enabled = true;
+		}
+		/**
+		 * Handler add, update user
+		 */
+		protected function onNotificationAddUpdateUser(event:Event):void
+		{
+			// set disabled button edit selected user 
+			editUserButton.enabled = false;
+			// deselect user
+			usersList.selectedIndex = -1;
 		}
 		
 		protected function filter_viewAllHandler(event:UserFilterEvent):void
