@@ -81,6 +81,7 @@ package com.ithaca.visu.view.session.controls
 	import mx.controls.Alert;
 	import mx.controls.Image;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.NumericStepper;
@@ -119,10 +120,10 @@ package com.ithaca.visu.view.session.controls
 		public var titleActivityLable:Label;
 
 		[SkinPart("true")]
-		public var buttonUp:Image;
+		public var buttonUp:Button;
 
 		[SkinPart("true")]
-		public var buttonDown:Image;
+		public var buttonDown:Button;
 
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;

@@ -74,6 +74,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		import com.ithaca.utils.URLValidator;
 		import com.ithaca.utils.UtilFunction;
 		import com.ithaca.visu.model.ActivityElementType;
+		import com.ithaca.visu.skins.Components.Button;
 		import com.ithaca.visu.ui.utils.IconEnum;
 		
 		import gnu.as3.gettext.FxGettext;
@@ -382,21 +383,26 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				fontSize="14" fontWeight="bold" maxHeight="22" maxChars="80"
 				focusOut="titleActivity_focusOutHandler(event)"
 				change="titleActivity_changeHandler(event)"
-				includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="155" top.openEditable="5" left.openEditable="120" right.openEditable="155">
+				includeIn="normalEditable,openEditable" top.normalEditable="5" left.normalEditable="120" right.normalEditable="155" top.openEditable="5" left.openEditable="120" right.openEditable="155"
+				styleName="corexpert">
 				<!--<s:filters>
 				<mx:DropShadowFilter distance="1" angle="90" blurX="3" blurY="3" alpha=".5" />
 				</s:filters>-->
 			</s:TextInput>
 			<!-- DELETE ACTIVITY -->
 			<mx:Button id="buttonDeleteActivity" top="5"
-				icon="{IconEnum.getIconByName('delete')}"
-				click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="30" top.normalEditable="5" right.normalEditable="120" top.openEditable="5" right.openEditable="120">
+				icon="{IconEnum.getIconByName('ico_trash')}"
+				click="buttonDeleteActivity_clickHandler(event)" includeIn="normalEditable,openEditable" width="20" height="20" top.normalEditable="5" right.normalEditable="120" top.openEditable="5" right.openEditable="120">
 				<mx:toolTip>{fxgt.gettext("Supprimer l'activité")}</mx:toolTip>
 			</mx:Button>
 			<!-- MOVE UP/DOWN -->
-			<s:HGroup paddingTop="5" includeIn="normalEditable,openEditable">
-				<mx:Image id="buttonUp" source="{IconEnum.getIconByName('up')}" width="12" height="12"/>
-				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('down')}" width="12" height="12"/>
+			<s:HGroup includeIn="normalEditable,openEditable">
+				<s:Button id="buttonUp" width="20" height="20"
+						  icon="{IconEnum.getIconByName('ico_up')}"
+						  skinClass="com.ithaca.visu.skins.Components.Button"/>
+				<s:Button id="buttonDown" width="20" height="20"
+						  icon="{IconEnum.getIconByName('ico_down')}"
+						  skinClass="com.ithaca.visu.skins.Components.Button"/>
 			</s:HGroup>
 			<!-- DURATION -->
 			<s:Label id="durationDisplay" paddingTop="10" text="{fxgt.gettext('Durée :')}" text.normal="{fxgt.gettext('Durée :')}" text.normalEditable="{fxgt.gettext('Durée :')}" text.open="{fxgt.gettext('Durée :')}" text.openEditable="{fxgt.gettext('Durée :')}"/>
