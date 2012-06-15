@@ -110,12 +110,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
         <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
             <s:Label id="loginLabel" />
-			<s:TextInput id="loginField" width="150" />
+			<s:TextInput id="loginField" width="150" styleName="corexpert"/>
         </s:HGroup>
         
         <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
             <s:Label id="passLabel" />
-		    <s:TextInput id="passField" width="150" />
+		    <s:TextInput id="passField" width="150"  styleName="corexpert"/>
         </s:HGroup>
 
         <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
