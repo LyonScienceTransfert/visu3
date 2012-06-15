@@ -78,6 +78,7 @@ package  com.ithaca.visu.events
 		static public const ADD_USER : String = 'addViewUser';
 		static public const DELETE_USER : String = 'deleteViewUser';
 		static public const SELECTED_USER : String = 'selectedUser';
+		static public const NOTIFICTION_ADD_UPDATE_USER : String = 'notificationAddUpdateUser';
 		
 		// properties
 		public var sessionId : int;
