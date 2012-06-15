@@ -300,7 +300,7 @@ package com.ithaca.visu.controls.users
 		/**
 		 * @private
 		 */
-		protected function editButton_clickHandler(event:MouseEvent):void
+		public function editButton_clickHandler(event:*=null):void
 		{
 			_editing = true;
             empty = false;
