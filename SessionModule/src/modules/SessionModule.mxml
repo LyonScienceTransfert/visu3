@@ -68,11 +68,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		xmlns:mx="library://ns.adobe.com/flex/mx" 
 		xmlns:modules="com.ithaca.visu.modules.*"
 		xmlns:maps="maps.*"
-		width="100%" height="100%" 
 		configure="visumodulebase1_configureHandler(event)" 
 		creationComplete="visumodulebase1_creationCompleteHandler(event)"
         currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*" xmlns:mate="http://mate.asfusion.com/" xmlns:sessions="com.ithaca.visu.controls.sessions.*"> 
+		xmlns:business="business.*" xmlns:skin="com.ithaca.visu.view.session.skin.*" xmlns:session="com.ithaca.visu.view.session.*" xmlns:mate="http://mate.asfusion.com/" xmlns:sessions="com.ithaca.visu.controls.sessions.*"
+		top="15" bottom="25" left="5" right="5"> 
 	<fx:Script>
 		<![CDATA[ 
             import com.ithaca.visu.controls.sessions.SessionDetailView;
