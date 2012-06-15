@@ -77,7 +77,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.controls.skins.AdvancedTextInputSkin;
+			import com.ithaca.visu.skins.Components.Button;
 			import com.ithaca.visu.skins.FixedPanel;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
@@ -114,7 +116,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:layout>
 		
 		<s:Group top="0" width="25%" height="100%">
-			<s:Panel top="40"
+			<s:Panel top="0"
 				 width="100%"
 				  skinClass="com.ithaca.visu.skins.FixedPanel">	
 				<s:title>{fxgt.gettext("Afficher...")}</s:title>
@@ -126,14 +128,20 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:Group>
 		
 		<s:Group width="25%" height="100%">
-			<s:Button id="addUserButton" width="100%" top="14">
+			<!--<s:Button id="addUserButton" width="100%" top="14">
 				<s:label>{fxgt.gettext("Ajouter un utilisateur")}</s:label>
 			</s:Button>
+			-->
 			
-			
-			<s:Panel top="40" width="100%" height="100%"
+			<s:Panel top="0" width="100%" height="100%"
 					 skinClass="com.ithaca.visu.skins.FixedPanel">
 				<s:title>{fxgt.gettext("Utilisateurs...")}</s:title>
+				<s:Button id="addUserButton"
+						  right="5" top="-25"
+						  icon="{IconEnum.getIconByName('ico_add')}"
+						  skinClass="com.ithaca.visu.skins.Components.Button">
+					<s:label>{fxgt.gettext("Ajouter un utilisateur")}</s:label>
+				</s:Button>
 				<!--<controls:FilteredList-->
 				<controls2:AdvancedTextInput
 					id="searchDisplay" prompt="{fxgt.gettext('Filtre de recherche')}"
@@ -151,10 +159,25 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:Group>
 		
 		<s:Group width="50%" height="100%">
-			<s:Panel top="40" 
+			<s:Panel top="0" 
 					width="100%" height="80%"
 					skinClass="com.ithaca.visu.skins.FixedPanel">	
                 <s:title>{fxgt.gettext("Profil") + "(" +userDetail.user.firstname + ")"}</s:title>
+				<s:HGroup right="5" top="-25">
+					<s:Button id="editUserButton"
+							  enabled="false"
+							  icon="{IconEnum.getIconByName('ico_edit')}"
+							  skinClass="com.ithaca.visu.skins.Components.Button"
+							  click="{userDetail.editButton_clickHandler()}">
+						<s:label>{fxgt.gettext("Editer")}</s:label>	
+					</s:Button>
+					<s:Button enabled="false"
+							  icon="{IconEnum.getIconByName('ico_delete')}"
+							  skinClass="com.ithaca.visu.skins.Components.Button"
+							  >
+						<s:label>{fxgt.gettext("Supprimer")}</s:label>	
+					</s:Button>
+				</s:HGroup>
 				<users:UserDetail id="userDetail" 
 									   top="0" bottom="0" left="0" right="0"
 									   skinClass="com.ithaca.visu.controls.users.skins.UserDetailSkin" />
