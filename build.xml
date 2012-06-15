@@ -356,6 +356,17 @@ or by setting the following environment variable:
 				<include-file name="images/Utillisateurs/ico_edit.png" path="${framework.images}/Utillisateurs/ico_edit.png"/>
 				<include-file name="images/Utillisateurs/ico_save.png" path="${framework.images}/Utillisateurs/ico_save.png"/>
 				
+				<include-file name="images/Seance/ico_new_seance.png" path="${framework.images}/Seance/ico_new_seance.png"/>
+				<include-file name="images/Seance/ico_delete_seance.png" path="${framework.images}/Seance/ico_delete_seance.png"/>
+				<include-file name="images/Seance/ico_pen.png" path="${framework.images}/Seance/ico_pen.png"/>
+				<include-file name="images/Seance/ico_save_seance.png" path="${framework.images}/Seance/ico_save_seance.png"/>
+				<include-file name="images/Seance/ico_trash.png" path="${framework.images}/Seance/ico_trash.png"/>
+				<include-file name="images/Seance/ico_up.png" path="${framework.images}/Seance/ico_up.png"/>
+				<include-file name="images/Seance/ico_down.png" path="${framework.images}/Seance/ico_down.png"/>
+				<include-file name="images/Seance/ico_add.png" path="${framework.images}/Seance/ico_add.png"/>
+				<include-file name="images/Seance/ico_delete.png" path="${framework.images}/Seance/ico_delete.png"/>
+				<include-file name="images/Seance/ico_edit.png" path="${framework.images}/Seance/ico_edit.png"/>
+	
 				
 				
 				<!-- integration corexpert end-->

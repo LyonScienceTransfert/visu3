@@ -344,6 +344,25 @@ package com.ithaca.visu.ui.utils
 		static private var ico_edit:Class;
 		[Embed("images/Utillisateurs/ico_save.png")]
 		static private var ico_save:Class;
+
+		[Embed("images/Seance/ico_new_seance.png")]
+		static private var ico_new_seance:Class;
+		[Embed("images/Seance/ico_save_seance.png")]
+		static private var ico_save_seance:Class;
+		[Embed("images/Seance/ico_delete_seance.png")]
+		static private var ico_delete_seance:Class;
+		[Embed("images/Seance/ico_trash.png")]
+		static private var ico_trash:Class;
+		[Embed("images/Seance/ico_down.png")]
+		static private var ico_down:Class;
+		[Embed("images/Seance/ico_up.png")]
+		static private var ico_up:Class;
+		[Embed("images/Seance/ico_pen.png")]
+		static private var ico_pen:Class;
+		[Embed("images/Seance/ico_add.png")]
+		static private var ico_add_Seance:Class;
+		[Embed("images/Seance/ico_delete.png")]
+		static private var ico_delete_Seance:Class;
 		
 		
 		
@@ -593,6 +612,33 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "ico_save" : 
 					icon = ico_save;
+					break;
+				case "ico_new_seance" : 
+					icon = ico_new_seance;
+					break;
+				case "ico_save_seance" : 
+					icon = ico_save_seance;
+					break;
+				case "ico_delete_seance" : 
+					icon = ico_delete_seance;
+					break;
+				case "ico_trash" : 
+					icon = ico_trash;
+					break;
+				case "ico_down" : 
+					icon = ico_down;
+					break;
+				case "ico_up" : 
+					icon = ico_up;
+					break;
+				case "ico_pen" : 
+					icon = ico_pen;
+					break;
+				case "ico_add_Seance" : 
+					icon = ico_add_Seance;
+					break;
+				case "ico_delete_Seance" : 
+					icon = ico_delete_Seance;
 					break;
 				default :
 					break;				
