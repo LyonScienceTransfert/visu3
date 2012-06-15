@@ -74,6 +74,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.skins.Components.Button;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			
 			import mx.collections.ArrayCollection;
@@ -146,10 +148,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				</s:itemRenderer>
 			</s:List>
 			<s:HGroup width="100%">
-				<s:Button id="addUser">
+				<s:Button id="addUser"
+						   skinClass="com.ithaca.visu.skins.Components.Button"
+						   icon="{IconEnum.getIconByName('ico_add_Seance')}" >
 					<s:label>Ajouter</s:label>
 				</s:Button>
-				<s:Button id="deleteUser">
+				<s:Button id="deleteUser" 
+						  skinClass="com.ithaca.visu.skins.Components.Button"
+						  icon="{IconEnum.getIconByName('ico_delete_Seance')}" >
 					<s:label>Supprimer</s:label>
 				</s:Button>
 			</s:HGroup>

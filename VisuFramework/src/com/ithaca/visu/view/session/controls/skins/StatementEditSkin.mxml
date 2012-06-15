@@ -167,7 +167,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
+						<s:GradientEntry color="0xfff4df" />
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
@@ -188,7 +188,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:fill>
 					<s:LinearGradient rotation="90">
 						<s:GradientEntry color="0xFFFFFF" />
-						<s:GradientEntry color="0xD8D8D8" />
+						<s:GradientEntry color="0xfff4df" />
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
@@ -209,16 +209,16 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					<!--<s:SolidColorStroke color="0xFFFFFF" weight="1" joints="miter"/>-->
 					<s:LinearGradientStroke rotation="90" weight="1">
 						<s:GradientEntry color="0xFFFFFF"/>
-						<s:GradientEntry color="0xD8D8D8"/>
+						<s:GradientEntry color="0xfff4df"/>
 					</s:LinearGradientStroke>
 				</s:stroke>
 			</s:Line>
 			
 			<!-- BUTTONS -->
-			<s:HGroup top="13" paddingLeft="{-widthAppendix+7}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
-				<mx:Image id="buttonUp" source="{IconEnum.getIconByName('up')}" width="12" height="12"/>
-				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('down')}" width="12" height="12"/>
-				<mx:Image id="buttonDelete" source="{IconEnum.getIconByName('delete')}" width="16"
+			<s:HGroup top="14" paddingLeft="{-widthAppendix+7}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
+				<mx:Image id="buttonUp" source="{IconEnum.getIconByName('ico_up')}"/>
+				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('ico_down')}"/>
+				<mx:Image id="buttonDelete" source="{IconEnum.getIconByName('ico_trash')}"
 					click="buttonDelete_clickHandler(event)"/>
 				<s:Line height="11" >
 					<s:stroke>
@@ -226,14 +226,16 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					</s:stroke>
 				</s:Line>
 				<!--<s:Label text=" editer" color="#6370D7" click="label1_clickHandler(event)"/>-->
-				<mx:Image id="buttonEdit" source="{IconEnum.getIconByName('iconEdit_16x16')}" height="16" width="16" click="label1_clickHandler(event)"/>
+				<mx:Image id="buttonEdit" source="{IconEnum.getIconByName('ico_pen')}" click="label1_clickHandler(event)"/>
 				
 			</s:HGroup>
 			<s:RichText includeIn="normal,close" id="textContent" text="---------------------" minHeight="40" top="10" left="10" right="10" bottom="10"
-				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
+				styleName="corexpert"/>
 			<s:TextArea id="editableContent" includeIn="open" maxHeight="40" text="jkhgljhglgkjgkjgkjhgkljf" top="10" left="10" right="10" bottom="10"
 				paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"
-				focusIn="editableContent_focusInHandler(event)"/>
+				focusIn="editableContent_focusInHandler(event)"
+				styleName="corexpert"/>
 			
 		</s:Group>
 		<s:HGroup width="100%" includeIn="open" horizontalAlign="right" paddingRight="3">

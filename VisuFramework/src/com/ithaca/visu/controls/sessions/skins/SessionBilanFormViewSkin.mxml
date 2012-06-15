@@ -189,7 +189,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 </s:Label>
             </s:HGroup>
             <s:HGroup width="100%">
-    			<mx:LinkButton id="linkButtonGoSalonRetrospection" color="#0000FF" fontWeight="bold" toolTip="Rejoindre le salon de rétrospection pour cette séance" label="Aller vers rétrospection" textAlign="left"/>
+    			<mx:LinkButton id="linkButtonGoSalonRetrospection" color="#FFB311" fontWeight="bold" toolTip="Rejoindre le salon de rétrospection pour cette séance" label="Aller vers rétrospection" textAlign="left"
+							   />
             </s:HGroup>
         </s:HGroup>
         <s:HGroup width="100%" gap="20" height="100%">
@@ -201,7 +202,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
             <s:HGroup width="100%" height="100%">
     			<s:VGroup width="100%" gap="12" height="100%">
                     <s:Label id="labelBilan" width="100%" text="(Liste interactive des bilans, à maquetter avec le composant 'Liste des bilans')" textAlign="left"/>
-                    <mx:DataGrid id="dataGridBilan" width="100%" height="100%">
+                    <mx:DataGrid id="dataGridBilan" width="100%" height="100%"
+								 focusColor="#FFCC5E" rollOverColor="#FFCC5E"
+								 selectionColor="#FFCC5E"
+								 alternatingItemColors="[#FFFFFF, #FFF4DF]" borderColor="#FFB311">
                         <mx:columns>
                             <mx:DataGridColumn id="dataGridDateModification"  dataField="modifyDateAsDate" itemRenderer="com.ithaca.visu.renderer.DateBilanRendererInLine">
                                 <mx:headerText>{fxgt.gettext("Date de modification")}</mx:headerText>

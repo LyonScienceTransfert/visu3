@@ -68,7 +68,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			   xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="350" 
 			   xmlns:user="com.ithaca.visu.view.user.*"
 			   close="PopUpManager.removePopUp(this);" 
-			    creationComplete="titlewindow1_creationCompleteHandler(event)">
+			   creationComplete="titlewindow1_creationCompleteHandler(event)"
+			   styleName="corexpert" chromeColor="#FFCC5E">
 	<s:title>{fxgt.gettext("Sélection d'utilisateur...")}</s:title>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->

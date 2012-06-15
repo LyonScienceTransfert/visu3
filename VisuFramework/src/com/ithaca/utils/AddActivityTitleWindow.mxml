@@ -67,7 +67,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
-			   close="titlewindow1_closeHandler(event)">
+			   close="titlewindow1_closeHandler(event)"
+		       styleName="corexpert" chromeColor="#FFCC5E">
 	<fx:Script>
 		<![CDATA[
 			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;

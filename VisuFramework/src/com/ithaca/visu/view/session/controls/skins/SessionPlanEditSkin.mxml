@@ -115,7 +115,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<s:Label  paddingTop="5">
 				<s:text>Titre:</s:text>
 			</s:Label>
-			<s:TextInput id="themeLabel" width="100%" text="FIXME" fontWeight="bold" fontSize="14"/>
+			<s:TextInput id="themeLabel" width="100%" text="FIXME" fontWeight="bold" fontSize="14"
+						 styleName="corexpert"/>
 			<mx:Spacer width="10"/>
 		</s:HGroup>
 		<mx:Spacer height="5" includeIn="normalEditable"/>
