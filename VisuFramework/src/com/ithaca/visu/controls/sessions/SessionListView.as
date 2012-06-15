@@ -334,7 +334,10 @@ package com.ithaca.visu.controls.sessions
 			if(filterAlphaChange)
 			{
 				filterAlphaChange = false;
-				solidColorFilter.alpha = _filterAlpha;
+				if(solidColorFilter)
+				{
+					solidColorFilter.alpha = _filterAlpha;
+				}
 			}
 			
 			if(showFilterAreaBorderChange)
