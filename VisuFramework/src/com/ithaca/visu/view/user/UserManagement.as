@@ -110,7 +110,6 @@ package com.ithaca.visu.view.user
 		public var userDetail:UserDetail;
 
         [SkinPart("true")]
-		public var userDetailPanel:Panel;
         
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;
@@ -179,10 +178,6 @@ package com.ithaca.visu.view.user
 			{
                 userDetail.user = null;
 			}
-			if (instance == userDetailPanel)
-			{
-                userDetailPanel.title = fxgt.gettext("Profil");
-			}
 		}
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
@@ -235,8 +230,6 @@ package com.ithaca.visu.view.user
 			
 			userDetail.editing = true;
 			userDetail.user = new User( new UserVO());
-            // set titre the panel
-            userDetailPanel.title = fxgt.gettext("Profil");
             
 		}
 		
@@ -309,7 +302,6 @@ package com.ithaca.visu.view.user
         public function setStateEmpty():void{
             userDetail.setStateEmpty();
             // set title the panel
-            userDetailPanel.title = fxgt.gettext("Profil");
         }
 	}
 }
