@@ -351,6 +351,13 @@ or by setting the following environment variable:
 				<include-file name="images/Salon/ico_video.png" path="${framework.images}/Salon/ico_video.png"/>
 				<include-file name="images/Salon/ico_audio.png" path="${framework.images}/Salon/ico_audio.png"/>
 				
+				<include-file name="images/Utillisateurs/ico_add.png" path="${framework.images}/Utillisateurs/ico_add.png"/>
+				<include-file name="images/Utillisateurs/ico_delete.png" path="${framework.images}/Utillisateurs/ico_delete.png"/>
+				<include-file name="images/Utillisateurs/ico_edit.png" path="${framework.images}/Utillisateurs/ico_edit.png"/>
+				<include-file name="images/Utillisateurs/ico_save.png" path="${framework.images}/Utillisateurs/ico_save.png"/>
+				
+				
+				
 				<!-- integration corexpert end-->
 				
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
