@@ -364,6 +364,9 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/Seance/ico_delete.png")]
 		static private var ico_delete_Seance:Class;
 		
+		[Embed("images/Bilan/ico_view_bilan.png")]
+		static private var ico_view_bilan:Class;
+		
 		
 		
 		public static function getPathByName(code:String):String
@@ -639,6 +642,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "ico_delete_Seance" : 
 					icon = ico_delete_Seance;
+					break;
+				case "ico_view_bilan" : 
+					icon = ico_view_bilan;
 					break;
 				default :
 					break;				
