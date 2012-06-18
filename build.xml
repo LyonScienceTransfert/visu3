@@ -368,6 +368,7 @@ or by setting the following environment variable:
 				<include-file name="images/Seance/ico_edit.png" path="${framework.images}/Seance/ico_edit.png"/>
 				
 				<include-file name="images/Bilan/ico_view_bilan.png" path="${framework.images}/Bilan/ico_view_bilan.png"/>
+				<include-file name="images/Bilan/ico_edit_bilan.png" path="${framework.images}/Bilan/ico_edit_bilan.png"/>
 	
 	
 				

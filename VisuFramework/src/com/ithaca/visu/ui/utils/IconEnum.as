@@ -366,6 +366,8 @@ package com.ithaca.visu.ui.utils
 		
 		[Embed("images/Bilan/ico_view_bilan.png")]
 		static private var ico_view_bilan:Class;
+		[Embed("images/Bilan/ico_edit_bilan.png")]
+		static private var ico_edit_bilan:Class;
 		
 		
 		
@@ -645,6 +647,9 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "ico_view_bilan" : 
 					icon = ico_view_bilan;
+					break;
+				case "ico_edit_bilan" : 
+					icon = ico_edit_bilan;
 					break;
 				default :
 					break;				
