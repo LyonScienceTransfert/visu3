@@ -178,10 +178,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 <s:HGroup id="hgroupDndOwnerObsel" width="100%" verticalAlign="middle" includeInLayout="true" visible="true" fontSize="10" horizontalAlign="center" toolTip=".">
                     <documentarisation:SegmentVideoIconMarker id="iconDndObsel" skinClass="com.ithaca.documentarisation.skins.SegmentVideoIconMarkerSkin"/>
                     <s:VGroup width="100%" gap="3">
-                        <s:HGroup width="100%" horizontalAlign="center">
+                        <s:HGroup width="250" horizontalAlign="center">
                             <s:Label id="labelDndObsel" maxDisplayedLines="1"/>
                         </s:HGroup>
-                        <s:HGroup width="100%" horizontalAlign="center">
+                        <s:HGroup width="250" horizontalAlign="center">
                             <s:Label id="labelDndObselTempsContent" maxDisplayedLines="1" width="100%"/>
                         </s:HGroup>
                     </s:VGroup>
@@ -199,28 +199,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 </s:HGroup>
             </s:VGroup>
 		</s:HGroup>
-		<s:HGroup id="groupText" width="100%" gap="0"
-			paddingLeft.edit="16"
-			paddingLeft.editOver="16"
-			paddingLeft.editPause="16"
-			paddingLeft.editPlay="16"
-			paddingLeft.editSelected="16"
-			paddingRight.edit="16"
-			paddingRight.editOver="16"
-			paddingRight.editPause="16"
-			paddingRight.editPlay="16"
-			paddingRight.editSelected="16"
-			paddingTop="0"
-			paddingBottom="0">
+		<s:Group id="groupText" width="100%">
 			<!-- TEXT -->
 			<s:RichEditableText id="richEditableText"
 				editable.sharedOver="false" editable.shared="false"
-				width="100%" 
 				color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false" selectable="true" selectionHighlighting="whenActive"
-				styleName="corexpert">
+				styleName="corexpert" width="300" horizontalCenter="0">
 				<s:text>votre text ici</s:text>
 			</s:RichEditableText>	
-		</s:HGroup>
+		</s:Group>
 
 		<!-- LINE HORISONTALE -->
 		<s:Line width="100%" id="lineBottom" includeIn="edit,editOver,editPause,editPlay,editSelected">

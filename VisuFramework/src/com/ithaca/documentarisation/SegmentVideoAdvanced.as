@@ -94,6 +94,7 @@ import mx.events.ToolTipEvent;
 import mx.managers.CursorManager;
 import mx.utils.StringUtil;
 
+import spark.components.Group;
 import spark.components.HGroup;
 import spark.components.Label;
 import spark.components.RichEditableText;
@@ -138,7 +139,7 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 	public var richEditableText:RichEditableText;
 
     [SkinPart("true")]
-    public var groupText:HGroup;
+    public var groupText:Group;
     
     [SkinPart("true")]
     public var labelInfoDuration:Label;

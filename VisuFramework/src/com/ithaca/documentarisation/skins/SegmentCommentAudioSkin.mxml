@@ -117,24 +117,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					visible.editSelected="true">
 				</components:IconDelete>
 			</s:HGroup>
-			<s:HGroup width="100%" 
-				id="groupText"
-				paddingLeft.edit="16"
-				paddingLeft.editOver="16"
-				paddingLeft.editSelected="16"
-				paddingRight.edit="16" 
-				paddingRight.editOver="16" 
-				paddingRight.editSelected="16" 
-				paddingTop="0" 
-				paddingBottom="0">
+			<s:Group width="100%" 
+				id="groupText">
 				<!-- TEXT -->
 				<s:RichEditableText id="richEditableText"
 					editable.sharedOver="false" editable.shared="false"
-					width="100%" 
 					color="#000000" paddingTop="3" selectable="true" selectionHighlighting="whenActive"
-					styleName="corexpert">
+					styleName="corexpert" width="300" horizontalCenter="0" text="er">
 				</s:RichEditableText>
-			</s:HGroup>
+			</s:Group>
 			<s:Line width="100%" id="lineBottom" includeIn="edit, editOver, editSelected">
 				<s:stroke>
 					<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
