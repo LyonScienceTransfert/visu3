@@ -309,7 +309,7 @@ package com.ithaca.utils.components
 				}else
 				{
 					buttonSwitch.addEventListener(MouseEvent.CLICK, onClickButtonSwitch);
-					buttonSwitch.icon =  IconEnum.getIconByName('iconMinimaze_16x16');
+					buttonSwitch.icon =  IconEnum.getIconByName('ico_edit_bilan');
 					buttonSwitch.toolTip = fxgt.gettext("Éditer ce bilan");
 					if(spicerBeforeTitle)
 					{
