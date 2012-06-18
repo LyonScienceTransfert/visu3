@@ -109,10 +109,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
 			<!-- TEXTAREA -->
-			<s:RichEditableText id="textSegment" width="100%" 
-				backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"
-                editable.normal="false" selectable="true" selectionHighlighting="whenActive"
-  				styleName="corexpert"/>		
+			<s:Group  width="100%">
+				<s:RichEditableText id="textSegment" width="300" 
+					backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"
+	                editable.normal="false" selectable="true" selectionHighlighting="whenActive"
+	  				styleName="corexpert" text="zz" horizontalCenter="0"/>		
+			</s:Group>
 			<!-- DELETE ICON -->
 			<components:IconDelete id="iconDelete"
 				visible.edit="false"

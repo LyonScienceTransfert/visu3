@@ -92,6 +92,7 @@ import mx.controls.Image;
 import mx.events.FlexEvent;
 import mx.managers.CursorManager;
 
+import spark.components.Group;
 import spark.components.HGroup;
 import spark.components.RichEditableText;
 import spark.components.supportClasses.SkinnableComponent;
@@ -119,7 +120,7 @@ public class SegmentCommentAudio extends SkinnableComponent
 	public var groupAudioRecorder:HGroup;
     
 	[SkinPart("true")]
-	public var groupText:HGroup;
+	public var groupText:Group;
     
 	[SkinPart("true")]
 	public var lineBottom:Line;
