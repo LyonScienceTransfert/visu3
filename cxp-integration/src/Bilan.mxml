@@ -100,7 +100,7 @@
 											  verticalAlign="middle">										
 										<s:Label text="Visualisation de la liste des bilans :" verticalAlign="bottom"/>
 										<s:Button width="24" height="24"
-												  icon="images/Bilan/ico_view_bilan.png"
+												  icon="images/Bilan/ico_view_bilan_more.png"
 												  skinClass="skins.Components.Button"/>
 									</s:HGroup>
 									
