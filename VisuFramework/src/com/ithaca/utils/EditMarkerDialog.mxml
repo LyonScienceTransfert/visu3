@@ -66,8 +66,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
+	preinitialize="titlewindow1_preinitializeHandler(event)"
 	creationComplete="titlewindow1_creationCompleteHandler(event)"
-	close="titlewindow1_closeHandler(event)" >
+	close="titlewindow1_closeHandler(event)" 
+	styleName="corexpert" chromeColor="#FFCC5E">
 	<s:title>{fxgt.gettext("Édition de marqueur")}</s:title>
 	<s:states>
 		<s:State name="normal"/>
@@ -358,6 +360,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			{
 				return 0;
 			}
+		}
+
+
+		protected function titlewindow1_preinitializeHandler(event:FlexEvent):void
+		{
+			// init internationalisation
+			fxgt = FxGettext;
 		}
 
 	]]>
