@@ -72,86 +72,88 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						configure="visumodulebase1_configureHandler(event)"
 						creationComplete="visumodulebase1_creationCompleteHandler(event)"
                         currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-						width="100%" height="100%" xmlns:controls="com.lyon2.controls.*" 
+						top="15" bottom="25" left="5" right="5"
+						xmlns:controls="com.lyon2.controls.*" 
 						xmlns:sessions="com.ithaca.visu.controls.sessions.*" xmlns:local="*" xmlns:timeline="com.ithaca.timeline.*" xmlns:video="com.ithaca.visu.view.video.*" xmlns:utils="com.ithaca.utils.*" xmlns:components="com.ithaca.utils.components.*" xmlns:controls1="com.ithaca.visu.controls.*">
 	<fx:Script>
 		<![CDATA[
-            import com.ithaca.timeline.Layout;
-            import com.ithaca.timeline.SelectorRegexp;
-            import com.ithaca.timeline.Timeline;
-            import com.ithaca.timeline.TraceLine;
-            import com.ithaca.timeline.TraceLineGroup;
-            import com.ithaca.timeline.events.TimelineEvent;
-            import com.ithaca.timeline.skins.TraceLineTitleSkin;
-            import com.ithaca.timelineskins.events.TimelineSkinEvent;
-            import com.ithaca.traces.Obsel;
-            import com.ithaca.traces.events.ObselEvent;
-            import com.ithaca.traces.model.RetroTraceModel;
-            import com.ithaca.traces.model.TraceModel;
-            import com.ithaca.traces.model.vo.SGBDObsel;
-            import com.ithaca.utils.ConfigShareMarker;
-            import com.ithaca.utils.EditChatDialog;
-            import com.ithaca.utils.EditMarkerDialog;
-            import com.ithaca.utils.UtilFunction;
-            import com.ithaca.utils.VisuUtils;
-            import com.ithaca.utils.components.MessageNotification;
-            import com.ithaca.utils.components.skins.MessageNotificationSkin;
-            import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
-            import com.ithaca.visu.controls.sessions.ActivityDetailB;
-            import com.ithaca.visu.controls.sessions.SharedElementChat;
-            import com.ithaca.visu.controls.skins.SendMarkerAnimationSkin;
-            import com.ithaca.visu.events.ActivityElementEvent;
-            import com.ithaca.visu.events.InitMapEvent;
-            import com.ithaca.visu.events.MarkerEvent;
-            import com.ithaca.visu.events.MessageEvent;
-            import com.ithaca.visu.events.PanelButtonEvent;
-            import com.ithaca.visu.events.SessionEvent;
-            import com.ithaca.visu.events.SessionSharedEvent;
-            import com.ithaca.visu.events.ShortMarkerEvent;
-            import com.ithaca.visu.events.TraceLineEvent;
-            import com.ithaca.visu.events.VisuActivityEvent;
-            import com.ithaca.visu.events.VisuModuleEvent;
-            import com.ithaca.visu.interfaces.IDocument;
-            import com.ithaca.visu.model.Activity;
-            import com.ithaca.visu.model.ActivityElement;
-            import com.ithaca.visu.model.ActivityElementType;
-            import com.ithaca.visu.model.DocumentActionType;
-            import com.ithaca.visu.model.Model;
-            import com.ithaca.visu.model.Notification;
-            import com.ithaca.visu.model.Session;
-            import com.ithaca.visu.model.User;
-            import com.ithaca.visu.ui.utils.ActionObselEnum;
-            import com.ithaca.visu.ui.utils.ConnectionStatus;
-            import com.ithaca.visu.ui.utils.IconEnum;
-            import com.ithaca.visu.ui.utils.RoleEnum;
-            import com.ithaca.visu.ui.utils.SessionStatusEnum;
-            import com.ithaca.visu.ui.utils.SoundEnum;
-            import com.ithaca.visu.view.video.PanelEditInfo;
-            import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
-            import com.lyon2.controls.ImageDocument;
-            import com.lyon2.controls.YoutubePlayer;
-            import com.youtube.player.events.PlayerEvent;
-            import com.youtube.player.events.PlayerSharedEvent;
-            
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
-            
-            import mx.collections.ArrayCollection;
-            import mx.controls.Alert;
-            import mx.controls.Image;
-            import mx.core.DragSource;
-            import mx.core.IUIComponent;
-            import mx.events.CloseEvent;
-            import mx.events.CollectionEvent;
-            import mx.events.DragEvent;
-            import mx.events.FlexEvent;
-            import mx.events.ResizeEvent;
-            import mx.events.StateChangeEvent;
-            import mx.managers.DragManager;
-            import mx.managers.PopUpManager;
-            
-            import spark.components.Button;
-            import spark.components.Label;
+			import com.ithaca.timeline.Layout;
+			import com.ithaca.timeline.SelectorRegexp;
+			import com.ithaca.timeline.Timeline;
+			import com.ithaca.timeline.TraceLine;
+			import com.ithaca.timeline.TraceLineGroup;
+			import com.ithaca.timeline.events.TimelineEvent;
+			import com.ithaca.timeline.skins.TraceLineTitleSkin;
+			import com.ithaca.timelineskins.events.TimelineSkinEvent;
+			import com.ithaca.traces.Obsel;
+			import com.ithaca.traces.events.ObselEvent;
+			import com.ithaca.traces.model.RetroTraceModel;
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.traces.model.vo.SGBDObsel;
+			import com.ithaca.utils.ConfigShareMarker;
+			import com.ithaca.utils.EditChatDialog;
+			import com.ithaca.utils.EditMarkerDialog;
+			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.utils.VisuUtils;
+			import com.ithaca.utils.components.MessageNotification;
+			import com.ithaca.utils.components.skins.MessageNotificationSkin;
+			import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
+			import com.ithaca.visu.controls.sessions.ActivityDetailB;
+			import com.ithaca.visu.controls.sessions.SharedElementChat;
+			import com.ithaca.visu.controls.skins.SendMarkerAnimationSkin;
+			import com.ithaca.visu.events.ActivityElementEvent;
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.MarkerEvent;
+			import com.ithaca.visu.events.MessageEvent;
+			import com.ithaca.visu.events.PanelButtonEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionSharedEvent;
+			import com.ithaca.visu.events.ShortMarkerEvent;
+			import com.ithaca.visu.events.TraceLineEvent;
+			import com.ithaca.visu.events.VisuActivityEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.interfaces.IDocument;
+			import com.ithaca.visu.model.Activity;
+			import com.ithaca.visu.model.ActivityElement;
+			import com.ithaca.visu.model.ActivityElementType;
+			import com.ithaca.visu.model.DocumentActionType;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Notification;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.skins.FixedPanel;
+			import com.ithaca.visu.ui.utils.ActionObselEnum;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
+			import com.ithaca.visu.ui.utils.SoundEnum;
+			import com.ithaca.visu.view.video.PanelEditInfo;
+			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+			import com.lyon2.controls.ImageDocument;
+			import com.lyon2.controls.YoutubePlayer;
+			import com.youtube.player.events.PlayerEvent;
+			import com.youtube.player.events.PlayerSharedEvent;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Image;
+			import mx.core.DragSource;
+			import mx.core.IUIComponent;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.Button;
+			import spark.components.Label;
 
             /* When reaching the end of the timeline, how much time should we add ? */
 			private var DURATION_EXTENSION: Number = 60 * 1000; /* 1 minute */
