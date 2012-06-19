@@ -95,7 +95,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:Label id="labelDisplay" width="100%" fontSize="11"
 				 paddingBottom="5" paddingLeft="5"
 				 paddingRight="5" paddingTop="5"
-				 text="Cette catégorie sociale (les bourgeois-bohème /bobos) existe en France. Est-ce le cas aux Etats- Unis ?"
 				 verticalAlign="middle"/>
 	</s:Group>
 </s:Skin>
