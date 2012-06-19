@@ -86,11 +86,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<!-- activity group -->	
 		<s:Group width="100%" height="100%">
-			<s:Rect top="0" left="0" right="0" bottom="0" bottomLeftRadiusX="5" bottomRightRadiusX="5">
-				<s:fill>
-					<s:SolidColor color="#d1def6" />
-				</s:fill>
-			</s:Rect>
 			<s:Scroller top="0" left="0" right="0" bottom="0">
 				<s:Group id="contentGroup">
 					<s:layout>
