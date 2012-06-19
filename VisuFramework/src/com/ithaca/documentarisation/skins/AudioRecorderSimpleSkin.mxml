@@ -179,27 +179,34 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<s:HGroup width="100%" height="50%" verticalAlign="middle" horizontalAlign="center" gap="1">
 		<!-- LABEL DURATION, CURRENT TIME IN DIGIT, DURATION IN DIGITS -->
 		<s:HGroup  id="labelGroup" gap="1" verticalAlign="middle" fontSize="10">
+			<s:Spacer width="5"/>
 			<s:Label id="labelCurrnetTime" includeIn="play,record" color.record="#E73A3A"/>
 			<s:Label id="labelInfo" color.record="#FF2B2B"/>
 			<s:Label id="lableDuration" includeIn="normal,over,overShare,play,record" color.record="#ED3030">
 			</s:Label>
 		</s:HGroup>
-		<!-- IMAGE PLAY --> 
-		<mx:Image id="imagePlay" 
-			buttonMode="true" 
-			source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="over,overShare">
-		</mx:Image>
-		<!-- IMAGE STOP -->
-		<mx:Image id="imageStop"
-			buttonMode="true"
-			includeIn="play,record"
-			source.play="{IconEnum.getIconByName('iconStopYellow_16x16')}"
-			source.record="{IconEnum.getIconByName('iconStopRed_16x16')}">
-		</mx:Image>
-		<!-- IMAGE RECORD -->
-		<mx:Image id="imageRecord"
-			buttonMode="true"
-			source="{IconEnum.getIconByName('iconRecordBorder_16x16')}" includeIn="over,overEmpty">
-		</mx:Image>
+		<s:HGroup paddingTop="-1">
+			<!-- IMAGE PLAY --> 
+			<mx:Image id="imagePlay" 
+				buttonMode="true" 
+				source="{IconEnum.getIconByName('ico_play')}" includeIn="over,overShare">
+			</mx:Image>
+				<!--source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="over,overShare">-->
+			<!-- IMAGE STOP -->
+			<mx:Image id="imageStop"
+				buttonMode="true"
+				includeIn="play,record"
+				source.play="{IconEnum.getIconByName('ico_stop')}"
+				source.record="{IconEnum.getIconByName('ico_stop')}">
+			</mx:Image>
+	<!--			source.play="{IconEnum.getIconByName('iconStopYellow_16x16')}"
+				source.record="{IconEnum.getIconByName('iconStopRed_16x16')}">-->
+			<!-- IMAGE RECORD -->
+			<mx:Image id="imageRecord"
+				buttonMode="true"
+				source="{IconEnum.getIconByName('ico_record')}" includeIn="over,overEmpty">
+			</mx:Image>
+	<!--			source="{IconEnum.getIconByName('iconRecordBorder_16x16')}" includeIn="over,overEmpty">-->
+		</s:HGroup>
 	</s:HGroup>	
 </s:Skin>
