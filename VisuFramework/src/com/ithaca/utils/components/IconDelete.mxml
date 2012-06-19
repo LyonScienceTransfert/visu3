@@ -99,11 +99,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	</s:states>
 	<s:Group id="groupIconDelete">
 		<s:BitmapImage
-			source="{IconEnum.getIconByName('deleteRoundIcon')}"
+			source="{IconEnum.getIconByName('ico_cancel')}"
 			visible="true" visible.hovered="false"/>
+<!--			source="{IconEnum.getIconByName('deleteRoundIcon')}"-->
 		<s:BitmapImage
-			source="{IconEnum.getIconByName('deleteRoundIconRed_16x16')}"
+			source="{IconEnum.getIconByName('ico_cancel')}"
 			visible="false" visible.hovered="true">
 		</s:BitmapImage>
+<!--			source="{IconEnum.getIconByName('deleteRoundIconRed_16x16')}"-->
 	</s:Group>
 </s:Group>
