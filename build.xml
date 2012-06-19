@@ -377,6 +377,8 @@ or by setting the following environment variable:
 				<include-file name="images/Salon/ico_play.png" path="${framework.images}/Salon/ico_play.png"/>
 				<include-file name="images/Salon/ico_record.png" path="${framework.images}/Salon/ico_record.png"/>
 				<include-file name="images/Salon/ico_cancel.png" path="${framework.images}/Salon/ico_cancel.png"/>
+				<include-file name="images/Salon/micro_off.png" path="${framework.images}/Salon/micro_off.png"/>
+				
 				
 
 				<!-- integration corexpert end-->

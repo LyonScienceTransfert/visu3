@@ -401,7 +401,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						  icon="{IconEnum.getIconByName('ico_up')}"
 						  skinClass="com.ithaca.visu.skins.Components.Button"/>
 				<s:Button id="buttonDown" width="20" height="20"
-						  icon="{IconEnum.getIconByName('ico_down')}"
+						  icon="{IconEnum.getIconByName('ico_downPlanSession')}"
 						  skinClass="com.ithaca.visu.skins.Components.Button"/>
 			</s:HGroup>
 			<!-- DURATION -->

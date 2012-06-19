@@ -210,7 +210,8 @@ package com.ithaca.visu.ui.utils
 		static private var mic_on:Class;
 		
 		[Bindable]
-		[Embed("images/mic_off.png")]
+		//[Embed("images/mic_off.png")]
+		[Embed("images/Salon/micro_off.png")]
 		static private var mic_off:Class;
 		
 		[Bindable]
@@ -354,7 +355,7 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/Seance/ico_trash.png")]
 		static private var ico_trash:Class;
 		[Embed("images/Seance/ico_down.png")]
-		static private var ico_down:Class;
+		static private var ico_downPlanSession:Class;
 		[Embed("images/Seance/ico_up.png")]
 		static private var ico_up:Class;
 		[Embed("images/Seance/ico_pen.png")]
@@ -381,9 +382,16 @@ package com.ithaca.visu.ui.utils
 		static private var ico_pause:Class;
 		[Embed("images/Salon/ico_stop.png")]
 		static private var ico_stop:Class;	
-
 		[Embed("images/Salon/ico_cancel.png")]
-		static private var ico_cancel:Class;	
+		static private var ico_cancel:Class;
+		
+		[Embed("images/Components/right.png")]
+		static private var ico_right:Class;
+		[Embed("images/Components/left.png")]
+		static private var ico_left:Class;
+		[Embed("images/Components/down.png")]
+		static private var ico_down:Class;
+		
 	
 		public static function getPathByName(code:String):String
 		{
@@ -644,8 +652,8 @@ package com.ithaca.visu.ui.utils
 				case "ico_trash" : 
 					icon = ico_trash;
 					break;
-				case "ico_down" : 
-					icon = ico_down;
+				case "ico_downPlanSession" : 
+					icon = ico_downPlanSession;
 					break;
 				case "ico_up" : 
 					icon = ico_up;
@@ -686,6 +694,15 @@ package com.ithaca.visu.ui.utils
 				case "ico_cancel" : 
 					icon = ico_cancel;
 					break;
+				case "ico_right" : 
+					icon = ico_right;
+					break;
+				case "ico_left" : 
+					icon = ico_left;
+					break;
+				case "ico_down" : 
+					icon = ico_down;
+					break;				
 				default :
 					break;				
 			}
