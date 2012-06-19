@@ -107,7 +107,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				visible="true">
 			</components:IconInfoSegment>
 			<!-- BUTTON DELETE -->
-			<components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true" visible.normal="false"/>
+			<components:IconButton id="buttonDelete" height="22" width="30" buttonMode="true" visible.normal="false"/>
 			<!-- BUTTON SHARE -->
 			<components:IconButton id="buttonShare" height="22" width="22" buttonMode="true" visible.normal="false"/>
 			<!-- BUTTON SWITCH -->
