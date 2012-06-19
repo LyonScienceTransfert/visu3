@@ -140,9 +140,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
     <s:HGroup width="100%" id="groupSetMarker" paddingLeft="5" paddingRight="5" height="26">
         <s:HGroup id="groupNormal" width="100%" height="100%" verticalAlign="middle">
             <mx:Spacer id="spacerShowMarker" width="0"/>
-            <mx:TextArea id="markerAnimation" text="."  includeIn="showMarker" editable="false" width="100%" height="22"/>
-            <mx:TextArea  id="textMarker"  enabled="true"  width="100%" height="22" includeIn="normal"/>				
-            <mx:Button id="buttonSendMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" width="150">
+            <s:TextArea id="markerAnimation" text="."  includeIn="showMarker" editable="false" width="100%" height="22"
+						 styleName="corexpert"/>
+            <s:TextArea id="textMarker"  enabled="true"  width="100%" height="22" includeIn="normal"
+						 styleName="corexpert"/>				
+            <mx:Button id="buttonSendMarker" icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}" width="150"
+					   styleName="corexpert">
                 <mx:label>"Poser un marqueur"</mx:label>
             </mx:Button>
         </s:HGroup>
