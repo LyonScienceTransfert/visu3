@@ -369,8 +369,22 @@ package com.ithaca.visu.ui.utils
 		[Embed("images/Bilan/ico_edit_bilan.png")]
 		static private var ico_edit_bilan:Class;
 		
-		
-		
+		[Embed("images/Salon/audio_off.png")]
+		static private var audio_off:Class;
+		[Embed("images/Salon/audio_on.png")]
+		static private var audio_on:Class;
+		[Embed("images/Salon/ico_play.png")]
+		static private var ico_play:Class;
+		[Embed("images/Salon/ico_record.png")]
+		static private var ico_record:Class;
+		[Embed("images/Salon/ico_pause.png")]
+		static private var ico_pause:Class;
+		[Embed("images/Salon/ico_stop.png")]
+		static private var ico_stop:Class;	
+
+		[Embed("images/Salon/ico_cancel.png")]
+		static private var ico_cancel:Class;	
+	
 		public static function getPathByName(code:String):String
 		{
 			var path:String = "";
@@ -650,6 +664,27 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "ico_edit_bilan" : 
 					icon = ico_edit_bilan;
+					break;
+				case "audio_off" : 
+					icon = audio_off;
+					break;
+				case "audio_on" : 
+					icon = audio_on;
+					break;
+				case "ico_stop" : 
+					icon = ico_stop;
+					break;
+				case "ico_pause" : 
+					icon = ico_pause;
+					break;
+				case "ico_record" : 
+					icon = ico_record;
+					break;
+				case "ico_play" : 
+					icon = ico_play;
+					break;
+				case "ico_cancel" : 
+					icon = ico_cancel;
 					break;
 				default :
 					break;				

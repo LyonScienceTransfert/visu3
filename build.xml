@@ -369,10 +369,16 @@ or by setting the following environment variable:
 				
 				<include-file name="images/Bilan/ico_view_bilan.png" path="${framework.images}/Bilan/ico_view_bilan.png"/>
 				<include-file name="images/Bilan/ico_edit_bilan.png" path="${framework.images}/Bilan/ico_edit_bilan.png"/>
-	
-	
 				
+				<include-file name="images/Salon/audio_off.png" path="${framework.images}/Salon/audio_off.png"/>
+				<include-file name="images/Salon/audio_on.png" path="${framework.images}/Salon/audio_on.png"/>
+				<include-file name="images/Salon/ico_stop.png" path="${framework.images}/Salon/ico_stop.png"/>
+				<include-file name="images/Salon/ico_pause.png" path="${framework.images}/Salon/ico_pause.png"/>
+				<include-file name="images/Salon/ico_play.png" path="${framework.images}/Salon/ico_play.png"/>
+				<include-file name="images/Salon/ico_record.png" path="${framework.images}/Salon/ico_record.png"/>
+				<include-file name="images/Salon/ico_cancel.png" path="${framework.images}/Salon/ico_cancel.png"/>
 				
+
 				<!-- integration corexpert end-->
 				
 	  		  	<include-file name="sounds/blubup.mp3" path="${framework.sounds}/blubup.mp3"/>
