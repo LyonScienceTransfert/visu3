@@ -94,6 +94,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:State name="editSelected"/>
 		<s:State name="normal"/>
 	</s:states>
+	<s:Rect width="18" height="100%" includeIn="edit, editSelected">
+		<s:fill>
+			<s:SolidColor color="0xd4d4d4" />
+		</s:fill>
+	</s:Rect>
 	<s:VGroup width="100%" gap="1" verticalAlign="top">
 		<s:mouseOver.edit>
 		<![CDATA[
