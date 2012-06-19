@@ -99,6 +99,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
 		]]>
 		</fx:Script>
+	<s:Rect width="18" height="100%" includeIn="edit, editOver, editSelected">
+		<s:fill>
+			<s:SolidColor color="0xd4d4d4" />
+		</s:fill>
+	</s:Rect>
 		<s:VGroup width="100%" gap="1">
 			<s:HGroup width="100%"  id="groupAudioRecorder" gap="1" horizontalAlign="center" verticalAlign="middle" height="16">
 				<!-- SPACER FOR BILAN MODULE-->
