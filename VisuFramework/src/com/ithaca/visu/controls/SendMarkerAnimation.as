@@ -69,9 +69,9 @@ import flash.events.MouseEvent;
 import flash.ui.Keyboard;
 
 import mx.controls.Button;
-import mx.controls.TextArea;
 import mx.events.EffectEvent;
 
+import spark.components.TextArea;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.effects.Fade;
 
