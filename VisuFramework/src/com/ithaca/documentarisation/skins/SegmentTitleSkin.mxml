@@ -128,10 +128,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				height="16">
 			</components:IconDelete>
 		</s:HGroup>
-		<s:Line width="100%" id="lineBottom" includeIn="edit, editSelected">
-			<s:stroke>
-				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
-			</s:stroke>
-		</s:Line>
+		<s:HGroup width="100%" includeIn="edit, editSelected" gap="0">
+			<s:Line width="18" id="lineBottom" >
+				<s:stroke>
+					<s:SolidColorStroke color="#ffffff" weight="1" joints="miter"/>
+				</s:stroke>
+			</s:Line>
+			<s:Line width="100%">
+				<s:stroke>
+					<s:SolidColorStroke color="#d4d4d4" weight="1" joints="miter"/>
+				</s:stroke>	
+			</s:Line>
+		</s:HGroup>
 	</s:VGroup>
 </s:Skin>
