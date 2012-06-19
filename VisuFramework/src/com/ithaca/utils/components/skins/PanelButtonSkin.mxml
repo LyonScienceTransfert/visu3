@@ -275,13 +275,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     <mx:Spacer width="1"/>
                     
                     <components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true"/>
-                    <components:IconButton id="buttonAdd" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonAdd" height="22" width="30" buttonMode="true"/>
                     <components:IconButton id="buttonShare" height="22" width="22" buttonMode="true"/>
                     
-                    <components:IconButton id="buttonMax" height="22" width="22" buttonMode="true"/>
-                    <components:IconButton id="buttonZoom" height="22" width="22" buttonMode="true"/>
-                    <components:IconButton  id="buttonMicro" height="22" width="22" buttonMode="true"/>
-                    <video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonMax" height="22" width="30" buttonMode="true"/>
+                    <components:IconButton id="buttonZoom" height="22" width="30" buttonMode="true"/>
+                    <components:IconButton  id="buttonMicro" height="22" width="30" buttonMode="true"/>
+                    <video:ImageVolume id="buttonVolume" volumeSliderEnabled="false" height="22" width="30" buttonMode="true"/>
                     <components:IconButton id="buttonSwitch" height="22" width="32" buttonMode="true"/>
                     <components:IconButton id="buttonAdvancedDataGrid" height="22" width="22" buttonMode="true"/>
                     <mx:Image id="imageInfo" height="16" width="16" buttonMode="true"/>
