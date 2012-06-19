@@ -217,7 +217,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<!-- BUTTONS -->
 			<s:HGroup top="14" paddingLeft="{-widthAppendix+7}" horizontalAlign="left" includeIn="normal" gap="2" verticalAlign="middle">
 				<mx:Image id="buttonUp" source="{IconEnum.getIconByName('ico_up')}"/>
-				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('ico_down')}"/>
+				<mx:Image id="buttonDown" source="{IconEnum.getIconByName('ico_downPlanSession')}"/>
 				<mx:Image id="buttonDelete" source="{IconEnum.getIconByName('ico_trash')}"
 					click="buttonDelete_clickHandler(event)"/>
 				<s:Line height="11" >
