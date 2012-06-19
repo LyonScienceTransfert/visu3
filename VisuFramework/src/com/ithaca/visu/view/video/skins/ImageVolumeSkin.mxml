@@ -166,10 +166,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			</s:LinearGradientStroke>
 		</s:stroke>
 	</s:Rect>
-	<mx:Image id="volumeImage" source="{IconEnum.getIconByName('volume')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" excludeFrom="mute">
+	<mx:Image id="volumeImage" source="{IconEnum.getIconByName('audio_on')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" excludeFrom="mute">
 	</mx:Image>
 	<s:VSlider id="volumeSlider"  includeInLayout="false" visible="false" minimum="0" height="50" value="0.5" maximum="1.0"  
 			   liveDragging="true" snapInterval="0.1" toolTip="" showDataTip="false" horizontalCenter="0" top="22" width="12"/>
-	<mx:Image  id="muteImage" source="{IconEnum.getIconByName('mute')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" includeIn="mute">
+	<mx:Image  id="muteImage" source="{IconEnum.getIconByName('audio_off')}" width="16" height="16" horizontalCenter="0" verticalCenter="0" includeIn="mute">
 	</mx:Image>
 </s:Skin>
