@@ -76,6 +76,8 @@ package com.ithaca.visu.controls.sessions
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	
 	import gnu.as3.gettext.FxGettext;
 	import gnu.as3.gettext._FxGettext;
@@ -85,6 +87,7 @@ package com.ithaca.visu.controls.sessions
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.events.ToolTipEvent;
+	import mx.managers.CursorManager;
 	import mx.utils.StringUtil;
 	
 	import spark.components.Button;
@@ -133,6 +136,9 @@ package com.ithaca.visu.controls.sessions
 		private var keywordList:IList; 
 		private var memo:String=""; 
 		private var TOOL_TIPS_IMAGE_WIDTH:int = 160;
+		
+		// cursor id
+		private var _cursorID:int;
 		
         [Bindable]
         private var fxgt: _FxGettext = FxGettext;
@@ -283,6 +289,8 @@ package com.ithaca.visu.controls.sessions
 				s.label = el.data;
 				s.activityElement = el;
 				s.doubleClickEnabled = true;
+				s.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverAcitiviyElement);
+				s.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutAcitiviyElement);
 				statementGroup.addElement(s);
 			}
 		}
@@ -320,6 +328,8 @@ package com.ithaca.visu.controls.sessions
 				s.label = el.data;
 				s.activityElement = el;
 				s.doubleClickEnabled = true;
+				s.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverAcitiviyElement);
+				s.addEventListener(MouseEvent.MOUSE_OUT, onMouseOutAcitiviyElement);
 				keywordGroup.addElement(s);	
 			}
 		}
@@ -379,6 +389,22 @@ package com.ithaca.visu.controls.sessions
 			sort.fields = [new SortField("order_activity_element", true)];
 			list.sort = sort;
 			list.refresh();
+		}
+		
+		/**
+		 * Mouse over activity element
+		 */
+		private function onMouseOverAcitiviyElement(event:MouseEvent):void
+		{
+			_cursorID = CursorManager.setCursor(IconEnum.getIconByName('hand_open'));
+		}
+		
+		/**
+		 * Mouse out activity element
+		 */
+		private function onMouseOutAcitiviyElement(even:MouseEvent):void
+		{
+			CursorManager.removeCursor(_cursorID);
 		}
 	}
 }
