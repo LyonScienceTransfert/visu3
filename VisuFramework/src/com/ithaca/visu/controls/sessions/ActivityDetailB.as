@@ -65,7 +65,9 @@ package com.ithaca.visu.controls.sessions
 	import com.ithaca.utils.ExtendToolTip;
 	import com.ithaca.utils.VisuUtils;
 	import com.ithaca.visu.controls.sessions.skins.KeywordSkin;
+	import com.ithaca.visu.controls.sessions.skins.KeywordSkinCorexpert;
 	import com.ithaca.visu.controls.sessions.skins.StatementSkin;
+	import com.ithaca.visu.controls.sessions.skins.StatementSkinCorexpert;
 	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
@@ -150,11 +152,6 @@ package com.ithaca.visu.controls.sessions
 		override protected function partAdded(partName:String, instance:Object):void
 		{
 			super.partAdded(partName,instance);
-			if (instance == titleDisplay)
-			{
-				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
-			}
-			
 			if (instance == titleDisplay)
 			{
 				titleDisplay.addEventListener(MouseEvent.CLICK, titleDisplay_clickHandler);
@@ -281,7 +278,7 @@ package com.ithaca.visu.controls.sessions
 			for each( var el:ActivityElement in list)
 			{
 				var s:ActivityElementDetail = new ActivityElementDetail();
-				s.setStyle("skinClass",StatementSkin);
+				s.setStyle("skinClass",StatementSkinCorexpert);
 				s.percentWidth = 100;
 				s.label = el.data;
 				s.activityElement = el;
@@ -319,7 +316,7 @@ package com.ithaca.visu.controls.sessions
 			for each( var el:ActivityElement in list)
 			{
 				var s:ActivityElementDetail = new ActivityElementDetail();
-				s.setStyle("skinClass",KeywordSkin);
+				s.setStyle("skinClass",KeywordSkinCorexpert);
 				s.label = el.data;
 				s.activityElement = el;
 				s.doubleClickEnabled = true;
