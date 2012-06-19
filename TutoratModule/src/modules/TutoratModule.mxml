@@ -2659,8 +2659,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							</s:Scroller> 
 						</s:Group>
 						<s:HGroup width="100%" paddingLeft="5" paddingRight="5">
-							<mx:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true" height="22" width="100%"/>				
-							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" width="180">
+							<s:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true" height="22" width="100%"
+											 styleName="corexpert"/>				
+							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" width="180" 
+									   styleName="corexpert">
 								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
 							</mx:Button>
 						</s:HGroup>	
