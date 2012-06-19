@@ -132,25 +132,31 @@ knowledge of the CeCILL-C license and that you accept its terms.
         					<!-- ICON SEGMENT -->
         					<s:Label id="labelCurrentTime" includeIn="editPause,editPlay,sharedPause,sharedPlay">
         					</s:Label>
+							<s:Spacer width="5"/>
         					<s:Label id="labelInfoDuration"/>
         					<s:Label id="labelDuration" text="02:24">
         					</s:Label>
         				</s:HGroup>
-        				<!-- IMAGE PLAY --> 
-        				<mx:Image id="imagePlay" 
-        					buttonMode="true" 
-        					source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause">
-        				</mx:Image>
-        				<!-- IMAGE JUMP START --> 
-        				<mx:Image id="imageJumpStart" 
-        					buttonMode="true" 
-        					source="{IconEnum.getIconByName('iconStopYellow_16x16')}" includeIn=" editPause, sharedPause">
-        				</mx:Image>
-        				<!-- IMAGE PAUSE --> 
-        				<mx:Image id="imagePause" 
-        					buttonMode="true" 
-        					source="{IconEnum.getIconByName('iconPauseYellow_16x16')}" includeIn="editPlay,sharedPlay">
-        				</mx:Image>
+						<s:HGroup paddingTop="2">
+							<!-- IMAGE PLAY --> 
+							<mx:Image id="imagePlay" 
+									  buttonMode="true" 
+									  source="{IconEnum.getIconByName('ico_play')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause">
+							</mx:Image>
+							<!--        					source="{IconEnum.getIconByName('iconPlayGreen_16x16')}" includeIn="editOver,editPause,editSelected,sharedOver, sharedPause">-->
+							<!-- IMAGE JUMP START --> 
+							<mx:Image id="imageJumpStart" 
+									  buttonMode="true" 
+									  source="{IconEnum.getIconByName('ico_stop')}" includeIn=" editPause, sharedPause">
+							</mx:Image>
+							<!--        					source="{IconEnum.getIconByName('iconStopYellow_16x16')}" includeIn=" editPause, sharedPause">-->
+							<!-- IMAGE PAUSE --> 
+							<mx:Image id="imagePause" 
+									  buttonMode="true" 
+									  source="{IconEnum.getIconByName('ico_pause')}" includeIn="editPlay,sharedPlay">
+							</mx:Image>
+							<!--        					source="{IconEnum.getIconByName('iconPauseYellow_16x16')}" includeIn="editPlay,sharedPlay">-->
+						</s:HGroup>
         			</s:HGroup>
         			<!-- SCREEN SHOT -->
                     <!-- remove screen-shot
@@ -204,21 +210,28 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 </s:HGroup>
             </s:VGroup>
 		</s:HGroup>
-		<s:Group id="groupText" width="100%">
+		<s:HGroup id="groupText" width="100%">
+			<s:Spacer width="20"/>
 			<!-- TEXT -->
 			<s:RichEditableText id="richEditableText"
-				editable.sharedOver="false" editable.shared="false"
-				color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false" selectable="true" selectionHighlighting="whenActive"
-				styleName="corexpert" width="300" horizontalCenter="0">
+								editable.sharedOver="false" editable.shared="false"
+								color="#000000" paddingTop="3" editable.sharedPlay="false" editable.sharedPause="false" selectable="true" selectionHighlighting="whenActive"
+								styleName="corexpert" width="300" >
 				<s:text>votre text ici</s:text>
 			</s:RichEditableText>	
-		</s:Group>
-
-		<!-- LINE HORISONTALE -->
-		<s:Line width="100%" id="lineBottom" includeIn="edit,editOver,editPause,editPlay,editSelected">
-			<s:stroke>
-				<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
-			</s:stroke>
-		</s:Line>
+		</s:HGroup>
+		<s:HGroup width="100%" includeIn="edit,editOver,editPause,editPlay,editSelected" gap="0">
+			<!-- LINE HORISONTALE -->
+			<s:Line width="18" id="lineBottom" >
+				<s:stroke>
+					<s:SolidColorStroke color="#ffffff" weight="1" joints="miter"/>
+				</s:stroke>
+			</s:Line>
+			<s:Line width="100%">
+				<s:stroke>
+					<s:SolidColorStroke color="#d4d4d4" weight="1" joints="miter"/>
+				</s:stroke>
+			</s:Line>
+		</s:HGroup>
 	</s:VGroup>
 </s:Skin>
