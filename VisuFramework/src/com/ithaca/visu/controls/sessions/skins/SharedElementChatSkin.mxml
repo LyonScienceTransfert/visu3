@@ -81,8 +81,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:State name="normal" />
 		<s:State name="vciel"/>
 	</s:states>
-	<s:Group width="100%" >				
-		<s:Rect top="0" left="1" right="1" top.normal="0" left.normal="1" bottom="-2" right.normal="1">
+	<s:Group width="100%" >		
+		<s:Rect top="0" left="1" right="1" top.normal="0" bottom="0">
 			<s:stroke>
 				<s:LinearGradientStroke rotation="90">
 					<s:GradientEntry color="#CCCCCC" />
@@ -96,7 +96,21 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				</s:LinearGradient>
 			</s:fill>
 		</s:Rect>
-		<mx:Image id="avatar"  left="3" top="1" width="25" height="25"/>
+		<s:Rect left="1" top="0" bottom="0" height="100%" width="36">
+			<s:fill>
+				<s:SolidColor color="0xe4e4e4" />
+			</s:fill>
+		</s:Rect>
+		<s:Group x="6" y="1" height="25" width="25">
+			<s:Rect height="25" width="25">
+				<s:stroke>
+					<s:SolidColorStroke weight="1" color="0xa2a2a2" />
+				</s:stroke>
+			</s:Rect>
+			<mx:Image  id="avatar" top="1" bottom="1" left="1" right="1"/>
+		</s:Group>
+		
+		<!--<mx:Image id="avatar"  left="3" top="1" width="25" height="25"/>-->
 		<s:Label id="nameUser"  maxDisplayedLines="1" visible.vciel="true" visible.normal="false" top="5" left="40"  width="90"/>
 		<mx:Image id="imageInfo" left.normal="44"  left.vciel="135" top="5" maxWidth="25" maxHeight="25"/>
 		<s:RichEditableText id="titleDisplay" left.normal="72" left.vciel="40" top.normal="5" top.vciel="30" right="10" color="#121212"
