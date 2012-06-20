@@ -447,11 +447,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				if(this.currentState == "normal")
 				{
 					this.currentState = "advanced";
-					//buttonViewAdvanced.icon = IconEnum.getIconByName('normalViewDataGrid_16x16')
+					buttonViewAdvanced.icon = IconEnum.getIconByName('ico_view_bilan_less')
 				}else
 				{
 					this.currentState = "normal";
-					//buttonViewAdvanced.icon = IconEnum.getIconByName('advancedViewDataGrid_16x16')
+					buttonViewAdvanced.icon = IconEnum.getIconByName('ico_view_bilan_more')
 				}
 			} 
 			
@@ -546,7 +546,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	<!--		<components:IconButton id="buttonViewAdvanced" icon="{IconEnum.getIconByName('advancedViewDataGrid_16x16')}" width="22" height="22"
 								   click="buttonViewAdvanced_clickHandler(event)"/>-->
 			<s:Button id="buttonViewAdvanced" width="24" height="24"
-					  icon="{IconEnum.getIconByName('ico_view_bilan')}"
+					  icon="{IconEnum.getIconByName('ico_view_bilan_more')}"
 					  skinClass="com.ithaca.visu.skins.Components.Button"
 					  click="buttonViewAdvanced_clickHandler(event)"/>
 		</s:HGroup>
