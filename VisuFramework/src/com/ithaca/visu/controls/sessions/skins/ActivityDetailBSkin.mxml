@@ -75,7 +75,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Script>
 		<![CDATA[
+			import com.ithaca.visu.skins.Components.Button;
 			import com.ithaca.visu.skins.Components.TreeButton;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			protected function group1_clickHandler(event:MouseEvent):void
 			{
 				if(event.target is Group)
@@ -116,7 +118,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<s:Button skinClass="com.ithaca.visu.skins.Components.TreeButton"/>
 				<s:Group width="100%" clipAndEnableScrolling="true">
 					<s:Label  id="titleDisplay" width="100%" height="14" fontSize="13"
-							  right="85" left="5" top="2"
+							  right="100" left="5" top="2"
 							 fontWeight="bold"
 							 verticalAlign="middle"
 							 maxDisplayedLines="1"/>
@@ -124,7 +126,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			</s:HGroup>
 		</s:Group>
 		
-		<s:Button id="startButton" right="3" width="80" verticalCenter="-5" cornerRadius="10" height="16"/>
+		<!-- Start this Activity -->
+		<s:Button id="startButton" right="3" width="95" verticalCenter="-5" height="18"
+				  skinClass="com.ithaca.visu.skins.Components.Button"
+				  icon="{IconEnum.getIconByName('ico_activity_start')}"
+				  />
 	</s:Group>
 	
 	<s:VGroup top="30" left="5" right="5" bottom="10" includeIn="open" id="content" height="100%">
