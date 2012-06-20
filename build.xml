@@ -378,6 +378,18 @@ or by setting the following environment variable:
 				<include-file name="images/Salon/ico_record.png" path="${framework.images}/Salon/ico_record.png"/>
 				<include-file name="images/Salon/ico_cancel.png" path="${framework.images}/Salon/ico_cancel.png"/>
 				<include-file name="images/Salon/micro_off.png" path="${framework.images}/Salon/micro_off.png"/>
+				<include-file name="images/Salon/ico_activity_start.png" path="${framework.images}/Salon/ico_activity_start.png"/>
+				<include-file name="images/Salon/ico_session_start.png" path="${framework.images}/Salon/ico_session_start.png"/>
+				<include-file name="images/Salon/ico_session_end.png" path="${framework.images}/Salon/ico_session_end.png"/>
+				<include-file name="images/Salon/pin_add.png" path="${framework.images}/Salon/pin_add.png"/>
+				<include-file name="images/Salon/pin_negative.png" path="${framework.images}/Salon/pin_negative.png"/>
+				<include-file name="images/Salon/pin_positive.png" path="${framework.images}/Salon/pin_positive.png"/>
+				
+				
+				
+				
+				
+				
 				
 				
 
