@@ -66,7 +66,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		minWidth="250" minHeight="200" 
 		xmlns:containers="ws.tink.spark.containers.*" 
         preinitialize="skin1_preinitializeHandler(event)"
 		>
@@ -106,24 +105,46 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			]]>
 		</fx:Script>
 	</s:states>
-	<s:VGroup  width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+	<s:Group width="325" height="222" verticalCenter="0" horizontalCenter="0">
+		<s:Rect left="0" right="0" top="0" bottom="0" radiusX="5">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0xf0f0f0" />
+					<s:GradientEntry color="0xe5e5e5" />
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+		<s:Rect left="2" right="2" top="2" bottom="2" radiusX="5">
+			<s:stroke>
+				<s:SolidColorStroke color="#FFFFFF" />
+			</s:stroke>
+		</s:Rect>
+		<s:Rect left="1" right="1" top="1" bottom="1" radiusX="5">
+			<s:stroke>
+				<s:SolidColorStroke color="#9f9f9f" />
+			</s:stroke>
+		</s:Rect>
+		<s:Label top="20" width="100%" color="#2E2E2E" fontFamily="Arial" fontSize="24" text="VISU"
+				 textAlign="center" verticalAlign="middle"/>
+	<s:VGroup  width="100%" left="28" right="28" bottom="45" horizontalAlign="center" verticalAlign="middle">
 	
-        <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
-            <s:Label id="loginLabel" />
-			<s:TextInput id="loginField" width="150" styleName="corexpert"/>
+        <s:HGroup width="100%" height="28" horizontalAlign="right" verticalAlign="middle">
+            <s:Label id="loginLabel" height="100%"  verticalAlign="middle"/>
+			<s:TextInput id="loginField" width="180"  height="100%" styleName="corexpert"/>
         </s:HGroup>
         
-        <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
-            <s:Label id="passLabel" />
-		    <s:TextInput id="passField" width="150"  styleName="corexpert"/>
+        <s:HGroup width="100%" height="28" horizontalAlign="right" verticalAlign="middle">
+            <s:Label id="passLabel"  height="100%" verticalAlign="middle"/>
+		    <s:TextInput id="passField" width="180"  height="100%" styleName="corexpert"/>
         </s:HGroup>
 
-        <s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
-			<s:Button id="submit" />
+        <s:HGroup width="100%" height="25" horizontalAlign="right" verticalAlign="middle">
+			<s:Button id="submit" height="100%"  fontSize="14"/>
         </s:HGroup>
 			
 		<s:Button id="forgottenButton"
 				skinClass="com.ithaca.visu.skins.LinkButtonSkin" 
                 includeInLayout="false"/>
 	</s:VGroup>
+		</s:Group>
 </s:Skin>
