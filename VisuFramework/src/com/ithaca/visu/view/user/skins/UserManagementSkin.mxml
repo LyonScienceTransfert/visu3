@@ -116,14 +116,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:layout>
 		
 		<s:Group top="0" width="25%" height="100%">
-			<s:Panel top="0"
+			<s:Panel height="100%"
 				 width="100%"
 				  skinClass="com.ithaca.visu.skins.FixedPanel">	
 				<s:title>{fxgt.gettext("Afficher...")}</s:title>
 				<users:UserFilters 
 					width="100%"
+					height="100%"
 					id="filter"
-					skinClass="com.ithaca.visu.controls.users.skins.UserFilterSkin" />
+					skinClass="com.ithaca.visu.controls.users.skins.UserFilterSkin"/>
 			</s:Panel>
 		</s:Group>
 		
@@ -160,7 +161,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		
 		<s:Group width="50%" height="100%">
 			<s:Panel top="0" 
-					width="100%" height="80%"
+					width="100%" height="100%"
 					skinClass="com.ithaca.visu.skins.FixedPanel">	
                 <s:title>{fxgt.gettext("Profil") + "(" +userDetail.user.firstname + ")"}</s:title>
 				<s:HGroup right="5" top="-25">
@@ -183,9 +184,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 									   skinClass="com.ithaca.visu.controls.users.skins.UserDetailSkin" />
 									   
 			</s:Panel>
-					
-			<s:List bottom="0" width="100%" height="20%" />
-					
 		</s:Group>
 	</s:Group> 
 </s:Skin>
