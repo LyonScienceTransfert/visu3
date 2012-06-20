@@ -77,7 +77,8 @@ package com.ithaca.visu.ui.utils
 		static private var marqueurFondBlanc:Class;
         
 		[Bindable]
-		[Embed("images/marqueurBlanc-bas-20px.png")]
+		//[Embed("images/marqueurBlanc-bas-20px.png")]
+		[Embed("images/Salon/pin_add.png")]
 		static private var markerIcon:Class;
 
         [Bindable]
