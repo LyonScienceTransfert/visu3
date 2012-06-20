@@ -447,11 +447,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				if(this.currentState == "normal")
 				{
 					this.currentState = "advanced";
-					buttonViewAdvanced.icon = IconEnum.getIconByName('ico_view_bilan_less')
+					buttonViewAdvanced.setStyle("icon", IconEnum.getIconByName('ico_view_bilan_less'));
 				}else
 				{
 					this.currentState = "normal";
-					buttonViewAdvanced.icon = IconEnum.getIconByName('ico_view_bilan_more')
+					buttonViewAdvanced.setStyle("icon", IconEnum.getIconByName('ico_view_bilan_more'));
 				}
 			} 
 			
