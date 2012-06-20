@@ -135,7 +135,7 @@ package com.ithaca.visu.controls.login
 			}
 			else if (instance == loginLabel )
 			{
-                loginLabel.text = "login";
+                loginLabel.text = "Login"+":";
 			}
 			else if (instance == passField)
 			{
@@ -146,7 +146,7 @@ package com.ithaca.visu.controls.login
 			}
 			else if (instance == passLabel)
 			{
-                passLabel.text = "password";
+                passLabel.text = "Password"+":";
 			}
 			else if (instance == submit)
 			{
