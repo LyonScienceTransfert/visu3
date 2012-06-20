@@ -165,7 +165,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					 top="20"
 					 x="20" y="20" fontSize="24"
 					 paddingTop="20" paddingLeft="10"
-					/>
+					 includeIn="authentified"/>
 			<s:HGroup width="100%" horizontalAlign="center"  includeIn="authentified">
 				<s:HGroup right="0" height="48"
 						  gap="5" 
