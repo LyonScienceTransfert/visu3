@@ -176,9 +176,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					<s:Button id="buttonUserModule" label="Utilisateurs" skinClass="com.ithaca.visu.skins.MenuButton.Users" includeInLayout="false" visible="false"/>
 					<s:Button id="buttonSessionModule" label="Séances" skinClass="com.ithaca.visu.skins.MenuButton.Seance" includeInLayout="false" visible="false"/>
 					<s:Button id="buttonProfilModule" label="Profil" skinClass="com.ithaca.visu.skins.MenuButton.Profil"/>
-					<s:Button id="buttonBilanModule" label="Bilans" skinClass="com.ithaca.visu.skins.MenuButton.Bilan"/>
 					<s:Button id="buttonTutoratModule" label="Salon synchrone" skinClass="com.ithaca.visu.skins.MenuButton.SalonSync" enabled="false"/>
 					<s:Button id="buttonRetrospectionModule" label="Salon de retrospection" skinClass="com.ithaca.visu.skins.MenuButton.SalonRetro" enabled="false"/>
+					<s:Button id="buttonBilanModule" label="Bilans" skinClass="com.ithaca.visu.skins.MenuButton.Bilan"/>
 				</s:HGroup>
 			</s:HGroup>
 			
