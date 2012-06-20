@@ -384,6 +384,16 @@ package com.ithaca.visu.ui.utils
 		static private var ico_stop:Class;	
 		[Embed("images/Salon/ico_cancel.png")]
 		static private var ico_cancel:Class;
+		[Embed("images/Salon/ico_activity_start.png")]
+		static private var ico_activity_start:Class;
+		[Embed("images/Salon/ico_session_end.png")]
+		static private var ico_session_end:Class;
+		[Embed("images/Salon/ico_session_start.png")]
+		static private var ico_session_start:Class;
+		[Embed("images/Salon/pin_positive.png")]
+		static private var pin_positive:Class;
+		[Embed("images/Salon/pin_negative.png")]
+		static private var pin_negative:Class;
 		
 		[Embed("images/Components/right.png")]
 		static private var ico_right:Class;
@@ -702,6 +712,21 @@ package com.ithaca.visu.ui.utils
 					break;
 				case "ico_down" : 
 					icon = ico_down;
+					break;				
+				case "ico_activity_start" : 
+					icon = ico_activity_start;
+					break;				
+				case "ico_session_start" : 
+					icon = ico_session_start;
+					break;				
+				case "ico_session_end" : 
+					icon = ico_session_end;
+					break;				
+				case "pin_positive" : 
+					icon = pin_positive;
+					break;				
+				case "pin_negative" : 
+					icon = pin_negative;
 					break;				
 				default :
 					break;				
