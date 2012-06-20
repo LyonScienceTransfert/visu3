@@ -49,8 +49,17 @@
 							
 							<!-- group of buttons -->
 							<s:HGroup left="2" right="2" gap="2" verticalCenter="0">
-								<s:Button skinClass="skins.Components.Button" height="22" width="100%" label="Clôturer la séance" enabled="false" />
-								<s:Button skinClass="skins.Components.Button" height="22" width="100%" label="Démarrer la séance" />
+								<s:Button width="100%" height="22" label="Clôturer la séance"
+										  enabled="false" icon="images/Salon/ico_session_end.png"
+										  skinClass="skins.Components.Button"/>
+								<s:Button width="100%" height="22" label="Démarrer la séance"
+										  icon="images/Salon/ico_session_start.png"
+										  skinClass="skins.Components.Button"/>
+								<!--
+								<s:Button width="100%" height="22" label="Suspendre la séance"
+										  icon="images/Salon/ico_session_pause.png"
+										  skinClass="skins.Components.Button"/>
+								-->
 							</s:HGroup>
 						</s:Group>
 						
@@ -113,6 +122,21 @@
 																 verticalAlign="middle"/>
 													</s:Group>
 												</s:HGroup>
+												
+												
+												<!-- Activity in progress -->
+												<s:Group right="5" top="3" height="13" minWidth="50">
+													<s:Rect width="100%" height="100%" radiusX="5">
+														<s:fill>
+															<s:SolidColor color="#bbbbbb" />
+														</s:fill>
+													</s:Rect>
+													<s:Label left="3" right="3" top="2"
+															 bottom="2" color="#373737"
+															 fontSize="10" text="En cours"
+															 textAlign="center"
+															 verticalAlign="middle"/>
+												</s:Group>
 											</s:Group>
 											<s:VGroup left="3" right="3" top="20" width="100%"
 													  gap="3">
@@ -284,6 +308,11 @@
 															 verticalAlign="middle"/>
 												</s:Group>
 											</s:HGroup>
+											<!-- Start this Activity -->
+											<s:Button right="5" top="0" height="18"
+													  label="Démarrer"
+													  icon="images/Salon/ico_activity_start.png"
+													  skinClass="skins.Components.Button"/>
 										</s:Group>
 									</s:Group>
 									
@@ -309,6 +338,11 @@
 															 verticalAlign="middle"/>
 												</s:Group>
 											</s:HGroup>
+											<!-- Start this Activity -->
+											<s:Button right="5" top="0" height="18"
+													  label="Démarrer"
+													  icon="images/Salon/ico_activity_start.png"
+													  skinClass="skins.Components.Button"/>
 										</s:Group>
 									</s:Group>
 									
