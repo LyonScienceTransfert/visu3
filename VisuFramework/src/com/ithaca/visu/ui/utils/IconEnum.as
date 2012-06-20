@@ -370,6 +370,10 @@ package com.ithaca.visu.ui.utils
 		static private var ico_view_bilan:Class;
 		[Embed("images/Bilan/ico_edit_bilan.png")]
 		static private var ico_edit_bilan:Class;
+		[Embed("images/Bilan/ico_view_bilan_more.png")]
+		static private var ico_view_bilan_more:Class;
+		[Embed("images/Bilan/ico_view_bilan_less.png")]
+		static private var ico_view_bilan_less:Class;
 		
 		[Embed("images/Salon/audio_off.png")]
 		static private var audio_off:Class;
@@ -728,6 +732,12 @@ package com.ithaca.visu.ui.utils
 					break;				
 				case "pin_negative" : 
 					icon = pin_negative;
+					break;				
+				case "ico_view_bilan_less" : 
+					icon = ico_view_bilan_less;
+					break;				
+				case "ico_view_bilan_more" : 
+					icon = ico_view_bilan_more;
 					break;				
 				default :
 					break;				
