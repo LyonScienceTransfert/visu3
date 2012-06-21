@@ -336,7 +336,11 @@ or by setting the following environment variable:
 				<include-file name="images/Home/role_tuteur.png" path="${framework.images}/Home/role_tuteur.png"/>
 				<include-file name="images/Home/role_responsable.png" path="${framework.images}/Home/role_responsable.png"/>
 				<include-file name="images/Home/role_admin.png" path="${framework.images}/Home/role_admin.png"/>
+				<include-file name="images/Home/ico_goto.png" path="${framework.images}/Home/ico_goto.png"/>
+				<include-file name="images/Home/ico_edit.png" path="${framework.images}/Home/ico_edit.png"/>
+				<include-file name="images/Home/ico_delete.png" path="${framework.images}/Home/ico_delete.png"/>
 				
+						
 				<include-file name="images/Salon/ico_05.png" path="${framework.images}/Salon/ico_05.png"/>
 				<include-file name="images/Salon/ico_screen.png" path="${framework.images}/Salon/ico_screen.png"/>
 				<include-file name="images/Salon/ico_micro.png" path="${framework.images}/Salon/ico_micro.png"/>

@@ -337,6 +337,12 @@ package com.ithaca.visu.ui.utils
 		static private var role_responsable:Class;
 		[Embed("images/Home/role_admin.png")]
 		static private var role_admin:Class;
+		[Embed("images/Home/ico_goto.png")]
+		static private var ico_goto_Home:Class;
+		[Embed("images/Home/ico_edit.png")]
+		static private var ico_edit_Home:Class;
+		[Embed("images/Home/ico_delete.png")]
+		static private var ico_delete_Home:Class;
 
 		[Embed("images/Utillisateurs/ico_add.png")]
 		static private var ico_add:Class;
@@ -406,8 +412,10 @@ package com.ithaca.visu.ui.utils
 		static private var ico_left:Class;
 		[Embed("images/Components/down.png")]
 		static private var ico_down:Class;
-		
-	
+
+		[Embed("images/Page/topbar_wave2.png")]
+		static private var topbar_wave2:Class;
+
 		public static function getPathByName(code:String):String
 		{
 			var path:String = "";
@@ -738,7 +746,19 @@ package com.ithaca.visu.ui.utils
 					break;				
 				case "ico_view_bilan_more" : 
 					icon = ico_view_bilan_more;
+					break;		
+				case "ico_goto_Home" : 
+					icon = ico_goto_Home;
 					break;				
+				case "ico_edit_Home" : 
+					icon = ico_edit_Home;
+					break;				
+				case "ico_delete_Home" : 
+					icon = ico_delete_Home;
+					break;						
+				case "topbar_wave2" : 
+					icon = topbar_wave2;
+					break;	
 				default :
 					break;				
 			}
