@@ -77,6 +77,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<![CDATA[
 			import com.ithaca.visu.skins.MenuButton.Home;
 			import com.ithaca.visu.skins.Page.ChatButton;
+			import com.ithaca.visu.ui.utils.IconEnum;
 			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
@@ -184,7 +185,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			<s:Group height="58"  includeIn="authentified">
 				<s:Group right="0" height="35">
-					<s:Image left="-1" top="-1" source="images/Page/topbar_wave2.png"/>
+					<s:Image left="-1" top="-1" source="{IconEnum.getIconByName('topbar_wave2')}"/>
 					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
 						<s:fill>
 							<s:LinearGradient rotation="90">
