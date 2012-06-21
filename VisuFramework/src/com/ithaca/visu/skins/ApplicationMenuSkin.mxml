@@ -184,7 +184,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			<s:Group height="58"  includeIn="authentified">
 				<s:Group right="0" height="35">
-					<s:Image left="-1" top="-1" source="images/Page/topbar_wave.png"/>
+					<s:Image left="-1" top="-1" source="images/Page/topbar_wave2.png"/>
 					<s:Rect left="15" right="0" top="0" height="100%" width="100%">
 						<s:fill>
 							<s:LinearGradient rotation="90">
