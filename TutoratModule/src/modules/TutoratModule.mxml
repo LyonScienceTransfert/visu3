@@ -143,7 +143,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
-			import mx.controls.Image;
 			import mx.core.DragSource;
 			import mx.core.IUIComponent;
 			import mx.events.CloseEvent;
@@ -2669,12 +2668,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <!-- CHAT -->
 				<s:Panel   height="100%" width="30%" minWidth="300" skinClass="com.ithaca.visu.skins.FixedPanel">
 					<s:title>Chat</s:title>
-					<s:Rect left="1" top="1" bottom="28" height="100%" width="37">
+					<s:Rect left="1" top="1" bottom="1" height="100%" width="37">
 						<s:fill>
 							<s:SolidColor color="0xe4e4e4" />
 						</s:fill>
 					</s:Rect>
-					<s:VGroup height="100%" width="100%" paddingBottom="3">
+					<s:VGroup height="100%" width="100%" paddingBottom="1">
 						<s:Group  width="100%"  height="100%">
 							<s:Scroller left="1" right="1" top="1" bottom="1" id="scrollerPanelChatSession">    
 								<s:Group id="panelChatSession"   width="100%"  top="0">
@@ -2684,14 +2683,29 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								</s:Group>
 							</s:Scroller> 
 						</s:Group>
-						<s:HGroup width="100%" paddingLeft="5" paddingRight="5">
-							<s:TextArea    id="textChatMessage" keyUp="onSendMessage(event)" enabled="true" height="22" width="100%"
-											 styleName="corexpert"/>				
-							<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" width="180" 
-									   styleName="corexpert">
-								<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
-							</mx:Button>
-						</s:HGroup>	
+						<!-- Answer box -->
+						<s:VGroup width="100%" paddingLeft="0" paddingRight="1" gap="1">
+							<s:HGroup width="100%"  paddingLeft="7" gap="10" paddingRight="1">
+								<s:Group left="7" width="23" height="23">
+									<s:Rect height="23" width="23">
+										<s:stroke>
+											<s:SolidColorStroke weight="1" color="0xa2a2a2" />
+										</s:stroke>
+									</s:Rect>
+									<s:Image top="1" bottom="1" left="1" right="1" source="{Model.getInstance().getLoggedUser().avatar}"/>
+								</s:Group>
+								<s:HGroup width="100%">
+									<s:TextArea id="textChatMessage" keyUp="onSendMessage(event)" enabled="true" height="22" width="100%"
+													 styleName="corexpert"/>				
+								</s:HGroup>
+							</s:HGroup>
+							<s:HGroup width="100%"  paddingLeft="40" paddingRight="1">
+								<mx:Button icon="{IconEnum.getIconByName('chat')}" click="onSendMessage(event)" width="100%" 
+										   styleName="corexpert">
+									<mx:label>{fxgt.gettext("Envoyer le message")}</mx:label>
+								</mx:Button>
+							</s:HGroup>
+						</s:VGroup>	
 					</s:VGroup>
 				</s:Panel>
 			</mx:HDividedBox>
