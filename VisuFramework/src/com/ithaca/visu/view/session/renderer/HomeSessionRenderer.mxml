@@ -85,12 +85,15 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.model.Model;
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.skins.Components.Button;
 			import com.ithaca.visu.ui.utils.IconEnum;
 			import com.ithaca.visu.ui.utils.RoleEnum;
 			import com.ithaca.visu.ui.utils.SessionStatusEnum;
 			import com.lyon2.controls.utils.TimeUtils;
+			
 			import gnu.as3.gettext.FxGettext;
 			import gnu.as3.gettext._FxGettext;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.core.INavigatorContent;
@@ -98,6 +101,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import mx.events.FlexEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
+			
 			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
@@ -296,37 +300,43 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						
 					</s:DataGroup>
 					
+					<s:HGroup horizontalAlign="center" width="100%">
+						<s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
+					</s:HGroup>
+					
 					<s:HGroup id="actionGroup" includeIn="selected" width="100%">
 						<s:HGroup width="100%" horizontalAlign="left" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-							
-							<mx:LinkButton
-								id="cancelButton"
-								label="{fxgt.gettext('Supprimer')}"
-								toolTip="{fxgt.gettext('Supprimer définitivement cette séance')}"
-								click="doCancel(event)"
-								visible="{canCancelSession(data.statusSession)}"
-								includeInLayout="{canCancelSession(data.statusSession)}"
-								rollOverColor="0xFFCC5E"/>
-							
-							<mx:LinkButton
-								id="editButton"
-								label="{fxgt.gettext('Modifier')}"
-								click="doEdit(event)"
-								toolTip="{fxgt.gettext('Modifier la date, les participants ou le plan de séance')}"
-								visible="{canModifySession(data.statusSession)}"
-								includeInLayout="{canModifySession(data.statusSession)}"
-								rollOverColor="0xFFCC5E"/>
+							<s:Button height="18" fontSize="11"
+									  icon="{IconEnum.getIconByName('ico_delete_Home')}"
+									  skinClass="com.ithaca.visu.skins.Components.Button"
+									  id="cancelButton"
+									  label="{fxgt.gettext('Supprimer')}"
+									  toolTip="{fxgt.gettext('Supprimer définitivement cette séance')}"
+									  click="doCancel(event)"
+									  visible="{canCancelSession(data.statusSession)}"
+									  includeInLayout="{canCancelSession(data.statusSession)}"
+									  />
+							<s:Button height="18" fontSize="11"
+									  icon="{IconEnum.getIconByName('ico_edit_Home')}"
+									  skinClass="com.ithaca.visu.skins.Components.Button"
+									  id="editButton"
+									  label="{fxgt.gettext('Modifier')}"
+									  click="doEdit(event)"
+									  toolTip="{fxgt.gettext('Modifier la date, les participants ou le plan de séance')}"
+									  visible="{canModifySession(data.statusSession)}"
+									  includeInLayout="{canModifySession(data.statusSession)}"
+									  />
 						</s:HGroup>
 						
 						<s:HGroup width="100%" horizontalAlign="right" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-							<mx:LinkButton
-								id="connectButton"
-								label="{fxgt.gettext('Rejoindre')}"
-								click="doJoinSession(event)"
-								toolTip="{fxgt.gettext('Entrer dans le salon synchrone')}"
-								visible="{canJoinSession(data.statusSession)}"
-								includeInLayout="{canJoinSession(data.statusSession)}"
-								rollOverColor="0xFFCC5E"/>
+							<s:Button height="18" fontSize="11" icon="{IconEnum.getIconByName('ico_goto_Home')}"
+									  skinClass="com.ithaca.visu.skins.Components.Button"
+									  id="connectButton"
+									  label="{fxgt.gettext('Rejoindre')}"
+									  click="doJoinSession(event)"
+									  toolTip="{fxgt.gettext('Entrer dans le salon synchrone')}"
+									  visible="{canJoinSession(data.statusSession)}"
+									  includeInLayout="{canJoinSession(data.statusSession)}"/>
 							
 							<mx:LinkButton
 								id="retrospectionButton"
@@ -335,7 +345,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								toolTip="{fxgt.gettext('Entrer dans le salon de rétrospection')}"
 								visible="{canJoinRetrospection(data.statusSession)}"
 								includeInLayout="{canJoinRetrospection(data.statusSession)}"
-								rollOverColor="0xFFCC5E"/>
+								color="#000000" focusColor="#FFFFFFFF"
+								fontSize="11" fontWeight="bold" paddingBottom="3"
+								paddingLeft="0" paddingRight="0" paddingTop="0"
+								rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+								textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
+								height="15" textAlign="center"/>
 							
 							<mx:LinkButton
 								id="bilanButton"
@@ -344,11 +359,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								toolTip="{fxgt.gettext('Voir les bilans existants pour cette séance')}"
 								visible="{canJoinBilan(data.statusSession)}"
 								includeInLayout="{canJoinBilan(data.statusSession)}"
-								rollOverColor="0xFFCC5E"/>
+								color="#000000" focusColor="#FFFFFFFF"
+								fontSize="11" fontWeight="bold" paddingBottom="3"
+								paddingLeft="0" paddingRight="0" paddingTop="0"
+								rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+								textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
+								height="15" textAlign="center"/>
 						</s:HGroup>
-					</s:HGroup>
-					<s:HGroup horizontalAlign="center" width="100%">
-						<s:Label id="subDisplay" includeIn="selected" text="{VisuUtils.getSessionStatusInfoMessage(data.statusSession,data.date_start_recording)}"/>
 					</s:HGroup>
 				</s:VGroup>
 			</s:Group>
