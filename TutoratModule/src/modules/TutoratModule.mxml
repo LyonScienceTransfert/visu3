@@ -2618,7 +2618,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 											clickButtonChat="visio_clickButtonChatHandler(event)"
                                             clickButtonZoom="panelbutton1_clickButtonModeZoomHandler(event)"/>
                         <s:HGroup width="100%" id="groupSetMarkerConst" horizontalAlign="center" verticalAlign="middle" gap="20">
-                            <s:Button id="posi"
+                           <!-- <s:Button id="posi"
                                 click="groupSetMarkerConst_clickHandler(event)" chromeColor="#92DD56"
 								 skinClass="com.ithaca.visu.skins.Tutorat.ButtonPositive"
 								icon="{IconEnum.getIconByName('pin_positive')}">
@@ -2631,27 +2631,31 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								icon="{IconEnum.getIconByName('pin_negative')}">
                                 <s:label>{fxgt.gettext("négatif")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : négatif")}</s:toolTip>
-                            </s:Button>
-                           <!-- <s:Button id="comp"
-                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DB6E6E">
+                            </s:Button>-->
+                            <s:Button id="comp"
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DB6E6E"
+								icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}">
                                 <s:label>{fxgt.gettext("compréhension")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : compréhension")}</s:toolTip>
                             </s:Button>
                             <s:Button id="pron"
-                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DFE549">
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#DFE549"
+								icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}">
                                 <s:label>{fxgt.gettext("prononciation")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : prononciation")}</s:toolTip>
                             </s:Button>
                             <s:Button id="sens"
-                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#92DD56">
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#92DD56"
+								icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}">
                                 <s:label>{fxgt.gettext("sens")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : sens")}</s:toolTip>
                             </s:Button>
                             <s:Button id="inte"
-                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#55B3DE">
+                                click="groupSetMarkerConst_clickHandler(event)" chromeColor="#55B3DE"
+								icon="{IconEnum.getIconByTypeObsel(TraceModel.SET_MARKER)}">
                                 <s:label>{fxgt.gettext("interaction")}</s:label>
                                 <s:toolTip>{fxgt.gettext("marqueur prédéfini : interaction")}</s:toolTip>
-                            </s:Button>-->
+                            </s:Button>
                         </s:HGroup>
                         <controls1:SendMarkerAnimation id="sendMarkerAnimation" width="100%" skinClass="com.ithaca.visu.controls.skins.SendMarkerAnimationSkin"
                              sendMarker="sendMarkerAnimation_sendMarkerHandler(event)"
