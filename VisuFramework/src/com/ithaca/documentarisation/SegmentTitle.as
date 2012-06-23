@@ -273,7 +273,7 @@ public class SegmentTitle extends SkinnableComponent
             iconSegment.source = IconEnum.getIconByName(iconName);
             iconSegment.toolTip = toolTipText;
             
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
                 iconSegment.includeInLayout = iconSegment.visible = false;
             }
