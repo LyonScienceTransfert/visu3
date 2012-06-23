@@ -394,10 +394,6 @@ public class SegmentVideoAdvanced extends SkinnableComponent
             {
                 iconSegment.toolTip = fxgt.gettext("Bloc vidéo");
             }
-            if(_bilanModule == null)
-            {
-                iconSegment.includeInLayout = iconSegment.visible = false;
-            }
         }
 		
 		if(instance == startSpinner)
@@ -448,14 +444,14 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 		}
         if(instance == vgroupIconBloc)
         {
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
-                vgroupIconBloc.paddingLeft = 10;
+                vgroupIconBloc.paddingLeft = 0;
             }
         }
         if(instance == lineBottom)
         {
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
                 lineBottom.includeInLayout = lineBottom.visible = false;
             }
