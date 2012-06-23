@@ -113,9 +113,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<s:HGroup width="100%"  id="groupBloc" gap="1" verticalAlign="top"  paddingTop="3" paddingBottom="2">
 			<!-- ICON SEGMENT -->
 			<mx:Image  id="iconSegment" buttonMode="true" useHandCursor="true" includeIn="edit, editSelected" height="16"/>
+			<s:Spacer width="3"/>
 			<!-- TEXTAREA -->
 			<s:Group  width="100%">
-				<s:RichEditableText id="textSegment" width="300" 
+				<s:RichEditableText id="textSegment" width="295"
 					backgroundColor.edit="#FFFFFF" verticalAlign="middle" paddingTop="3"
 	                editable.normal="false" selectable="true" selectionHighlighting="whenActive"
 	  				styleName="corexpert" text="zz" horizontalCenter="0"/>		
