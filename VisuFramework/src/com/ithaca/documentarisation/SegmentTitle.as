@@ -235,14 +235,14 @@ public class SegmentTitle extends SkinnableComponent
 		}
 		if(instance == groupBloc)
 		{
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
-                groupBloc.paddingLeft = 10;           
+                groupBloc.paddingLeft = 0;           
             }
         }
 		if(instance == lineBottom)
 		{
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
                 lineBottom.includeInLayout = lineBottom.visible = false;
             }
