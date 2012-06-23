@@ -65,18 +65,30 @@ package com.ithaca.visu.ui.utils
 	public class ColorEnum
 	{
 		// color for user was out the session
-		static public var VOID : String = "0xebcbd2";
-		static public var YELLOW : String = "0xefed44";
-		static public var BLUE : String = "0xcedbef";
-		static public var RED : String = "0xf4b1b1";
-		static public var GREEN : String = "0x8df82f";
-		static public var VIOLET : String = "0xef96f5";
-		static public var BLUEMARIN : String = "0xbdf7f6";
-		static public var VOID1 : String = "0xcff795";
-		static public var VOID2 : String = "0xf5cb66";
-		static public var VOID3 : String = "0x6f7bea";
-		static public var VOID4 : String = "0xd879f0";
-		static public var VOID5 : String = "0xebcbd2";
+		//static public var VOID : String = "0xebcbd2";
+		static public var VOID : String = "0xbef294";
+		//tatic public var YELLOW : String = "0xefed44";
+		static public var YELLOW : String = "0xc8ff9b";
+		static public var BLUE : String = "0xb6e7f2";
+		//static public var BLUE : String = "0xcedbef";
+		static public var RED : String = "0xbff4ff";
+		//static public var RED : String = "0xf4b1b1";
+		static public var GREEN : String = "0xf2c9f2";
+		//static public var GREEN : String = "0x8df82f";
+		static public var VIOLET : String = "0xffd4fe";
+		//static public var VIOLET : String = "0xef96f5";
+		static public var BLUEMARIN : String = "0xd1c5b8";
+		//static public var BLUEMARIN : String = "0xbdf7f6";
+		static public var VOID1 : String = "0xe1d4e7";
+		//static public var VOID1 : String = "0xcff795";
+		static public var VOID2 : String = "0xe8a7a7";
+		//static public var VOID2 : String = "0xf5cb66";
+		static public var VOID3 : String = "0xf5b1b1";
+		//static public var VOID3 : String = "0x6f7bea";
+		static public var VOID4 : String = "0xbfbdf0";
+		//static public var VOID4 : String = "0xd879f0";
+		static public var VOID5 : String = "0xc9c7fd";
+		//static public var VOID5 : String = "0xebcbd2";
 		
 		public static function getColorByCode(code:String):String
 		{
