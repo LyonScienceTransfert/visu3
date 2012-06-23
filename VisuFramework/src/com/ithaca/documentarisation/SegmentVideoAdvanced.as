@@ -230,8 +230,8 @@ public class SegmentVideoAdvanced extends SkinnableComponent
         // set change language listener
         InternationalisationEventDispatcherFactory.getEventDispatcher().addEventListener(InternationalisationEvent.CHANGE_LANGUAGE, onChangeLanguage);
         // set bilanModule 
-        //_bilanModule = Model.getInstance().getCurrentBilanModule();
-        _bilanModule = new Object();
+        _bilanModule = Model.getInstance().getCurrentBilanModule();
+        //_bilanModule = new Object();
     }
 	//_____________________________________________________________________
 	//
@@ -371,6 +371,10 @@ public class SegmentVideoAdvanced extends SkinnableComponent
 			{
 				richEditableText.addEventListener(FocusEvent.FOCUS_IN, onFocusInRichEditableText);
 				richEditableText.addEventListener(FocusEvent.FOCUS_OUT, onFocusOutRichEditableText);
+			}
+			if(_bilanModule)
+			{
+				richEditableText.width = 370;
 			}
 		}
         if (instance == iconSegment)
