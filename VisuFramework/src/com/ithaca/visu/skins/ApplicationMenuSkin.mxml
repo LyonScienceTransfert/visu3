@@ -221,7 +221,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						<s:Label text="Langue:" color="#FFFFFF" fontSize="10"/>
 						<s:DropDownList width="90" selectedIndex="0"
 										skinClass="com.ithaca.visu.skins.Page.DropDownLanguage"
-										 styleName="corexpert">
+										 styleName="corexpert"
+										 enabled="false">
 							<s:dataProvider>
 								<mx:ArrayCollection>
 									<fx:String>Français</fx:String>
