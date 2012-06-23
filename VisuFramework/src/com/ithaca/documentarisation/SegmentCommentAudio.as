@@ -391,22 +391,17 @@ public class SegmentCommentAudio extends SkinnableComponent
             {
                 iconSegment.toolTip = fxgt.gettext("Bloc audio");
             }
-            
-            if(_bilanModule == null)
-            {
-                iconSegment.includeInLayout = iconSegment.visible = false;
-            }
         }
         if(instance == groupAudioRecorder)
         {
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
-                groupAudioRecorder.paddingLeft = 10;      
+                groupAudioRecorder.paddingLeft = 0;      
             }
         }
         if(instance == lineBottom)
         {
-            if(_bilanModule == null)
+            if(_bilanModule)
             {
                 lineBottom.includeInLayout = lineBottom.visible = false;
             }
