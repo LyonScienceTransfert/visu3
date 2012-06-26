@@ -75,7 +75,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						xmlns:ithaca="com.ithaca.components.*"
 						creationComplete="initBilanModule(event)"
 						currentStateChange="visumodulebase1_currentStateChangeHandler(event)"
-						xmlns:components="com.ithaca.utils.components.*"
+						xmlns:components="com.ithaca.utils.components.*" 
 						top="15" bottom="25" left="5" right="5">
 	<fx:Declarations>
 		<s:ArrayList id="segmentList"/>
@@ -90,7 +90,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.documentarisation.model.RetroDocument;
 			import com.ithaca.events.SelectionEvent;
 			import com.ithaca.utils.ShareUserTitleWindow;
-			import com.ithaca.utils.VisuUtils;
 			import com.ithaca.visu.events.BilanEvent;
 			import com.ithaca.visu.events.InitMapEvent;
 			import com.ithaca.visu.events.PanelButtonEvent;
@@ -487,6 +486,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			}
 			
 			
+
+			protected function panelButtonBilan_clickButtonAdvancedDataGridHandler(event:PanelButtonEvent):void
+			{
+				var bilanData:Array = bilanViewer.bilan.getExportRetroDocument("");
+				var fileReference:FileReference = new FileReference();
+				fileReference.save(bilanData[1], bilanData[0]+".html");
+			}
+
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -520,8 +527,12 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								buttonShareEnabled="false"
 								buttonShareVisible="true"
 								imageInfoVisible="false"
+								buttonAdvancedDataGridEnabled="true"
+								buttonAdvancedDataGridVisible="true"
+								clickButtonAdvancedDataGrid="panelButtonBilan_clickButtonAdvancedDataGridHandler(event)"
 								clickButtonSwitch="panelButtonBilan_clickButtonSwitchHandler(event)"
-								clickButtonShare="panelButtonBilan_clickButtonShareHandler(event)">
+								clickButtonShare="panelButtonBilan_clickButtonShareHandler(event)"
+								>
 			<ithaca:BilanViewer
 				id="bilanViewer"
 				width="100%"
