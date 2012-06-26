@@ -66,13 +66,13 @@ package com.ithaca.documentarisation.model
 	import com.ithaca.visu.model.Session;
 	import com.ithaca.visu.model.vo.RetroDocumentVO;
 	
+	import gnu.as3.gettext.FxGettext;
+	import gnu.as3.gettext._FxGettext;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
-
-    import gnu.as3.gettext.FxGettext;
-    import gnu.as3.gettext._FxGettext;
 
 	public class RetroDocument
 	{
@@ -244,5 +244,53 @@ package com.ithaca.documentarisation.model
 			result = "<?xml version='1.0' encoding='UTF-8'?>" + result;
 			return result;
 		}
+		/**
+		 * Create export bilan in HTML format
+		 */
+		public function getExportRetroDocument(format:String):Array
+		{
+			// TODO check empty block
+			var result:Array = new Array();
+			var headHtml:String = "<html xmlns='http://www.w3.org/1999/xhtml'>" +
+				"<head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" +
+				"<title>" + 
+				this.title + "</title><center><br>";
+			var endHtml:String = "</center></html>";
+			var bodyHtml:String = "<table width='80%' border='1'><CAPTION>"+ "Bilan sur la séance : " + this.session.theme + " de " +this.createur + "</CAPTION><tr><th width='80'> Type de bloc </th><th>Comments</th></tr>";
+			
+			for each(var segment:Segment in listSegment)
+			{
+				var typeBlok:String;
+				var tagBoldBegin:String = "";
+				var tagBoldEnd:String = "";
+				var propAlign:String = "align='left'";
+				switch (segment.typeSource)
+				{
+					case RetroDocumentConst.TITLE_SEGMENT :
+						typeBlok = 'Titre';
+						tagBoldBegin = "<b>";
+						tagBoldEnd = "</b>";
+						propAlign = "align='center'";
+						break;
+					case RetroDocumentConst.TEXT_SEGMENT :
+						typeBlok = 'Text';
+						break;
+					case RetroDocumentConst.VIDEO_SEGMENT :
+						typeBlok = 'Vidéo';
+						break;
+					case RetroDocumentConst.COMMENT_AUDIO_SEGMENT :
+						typeBlok = 'Audio';
+						break;
+				}
+				bodyHtml += "<tr align='center'><td align='center'>"+ typeBlok + "</td><td " + propAlign + " >" + tagBoldBegin + segment.comment + tagBoldEnd + "</td></tr>"
+			}
+			bodyHtml += "</table>";
+			
+			result[1] = headHtml + bodyHtml + endHtml;
+			var nameFileSave:String = "Bilan_de_" +this.createur;
+			result[0] = (nameFileSave);
+			return result;
+		}
+		
 	}
 }
