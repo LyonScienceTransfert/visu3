@@ -415,7 +415,10 @@ package com.ithaca.visu.ui.utils
 
 		[Embed("images/Page/topbar_wave2.png")]
 		static private var topbar_wave2:Class;
-
+		
+		[Embed("images/auto_bilan.png")]
+		static private var auto_bilan:Class;
+		
 		public static function getPathByName(code:String):String
 		{
 			var path:String = "";
@@ -758,6 +761,9 @@ package com.ithaca.visu.ui.utils
 					break;						
 				case "topbar_wave2" : 
 					icon = topbar_wave2;
+					break;	
+				case "auto_bilan" : 
+					icon = auto_bilan;
 					break;	
 				default :
 					break;				
