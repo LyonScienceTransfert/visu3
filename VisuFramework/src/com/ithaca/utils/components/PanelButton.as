@@ -91,6 +91,7 @@ package com.ithaca.utils.components
 	[Event(name="clickButtonSwitch",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonAdvancedDataGrid",type="com.ithaca.visu.events.PanelButtonEvent")]
 	[Event(name="clickButtonNormalDataGrid",type="com.ithaca.visu.events.PanelButtonEvent")]
+	[Event(name="clickButtonAutoBilan",type="com.ithaca.visu.events.PanelButtonEvent")]
 
 	public class PanelButton extends Panel
 	{
@@ -124,6 +125,8 @@ package com.ithaca.utils.components
 		public var buttonAdvancedDataGrid:IconButton;
 		[SkinPart("true")]
 		public var buttonNormalDataGrid:IconButton;
+		[SkinPart("true")]
+		public var buttonAutoBilan:IconButton;
         
 		private var _muteMicro:Boolean;
 		private var _buttonMuteMicroVisible:Boolean;
@@ -150,6 +153,8 @@ package com.ithaca.utils.components
 		private var buttonAdvancedDataGridVisibleChange:Boolean;
 		private var _buttonNormalDataGridVisible:Boolean;
 		private var buttonNormalDataGridVisibleChange:Boolean;
+		private var _buttonAutoBilanVisible:Boolean;
+		private var buttonAutoBilanVisibleChange:Boolean;
 
 		private var _buttonModeZoomEnabled:Boolean;
 		private var buttonModeZoomEnabledChange:Boolean;
@@ -167,6 +172,8 @@ package com.ithaca.utils.components
 		private var buttonAdvancedDataGridEnabledChange:Boolean;
 		private var _buttonNormalDataGridEnabled:Boolean;
 		private var buttonNormalDataGridEnabledChange:Boolean;
+		private var _buttonAutoBilanEnabled:Boolean;
+		private var buttonAutoBilanEnabledChange:Boolean;
 
 		private var _retroDocument:RetroDocument;
 
@@ -361,6 +368,21 @@ package com.ithaca.utils.components
                     buttonNormalDataGrid.addEventListener(MouseEvent.CLICK, onClickButtonNormalDataGrid);
                     buttonNormalDataGrid.icon =  IconEnum.getIconByName('iconVideo_16x16');
                     buttonNormalDataGrid.toolTip = fxgt.gettext("Ajouter bloc vidéo")
+                }
+            }
+            if (instance == buttonAutoBilan)
+            {
+				buttonAutoBilan.enabled = _buttonAutoBilanEnabled;
+                
+                if(!_buttonAutoBilanVisible)
+                {
+					buttonAutoBilan.includeInLayout = false;
+					buttonAutoBilan.visible = false;
+                }else
+                {
+					buttonAutoBilan.addEventListener(MouseEvent.CLICK, onClickButtonAutoBilan);
+					buttonAutoBilan.icon =  IconEnum.getIconByName('auto_bilan');
+					buttonAutoBilan.toolTip = fxgt.gettext("Créate auto bilan")
                 }
             }
 		}
@@ -607,6 +629,27 @@ package com.ithaca.utils.components
 					}
 				}
 			}
+			
+			if(buttonAutoBilanVisibleChange)
+			{
+				buttonAutoBilanVisibleChange = false;
+				if(buttonAutoBilan != null)
+				{
+					if(_buttonAutoBilanVisible)
+					{
+						buttonAutoBilan.includeInLayout = true;
+						buttonAutoBilan.visible = true;
+						buttonAutoBilan.icon =  IconEnum.getIconByName('auto_bilan');
+						buttonAutoBilan.toolTip = fxgt.gettext("Créate auto bilan")
+						buttonAutoBilan.addEventListener(MouseEvent.CLICK, onClickButtonAutoBilan);
+					}else
+					{
+						buttonAutoBilan.includeInLayout = false;
+						buttonAutoBilan.visible = false;
+						buttonAutoBilan.removeEventListener(MouseEvent.CLICK, onClickButtonAutoBilan);
+					}
+				}
+			}
             
 			if(buttonModeMaxEnabledChange)
 			{
@@ -672,6 +715,14 @@ package com.ithaca.utils.components
 				if(buttonNormalDataGrid != null)
 				{
                     buttonNormalDataGrid.enabled = _buttonNormalDataGridEnabled
+				}
+			}
+			if(buttonAutoBilanEnabledChange)
+			{
+				buttonAutoBilanEnabledChange = false;
+				if(buttonAutoBilan != null)
+				{
+                    buttonAutoBilan.enabled = _buttonAutoBilanEnabled
 				}
 			}
 		}
@@ -801,6 +852,16 @@ package com.ithaca.utils.components
 		{
 			return _buttonAdvancedDataGridVisible;
 		}
+		public function set buttonAutoBilanVisible(value:Boolean):void
+		{
+			_buttonAutoBilanVisible = value;
+			buttonAutoBilanVisibleChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonAutoBilanVisible():Boolean
+		{
+			return _buttonAutoBilanVisible;
+		}
 		public function set imageInfoVisible(value:Boolean):void
 		{
 			_imageInfoVisible = value;
@@ -893,6 +954,16 @@ package com.ithaca.utils.components
 		{
 			return _buttonAdvancedDataGridEnabled;
 		}
+		public function set buttonAutoBilanEnabled(value:Boolean):void
+		{
+			_buttonAutoBilanEnabled = value;
+			buttonAutoBilanEnabledChange = true;
+			this.invalidateProperties();
+		}
+		public function get buttonAutoBilanEnabled():Boolean
+		{
+			return _buttonAutoBilanEnabled;
+		}
 
 		public function set retroDocument(value:RetroDocument):void
 		{
@@ -979,6 +1050,11 @@ package com.ithaca.utils.components
 		{
 			var clickButtonNormalDataGrid:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_NORMAL_DATA_GRID);
 			dispatchEvent(clickButtonNormalDataGrid);
+		}
+		private function onClickButtonAutoBilan(event:MouseEvent):void
+		{
+			var clickButtonAutoBilan:PanelButtonEvent = new PanelButtonEvent(PanelButtonEvent.CLICK_BUTTON_AUTO_BILAN);
+			dispatchEvent(clickButtonAutoBilan);
 		}
 
 		private function onCreateToolTipBilanInfo(event:ToolTipEvent):void

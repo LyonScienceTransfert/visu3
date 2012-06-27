@@ -275,6 +275,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     <mx:Spacer width="1"/>
                     
                     <components:IconButton id="buttonDelete" height="22" width="22" buttonMode="true"/>
+                    <components:IconButton id="buttonAutoBilan" height="22" width="22" buttonMode="true"/>
                     <components:IconButton id="buttonAdd" height="22" width="30" buttonMode="true"/>
                     <components:IconButton id="buttonShare" height="22" width="22" buttonMode="true"/>
                     
