@@ -80,65 +80,67 @@ knowledge of the CeCILL-C license and that you accept its terms.
                         currentStateChange="visumodulebase1_currentStateChangeHandler(event)"> 
 	<fx:Script>
 		<![CDATA[ 
-            import com.ithaca.documentarisation.SegmentVideoAdvanced;
-            import com.ithaca.documentarisation.events.RetroDocumentEvent;
-            import com.ithaca.documentarisation.model.RetroDocument;
-            import com.ithaca.timeline.Layout;
-            import com.ithaca.timeline.ObselSkin;
-            import com.ithaca.timeline.SelectorRegexp;
-            import com.ithaca.timeline.Timeline;
-            import com.ithaca.timeline.TraceLine;
-            import com.ithaca.timeline.TraceLineGroup;
-            import com.ithaca.timeline.events.TimelineEvent;
-            import com.ithaca.timeline.skins.TraceLineTitleSkin;
-            import com.ithaca.timelineskins.events.TimelineSkinEvent;
-            import com.ithaca.traces.Obsel;
-            import com.ithaca.traces.Trace;
-            import com.ithaca.traces.TraceManager;
-            import com.ithaca.traces.events.ObselEvent;
-            import com.ithaca.traces.model.RetroTraceModel;
-            import com.ithaca.traces.model.TraceModel;
-            import com.ithaca.traces.model.vo.SGBDObsel;
-            import com.ithaca.utils.EditCommentDialog;
-            import com.ithaca.utils.UtilFunction;
-            import com.ithaca.utils.VisuUtils;
-            import com.ithaca.visu.events.InitMapEvent;
-            import com.ithaca.visu.events.PanelButtonEvent;
-            import com.ithaca.visu.events.SalonRetroEvent;
-            import com.ithaca.visu.events.SessionEvent;
-            import com.ithaca.visu.events.TraceLineEvent;
-            import com.ithaca.visu.events.VisuModuleEvent;
-            import com.ithaca.visu.model.Model;
-            import com.ithaca.visu.model.Session;
-            import com.ithaca.visu.model.User;
-            import com.ithaca.visu.model.vo.RetroDocumentVO;
-            import com.ithaca.visu.traces.TracageEventDispatcherFactory;
-            import com.ithaca.visu.traces.TracageManager;
-            import com.ithaca.visu.traces.events.TracageEvent;
-            import com.ithaca.visu.ui.utils.ConnectionStatus;
-            import com.ithaca.visu.ui.utils.IconEnum;
-            import com.ithaca.visu.ui.utils.RoleEnum;
-            import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
-            import com.ithaca.visu.view.video.model.StreamObsel;
-            
-            import gnu.as3.gettext.FxGettext;
-            import gnu.as3.gettext._FxGettext;
-            
-            import mx.collections.ArrayCollection;
-            import mx.controls.Alert;
-            import mx.controls.Image;
-            import mx.controls.SWFLoader;
-            import mx.controls.dataGridClasses.DataGridColumn;
-            import mx.core.DragSource;
-            import mx.events.CollectionEvent;
-            import mx.events.CollectionEventKind;
-            import mx.events.FlexEvent;
-            import mx.events.IndexChangedEvent;
-            import mx.events.StateChangeEvent;
-            import mx.managers.CursorManager;
-            import mx.managers.DragManager;
-            import mx.managers.PopUpManager;
-            import mx.utils.StringUtil;
+			import com.ithaca.documentarisation.RetroDocumentConst;
+			import com.ithaca.documentarisation.SegmentVideoAdvanced;
+			import com.ithaca.documentarisation.events.RetroDocumentEvent;
+			import com.ithaca.documentarisation.model.RetroDocument;
+			import com.ithaca.documentarisation.model.Segment;
+			import com.ithaca.timeline.Layout;
+			import com.ithaca.timeline.ObselSkin;
+			import com.ithaca.timeline.SelectorRegexp;
+			import com.ithaca.timeline.Timeline;
+			import com.ithaca.timeline.TraceLine;
+			import com.ithaca.timeline.TraceLineGroup;
+			import com.ithaca.timeline.events.TimelineEvent;
+			import com.ithaca.timeline.skins.TraceLineTitleSkin;
+			import com.ithaca.timelineskins.events.TimelineSkinEvent;
+			import com.ithaca.traces.Obsel;
+			import com.ithaca.traces.Trace;
+			import com.ithaca.traces.TraceManager;
+			import com.ithaca.traces.events.ObselEvent;
+			import com.ithaca.traces.model.RetroTraceModel;
+			import com.ithaca.traces.model.TraceModel;
+			import com.ithaca.traces.model.vo.SGBDObsel;
+			import com.ithaca.utils.EditCommentDialog;
+			import com.ithaca.utils.UtilFunction;
+			import com.ithaca.utils.VisuUtils;
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.PanelButtonEvent;
+			import com.ithaca.visu.events.SalonRetroEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.TraceLineEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.vo.RetroDocumentVO;
+			import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+			import com.ithaca.visu.traces.TracageManager;
+			import com.ithaca.visu.traces.events.TracageEvent;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.ui.utils.IconEnum;
+			import com.ithaca.visu.ui.utils.RoleEnum;
+			import com.ithaca.visu.view.video.VisuVisioAdvancedEvent;
+			import com.ithaca.visu.view.video.model.StreamObsel;
+			
+			import gnu.as3.gettext.FxGettext;
+			import gnu.as3.gettext._FxGettext;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Image;
+			import mx.controls.SWFLoader;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.core.DragSource;
+			import mx.events.CollectionEvent;
+			import mx.events.CollectionEventKind;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.CursorManager;
+			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			import mx.utils.StringUtil;
 
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
@@ -954,6 +956,82 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					// set mouse cursor
 					CursorManager.setBusyCursor();
 				}
+			}
+			
+			/**
+			 * Add auto RetroDocument 
+			 */
+			protected function documentarisation_addRetroDocumentAutoHandler(event:RetroDocumentEvent):void
+			{
+				var listSegment:ArrayCollection = new ArrayCollection();
+				// default duration blok video
+				var DEFAULT_DURATION_SEGMENT_VIDEO:Number = 10*1000;
+				for each(var obsel:Obsel in this._listObselMarker)
+				{
+					var segment:Segment = new Segment();
+					segment.order = 3;
+					segment.typeSource = RetroDocumentConst.VIDEO_SEGMENT;
+					// set parent obsel
+					segment.obselRef = obsel;
+					// set text the obsel
+					segment.comment = obsel.props[TraceModel.TEXT];
+					// set duration the block
+					segment.beginTimeVideo = obsel.begin - DEFAULT_DURATION_SEGMENT_VIDEO/2;
+					segment.endTimeVideo = obsel.end + DEFAULT_DURATION_SEGMENT_VIDEO/2;
+					// check start/end block 
+					var session:Session = Model.getInstance().getCurrentSessionRetroModule();
+					var startTimeSession:Number = session.date_start_recording.time;
+					var endTimeSession:Number = startTimeSession + session.duration_session;
+					if(segment.beginTimeVideo < startTimeSession)
+					{
+						segment.beginTimeVideo = startTimeSession 
+					};
+					if(segment.endTimeVideo > endTimeSession)
+					{
+						segment.endTimeVideo = endTimeSession 
+					};
+					
+					
+					// add segment
+					listSegment.addItem(segment);
+				}
+				
+				if(Model.getInstance().getCurrentRetroModule() == this)
+				{
+					newRetroDocumentVO = new RetroDocumentVO();
+					var creatinDateNumber:Number = Model.getInstance().getTimeServeur();
+					newRetroDocumentVO.creationDate = new Date(null,null,null,null,null,null,creatinDateNumber);
+					newRetroDocumentVO.description = fxgt.gettext("Auto bilan");
+					newRetroDocumentVO.documentId = 0;
+					newRetroDocumentVO.lastModified = newRetroDocumentVO.creationDate;
+					var createurUser:User = Model.getInstance().getLoggedUser();
+					newRetroDocumentVO.ownerId = createurUser.id_user;
+					newRetroDocumentVO.sessionId = this.currentSessionId;
+					newRetroDocumentVO.title = StringUtil.substitute(fxgt.gettext('Auto bilan sur la séance "{0}"'),
+						Model.getInstance().getCurrentSessionRetroModule().theme);
+					
+					var nomCreateur:String = createurUser.lastname + " " + createurUser.firstname;
+					var stringXML:String = UtilFunction.createRetroDocumentXML(newRetroDocumentVO.title, newRetroDocumentVO.description,nomCreateur,newRetroDocumentVO.creationDate,newRetroDocumentVO.creationDate)
+					newRetroDocumentVO.xml = stringXML;
+					
+					var retroDocument:RetroDocument = new RetroDocument(newRetroDocumentVO);
+					retroDocument.listSegment = listSegment;
+					var retroDocumentAuto:String = retroDocument.getRetroDocumentXMLtoSTRING();
+					
+					newRetroDocumentVO.xml = retroDocumentAuto;
+					
+					
+					var createRetroDocumentVOEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.CREATE_RETRO_DOCUMENT);
+					createRetroDocumentVOEvent.retroDocumentVO = newRetroDocumentVO;
+					this.dispatchEvent(createRetroDocumentVOEvent);
+					
+					// set mouse cursor
+					CursorManager.setBusyCursor();
+				}
+				
+				
+				
+				
 			}
 			//_____________________________________________________________________
 			//
@@ -2080,7 +2158,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<documentarisation:Documentarisation height="100%" width="335"
 				 id="documentarisation"
 				 dragOwnerObject="{this}"
-				 addRetroDocument="documentarisation_addRetroDocumentHandler(event)">				 
+				 addRetroDocumentEmpty="documentarisation_addRetroDocumentHandler(event)"
+				 addRetroDocumentAuto="documentarisation_addRetroDocumentAutoHandler(event)"
+				 >				 
 			</documentarisation:Documentarisation>
 		</mx:HDividedBox>
 	</mx:VDividedBox>
