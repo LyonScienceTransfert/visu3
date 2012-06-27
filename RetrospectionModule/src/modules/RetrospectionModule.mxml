@@ -215,6 +215,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
             private var _listPlayVideoObsel:ArrayCollection = new ArrayCollection();
             // new retroDocument will add in BD
             private var newRetroDocumentVO:RetroDocumentVO;
+			// trace markers
+			private var _listObselMarker:ArrayCollection;
             
 			protected function visumodulebase1_configureHandler(event:VisuModuleEvent):void
 			{	
@@ -472,65 +474,74 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					//we init the trace object
 					var loader:URLLoader=event.target as URLLoader;
 					// create TimeLine
-                    // FIXME : timeLine == null when came from module bilan
+					// FIXME : timeLine == null when came from module bilan
 					timeLine.layoutXML 		= new XML( loader.data );
 					timeLine.timelineLayout = new Layout( timeLine ); 	
 					
-                    this.setObsels();
-                    timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine );
-                    // add listener added TraceLineTitle on the stage
-                    timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
+					this.setObsels();
+					timeLine.addEventListener( TimelineEvent.GENERATE_NEW_TRACELINE, onAddNewTraceLine );
+					// add listener added TraceLineTitle on the stage
+					timeLine.addEventListener( TimelineEvent.TRACE_LINE_TITLE_ADDED, onAddedTraceLineOnStage, true );
 					
 					var traceComment:Trace = Model.getInstance().getTraceComment();				
 					var tlgComment : TraceLineGroup;
 					tlgComment = timeLine.addTrace( traceComment, 0, "comments");
 					tlgComment.setStyle( "title", fxgt.gettext("Commentaires") );
-                    // logged user 
-                    var loggedUser:User = Model.getInstance().getLoggedUser();
-                    var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
-                    if(listTraceGroup != null)
-                    {											
-                        var nbrTraceGroup:int = listTraceGroup.length;
-                        for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
-                        {												
-                            var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
-                            
-                            // trace of user 
-                            // FIXME: which trace ? synchronous trace ? retrospection activity trace ?
-                            var trace:Trace = traceGroup.userTrace as Trace;
-                            // get user
-                            var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
-                            /// don't show trace if any obsels in the trace
-                            var nbrObsels:Number = trace.obsels.length;
-                            if(nbrObsels > 0)
-                            {
-                                var tlg :TraceLineGroup ;		
-                                tlg = timeLine.addTrace(trace,-1, "user");
-                                var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
-                                
-                                tlg.setStyle("title", lastNameUser );				
-                                tlg.setStyle("bgColor", traceGroup.userColor);
-                                tlg.setStyle("icon", traceGroup.userAvatar );	                                
-                            }
-                            
-                            
-                            // show timeline activity only for responsable and admin
-                            if(RoleEnum.hasAdminRight(loggedUser.role) || RoleEnum.hasResponsableRight(loggedUser.role))
-                            {
-                                // add NavigatorContent for each user presents in session
-                                var navigatorContent:NavigatorContent = new NavigatorContent();
-                                navigatorContent.percentHeight =  navigatorContent.height = 100;
-                                navigatorContent.label =  lastNameUser;
-                                // set id user like name
-                                navigatorContent.name = user.id_user.toString();
-                                // add navigator content
-                                // create timeline activity only if mode = expert
-                                if(Model.getInstance().getModeExpert())
-                                {
-                                    tnTimeline.addElement(navigatorContent);
-                                }
-                            } 
-                        }
+					// logged user 
+					var loggedUser:User = Model.getInstance().getLoggedUser();
+					var listTraceGroup:ArrayCollection = Model.getInstance().getListSynchroRoomObsels()
+					if(listTraceGroup != null)
+					{											
+						var nbrTraceGroup:int = listTraceGroup.length;
+						for(var nTraceGroup:int =0; nTraceGroup < nbrTraceGroup ; nTraceGroup++)
+						{												
+							var traceGroup:Object = listTraceGroup[nTraceGroup] as Object;
+							
+							// trace of user 
+							// FIXME: which trace ? synchronous trace ? retrospection activity trace ?
+							var trace:Trace = traceGroup.userTrace as Trace;
+							// get user
+							var user:User = Model.getInstance().getUserPlateformeByUserId(traceGroup.userId);
+							/// don't show trace if any obsels in the trace
+							var nbrObsels:Number = trace.obsels.length;
+							if(nbrObsels > 0)
+							{
+								var tlg :TraceLineGroup ;		
+								tlg = timeLine.addTrace(trace,-1, "user");
+								var lastNameUser:String =  VisuUtils.getUserLabelLastName(user,true);
+								
+								tlg.setStyle("title", lastNameUser );				
+								tlg.setStyle("bgColor", traceGroup.userColor);
+								tlg.setStyle("icon", traceGroup.userAvatar );	                                
+							}
+							
+							//  set collection the markers
+							_listObselMarker = new ArrayCollection();
+							for each (var obsel:Obsel in trace.obsels)
+							{
+								if (obsel.type ==  TraceModel.RECEIVE_MARKER)
+								{
+									_listObselMarker.addItem(obsel);
+								}
+							}
+							
+							// show timeline activity only for responsable and admin
+							if(RoleEnum.hasAdminRight(loggedUser.role) || RoleEnum.hasResponsableRight(loggedUser.role))
+							{
+								// add NavigatorContent for each user presents in session
+								var navigatorContent:NavigatorContent = new NavigatorContent();
+								navigatorContent.percentHeight =  navigatorContent.height = 100;
+								navigatorContent.label =  lastNameUser;
+								// set id user like name
+								navigatorContent.name = user.id_user.toString();
+								// add navigator content
+								// create timeline activity only if mode = expert
+								if(Model.getInstance().getModeExpert())
+								{
+									tnTimeline.addElement(navigatorContent);
+								}
+							} 
+						}
 					}
 					
 					var startRecordingSession:Number = this.currentSessionDateRecording.time;
