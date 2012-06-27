@@ -114,7 +114,7 @@ package com.ithaca.documentarisation.model
         // obsel was DND for create new bloc
         private var _obselRef:Obsel = null;
 
-		public function Segment(parentRetroDocument:RetroDocument)
+		public function Segment(parentRetroDocument:RetroDocument=null)
 		{
             // initialisation gettext
             fxgt = FxGettext;
