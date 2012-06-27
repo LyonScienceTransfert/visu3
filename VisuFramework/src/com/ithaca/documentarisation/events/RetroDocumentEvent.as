@@ -99,7 +99,8 @@ package  com.ithaca.documentarisation.events
 		static public const STOP_RETRO_SEGMENT : String = 'stopRetroSegment';
 		static public const CLICK_BUTTON_SWITCH : String = 'clickButtonSwitch';
 		static public const UPDATE_ADDED_RETRO_DOCUMENT : String = 'updateAddedRetroDocument';
-		static public const ADD_RETRO_DOCUMENT : String = 'addRetroDocument';
+		static public const ADD_RETRO_DOCUMENT_EMPTY : String = 'addRetroDocumentEmpty';
+		static public const ADD_RETRO_DOCUMENT_AUTO : String = 'addRetroDocumentAuto';
 		static public const GO_BILAN_MODULE_FROM_RETRO : String = 'goBilanModuleFromRetro';
 		static public const GO_RETRO_MODULE_FROM_BILAN : String = 'goRetroModuleFromBilan';
 		static public const GO_RETRO_MODULE_FROM_SESSION : String = 'goRetroModuleFromSession';

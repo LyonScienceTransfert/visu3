@@ -88,7 +88,8 @@ import spark.components.List;
 import spark.components.Panel;
 import spark.components.supportClasses.SkinnableComponent;
 
-[Event(name="addRetroDocument", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
+[Event(name="addRetroDocumentEmpty", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
+[Event(name="addRetroDocumentAuto", type="com.ithaca.documentarisation.events.RetroDocumentEvent")]
 
 public class Documentarisation extends SkinnableComponent
 {
@@ -492,7 +493,7 @@ public class Documentarisation extends SkinnableComponent
         addRetroDocument = true;
         invalidateSkinState();
         
-        var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT);
+        var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT_EMPTY);
         dispatchEvent(addRetroDocumentEvent);
     }
 	private function onCreationCompletePanelListRetrodocument(event:FlexEvent):void
