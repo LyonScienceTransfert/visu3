@@ -163,6 +163,9 @@ public class Documentarisation extends SkinnableComponent
 	{
 		return _listRetroDocumentVO;
 	}
+	/**
+	 * Add new retrodocument
+	 */
 	public function updateAddedRetroDocument(value:RetroDocumentVO):void
 	{
 
@@ -320,6 +323,7 @@ public class Documentarisation extends SkinnableComponent
 		if(instance == panelListRetroDocument)
 		{
 			panelListRetroDocument.addEventListener(PanelButtonEvent.CLICK_BUTTON_ADD, onAddRetroDocument);
+			panelListRetroDocument.addEventListener(PanelButtonEvent.CLICK_BUTTON_AUTO_BILAN, onAddRetroDocumentAuto);
 			panelListRetroDocument.addEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelListRetrodocument);
 		}
 		if(instance == panelEditRetroDocument)
@@ -496,6 +500,22 @@ public class Documentarisation extends SkinnableComponent
         var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT_EMPTY);
         dispatchEvent(addRetroDocumentEvent);
     }
+	/**
+	 * 
+	 */
+    private function onAddRetroDocumentAuto(event:PanelButtonEvent):void
+    {
+		_stateCallServer = RetroDocumentConst.ADD_RETRO_DOCUMENT;
+		
+		edit = false;
+		addRetroDocument = true;
+		invalidateSkinState();
+		
+		var addRetroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.ADD_RETRO_DOCUMENT_AUTO);
+		dispatchEvent(addRetroDocumentEvent);
+		
+    }
+	
 	private function onCreationCompletePanelListRetrodocument(event:FlexEvent):void
 	{
 		panelListRetroDocument.removeEventListener(FlexEvent.CREATION_COMPLETE, onCreationCompletePanelListRetrodocument);
