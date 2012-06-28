@@ -72,7 +72,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
      height="100%" width="100%">
     <fx:Script>
     <![CDATA[
-        import com.adobe.crypto.MD5;
         import com.ithaca.utils.UtilFunction;
         import com.ithaca.visu.controls.login.event.LoginFormEvent;
         import com.ithaca.visu.events.InitMapEvent;
