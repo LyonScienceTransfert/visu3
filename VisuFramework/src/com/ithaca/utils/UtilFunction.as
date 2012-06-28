@@ -283,7 +283,9 @@ package com.ithaca.utils
         */
         public static function getCryptWord(value:String):String
         {
-            var result:String = MD5.hash(MD5.hash(value) + Model.getInstance().server);
+            //var result:String = MD5.hash(MD5.hash(value) + Model.getInstance().server);
+			// desactivate MD5 for the test VISU
+            var result:String = value;
             return result;
         }
     }
