@@ -112,26 +112,23 @@ import org.slf4j.LoggerFactory;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.Obsel;
-import com.lyon2.utils.MailerFacade;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.ObselType;
 import com.lyon2.utils.SessionStatus;
 import com.lyon2.utils.UserColor;
 import com.lyon2.utils.UserDate;
 import com.lyon2.utils.UserStatus;
+import com.lyon2.utils.UtilFunction;
 import com.lyon2.visu.domain.model.Module;
 import com.lyon2.visu.domain.model.ProfileDescription;
 import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.SessionUser;
 import com.lyon2.visu.domain.model.SessionWithoutListUser;
 import com.lyon2.visu.domain.model.User;
-import com.lyon2.visu.ktbs.KtbsApplicationHelper;
 import com.lyon2.visu.ktbs.KtbsService;
 import com.lyon2.visu.red5.Red5Message;
 import com.lyon2.visu.red5.RemoteAppEventType;
 import com.lyon2.visu.red5.RemoteAppSecurityHandler;
-
-import com.lyon2.utils.UtilFunction;
 
 /**
  * Sample application that uses the client manager.
@@ -141,13 +138,11 @@ import com.lyon2.utils.UtilFunction;
 public class Application extends MultiThreadedApplicationAdapter implements
 		IScheduledJob {
 
-	private SqlMapClient sqlMapClient;
-	private String smtpserver = "";
 	// sheduling interval is 5 min.
 	private static Integer SHEDULING_INTERVAL_MSEC = 50 * 60 * 1000;
 
 	private static Logger log = LoggerFactory.getLogger(Application.class);
-			"visu2");
+	
 
 	public Application() {
 		super();
@@ -158,6 +153,35 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 	// Injected by Spring
 	private KtbsService ktbsService;
+	private SqlMapClient sqlMapClient;
+	private String smtpserver = "";
+
+	//
+	// setter/getter sqlMapClient
+	//
+	public SqlMapClient getSqlMapClient() {
+		return sqlMapClient;
+	}
+
+	public void setSqlMapClient(SqlMapClient sqlMapClient) {
+		this.sqlMapClient = sqlMapClient;
+	}
+	
+	//
+	// setter/getter smtpsever
+	//
+	public String getSmtpserver() {
+		return smtpserver;
+	}
+	public void setSmtpserver(String smtpserver) {
+		this.smtpserver = smtpserver;
+	}
+	//
+	// setter/getter ktbsService
+	//
+	public KtbsService getKtbsService() {
+		return ktbsService;
+	}
 
 	public void setKtbsService(KtbsService ktbsService) {
 		this.ktbsService = ktbsService;
@@ -1493,23 +1517,6 @@ public class Application extends MultiThreadedApplicationAdapter implements
 
 	}
 
-	public void setSqlMapClient(SqlMapClient sqlMapClient) {
-		this.sqlMapClient = sqlMapClient;
-	}
-
-	public SqlMapClient getSqlMapClient() {
-		return sqlMapClient;
-	}
-
-	public void setSmtpServer(String server) {
-		// Configure the MailerFacade
-		MailerFacade.setSmtpServer(server);
-		this.smtpserver = server;
-	}
-
-	public String getSmtpServer() {
-		return this.smtpserver;
-	}
 
 	private String getDateStringFormat_YYYY_MM_DD(Calendar calendar) {
 		// year today
