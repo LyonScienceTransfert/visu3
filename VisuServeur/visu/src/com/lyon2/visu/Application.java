@@ -1692,7 +1692,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	 * 
 	 * @return iterator of broadcast stream names
 	 */
-	public List<String> getStreams(IConnection conn) {
+	public Set<String> getStreams(IConnection conn) {
 		log.info("client " + conn.getClient().getId() + " getStreams");
 		return getBroadcastStreamNames(conn.getScope());
 	}
