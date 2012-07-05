@@ -64,7 +64,7 @@ package com.lyon2.visu.service.impl;
 
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.lyon2.utils.MailerFacade;
@@ -76,7 +76,7 @@ import com.lyon2.visu.service.UserService;
 public class UserServiceImpl implements UserService 
 {
 	
-	private static Logger log = Red5LoggerFactory.getLogger(UserServiceImpl.class,"visu");
+	private static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 	private UserDAO userDao;	
 	
 	public User addUser(User user) 

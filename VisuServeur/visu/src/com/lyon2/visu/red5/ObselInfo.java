@@ -67,11 +67,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.slf4j.Logger;
 
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
 import com.ithaca.domain.model.Obsel;
@@ -95,8 +95,8 @@ import java.util.Iterator;
 public class ObselInfo {
 	private Application app;
 
-	protected static final Logger log = Red5LoggerFactory.getLogger(
-			ObselInfo.class, "visu2");
+	protected static final Logger log = LoggerFactory.getLogger(
+			ObselInfo.class);
 
 	@SuppressWarnings("unchecked")
 	public void getObselSessionExitSessionPause(IConnection conn)

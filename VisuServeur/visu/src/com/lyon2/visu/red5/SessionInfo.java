@@ -81,14 +81,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
 import org.red5.server.api.IClient;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.stream.ClientBroadcastStream;
-import org.slf4j.Logger;
 
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
@@ -117,7 +117,6 @@ public class SessionInfo
 
 	private Application app;
   	
-	protected static final Logger log = Red5LoggerFactory.getLogger(SessionInfo.class, "visu2" );
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public void getSessionsDatesByUser(IConnection conn, Integer userId ) throws SQLException 

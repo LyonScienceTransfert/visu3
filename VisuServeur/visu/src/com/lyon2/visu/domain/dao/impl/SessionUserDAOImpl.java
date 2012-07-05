@@ -66,7 +66,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
@@ -78,7 +78,7 @@ public class SessionUserDAOImpl extends SqlMapClientTemplate implements SessionU
 	/**
      * Logger
      */
-    private static final Logger log = Red5LoggerFactory.getLogger(SessionUserDAOImpl.class,"visu");
+    private static final Logger log = LoggerFactory.getLogger(SessionUserDAOImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	public SessionUser addSessionUser(SessionUser sessionUser ) throws SQLException 

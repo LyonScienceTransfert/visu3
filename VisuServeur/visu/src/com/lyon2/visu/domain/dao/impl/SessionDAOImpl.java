@@ -67,7 +67,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.Date;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
@@ -82,7 +82,7 @@ public class SessionDAOImpl extends SqlMapClientTemplate implements SessionDAO
 	/**
      * Logger
      */
-    private static final Logger log = Red5LoggerFactory.getLogger(SessionDAOImpl.class,"visu");
+    private static final Logger log = LoggerFactory.getLogger(SessionDAOImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	public List<Session> getSessions() throws SQLException 

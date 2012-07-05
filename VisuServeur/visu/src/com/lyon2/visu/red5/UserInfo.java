@@ -3,11 +3,11 @@ package com.lyon2.visu.red5;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.slf4j.Logger;
 
 import com.lyon2.visu.Application;
 import com.lyon2.visu.domain.model.User;
@@ -21,7 +21,7 @@ public class UserInfo
 {
 	private Application app;
   	
-	protected static final Logger log = Red5LoggerFactory.getLogger(SessionInfo.class, "visu2" );
+	protected static final Logger log = LoggerFactory.getLogger(SessionInfo.class);
 	
 	@SuppressWarnings({ "unchecked" })
 	public void getListUser(IConnection conn) throws SQLException 

@@ -66,8 +66,8 @@ import java.util.List;
 
 import java.sql.SQLException;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
 import com.ithaca.domain.dao.ObselDAO;
@@ -80,7 +80,7 @@ public class ObselDAOImpl extends SqlMapClientTemplate implements ObselDAO
 	/**
      * Logger
      */
-    private static final Logger log = Red5LoggerFactory.getLogger(ObselDAOImpl.class,"visu");
+    private static final Logger log = LoggerFactory.getLogger(ObselDAOImpl.class);
 
 	@SuppressWarnings("unchecked")
 	public List<String> getTraces() throws SQLException 

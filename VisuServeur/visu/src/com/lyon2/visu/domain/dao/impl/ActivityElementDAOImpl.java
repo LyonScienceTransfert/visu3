@@ -65,7 +65,7 @@ package com.lyon2.visu.domain.dao.impl;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
@@ -79,7 +79,7 @@ public class ActivityElementDAOImpl extends SqlMapClientTemplate implements Acti
 	/**
      * Logger
      */
-    private static final Logger log = Red5LoggerFactory.getLogger(ActivityElementDAOImpl.class,"visu");
+    private static final Logger log = LoggerFactory.getLogger(ActivityElementDAOImpl.class);
 	
 	@SuppressWarnings("unchecked")
 	public List<ActivityElement> getActivityElements(Integer id_activity) throws SQLException

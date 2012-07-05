@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.liris.ktbs.domain.interfaces.IAttributePair;
 import org.liris.ktbs.domain.interfaces.IObsel;
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.slf4j.Logger;
 
 import com.ithaca.domain.model.KtbsObsel;
 import com.lyon2.utils.ObselStringParams;
@@ -24,8 +24,8 @@ import com.lyon2.visu.Application;
 public class KtbsObselInfo {
 	private Application app;
 
-	protected static final Logger log = Red5LoggerFactory.getLogger(
-			KtbsObselInfo.class, "visu2");
+	protected static final Logger log = LoggerFactory.getLogger(
+			KtbsObselInfo.class);
 	
 	
 	
