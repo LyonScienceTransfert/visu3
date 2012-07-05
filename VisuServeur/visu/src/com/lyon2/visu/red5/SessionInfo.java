@@ -117,6 +117,15 @@ public class SessionInfo
 
 	private Application app;
   	
+	public Application getApp() {
+		return app;
+	}
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
+	protected static final Logger log = LoggerFactory.getLogger(SessionInfo.class);
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public void getSessionsDatesByUser(IConnection conn, Integer userId ) throws SQLException 
@@ -604,11 +613,4 @@ public class SessionInfo
 		listTraceId.add(newTraceId);
 		return;
 	}
-	
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
-	}
-	
- 
 }

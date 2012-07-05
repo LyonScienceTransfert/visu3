@@ -98,6 +98,15 @@ public class SharedInfo
 
 	private Application app;
   	
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
 	protected static final Logger log = LoggerFactory.getLogger(SharedInfo.class);
 	
 	@SuppressWarnings("unchecked")
@@ -463,11 +472,4 @@ public class SharedInfo
 			log.error("Probleme lors du listing des sessions" + e);
         }
 	}
-	
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
-	}
-	
- 
 }

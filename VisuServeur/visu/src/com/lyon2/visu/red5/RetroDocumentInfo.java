@@ -27,6 +27,15 @@ public class RetroDocumentInfo {
 
 	private Application app;
 
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
 	// Injected by Spring
 	private RetroDocumentService retroDocumentService;
 	public void setRetroDocumentService(
@@ -372,10 +381,5 @@ public class RetroDocumentInfo {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListRetroDocumentBySessionId", argsRetroDocument);
 		}
-	}
-	
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
 	}
 }

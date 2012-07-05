@@ -95,6 +95,15 @@ import java.util.Iterator;
 public class ObselInfo {
 	private Application app;
 
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
 	protected static final Logger log = LoggerFactory.getLogger(
 			ObselInfo.class);
 
@@ -737,10 +746,5 @@ public class ObselInfo {
 				log.error("Probleme lors du adding obsel" + e);
 			}
 		}
-	}
-
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
 	}
 }
