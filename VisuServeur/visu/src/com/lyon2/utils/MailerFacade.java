@@ -73,12 +73,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;;
 
 public class MailerFacade
 {
-    private static Logger log = Red5LoggerFactory.getLogger(MailerFacade.class, "visu" );
+    private static Logger log = LoggerFactory.getLogger(MailerFacade.class);
 
     // If smtp == "local", then we log messages to the logger rather
     // than sending them through a mailserver.

@@ -64,8 +64,8 @@ package com.ithaca.service.impl;
 
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ithaca.domain.dao.ObselDAO;
 import com.ithaca.domain.model.Obsel;
@@ -75,7 +75,7 @@ public class ObselServiceImpl implements ObselService
 {
 	private ObselDAO obselDao;
 	
-	private Logger logger = Red5LoggerFactory.getLogger(ObselServiceImpl.class,"visu");
+	private Logger logger = LoggerFactory.getLogger(ObselServiceImpl.class);
 	
 	public Obsel addObsel(Obsel obsel) 
 	{

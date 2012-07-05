@@ -64,7 +64,7 @@ package com.lyon2.visu.service.impl;
 
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.lyon2.visu.domain.dao.ProfileDescriptionDAO;
@@ -76,7 +76,7 @@ public class ProfileDescriptionServiceImpl implements ProfileDescriptionService
 
 	private ProfileDescriptionDAO profileDescriptionDao;
 	
-	private Logger logger = Red5LoggerFactory.getLogger(ProfileDescriptionServiceImpl.class,"visu");
+	private Logger logger = LoggerFactory.getLogger(ProfileDescriptionServiceImpl.class);
 	
 	public List<ProfileDescription> getProfils()
  

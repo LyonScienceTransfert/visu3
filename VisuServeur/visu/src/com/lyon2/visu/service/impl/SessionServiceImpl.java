@@ -65,7 +65,7 @@ package com.lyon2.visu.service.impl;
 import java.util.List;
 import java.util.Date;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.lyon2.visu.domain.dao.SessionDAO;
@@ -77,7 +77,7 @@ import com.lyon2.utils.UserDate;
 public class SessionServiceImpl implements SessionService 
 {
 
-	private static Logger log = Red5LoggerFactory.getLogger(SessionServiceImpl.class,"visu");
+	private static Logger log = LoggerFactory.getLogger(SessionServiceImpl.class);
 	
 	private SessionDAO sessionDao;
 	

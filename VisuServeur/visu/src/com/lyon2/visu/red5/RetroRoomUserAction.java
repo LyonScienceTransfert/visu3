@@ -67,11 +67,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.slf4j.Logger;
 
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
@@ -87,8 +87,8 @@ import com.lyon2.utils.ObselType;
 public class RetroRoomUserAction {
 	private Application app;
 
-	protected static final Logger log = Red5LoggerFactory.getLogger(
-			RetroRoomUserAction.class, "visu2");
+	protected static final Logger log = LoggerFactory.getLogger(
+			RetroRoomUserAction.class);
 
 	public void test() {
 		log.warn("TEST OVER OBSEL----------");

@@ -66,14 +66,14 @@ import static org.red5.server.api.ScopeUtils.getScopeService;
 
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IScope;
 import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.so.ISharedObjectListener;
 import org.red5.server.api.so.ISharedObjectSecurity;
 import org.red5.server.api.so.ISharedObjectService;
 import org.red5.server.so.SharedObjectService;
-import org.slf4j.Logger;
 
 
 /**
@@ -87,7 +87,7 @@ import org.slf4j.Logger;
 
 public class RemoteAppSecurityHandler implements ISharedObjectSecurity
 { 
-	protected static Logger logger = Red5LoggerFactory.getLogger(RemoteAppSecurityHandler.class, "visu" );
+	protected static Logger logger = LoggerFactory.getLogger(RemoteAppSecurityHandler.class);
 	
  
 	  public boolean isConnectionAllowed(ISharedObject so) 

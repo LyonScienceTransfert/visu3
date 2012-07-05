@@ -65,7 +65,7 @@ package com.lyon2.visu.domain.dao.impl;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
@@ -78,7 +78,7 @@ public class ProfileDescriptionDAOImpl extends SqlMapClientTemplate implements P
 	/**
      * Logger
      */
-	private static Logger log = Red5LoggerFactory.getLogger(ProfileDescriptionDAOImpl.class,"visu");
+	private static Logger log = LoggerFactory.getLogger(ProfileDescriptionDAOImpl.class);
 
 	@SuppressWarnings("unchecked")
 	public List<ProfileDescription> getProfils() throws SQLException

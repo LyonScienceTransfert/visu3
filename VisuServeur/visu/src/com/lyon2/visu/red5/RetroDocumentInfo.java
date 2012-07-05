@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.slf4j.Logger;
 
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
 import com.ithaca.domain.model.RetroDocument;
@@ -33,8 +33,9 @@ public class RetroDocumentInfo {
 			RetroDocumentService retroDocumentService) {
 		this.retroDocumentService = retroDocumentService;
 	}
+	protected static final Logger log = LoggerFactory
+			.getLogger(RetroDocumentInfo.class);
 	
-	protected static final Logger log = Red5LoggerFactory.getLogger(RetroDocumentInfo.class, "visu2" );
 
 	public void getAllRetroDocuments(IConnection conn) {
 		log.info("Requesting for the list of all retro documents");

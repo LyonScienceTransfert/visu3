@@ -64,7 +64,7 @@ package com.lyon2.visu.service.impl;
 
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.lyon2.visu.domain.dao.ActivityElementDAO;
@@ -74,7 +74,7 @@ import com.lyon2.visu.service.ActivityElementService;
 public class ActivityElementServiceImpl implements ActivityElementService 
 {
 
-	private Logger logger = Red5LoggerFactory.getLogger(ActivityElementServiceImpl.class,"visu");
+	private Logger logger = LoggerFactory.getLogger(ActivityElementServiceImpl.class);
 	
 	private ActivityElementDAO activityElementDao;
 	

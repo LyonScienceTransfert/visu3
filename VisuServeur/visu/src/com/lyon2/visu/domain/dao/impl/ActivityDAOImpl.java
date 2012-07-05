@@ -65,8 +65,8 @@ package com.lyon2.visu.domain.dao.impl;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
 import com.lyon2.visu.domain.dao.ActivityDAO;
@@ -79,7 +79,7 @@ public class ActivityDAOImpl extends SqlMapClientTemplate implements ActivityDAO
 	/**
      * Logger
      */
-    private static final Logger log = Red5LoggerFactory.getLogger(ActivityDAOImpl.class,"visu");
+    private static final Logger log = LoggerFactory.getLogger(ActivityDAOImpl.class);
 	
 	
 

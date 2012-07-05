@@ -3,7 +3,7 @@ package com.lyon2.visu.service.impl;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.ithaca.domain.dao.RetroDocumentDAO;
@@ -14,7 +14,7 @@ import com.lyon2.visu.domain.model.User;
 
 public class RetroDocumentServiceImpl implements RetroDocumentService {
 
-	private Logger logger = Red5LoggerFactory.getLogger(RetroDocumentServiceImpl.class,"visu");
+	private Logger logger = LoggerFactory.getLogger(RetroDocumentServiceImpl.class);
 
 	private RetroDocumentDAO retroDocumentDao;
 

@@ -69,12 +69,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.IScope;
 import org.red5.server.api.service.IServiceCapableConnection;
-import org.slf4j.Logger;
 
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
@@ -98,7 +98,7 @@ public class SharedInfo
 
 	private Application app;
   	
-	protected static final Logger log = Red5LoggerFactory.getLogger(SharedInfo.class, "visu" );
+	protected static final Logger log = LoggerFactory.getLogger(SharedInfo.class);
 	
 	@SuppressWarnings("unchecked")
 	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor, String beginTime, String endTime, String typeShortMarker)

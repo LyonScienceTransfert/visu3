@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.ibatis.SqlMapClientTemplate;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -19,7 +19,7 @@ import com.lyon2.visu.domain.model.User;
 @SuppressWarnings("unchecked")
 public class RetroDocumentDAOImpl extends SqlMapClientTemplate implements RetroDocumentDAO {
 
-    private static final Logger logger = Red5LoggerFactory.getLogger(RetroDocumentDAOImpl.class,"visu");
+    private static final Logger logger = LoggerFactory.getLogger(RetroDocumentDAOImpl.class);
 
 	public Collection<RetroDocument> getRetroDocumentsByOwnerAndBySession (
 			Integer ownerId, Integer sessionId)  throws SQLException {

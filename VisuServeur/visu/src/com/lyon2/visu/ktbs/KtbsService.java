@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.liris.ktbs.domain.interfaces.IObsel;
 import org.liris.ktbs.domain.interfaces.ITrace;
-import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.api.IConnection;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KtbsService {
 
-	protected static final Logger log = Red5LoggerFactory.getLogger(
-			KtbsService.class, "visu2");
+	protected static final Logger log = LoggerFactory.getLogger(
+			KtbsService.class);
 	
 	// Injected by Spring
 	private boolean pluggedToKtbs;

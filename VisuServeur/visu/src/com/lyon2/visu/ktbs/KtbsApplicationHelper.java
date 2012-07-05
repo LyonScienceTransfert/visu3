@@ -23,15 +23,16 @@ import org.liris.ktbs.service.ResourceService;
 import org.liris.ktbs.service.StoredTraceService;
 import org.liris.ktbs.service.impl.ObselBuilder;
 import org.liris.ktbs.utils.KtbsUtils;
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.slf4j.Logger;
 
 public class KtbsApplicationHelper {
 
-	private static Logger log = Red5LoggerFactory.getLogger(
-			KtbsApplicationHelper.class, "visu2");
+	private static Logger log = LoggerFactory.getLogger(
+			KtbsApplicationHelper.class);
 
 	// injected by Spring
 	private ClientFactory clientFactory;

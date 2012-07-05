@@ -7,15 +7,15 @@ import java.util.Set;
 import org.liris.ktbs.domain.interfaces.IAttributePair;
 import org.liris.ktbs.domain.interfaces.IObsel;
 import org.liris.ktbs.utils.KtbsUtils;
-import org.red5.logging.Red5LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import com.ithaca.domain.model.KtbsAttributePair;
 import com.ithaca.domain.model.KtbsObsel;
 
 public class KtbsResourceVOFactory {
-	protected static final Logger log = Red5LoggerFactory.getLogger(
-			KtbsResourceVOFactory.class, "visu2");
+	protected static final Logger log = LoggerFactory.getLogger(
+			KtbsResourceVOFactory.class);
 	public static KtbsObsel createKtbsObsel(IObsel obsel) {
 		KtbsObsel ktbsObsel = new KtbsObsel();
 		ktbsObsel.setUri(obsel.getUri());

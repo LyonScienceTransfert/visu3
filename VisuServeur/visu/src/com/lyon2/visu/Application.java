@@ -95,7 +95,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.red5.logging.Red5LoggerFactory;
 import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
@@ -109,6 +108,7 @@ import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.stream.IBroadcastStream;
 import org.red5.server.stream.ClientBroadcastStream;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.Obsel;
@@ -146,7 +146,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 	// sheduling interval is 5 min.
 	private static Integer SHEDULING_INTERVAL_MSEC = 50 * 60 * 1000;
 
-	private static Logger log = Red5LoggerFactory.getLogger(Application.class,
+	private static Logger log = LoggerFactory.getLogger(Application.class);
 			"visu2");
 
 	public Application() {
