@@ -62,13 +62,11 @@
  */
 package com.lyon2.visu.red5;
 
-import static org.red5.server.api.ScopeUtils.getScopeService;
-
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import org.red5.server.api.IScope;
+import org.red5.server.api.scope.IScope;
 import org.red5.server.api.so.ISharedObject;
 import org.red5.server.api.so.ISharedObjectListener;
 import org.red5.server.api.so.ISharedObjectSecurity;
