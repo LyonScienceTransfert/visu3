@@ -249,7 +249,7 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		log.info("=== INFO test message ===");
 		log.warn("=== WARN test message ===");
 		log.error("=== ERROR test message ===");
-		log.warn("=== SMTP Server: {} ===", getSmtpServer());
+		log.warn("=== SMTP Server: {} ===", this.getSmtpserver());
 
 		registerSharedObjectSecurity(new RemoteAppSecurityHandler());
 
