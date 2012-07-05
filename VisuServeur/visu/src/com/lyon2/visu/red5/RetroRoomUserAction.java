@@ -87,6 +87,16 @@ import com.lyon2.utils.ObselType;
 public class RetroRoomUserAction {
 	private Application app;
 
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
+
 	protected static final Logger log = LoggerFactory.getLogger(
 			RetroRoomUserAction.class);
 
@@ -487,12 +497,6 @@ public class RetroRoomUserAction {
 			sc.invoke("checkAddObselComment", args);
 		}
 	}
-
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
-	}
-	
 	
 	/**********************************************************************************/
 	/**********************************************************************************/

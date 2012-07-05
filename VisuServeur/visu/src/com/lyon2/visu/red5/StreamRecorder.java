@@ -112,6 +112,15 @@ public class StreamRecorder
 
 	private Application app;
 	
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
 	private static String FOLDER_NAME_AUDIO_RECORDERS = "usersAudioRetroDocument";
   	
 	protected static final Logger log = LoggerFactory.getLogger(StreamRecorder.class);
@@ -586,12 +595,5 @@ log.warn("refParam = {}",refParam);
 			}
 		}
 		
-	}
-
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
-	}
-	
- 
+	} 
 }

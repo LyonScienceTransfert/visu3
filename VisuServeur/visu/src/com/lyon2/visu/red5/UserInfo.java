@@ -21,6 +21,15 @@ public class UserInfo
 {
 	private Application app;
   	
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+		log.debug("set application " + app);
+	}
+
 	protected static final Logger log = LoggerFactory.getLogger(SessionInfo.class);
 	
 	@SuppressWarnings({ "unchecked" })
@@ -45,11 +54,4 @@ public class UserInfo
 			sc.invoke("checkListUser", args);
 			} 	
 	}
-	
-	public void setApplication(Application app) {
-		this.app = app;
-		log.debug("set application " + app);
-	}
-	
- 
 }
