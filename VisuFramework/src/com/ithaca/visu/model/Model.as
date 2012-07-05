@@ -1748,13 +1748,16 @@ package  com.ithaca.visu.model
 		public function getConnectedUsers():ArrayCollection
 		{
 			var list:ArrayCollection = new ArrayCollection();
-			var nbrUser:int = this._listUsersPlateforme.length;
-			for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
+			if(_listUsersPlateforme)
 			{
-				var user:User = this._listUsersPlateforme.getItemAt(nUser) as User;
-				if(user.status != ConnectionStatus.DISCONNECTED)
+				var nbrUser:int = this._listUsersPlateforme.length;
+				for(var nUser:int = 0 ; nUser < nbrUser ; nUser++)
 				{
-					list.addItem(user);
+					var user:User = this._listUsersPlateforme.getItemAt(nUser) as User;
+					if(user.status != ConnectionStatus.DISCONNECTED)
+					{
+						list.addItem(user);
+					}
 				}
 			}
 			return list;
