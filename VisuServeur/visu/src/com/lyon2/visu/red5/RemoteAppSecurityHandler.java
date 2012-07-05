@@ -106,14 +106,14 @@ public class RemoteAppSecurityHandler implements ISharedObjectSecurity
 		  {
 			  // get the SO creation service. Basically the following lines are exactly what MultiThreadedApplicationAdapter does.
 			  // You can also pass a reference to your Application to this SecurityHandler and use it instead
-			  ISharedObjectService service = (ISharedObjectService) getScopeService(scope, ISharedObjectService.class, SharedObjectService.class, false);
-			  
-			  if( service.createSharedObject(scope, name, persistent) == true )
-			  {
-				  logger.debug("Creation du SO "+name);
-				  ISharedObject so = service.getSharedObject(scope, name);
-				  // Adding SO listenner here
-			  }
+//			  ISharedObjectService service = (ISharedObjectService) getScopeService(scope, ISharedObjectService.class, SharedObjectService.class, false);
+//			  
+//			  if( service.createSharedObject(scope, name, persistent) == true )
+//			  {
+//				  logger.debug("Creation du SO "+name);
+//				  ISharedObject so = service.getSharedObject(scope, name);
+//				  // Adding SO listenner here
+//			  }
 		  }
 		  return true;
 	  }
