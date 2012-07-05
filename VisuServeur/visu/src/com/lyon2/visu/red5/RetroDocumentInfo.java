@@ -36,13 +36,18 @@ public class RetroDocumentInfo {
 
 	// Injected by Spring
 	private RetroDocumentService retroDocumentService;
+
+	public RetroDocumentService getRetroDocumentService() {
+		return retroDocumentService;
+	}
+
 	public void setRetroDocumentService(
 			RetroDocumentService retroDocumentService) {
 		this.retroDocumentService = retroDocumentService;
 	}
+
 	protected static final Logger log = LoggerFactory
 			.getLogger(RetroDocumentInfo.class);
-	
 
 	public void getAllRetroDocuments(IConnection conn) {
 		log.info("Requesting for the list of all retro documents");
