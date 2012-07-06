@@ -62,6 +62,7 @@
  */
 package business
 {
+import com.ithaca.documentarisation.RetroDocumentConst;
 import com.ithaca.documentarisation.events.RetroDocumentEvent;
 import com.ithaca.documentarisation.model.RetroDocument;
 import com.ithaca.messagerie.model.MessageVO;
@@ -93,8 +94,6 @@ import com.ithaca.visu.ui.utils.ColorEnum;
 import com.ithaca.visu.ui.utils.ConnectionStatus;
 import com.ithaca.visu.ui.utils.RightStatus;
 import com.ithaca.visu.ui.utils.SessionStatusEnum;
-
-import com.ithaca.documentarisation.RetroDocumentConst;
 
 import flash.events.Event;
 import flash.events.IEventDispatcher;
@@ -174,29 +173,50 @@ public class MainManager
     }
     
 	/**
-	 * set logged user
+	 * Set logged user
 	 * @param
-	 * user - 
-	 * listModules - list modules for this user according with rights
-	 * listSessionToday - will using ?, list session for today
+	 * user             			  - logged user
+	 * listModules      			  - list modules for this user according with rights
+	 * listSessionToday 			  - list session for today for logged user
+	 * profiles         			  - list profiles
+	 * listUserIdConnectedPlateforme  - list id user connected on the plateforme
+	 * listIdUserClientPlateforme     - list id client connected on the plateforme
+	 * listUserSessionIdPlateforme    - list id sessions connected users
+	 * listUserStatusPlateforme       - list status connected users
+	 * listUser						  - list users plateforme
 	 */
-	public function onSetLoggedUser(user:UserVO, listModules:Array, listSessionToday:Array, profiles:Array):void
+	public function onSetLoggedUser(user:UserVO, listModules:Array, listSessionToday:Array, profiles:Array,
+									listUserIdConnectedPlateforme:Array,
+									listIdUserClientPlateforme:Array, listUserSessionIdPlateforme:Array, 
+									listUserStatusPlateforme:Array, listUserPlateformeVO:Array):void
 	{
-
-		
 		if (user == null)
 		{
 			// TODO MESSAGE 
 			return;
 		}
+		// set list user plateforme
+		var listUserPlateforme:ArrayCollection = new ArrayCollection();
+		for each (var vo:UserVO in listUserPlateformeVO)
+		{
+			listUserPlateforme.addItem(new User(vo));
+		}		
+		Model.getInstance().setListUsersPlateforme(listUserPlateforme);
+		// set connected users
+		Model.getInstance().setConnectedUsers(listUserIdConnectedPlateforme, listIdUserClientPlateforme, listUserSessionIdPlateforme, listUserStatusPlateforme);
+		// set connected users
+		this.connectedUsers = Model.getInstance().getConnectedUsers();
+		// set netConnection
+		Model.getInstance().setNetConnection(this.netConnection);
+		// DEBUG
+		this.dispatcher.dispatchEvent(new Event("testApp"));
+		
 		// set logged user to the model
 		Model.getInstance().setLoggedUser(user);
 		logger.info('Logged user: {0} {1} (id={2})]', user.lastname, user.firstname, user.id_user);
-		
-//		Model.getInstance().updateUserStatus(user.id_user, ConnectionStatus.CONNECTED);
-		
+		// set list profiles
 		Model.getInstance().profiles = profiles;
-		
+		// init menu application
 		var event:VisuModuleEvent = new VisuModuleEvent(VisuModuleEvent.LOAD_LIST_MODULES);
 		event.listModules = listModules;
 		dispatcher.dispatchEvent(event);
@@ -345,7 +365,7 @@ public class MainManager
 	 * @param 
 	 * ar - list connected users:UserVO, list client id of the connected users, list status of the connected users
 	 */
-	public function getConnectedClients(ar:Array, listUserPlateformeVO:Array):void
+/*	public function getConnectedClients(ar:Array, listUserPlateformeVO:Array):void
 	{
 		var listUserPlateforme:ArrayCollection = new ArrayCollection();
 		for each (var vo:UserVO in listUserPlateformeVO)
@@ -363,7 +383,7 @@ public class MainManager
 		this.dispatcher.dispatchEvent(new Event("clientInfo"));
 		// DEBUG
 		this.dispatcher.dispatchEvent(new Event("testApp"));
-	}
+	}*/
 	
 	/**
 	 * message for user, if someone connected on the DECK with the same identifiants
