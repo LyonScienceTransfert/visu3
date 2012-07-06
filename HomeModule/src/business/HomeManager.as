@@ -103,47 +103,13 @@ public class HomeManager
 		this.dispatcher = dispatcher;
 	}
 
-	// methods
-	/**
-	 * Set user list for a session
-	 */ 
-	public function onLoadListUsersSession(listUsers: Array, sessionId : int, sessionDate: String):void
-	{
-		// set users session
-	    Model.getInstance().setListUsersSession(listUsers, sessionId);
-		
-		var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
-		var listSession:ArrayCollection = Model.getInstance().getListSessionByDate(sessionDate);
-		
-		sessionEvent.listSession = listSession;
-		sessionEvent.sessionDate = sessionDate;
-		dispatcher.dispatchEvent(sessionEvent);	
-	}
-	
+	// methods	
 	/**
 	 * init flux activity
 	 */ 
 	public function getFluxActivity():void{
 		// initialisation flux activity
 		this.fluxActivity = Model.getInstance().getFluxActivity();
-	}
-
-
-/*	public function onLoadListUsers(value:Array):void
-	{
-		var ar:Array = new Array();
-		for each (var vo:UserVO in value)
-		{
-			ar.push(new User(vo));
-		}		
-		var onLoadedAllUsers:SessionEvent = new SessionEvent(SessionEvent.LOAD_LIST_USERS_PLATEFORME);
-		onLoadedAllUsers.listDate = ar;
-		this.dispatcher.dispatchEvent(onLoadedAllUsers);
-	}	*/
-		
-	public function onUpdateUser(userVO:UserVO):void
-	{
-		
 	}
 	
 	public function onError(session:* = null):void
