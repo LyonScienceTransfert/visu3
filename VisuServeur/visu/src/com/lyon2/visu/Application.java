@@ -377,8 +377,36 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			log.error("Loading profileDescription failed {}", e);
 		}
 
+		List<Integer> listUserIdConnectedPlateforme = new ArrayList<Integer>();
+		List<String> listIdUserClientPlateforme = new ArrayList<String>();
+		List<Integer> listUserSessionIdPlateforme = new ArrayList<Integer>();
+		List<Integer> listUserStatusPlateforme = new ArrayList<Integer>();
+		
+		for (IClient clnt : this.getClients()) {
+			User usr = (User) clnt.getAttribute("user");
+			listUserIdConnectedPlateforme.add((Integer)usr.getId_user());
+			listIdUserClientPlateforme.add((String) clnt.getAttribute("id"));
+			listUserSessionIdPlateforme.add((Integer) clnt.getAttribute("sessionId"));
+			listUserStatusPlateforme.add((Integer) clnt.getAttribute("userStatus"));
+		}
+
+		List<User> listUser = null;
+		try {
+			listUser = (List<User>) getSqlMapClient().queryForList(
+					"users.getUsers");
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des utilisateurs" + e);
+		}
+
+		log.warn("  listUserConnectedPlateforme = {}",listUserIdConnectedPlateforme.toString());
+		
 		Object[] argsLoggedUser = { user, listModulesUser, listSessionToday,
-				profiles };
+				profiles, 
+				listUserIdConnectedPlateforme,
+				listIdUserClientPlateforme, 
+				listUserSessionIdPlateforme,
+				listUserStatusPlateforme, 
+				listUser};
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) conn;
 			sc.invoke("setLoggedUser", argsLoggedUser);

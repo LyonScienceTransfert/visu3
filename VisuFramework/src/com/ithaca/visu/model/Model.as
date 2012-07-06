@@ -1718,21 +1718,18 @@ package  com.ithaca.visu.model
 		/**
 		 * set connected users 
 		 */
-		public function setConnectedUsers(ar:Array):void
+		public function setConnectedUsers(listUserIdConnectedPlateforme:Array, listIdUserClientPlateforme:Array, listUserSessionIdPlateforme:Array, listUserStatusPlateforme:Array):void
 		{
 			var userPlateforme:User;
-			var nbrUser:uint = ar.length;
+			var nbrUser:uint = listUserIdConnectedPlateforme.length;
 			if(nbrUser == 0) { return };
+			
 			for(var nUser:uint = 0; nUser < nbrUser; nUser++)
 			{
-				var infoUser:Array = ar[nUser];
-				var userVO:UserVO = infoUser[1];
-				var userStatus:int = infoUser[4];
-				
-				userPlateforme = this.getUserPlateformeByUserId(userVO.id_user);
-				userPlateforme.setStatus(userStatus);
-				userPlateforme.id_client=infoUser[2];
-				userPlateforme.currentSessionId = infoUser[3];
+				userPlateforme = this.getUserPlateformeByUserId(listUserIdConnectedPlateforme[nUser]);
+				userPlateforme.setStatus(listUserStatusPlateforme[nUser]);
+				userPlateforme.id_client=listIdUserClientPlateforme[nUser];
+				userPlateforme.currentSessionId = listUserSessionIdPlateforme[nUser];
 			}
 		}
 		
