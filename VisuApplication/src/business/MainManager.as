@@ -1692,6 +1692,23 @@ public class MainManager
 		updateSession.session = session;
 		this.dispatcher.dispatchEvent(updateSession);
 	}
+	/**
+	 * Get users from session
+	 */
+	public function onCheckUsersFromSession(listUserVO:Array, sessionId:int, sessionDate:String):void
+	{
+		Model.getInstance().setListUsersSession(listUserVO, sessionId);
+		
+		var sessionEvent:SessionEvent = new SessionEvent(SessionEvent.UPDATE_LIST_SESSION);
+		var listSession:ArrayCollection = Model.getInstance().getListSessionByDate(sessionDate);
+		
+		sessionEvent.listSession = listSession;
+		sessionEvent.sessionDate = sessionDate;
+		dispatcher.dispatchEvent(sessionEvent);	
+	}
+	
+	
+	
 	public function onError(event : Object) : void
 	{
 		var closeConnetionEvent:ApplicationMenuEvent = new ApplicationMenuEvent(ApplicationMenuEvent.CLOSE_CONNECTION);

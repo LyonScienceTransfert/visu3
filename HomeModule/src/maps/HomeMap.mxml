@@ -103,23 +103,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<mate:Request action="testApp"   arguments="{['Home']}"/>
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-		
-		<s:RemoteObject
-			id="remoteUser"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="UserService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>						
-		
-		<s:RemoteObject
-			id="remoteSession"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="SessionService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>
-
+								
 <!-- 1) first call -->		
 		<mate:EventHandlers type="{SessionEvent.LOAD_LIST_DATE_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true" cache="global">
@@ -136,25 +120,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			
 <!-- 3) third call -->
 		<mate:EventHandlers type="{UserEvent.LOAD_LIST_USERS_SESSION}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="getUsersFromSession" arguments="{event.sessionId}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onLoadListUsersSession" arguments="{[resultObject, event.sessionId, event.sessionDate]}"/>
-				</mate:resultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>
-
-<!-- USERS -->
-		<mate:EventHandlers type="{UserEvent.UPDATE_USER}" useCapture="true"  debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="updateUser" arguments="{event.userVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}" method="onUpdateUser" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{HomeManager}"
-										method="onError" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true" cache="global">
+				<mate:Request action="userInfo.getUsersFromSession"   arguments="{[event.sessionId, event.sessionDate]}" />
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 <!-- SESSIONS -->
