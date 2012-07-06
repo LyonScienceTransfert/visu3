@@ -1106,47 +1106,6 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		log.warn("stream broadcast start: " + stream.getPublishedName());
 	}
 
-	/**
-	 * 
-	 * Get getConnectedClients
-	 * 
-	 * @return Clients : List<String>
-	 */
-	@SuppressWarnings("unchecked")
-	public void getConnectedClients(IConnection conn) {
-		IClient clientLogged = conn.getClient();
-
-		List<List<Object>> userlist = new Vector<List<Object>>();
-
-		for (IClient client : this.getClients()) {
-			List<Object> info = new Vector<Object>();
-			info.add((Integer) client.getAttribute("status"));
-			info.add((User) client.getAttribute("user"));
-			info.add((String) client.getAttribute("id"));
-			info.add((Integer) client.getAttribute("sessionId"));
-			info.add((Integer) client.getAttribute("userStatus"));
-
-			userlist.add(info);
-		}
-
-		List<User> listUser = null;
-		try {
-			listUser = (List<User>) getSqlMapClient().queryForList(
-					"users.getUsers");
-		} catch (Exception e) {
-			log.error("Probleme lors du listing des utilisateurs" + e);
-		}
-
-		Object[] obj = { userlist, listUser };
-		IConnection connectionClient = (IConnection) clientLogged
-				.getAttribute("connection");
-		if (connectionClient instanceof IServiceCapableConnection) {
-			IServiceCapableConnection sc = (IServiceCapableConnection) connectionClient;
-			sc.invoke("checkConnectedClients", obj);
-		}
-
-	}
-
 	public void sendPrivateMessage(Integer senderId, String message,
 			Integer resiverId) {
 		log.warn("====sendPrivateMessage====");
