@@ -113,31 +113,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<mate:ObjectBuilder generator="{MainManager}" constructorArguments="{scope.dispatcher}"/>
 		</mate:EventHandlers>
 
-        <mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
-			<rtmp:RtmpServiceInvoker service="{RtmpService}">
-				<mate:Request action="getConnectedClients"   arguments="{[]}" />
-				<!--<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{MainManager}"
-										method="getConnectedClients" arguments="{[currentEvent.data]}"/>
-				</rtmp:resultHandlers>		
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{MainManager}"
-										method="onError" arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>-->
-			</rtmp:RtmpServiceInvoker>	
-        </mate:EventHandlers>
-
-		<mate:EventHandlers type="{'clientInfo'}" debug="true">
+		<mate:EventHandlers type="{RtmpStatusEvent.SUCCESS}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" debug="true">
 				<mate:Request action="getClientInfo"   arguments="{[]}" />
-<!--				<rtmp:resultHandlers>
-					<mate:MethodInvoker generator="{MainManager}"
-										method="onGetClientInfo" arguments="{[currentEvent.data]}"/>
-				</rtmp:resultHandlers>		
-				<rtmp:faultHandlers>
-					<mate:MethodInvoker generator="{MainManager}"
-										method="onError" arguments="{[currentEvent]}"/>
-				</rtmp:faultHandlers>-->
 			</rtmp:RtmpServiceInvoker>	
 		</mate:EventHandlers>
  
@@ -217,7 +195,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:CallbackRegistrator action="checkAddObselComment" target="{MainManager}" method="onCheckAddObselComment"/>
 			<rtmp:CallbackRegistrator action="checkListRetroDocument" target="{MainManager}" method="onCheckListRetroDocument"/>
 			<rtmp:CallbackRegistrator action="checkRetroDocument" target="{MainManager}" method="onCheckRetroDocument"/>
-			<rtmp:CallbackRegistrator action="checkConnectedClients" target="{MainManager}" method="getConnectedClients"/>
 			<rtmp:CallbackRegistrator action="checkClientInfo" target="{MainManager}" method="onCheckClientInfo"/>
 			<rtmp:CallbackRegistrator action="checkListObselSessioExitSessionPause" target="{MainManager}" method="onCheckListObselSessioExitSessionPause"/>
 			<rtmp:CallbackRegistrator action="checkListRetroDocumentBySessionId" target="{MainManager}" method="onCheckListRetroDocumentBySessionId"/>
