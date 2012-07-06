@@ -10,6 +10,7 @@ import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
 
 import com.lyon2.visu.Application;
+import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
  
 /**
@@ -53,5 +54,27 @@ public class UserInfo
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkListUser", args);
 			} 	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void getUsersFromSession(IConnection conn, Integer sessionId, String sessionDate) {
+		log.warn("======== getUsersFromSession ");
+		log.warn("=====sessionId = {}", sessionId);
+		IClient client = conn.getClient();
+		List<User> listUser = null;
+		try
+		{
+			listUser = (List<User>) app.getSqlMapClient().queryForList("users.getUsersFromSession",sessionId);
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des users dans la séance id = {}" + e,sessionId);
+		}	
+		
+		Object[] args = {listUser,sessionId, sessionDate};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkUsersFromSession", args);
+			} 	
+		
 	}
 }
