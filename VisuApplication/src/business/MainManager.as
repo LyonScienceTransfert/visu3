@@ -451,15 +451,14 @@ public class MainManager
 	}
 	
 	
-	public function onCheckRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array, editabled:Boolean):void
+	public function onCheckRetroDocument(retroDocumentVO:RetroDocumentVO, listInvitees:Array):void
 	{
-		logger.info("onCheckRetroDocument(retroDocumentVO:{0}, listInvitees:{1}, editabled:{2})", retroDocumentVO, listInvitees, editabled);
+		logger.info("onCheckRetroDocument(retroDocumentVO:{0}, listInvitees:{1}, editabled:{2})", retroDocumentVO, listInvitees);
 		var retroDocument:RetroDocument = new RetroDocument(retroDocumentVO);
 		retroDocument.setRetroDocumentXML(retroDocumentVO.xml);	
 		var retroDocumentEvent:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.SHOW_RETRO_DOCUMENT);
 		retroDocumentEvent.retroDocument = retroDocument;
 		retroDocumentEvent.listUser = listInvitees;
-		retroDocumentEvent.editabled = editabled;
 		this.dispatcher.dispatchEvent(retroDocumentEvent);
 	}
 	/**
