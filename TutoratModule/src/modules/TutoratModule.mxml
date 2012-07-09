@@ -1757,7 +1757,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                         
                         if (event.currentTarget.confirm)
                         {						
-                            var timeStamp:Number = 0
+                            var timeStamp:String = "0";
                             var forUserId:int = 0;
                             // set properties for existing obsel
                             if(event.currentTarget.user)
