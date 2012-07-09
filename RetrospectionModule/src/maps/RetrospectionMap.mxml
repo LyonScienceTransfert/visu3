@@ -104,14 +104,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<mate:Request action="testApp"   arguments="{['Retrospection']}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
-		
-		<s:RemoteObject
-			id="remoteUser"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="UserService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>	
 
         <mate:EventHandlers type="{SessionEvent.GET_LIST_CLOSED_SESSION}" debug="true">
             <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
@@ -123,7 +115,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.getListClosedSession"   arguments="{[]}" />
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>	
+		</mate:EventHandlers>
 <!-- MY SESSION -->		
 <!--		<mate:EventHandlers type="{SessionEvent.GET_LIST_OBSEL}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
@@ -241,15 +233,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="userInfo.getListUser" arguments="{['retro']}"/>     				
 			</rtmp:RtmpServiceInvoker>
-			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{RetrospectionManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{RetrospectionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
 		</mate:EventHandlers>
 	</fx:Declarations>
 	
