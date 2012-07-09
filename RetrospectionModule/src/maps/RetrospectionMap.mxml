@@ -238,6 +238,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</mate:EventHandlers>
 <!-- USERS -->
 		<mate:EventHandlers type="{RetroDocumentEvent.LOAD_LIST_USERS}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="userInfo.getListUser" arguments="{['retro']}"/>     				
+			</rtmp:RtmpServiceInvoker>
 			<mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
 				<mate:resultHandlers>
 					<mate:MethodInvoker generator="{RetrospectionManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
