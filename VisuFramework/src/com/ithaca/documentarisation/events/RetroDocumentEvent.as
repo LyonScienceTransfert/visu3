@@ -120,7 +120,7 @@ package  com.ithaca.documentarisation.events
 		public var listRetroDocument:ArrayCollection;
 		public var idRetroDocument:int;
 		public var retroDocument:RetroDocument;
-		public var editabled:Boolean;
+		public var editabled:String;
 		public var retroDocumentVO:RetroDocumentVO;
 		public var sessionId:int;
 		public var session:Session;
