@@ -596,7 +596,6 @@ public class Documentarisation extends SkinnableComponent
 		if(value)
 		{
 			loadRetroDocument.idRetroDocument = value.documentId;;
-			loadRetroDocument.editabled = true;
 			dispatchEvent(loadRetroDocument);
 
             // set skin load retrodocument
