@@ -94,7 +94,7 @@ package com.ithaca.visu.events
 		public var forUserId :int;
 		public var sessionId :int;
 		public var obsel:Obsel;
-		public var timeStamp:Number;
+		public var timeStamp:String;
 		
 		public var info : String;
 		public var listUsers : Array;
