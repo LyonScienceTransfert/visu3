@@ -191,7 +191,7 @@ public class RetroDocumentInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void deleteRetroDocument(IConnection conn, int retroDocumentId, int sessionId)
+	public void deleteRetroDocument(IConnection conn, Integer retroDocumentId, Integer sessionId)
 	{
 		log.warn("======== deleteRetroDocument ");
 		log.warn("=====documentId = {}",retroDocumentId);
