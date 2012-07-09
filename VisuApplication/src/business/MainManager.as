@@ -322,17 +322,31 @@ public class MainManager
 	/**
 	 * Get list user from BDD
 	 */
-	public function onCheckListUser(listUserVO:Array):void
+	public function onCheckListUser(listUserVO:Array, typeModule:String):void
 	{
 		var ar:Array = []
 		for each (var vo:UserVO in listUserVO)
 		{
 			ar.push(new User(vo)) ; 
 		}
+		switch (typeModule)
+		{
+			case "retro" :
+				var onLoadedAllUsersRetroModule:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOADED_ALL_USERS);
+				// dispatcher 
+				onLoadedAllUsersRetroModule.listUser = ar;
+				this.dispatcher.dispatchEvent(onLoadedAllUsersRetroModule);
+				break;
+			case "session" : 
+				var onLoadedAllUsersSessionModule:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS);
+				// dispatcher 
+				onLoadedAllUsersSessionModule.listUser = ar;
+				this.dispatcher.dispatchEvent(onLoadedAllUsersSessionModule);
+				break;
+		}
 		
-		var onLoadedAllUsers:UserEvent = new UserEvent(UserEvent.LOADED_ALL_USERS);
-		onLoadedAllUsers.listUser = ar;
-		this.dispatcher.dispatchEvent(onLoadedAllUsers);
+
+		
 	}
 	
 	public function onCheckListObselSessioExitSessionPause(listObselVO:Array):void
