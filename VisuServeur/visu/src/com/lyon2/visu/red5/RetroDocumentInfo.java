@@ -213,9 +213,10 @@ public class RetroDocumentInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, int[] listUser, String typeUpdate) throws SQLException
+	public void updateRetroDocument(IConnection conn, RetroDocument retroDocument, String typeUpdate) throws SQLException
 	{
 		log.warn("======== updateRetroDocument {}",retroDocument.getXml());
+		log.warn("======== updateRetroDocument, list invates {}",retroDocument.getInviteeIds().toString());
 
 		IClient client = conn.getClient();
 		IScope scope = conn.getScope();
@@ -240,8 +241,9 @@ public class RetroDocumentInfo {
 		} catch (Exception e) {
 			log.error("Probleme lors du listing des deleteAllInvitations" + e);
 		}
-		// add new invitations
-		for (int userId : listUser)
+
+		// update list invated user
+		for (int userId : retroDocument.getInviteeIds())
 		{		
 			try {
 				app.getSqlMapClient().insert(
@@ -250,7 +252,6 @@ public class RetroDocumentInfo {
 				log.error("Probleme lors du insert insertInvitation " + e, e);
 			}
 		}
-		log.warn("shared for : {}", listUser.toString());
 		// call function updated on the client side 
 		// FIXME : not need update retroDocument for owner of this document
 //		Object[] argsRetroDocument = {retroDocument};
