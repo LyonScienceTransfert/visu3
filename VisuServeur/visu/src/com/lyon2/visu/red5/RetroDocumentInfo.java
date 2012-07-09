@@ -127,7 +127,7 @@ public class RetroDocumentInfo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void getRetroDocumentById(IConnection conn, int documentId, boolean editabled) 
+	public void getRetroDocumentById(IConnection conn, Integer documentId) 
 	{
 		log.warn("======== getRetroDocumentById ");
 		log.warn("=====documentId = {}",documentId);
@@ -149,7 +149,7 @@ public class RetroDocumentInfo {
 		}
 		log.warn("list shared by retroDocument id = {}",listInvitees.size());
 		
-		Object[] args = {retroDocument,listInvitees, editabled};
+		Object[] args = {retroDocument,listInvitees};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) 
 		{
