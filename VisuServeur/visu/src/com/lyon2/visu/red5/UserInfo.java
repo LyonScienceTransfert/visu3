@@ -34,7 +34,7 @@ public class UserInfo
 	protected static final Logger log = LoggerFactory.getLogger(SessionInfo.class);
 	
 	@SuppressWarnings({ "unchecked" })
-	public void getListUser(IConnection conn) throws SQLException 
+	public void getListUser(IConnection conn, String typeModule) throws SQLException 
 	{
 		log.warn("======== getListUser ");
 
@@ -48,7 +48,7 @@ public class UserInfo
 			log.error("Probleme lors du listing des users " + e);
 		}	
 		
-		Object[] args = {listUser};
+		Object[] args = {listUser, typeModule};
 		IConnection connClient = (IConnection)client.getAttribute("connection");
 		if (conn instanceof IServiceCapableConnection) {
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
