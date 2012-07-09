@@ -142,14 +142,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		</s:RemoteObject>
 		
 		<s:RemoteObject
-			id="remoteUser"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="UserService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>
-		
-		<s:RemoteObject
 			id="remoteSessionUser"
 			endpoint="{Model.getInstance().AMFServer}"
 			destination="SessionUserService"
