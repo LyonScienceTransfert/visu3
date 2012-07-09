@@ -577,8 +577,9 @@ public class ObselInfo {
 		}
 	}
 	
-	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, Long timeStamp )
+	public void addObselComment(IConnection conn, String traceComment, String traceParent, String typeObsel, String textComment, String beginTime, String endTime, Integer forUserId, Integer sessionId, String timeStamp )
 	{
+		log.warn("=== addObselComment ===");
 		IClient client = conn.getClient();
 		User user = (User)client.getAttribute("user");
 		Integer userId = user.getId_user();
@@ -589,15 +590,15 @@ public class ObselInfo {
 			traceComment = app.makeTraceId(userId);
 		}
 		// set timestamp
-		if(timeStamp == 0){
+		if(timeStamp.equals("0")){
 			Date date = new Date();
-			timeStamp = date.getTime();			
+			timeStamp = String.valueOf(date.getTime());			
 		}
 		
 		List<Object> paramsObsel= new ArrayList<Object>();
 		paramsObsel.add("commentforuserid");paramsObsel.add(forUserId.toString());
 		 // add timeStamp
-		paramsObsel.add("timestamp");paramsObsel.add(timeStamp.toString());
+		paramsObsel.add("timestamp");paramsObsel.add(timeStamp);
 		paramsObsel.add("session");paramsObsel.add(sessionId.toString());
 		paramsObsel.add("parentTrace");paramsObsel.add(traceParent.toString());
 		paramsObsel.add("text");paramsObsel.add(textComment.toString());
