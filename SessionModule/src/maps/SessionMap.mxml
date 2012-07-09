@@ -210,7 +210,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 <!-- USERS -->
 		<mate:EventHandlers type="{SessionEditEvent.LOAD_LIST_USERS}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="userInfo.getListUser"/>     				
+				<mate:Request action="userInfo.getListUser" arguments="{['session']}"/>     				
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
