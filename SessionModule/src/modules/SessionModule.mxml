@@ -75,33 +75,35 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		top="15" bottom="25" left="5" right="5"> 
 	<fx:Script>
 		<![CDATA[ 
-            import com.ithaca.visu.controls.sessions.SessionDetailView;
-            import com.ithaca.visu.events.SelectionEvent;
-            import com.ithaca.visu.events.SessionEvent;
-            import com.ithaca.visu.events.SessionUserEvent;
-            import com.ithaca.visu.events.UserEvent;
-            import com.ithaca.visu.events.VisuModuleEvent;
-            import com.ithaca.visu.model.Activity;
-            import com.ithaca.visu.model.ActivityElement;
-            import com.ithaca.visu.model.Model;
-            import com.ithaca.visu.model.Session;
-            import com.ithaca.visu.model.User;
-            import com.ithaca.visu.model.vo.ActivityElementVO;
-            import com.ithaca.visu.model.vo.ActivityVO;
-            import com.ithaca.visu.model.vo.SessionVO;
-            import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
-            import com.ithaca.visu.model.vo.UserVO;
-            import com.ithaca.visu.ui.utils.SessionStatusEnum;
-            import com.ithaca.visu.view.session.controls.SessionDetail;
-            import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
-            import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
-            
-            import mx.collections.ArrayCollection;
-            import mx.controls.Alert;
-            import mx.events.FlexEvent;
-            import mx.events.IndexChangedEvent;
-            import mx.events.StateChangeEvent;
-            import mx.managers.CursorManager;
+			import com.ithaca.visu.controls.sessions.SessionDetailView;
+			import com.ithaca.visu.events.SelectionEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.SessionUserEvent;
+			import com.ithaca.visu.events.UserEvent;
+			import com.ithaca.visu.events.VisuActivityElementEvent;
+			import com.ithaca.visu.events.VisuActivityEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.model.Activity;
+			import com.ithaca.visu.model.ActivityElement;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.Session;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.vo.ActivityElementVO;
+			import com.ithaca.visu.model.vo.ActivityVO;
+			import com.ithaca.visu.model.vo.SessionVO;
+			import com.ithaca.visu.model.vo.SessionWithoutListUserVO;
+			import com.ithaca.visu.model.vo.UserVO;
+			import com.ithaca.visu.ui.utils.SessionStatusEnum;
+			import com.ithaca.visu.view.session.controls.SessionDetail;
+			import com.ithaca.visu.view.session.controls.event.SessionEditEvent;
+			import com.ithaca.visu.view.session.controls.event.SessionFilterEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.CursorManager;
 			
 			private var currentSession:Session = null;
 			
@@ -441,14 +443,88 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					sessionManagement.sessionDetailView.nbrRetroDocumentOwner = nbrRetroDocumentOwner;
 					sessionManagement.sessionDetailView.nbrRetroDocumentShare = nbrRetroDocumentShare;
 					sessionManagement.sessionDetailView.listRetroDocument = event.listRetroDocument;
-                    
 				}
 			}
+			/**
+			 * Set list activities
+			 */
+			private function onSetListActivities(event:VisuActivityEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var arrActivities:Array = event.listActivity;
+					var listActivities:ArrayCollection = new ArrayCollection();
+					var nbrActivities:uint = arrActivities.length;
+					for(var nActivity:uint = 0; nActivity < nbrActivities; nActivity++)
+					{
+						var obj:Object = arrActivities[nActivity];
+						var activity:Activity = new Activity(obj);
+						listActivities.addItem(activity);
+						var activityId:int = obj.id_activity;
+						var visuActivtyElementEvent:VisuActivityElementEvent = new VisuActivityElementEvent(VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS);
+						visuActivtyElementEvent.activityId = activityId;
+						dispatchEvent(visuActivtyElementEvent);
+					}
+					// set list activities
+					sessionManagement.sessionDetailView.activities = listActivities;
+				}
+			}
+			
+			
+			
+			/**
+			 * Set list activity elements
+			 */
+			public function onSetListActivityElements(event:VisuActivityElementEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					var activity:Activity = this.getActivityById(event.activityId, sessionManagement.sessionDetailView.activities );
+					if(activity != null)
+					{
+						var nbrActivity:int = activity.getListActivityElement().length;
+						if((activity != null) && ( nbrActivity == 0))
+						{
+							activity.setListActivityElement(event.listActivityElement);
+							sessionManagement.sessionDetailView.activities.itemUpdated( activity, activity.activityElements);
+						}
+					}
+				}
+			}
+			
+			/**
+			 * Set id added activity
+			 */
+			public function onSetIdAddedActivity(event:VisuActivityEvent):void
+			{
+				if(Model.getInstance().getCurrentSessionModule() == this)
+				{
+					this.getActivityById(0, sessionManagement.sessionDetailView.activities).id_activity = event.activityId;
+				}
+			}
+
+			
+			
 			//_____________________________________________________________________
 			//
 			// Utils
 			//
 			//_____________________________________________________________________
+			private function getActivityById(value:int, list:ArrayCollection):Activity
+			{
+				var nbrActivity:uint = list.length;
+				for(var nActivity:uint = 0; nActivity < nbrActivity;nActivity++)
+				{
+					var activity:Activity = list[nActivity];
+					var activityId:int = activity.id_activity;
+					if(activityId == value)
+					{
+						return activity;
+					}
+				}
+				return null;
+			}
+			
 			/**
 			 * notify , ready for use
 			 */
@@ -480,6 +556,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<mate:Listener type="{SessionEvent.UPDATE_DELETED_SESSION}"  method="onUpdateDeletedSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_DURATION_SESSION}"  method="onLoadDurationSession"/>
 		<mate:Listener type="{SessionEvent.LOAD_LIST_RETRODOCUMENT_SESSION}"  method="onLoadListRetrodocumentSession"/>
+		<mate:Listener type="{VisuActivityEvent.SET_ACTIVITY}"  method="onSetListActivities"/>
+		<mate:Listener type="{VisuActivityElementEvent.SET_LIST_ACTIVITY_ELEMENTS}"  method="onSetListActivityElements"/>
+		<mate:Listener type="{VisuActivityEvent.SET_ID_ADDED_ACTIVITY}"  method="onSetIdAddedActivity"/>
 	</fx:Declarations>
 </modules:VisuModuleBase>
 

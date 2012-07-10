@@ -301,6 +301,49 @@ public class MainManager
 	}	
 	
 	/**
+	 * Set activity session
+	 */
+	public function onCheckSessionActivities(listActivity:Array):void
+	{
+/*		listActivities = new ArrayCollection();
+		var nbrActivities:uint = arrActivities.length;
+		for(var nActivity:uint = 0; nActivity < nbrActivities; nActivity++){
+			var obj:Object = arrActivities[nActivity];
+			var activity:Activity = new Activity(obj);
+			this.listActivities.addItem(activity);
+			var activityId:int = obj.id_activity;
+			var visuActivtyElementEvent: = new VisuActivityElementEvent(VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS);
+			visuActivtyElementEvent.activityId = activityId;
+			this.dispatcher.dispatchEvent(visuActivtyElementEvent);
+		}*/
+		
+		var setListActivitiesEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.SET_ACTIVITY);
+		setListActivitiesEvent.listActivity = listActivity;
+		dispatcher.dispatchEvent(setListActivitiesEvent);
+
+	}	
+	
+	/**
+	 * Set activity elemnts session
+	 */
+	public function onCheckActivityElements(listActivityElement:Array, activityId:int):void
+	{
+		var setListActivityElementEvent:VisuActivityElementEvent = new VisuActivityElementEvent(VisuActivityElementEvent.SET_LIST_ACTIVITY_ELEMENTS);
+		setListActivityElementEvent.listActivityElement = listActivityElement;
+		setListActivityElementEvent.activityId = activityId;
+		dispatcher.dispatchEvent(setListActivityElementEvent);
+	}	
+	
+	/**
+	 * Set id added activity
+	 */
+	public function onCheckAddActivity(activityId:int):void
+	{
+		var setIdActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.SET_ID_ADDED_ACTIVITY);
+		setIdActivityEvent.activityId = activityId;
+		dispatcher.dispatchEvent(setIdActivityEvent);
+	}	
+	/**
 	 * check list date of the session in format string
 	 * it's easy than control UTC time localy. 
 	 */
