@@ -75,10 +75,12 @@ package com.ithaca.visu.events
 		static public const SHOW_LIST_ACTIVITY : String = 'showListActivity';
 		static public const START_ACTIVITY : String = 'startActivity';
 		static public const UPDATE_ACTIVITY : String = 'updateActivity';
+		static public const SET_ACTIVITY : String = 'setActivity';
+		static public const SET_ID_ADDED_ACTIVITY : String = 'setIdAddedActivity';
 		
 		// properties
 		public var sessionId:int;
-		public var listActivity:ArrayCollection;
+		public var listActivity:Array;
 		public var activity:Activity;
 		public var activityId:int;
 		
