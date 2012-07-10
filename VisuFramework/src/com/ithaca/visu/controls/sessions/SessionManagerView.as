@@ -473,11 +473,7 @@ package com.ithaca.visu.controls.sessions
 		}
 
 		private function loadListActivity(value:int):void
-		{
-			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
-			visuActivityEvent.sessionId = value;					
-			dispatchEvent(visuActivityEvent);
-			
+		{			
 			// get list user was recording in session
 			var presentUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.GET_LIST_SESSION_USER);
 			presentUserEvent.sessionId = value;
