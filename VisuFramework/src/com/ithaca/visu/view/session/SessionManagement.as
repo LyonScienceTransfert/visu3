@@ -442,10 +442,6 @@ package com.ithaca.visu.view.session
 			var presentUserEvent:SessionUserEvent = new SessionUserEvent(SessionUserEvent.GET_LIST_SESSION_USER);
 			presentUserEvent.sessionId = sessionDetail.session.id_session;
 			this.dispatchEvent(presentUserEvent);
-			
-			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
-			visuActivityEvent.sessionId = session.id_session;					
-			dispatchEvent(visuActivityEvent);
 		}
 		private function updateSelectedSession(value:SessionViewSalonSession):void
 		{
