@@ -158,40 +158,6 @@ package business
 			}
 		}
 		
-		/**
-		 * Set activity list 
-		 */
-		public function onLoadListActivity(arrActivities:Array):void
-		{
-			if(true){
-				this.listActivities = new ArrayCollection();
-				var nbrActivities:uint = arrActivities.length;
-				for(var nActivity:uint = 0; nActivity < nbrActivities; nActivity++){
-					var obj:Object = arrActivities[nActivity];
-					var activity:Activity = new Activity(obj);
-					this.listActivities.addItem(activity);
-					var activityId:int = obj.id_activity;
-					var visuActivtyElementEvent:VisuActivityElementEvent = new VisuActivityElementEvent(VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS);
-					visuActivtyElementEvent.activityId = activityId;
-					this.dispatcher.dispatchEvent(visuActivtyElementEvent);
-				}	
-			}
-		}
-		
-		public function onLoadListActivityElement(listActivityElement:Array, activityId:int):void
-		{
-			var activity:Activity = this.getActivityById(activityId);
-			if(activity != null)
-			{
-				var nbrActivity:int = activity.getListActivityElement().length;
-				if((activity != null) && ( nbrActivity == 0))
-				{
-					activity.setListActivityElement(listActivityElement);
-					listActivities.itemUpdated( activity, activity.activityElements);
-				}
-			}
-		}
-		
 		public function onLoadListUsersSession(listUserVO:Array, sessionId:int):void
 		{
 			this.listUser.removeAll();
