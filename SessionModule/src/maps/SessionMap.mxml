@@ -115,16 +115,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="checkOutSession" arguments="{[event.userId]}"/>              
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
-<!-- REMOTE-->		
-		<s:RemoteObject
-			id="remoteActivity"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="ActivityService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>						
-		
+		</mate:EventHandlers>						
+
 		<s:RemoteObject
 			id="remoteActivityElement"
 			endpoint="{Model.getInstance().AMFServer}"
@@ -132,23 +124,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			makeObjectsBindable="true"
 			showBusyCursor="true">
 		</s:RemoteObject>
-		
-		<s:RemoteObject
-			id="remoteSession"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="SessionService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>
-		
-		<s:RemoteObject
-			id="remoteSessionUser"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="SessionUserService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>
-		
 		
 		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}" debug="true">  
 			<mate:MethodInvoker generator="{SessionManager}" method="setCurrentSessionId" arguments="{event.sessionId}"/>
@@ -323,10 +298,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 								   sourceKey="sessions"
 								   targetKey="sessions"
 								   />
-		</mate:Injectors>
-		<mate:Injectors target="{SessionDetailView}">
-			<mate:PropertyInjector source="{SessionManager}"
-								   targetKey="activities" sourceKey="listActivities"/>
 		</mate:Injectors>
 		<mate:Injectors targets="{[SessionDetailView]}">
 			<mate:PropertyInjector source="{Model.getInstance()}"
