@@ -128,7 +128,7 @@ package business
 					activity.setListActivityElement(listActivityElement);
 					listActivities.itemUpdated( activity, activity.activityElements);
 					var ev:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.SHOW_LIST_ACTIVITY);
-					ev.listActivity = this.listActivities;
+//					ev.listActivity = this.listActivities;
 					var modulTutorat:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
 					//modulTutorat.updateView(this.listActivities);
 					// FIXME : If using dispatcher => Error : many instances the TutoratModule
