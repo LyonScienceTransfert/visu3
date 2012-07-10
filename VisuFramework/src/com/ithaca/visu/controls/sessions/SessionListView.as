@@ -536,12 +536,10 @@ package com.ithaca.visu.controls.sessions
 			if(instance == sessionDataGrid)
 			{
 				sessionDataGrid.addEventListener(ListEvent.ITEM_CLICK, onDataGridChangeSession);
-				sessionDataGrid.addEventListener(ListEvent.CHANGE,  onDataGridChangeSession);
 			}
 			if(instance == planDataGrid)
 			{
 				planDataGrid.addEventListener(ListEvent.ITEM_CLICK, onDataGridChangeSession);
-				planDataGrid.addEventListener(ListEvent.CHANGE,  onDataGridChangeSession);
 			}
 			
 		}
