@@ -5,10 +5,14 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Group width="1024" horizontalCenter="0">
+	<s:Group width="100%" horizontalCenter="0">
+		
+		<s:HGroup y="68" left="10" right="10" gap="10">
+			
 		
 		<!-- Calendrier des séances -->
-		<s:Panel id="panelCalendar" x="10" y="68" skinClass="skins.FixedPanel" title="Calendar">
+		<s:Panel id="panelCalendar" x="10" y="68" width="100%" skinClass="skins.FixedPanel"
+				 title="Calendar">
 			<s:Image x="10" y="-25" source="images/Home/ico_panel_calendar.png"/>
 			
 			<!-- Seance calendar navigation tools -->
@@ -35,7 +39,7 @@
 			
 			<!-- Contenu du calendrier des séances -->
 			<mx:VBox id="calendarContent" x="1" y="22"
-					 width="321" minHeight="400"
+					 width="100%" minHeight="400"
 					 dropShadowVisible="false" verticalScrollPolicy="auto">
 				
 				
@@ -108,46 +112,81 @@
 										<!-- Student -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_connected.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_etudiant.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_connected.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Étudiant 1" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 										<!-- Teacher -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_connected.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_tuteur.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_connected.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Tuteur 1" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 										<!-- Student not connected -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_deconnected.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_etudiant.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_deconnected.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Étudiant 2" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 										<!-- Student recording -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_recording.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_etudiant.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_recording.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Étudiant 3" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 										<!-- Teacher not in session -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_session.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_tuteur.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_session.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Tuteur 3" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 									</s:TileGroup>
@@ -219,19 +258,33 @@
 										<!-- Student -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_connected.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_etudiant.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_connected.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Étudiant 3" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(étu)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 										<!-- Teacher -->
 										<s:HGroup left="3" right="3" gap="2" height="100%"
 												  verticalAlign="middle">
-											<s:Image source="images/Home/ico_connected.png"/>
+											<s:HGroup>
+												<s:Group>
+													<s:Image source="images/Home/role_tuteur.png"
+															 width="16" height="16"/>
+												</s:Group>
+												<s:Group>
+													<s:Image source="images/Home/ico_connected.png"
+															 x="-9" y="8" width="8" height="8"/>	
+												</s:Group>
+											</s:HGroup>
 											<s:Label fontSize="12" text="Tuteur 3" color="#373737"
-													 verticalAlign="bottom" verticalCenter="0"/>
-											<s:Label fontSize="10" text="(tut)" color="#a6a6a6"
 													 verticalAlign="bottom" verticalCenter="0"/>
 										</s:HGroup>
 									</s:TileGroup>
@@ -285,7 +338,7 @@
 		
 		
 		<!-- Chat -->
-		<s:Panel id="panelChat" x="345" y="68" width="335" skinClass="skins.FixedPanel"
+		<s:Panel id="panelChat" x="345" y="68" width="100%" skinClass="skins.FixedPanel"
 				 title="Chat global">
 			<s:Image x="10" y="-25" source="images/Home/ico_panel_chat.png"/>
 			
@@ -337,15 +390,40 @@
 		</s:Panel>
 		
 		<!-- Utilisateurs -->
-		<s:Panel id="panelUtilisateurs" x="690" y="68" width="325" skinClass="skins.FixedPanel"
+		<s:Panel id="panelUtilisateurs" x="690" y="68" width="100%" skinClass="skins.FixedPanel"
 				 title="Utilisateurs">
 			<s:Image x="10" y="-25" source="images/Home/ico_panel_users.png"/>
 			
 			<s:Group x="0" y="0" width="100%" height="100%">
 				
 				<!-- barre de tri -->
-				<s:Group x="1" y="1">
-					<s:Image source="images/Home/users_filter.png"/>
+				<s:Group left="1" right="1" top="1" height="20" width="100%">
+					<s:Rect left="0" right="0" top="0" bottom="0" radiusX="2">
+						<s:fill>
+							<s:LinearGradient rotation="90">
+								<s:GradientEntry color="0xf3f3f3" 
+												 ratio="0" />
+								<s:GradientEntry color="0xdbdbdb" 
+												 ratio="0.5" />
+								<s:GradientEntry color="0xcacaca" 
+												 ratio="0.51" />
+								<s:GradientEntry color="0xdcdcdc" 
+												 ratio="1" />
+							</s:LinearGradient>
+						</s:fill>
+					</s:Rect>
+					<s:Rect left="0" right="0" top="0" bottom="0" radiusX="2">
+						<s:stroke>
+							<s:LinearGradientStroke rotation="90" weight="1">
+								<s:GradientEntry color="0x000000" alpha="0.2" ratio="0.0" />
+								<s:GradientEntry color="0x000000" alpha="0.2" ratio="0.001" />
+								<s:GradientEntry color="0x000000" alpha="0.2" ratio="0.0011" />
+								<s:GradientEntry color="0x000000" alpha="0.57" ratio="0.965" />
+								<s:GradientEntry color="0x000000" alpha="0.57" ratio="0.9651" />
+							</s:LinearGradientStroke>
+						</s:stroke>
+					</s:Rect>
+					
 					<s:HGroup left="5" top="5">
 						<s:Label color="0x000000" fontFamily="Arial" fontSize="12"
 								 fontWeight="normal" text="Tri" textAlign="center"
@@ -359,9 +437,8 @@
 				</s:Group>
 				
 				<!-- Liste des utilisateurs -->
-				<mx:VBox left="1" right="1" top="22" bottom="1" 
-						 width="100%" height="100%"
-						 dropShadowVisible="false" verticalScrollPolicy="auto">
+				<mx:VBox left="1" right="1" top="22" bottom="1" dropShadowVisible="false"
+						 verticalScrollPolicy="auto">
 					
 					
 					<s:List width="100%" height="610" focusColor="#FFCC5E"
@@ -370,11 +447,14 @@
 						<s:dataProvider>
 							<mx:ArrayCollection>
 								
-								<fx:Object name="Tuteur 1" role="tut" status="connected" />
-								<fx:Object name="Etudiant 1" role="étu" status="connected" />
-								<fx:Object name="Etudiant 2" role="étu" status="deconnected" />
-								<fx:Object name="Etudiant 3" role="étu" status="recording" />
-								<fx:Object name="Admin" role="adm" status="session" />
+								<fx:Object name="Tuteur 1" role="tuteur" status="connected" />
+								<fx:Object name="Etudiant 1" role="etudiant" status="connected" />
+								<fx:Object name="Etudiant 2" role="etudiant" status="deconnected" />
+								<fx:Object name="Etudiant 3" role="etudiant" status="recording" />
+								<fx:Object name="Etudiant 3" role="etudiant" status="recording" />
+								<fx:Object name="Etudiant 4" role="etudiant" status="session" />
+								<fx:Object name="Responsable 1" role="responsable" status="connected" />
+								<fx:Object name="Admin 1" role="admin" status="connected" />
 								
 							</mx:ArrayCollection>
 						</s:dataProvider>
@@ -384,6 +464,8 @@
 				
 			</s:Group>
 		</s:Panel>
+			
+		</s:HGroup>
 		
 	</s:Group>
 </s:Application>

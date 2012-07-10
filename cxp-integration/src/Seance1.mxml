@@ -238,10 +238,16 @@
 								</s:HGroup>
 								
 								<!-- buttons -->
-								<s:Button y="25" x="5" label="Ajouter une activité" skinClass="skins.Components.Button"/>
+								<s:Button x="5" y="25" label="Ajouter une activité"
+										  icon="images/Seance/ico_ajouter_activite.png"
+										  skinClass="skins.Components.Button"/>
 								<s:HGroup right="5" top="25">
-									<s:Button label="Publier ce plan" skinClass="skins.Components.Button"/>
-									<s:Button label="Créer une séance" skinClass="skins.Components.Button"/>
+									<s:Button label="Publier ce plan"
+											  icon="images/Seance/ico_publier_plan.png"
+											  skinClass="skins.Components.Button"/>
+									<s:Button label="Créer une séance"
+											  icon="images/Seance/ico_creer_seance.png"
+											  skinClass="skins.Components.Button"/>
 								</s:HGroup>
 								<!-- End grey block -->
 							</s:Group>

@@ -59,7 +59,8 @@ in accordance with the terms of the license agreement accompanying it.
 			 maxDisplayedLines="1" textAlign="center" verticalAlign="middle"
 			 left="11" right="9" top="32" bottom="2" 
 			 color="#FFFFFF" color.active="#010101" color.down="#010101"
-			 fontSize="11" horizontalCenter="1" verticalCenter="15">
+			 fontSize="11" horizontalCenter="1" verticalCenter="15"
+			 fontWeight.active="bold">
 	</s:Label>
 	
 </s:SparkButtonSkin>

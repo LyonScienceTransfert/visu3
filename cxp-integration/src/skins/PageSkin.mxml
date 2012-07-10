@@ -64,15 +64,20 @@ in accordance with the terms of the license agreement accompanying it.
 			</s:fill>
 		</s:Rect>
 	</s:Group>
-	<s:Group width="1024" horizontalCenter="0"
+	<s:Group width="100%" horizontalCenter="0"
 			 height="58">
-		<s:HGroup width="1024" height="58">
+		<s:HGroup width="100%" height="58">
 			
-			<s:Label color="0x2e2e2e" text="VISU"
-					 top="20" fontSize.normal="24" paddingTop="20" paddingLeft="10"/>
+			<s:Label top="20" color="0x2e2e2e" paddingLeft="10" paddingTop="25" text="VISU"
+					 width.normal="115" fontSize.normal="24" textAlign.normal="center"
+					 verticalAlign.normal="top"/>
 			<s:Group width="100%">
-				<s:HGroup right="0" height="48"
-						  gap.normal="5" paddingTop.normal="10" textAlign.normal="right">
+				<s:HGroup height="48"
+						  right.disabled="0"
+						  right.disabledWithControlBar="0"
+						  left.normal="0" gap.normal="5" paddingTop.normal="10"
+						  textAlign.normal="left"
+						  right.normalWithControlBar="0">
 					<s:Button label="Accueil" skinClass="skins.MenuButton.Home"/>
 					<s:Button label="Utilisateurs" skinClass="skins.MenuButton.Users"/>
 					<s:Button label="Séances" skinClass="skins.MenuButton.Seance"/>
@@ -99,21 +104,23 @@ in accordance with the terms of the license agreement accompanying it.
 							</s:LinearGradient>
 						</s:fill>
 					</s:Rect>
-					<s:HGroup y="1" left="20" right="10" height="100%">
+					<s:HGroup y="1" left="20" right="10" height="100%"
+							  gap.normal="0">
 						<s:Image source="images/Page/profile_ico.png" />
-						<s:Label height="20" text="Nom Utilisateur"
-								 verticalAlign="middle" color="#FFFFFF" 
-								 fontSize="11" fontWeight="bold"/>
-						<s:Label height="20" text="/"
-								 verticalAlign="middle" color="#FFFFFF" 
-								 fontSize="11" fontWeight="bold"/>
+						<s:Label height="20" color="#FFFFFF" fontSize="11" fontWeight="bold"
+								 text="Nom Utilisateur" verticalAlign="middle"
+								 text.normal="Nom Utilisateur"/>
+						<s:Label height="20" color="#FFFFFF" fontSize="11" fontWeight="bold" text="/"
+								 verticalAlign="middle"
+								 width.normal="20" textAlign.normal="center"/>
 						<s:Image source="images/Page/logout_ico.png" />
-						<mx:LinkButton label="Déconnexion" color="#FFFFFF" focusColor="#FFFFFFFF"
-									   fontSize="11" fontWeight="bold" paddingBottom="3"
-									   paddingLeft="0" paddingRight="0" paddingTop="0"
-									   rollOverColor="#FFFFFFFF" selectionColor="#FFFFFFFF"
+						<mx:LinkButton height="15" label="Déconnexion" color="#FFFFFF"
+									   focusColor="#FFFFFFFF" fontSize="11" fontWeight="bold"
+									   paddingBottom="3" paddingLeft="0" paddingRight="0"
+									   paddingTop="0" rollOverColor="#FFFFFFFF"
+									   selectionColor="#FFFFFFFF" textAlign="center"
 									   textRollOverColor="#ffaf04" textSelectedColor="#ffaf04"
-									   height="15" textAlign="center"/>
+									   textAlign.normal="right"/>
 					</s:HGroup>
 					<!-- Language -->
 					<s:HGroup right="10" bottom="4" gap="2" verticalAlign="baseline">
