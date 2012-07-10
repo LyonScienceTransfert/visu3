@@ -370,6 +370,93 @@ public class SessionInfo
 	}
 	
 	@SuppressWarnings("unchecked")
+	public void getSessionActivities(IConnection conn, Integer sessionId) throws SQLException
+	{
+		log.warn("======== getSessionActivities ");
+		
+		IClient client = conn.getClient();
+		// session activityElements
+		List<Activity> listActivity= null;
+		try
+		{
+			listActivity = (List<Activity>)app.getSqlMapClient().queryForList("activities.getSessionActivities", sessionId );
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des activities " + e);
+		}
+		Object[] args = {listActivity};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkSessionActivities", args);
+		} 	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void getActivityElements(IConnection conn, Integer activityId) throws SQLException
+	{
+		log.warn("======== getActivityElements ");
+		
+		IClient client = conn.getClient();
+		List<ActivityElement> listActivityElement = null;
+		try
+		{
+			listActivityElement = (List<ActivityElement>)app.getSqlMapClient().queryForList("activities_elements.getActivityElements", activityId);			
+		} catch (Exception e) {
+			log.error("Probleme lors du listing des activitiyElement " + e);
+		}
+		Object[] args = {listActivityElement, activityId};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkActivityElements", args);
+		} 
+	}
+	
+	public void updateActivity(Activity activity) throws SQLException 
+	{
+		log.debug("update activity  {}", activity);
+		try
+		{
+			app.getSqlMapClient().update("activities.update", activity);
+		} catch (Exception e) {
+			log.error("Probleme lors du updating d'activitiy " + e);
+		}
+	}
+	public void deleteActivity(Activity activity) throws SQLException 
+	{
+		log.debug("delete activity id  {}", activity);
+		try
+		{
+			app.getSqlMapClient().delete("activities_elements.deleteByIdActivity", activity.getId_activity());
+			app.getSqlMapClient().delete("activities.delete", activity);
+		} catch (Exception e) {
+			log.error("Probleme lors du deleting d'activitiy " + e);
+		}
+	}
+	
+	public void addActivity(IConnection conn, Activity activity) throws SQLException 
+	{
+		log.debug("insert activty  {}", activity );
+		IClient client = conn.getClient();
+		Integer key = 0;
+		try
+		{
+			key = (Integer)app.getSqlMapClient().insert("activities.insert", activity);
+		} catch (Exception e) {
+			log.error("Probleme lors du adding d'activitiy " + e);
+		}
+		
+		//activity.setId_activity(key);
+		
+		Object[] args = {key};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkAddActivity", args);
+			} 	
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
 	{
 		log.warn("======== getSessionsByDateByUser ");
