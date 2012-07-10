@@ -66,6 +66,7 @@ package business
 	import com.ithaca.visu.events.SessionUserEvent;
 	import com.ithaca.visu.events.UserEvent;
 	import com.ithaca.visu.events.VisuActivityElementEvent;
+	import com.ithaca.visu.events.VisuActivityEvent;
 	import com.ithaca.visu.model.Activity;
 	import com.ithaca.visu.model.ActivityElement;
 	import com.ithaca.visu.model.Model;
@@ -141,7 +142,7 @@ package business
 			log.debug("setSessionAndPlan "+ sessions);
 		}
 		
-		public function loadListPresentUserInSession(value:Array):void
+		public function loadListPresentUserInSession(value:Array, sessionId:int):void
 		{
 			if(value != null && value.length > 0)
 			{
@@ -156,6 +157,10 @@ package business
 				loadListRecordingUser.listUser = listUser;
 				this.dispatcher.dispatchEvent(loadListRecordingUser);	
 			}
+			// load activities
+			var visuActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.LOAD_LIST_ACTIVITY);
+			visuActivityEvent.sessionId = sessionId;			   		
+			this.dispatcher.dispatchEvent(visuActivityEvent);
 		}
 		
 		public function onLoadListUsersSession(listUserVO:Array, sessionId:int):void
