@@ -236,39 +236,21 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		
 <!-- ACTIVITY -->
 		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_SESSION}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="updateActivity" arguments="{event.activityVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onUpdateActivity" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.updateActivity" arguments="{[event.activityVO]}"/>     				
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{SessionEvent.DELETE_ACTIVITY}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="deleteActivity" arguments="{event.activityVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onDeleteActivity" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.deleteActivity" arguments="{[event.activityVO]}"/>     				
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{SessionEvent.ADD_ACTIVITY}" debug="true">
-			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="addActivity" arguments="{event.activityVO}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}" method="onAddActivity" arguments="{[resultObject]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{SessionManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.addActivity" arguments="{[event.activityVO]}"/>     				
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 <!-- ACTIVITY ELEMENT -->

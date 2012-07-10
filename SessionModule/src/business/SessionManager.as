@@ -169,17 +169,7 @@ package business
 				this.listUser.addItem(user);
 			}
 		}
-		
-		public function onUpdateActivity(activityVO:ActivityVO):void
-		{
-		}
-		public function onDeleteActivity(activityId:int):void
-		{
-		}
-		public function onAddActivity(activityVO:ActivityVO):void
-		{
-			this.getActivityById(0).id_activity = activityVO.id_activity;
-		}
+
 		public function onUpdateActivityElement(activityElement:ActivityElementVO):void
 		{
 		}
