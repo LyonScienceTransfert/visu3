@@ -281,7 +281,7 @@ public class SessionInfo
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, int userId) throws SQLException
+	public void addSession(IConnection conn, SessionWithoutListUser sessionWithoutListUser, Integer userId) throws SQLException
 	{
 		log.warn("======== addSession ");
 		// id session for cloned
