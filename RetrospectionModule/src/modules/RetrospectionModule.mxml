@@ -1043,8 +1043,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				if(Model.getInstance().getCurrentRetroModule() == this)
 				{
 					var loadRetroDocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOAD_RETRO_DOCUMENT);
-					loadRetroDocument.idRetroDocument =  value.documentId
-					loadRetroDocument.editabled = true;				
+					loadRetroDocument.idRetroDocument =  value.documentId			
 					this.dispatchEvent(loadRetroDocument);
 				}
 			}
