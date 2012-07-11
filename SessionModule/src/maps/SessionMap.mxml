@@ -116,14 +116,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				<mate:Request action="checkOutSession" arguments="{[event.userId]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>						
-
-		<s:RemoteObject
-			id="remoteActivityElement"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="ActivityElementService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>
 		
 		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}" debug="true">  
 			<mate:MethodInvoker generator="{SessionManager}" method="setCurrentSessionId" arguments="{event.sessionId}"/>
@@ -226,8 +218,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="sessionInfo.addActivity" arguments="{[event.activityVO]}"/>     				
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>
-		
+		</mate:EventHandlers>	
 <!-- ACTIVITY ELEMENT -->
 		<mate:EventHandlers type="{SessionEvent.UPDATE_ACTIVITY_ELEMENT_SESSION}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
