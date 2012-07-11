@@ -456,6 +456,48 @@ public class SessionInfo
 			} 	
 	}
 	
+	public void updateActivityElement(ActivityElement activityElement) throws SQLException 
+	{
+		log.debug("update activityElement  {}", activityElement);
+		try
+		{
+			app.getSqlMapClient().update("activities_elements.update", activityElement);
+		} catch (Exception e) {
+			log.error("Probleme lors du updating d'activitiyElement " + e);
+		}
+	}
+	
+	public void deleteActivityElement(ActivityElement activityElement) throws SQLException 
+	{
+		log.debug("delete activityElement  {}", activityElement);
+		try
+		{
+			app.getSqlMapClient().delete("activities_elements.delete", activityElement);
+		} catch (Exception e) {
+			log.error("Probleme lors du updating d'activitiyElement " + e);
+		}
+	}
+	
+	public void addActivityElement(IConnection conn, ActivityElement activityElement) throws SQLException 
+	{
+		log.debug("insert activtyElement {}", activityElement );
+		IClient client = conn.getClient();
+		Integer key = 0;
+		try
+		{
+			key = (Integer)app.getSqlMapClient().insert("activities_elements.insert", activityElement);
+		} catch (Exception e) {
+			log.error("Probleme lors du adding d'activitiy element " + e);
+		}
+		
+		Object[] args = {activityElement.getId_activity(), key};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkAddActivityElement", args);
+			} 	
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void getSessionsByDateByUser(IConnection conn, Integer userId , String date) 
 	{
