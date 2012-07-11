@@ -873,7 +873,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     retroDocumentVO.lastModified = dateLastModify;
                     var updateRetrodocument:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.UPDATE_RETRO_DOCUMENT);
                     updateRetrodocument.retroDocumentVO = retroDocumentVO;
-                    updateRetrodocument.listUser = event.listUser;
+					retroDocumentVO.inviteeIds = event.listUser;
                     updateRetrodocument.typeUpdate = event.typeUpdate;
                     this.dispatchEvent(updateRetrodocument);		
                 }
