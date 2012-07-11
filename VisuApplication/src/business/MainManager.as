@@ -79,6 +79,7 @@ import com.ithaca.visu.events.SessionEvent;
 import com.ithaca.visu.events.SessionSharedEvent;
 import com.ithaca.visu.events.ShortMarkerEvent;
 import com.ithaca.visu.events.UserEvent;
+import com.ithaca.visu.events.VisuActivityElementEvent;
 import com.ithaca.visu.events.VisuActivityEvent;
 import com.ithaca.visu.events.VisuModuleEvent;
 import com.ithaca.visu.model.ActivityElementType;
