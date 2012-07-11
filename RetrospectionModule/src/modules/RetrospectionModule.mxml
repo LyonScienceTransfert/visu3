@@ -343,15 +343,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
     				}
                     
                     // init listener, activity on Timeline
-                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
+// FIXME : disactivate TracageManager 
+// [INFO] [http-0.0.0.0-80-1] org.red5.io.amf3.Input - Unknown datatype: 110
+// [ERROR] [http-0.0.0.0-80-1] org.red5.server.net.servlet.AMFGatewayServlet - Error handling remoting call
+//java.lang.IndexOutOfBoundsException: Index: 5, Size: 2
+//					TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_TIME_LINE , TracageManager.getInstance().addTracageActivity);
                     // init listener, activity on user video
-                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
+//                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_USER_VIDEO , TracageManager.getInstance().addTracageActivity);
                     // init listener, activity on session video
-                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
+//                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_SESSION_VIDEO , TracageManager.getInstance().addTracageActivity);
                     // init listener, activity on retro document blocks
-                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
+//                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT_BLOCK , TracageManager.getInstance().addTracageActivity);
                     // init listener, activity on retro document 
-                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
+//                    TracageEventDispatcherFactory.getEventDispatcher().addEventListener(TracageEvent.ACTIVITY_RETRO_DOCUMENT , TracageManager.getInstance().addTracageActivity);
     
                     // init list editing comment obsel
                     _listEditCommentDialog = new ArrayCollection();
