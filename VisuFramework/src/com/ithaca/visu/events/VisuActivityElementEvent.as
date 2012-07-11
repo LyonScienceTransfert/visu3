@@ -69,8 +69,10 @@ package com.ithaca.visu.events
 		// constants
 		static public const LOAD_LIST_ACTIVITY_ELEMENTS : String = 'loadListActivityElements';
 		static public const SET_LIST_ACTIVITY_ELEMENTS : String = 'setListActivityElements';
+		static public const SET_ID_ADDED_ACTIVITY_ELEMENT : String = 'setIdAddedActivityElements';
 		// properties
 		public var activityId:int;
+		public var activityElementId:int;
 		public var listActivityElement:Array;
 		// constructor
 		public function VisuActivityElementEvent(type : String,
