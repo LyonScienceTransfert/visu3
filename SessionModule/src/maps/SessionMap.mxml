@@ -238,13 +238,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
-		<mate:EventHandlers type="{SessionUserEvent.GET_LIST_SESSION_USER}" debug="true">
+		<mate:EventHandlers type="{SessionUserEvent.GET_LIST_SESSION_USER}" debug="true">   
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="obselInfo.getListPresentUserInSession" arguments="{[event.sessionId]}" />				
 				<rtmp:resultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}"
 										method="loadListPresentUserInSession" 
-										arguments="{[currentEvent.data]}" />
+										arguments="{[currentEvent.data, event.sessionId]}" />
 				</rtmp:resultHandlers>			
 				<rtmp:faultHandlers>
 					<mate:MethodInvoker generator="{SessionManager}" 
@@ -253,7 +253,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				</rtmp:faultHandlers>
 			</rtmp:RtmpServiceInvoker>
 			
-			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">  
 				<mate:Request action="obselInfo.getObselByTypeSessionExitSessionPause"   arguments="{[event.sessionId]}" />	
 			</rtmp:RtmpServiceInvoker>	
 			
