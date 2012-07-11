@@ -342,6 +342,17 @@ public class MainManager
 		var setIdActivityEvent:VisuActivityEvent = new VisuActivityEvent(VisuActivityEvent.SET_ID_ADDED_ACTIVITY);
 		setIdActivityEvent.activityId = activityId;
 		dispatcher.dispatchEvent(setIdActivityEvent);
+	}
+	
+	/**
+	 * Set id added activityElement
+	 */
+	public function onCheckAddActivityElement( activityId:int, activityElementId:int):void
+	{
+		var setIdActivityElementEvent:VisuActivityElementEvent = new VisuActivityElementEvent(VisuActivityElementEvent.SET_ID_ADDED_ACTIVITY_ELEMENT);
+		setIdActivityElementEvent.activityElementId = activityElementId;
+		setIdActivityElementEvent.activityId = activityId;
+		dispatcher.dispatchEvent(setIdActivityElementEvent);
 	}	
 	/**
 	 * check list date of the session in format string
