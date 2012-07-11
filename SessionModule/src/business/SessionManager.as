@@ -175,48 +175,6 @@ package business
 			}
 		}
 
-		public function onUpdateActivityElement(activityElement:ActivityElementVO):void
-		{
-		}
-		public function onDeleteActivityElement(value:*):void
-		{	
-		}
-		
-		public function onAddActivityElement(value:ActivityElementVO):void
-		{
-			var idElement:int = value.id_element;
-			if(idElement != 0)
-			{
-				var arrActivityElement:ArrayCollection = this.getActivityById(value.id_activity).activityElements;
-				setIdElement(idElement, arrActivityElement);
-			}else
-			{
-				var nbrActivity:int = this.listActivities.length;
-				for(var nActivity:int=0; nActivity < nbrActivity; nActivity++)
-				{
-					var activity:Activity = this.listActivities.getItemAt(nActivity) as Activity;
-					var arrActivityElement:ArrayCollection = activity.activityElements;
-					var isSet:Boolean = setIdElement(idElement, arrActivityElement);
-					if(isSet){ return;}
-				}
-			}
-			
-			function setIdElement(id:int , list:ArrayCollection):Boolean
-			{
-				var nbrElement:int = list.length;
-				for(var nElement:int = 0; nElement < nbrElement; nElement++)
-				{
-					var activityElement:ActivityElement = list.getItemAt(nElement) as ActivityElement;
-					if(activityElement.id_element == 0)
-					{
-						activityElement.id_element = id;
-						return true;
-					}
-				}
-				return false;
-			}
-		}
-		
 
 // USER
 		public function onUpdateSession(sessionVO:SessionVO):void
