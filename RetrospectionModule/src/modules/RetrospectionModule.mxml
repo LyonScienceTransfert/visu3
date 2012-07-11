@@ -1543,7 +1543,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                            var beginTime:String = currentTime.toString();
                            var endTime:String = (currentTime + durationObselCommentMs).toString();					
                            
-                           var timeStamp:Number = 0
+                           var timeStamp:String = "0";
                            var forUserId:int = 0;
                            // set properties for existing obsel
                            if(event.currentTarget.user)
@@ -1592,7 +1592,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
                        if( obsel && userIdInitEditCommentDialog > -1 && !event.currentTarget.deleting && userIdInitEditCommentDialog != new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]) ) 
                        {
                            var setCommentObsel:TraceLineEvent = updateObselComment.cloneMe()
-                           setCommentObsel.timeStamp = 0;
+                           setCommentObsel.timeStamp = "0";
                            setCommentObsel.forUserId = new Number(obsel.props[TraceModel.COMMENT_FOR_USER_ID]);
                            setCommentObsel.typeObsel = TraceModel.SET_TEXT_COMMENT;
                            // send second obsel 
