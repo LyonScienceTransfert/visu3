@@ -103,6 +103,8 @@ import flash.net.NetConnection;
 import gnu.as3.gettext.FxGettext;
 import gnu.as3.gettext._FxGettext;
 
+import modules.UserModule;
+
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.logging.ILogger;
@@ -609,7 +611,7 @@ public class MainManager
 		}
 		
 	}
-	
+
 	/**
 	 * notification to all connected users for updating list users
 	 * @param 
@@ -1773,6 +1775,35 @@ public class MainManager
 		sessionEvent.listSession = listSession;
 		sessionEvent.sessionDate = sessionDate;
 		dispatcher.dispatchEvent(sessionEvent);	
+	}
+	/**
+	 * Set updated user
+	 * @param userVO
+	 */
+	public function onCheckUpdatedUser(userVO:UserVO):void
+	{
+		var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
+		userModule.setModeEditUpdatedUser(userVO);
+	}
+	
+	/**
+	 * Set added user
+	 * @param userVO
+	 */
+	public function onCheckAddedUser(userVO:UserVO):void
+	{
+		var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
+		userModule.setModeEditAddedUser(userVO);
+	}
+	
+	/**
+	 * Set deleted user
+	 * @param user id
+	 */
+	public function onCheckDeletedUser(userId:int):void
+	{
+		var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
+		userModule.setModeEditDeletedUser(userId);
 	}
 	
 	

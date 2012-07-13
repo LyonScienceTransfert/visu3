@@ -204,11 +204,13 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:CallbackRegistrator action="checkListObselRetroRoom" target="{MainManager}" method="onCheckListObselRetroRoom"/>
 			<rtmp:CallbackRegistrator action="checkUpdateRetroDocument" target="{MainManager}" method="onCheckUpdateRetroDocument"/>
 			<rtmp:CallbackRegistrator action="checkUsersFromSession" target="{MainManager}" method="onCheckUsersFromSession"/>
-			<!--<rtmp:CallbackRegistrator action="checkUpdatedUser" target="{MainManager}" method="onCheckUpdatedUser"/>-->
 			<rtmp:CallbackRegistrator action="checkSessionActivities" target="{MainManager}" method="onCheckSessionActivities"/>
 			<rtmp:CallbackRegistrator action="checkActivityElements" target="{MainManager}" method="onCheckActivityElements"/>
 			<rtmp:CallbackRegistrator action="checkAddActivity" target="{MainManager}" method="onCheckAddActivity"/>
 			<rtmp:CallbackRegistrator action="checkAddActivityElement" target="{MainManager}" method="onCheckAddActivityElement"/>
+			<rtmp:CallbackRegistrator action="checkUpdatedUser" target="{MainManager}" method="onCheckUpdatedUser"/>
+			<rtmp:CallbackRegistrator action="checkAddedUser" target="{MainManager}" method="onCheckAddedUser"/>
+			<rtmp:CallbackRegistrator action="checkDeletedUser" target="{MainManager}" method="onCheckDeletedUser"/>
         </mate:EventHandlers>
 
 		<mate:EventHandlers type="{RtmpStatusEvent.DISCONNECTED}" debug="true">
