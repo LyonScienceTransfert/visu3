@@ -88,13 +88,7 @@ package managers
 			this.dispatcher = dispatcher;
 			
 		}
-		/*
-		* this variable contains the list of profileDescription 
-		*/	
-		/*
-		[Bindable] public var profiles:Array=[];	
-		public function setProfiles(value:Array):void { log.debug(value.toString());profiles = value; }
-		*/
+
 		[Bindable] public var users:Array=[];	
 		public function setUsers(value:Array):void 
 		{ 
@@ -123,35 +117,6 @@ package managers
 		public function onError(event:Event):void
 		{
 			log.error(event.toString());
-		}
-		
-		/**
-		 * return updated user
-		 */
-		public function onUpdateUser(userVO:UserVO):void{
-			//var userEvent:UserEvent = new UserEvent(UserEvent.UPDATE_VIEW_USER);
-			//userEvent.userVO = userVO;
-			var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
-			userModule.setModeEditUpdatedUser(userVO);
-			// FIXME : If using dispatcher => Error : many instances the UserModule
-			//TypeError: Error #1034: Echec de la contrainte de type 
-			//dispatcher.dispatchEvent(userEvent);
-		}
-		
-		/**
-		 * return added user
-		 */
-		public function onAddUser(userVO:UserVO):void{
-			var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
-			userModule.setModeEditAddedUser(userVO);
-		}
-		
-		/**
-		 * return id of the deleted user
-		 */
-		public function onDeleteUser(userId:int):void{
-			var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
-			userModule.setModeEditDeletedUser(userId);
 		}
 	}
 }
