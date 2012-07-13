@@ -212,30 +212,6 @@ package business
 			}
 		}
 		
-		private function setActivityVO(activity:Activity,sessionId:int):ActivityVO
-		{
-			var activityVO:ActivityVO = new ActivityVO();
-			activityVO.id_activity = activity.id_activity; 
-			activityVO.id_session = sessionId;
-			activityVO.title = activity.title;
-			activityVO.duration = activity.duration;
-			activityVO.ind = activity.ind;
-			return activityVO;
-		}
-		
-		private function setActivityElementVO(activityElement:ActivityElement, idActivity:int):ActivityElementVO
-		{
-			var alm:ActivityElementVO = new ActivityElementVO();
-			var idActivity:int;
-			alm.id_activity = idActivity;
-			alm.data = activityElement.data;
-			alm.url_element = activityElement.url_element;
-			alm.type_element = activityElement.type_element;
-			alm.type_mime = activityElement.type_mime;
-			alm.order_activity_element = activityElement.order_activity_element;
-			return alm;
-		}
-		
 		private function getActivityById(value:int):Activity
 		{
 			var nbrActivity:uint = this.listActivities.length;
