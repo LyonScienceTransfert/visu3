@@ -20,12 +20,12 @@
 		<property name="virtualHosts" value="${webapp.virtualHosts}" />
 	</bean>
 
-	<bean id="web.handler" class="com.lyon2.visu.Application">
+	<bean id="web.handler" class="com.lyon2.visu.Application" scope="prototype">
 		<property name="smtpserver" value="${visu.smtpServer}" />
 		<property name="sqlMapClient" ref="sqlMap"/>
     </bean>
      
-    <bean id="sqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+    <bean id="sqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" scope="prototype">
         <property name="configLocation" value="classpath:ibatis/sqlMapConfig.xml"/>
     </bean>
     
