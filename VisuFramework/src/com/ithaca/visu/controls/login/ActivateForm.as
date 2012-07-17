@@ -62,11 +62,8 @@
  */
 package com.ithaca.visu.controls.login
 {
-import com.adobe.crypto.MD5;
 import com.ithaca.utils.UtilFunction;
-import com.ithaca.utils.components.IconButton;
 import com.ithaca.visu.controls.login.event.LoginFormEvent;
-import com.ithaca.visu.model.User;
 import com.ithaca.visu.model.vo.UserVO;
 import com.ithaca.visu.ui.utils.IconEnum;
 

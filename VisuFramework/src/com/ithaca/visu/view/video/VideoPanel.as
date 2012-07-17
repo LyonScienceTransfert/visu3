@@ -62,31 +62,22 @@
  */
 package com.ithaca.visu.view.video
 {
-	import com.ithaca.visu.traces.TracageEventDispatcherFactory;
-	import com.ithaca.visu.traces.events.TracageEvent;
 	import com.ithaca.traces.model.RetroTraceModel;
-	import com.ithaca.traces.model.TraceModel;
-	import com.ithaca.utils.VisuUtils;
-	import com.ithaca.utils.components.IconButton;
 	import com.ithaca.visu.events.VideoPanelEvent;
 	import com.ithaca.visu.model.User;
+	import com.ithaca.visu.traces.TracageEventDispatcherFactory;
+	import com.ithaca.visu.traces.events.TracageEvent;
 	import com.lyon2.controls.VideoComponent;
 	
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.media.Camera;
 	import flash.media.SoundTransform;
-	import flash.media.Video;
 	import flash.net.NetStream;
-	
-	import gnu.as3.gettext._FxGettext;
 	
 	import mx.controls.Button;
 	import mx.events.FlexEvent;
 	
 	import spark.components.HGroup;
-	import spark.components.Label;
-	import spark.components.Panel;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	public class VideoPanel extends SkinnableComponent
