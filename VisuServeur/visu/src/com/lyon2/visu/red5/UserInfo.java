@@ -75,7 +75,6 @@ public class UserInfo
 			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
 			sc.invoke("checkUsersFromSession", args);
 			} 	
-		
 	}
 	
 
@@ -139,5 +138,4 @@ public class UserInfo
 			sc.invoke("checkDeletedUser", args);
 		} 	
 	}
-	
 }

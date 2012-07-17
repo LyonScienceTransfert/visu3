@@ -144,9 +144,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+
 			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.controls.List;
+
 			import mx.core.DragSource;
 			import mx.core.IUIComponent;
 			import mx.events.CloseEvent;
