@@ -121,6 +121,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.model.Notification;
 			import com.ithaca.visu.model.Session;
 			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.vo.ArrayDataVO;
 			import com.ithaca.visu.skins.Components.Button;
 			import com.ithaca.visu.skins.FixedPanel;
 			import com.ithaca.visu.skins.Tutorat.ButtonNegative;
@@ -142,7 +143,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import gnu.as3.gettext._FxGettext;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			import mx.controls.Alert;
+			import mx.controls.List;
 			import mx.core.DragSource;
 			import mx.core.IUIComponent;
 			import mx.events.CloseEvent;
@@ -368,14 +371,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
 							// this information will add to the obsel
 							sessionSharedEvent.info = event.target.toolTip;
-							sessionSharedEvent.listUsers = listUsersIds;
+							// set object for list users
+							var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+							listUserIdVO.listUser = listUsersIds;
+							sessionSharedEvent.listUserIdVO = listUserIdVO;
 							sessionSharedEvent.senderUserId = 	player.getSenderId();
 							sessionSharedEvent.info = player.toolTip;
 							// set status record for add obsel sharedPlayerAction when session on Paused
 							sessionSharedEvent.status = VisuVisioAdvanced.STATUS_RECORD;	
 							sessionSharedEvent.url = player.url;
-							sessionSharedEvent.idDocument = player.getIdDocument();
-							sessionSharedEvent.currentTimeVideoPlayer = player.getCurrentTime();
+							sessionSharedEvent.idDocument = player.getIdDocument().toString();
+							sessionSharedEvent.currentTimeVideoPlayer = player.getCurrentTime().toString();
 							sessionSharedEvent.action = TraceModel.STOP_VIDEO;
 							dispatchEvent(sessionSharedEvent);	
 							// set pause video
@@ -727,13 +733,17 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				sessionSharedEvent.typeInfo = DocumentActionType.valueOf(DocumentActionType.ACTION_DOCUMENT_VIDEO);
 				// this information will add to the obsel
 				sessionSharedEvent.info = event.target.toolTip;
-				sessionSharedEvent.listUsers = listUsersIds;
+				
+				// set object for list users
+				var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+				listUserIdVO.listUser = listUsersIds;
+				sessionSharedEvent.listUserIdVO = listUserIdVO;
 				sessionSharedEvent.senderUserId = 	player.getSenderId();
 				// set status record for add obsel sharedPlayerAction when session on Paused
 				sessionSharedEvent.status = VisuVisioAdvanced.STATUS_RECORD;	
 				sessionSharedEvent.url = player.url;
-				sessionSharedEvent.idDocument = idDocument;
-				sessionSharedEvent.currentTimeVideoPlayer = currentTime;
+				sessionSharedEvent.idDocument = idDocument.toString();
+				sessionSharedEvent.currentTimeVideoPlayer = currentTime.toString();
 				sessionSharedEvent.action = action;
 				dispatchEvent(sessionSharedEvent);			
 			}
@@ -767,11 +777,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				sessionSharedEvent.typeInfo = typeInfo;
 				// this information will add to the obsel
 				sessionSharedEvent.info = event.target.toolTip;
-				sessionSharedEvent.listUsers = listUsersIds;
 				sessionSharedEvent.senderUserId = senderUserId;
+				// set object for list users
+				var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+				listUserIdVO.listUser = listUsersIds;
+				sessionSharedEvent.listUserIdVO = listUserIdVO;
 				sessionSharedEvent.status = this.visio.status;	
 				sessionSharedEvent.url = url;
-				sessionSharedEvent.idDocument = idDocument;
+				sessionSharedEvent.idDocument = idDocument.toString();
 				dispatchEvent(sessionSharedEvent);			
 			}
 			
@@ -826,7 +839,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(value.type_element);
 				sessionSharedEvent.info = value.data;
-				sessionSharedEvent.listUsers = listUsersId;
+				// set object for list users
+				var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+				listUserIdVO.listUser = listUsersId;
+				sessionSharedEvent.listUserIdVO = listUserIdVO;
 				sessionSharedEvent.status = this.visio.status;	
 				sessionSharedEvent.url = value.url_element;
 				dispatchEvent(sessionSharedEvent);	
@@ -892,7 +908,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 				sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.START_ACTIVITY);
 				sessionSharedEvent.info = value.title;
-				sessionSharedEvent.listUsers = listUsersId;
+				
+				// set object for list users
+				var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+				listUserIdVO.listUser = listUsersId;
+				sessionSharedEvent.listUserIdVO = listUserIdVO;
 				// use url variable for sending id activity
 				sessionSharedEvent.url = value.id_activity.toString();
 				sessionSharedEvent.status = this.visio.status;	
@@ -942,8 +962,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 							var sessionSharedEvent:SessionSharedEvent = new SessionSharedEvent(SessionSharedEvent.SEND_SHARED_INFO);
 							sessionSharedEvent.typeInfo = ActivityElementType.valueOf(ActivityElementType.STOP_ACTIVITY);
 							// info == "void", we have title activity in obsel start activity
-							sessionSharedEvent.info = fxgt.gettext("a suspendu la séance.");	
-							sessionSharedEvent.listUsers = listUsersId;
+							sessionSharedEvent.info = fxgt.gettext("a suspendu la séance.");
+							// set object for list users
+							var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+							listUserIdVO.listUser = listUsersId;
+							sessionSharedEvent.listUserIdVO = listUserIdVO;
 							// use url variable for sending id activity
 							sessionSharedEvent.url = currentActivityId.toString();
 							sessionSharedEvent.status = this.visio.status;	
@@ -1054,7 +1077,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 					return;
 				}
 				sessionSharedEvent.info = message;
-				sessionSharedEvent.listUsers = listUsersId;
+				// set object for list users
+				var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+				listUserIdVO.listUser = listUsersId;
+				sessionSharedEvent.listUserIdVO = listUserIdVO;
 				sessionSharedEvent.idUserFor = idUserFor;
 				dispatchEvent(sessionSharedEvent);
                 // empty text message
@@ -1113,7 +1139,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
 
                 sessionSharedEvent.info = message;
 				sessionSharedEvent.status = this.visio.status;
-				sessionSharedEvent.listUsers = listUsersId;
+				// set object for list users
+				var listUserIdVO:ArrayDataVO = new ArrayDataVO();
+				listUserIdVO.listUser = listUsersId;
+				sessionSharedEvent.listUserIdVO = listUserIdVO;
 				sessionSharedEvent.idUserFor = idUserFor;
 				sessionSharedEvent.typeShortMarker = typeShortMarker;
 				if(beginTime != "")
@@ -1579,6 +1608,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 if(Model.getInstance().getCurrentTutoratModule() == this)
                 {
                     var saveShortMarkerEvent:ShortMarkerEvent = new ShortMarkerEvent(ShortMarkerEvent.SAVE_SHORT_MARKER);
+					// transfer data class
+					var arrayData:ArrayDataVO = new ArrayDataVO()
                     var listColor:Array = new Array();
                     listColor.push("#DB6E6E");
                     listColor.push("#DFE549");
@@ -1586,7 +1617,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     listColor.push("#55B3DE");
                     listColor.push("#92DD56");
                     listColor.push("#DB6E6E");
-                    saveShortMarkerEvent.listColor = listColor;
+					// set list the color
+					arrayData.listColor = listColor;
                     
                     var listText:Array = new Array();
                     listText.push("comp");
@@ -1595,8 +1627,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     listText.push("inte");
                     listText.push("posi");
                     listText.push("nega");
-                    saveShortMarkerEvent.listText = listText;
-                    
+					// set list text
+					arrayData.listText = listText;
+                    // set transfer data 
+					saveShortMarkerEvent.arrayData = arrayData;
                     saveShortMarkerEvent.loggedUserId = Model.getInstance().getLoggedUser().id_user;
                     
                     dispatchEvent(saveShortMarkerEvent);
@@ -1813,7 +1847,10 @@ knowledge of the CeCILL-C license and that you accept its terms.
                             
                             updateObselMarker.info = text;
                             updateObselMarker.action = action
-                            updateObselMarker.listUsers = listUsersId;
+							// set transfer data
+							var arrayDataVO:ArrayDataVO =  new ArrayDataVO();
+							arrayDataVO.listUser = listUsersId;
+                            updateObselMarker.arrayData = arrayDataVO;
                         }
                         // delete marker obsel
                         if(event.currentTarget.deleting)
