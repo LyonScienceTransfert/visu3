@@ -68,6 +68,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -76,6 +77,7 @@ import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 import org.red5.server.api.service.IServiceCapableConnection;
 
+import com.ithaca.domain.model.ArrayData;
 import com.ithaca.domain.model.Obsel;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.visu.Application;
@@ -110,11 +112,11 @@ public class SharedInfo
 	protected static final Logger log = LoggerFactory.getLogger(SharedInfo.class);
 	
 	@SuppressWarnings("unchecked")
-	public void sendSharedInfo(IConnection conn, int typeInfo, String info, int[] listUser, String urlElement, int codeSharedAction, int senderDocumentUserId, Long idDocument, Long currentTimeVideoPlayer, String actionUser, int idUserFor, String beginTime, String endTime, String typeShortMarker)
+	public void sendSharedInfo(IConnection conn, Integer typeInfo, String info, String urlElement, Integer codeSharedAction, Integer senderDocumentUserId, String idDocument, String currentTimeVideoPlayer, String actionUser, Integer idUserFor, String beginTime, String endTime, String typeShortMarker, ArrayData listUserIdVO)
 	{
 		log.warn("======== sendSharedInfo ");
 		log.warn("======== codeSharedAction = {}",codeSharedAction);
-		if (codeSharedAction == 0)
+		if (Integer.valueOf(codeSharedAction) == 0)
 		{
 			// do nothing			
 			return;
@@ -128,28 +130,24 @@ public class SharedInfo
 			IScope scope = conn.getScope();
 			// get all shared clients
 			List<IClient> listSharedUsers = new ArrayList<IClient>();
-			Integer sharedUserId=0;
-			int nbrSharedUsers = listUser.length;
 			for (IClient client : scope.getClients())
 				{
-					for(int nUser=0; nUser < nbrSharedUsers; nUser++)
-					{
-						sharedUserId = listUser[nUser];
+					for(int sharedUserId:listUserIdVO.getListUser()) {
 						Integer userId = (Integer)client.getAttribute("uid");
 						int diff = sharedUserId - userId;
 						if(diff == 0)
 						{
 							listSharedUsers.add(client);
 							log.warn(" == added client {}",(String)client.getAttribute("id"));
-						}	
+						}
 					}
 				}
 			// all others shared info when session is recording, STATUS_RECORD: int = 1;
-			if (codeSharedAction == 1)
+			if (Integer.valueOf(codeSharedAction) == 1)
 			{	
 				log.warn("=====typeInfo = {}",typeInfo);
 				log.warn("=====info = {}",info);
-				log.warn("===== listInteger ={}",listUser);
+				log.warn("===== listInteger ={}",listUserIdVO.getListUser());
 				String typeObselSend ="void";
 				String typeObselReceive = "void";
 				String namePropertyObsel ="void";
@@ -237,7 +235,7 @@ public class SharedInfo
 			   		paramsObselSend.add(namePropertyObsel);paramsObselSend.add(info);
 			   		paramsObselSend.add("timestamp");paramsObselSend.add(timeStamp.toString());
 			   		// add idUserFor 
-			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor >= 0)
+			   		if((typeInfo == 5 || typeInfo == 6) && Integer.valueOf(idUserFor) >= 0)
 			   		{
 			   			paramsObselSend.add(ObselType.ID_USER_FOR);paramsObselSend.add(String.valueOf(idUserFor));
 			   			// set type short marker for existing type <> "void"
@@ -286,7 +284,7 @@ public class SharedInfo
 		   			paramsObselReceive.add("sender");paramsObselReceive.add(senderUserId.toString());
 		   			paramsObselReceive.add("timestamp");paramsObselReceive.add(timeStamp.toString());
 		   			// add idUserFor 
-			   		if((typeInfo == 5 || typeInfo == 6) && idUserFor >= 0)
+			   		if((typeInfo == 5 || typeInfo == 6) && Integer.valueOf(idUserFor) >= 0)
 			   		{
 			   			paramsObselReceive.add(ObselType.ID_USER_FOR);paramsObselReceive.add(String.valueOf(idUserFor));
 			   			// set type short marker for existing type <> "void"
@@ -304,14 +302,14 @@ public class SharedInfo
 			   			if (!sendObselToSender)
 			   			{
 			   				paramsObselReceive.add("senderdocument");paramsObselReceive.add(String.valueOf(senderDocumentUserId));
-			   				paramsObselReceive.add("iddocument");paramsObselReceive.add(Long.toString(idDocument));
+			   				paramsObselReceive.add("iddocument");paramsObselReceive.add(idDocument);
 			   			}else
 			   			{
 			   				paramsObselReceive.add("iddocument");paramsObselReceive.add(timeStamp.toString());
 			   			}
 				   		if(typeInfo  == 100)
 				   		{
-				   			paramsObselReceive.add("currenttime");paramsObselReceive.add(Long.toString(currentTimeVideoPlayer));
+				   			paramsObselReceive.add("currenttime");paramsObselReceive.add(currentTimeVideoPlayer);
 				   		}
 			   		}
 			   		
@@ -368,7 +366,7 @@ public class SharedInfo
 	}
 
 	@SuppressWarnings("unchecked")
-	public void sendEditedMarker(IConnection conn, String info, Integer[] listUser, Long timeStimp, String action, int idUserFor, String beginTime, String endTime)
+	public void sendEditedMarker(IConnection conn, String info, ArrayData listUserIdVO, String timeStimp, String action, Integer idUserFor, String beginTime, String endTime)
 	{
 		log.warn("======== sendEditedMarker ");
 		String typeObselUser="UpdateMarker";
@@ -385,27 +383,24 @@ public class SharedInfo
 		IScope scope = conn.getScope();
 		// get all shared clients
 		List<IClient> listSharedUsers = new ArrayList<IClient>();
-		Integer sharedUserId=0;
-		int nbrSharedUsers = listUser.length;
 		for (IClient client : scope.getClients())
 			{
-				for(int nUser=0; nUser < nbrSharedUsers; nUser++)
-				{
-					sharedUserId = listUser[nUser];
+				
+				for(int sharedUserId:listUserIdVO.getListUser()) {
 					Integer userId = (Integer)client.getAttribute("uid");
 					int diff = sharedUserId - userId;
 					if(diff == 0)
 					{
 						listSharedUsers.add(client);
 						log.warn(" == added client {}",(String)client.getAttribute("id"));
-					}	
+					}
 				}
 			}
 		Integer senderUserId = (Integer)sender.getAttribute("uid");
 		List<Object> paramsObsel= new ArrayList<Object>();
 		paramsObsel.add("text");paramsObsel.add(info);
 		paramsObsel.add("sender");paramsObsel.add(senderUserId.toString());
-		paramsObsel.add("timestamp");paramsObsel.add(timeStimp.toString());
+		paramsObsel.add("timestamp");paramsObsel.add(timeStimp);
 		paramsObsel.add(ObselType.ID_USER_FOR);paramsObsel.add(String.valueOf(idUserFor));
 		Obsel obsel = null;
 		for(IClient sharedClient : listSharedUsers)

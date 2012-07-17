@@ -256,14 +256,14 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		<mate:EventHandlers type="{SessionSharedEvent.SEND_SHARED_INFO}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendSharedInfo"
-							  arguments="{[event.typeInfo, event.info, event.listUsers, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor, event.beginTime, event.endTime, event.typeShortMarker]}"/>              
+							  arguments="{[event.typeInfo, event.info, event.url, event.status, event.senderUserId, event.idDocument, event.currentTimeVideoPlayer, event.action, event.idUserFor, event.beginTime, event.endTime, event.typeShortMarker, event.listUserIdVO]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{TraceLineEvent.UPDATE_MARKER_OBSEL}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}">
 				<mate:Request action="shared.sendEditedMarker"
-							  arguments="{[ event.info, event.listUsers, event.timeStamp, event.action, event.forUserId, event.beginTime, event.endTime]}"/>              
+							  arguments="{[ event.info, event.arrayData, event.timeStamp, event.action, event.forUserId, event.beginTime, event.endTime]}"/>              
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
