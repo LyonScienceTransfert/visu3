@@ -63,6 +63,7 @@
 package com.ithaca.visu.events
 {
 	import com.ithaca.traces.Obsel;
+	import com.ithaca.visu.model.vo.ArrayDataVO;
 	
 	import flash.events.Event;
 	
@@ -99,6 +100,7 @@ package com.ithaca.visu.events
 		public var info : String;
 		public var listUsers : Array;
 		public var action:String = "";
+		public var arrayData:ArrayDataVO;
 		
 		// constructor
 		public function TraceLineEvent(type : String,

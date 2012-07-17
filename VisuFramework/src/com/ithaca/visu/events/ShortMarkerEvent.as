@@ -63,6 +63,8 @@
 package com.ithaca.visu.events
 
 {
+import com.ithaca.visu.model.vo.ArrayDataVO;
+
 import flash.events.Event;
 
 
@@ -76,6 +78,7 @@ public class ShortMarkerEvent extends Event
     public var listColor:Array;
     public var listText:Array;
     public var loggedUserId:int;
+	public var arrayData:ArrayDataVO;
     
     // constructor
     public function ShortMarkerEvent(type : String,

@@ -65,6 +65,7 @@ package com.ithaca.visu.events
 
 import com.ithaca.traces.model.vo.SGBDObsel;
 import com.ithaca.visu.model.Session;
+import com.ithaca.visu.model.vo.ArrayDataVO;
 
 import flash.events.Event;
 
@@ -83,19 +84,20 @@ public class SessionSharedEvent extends Event
     public var info : String;
     public var listUsers : Array;
     public var senderUserId : int;
-    public var url : String;
+    public var url : String = "";
     public var status : int;	
     public var obselVO:SGBDObsel;
-    public var timeStamp:Number;
-    public var idDocument:Number = 0;
-    public var currentTimeVideoPlayer:Number = 0;
-    public var action:String = "";
+    public var timeStamp:String = "0";
+    public var idDocument:String = "";
+    public var currentTimeVideoPlayer:String = "";
+    public var action:String = "void";
     public var idUserFor:int = 0;
     
     public var beginTime:String = "void";
     public var endTime:String = "void";
     public var typeShortMarker:String = "void";
     public var shareMarker:Boolean;
+    public var listUserIdVO:ArrayDataVO;
 	
 	
 	
