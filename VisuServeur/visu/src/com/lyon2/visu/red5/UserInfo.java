@@ -77,4 +77,67 @@ public class UserInfo
 			} 	
 		
 	}
+	
+
+	public void updateUser(IConnection conn, User user) throws SQLException 
+	{
+		log.debug("updateUser {}",user);
+		IClient client = conn.getClient();
+		
+		try
+		{
+			app.getSqlMapClient().update("users.update", user);
+		} catch (Exception e) {
+			log.error("Probleme lors du update user= {}, dans BDD" + e,user);
+		}	
+		
+		Object[] args = {user};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkUpdatedUser", args);
+			} 	
+	}
+	public void addUser(IConnection conn, User user) throws SQLException 
+	{
+		log.debug("addUser {}",user);
+		IClient client = conn.getClient();
+		
+		try
+		{
+			Integer id = (Integer)app.getSqlMapClient().insert("users.insert",user);
+			user.setId_user(id);
+		} catch (Exception e) {
+			log.error("Probleme lors du addind user= {}, dans BDD" + e,user);
+		}	
+		
+		Object[] args = {user};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkAddedUser", args);
+		} 	
+	}
+	public void deleteUser(IConnection conn, User user) throws SQLException 
+	{
+		log.debug("deleteUser {}",user);
+		IClient client = conn.getClient();
+		
+		try
+		{
+			log.debug("delete {}", user);
+			app.getSqlMapClient().delete("session_users.deleteSessionUserByIdUser",user.getId_user());
+			app.getSqlMapClient().delete("users.delete", user);
+		} catch (Exception e) {
+			log.error("Probleme lors du addind user= {}, dans BDD" + e,user);
+		}	
+		
+		Object[] args = {user.getId_user()};
+		IConnection connClient = (IConnection)client.getAttribute("connection");
+		if (conn instanceof IServiceCapableConnection) {
+			IServiceCapableConnection sc = (IServiceCapableConnection) connClient;
+			sc.invoke("checkDeletedUser", args);
+		} 	
+	}
+	
 }
