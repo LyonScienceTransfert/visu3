@@ -110,6 +110,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			import com.ithaca.visu.events.SessionSharedEvent;
 			import com.ithaca.visu.events.ShortMarkerEvent;
 			import com.ithaca.visu.events.TraceLineEvent;
+			import com.ithaca.visu.events.VisuActivityElementEvent;
 			import com.ithaca.visu.events.VisuActivityEvent;
 			import com.ithaca.visu.events.VisuModuleEvent;
 			import com.ithaca.visu.interfaces.IDocument;
@@ -175,7 +176,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			private var _listObjectMediaPlaying:ArrayCollection = new ArrayCollection();
 			private var _listTempViewObselSessionOut:ArrayCollection = new ArrayCollection();
 			[Bindable]
-			public var listActivities:ArrayCollection;
+			public var listActivities:ArrayCollection = new ArrayCollection();
 			
 			[Bindable]
 			private var fxgt: _FxGettext = FxGettext;
@@ -1244,6 +1245,63 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				if(this.sessionPlan != null)
 				{
 					this.sessionPlan.setCurrentActivityId(activityId);
+				}
+			}
+			
+			/**
+			 * Set list activity
+			 */
+			private function onSetActivity(event:VisuActivityEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					var arrActivities:Array = event.listActivity;
+					if(arrActivities.length > 0)
+					{
+						var nbrActivities:uint = arrActivities.length;
+						for(var nActivity:uint = 0; nActivity < nbrActivities; nActivity++){
+							var obj:Object = arrActivities[nActivity];
+							var activity:Activity = new Activity(obj);
+							this.listActivities.addItem(activity);
+							var activityId:int = obj.id_activity;
+							var visuActivtyElementEvent:VisuActivityElementEvent = new VisuActivityElementEvent(VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS);
+							visuActivtyElementEvent.activityId = activityId;
+							dispatchEvent(visuActivtyElementEvent);
+						}	
+					}	
+					// don't set activities for etudiant
+					if(sessionPlan)
+					{
+						// set list activities 
+						sessionPlan.activities = this.listActivities;
+					}
+					
+				}
+			}
+			
+			/**
+			 * Set list activityElements
+			 */
+			private function onSetListActivityElements(event:VisuActivityElementEvent):void
+			{
+				var currentModule:TutoratModule = Model.getInstance().getCurrentTutoratModule() as TutoratModule;
+				if(this == currentModule)
+				{
+					// don't set activities for etudiant
+					if(sessionPlan)
+					{
+						var activity:Activity = this.getActivityById(event.activityId, sessionPlan.activities);
+						if(activity != null)
+						{
+							var nbrActivity:int = activity.getListActivityElement().length;
+							if((activity != null) && ( nbrActivity == 0))
+							{
+								activity.setListActivityElement(event.listActivityElement);
+								sessionPlan.activities.itemUpdated( activity, activity.activityElements);
+							}
+						}
+					}
 				}
 			}
 			
@@ -2555,6 +2613,24 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 PopUpManager.addPopUp(configShareMarker, this);
                 PopUpManager.centerPopUp(configShareMarker);
             }
+			
+			//////////////////
+			/// Utils
+			/////////////////
+			private function getActivityById(value:int, list:IList):Activity
+			{
+				var nbrActivity:uint = list.length;
+				for(var nActivity:uint = 0; nActivity < nbrActivity;nActivity++)
+				{
+					var activity:Activity = list[nActivity];
+					var activityId:int = activity.id_activity;
+					if(activityId == value)
+					{
+						return activity;
+					}
+				}
+				return null;
+			}
 
 		]]>
 	</fx:Script>
@@ -2579,6 +2655,8 @@ knowledge of the CeCILL-C license and that you accept its terms.
         <mate:Listener type="{ShortMarkerEvent.INIT_SHORT_MARKER}"  method="onInitShortMarker"/>
 
 		<mate:Listener type="{ObselEvent.PRE_EDIT_OBSEL_MARKER_BY_SKIN_MARKER}"  method="onPreAddMarkerBySkinMarker" useWeakReference="true"/>
+		<mate:Listener type="{VisuActivityEvent.SET_ACTIVITY}"  method="onSetActivity"/>
+		<mate:Listener type="{VisuActivityElementEvent.SET_LIST_ACTIVITY_ELEMENTS}"  method="onSetListActivityElements"/>
 
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
