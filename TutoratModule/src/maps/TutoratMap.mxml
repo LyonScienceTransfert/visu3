@@ -75,15 +75,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		
 		import com.asfusion.mate.utils.debug.Debugger;
 		import com.flashdevs.mateExt.rtmpService.RtmpService;
-		import com.ithaca.visu.controls.sessions.SessionPlanB;
 		import com.ithaca.visu.events.InitMapEvent;
+		import com.ithaca.visu.events.MessageEvent;
 		import com.ithaca.visu.events.VisuActivityElementEvent;
 		import com.ithaca.visu.events.VisuActivityEvent;
 		import com.ithaca.visu.model.Model;
-		
-		import com.ithaca.visu.events.MessageEvent;
-		
-		import modules.TutoratModule;
 		
 		import mx.events.FlexEvent;
 		
@@ -92,15 +88,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
 	
 	<fx:Declarations>
 		<mate:Debugger level="{Debugger.ALL}"/>
-		
-		<mate:Injectors target="{TutoratModule}">
-			<mate:PropertyInjector source="{TutoratManager}"
-								   targetKey="listActivities" sourceKey="listActivities"/>
-		</mate:Injectors>
-		<mate:Injectors target="{SessionPlanB}">
-			<mate:PropertyInjector source="{TutoratManager}"
-								   targetKey="activities" sourceKey="listActivities"/>
-		</mate:Injectors>
 		
 		<!-- FlexEvent.PREINITIALIZE __________________________________________________________________ -->
 		<mate:EventHandlers type="{FlexEvent.PREINITIALIZE}">
@@ -112,60 +99,25 @@ knowledge of the CeCILL-C license and that you accept its terms.
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="testApp"   arguments="{['Tutorat']}" />
 			</rtmp:RtmpServiceInvoker>
-		<!--	<rtmp:CallbackRegistrator action="joinSession" target="{TutoratModule}" method="onJoinSession"/>-->
 		</mate:EventHandlers>
 		
 <!-- debug mode-->
-	
-		<s:RemoteObject
-			id="remoteActivity"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="ActivityService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>						
-		
-		<s:RemoteObject
-			id="remoteActivityElement"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="ActivityElementService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>
 		
 		<mate:EventHandlers type="{VisuActivityEvent.LOAD_LIST_ACTIVITY}">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
 				<mate:Request action="checkJoinSession"
 							  arguments="{[Model.getInstance().getLoggedUser().id_user, Model.getInstance().getUserIdClient(),event.sessionId]}"/>              
 			</rtmp:RtmpServiceInvoker>
-			<mate:RemoteObjectInvoker  instance="{remoteActivity}" method="getSessionActivities" arguments="{event.sessionId}">
-			<mate:resultHandlers>
-				<mate:MethodInvoker generator="{TutoratManager}" method="onLoadListActivity" arguments="{[resultObject]}"/>
-			</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{TutoratManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-		</mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="sessionInfo.getSessionActivities" arguments="{[event.sessionId]}"/>     				
+			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{VisuActivityElementEvent.LOAD_LIST_ACTIVITY_ELEMENTS}">
-			<mate:RemoteObjectInvoker  instance="{remoteActivityElement}" method="getActivityElements" arguments="{event.activityId}">
-				<mate:resultHandlers>
-					<mate:MethodInvoker generator="{TutoratManager}" method="onLoadListActivityElement" arguments="{[resultObject, event.activityId]}"/>
-				</mate:resultHandlers>
-				<mate:faultHandlers>
-					<mate:MethodInvoker generator="{TutoratManager}"
-										method="error" arguments="{[currentEvent]}"/>
-				</mate:faultHandlers>
-			</mate:RemoteObjectInvoker>
-		</mate:EventHandlers>
-
-<!--		<mate:EventHandlers type="{MessageEvent.GET_TRACE}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="obselInfo.getActiveTraceUser"/>              
+				<mate:Request action="sessionInfo.getActivityElements" arguments="{[event.activityId]}"/>     				
 			</rtmp:RtmpServiceInvoker>
-		</mate:EventHandlers>	-->	
+		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{MessageEvent.GET_SETMARCK}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
