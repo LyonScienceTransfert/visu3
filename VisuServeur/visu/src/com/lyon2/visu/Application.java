@@ -329,11 +329,15 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		// "Deck"/"Plateforme"
 		invokeOnScopeClients(scope, "joinDeck", args);
 
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("uid");
 		// add info about client
 		client.setAttribute("uid", userId);
 		client.setAttribute("connection", conn);
 		client.setAttribute("id", client.getId());
 		client.setAttribute("sessionId", 0);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("status");
 		// set status Session
 		client.setAttribute("status", SessionStatus.PAUSE);
 		// set status User
@@ -550,8 +554,12 @@ public class Application extends MultiThreadedApplicationAdapter implements
 				log.error("=====Errors===== {}", sqle);
 			}
 		}
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("status");
 		// set Session status
 		client.setAttribute("status", SessionStatus.CLOSE);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("userStatus");
 		// set status User
 		client.setAttribute("userStatus", UserStatus.DISCONNECTED);
 	}
@@ -1199,10 +1207,16 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		log.warn("sessionId = {}", sessionId);
 		// change users status
 		IClient client = conn.getClient();
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("status");
 		// set session status
 		client.setAttribute("status", SessionStatus.OPEN);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("userStatus");
 		// set status User
 		client.setAttribute("userStatus", UserStatus.PENDING);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("sessionId");
 		// client in the session id
 		client.setAttribute("sessionId", sessionId);
 		// get logged userVO
@@ -1228,8 +1242,12 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		// get status session
 		Integer statuSession = session.getStatus_session();
 		if (statuSession == 3) {
+			// in version red5-1.0.0, have to remove attribute
+			client.removeAttribute("status");
 			// set status session recording
 			client.setAttribute("status", SessionStatus.RECORDING);
+			// in version red5-1.0.0, have to remove attribute
+			client.removeAttribute("userStatus");
 			// set status User
 			client.setAttribute("userStatus", UserStatus.RECORDING);
 		}
@@ -1423,12 +1441,20 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		IScope scope = conn.getScope();
 		// start recording fila for users how staying in session
 		this.updateRecordingWhenUserWalkOutSession(scope, listStayingClient);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("status");
 		// set status session
 		client.setAttribute("status", SessionStatus.PAUSE);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("userStatus");
 		// set status User
 		client.setAttribute("userStatus", UserStatus.CONNECTED);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("sessionId");
 		// clear sessionId
 		client.setAttribute("sessionId", 0);
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("trace");
 		// clear trace
 		client.setAttribute("trace", null);
 		// get loggedUser
@@ -1628,7 +1654,11 @@ public class Application extends MultiThreadedApplicationAdapter implements
 			ISharedObject so = getSharedObject(room, "VisuServer");
 
 			String username = (String) client.getAttribute("username");
+			// in version red5-1.0.0, have to remove attribute
+			client.removeAttribute("live");
 			client.setAttribute("live", "no");
+			// in version red5-1.0.0, have to remove attribute
+			client.removeAttribute("recording");
 			client.setAttribute("recording", "no");
 
 			so.setAttribute("message", new Red5Message(
@@ -1692,6 +1722,8 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		ISharedObject so = getSharedObject(room, "VisuServer");
 
 		String username = (String) client.getAttribute("username");
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("live");
 		client.setAttribute("live", "yes");
 
 		so.setAttribute("message", new Red5Message(
@@ -1708,8 +1740,12 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		ISharedObject so = getSharedObject(room, "VisuServer");
 
 		String username = (String) client.getAttribute("username");
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("live");
 		client.setAttribute("live", "no");
 		// FIXME: make sure that the recording is stopped ??
+		// in version red5-1.0.0, have to remove attribute
+		client.removeAttribute("recording");
 		client.setAttribute("recording", "no");
 
 		so.setAttribute("message", new Red5Message(

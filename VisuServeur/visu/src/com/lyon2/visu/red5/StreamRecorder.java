@@ -316,6 +316,8 @@ log.warn("refParam = {}",refParam);
 						Obsel obselSessionStart = listObselSessionStart.get(0);
 						trace = obselSessionStart.getTrace();
 						typeObsel = "SessionEnter";
+						// in version red5-1.0.0, have to remove attribute
+						client.removeAttribute("trace");
 						client.setAttribute("trace", trace);
 						app.setStatusSession(session_id, SessionStatus.RECORDING, null);
 					}else
@@ -323,6 +325,8 @@ log.warn("refParam = {}",refParam);
 						// generate traceId
 					    trace = app.makeTraceId(userId);
 					    typeObsel = "SessionStart";
+						// in version red5-1.0.0, have to remove attribute
+						client.removeAttribute("trace");
 					    client.setAttribute("trace", trace);
 						log.warn("empty BD, ListObsel = null");
 						// set "date_start_recording" and "status_session" of this session
@@ -333,14 +337,19 @@ log.warn("refParam = {}",refParam);
 					// generate traceId
 					trace = app.makeTraceId(userId);
 					typeObsel = "SessionStart";
+					// in version red5-1.0.0, have to remove attribute
+					client.removeAttribute("trace");
 					client.setAttribute("trace", trace);
 					log.warn("empty BD, exception case");	
 					// set "date_start_recording" and "status_session" of this session
 					app.setStatusSession(session_id, SessionStatus.RECORDING, startRecording);
 				}
-								
+				// in version red5-1.0.0, have to remove attribute
+				client.removeAttribute("status");
 				// set status recording
 				client.setAttribute("status", SessionStatus.RECORDING);
+				// in version red5-1.0.0, have to remove attribute
+				client.removeAttribute("userStatus");
 				// set status User
 				client.setAttribute("userStatus", UserStatus.RECORDING);
 				// "startRecordingSession", signature the type of recording, can see too types: "start"/"join" 
@@ -522,8 +531,12 @@ log.warn("refParam = {}",refParam);
 					
 					IClient client = stream.getConnection().getClient();
 					Integer userId = (Integer)client.getAttribute("uid");
+					// in version red5-1.0.0, have to remove attribute
+					client.removeAttribute("status");
 					// set status join session
 					client.setAttribute("status", SessionStatus.OPEN);
+					// in version red5-1.0.0, have to remove attribute
+					client.removeAttribute("userStatus");
 					// set status User
 					client.setAttribute("userStatus", UserStatus.PENDING);
 					

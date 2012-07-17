@@ -351,6 +351,8 @@ public class ObselInfo {
 			// Initialization trace id of the salon retrospection 
 			// get trace id 
 			traceId = listTraceId.get(0);
+			// in version red5-1.0.0, have to remove attribute
+			client.removeAttribute("traceParentRetroId");
 			// set traceId parent
 			client.setAttribute("traceParentRetroId", traceId);
 			
@@ -380,6 +382,8 @@ public class ObselInfo {
 				traceRetroId = obsel.getTrace();
 			}
 			log.warn("traceRetroId = {}",traceRetroId );
+			// in version red5-1.0.0, have to remove attribute
+			client.removeAttribute("traceParentRetroId");
 			// set traceId retrospection module
 			client.setAttribute("traceRetroId", traceRetroId);	
 			
