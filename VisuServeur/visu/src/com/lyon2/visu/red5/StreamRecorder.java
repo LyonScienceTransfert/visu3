@@ -180,6 +180,7 @@ public class StreamRecorder
 	@SuppressWarnings("unchecked")
 	public void startRecordRoom(IConnection conn, Integer session_id)
 	{
+		log.warn("=== startRecordRoom === session id = {}",session_id);
 		Date date = new Date();
 		Long timeStamp = date.getTime();
         /* We store the record filenames, in order to notify clients */
@@ -235,16 +236,15 @@ public class StreamRecorder
 			// sessionId of this client
 			Integer sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
 			
-log.warn("====sessionIdClient  {}",sessionIdClient.toString());
+			log.warn("====sessionIdClient  {}",sessionIdClient.toString());
 			
-			Integer diff = session_id - sessionIdClient;
+			int diff = session_id - sessionIdClient;
 			if(diff == 0)
 			{
 				IClient client = stream.getConnection().getClient();
 				Integer userId = (Integer)client.getAttribute("uid");
 				User user = (User)client.getAttribute("user");
 				// get recording session
-				
 				try
 				{
 					session = (Session) app.getSqlMapClient().queryForObject("sessions.getSession",session_id);
@@ -505,7 +505,7 @@ log.warn("refParam = {}",refParam);
 	*/
 	}
 
-	public void stopRecordRoom(IConnection conn, int session_id, int sessionStatus)
+	public void stopRecordRoom(IConnection conn, Integer session_id, Integer sessionStatus)
 	{
 		// set timestamp
 		Date date = new Date();
@@ -519,7 +519,7 @@ log.warn("refParam = {}",refParam);
 				
 				// sessionId of this client
 				int sessionIdClient= (Integer)stream.getConnection().getClient().getAttribute("sessionId");
-				if(session_id == sessionIdClient)
+				if(Integer.valueOf(session_id) == sessionIdClient)
 				{
 					// stop recording
 					stream.stopRecording();
