@@ -633,11 +633,10 @@ public class ObselInfo {
      * 
      * @param conn
      * @param userId
-     * @param listTextShortMarker
-     * @param listColorShortMarker
+     * @param arayData
      */
     @SuppressWarnings("unchecked")
-    public void addObselSaveShortMarker(IConnection conn, int userId, String[] listTextShortMarker, String[] listColorShortMarker ) {
+    public void addObselSaveShortMarker(IConnection conn, Integer userId, ArrayData arrayData ) {
             log.warn("======== addObselSaveShortMarker = {}",userId);
             IClient clientRecording = conn.getClient();
             List<Obsel> listObselSystemSessionStart = null;
@@ -672,13 +671,13 @@ public class ObselInfo {
 			}
 			// set list text short marker
 			List<String> listText = new ArrayList<String>();
-			for (String textMarker : listTextShortMarker)
+			for (String textMarker : arrayData.getListText())
 			{
 				listText.add(textMarker);
 			}
 			// set list text short color
 			List<String> listColor = new ArrayList<String>();
-			for (String colorMarker : listColorShortMarker)
+			for (String colorMarker : arrayData.getListColor())
 			{
 				listColor.add(colorMarker);
 			}

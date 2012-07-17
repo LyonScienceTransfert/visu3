@@ -283,7 +283,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
         
         <mate:EventHandlers type="{ShortMarkerEvent.SAVE_SHORT_MARKER}" debug="true">
             <rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-                <mate:Request action="obselInfo.addObselSaveShortMarker"   arguments="{[event.loggedUserId, event.listText, event.listColor]}" />
+                <mate:Request action="obselInfo.addObselSaveShortMarker"   arguments="{[event.loggedUserId, event.arrayData]}" />
             </rtmp:RtmpServiceInvoker>
         </mate:EventHandlers>
         
