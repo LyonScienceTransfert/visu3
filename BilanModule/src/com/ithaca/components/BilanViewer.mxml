@@ -290,7 +290,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
 				visio.status = VisuVisioAdvanced.STATUS_PAUSE;
 				// do plause segment
 				visio.pauseStreams();
-				timer.stop();
+				// check if timer exist
+				if(timer)
+				{
+					timer.stop();
+				}
 				// enabled button play/pause
 				buttonPlay.enabled = true;
 				buttonPlay.label = fxgt.gettext("Play");
