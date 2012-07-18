@@ -400,10 +400,12 @@ public class MainManager
 				onLoadedAllUsersSessionModule.listUser = ar;
 				this.dispatcher.dispatchEvent(onLoadedAllUsersSessionModule);
 				break;
+			case "bilan" : 
+				var onLoadedAllUsers:RetroDocumentEvent = new RetroDocumentEvent(RetroDocumentEvent.LOADED_ALL_USERS);
+				onLoadedAllUsers.listUser = ar;
+				this.dispatcher.dispatchEvent(onLoadedAllUsers);
+				break;
 		}
-		
-
-		
 	}
 	
 	public function onCheckListObselSessioExitSessionPause(listObselVO:Array):void
