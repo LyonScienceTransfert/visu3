@@ -77,13 +77,11 @@ knowledge of the CeCILL-C license and that you accept its terms.
             import com.ithaca.visu.events.BilanEvent;
             import com.ithaca.visu.events.InitMapEvent;
             import com.ithaca.visu.events.VisuModuleEvent;
-            import com.ithaca.visu.model.Model;
             
             import managers.BilanManager;
             
             import mx.events.FlexEvent;
 
-			private var ALL_INFO:int = 777;
 		]]>
 	</fx:Script>
 
@@ -119,7 +117,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		
 		<mate:EventHandlers type="{BilanEvent.NEW_BILAN_SELECTED}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
-				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[event.bilanId, false]}" />
+				<mate:Request action="retroDocument.getRetroDocumentById"   arguments="{[event.bilanId]}" />
 			</rtmp:RtmpServiceInvoker>
 		</mate:EventHandlers>
 				
@@ -130,15 +128,9 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		
         <!-- USERS -->
         <mate:EventHandlers type="{RetroDocumentEvent.LOAD_LIST_USERS}" debug="true">
-            <mate:RemoteObjectInvoker  instance="{remoteUser}" method="listUsers">
-                <mate:resultHandlers>
-                    <mate:MethodInvoker generator="{BilanManager}" method="onLoadListUsers" arguments="{[resultObject]}"/>
-                </mate:resultHandlers>
-                <mate:faultHandlers>
-                    <mate:MethodInvoker generator="{BilanManager}"
-                        method="error" arguments="{[currentEvent]}"/>
-                </mate:faultHandlers>
-            </mate:RemoteObjectInvoker>
+			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
+				<mate:Request action="userInfo.getListUser" arguments="{['bilan']}"/>     				
+			</rtmp:RtmpServiceInvoker>
         </mate:EventHandlers>
         
         <!-- Update shared users the bilan -->
@@ -147,31 +139,6 @@ knowledge of the CeCILL-C license and that you accept its terms.
                 <mate:Request action="retroDocument.updateRetroDocument"   arguments="{[event.retroDocumentVO , event.listUser]}" />
             </rtmp:RtmpServiceInvoker>
         </mate:EventHandlers>
-		
-		<!-- Application complete start-->
-		
-		
-		<!-- 
-			~~~~~~~~ INJECTORS ~~~~~~~~
-		-->
-		
-		<!--
-		  ~~~~~~~~ REMOTEOBJECTS ~~~~~~~~
-		-->
-		<s:RemoteObject
-			id="remoteBilan"
-			endpoint="{Model.getInstance().AMFServer}"
-			destination="BilanService"
-			makeObjectsBindable="true"
-			showBusyCursor="true">
-		</s:RemoteObject>	
-        
-        <s:RemoteObject
-            id="remoteUser"
-            endpoint="{Model.getInstance().AMFServer}"
-            destination="UserService"
-            makeObjectsBindable="true"
-            showBusyCursor="true">
-        </s:RemoteObject>
-    </fx:Declarations>
+
+	</fx:Declarations>
 </mate:LocalEventMap>
