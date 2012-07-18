@@ -79,21 +79,26 @@ knowledge of the CeCILL-C license and that you accept its terms.
 		   >
 	<fx:Declarations>
 		<maps:UserMap dispatcher="{this}"/>
+		<mate:Listener type="{UserEvent.CHECK_ADDED_USER}"  method="onCheckAddedUser"/>
+		<mate:Listener type="{UserEvent.CHECK_UPDATED_USER}"  method="onCheckUpdatedUser"/>
+		<mate:Listener type="{UserEvent.CHECK_DELETED_USER}"  method="onCheckDeletedUser"/>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
-            import com.ithaca.visu.events.InitMapEvent;
-            import com.ithaca.visu.events.SessionEvent;
-            import com.ithaca.visu.events.VisuModuleEvent;
-            import com.ithaca.visu.model.Model;
-            import com.ithaca.visu.model.User;
-            import com.ithaca.visu.model.vo.UserVO;
-            import com.ithaca.visu.ui.utils.ConnectionStatus;
-            import com.ithaca.visu.view.user.skins.UserManagementSkin;
-            
-            import mx.events.FlexEvent;
-            import mx.events.StateChangeEvent;			
+			import com.ithaca.visu.events.InitMapEvent;
+			import com.ithaca.visu.events.SessionEvent;
+			import com.ithaca.visu.events.UserEvent;
+			import com.ithaca.visu.events.VisuModuleEvent;
+			import com.ithaca.visu.model.Model;
+			import com.ithaca.visu.model.User;
+			import com.ithaca.visu.model.vo.UserVO;
+			import com.ithaca.visu.ui.utils.ConnectionStatus;
+			import com.ithaca.visu.view.session.controls.UserEdit;
+			import com.ithaca.visu.view.user.skins.UserManagementSkin;
+			
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;			
 
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
@@ -181,6 +186,37 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						
 				}
 			}
+			/**
+			 * Set added user
+			 */
+			private function onCheckAddedUser(event:UserEvent):void
+			{
+				if (Model.getInstance().getCurrentUserModule() == this)
+				{
+					setModeEditAddedUser(event.userVO);
+				}
+			}
+			/**
+			 * Set updated user
+			 */
+			private function onCheckUpdatedUser(event:UserEvent):void
+			{
+				if (Model.getInstance().getCurrentUserModule() == this)
+				{
+					setModeEditUpdatedUser(event.userVO);
+				}
+			}
+			/**
+			 * Set deleted user
+			 */
+			private function onCheckDeletedUser(event:UserEvent):void
+			{
+				if (Model.getInstance().getCurrentUserModule() == this)
+				{
+					setModeEditDeletedUser(event.userId);
+				}
+			}
+			
 			
 			protected function visumodulebase1_initializeHandler(event:FlexEvent):void
 			{

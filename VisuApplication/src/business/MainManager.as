@@ -1782,8 +1782,9 @@ public class MainManager
 	 */
 	public function onCheckUpdatedUser(userVO:UserVO):void
 	{
-		var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
-		userModule.setModeEditUpdatedUser(userVO);
+		var userEvent:UserEvent = new UserEvent(UserEvent.CHECK_UPDATED_USER);
+		userEvent.userVO = userVO;
+		this.dispatcher.dispatchEvent(userEvent);
 	}
 	
 	/**
@@ -1792,8 +1793,9 @@ public class MainManager
 	 */
 	public function onCheckAddedUser(userVO:UserVO):void
 	{
-		var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
-		userModule.setModeEditAddedUser(userVO);
+		var userEvent:UserEvent = new UserEvent(UserEvent.CHECK_ADDED_USER);
+		userEvent.userVO = userVO;
+		this.dispatcher.dispatchEvent(userEvent);
 	}
 	
 	/**
@@ -1802,11 +1804,10 @@ public class MainManager
 	 */
 	public function onCheckDeletedUser(userId:int):void
 	{
-		var userModule:UserModule = Model.getInstance().getCurrentUserModule() as UserModule;
-		userModule.setModeEditDeletedUser(userId);
+		var userEvent:UserEvent = new UserEvent(UserEvent.CHECK_DELETED_USER);
+		userEvent.userId = userId;
+		this.dispatcher.dispatchEvent(userEvent);
 	}
-	
-	
 	
 	public function onError(event : Object) : void
 	{
