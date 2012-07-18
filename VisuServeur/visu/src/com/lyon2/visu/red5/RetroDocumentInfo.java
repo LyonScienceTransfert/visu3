@@ -81,7 +81,7 @@ public class RetroDocumentInfo {
 		} 	
 	}
 	
-	public void getOwnedAndSharedRetroDocumentsByUserId(IConnection conn, int userId)  {
+	public void getOwnedAndSharedRetroDocumentsByUserId(IConnection conn, Integer userId)  {
 		log.warn("======== getOwnedAndSharedRetroDocumentsByUserId");
 		IClient client = conn.getClient();
 		User user = (User) client.getAttribute("user");
