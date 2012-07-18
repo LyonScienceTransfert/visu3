@@ -74,6 +74,7 @@ import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
 
 import com.ithaca.domain.dao.impl.RetroDocumentDAOImpl;
+import com.ithaca.domain.model.ArrayData;
 import com.ithaca.domain.model.Obsel;
 import com.ithaca.domain.model.RetroDocument;
 import com.lyon2.utils.ObselStringParams;
