@@ -103,8 +103,6 @@ import flash.net.NetConnection;
 import gnu.as3.gettext.FxGettext;
 import gnu.as3.gettext._FxGettext;
 
-import modules.UserModule;
-
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.logging.ILogger;
