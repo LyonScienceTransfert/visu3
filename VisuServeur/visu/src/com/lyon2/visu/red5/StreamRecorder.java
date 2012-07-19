@@ -82,7 +82,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
-import org.red5.server.api.scope.IScope;
+import org.red5.server.api.IScope;
 import org.red5.server.api.service.IServiceCapableConnection;
 import org.red5.server.api.service.ServiceUtils;
 import org.red5.server.stream.ClientBroadcastStream;
@@ -395,6 +395,7 @@ log.warn("refParam = {}",refParam);
 				
 				try 
 				{
+					log.warn("== startRecordRoom == , start record stream {}",filename);
 					// Save the stream to disk.
 					stream.saveAs(filename, false);					
 					// However, NetStream takes the generated basename,
