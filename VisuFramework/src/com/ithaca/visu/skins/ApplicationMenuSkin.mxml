@@ -195,7 +195,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						</s:fill>
 					</s:Rect>
 					<s:HGroup y="1" left="20" right="10" height="100%">
-						<s:Image source="images/Page/profile_ico.png" />
+						<s:Image source="@Embed('images/Page/profile_ico.png')" />
 						<s:Label id="labelLoggedUser" 
 								 height="20" text="Nom Utilisateur"
 								 verticalAlign="middle" color="#FFFFFF" 
@@ -203,7 +203,7 @@ knowledge of the CeCILL-C license and that you accept its terms.
 						<s:Label height="20" text="/"
 								 verticalAlign="middle" color="#FFFFFF" 
 								 fontSize="11" fontWeight="bold"/>
-						<s:Image source="images/Page/logout_ico.png" />
+						<s:Image source="@Embed('images/Page/logout_ico.png')" />
 						<mx:LinkButton id="disconnect"
 									   fontSize="11" fontWeight="bold"
 									   height="15" textAlign="center"

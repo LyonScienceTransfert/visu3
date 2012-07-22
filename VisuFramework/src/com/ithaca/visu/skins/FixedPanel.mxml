@@ -98,7 +98,7 @@ in accordance with the terms of the license agreement accompanying it.
                 
                 <!-- layer 0: title bar fill -->
                 <!--- @private -->
-				<s:Image id="tbFill" left="0" right="0" top="0" bottom="1" scaleMode="stretch" source="images/Home/panel-top.png" />
+				<s:Image id="tbFill" left="0" right="0" top="0" bottom="1" scaleMode="stretch" source="@Embed('images/Home/panel-top.png')" />
                 
                 <!-- layer 1: title bar highlight -->
                 <!--- @private -->

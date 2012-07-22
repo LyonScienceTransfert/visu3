@@ -49,7 +49,7 @@
     
     <!-- layer 8: text -->
     <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
-	<s:Image x="0" y="0" scaleMode="stretch" source="images/Menu/UsersOff.png"
+	<s:Image x="0" y="0" scaleMode="stretch" source="@Embed('images/Menu/UsersOff.png')"
 			 source.active="@Embed('images/Menu/UsersOn.png')"
 			 source.disabled="@Embed('images/Menu/UsersOff.png')"
 			 source.down="@Embed('images/Menu/UsersOn.png')"

@@ -108,7 +108,7 @@ in accordance with the terms of the license agreement accompanying it.
 		</s:stroke>
 	</s:Rect>
 	
-	<s:Image horizontalCenter="0" source="images/Components/right.png" verticalCenter="0"/>
+	<s:Image horizontalCenter="0" source="@Embed('images/Components/right.png')" verticalCenter="0"/>
 	
 	
 </s:SparkButtonSkin>
