@@ -219,7 +219,7 @@ package  com.ithaca.visu.model
 		public function get rtmpServer(): String
 		{
 		//	return "rtmpt://" + this.server + ":80/" + this.appName + "/" + this.roomName;
-			return "rtmpt://" + this.server + "/" + this.appName + "/" + this.roomName;
+			return "rtmp://" + this.server + "/" + this.appName + "/" + this.roomName;
 		}
 		
 		public function get urlServeur(): String
