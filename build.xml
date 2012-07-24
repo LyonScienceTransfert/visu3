@@ -1015,7 +1015,7 @@ or by setting the following environment variable:
 	            <pathelement path="${classpath}"/>
 	            <pathelement location="${red5.dir}/red5.jar"/>
 	            <fileset dir="${project.server.path}/webapp/WEB-INF/lib" includes="*.jar"/>
-	             <fileset dir="${project.server.path}/webapp/WEB-INF/lib/spring-REALESE-jars" includes="*.jar"/>
+	             <fileset dir="${project.server.path}/webapp/WEB-INF/lib/spring-REALESE-jars" includes="*.jar"/>  
 	          </classpath>
 	        </javac>
 	        <mkdir dir="${jar.dir}"/>
@@ -1311,7 +1311,7 @@ or by setting the following environment variable:
 
 	      <copy  verbose="true"  file="${jar.file}" todir="${webapp.dir}/WEB-INF/lib" />
 	      
-	      <delete dir="${webapp.dir}/WEB-INF/lib/spring-REALESE-jars"/>
+	      <delete dir="${webapp.dir}/WEB-INF/lib/spring-REALESE-jars"/> 
 	    </target>
 
 		<target name="clean-webinf-libs">
