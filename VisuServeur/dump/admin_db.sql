@@ -405,7 +405,7 @@ CREATE TABLE `users` (
 ) ENGINE=MyISAM AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Password for admin = azerty';
 SET character_set_client = @saved_cs_client;
 
-INSERT INTO `users` VALUES(1, 'Admin', 'ADMIN', 'admin', 'azerty', NULL, 'users/avatars/unknown.png', '00010001000111110111','Hello, ___' );
+INSERT INTO `users` VALUES(1, 'Admin', 'ADMIN', 'admin', 'azerty', NULL, '/images/unknown.png', '00010001000111110111','Hello, ___' );
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
