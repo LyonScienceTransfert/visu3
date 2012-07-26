@@ -189,7 +189,24 @@ knowledge of the CeCILL-C license and that you accept its terms.
                     </s:HGroup>
                 </s:VGroup>
             </s:HGroup>
-            
+			<s:VGroup id="reinitPasswordGroup" width="100%" includeIn="edit">
+	            <!-- line -->
+				<s:Line width="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1" joints="miter"/>
+					</s:stroke>
+				</s:Line>
+				<!-- reinitialisation MDP -->
+				<s:HGroup width="100%"  horizontalAlign="right" verticalAlign="middle" gap="20">
+					<s:Label>
+						<s:text>{fxgt.gettext("Vous pouvez reinitialiser le mot de passe")+":"}</s:text>
+					</s:Label>
+					<s:Button id="reinitPasswordButton">
+						<s:label>{fxgt.gettext("Reinitialiser le MDP")}</s:label>
+						<s:toolTip>{fxgt.gettext('Le mail avec nouveau MDP va envoyer à')+' '+firstnameDisplay.text+' '+lastnameDisplay.text} </s:toolTip>
+					</s:Button>
+				</s:HGroup>
+			</s:VGroup>
             <mx:Image id="avatarUser" width="100" height="100"/>
             
         </s:VGroup>

@@ -62,7 +62,9 @@
  */
 package com.ithaca.visu.controls.users
 {
+	import com.ithaca.utils.UtilFunction;
 	import com.ithaca.visu.events.UserEvent;
+	import com.ithaca.visu.model.Model;
 	import com.ithaca.visu.model.User;
 	import com.ithaca.visu.model.vo.ProfileDescriptionVO;
 	import com.ithaca.visu.model.vo.UserVO;
@@ -78,6 +80,7 @@ package com.ithaca.visu.controls.users
 	import spark.components.DropDownList;
 	import spark.components.Label;
 	import spark.components.TextInput;
+	import spark.components.VGroup;
 	import spark.components.supportClasses.SkinnableComponent;
 	
 	[SkinSate("normal")]
@@ -124,6 +127,12 @@ package com.ithaca.visu.controls.users
 		
 		[SkinPart("true")]
 		public var deleteButton : Button;
+		
+		[SkinPart("true")]
+		public var reinitPasswordButton : Button;
+		
+		[SkinPart("true")]
+		public var reinitPasswordGroup : VGroup;
 		
 		 
         private var _profiles:Array = [];
@@ -178,6 +187,7 @@ package com.ithaca.visu.controls.users
             
             pending = _editing = false;
             empty = false;
+			
             
             dispatchEvent( new Event("update") );    
                 
@@ -222,6 +232,10 @@ package com.ithaca.visu.controls.users
 			if (instance == editButton)
 			{
 				editButton.addEventListener(MouseEvent.CLICK, editButton_clickHandler);
+			}
+			if (instance == reinitPasswordButton)
+			{
+				reinitPasswordButton.addEventListener(MouseEvent.CLICK, reinitPasswordButton_clickHandler);
 			}
 			if (instance == saveButton)
 			{
@@ -283,7 +297,20 @@ package com.ithaca.visu.controls.users
                 if ( getCurrentSkinState() == "normal" || getCurrentSkinState() == "empty")
 					setDisplay();
 				else
+				{
 					setInput();
+					if(user.id_user == 0)
+					{
+						// remove group reinit password
+						reinitPasswordGroup.includeInLayout = reinitPasswordGroup.visible = false;
+					}
+					else
+					{
+						// add group reinit password
+						reinitPasswordGroup.includeInLayout = reinitPasswordGroup.visible = true;
+					}
+					
+				}
 			}
 		}
 		
@@ -305,6 +332,26 @@ package com.ithaca.visu.controls.users
 			_editing = true;
             empty = false;
 			invalidateSkinState();
+		}
+		
+		/**
+		 * Reinitialisation password
+		 */
+		public function reinitPasswordButton_clickHandler(event:*=null):void
+		{
+			// reinit password for user
+			var setPasswordEvent:UserEvent = new UserEvent(UserEvent.SET_PASSWORD);
+			setPasswordEvent.password = UtilFunction.getCryptWord(user.mail);
+			setPasswordEvent.userId = user.id_user;
+			dispatchEvent(setPasswordEvent);
+			
+			// send mail that reinit password
+			var sendMailEvent:UserEvent = new UserEvent(UserEvent.SEND_MAIL);
+			sendMailEvent.sendTo = user.mail;
+			var loggedUser:User = Model.getInstance().getLoggedUser();
+			sendMailEvent.subject = "New password for the plateforme VISU was reinit by"+' '+loggedUser.firstname+' '+loggedUser.lastname;
+			sendMailEvent.bodyMail = 'Hello'+' '+ userVO.firstname+' '+userVO.lastname+',\n you have new password on the plateforme VISU,\n\t password'+' = '+user.mail+'.\nPlease set new password when you join the plateforme VISU in Profil module.';
+			dispatchEvent(sendMailEvent);
 		}
 		
 		/**
