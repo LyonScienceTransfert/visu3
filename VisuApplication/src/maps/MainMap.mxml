@@ -138,6 +138,19 @@ knowledge of the CeCILL-C license and that you accept its terms.
             </mate:RemoteObjectInvoker>	
         </mate:EventHandlers>
         
+		<!-- Send mail -->
+		<mate:EventHandlers type="{UserEvent.SEND_MAIL}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="sendMail"   arguments="{[event.sendTo, event.subject, event.bodyMail]}" />	
+			</rtmp:RtmpServiceInvoker>	
+		</mate:EventHandlers>
+		
+		<!-- Set password -->
+		<mate:EventHandlers type="{UserEvent.SET_PASSWORD}" debug="true">
+			<rtmp:RtmpServiceInvoker service="{RtmpService}">
+				<mate:Request action="setPassword"   arguments="{[event.password, event.userId]}" />
+			</rtmp:RtmpServiceInvoker>
+		</mate:EventHandlers>
 		
 		<mate:EventHandlers type="{'clientInfo'}" debug="true">
 			<rtmp:RtmpServiceInvoker service="{RtmpService}" cache="global">
