@@ -76,7 +76,7 @@ package com.ithaca.visu.controls.login.event
 		public static const CHECK_ACTIVATED_KEY:String="checkActivatedKey";
 		public static const GET_USER_ACTIVATED_KEY:String="getUserActivatedKey";
 		public static const UPDATE_PASSWORD_DELETE_ACTIVATED_KEY:String="updatePasswordDeleteActivatedKey";
-		public static const SET_PASSWORD:String="setPassword";
+		public static const SET_PASSWORD:String="setPasswordOnLoginForm";
 		
 		// properties
 		public var username:String;
