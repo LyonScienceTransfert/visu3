@@ -112,6 +112,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ithaca.domain.model.Obsel;
+import com.lyon2.utils.MailerFacade;
 import com.lyon2.utils.ObselStringParams;
 import com.lyon2.utils.ObselType;
 import com.lyon2.utils.SessionStatus;
