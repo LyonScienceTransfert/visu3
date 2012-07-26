@@ -174,6 +174,8 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		return smtpserver;
 	}
 	public void setSmtpserver(String smtpserver) {
+        // Configure the MailerFacade
+        MailerFacade.setSmtpServer(smtpserver);
 		this.smtpserver = smtpserver;
 	}
 	//
