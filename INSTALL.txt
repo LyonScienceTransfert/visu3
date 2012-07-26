@@ -1,13 +1,30 @@
 
 * Installation red5
-  The server has been tested and deployed on red5 0.8.0.
+ 
+	Java
+ 		apt-get install openjdk-6-jre icedtea6-plugin
+	Ant
+		sudo apt-get install ant
+	Mysql
+		sudo apt-get install mysql-server
+	Git
+		sudo apt-get install git
+	Svn
+		apt-get install subversion subversion-tools
+		
+	get red5 version 0.9.1 final from red5.org 
+
+* Installation VISU
+
+	clone visu by git 
+	get flex_sdk_4.5.1.21328A and deploy on server 
 
 * Database initialisation
 
   Configure the mysql connnection in
   VisuServeur/visu/webapp/WEB-INF/classes/ibatis/sqlMapConfig.xml
 
-	<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu"/>
+	<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/visu?useUnicode=yes&amp;characterEncoding=UTF8"/>
 	<property name="JDBC.Username" value="HERE"/>
 	<property name="JDBC.Password" value="HERE"/>
 	
@@ -16,14 +33,15 @@
   Create an admin user from VisuServeur/dump/admin_db.sql:
    mysql -u_login_ -p visu < VisuServeur/dump/admin_db.sql
 
+  For admin : login/assword => admin/azerty
+  
 * Configure variables in files :
 
    Copy the build.properties.template to build.properties and update
    its contents to match your local configuration.
 
-   build.properties(webapp.name=instance_name)
-   VisuServeur/visu/webapp/WEB-INF/red5-web.properties (webapp.contextPath = instance_name)
-   
+   build.properties(webapp.name=instance_name; mysql.pass=database_password; mysql.user=database_user)
+   VisuServeur/visu/webapp/WEB-INF/red5-web.properties (webapp.contextPath = instance_name) 
 
 * Compilation and deployment
 	
@@ -55,4 +73,7 @@
 
     http://path_red5/instance_name
 
+More links:
+http://osflash.org/red5/linux-install
+http://trac.red5.org/ticket/647
 
