@@ -63,6 +63,7 @@
 package com.ithaca.utils
 {
     import com.adobe.crypto.MD5;
+    import com.adobe.crypto.SHA256;
     import com.ithaca.documentarisation.RetroDocumentConst;
     import com.ithaca.visu.model.Model;
     
@@ -277,16 +278,14 @@ package com.ithaca.utils
             result = result.split(".")[0];
             return new Number(result);
         }
-        /**
-        * criptage the passwor
-        * md5(md5(pass)+word)
-        */
-        public static function getCryptWord(value:String):String
-        {
-            //var result:String = MD5.hash(MD5.hash(value) + Model.getInstance().server);
-			// desactivate MD5 for the test VISU
-            var result:String = value;
-            return result;
-        }
+		/**
+		 * criptage the passwor
+		 * SHA256(String)
+		 */
+		public static function getCryptWord(value:String):String
+		{
+			var result:String = SHA256.hash(value);
+			return result;
+		}
     }
 }
