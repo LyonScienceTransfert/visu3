@@ -70,6 +70,7 @@ import com.ithaca.timeline.events.TimelineEvent;
 import com.ithaca.traces.Obsel;
 import com.ithaca.traces.model.TraceModel;
 import com.ithaca.traces.model.vo.SGBDObsel;
+import com.ithaca.utils.UtilFunction;
 import com.ithaca.utils.VisuUtils;
 import com.ithaca.visu.controls.globalNavigation.event.ApplicationMenuEvent;
 import com.ithaca.visu.controls.login.event.LoginFormEvent;
@@ -1796,6 +1797,19 @@ public class MainManager
 		var userEvent:UserEvent = new UserEvent(UserEvent.CHECK_ADDED_USER);
 		userEvent.userVO = userVO;
 		this.dispatcher.dispatchEvent(userEvent);
+		
+		// set password for new user
+		var setPasswordEvent:UserEvent = new UserEvent(UserEvent.SET_PASSWORD);
+		setPasswordEvent.password = UtilFunction.getCryptWord(userVO.mail);
+		setPasswordEvent.userId = userVO.id_user;
+		this.dispatcher.dispatchEvent(setPasswordEvent);
+		
+		// send mail to new user with new password
+		var sendMailEvent:UserEvent = new UserEvent(UserEvent.SEND_MAIL);
+		sendMailEvent.sendTo = userVO.mail;
+		sendMailEvent.subject = "You have new account on the plateform VISU";
+		sendMailEvent.bodyMail = 'Hello'+' '+ userVO.firstname+' '+userVO.lastname+',\n you have new account on the plateforme VISU,\n\t login'+' = '+userVO.mail+'\n\t password'+' = '+userVO.mail+'.\nPlease set new password when you join the plateforme VISU in Profil module.';
+		this.dispatcher.dispatchEvent(sendMailEvent);
 	}
 	
 	/**
