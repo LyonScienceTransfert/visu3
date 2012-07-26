@@ -3,14 +3,13 @@ package com.lyon2.visu.red5;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.red5.server.api.IClient;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.service.IServiceCapableConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.lyon2.visu.Application;
-import com.lyon2.visu.domain.model.Session;
 import com.lyon2.visu.domain.model.User;
  
 /**
