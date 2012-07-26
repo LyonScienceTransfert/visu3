@@ -82,6 +82,8 @@ package  com.ithaca.visu.events
 		static public const CHECK_UPDATED_USER : String = 'checkUpdatedUser';
 		static public const CHECK_ADDED_USER : String = 'checkAddedUser';
 		static public const CHECK_DELETED_USER : String = 'checkDeletedUser';
+		static public const SEND_MAIL : String = 'sendMail';
+		static public const SET_PASSWORD : String = 'setPassword';
 		
 		// properties
 		public var sessionId : int;
@@ -90,6 +92,10 @@ package  com.ithaca.visu.events
 		public var userVO: UserVO;
 		public var listUser:Array;
 		public var userId:int;
+		public var sendTo:String;
+		public var subject:String;
+		public var bodyMail:String;
+		public var password:String;
 		
 		// constructor
 		public function UserEvent(type : String,
