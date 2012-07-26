@@ -731,6 +731,22 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		}
 		
 	}
+	/**
+	 * Set password for new user
+	 * 
+	 * @param an encrypted version of the user password
+	 */
+	public void setPassword(IConnection conn, String password, Integer userId) throws SQLException {
+		log.warn("=== setPassword ===");
+		
+		try {
+			getSqlMapClient().update(
+					"users.updatePassword", UtilFunction.createParams("userId", userId, "password", password));
+		} catch (Exception e) {
+			log.error("Probleme lors du update password " + e);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<User> listUsers() throws SQLException {
 		log.debug("listUsers");
@@ -1774,4 +1790,25 @@ public class Application extends MultiThreadedApplicationAdapter implements
 		super.roomLeave(client, scope);
 	}
 
+	public void sendMail(IConnection conn, String sendTo, String subject, String bodyMail )
+	{
+		log.warn("=== sendMail ===");
+		log.warn("=== sendMail, sendTo => {}", sendTo);
+		IClient client = conn.getClient();
+
+		User user = (User)client.getAttribute("user"); 
+		String sender = user.getMail();
+		log.warn("=== sender ==="+ sender);
+		
+		String[] recipients = {sendTo};
+		log.warn("=== sendMail, recipients => {}",recipients);
+		
+		log.warn("=== sendMail, subject => {}", subject);
+		log.warn("=== sendMail, bodyMail => {}", bodyMail);
+		try {
+			MailerFacade.sendMail(subject, recipients, sender, bodyMail);
+		} catch (Exception e) {
+			log.warn("=== sendMail, can't send mail:"+e.getMessage());
+		}
+	}
 }
