@@ -14,7 +14,7 @@ accessed through a flex-based frontend.
    * VisuApplication
    The Visu Application 
 
-   *HomeModule
+   * HomeModule
    
    * ProfilModule
    
@@ -25,7 +25,7 @@ accessed through a flex-based frontend.
    A module for work of a tutor after a session. 
    He can watch a previous session, select part, and add note for the student, make the bilan.
    
-   *BilanModule
+   * BilanModule
    A module for bilan management.
    
    * UserModule
