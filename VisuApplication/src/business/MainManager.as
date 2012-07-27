@@ -1808,7 +1808,7 @@ public class MainManager
 		var sendMailEvent:UserEvent = new UserEvent(UserEvent.SEND_MAIL);
 		sendMailEvent.sendTo = userVO.mail;
 		sendMailEvent.subject = "You have new account on the plateform VISU";
-		sendMailEvent.bodyMail = 'Hello'+' '+ userVO.firstname+' '+userVO.lastname+',\n you have new account on the plateforme VISU,\n\t login'+' = '+userVO.mail+'\n\t password'+' = '+userVO.mail+'.\nPlease set new password when you join the plateforme VISU in Profil module.';
+		sendMailEvent.bodyMail = 'Hello'+' '+ userVO.firstname+' '+userVO.lastname+',\n you have new account on the plateforme VISU,\n\t login'+' = '+userVO.mail+'\n\t password'+' = '+userVO.mail+'\nPlease set new password when you join the plateforme VISU in Profil module.';
 		this.dispatcher.dispatchEvent(sendMailEvent);
 	}
 	

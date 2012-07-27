@@ -350,7 +350,7 @@ package com.ithaca.visu.controls.users
 			sendMailEvent.sendTo = user.mail;
 			var loggedUser:User = Model.getInstance().getLoggedUser();
 			sendMailEvent.subject = "New password for the plateforme VISU was reinit by"+' '+loggedUser.firstname+' '+loggedUser.lastname;
-			sendMailEvent.bodyMail = 'Hello'+' '+ user.firstname+' '+user.lastname+',\n you have new password on the plateforme VISU,\n\t password'+' = '+user.mail+'.\nPlease set new password when you join the plateforme VISU in Profil module.';
+			sendMailEvent.bodyMail = 'Hello'+' '+ user.firstname+' '+user.lastname+',\n you have new password on the plateforme VISU,\n\t password'+' = '+user.mail+'\nPlease set new password when you join the plateforme VISU in Profil module.';
 			dispatchEvent(sendMailEvent);
 		}
 		
