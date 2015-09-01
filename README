@@ -1,35 +1,44 @@
 Visu is a videoconferencing software mainly aimed at foreign language
-courses.
+courses. It features recording sessions and annotating them either
+live or afterwards, to enable the production of summaries.
+
+Visu is a free software subjected to a double license. You can
+redistribute it and/or modify since you respect the terms of either
+(at least one of):
+- the GNU Lesser General Public License as published by the Free Software Foundation;
+  either version 3 of the License, or any later version.
+- the CeCILL-C as published by CeCILL; either version 2 of the License, or any later version.
 
 It consists in a red5 server webapplication (using a MySQL database)
 accessed through a flex-based frontend.
 
-* Projects organisation 
-   
-   The project is divided in several FlashBuilder sub-projects
+* Project organisation
 
-   * VisuFramework
-   A library with our visu related componenents
+The project is divided in several FlashBuilder sub-projects
 
-   * VisuApplication
-   The Visu Application 
+** VisuFramework
+A library with our Visu related components
 
-   * HomeModule
-   
-   * ProfilModule
-   
-   * TutoratModule
-   A module for work of a tutor during a live session.
-   
-   * RetrospectionModule
-   A module for work of a tutor after a session. 
-   He can watch a previous session, select part, and add note for the student, make the bilan.
-   
-   * BilanModule
-   A module for bilan management.
-   
-   * UserModule
-   A module for user management.
+** VisuApplication
+The Visu Application itself
 
-   * SessionModule
-   A module for session management.
+** HomeModule
+
+** ProfilModule
+
+** TutoratModule
+A module for tutors during a live session.
+
+** RetrospectionModule
+A module allowing the review of a recorded session. The user can watch
+a previous session, select some fragments, and add notes for the
+student to make the bilan.
+
+** BilanModule
+A module for bilan management.
+
+** UserModule
+A module for user management.
+
+** SessionModule
+A module for session management.
